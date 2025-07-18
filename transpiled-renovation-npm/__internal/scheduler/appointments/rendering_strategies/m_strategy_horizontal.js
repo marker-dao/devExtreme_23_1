@@ -83,7 +83,7 @@ class HorizontalRenderingStrategy extends _m_strategy_base.default {
     return deltaTime;
   }
   isAllDay(appointmentData) {
-    return Boolean(this.dataAccessors.get('allDay', appointmentData));
+    return this.dataAccessors.get('allDay', appointmentData);
   }
   _isItemsCross(firstItem, secondItem) {
     const orientation = this._getOrientation();

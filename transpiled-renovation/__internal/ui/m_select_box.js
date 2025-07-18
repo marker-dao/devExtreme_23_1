@@ -166,7 +166,6 @@ class SelectBox extends _m_drop_down_list.default {
       placeholder: _message.default.format('Select'),
       fieldTemplate: null,
       customItemCreateEvent: 'change',
-      valueChangeEvent: 'change',
       acceptCustomValue: false,
       onCustomItemCreating(e) {
         if (!(0, _type.isDefined)(e.customItem)) {
@@ -201,15 +200,6 @@ class SelectBox extends _m_drop_down_list.default {
   }
   _popupWrapperClass() {
     return `${super._popupWrapperClass()} ${SELECTBOX_POPUP_WRAPPER_CLASS}`;
-  }
-  _setDeprecatedOptions() {
-    super._setDeprecatedOptions();
-    (0, _extend.extend)(this._deprecatedOptions, {
-      valueChangeEvent: {
-        since: '22.2',
-        alias: 'customItemCreateEvent'
-      }
-    });
   }
   _cancelEditing() {
     if (!this.option('searchEnabled') && this._list) {

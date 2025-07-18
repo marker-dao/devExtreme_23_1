@@ -10,8 +10,8 @@ var _type = require("../../../../core/utils/type");
 var _themes = require("../../../../ui/themes");
 var _date2 = require("../../../core/utils/date");
 var _index = require("../../../scheduler/r1/utils/index");
-var _m_appointment_adapter = require("../../m_appointment_adapter");
 var _m_utils_time_zone = _interopRequireDefault(require("../../m_utils_time_zone"));
+var _appointment_adapter = require("../../utils/appointment_adapter/appointment_adapter");
 var _m_settings_generator = require("../m_settings_generator");
 var _m_appointments_positioning_strategy_adaptive = _interopRequireDefault(require("./m_appointments_positioning_strategy_adaptive"));
 var _m_appointments_positioning_strategy_base = _interopRequireDefault(require("./m_appointments_positioning_strategy_base"));
@@ -270,8 +270,7 @@ class BaseRenderingStrategy {
     return this.getAppointmentSettingsGenerator(rawAppointment).create();
   }
   isAppointmentTakesAllDay(rawAppointment) {
-    const adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this.dataAccessors, this.timeZoneCalculator);
-    return (0, _index.isAppointmentTakesAllDay)(adapter, this.allDayPanelMode);
+    return (0, _index.isAppointmentTakesAllDay)(new _appointment_adapter.AppointmentAdapter(rawAppointment, this.dataAccessors), this.allDayPanelMode);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _getAppointmentParts(geometry, settings) {
@@ -766,9 +765,9 @@ class BaseRenderingStrategy {
     } = this.options;
     const startDateField = this.dataAccessors.expr.startDateExpr;
     const endDateField = this.dataAccessors.expr.endDateExpr;
-    let startDate = new Date(this.dataAccessors.get('startDate', appointment));
+    let startDate = this.dataAccessors.get('startDate', appointment);
     startDate = _date2.dateUtilsTs.addOffsets(startDate, [-viewOffset]);
-    let endDate = new Date(this.dataAccessors.get('endDate', appointment));
+    let endDate = this.dataAccessors.get('endDate', appointment);
     endDate = _date2.dateUtilsTs.addOffsets(endDate, [-viewOffset]);
     return _extends({}, appointment, {
       [startDateField]: startDate,

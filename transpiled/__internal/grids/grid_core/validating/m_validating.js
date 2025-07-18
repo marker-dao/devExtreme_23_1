@@ -1382,10 +1382,11 @@ const validatingRowsViewExtender = Base => class ValidatingRowsViewExtender exte
     const $tooltipContent = $element && $element.find(`.${that.addWidgetPrefix(WIDGET_INVALID_MESSAGE_CLASS)} .dx-overlay-content`);
     super.updateFreeSpaceRowHeight($table);
     if ($tooltipContent && $tooltipContent.length) {
-      $rowElements = that._getRowElements();
+      $rowElements = that._getRowElements().filter(':visible');
       $freeSpaceRowElements = that._getFreeSpaceRowElements($table);
       $freeSpaceRowElement = $freeSpaceRowElements.first();
-      if ($freeSpaceRowElement && $rowElements.length === 1 && (!$freeSpaceRowElement.is(':visible') || (0, _size.getOuterHeight)($tooltipContent) > (0, _size.getOuterHeight)($freeSpaceRowElement))) {
+      const rowElementsHasFocusInside = $rowElements.find(':focus').length > 0;
+      if ($freeSpaceRowElement && $rowElements.length === 1 && (!$freeSpaceRowElement.is(':visible') || (0, _size.getOuterHeight)($tooltipContent) > (0, _size.getOuterHeight)($freeSpaceRowElement)) && rowElementsHasFocusInside) {
         $freeSpaceRowElements.show();
         (0, _size.setHeight)($freeSpaceRowElements, (0, _size.getOuterHeight)($tooltipContent));
         return true;

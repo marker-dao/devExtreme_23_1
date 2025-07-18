@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_box = _interopRequireDefault(require("../__internal/ui/m_box"));
+var _box = _interopRequireDefault(require("../__internal/ui/box"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_box.default;
+var _default = exports.default = _box.default;
 /**
  * @name dxBoxOptions.activeStateEnabled
  * @hidden

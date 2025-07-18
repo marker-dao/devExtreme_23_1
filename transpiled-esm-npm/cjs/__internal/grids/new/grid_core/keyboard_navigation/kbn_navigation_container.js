@@ -76,6 +76,7 @@ class KbnNavigationContainerEnabled extends _inferno.Component {
       "data-dx-focus-container": true
     }), null, ref));
   }
+  // TODO: KeyboardEvent
   onKeyDown(event) {
     const {
       navigationStrategy,
@@ -111,7 +112,9 @@ class KbnNavigationContainerEnabled extends _inferno.Component {
   }
 }
 exports.KbnNavigationContainerEnabled = KbnNavigationContainerEnabled;
-__decorate([_index.eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", [KeyboardEvent]), __metadata("design:returntype", void 0)], KbnNavigationContainerEnabled.prototype, "onKeyDown", null);
+__decorate([_index.eventHandler
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+, __metadata("design:type", Function), __metadata("design:paramtypes", [Object]), __metadata("design:returntype", void 0)], KbnNavigationContainerEnabled.prototype, "onKeyDown", null);
 __decorate([_index.eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", []), __metadata("design:returntype", void 0)], KbnNavigationContainerEnabled.prototype, "onFocusOut", null);
 __decorate([_index.eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", []), __metadata("design:returntype", void 0)], KbnNavigationContainerEnabled.prototype, "onDecoyFocusIn", null);
 const KbnNavigationContainer = props => {

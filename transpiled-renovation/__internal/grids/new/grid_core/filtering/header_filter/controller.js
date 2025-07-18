@@ -10,7 +10,8 @@ var _utils = require("./utils");
 class HeaderFilterController {
   constructor(columnsController) {
     this.columnsController = columnsController;
-    this.composedHeaderFilter = (0, _signalsCore.computed)(() => (0, _utils.getComposedHeaderFilter)(this.columnsController.visibleColumns.value));
+    this.headerFilterInfoArray = (0, _signalsCore.computed)(() => (0, _utils.getHeaderFilterInfoArray)(this.columnsController.visibleColumns.value));
+    this.composedHeaderFilter = (0, _signalsCore.computed)(() => (0, _utils.getComposedHeaderFilter)(this.headerFilterInfoArray.value));
   }
   clearHeaderFilters() {
     this.columnsController.updateColumns(columns => columns.map(col => {

@@ -4,8 +4,8 @@ import { extend } from '../../../../core/utils/extend';
 import { roundFloatPart } from '../../../../core/utils/math';
 import { isNumeric } from '../../../../core/utils/type';
 import { getSkippedHoursInRange, isAppointmentTakesAllDay } from '../../../scheduler/r1/utils/index';
-import { createAppointmentAdapter } from '../../m_appointment_adapter';
 import timeZoneUtils from '../../m_utils_time_zone';
+import { AppointmentAdapter } from '../../utils/appointment_adapter/appointment_adapter';
 import BaseAppointmentsStrategy from './m_strategy_base';
 const ALLDAY_APPOINTMENT_MIN_VERTICAL_OFFSET = 5;
 const ALLDAY_APPOINTMENT_MAX_VERTICAL_OFFSET = 20;
@@ -54,10 +54,12 @@ class VerticalRenderingStrategy extends BaseAppointmentsStrategy {
       return super._getItemPosition(initialAppointment);
     }
     const appointment = super.shiftAppointmentByViewOffset(initialAppointment);
-    const adapter = createAppointmentAdapter(appointment, this.dataAccessors, this.timeZoneCalculator);
-    const isRecurring = !!adapter.recurrenceRule;
-    const appointmentStartDate = adapter.calculateStartDate('toGrid');
-    const appointmentEndDate = adapter.calculateEndDate('toGrid');
+    const adapter = new AppointmentAdapter(appointment, this.dataAccessors);
+    const isRecurring = adapter.isRecurrent;
+    const {
+      startDate: appointmentStartDate,
+      endDate: appointmentEndDate
+    } = adapter.getCalculatedDates(this.timeZoneCalculator, 'toGrid');
     const appointmentDuration = appointmentEndDate.getTime() - appointmentStartDate.getTime();
     const appointmentBeginInCurrentView = this.options.startViewDate < appointmentStartDate;
     const isAppointmentTakesSeveralDays = !timeZoneUtils.isSameAppointmentDates(appointmentStartDate, appointmentEndDate);
@@ -263,7 +265,7 @@ class VerticalRenderingStrategy extends BaseAppointmentsStrategy {
     return this.cellWidth;
   }
   isAllDay(appointmentData) {
-    return isAppointmentTakesAllDay(createAppointmentAdapter(appointmentData, this.dataAccessors, this.timeZoneCalculator), this.allDayPanelMode);
+    return isAppointmentTakesAllDay(new AppointmentAdapter(appointmentData, this.dataAccessors), this.allDayPanelMode);
   }
   _getAppointmentMaxWidth() {
     return this.cellWidth - this._getAppointmentDefaultOffset();

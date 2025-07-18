@@ -2,7 +2,7 @@
 
 exports.default = void 0;
 var _diagram = require("./diagram.importer");
-var _file_saver = require("../../exporter/file_saver");
+var _file_saver = require("../../__internal/exporter/file_saver");
 var _type = require("../../core/utils/type");
 var _window = require("../../core/utils/window");
 var _extend = require("../../core/utils/extend");
@@ -31,7 +31,6 @@ const DiagramCommandsManager = {
       separator: SEPARATOR_COMMAND,
       exportSvg: {
         command: DiagramCommand.ExportSvg,
-        // eslint-disable-line spellcheck/spell-checker
         text: _message.default.format('dxDiagram-commandExportToSvg'),
         getParameter: widget => {
           return dataURI => this._exportTo(widget, dataURI, 'SVG', 'image/svg+xml');
@@ -39,7 +38,6 @@ const DiagramCommandsManager = {
       },
       exportPng: {
         command: DiagramCommand.ExportPng,
-        // eslint-disable-line spellcheck/spell-checker
         text: _message.default.format('dxDiagram-commandExportToPng'),
         getParameter: widget => {
           return dataURI => this._exportTo(widget, dataURI, 'PNG', 'image/png');
@@ -47,7 +45,6 @@ const DiagramCommandsManager = {
       },
       exportJpg: {
         command: DiagramCommand.ExportJpg,
-        // eslint-disable-line spellcheck/spell-checker
         text: _message.default.format('dxDiagram-commandExportToJpg'),
         getParameter: widget => {
           return dataURI => this._exportTo(widget, dataURI, 'JPEG', 'image/jpeg');

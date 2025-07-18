@@ -458,19 +458,6 @@ const dxRangeSelector = _m_base_widget.default.inherit({
   _themeDependentChanges: ['MOSTLY_TOTAL'],
   _themeSection: 'rangeSelector',
   _fontFields: ['scale.label.font', 'sliderMarker.font'],
-  _setDeprecatedOptions() {
-    this.callBase();
-    (0, _extend.extend)(this._deprecatedOptions, {
-      'behavior.callValueChanged': {
-        since: '23.1',
-        message: 'Use the "behavior.valueChangeMode" property instead'
-      },
-      'scale.aggregateByCategory': {
-        since: '23.1',
-        message: 'Use the aggregation.enabled property'
-      }
-    });
-  },
   _initCore: function () {
     const that = this;
     const renderer = that._renderer;

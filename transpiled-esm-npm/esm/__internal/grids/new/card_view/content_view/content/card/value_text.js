@@ -1,26 +1,60 @@
 import { createVNode, createComponentVNode } from "inferno";
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { getPublicElement } from '../../../../../../../core/element';
+import $ from '../../../../../../../core/renderer';
+import { Component, createRef } from 'inferno';
 const ROOT_CLASS = 'dx-cardview-field-value';
 const CLASS = {
   root: ROOT_CLASS,
   textPartHighlighted: `${ROOT_CLASS}__text-part--highlighted`
 };
-export const ValueText = _ref => {
-  let {
-    field,
-    template: Template,
-    fieldHintEnabled
-  } = _ref;
-  const classNames = [CLASS.root, `${CLASS.root}--text-align-${field.column.alignment}`].join(' ');
-  const content = field.highlightedText ? field.highlightedText.map(_ref2 => {
-    let {
-      type,
-      text: textPart
-    } = _ref2;
-    return createVNode(1, "span", type === 'highlighted' ? CLASS.textPartHighlighted : '', textPart, 0);
-  }) : field.text;
-  return createVNode(1, "div", classNames, Template ? createComponentVNode(2, Template, {
-    "field": field
-  }) : content, 0, {
-    "title": fieldHintEnabled ? field.text : undefined
-  });
-};
+export class ValueText extends Component {
+  constructor() {
+    super(...arguments);
+    this.ref = createRef();
+    this.onClick = e => {
+      var _this$props$onClick, _this$props;
+      const args = {
+        event: e,
+        fieldValueElement: getPublicElement($(this.ref.current)),
+        field: this.props.field
+      };
+      (_this$props$onClick = (_this$props = this.props).onClick) === null || _this$props$onClick === void 0 || _this$props$onClick.call(_this$props, args);
+    };
+    this.onDblClick = e => {
+      var _this$props$onDblClic, _this$props2;
+      const args = {
+        event: e,
+        fieldValueElement: getPublicElement($(this.ref.current)),
+        field: this.props.field
+      };
+      (_this$props$onDblClic = (_this$props2 = this.props).onDblClick) === null || _this$props$onDblClic === void 0 || _this$props$onDblClic.call(_this$props2, args);
+    };
+  }
+  render() {
+    const classNames = [CLASS.root, `${CLASS.root}--text-align-${this.props.field.column.alignment}`].join(' ');
+    const content = this.props.field.highlightedText ? this.props.field.highlightedText.map(_ref => {
+      let {
+        type,
+        text: textPart
+      } = _ref;
+      return createVNode(1, "span", type === 'highlighted' ? CLASS.textPartHighlighted : '', textPart, 0);
+    }) : this.props.field.text;
+    const Template = this.props.template;
+    return createVNode(1, "div", classNames, Template ? createComponentVNode(2, Template, {
+      "field": this.props.field
+    }) : content, 0, {
+      "onClick": this.onClick,
+      "onDblClick": this.onDblClick,
+      "title": this.props.fieldHintEnabled ? this.props.field.text : undefined
+    }, null, this.ref);
+  }
+  componentDidMount() {
+    var _this$props$onPrepare, _this$props3;
+    const args = {
+      fieldValueElement: getPublicElement($(this.ref.current)),
+      field: this.props.field
+    };
+    (_this$props$onPrepare = (_this$props3 = this.props).onPrepared) === null || _this$props$onPrepare === void 0 || _this$props$onPrepare.call(_this$props3, args);
+  }
+}

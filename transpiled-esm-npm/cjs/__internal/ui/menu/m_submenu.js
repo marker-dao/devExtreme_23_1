@@ -16,6 +16,9 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 const DX_CONTEXT_MENU_CONTENT_DELIMITER_CLASS = 'dx-context-menu-content-delimiter';
 const DX_SUBMENU_CLASS = 'dx-submenu';
 class Submenu extends _m_context_menu.default {
+  _getMaxUsableSpace(offsetTop, windowHeight, anchorHeight) {
+    return Math.max(offsetTop, windowHeight - offsetTop - anchorHeight);
+  }
   _getDefaultOptions() {
     return (0, _extend.extend)(super._getDefaultOptions(), {
       orientation: 'horizontal',

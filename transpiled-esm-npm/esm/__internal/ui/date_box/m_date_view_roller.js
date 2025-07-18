@@ -10,7 +10,7 @@ import $ from '../../../core/renderer';
 import { each } from '../../../core/utils/iterator';
 import { getHeight } from '../../../core/utils/size';
 import { convertToLocation } from '../../ui/scroll_view/utils/convert_location';
-import Scrollable from '../scroll_view/m_scrollable';
+import Scrollable from '../scroll_view/scrollable';
 const DATEVIEW_ROLLER_CLASS = 'dx-dateviewroller';
 const DATEVIEW_ROLLER_ACTIVE_CLASS = 'dx-state-active';
 const DATEVIEW_ROLLER_CURRENT_CLASS = 'dx-dateviewroller-current';
@@ -169,6 +169,7 @@ class DateViewRoller extends Scrollable {
           },
           complete() {
             resetPosition($(that.content()));
+            // @ts-expect-error
             that.handleMove({
               delta
             });
@@ -176,6 +177,7 @@ class DateViewRoller extends Scrollable {
         });
         delete this._animation;
       } else {
+        // @ts-expect-error
         this.handleMove({
           delta
         });
@@ -280,6 +282,7 @@ class DateViewRoller extends Scrollable {
       case 'showOnClick':
         this._renderContainerClick();
         break;
+      // @ts-expect-error ts-error
       case 'onSelectedIndexChanged':
         this._renderSelectedIndexChanged();
         break;

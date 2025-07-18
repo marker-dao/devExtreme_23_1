@@ -4,7 +4,7 @@ import { computed, signal } from '@preact/signals-core';
 import { ColumnsController } from '../../../../grids/new/grid_core/columns_controller/columns_controller';
 import { DataController } from '../../../../grids/new/grid_core/data_controller/data_controller';
 import { SearchController } from '../../../../grids/new/grid_core/search/index';
-import { parseValue } from '../utils';
+import { parseValue } from '../utils/parse_value/index';
 export class ItemsController {
   constructor(dataController, columnsController, searchController) {
     this.dataController = dataController;
@@ -24,14 +24,14 @@ export class ItemsController {
     this.selectedCardKeys.value = keys;
   }
   findItemByKey(items, key) {
-    return items.find(item => item.key === key) ?? null;
+    return items.find(item => equalByValue(item.key, key)) ?? null;
   }
   createCardInfo(data, columns, itemIndex, selectedCardKeys, key) {
+    let visible = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : true;
     const itemKey = key ?? this.dataController.getDataKey(data);
     const fields = columns.map((column, index) => {
       const value = column.calculateFieldValue(data);
       const displayValue = column.calculateDisplayValue(data);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const formattedText = formatHelper.format(parseValue(column, displayValue), column.format);
       const text = column.customizeText ? column.customizeText({
         value: displayValue,
@@ -55,7 +55,8 @@ export class ItemsController {
       key: itemKey,
       index: itemIndex,
       isSelected: !!(selectedCardKeys !== null && selectedCardKeys !== void 0 && selectedCardKeys.includes(itemKey)),
-      data
+      data,
+      visible
     };
     card.fields.forEach(f => {
       f.card = card;

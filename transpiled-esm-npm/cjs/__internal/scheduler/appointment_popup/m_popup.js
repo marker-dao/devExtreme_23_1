@@ -12,9 +12,9 @@ var _date = _interopRequireDefault(require("../../../core/utils/date"));
 var _deferred = require("../../../core/utils/deferred");
 var _ui = _interopRequireDefault(require("../../../ui/popup/ui.popup"));
 var _index = require("../../scheduler/r1/appointment_popup/index");
-var _m_appointment_adapter = require("../m_appointment_adapter");
 var _m_loading = require("../m_loading");
-var _m_utils = require("../resources/m_utils");
+var _appointment_adapter = require("../utils/appointment_adapter/appointment_adapter");
+var _appointment_groups_utils = require("../utils/resource_manager/appointment_groups_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const toMs = _date.default.dateToMilliseconds;
@@ -113,10 +113,9 @@ class AppointmentPopup {
   }
   _createFormData(rawAppointment) {
     const appointment = this._createAppointmentAdapter(rawAppointment);
-    const dataAccessors = this.scheduler.getDataAccessors();
-    const resources = this.scheduler.getResources();
-    const normalizedResources = (0, _m_utils.getNormalizedResources)(rawAppointment, dataAccessors, resources);
-    return _extends({}, rawAppointment, normalizedResources, {
+    const resourceManager = this.scheduler.getResourceManager();
+    const rawAppointmentGroupValues = (0, _appointment_groups_utils.getRawAppointmentGroupValues)(rawAppointment, resourceManager.resources);
+    return _extends({}, rawAppointment, rawAppointmentGroupValues, {
       repeat: !!appointment.recurrenceRule
     });
   }
@@ -136,20 +135,14 @@ class AppointmentPopup {
     return !this.scheduler.getEditingConfig().allowUpdating;
   }
   _createAppointmentAdapter(rawAppointment) {
-    return (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this.scheduler.getDataAccessors(), this.scheduler.getTimeZoneCalculator());
+    return new _appointment_adapter.AppointmentAdapter(rawAppointment, this.scheduler.getDataAccessors());
   }
   _updateForm() {
     const {
       data
     } = this.state.appointment;
-    const appointment = this._createAppointmentAdapter(this._createFormData(data));
-    if (appointment.startDate) {
-      appointment.startDate = appointment.calculateStartDate('toAppointment');
-    }
-    if (appointment.endDate) {
-      appointment.endDate = appointment.calculateEndDate('toAppointment');
-    }
-    const formData = appointment.clone().source();
+    const appointment = this._createFormData(data);
+    const formData = this._createAppointmentAdapter(appointment).clone().calculateDates(this.scheduler.getTimeZoneCalculator(), 'toAppointment').source;
     this.form.readOnly = this._isReadOnly(formData);
     this.form.updateFormData(formData);
   }
@@ -192,15 +185,13 @@ class AppointmentPopup {
         repeat
       } = this.form.formData;
       const adapter = this._createAppointmentAdapter(this.form.formData);
-      const clonedAdapter = adapter.clone({
-        pathTimeZone: 'fromAppointment'
-      }); // TODO:
+      const clonedAdapter = adapter.clone().calculateDates(this.scheduler.getTimeZoneCalculator(), 'fromAppointment');
       const shouldClearRecurrenceRule = !repeat && !!clonedAdapter.recurrenceRule;
       this._addMissingDSTTime(adapter, clonedAdapter);
       if (shouldClearRecurrenceRule) {
         clonedAdapter.recurrenceRule = '';
       }
-      const appointment = clonedAdapter.source();
+      const appointment = clonedAdapter.source;
       delete appointment.repeat; // TODO
       switch (this.state.action) {
         case ACTION_TO_APPOINTMENT.CREATE:
@@ -243,10 +234,9 @@ class AppointmentPopup {
           const startTime = startDate.getTime();
           const endTime = endDate.getTime();
           const inAllDayRow = allDay || endTime - startTime >= DAY_IN_MS;
-          const dataAccessors = this.scheduler.getDataAccessors();
-          const resourceList = this.scheduler.getResources();
-          const normalizedResources = (0, _m_utils.getNormalizedResources)(this.state.lastEditData, dataAccessors, resourceList);
-          this.scheduler.updateScrollPosition(startDate, normalizedResources, inAllDayRow);
+          const resourceManager = this.scheduler.getResourceManager();
+          const appointmentGroupValues = (0, _appointment_groups_utils.getAppointmentGroupValues)(this.state.lastEditData, resourceManager.resources);
+          this.scheduler.updateScrollPosition(startDate, appointmentGroupValues, inAllDayRow);
           this.state.lastEditData = null;
         }
         this._unlockSaveChanges();

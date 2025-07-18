@@ -512,9 +512,7 @@ class DateBox extends _m_drop_down_editor.default {
   }
   _isValueChanged(newValue) {
     const oldValue = this.dateOption('value');
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     const oldTime = oldValue && oldValue.getTime();
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     const newTime = newValue && newValue.getTime();
     return oldTime !== newTime;
   }
@@ -618,6 +616,7 @@ class DateBox extends _m_drop_down_editor.default {
       case 'interval':
       case 'disabledDates':
       case 'calendarOptions':
+      case 'todayButtonText':
         this._invalidate();
         break;
       case 'displayFormat':
@@ -644,9 +643,6 @@ class DateBox extends _m_drop_down_editor.default {
         // @ts-expect-error ts-error
         super._optionChanged.apply(this, arguments);
         this._formatValidationIcon();
-        break;
-      case 'todayButtonText':
-        this._setPopupOption('toolbarItems', this._getPopupToolbarItems());
         break;
       case 'invalidDateMessage':
       case 'dateOutOfRangeMessage':

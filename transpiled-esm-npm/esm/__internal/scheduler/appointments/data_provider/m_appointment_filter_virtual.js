@@ -2,7 +2,7 @@ import query from '../../../../common/data/query';
 import dateUtils from '../../../../core/utils/date';
 import { dateUtilsTs } from '../../../core/utils/date';
 import { isDateAndTimeView, isTimelineView } from '../../../scheduler/r1/utils/index';
-import { getResourcesDataByGroups } from '../../resources/m_utils';
+import { getResourcesByGroupIndex } from '../../../scheduler/utils/resource_manager/group_utils';
 import { AppointmentFilterBaseStrategy } from './m_appointment_filter';
 // TODO Vinogradov refactoring: this module should be refactored :)
 const toMs = dateUtils.dateToMilliseconds;
@@ -93,8 +93,8 @@ export class AppointmentFilterVirtualStrategy extends AppointmentFilterBaseStrat
     return this.filterAllDayAppointments(preparedItems).length > 0;
   }
   _getPrerenderFilterResources(groupIndex) {
-    const cellGroup = this.viewDataProvider.getCellsGroup(groupIndex);
-    return getResourcesDataByGroups(this.loadedResources, this.resources, [cellGroup]);
+    const resourceManager = this.options.getResourceManager();
+    return getResourcesByGroupIndex(resourceManager.groupsLeafs, resourceManager.resourceById, groupIndex);
   }
 }
 AppointmentFilterVirtualStrategy.strategyName = 'virtual';

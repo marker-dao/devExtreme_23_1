@@ -88,6 +88,13 @@ class PopupPositionController extends _m_overlay_position_controller.OverlayPosi
       super.positionContent();
     }
   }
+  _normalizePosition(positionProp) {
+    const normalizedPosition = super._normalizePosition(positionProp);
+    if (this._props.fullScreen) {
+      normalizedPosition.of = 'window';
+    }
+    return normalizedPosition;
+  }
   _updateDragResizeContainer() {
     this._$dragResizeContainer = this._getDragResizeContainer();
   }

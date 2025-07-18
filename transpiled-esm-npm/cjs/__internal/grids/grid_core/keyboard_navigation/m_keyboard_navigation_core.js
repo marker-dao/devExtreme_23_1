@@ -14,17 +14,7 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 class KeyboardNavigationController extends _m_modules.default.ViewController {
   constructor() {
     super(...arguments);
-    this.isNeedToFocus = false;
-  }
-  _getFocusedColumnIndexOffset(columnIndex) {
-    let offset = 0;
-    const column = this._columnsController.getVisibleColumns()[columnIndex];
-    if (column !== null && column !== void 0 && column.fixed) {
-      offset = this._getFixedColumnIndexOffset(column);
-    } else if (columnIndex >= 0) {
-      offset = this._columnsController.getColumnIndexOffset();
-    }
-    return offset;
+    this.needToRestoreFocus = false;
   }
   _applyColumnIndexBoundaries(columnIndex) {
     const visibleColumnCount = this._columnsController.getVisibleColumns(null, true).length;
@@ -46,23 +36,16 @@ class KeyboardNavigationController extends _m_modules.default.ViewController {
       this.keyDownListener = _short.keyboard.on($focusedViewElement, null, e => this.keyDownHandler(e));
     }
   }
-  getDirectionByKeyName(keyName) {
-    const rtlEnabled = this.option('rtlEnabled');
-    switch (keyName) {
-      case 'leftArrow':
-        {
-          return rtlEnabled ? _const.Direction.Next : _const.Direction.Previous;
-        }
-      case 'rightArrow':
-        {
-          return rtlEnabled ? _const.Direction.Previous : _const.Direction.Next;
-          break;
-        }
-      default:
-        {
-          return _const.Direction.Next;
-        }
+  resizeCompleted() {}
+  getColumnIndexOffset(visibleIndex) {
+    let offset = 0;
+    const column = this._columnsController.getVisibleColumns()[visibleIndex];
+    if (column !== null && column !== void 0 && column.fixed) {
+      offset = this._getFixedColumnIndexOffset(column);
+    } else if (visibleIndex >= 0) {
+      offset = this._columnsController.getColumnIndexOffset();
     }
+    return offset;
   }
   getFocusedViewElement() {
     var _this$getFocusedView;
@@ -93,13 +76,15 @@ class KeyboardNavigationController extends _m_modules.default.ViewController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   focusinHandler(e) {}
   initHandlers() {
-    var _focusedView$renderCo;
+    var _focusedView$renderCo, _this$_resizeControll;
     const focusedView = this.getFocusedView();
     this.unsubscribeFromKeyDownEvent();
     focusedView === null || focusedView === void 0 || (_focusedView$renderCo = focusedView.renderCompleted) === null || _focusedView$renderCo === void 0 || _focusedView$renderCo.remove(this.renderCompletedWithContext);
+    (_this$_resizeControll = this._resizeController) === null || _this$_resizeControll === void 0 || (_this$_resizeControll = _this$_resizeControll.resizeCompleted) === null || _this$_resizeControll === void 0 || _this$_resizeControll.remove(this.resizeCompletedWithContext);
     if (this.isKeyboardEnabled()) {
-      var _focusedView$renderCo2;
+      var _focusedView$renderCo2, _this$_resizeControll2;
       focusedView === null || focusedView === void 0 || (_focusedView$renderCo2 = focusedView.renderCompleted) === null || _focusedView$renderCo2 === void 0 || _focusedView$renderCo2.add(this.renderCompletedWithContext);
+      (_this$_resizeControll2 = this._resizeController) === null || _this$_resizeControll2 === void 0 || (_this$_resizeControll2 = _this$_resizeControll2.resizeCompleted) === null || _this$_resizeControll2 === void 0 || _this$_resizeControll2.add(this.resizeCompletedWithContext);
     }
   }
   // eslint-disable-next-line class-methods-use-this
@@ -118,7 +103,7 @@ class KeyboardNavigationController extends _m_modules.default.ViewController {
     const offset = (0, _m_keyboard_navigation_utils.isFixedColumnIndexOffsetRequired)(this, column) ? visibleColumnCount - this._columnsController.getVisibleColumns().length : 0;
     return offset;
   }
-  getNewVisibleIndex(visibleIndex, direction) {
+  getNewVisibleIndex(visibleIndex, rowIndex, direction) {
     return direction === 'previous' ? visibleIndex - 1 : visibleIndex + 1;
   }
   _getCellPosition($cell, direction) {
@@ -126,9 +111,9 @@ class KeyboardNavigationController extends _m_modules.default.ViewController {
     if ((0, _m_keyboard_navigation_utils.isElementDefined)($row)) {
       const rowIndex = this._getRowIndex($row);
       let columnIndex = this.getCellIndex($cell, rowIndex);
-      columnIndex += this._getFocusedColumnIndexOffset(columnIndex);
+      columnIndex += this.getColumnIndexOffset(columnIndex);
       if (direction) {
-        columnIndex = this.getNewVisibleIndex(columnIndex, direction);
+        columnIndex = this.getNewVisibleIndex(columnIndex, rowIndex, direction);
         columnIndex = this._applyColumnIndexBoundaries(columnIndex);
       }
       return {
@@ -183,20 +168,16 @@ class KeyboardNavigationController extends _m_modules.default.ViewController {
     this.initKeyDownHandler();
     this.unsubscribeFromFocusinEvent();
     this.subscribeToFocusinEvent();
-    if (this.isNeedToFocus) {
-      const $focusElement = this._getFocusedCell();
-      this.isNeedToFocus = false;
-      // @ts-expect-error
-      _events_engine.default.trigger($focusElement, 'focus');
-    }
   }
   init() {
     this._columnsController = this.getController('columns');
+    this._resizeController = this.getController('resizing');
     this._focusedCellPosition = {};
     if (this.isKeyboardEnabled()) {
       this.createAction('onKeyDown');
     }
     this.renderCompletedWithContext = this.renderCompletedWithContext ?? this.renderCompleted.bind(this);
+    this.resizeCompletedWithContext = this.resizeCompletedWithContext ?? this.resizeCompleted.bind(this);
     this.focusinHandlerContext = this.focusinHandlerContext ?? this.focusinHandler.bind(this);
     this.initHandlers();
   }
@@ -237,6 +218,24 @@ class KeyboardNavigationController extends _m_modules.default.ViewController {
   }
   _getFocusedCell() {
     return (0, _renderer.default)(this._getCell(this._focusedCellPosition));
+  }
+  getDirectionByKeyName(keyName) {
+    const rtlEnabled = this.option('rtlEnabled');
+    switch (keyName) {
+      case 'leftArrow':
+        {
+          return rtlEnabled ? _const.Direction.Next : _const.Direction.Previous;
+        }
+      case 'rightArrow':
+        {
+          return rtlEnabled ? _const.Direction.Previous : _const.Direction.Next;
+          break;
+        }
+      default:
+        {
+          return _const.Direction.Next;
+        }
+    }
   }
 }
 exports.KeyboardNavigationController = KeyboardNavigationController;

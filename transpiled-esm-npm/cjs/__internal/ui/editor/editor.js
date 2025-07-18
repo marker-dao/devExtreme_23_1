@@ -83,8 +83,14 @@ class Editor extends _widget.default {
       isDirty: false
     });
   }
+  _shouldAttachKeyboardEvents() {
+    const {
+      readOnly
+    } = this.option();
+    return !readOnly;
+  }
   _attachKeyboardEvents() {
-    if (!this.option('readOnly')) {
+    if (this._shouldAttachKeyboardEvents()) {
       super._attachKeyboardEvents();
     }
   }

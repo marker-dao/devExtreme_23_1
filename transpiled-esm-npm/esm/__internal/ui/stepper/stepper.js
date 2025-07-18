@@ -2,11 +2,10 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../common/core/localization/message';
 import registerComponent from '../../../core/component_registrator';
 import $ from '../../../core/renderer';
-import { Deferred } from '../../../core/utils/deferred';
 import { isDefined } from '../../../core/utils/type';
 import { BindableTemplate } from '../../core/templates/m_bindable_template';
 import { getImageContainer } from '../../core/utils/m_icon';
-import CollectionWidgetAsync from '../../ui/collection/m_collection_widget.async';
+import CollectionWidgetAsync from '../../ui/collection/collection_widget.async';
 import Connector from '../../ui/stepper/connector';
 import StepperItem, { STEP_COMPLETED_CLASS, STEP_INVALID_ICON, STEP_VALID_ICON } from '../../ui/stepper/stepper_item';
 export const STEPPER_CLASS = 'dx-stepper';
@@ -157,6 +156,13 @@ class Stepper extends CollectionWidgetAsync {
   _selectedItemClass() {
     return STEP_SELECTED_CLASS;
   }
+  _isItemSelected(index) {
+    const {
+      items = [],
+      selectedItem
+    } = this.option();
+    return selectedItem === items[index];
+  }
   _itemDataKey() {
     return STEPPER_ITEM_DATA_KEY;
   }
@@ -281,10 +287,11 @@ class Stepper extends CollectionWidgetAsync {
     this._processChangeCompletedItems();
   }
   _syncSelectionOptions(byOption) {
-    super._syncSelectionOptions(byOption).done(() => {
+    const parentDeferred = super._syncSelectionOptions(byOption);
+    parentDeferred.done(() => {
       this._postProcessSyncSelection();
     });
-    return Deferred().resolve().promise();
+    return parentDeferred;
   }
   _itemOptionChanged(item, property, value, prevValue) {
     switch (property) {

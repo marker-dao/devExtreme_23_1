@@ -16,12 +16,14 @@ var _tooltip = require("../core/tooltip");
 var _loading_indicator = require("../core/loading_indicator");
 var _common = require("../../core/utils/common");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const _Number = Number;
 const _extend = _extend2.extend;
 const _format = _format_helper.default.format;
 const BaseGauge = exports.BaseGauge = _m_base_widget.default.inherit({
   _rootClassPrefix: 'dxg',
   _themeSection: 'gauge',
+  _titleBBoxCache: null,
   _createThemeManager: function () {
     return new _theme_manager.default.ThemeManager(this._getThemeManagerOptions());
   },
@@ -105,6 +107,25 @@ const BaseGauge = exports.BaseGauge = _m_base_widget.default.inherit({
     that._resizing = that._noAnimation = that._changes.count() === 2;
     that.callBase.apply(that, arguments);
   },
+  _getChangesRequireCoreUpdate: function () {
+    return ['DOMAIN', 'MOSTLY_TOTAL', 'EXPORT'];
+  },
+  _isTitleBBoxChanged: function () {
+    var _this$_titleBBoxCache, _this$_titleBBoxCache2, _this$_titleBBoxCache3;
+    const titleBBox = this._title.getLayoutOptions();
+    const hasTitleHeightChanged = titleBBox.height !== ((_this$_titleBBoxCache = this._titleBBoxCache) === null || _this$_titleBBoxCache === void 0 ? void 0 : _this$_titleBBoxCache.height);
+    const hasTitleYChanged = titleBBox.y !== ((_this$_titleBBoxCache2 = this._titleBBoxCache) === null || _this$_titleBBoxCache2 === void 0 ? void 0 : _this$_titleBBoxCache2.y);
+    const hasVerticalAlignmentChanged = titleBBox.verticalAlignment !== ((_this$_titleBBoxCache3 = this._titleBBoxCache) === null || _this$_titleBBoxCache3 === void 0 ? void 0 : _this$_titleBBoxCache3.verticalAlignment);
+    this._titleBBoxCache = null;
+    return hasTitleHeightChanged || hasTitleYChanged || hasVerticalAlignmentChanged;
+  },
+  _forceCoreUpdate: function () {
+    const isTriggeredByTitleOnly = this._changes.has('TITLE') && !this._getChangesRequireCoreUpdate().some(change => this._changes.has(change));
+    if (isTriggeredByTitleOnly) {
+      return this._isTitleBBoxChanged();
+    }
+    return true;
+  },
   _applySize: function (rect) {
     const that = this;
     that._innerRect = {
@@ -120,8 +141,10 @@ const BaseGauge = exports.BaseGauge = _m_base_widget.default.inherit({
     // The appropriate solution is to remove heavy rendering from "_applySize" - it should be done later during some other change processing.
     // It would be even better to somehow defer any inside option changes - so they all are applied after all changes are processed.
     const layoutCache = that._layout._cache;
-    that._cleanCore();
-    that._renderCore();
+    if (that._forceCoreUpdate()) {
+      that._cleanCore();
+      that._renderCore();
+    }
     that._layout._cache = that._layout._cache || layoutCache;
     return [rect[0], that._innerRect.top, rect[2], that._innerRect.bottom];
   },
@@ -256,4 +279,11 @@ const _setTooltipOptions = BaseGauge.prototype._setTooltipOptions;
 BaseGauge.prototype._setTooltipOptions = function () {
   _setTooltipOptions.apply(this, arguments);
   this._tracker && this._tracker.setTooltipState(this._tooltip.isEnabled());
+};
+const {
+  _change_TITLE
+} = BaseGauge.prototype;
+BaseGauge.prototype._change_TITLE = function () {
+  this._titleBBoxCache = _extends({}, this._title.getLayoutOptions());
+  _change_TITLE.apply(this, arguments);
 };

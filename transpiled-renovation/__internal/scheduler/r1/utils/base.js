@@ -3,15 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.splitNumber = exports.setOptionHour = exports.isVerticalGroupingApplied = exports.isTimelineView = exports.isHorizontalView = exports.isHorizontalGroupingApplied = exports.isGroupingByDate = exports.isFirstCellInMonthWithIntervalCount = exports.isDateInRange = exports.isDateAndTimeView = exports.isDataOnWeekend = exports.isAppointmentTakesAllDay = exports.hasResourceValue = exports.getWeekendsCount = exports.getViewStartByOptions = exports.getVerticalGroupCountClass = exports.getValidCellDateForLocalTimeFormat = exports.getTotalRowCountByCompleteData = exports.getTotalCellCountByCompleteData = exports.getToday = exports.getStartViewDateWithoutDST = exports.getStartViewDateTimeOffset = exports.getSkippedHoursInRange = exports.getOverflowIndicatorColor = exports.getKeyByGroup = exports.getIsGroupedAllDayPanel = exports.getHorizontalGroupCount = exports.getHeaderCellText = exports.getGroupPanelData = exports.getGroupCount = exports.getDisplayedRowCount = exports.getDisplayedCellCount = exports.getDatesWithoutTime = exports.getCellDuration = exports.getCalculatedFirstDayOfWeek = exports.getAppointmentKey = exports.extendGroupItemsForGroupingByDate = exports.calculateViewStartDate = exports.calculateIsGroupedAllDayPanel = exports.calculateDayDuration = exports.calculateCellIndex = void 0;
+exports.splitNumber = exports.setOptionHour = exports.isVerticalGroupingApplied = exports.isTimelineView = exports.isHorizontalView = exports.isHorizontalGroupingApplied = exports.isGroupingByDate = exports.isFirstCellInMonthWithIntervalCount = exports.isDateInRange = exports.isDateAndTimeView = exports.isDataOnWeekend = exports.isAppointmentTakesAllDay = exports.getWeekendsCount = exports.getViewStartByOptions = exports.getVerticalGroupCountClass = exports.getValidCellDateForLocalTimeFormat = exports.getTotalRowCountByCompleteData = exports.getTotalCellCountByCompleteData = exports.getToday = exports.getStartViewDateWithoutDST = exports.getStartViewDateTimeOffset = exports.getSkippedHoursInRange = exports.getOverflowIndicatorColor = exports.getKeyByGroup = exports.getIsGroupedAllDayPanel = exports.getHorizontalGroupCount = exports.getHeaderCellText = exports.getGroupPanelData = exports.getDisplayedRowCount = exports.getDisplayedCellCount = exports.getDatesWithoutTime = exports.getCellDuration = exports.getCalculatedFirstDayOfWeek = exports.getAppointmentKey = exports.extendGroupItemsForGroupingByDate = exports.calculateViewStartDate = exports.calculateIsGroupedAllDayPanel = exports.calculateDayDuration = exports.calculateCellIndex = void 0;
 var _date = _interopRequireDefault(require("../../../../common/core/localization/date"));
-var _common = require("../../../../core/utils/common");
 var _date2 = _interopRequireDefault(require("../../../../core/utils/date"));
 var _type = require("../../../../core/utils/type");
 var _date3 = require("../../../core/utils/date");
 var _constants = require("../../constants");
 var _m_classes = require("../../m_classes");
 var _m_utils_time_zone = _interopRequireDefault(require("../../m_utils_time_zone"));
+var _constants_view = require("../../utils/options/constants_view");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const toMs = _date2.default.dateToMilliseconds;
@@ -60,8 +60,6 @@ const getAppointmentKey = geometry => {
   return `${left}-${top}-${width}-${height}`;
 };
 exports.getAppointmentKey = getAppointmentKey;
-const hasResourceValue = (resourceValues, itemValue) => (0, _type.isDefined)(resourceValues.find(value => (0, _common.equalByValue)(value, itemValue)));
-exports.hasResourceValue = hasResourceValue;
 const getOverflowIndicatorColor = (color, colors) => !colors.length || colors.filter(item => item !== color).length === 0 ? color : undefined;
 exports.getOverflowIndicatorColor = getOverflowIndicatorColor;
 const getVerticalGroupCountClass = groups => {
@@ -128,36 +126,25 @@ const getHeaderCellText = (headerIndex, date, headerCellTextFormat, getDateForHe
 };
 exports.getHeaderCellText = getHeaderCellText;
 const isVerticalGroupingApplied = (groups, groupOrientation) => groupOrientation === _constants.VERTICAL_GROUP_ORIENTATION && !!groups.length;
+// TODO(9): Get rid of it as soon as you can. More parameters then needed
 exports.isVerticalGroupingApplied = isVerticalGroupingApplied;
-const getGroupCount = groups => {
-  let result = 0;
-  for (let i = 0, len = groups.length; i < len; i += 1) {
-    if (!i) {
-      result = groups[i].items.length;
-    } else {
-      result *= groups[i].items.length;
-    }
-  }
-  return result;
-};
-exports.getGroupCount = getGroupCount;
-const getHorizontalGroupCount = (groups, groupOrientation) => {
-  const groupCount = getGroupCount(groups) || 1;
-  const isVerticalGrouping = isVerticalGroupingApplied(groups, groupOrientation);
-  return isVerticalGrouping ? 1 : groupCount;
+const getHorizontalGroupCount = (groupLeafs, groupOrientation) => {
+  const isVerticalGrouping = isVerticalGroupingApplied(groupLeafs, groupOrientation);
+  return isVerticalGrouping ? 1 : groupLeafs.length;
 };
 exports.getHorizontalGroupCount = getHorizontalGroupCount;
-const isTimelineView = viewType => Boolean(viewType && _constants.TIMELINE_VIEWS.includes(viewType));
+const TIMELINE_VIEWS = [_constants_view.VIEWS.TIMELINE_DAY, _constants_view.VIEWS.TIMELINE_WEEK, _constants_view.VIEWS.TIMELINE_WORK_WEEK, _constants_view.VIEWS.TIMELINE_MONTH];
+const isTimelineView = viewType => Boolean(viewType && TIMELINE_VIEWS.includes(viewType));
 exports.isTimelineView = isTimelineView;
-const isDateAndTimeView = viewType => viewType !== _constants.VIEWS.TIMELINE_MONTH && viewType !== _constants.VIEWS.MONTH;
+const isDateAndTimeView = viewType => viewType !== _constants_view.VIEWS.TIMELINE_MONTH && viewType !== _constants_view.VIEWS.MONTH;
 exports.isDateAndTimeView = isDateAndTimeView;
 const isHorizontalView = viewType => {
   switch (viewType) {
-    case _constants.VIEWS.TIMELINE_DAY:
-    case _constants.VIEWS.TIMELINE_WEEK:
-    case _constants.VIEWS.TIMELINE_WORK_WEEK:
-    case _constants.VIEWS.TIMELINE_MONTH:
-    case _constants.VIEWS.MONTH:
+    case _constants_view.VIEWS.TIMELINE_DAY:
+    case _constants_view.VIEWS.TIMELINE_WEEK:
+    case _constants_view.VIEWS.TIMELINE_WORK_WEEK:
+    case _constants_view.VIEWS.TIMELINE_MONTH:
+    case _constants_view.VIEWS.MONTH:
       return true;
     default:
       return false;
@@ -220,9 +207,7 @@ const getKeyByGroup = (groupIndex, isVerticalGrouping) => {
 exports.getKeyByGroup = getKeyByGroup;
 const getToday = (indicatorTime, timeZoneCalculator) => {
   const todayDate = indicatorTime ?? new Date();
-  return (timeZoneCalculator === null || timeZoneCalculator === void 0 ? void 0 : timeZoneCalculator.createDate(todayDate, {
-    path: 'toGrid'
-  })) || todayDate;
+  return (timeZoneCalculator === null || timeZoneCalculator === void 0 ? void 0 : timeZoneCalculator.createDate(todayDate, 'toGrid')) || todayDate;
 };
 exports.getToday = getToday;
 const getCalculatedFirstDayOfWeek = firstDayOfWeekOption => (0, _type.isDefined)(firstDayOfWeekOption) ? firstDayOfWeekOption : _date.default.firstDayOfWeekIndex();
@@ -292,16 +277,18 @@ const extendGroupItemsForGroupingByDate = (groupRenderItems, columnCountPerGroup
   }))];
 }), []);
 exports.extendGroupItemsForGroupingByDate = extendGroupItemsForGroupingByDate;
-const getGroupPanelData = (groups, columnCountPerGroup, groupByDate, baseColSpan) => {
+const stringifyId = id => (0, _type.isObject)(id) ? JSON.stringify(id) : String(id);
+const getGroupPanelData = (groupResources, columnCountPerGroup, groupByDate, baseColSpan) => {
   let repeatCount = 1;
-  let groupPanelItems = groups.map(group => {
+  let groupPanelItems = groupResources.map(group => {
     const result = [];
     const {
-      name: resourceName,
+      resourceName,
+      resourceIndex,
       items,
       data
     } = group;
-    for (let iterator = 0; iterator < repeatCount; iterator += 1) {
+    for (let i = 0; i < repeatCount; i += 1) {
       result.push(...items.map((_ref2, index) => {
         let {
           id,
@@ -312,7 +299,7 @@ const getGroupPanelData = (groups, columnCountPerGroup, groupByDate, baseColSpan
           id,
           text,
           color,
-          key: `${iterator}_${resourceName}_${id}`,
+          key: `${i}_${resourceIndex}_${stringifyId(id)}`,
           resourceName,
           data: data === null || data === void 0 ? void 0 : data[index]
         };
@@ -320,7 +307,7 @@ const getGroupPanelData = (groups, columnCountPerGroup, groupByDate, baseColSpan
     }
     repeatCount *= items.length;
     return result;
-  });
+  }).filter(group => group.length);
   if (groupByDate) {
     groupPanelItems = extendGroupItemsForGroupingByDate(groupPanelItems, columnCountPerGroup);
   }

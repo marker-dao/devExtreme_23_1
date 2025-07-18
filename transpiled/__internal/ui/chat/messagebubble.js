@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.MESSAGE_DATA_KEY = exports.CHAT_MESSAGEBUBBLE_ICON_PROHIBITION_CLASS = exports.CHAT_MESSAGEBUBBLE_DELETED_CLASS = exports.CHAT_MESSAGEBUBBLE_CONTENT_CLASS = exports.CHAT_MESSAGEBUBBLE_CLASS = void 0;
+exports.default = exports.MESSAGE_DATA_KEY = exports.CHAT_MESSAGEBUBBLE_IMAGE_CLASS = exports.CHAT_MESSAGEBUBBLE_ICON_PROHIBITION_CLASS = exports.CHAT_MESSAGEBUBBLE_HAS_IMAGE_CLASS = exports.CHAT_MESSAGEBUBBLE_DELETED_CLASS = exports.CHAT_MESSAGEBUBBLE_CONTENT_CLASS = exports.CHAT_MESSAGEBUBBLE_CLASS = void 0;
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
 var _element = require("../../../core/element");
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
@@ -15,13 +15,15 @@ const CHAT_MESSAGEBUBBLE_CLASS = exports.CHAT_MESSAGEBUBBLE_CLASS = 'dx-chat-mes
 const CHAT_MESSAGEBUBBLE_DELETED_CLASS = exports.CHAT_MESSAGEBUBBLE_DELETED_CLASS = 'dx-chat-messagebubble-deleted';
 const CHAT_MESSAGEBUBBLE_CONTENT_CLASS = exports.CHAT_MESSAGEBUBBLE_CONTENT_CLASS = 'dx-chat-messagebubble-content';
 const CHAT_MESSAGEBUBBLE_ICON_PROHIBITION_CLASS = exports.CHAT_MESSAGEBUBBLE_ICON_PROHIBITION_CLASS = `${_m_icon.ICON_CLASS}-cursorprohibition`;
+const CHAT_MESSAGEBUBBLE_HAS_IMAGE_CLASS = exports.CHAT_MESSAGEBUBBLE_HAS_IMAGE_CLASS = 'dx-has-image';
+const CHAT_MESSAGEBUBBLE_IMAGE_CLASS = exports.CHAT_MESSAGEBUBBLE_IMAGE_CLASS = 'dx-chat-messagebubble-image';
 const MESSAGE_DATA_KEY = exports.MESSAGE_DATA_KEY = 'dxMessageData';
 class MessageBubble extends _widget.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
-      text: '',
       isDeleted: false,
       isEdited: false,
+      text: '',
       template: null
     });
   }
@@ -34,15 +36,23 @@ class MessageBubble extends _widget.default {
   }
   _updateContent() {
     const {
-      text = '',
-      isDeleted = false,
-      template
+      template,
+      type,
+      text,
+      src,
+      alt,
+      isDeleted = false
     } = this.option();
     this.$element().removeClass(CHAT_MESSAGEBUBBLE_DELETED_CLASS);
     const $bubbleContainer = (0, _renderer.default)(this.element()).find(`.${CHAT_MESSAGEBUBBLE_CONTENT_CLASS}`);
     $bubbleContainer.empty();
     if (template) {
-      template(text, (0, _element.getPublicElement)($bubbleContainer));
+      template({
+        type,
+        text,
+        src,
+        alt
+      }, (0, _element.getPublicElement)($bubbleContainer));
       return;
     }
     if (isDeleted) {
@@ -52,7 +62,15 @@ class MessageBubble extends _widget.default {
       $bubbleContainer.append(icon).append(deletedMessage);
       return;
     }
-    $bubbleContainer.text(text);
+    switch (type) {
+      case 'image':
+        this.$element().addClass(CHAT_MESSAGEBUBBLE_HAS_IMAGE_CLASS);
+        (0, _renderer.default)('<img>').attr('src', src ?? '').attr('alt', alt ?? _message.default.format('dxChat-defaultImageAlt')).addClass(CHAT_MESSAGEBUBBLE_IMAGE_CLASS).appendTo($bubbleContainer);
+        break;
+      case 'text':
+      default:
+        $bubbleContainer.text(text ?? '');
+    }
   }
   _updateMessageData(property, value) {
     const messageData = this.$element().data(MESSAGE_DATA_KEY) || {};
@@ -66,6 +84,8 @@ class MessageBubble extends _widget.default {
     } = args;
     switch (name) {
       case 'text':
+      case 'src':
+      case 'alt':
       case 'isDeleted':
         this._updateMessageData(name, value);
         this._updateContent();

@@ -5,17 +5,30 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.headersKeyboardNavigationModule = exports.HeadersKeyboardNavigationController = void 0;
 var _index = require("../../../../common/core/events/utils/index");
-var _message = _interopRequireDefault(require("../../../../common/core/localization/message"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
+var _position = require("../../../../core/utils/position");
 var _type = require("../../../../core/utils/type");
+var _get_element_location_internal = require("../../../ui/scroll_view/utils/get_element_location_internal");
 var _const = require("../sticky_columns/const");
+var _dom = require("../sticky_columns/dom");
 var _utils = require("../sticky_columns/utils");
 var _const2 = require("./const");
-var _m_keyboard_navigation_core = require("./m_keyboard_navigation_core");
+var _m_column_focus_dispatcher = require("./m_column_focus_dispatcher");
+var _m_column_keyboard_navigation_core = require("./m_column_keyboard_navigation_core");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable max-classes-per-file */
 
-class HeadersKeyboardNavigationController extends _m_keyboard_navigation_core.KeyboardNavigationController {
+class HeadersKeyboardNavigationController extends _m_column_keyboard_navigation_core.ColumnKeyboardNavigationController {
+  constructor() {
+    super(...arguments);
+    this.isOutsideVisibleArea = ($element, $container) => {
+      const elementRect = (0, _position.getBoundingRect)($element.get(0));
+      const elementRectLeft = Math.round(elementRect.left);
+      const elementRectRight = Math.round(elementRect.right);
+      const containerBoundingRect = this.getContainerBoundingRect($container);
+      return elementRectLeft < containerBoundingRect.left || elementRectRight > containerBoundingRect.right;
+    };
+  }
   leftRightKeysHandler(e) {
     const {
       originalEvent
@@ -25,11 +38,25 @@ class HeadersKeyboardNavigationController extends _m_keyboard_navigation_core.Ke
       const direction = this.getDirectionByKeyName(e.keyName);
       const rowIndex = this._getRowIndex($cell.parent());
       const column = this._getColumnByCellElement($cell, rowIndex);
-      if (this.isHeaderValidForReordering(column, direction, rowIndex)) {
-        this.moveHeader(column, rowIndex, direction);
+      if (this.canReorderColumn(column, direction, rowIndex)) {
+        this.moveColumn(column, direction, rowIndex);
       }
       originalEvent === null || originalEvent === void 0 || originalEvent.preventDefault();
     }
+  }
+  getColumnVisibleIndexCorrection(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  visibleColumnIndex,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  rowIndex,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  direction) {
+    return 0;
+  }
+  getNewVisibleIndex(visibleIndex, rowIndex, direction) {
+    const newVisibleIndex = super.getNewVisibleIndex(visibleIndex, rowIndex, direction);
+    const indexCorrection = this.getColumnVisibleIndexCorrection(visibleIndex, rowIndex, direction);
+    return newVisibleIndex + indexCorrection;
   }
   getDraggableColumns(column, rowIndex) {
     var _columnsController$ge;
@@ -44,35 +71,25 @@ class HeadersKeyboardNavigationController extends _m_keyboard_navigation_core.Ke
     return visibleColumns.filter(column => !column.fixed || column.fixedPosition === _const.StickyPosition.Sticky);
   }
   keyDownHandler(e) {
-    const isHandled = this.processOnKeyDown(e);
+    let isHandled = super.keyDownHandler(e);
     if (isHandled) {
-      return;
+      return true;
     }
     // eslint-disable-next-line default-case
     switch (e.keyName) {
       case 'tab':
         {
           this.tabKeyHandler(e);
+          isHandled = true;
           break;
         }
       case 'leftArrow':
       case 'rightArrow':
         this.leftRightKeysHandler(e);
+        isHandled = true;
         break;
     }
-  }
-  getNewVisibleIndex(visibleIndex, direction) {
-    /*
-      We need to add 2 to the index instead of 1,
-      because that's how normalization of these indexes works.
-           For example, we have columns with the following indexes:
-      0 1 2 3
-           We drag 1 to the right. Its index becomes 3.
-      0 2 3(1) 3(3)
-           After normalization of the indexes:
-      0 1(2) 2(1) 3(3)
-    */
-    return direction === 'previous' ? visibleIndex - 1 : visibleIndex + 2;
+    return isHandled;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   tabKeyHandler(e) {}
@@ -81,7 +98,12 @@ class HeadersKeyboardNavigationController extends _m_keyboard_navigation_core.Ke
   }
   _getCell(cellPosition) {
     var _this$_columnHeadersV;
-    return (_this$_columnHeadersV = this._columnHeadersView) === null || _this$_columnHeadersV === void 0 ? void 0 : _this$_columnHeadersV.getCell(cellPosition);
+    const columnIndexOffset = this.getColumnIndexOffset(cellPosition.columnIndex);
+    const columnIndex = cellPosition.columnIndex >= 0 ? cellPosition.columnIndex - columnIndexOffset : -1;
+    return (_this$_columnHeadersV = this._columnHeadersView) === null || _this$_columnHeadersV === void 0 ? void 0 : _this$_columnHeadersV.getCell({
+      rowIndex: cellPosition.rowIndex,
+      columnIndex
+    });
   }
   getFocusedView() {
     return this.getView('columnHeadersView');
@@ -92,12 +114,48 @@ class HeadersKeyboardNavigationController extends _m_keyboard_navigation_core.Ke
   getFocusinSelector() {
     return '.dx-header-row > td';
   }
+  getFocusableColumns(rowIndex, bandColumnId) {
+    const visibleColumns = this._columnsController.getVisibleColumns(rowIndex);
+    const isColumnFocusable = column => !(0, _type.isDefined)(column.type) || this._columnsController.isCustomCommandColumn(column);
+    const result = visibleColumns.filter(isColumnFocusable);
+    if ((0, _type.isDefined)(bandColumnId)) {
+      return result.filter(column => column.ownerBand === bandColumnId);
+    }
+    return result;
+  }
+  getContainerBoundingRect($container) {
+    const containerRect = (0, _position.getBoundingRect)($container.get(0));
+    return {
+      left: containerRect.left,
+      right: containerRect.right
+    };
+  }
+  getScrollPadding($container) {
+    const containerRect = (0, _position.getBoundingRect)($container.get(0));
+    const containerBoundingRect = this.getContainerBoundingRect($container);
+    return {
+      left: containerBoundingRect.left - containerRect.left,
+      right: containerRect.right - containerBoundingRect.right
+    };
+  }
+  scrollToColumn($cell) {
+    var _this$getView;
+    const scrollable = (_this$getView = this.getView('rowsView')) === null || _this$getView === void 0 ? void 0 : _this$getView.getScrollable();
+    if (!scrollable) {
+      return;
+    }
+    const scrollPadding = this.getScrollPadding((0, _renderer.default)(scrollable.container()));
+    const scrollPosition = (0, _get_element_location_internal.getElementLocationInternal)($cell[0], 'horizontal', (0, _renderer.default)(this._columnHeadersView.getContent())[0], scrollable.scrollOffset(), scrollPadding, this.addWidgetPrefix('table'));
+    scrollable.scrollTo({
+      x: scrollPosition
+    });
+  }
   init() {
     super.init();
     this._columnHeadersView = this.getView('columnHeadersView');
   }
-  isHeaderValidForReordering(column, direction, rowIndex) {
-    const allowReordering = this._columnHeadersView.isReorderingEnabled(column);
+  canReorderColumn(column, direction, rowIndex) {
+    const allowReordering = this._columnHeadersView.isColumnReorderingEnabled(column);
     if (!allowReordering) {
       return false;
     }
@@ -106,74 +164,49 @@ class HeadersKeyboardNavigationController extends _m_keyboard_navigation_core.Ke
     const isLastColumn = column.index === draggableColumns[draggableColumns.length - 1].index;
     return direction === _const2.Direction.Next ? !isLastColumn : !isFirstColumn;
   }
-  moveHeader(column, rowIndex, direction) {
-    const visibleIndex = this._columnsController.getVisibleIndex(column.index, rowIndex);
-    const newVisibleIndex = this.getNewVisibleIndex(visibleIndex, direction);
-    const newFocusedColumnIndex = direction === _const2.Direction.Next ? newVisibleIndex - 1 : newVisibleIndex;
-    this.isNeedToFocus = true;
-    this.setFocusedCellPosition(rowIndex, newFocusedColumnIndex);
-    this._columnsController.moveColumn({
-      columnIndex: visibleIndex,
-      rowIndex
-    }, {
-      columnIndex: newVisibleIndex,
-      rowIndex
-    }, 'headers', 'headers');
+  getFirstFocusableVisibleIndex() {
+    const focusableColumns = this.getFocusableColumns();
+    if (focusableColumns !== null && focusableColumns !== void 0 && focusableColumns.length) {
+      return this._columnsController.getVisibleIndex(focusableColumns[0].index);
+    }
+    return -1;
+  }
+  restoreFocus() {
+    const $focusedCell = this._getFocusedCell();
+    const isFixedCell = _dom.GridCoreStickyColumnsDom.isFixedCell($focusedCell, this.addWidgetPrefix.bind(this));
+    if (isFixedCell) {
+      super.restoreFocus();
+      return;
+    }
+    const focusedCellIsOutsideVisibleArea = $focusedCell.length && this.isOutsideVisibleArea($focusedCell, (0, _renderer.default)(this._columnHeadersView.getContent()));
+    if (focusedCellIsOutsideVisibleArea) {
+      this.scrollToColumn($focusedCell);
+    } else {
+      super.restoreFocus();
+    }
+  }
+  needToFocus() {
+    return this.needToRestoreFocus;
   }
 }
 exports.HeadersKeyboardNavigationController = HeadersKeyboardNavigationController;
 const columnHeadersView = Base => class ColumnHeadersViewKeyboardNavigationExtender extends Base {
-  constructor() {
-    super(...arguments);
-    this.isNeedToFocusHeader = false;
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  contextMenuHiddenHandler(e) {
-    const headersKeyboardNavigationController = this.getController('headersKeyboardNavigation');
-    if (this.isNeedToFocusHeader) {
-      headersKeyboardNavigationController === null || headersKeyboardNavigationController === void 0 || headersKeyboardNavigationController.restoreFocus();
-      this.isNeedToFocusHeader = false;
+  handleScroll(e) {
+    var _this$_headersKeyboar, _this$_columnsControl;
+    super.handleScroll(e);
+    if (!((_this$_headersKeyboar = this._headersKeyboardNavigation) !== null && _this$_headersKeyboar !== void 0 && _this$_headersKeyboar.needToFocus())) {
+      return;
     }
-  }
-  getContextMenuItems(options) {
-    let items = super.getContextMenuItems(options);
-    const {
-      column,
-      rowIndex
-    } = options;
-    const allowColumnReordering = this.isReorderingEnabled(options === null || options === void 0 ? void 0 : options.column);
-    if (allowColumnReordering) {
-      const headersKeyboardNavigationController = this.getController('headersKeyboardNavigation');
-      if (headersKeyboardNavigationController) {
-        const rtlEnabled = this.option('rtlEnabled');
-        const onItemClick = e => {
-          var _e$itemData;
-          this.isNeedToFocusHeader = true;
-          headersKeyboardNavigationController.moveHeader(column, rowIndex, (_e$itemData = e.itemData) === null || _e$itemData === void 0 ? void 0 : _e$itemData.value);
-        };
-        items = items ?? [];
-        items.push({
-          text: _message.default.format('dxDataGrid-moveColumnToTheLeft'),
-          value: _const2.Direction.Previous,
-          beginGroup: true,
-          disabled: !headersKeyboardNavigationController.isHeaderValidForReordering(column, _const2.Direction.Previous, rowIndex),
-          icon: rtlEnabled ? _const2.CONTEXT_MENU_MOVE_NEXT_ICON : _const2.CONTEXT_MENU_MOVE_PREVIOUS_ICON,
-          onItemClick
-        }, {
-          text: _message.default.format('dxDataGrid-moveColumnToTheRight'),
-          value: _const2.Direction.Next,
-          disabled: !headersKeyboardNavigationController.isHeaderValidForReordering(column, _const2.Direction.Next, rowIndex),
-          icon: rtlEnabled ? _const2.CONTEXT_MENU_MOVE_PREVIOUS_ICON : _const2.CONTEXT_MENU_MOVE_NEXT_ICON,
-          onItemClick
-        });
-      }
+    const isNeedToRenderVirtualColumns = (_this$_columnsControl = this._columnsController) === null || _this$_columnsControl === void 0 ? void 0 : _this$_columnsControl.isNeedToRenderVirtualColumns(e.target.scrollLeft);
+    if (!isNeedToRenderVirtualColumns) {
+      this._headersKeyboardNavigation.restoreFocus();
     }
-    return items;
   }
 };
 const headersKeyboardNavigationModule = exports.headersKeyboardNavigationModule = {
   controllers: {
-    headersKeyboardNavigation: HeadersKeyboardNavigationController
+    headersKeyboardNavigation: HeadersKeyboardNavigationController,
+    columnFocusDispatcher: _m_column_focus_dispatcher.ColumnFocusDispatcher
   },
   extenders: {
     views: {

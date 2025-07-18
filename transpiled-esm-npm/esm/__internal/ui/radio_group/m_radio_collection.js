@@ -2,7 +2,7 @@ import $ from '../../../core/renderer';
 import { deferRender } from '../../../core/utils/common';
 import { extend } from '../../../core/utils/extend';
 import DataExpressionMixin from '../../../ui/editor/ui.data_expression';
-import CollectionWidget from '../../ui/collection/m_collection_widget.edit';
+import CollectionWidget from '../../ui/collection/collection_widget.edit';
 const RADIO_BUTTON_CHECKED_CLASS = 'dx-radiobutton-checked';
 const RADIO_BUTTON_ICON_CHECKED_CLASS = 'dx-radiobutton-icon-checked';
 const RADIO_BUTTON_ICON_CLASS = 'dx-radiobutton-icon';

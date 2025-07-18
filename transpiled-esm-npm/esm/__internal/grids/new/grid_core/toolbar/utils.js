@@ -1,6 +1,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { extend } from '../../../../../core/utils/extend';
 import { isDefined, isString } from '../../../../../core/utils/type';
+import { DEFAULT_TOOLBAR_ITEMS } from './const';
 export function isVisible(visibleConfig, items) {
   if (visibleConfig === undefined) {
     return items.length > 0;
@@ -28,12 +29,19 @@ function normalizeToolbarItem(item, defaultButtonsMap, defaultItemNames) {
   }
   return extend(true, {}, defaultProps, button);
 }
-export function normalizeToolbarItems(defaultItems, userItems, defaultItemNames) {
+export function getSortedToolbarItems(defaultItemsCollection) {
+  return Object.values(defaultItemsCollection).sort((a, b) => {
+    const aIndex = DEFAULT_TOOLBAR_ITEMS.indexOf(a.name);
+    const bIndex = DEFAULT_TOOLBAR_ITEMS.indexOf(b.name);
+    return aIndex - bIndex;
+  });
+}
+export function normalizeToolbarItems(sortedDefaultItems, userItems, defaultItemNames) {
   if (!isDefined(userItems)) {
-    return defaultItems;
+    return sortedDefaultItems;
   }
   const defaultButtonsMap = {};
-  defaultItems.forEach(button => {
+  sortedDefaultItems.forEach(button => {
     defaultButtonsMap[button.name] = button;
   });
   return userItems.map(item => normalizeToolbarItem(item, defaultButtonsMap, defaultItemNames));

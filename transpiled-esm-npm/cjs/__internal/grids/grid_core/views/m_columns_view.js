@@ -238,11 +238,6 @@ class ColumnsView extends (0, _m_column_state_mixin.ColumnStateMixin)(_m_modules
     const cell = _dom_adapter.default.createElement('td');
     cell.style.textAlign = alignment;
     const $cell = (0, _renderer.default)(cell);
-    if (options.rowType === 'data' && column.headerId && !column.type) {
-      if (this.component.option('showColumnHeaders')) {
-        this.setAria('describedby', column.headerId, $cell);
-      }
-    }
     if (column.cssClass) {
       $cell.addClass(column.cssClass);
     }
@@ -881,6 +876,14 @@ class ColumnsView extends (0, _m_column_state_mixin.ColumnStateMixin)(_m_modules
       $scrollContainer.remove();
     }
   }
+  handleScroll(e) {
+    const scrollLeft = (0, _renderer.default)(e.target).scrollLeft();
+    if (scrollLeft !== this._scrollLeft) {
+      this.scrollChanged.fire({
+        left: scrollLeft
+      }, this.name);
+    }
+  }
   /**
    * @extended: column_fixing
    */
@@ -890,14 +893,7 @@ class ColumnsView extends (0, _m_column_state_mixin.ColumnStateMixin)(_m_modules
     if (useNative === false || useNative === 'auto' && !_m_support.default.nativeScrolling) {
       $scrollContainer.addClass(this.addWidgetPrefix(SCROLLABLE_SIMULATED_CLASS));
     }
-    _events_engine.default.on($scrollContainer, 'scroll', () => {
-      const scrollLeft = $scrollContainer.scrollLeft();
-      if (scrollLeft !== this._scrollLeft) {
-        this.scrollChanged.fire({
-          left: scrollLeft
-        }, this.name);
-      }
-    });
+    _events_engine.default.on($scrollContainer, 'scroll', this.handleScroll.bind(this));
     $scrollContainer.addClass(this.addWidgetPrefix(CONTENT_CLASS)).addClass(this.addWidgetPrefix(SCROLL_CONTAINER_CLASS)).append($table).appendTo(this.element());
     this.setAria('role', 'presentation', $scrollContainer);
     return $scrollContainer;

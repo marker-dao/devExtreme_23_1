@@ -1,0 +1,13 @@
+/**
+* DevExtreme (esm/__internal/grids/new/grid_core/content_view/options.js)
+* Version: 25.2.0
+* Build date: Fri Jul 18 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import messageLocalization from '../../../../../localization/message';
+export const defaultOptions = {
+  errorRowEnabled: true,
+  noDataText: messageLocalization.format('dxDataGrid-noDataText')
+};

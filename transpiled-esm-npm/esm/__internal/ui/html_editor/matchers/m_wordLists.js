@@ -1,3 +1,4 @@
+import { isString } from '../../../../core/utils/type';
 function getListType(matches) {
   const prefix = matches[1];
   return prefix.match(/\S+\./) ? 'ordered' : 'bullet';
@@ -20,6 +21,9 @@ const getMatcher = quill => {
   return (node, delta) => {
     const ops = delta.ops.slice();
     const insertOperation = ops[0];
+    if (!isString(insertOperation.insert)) {
+      return delta;
+    }
     insertOperation.insert = insertOperation.insert.replace(/^\s+/, '');
     const listDecoratorMatches = insertOperation.insert.match(/^(\S+)\s+/);
     const indent = listDecoratorMatches && getIndent(node, msStyleAttributeName);

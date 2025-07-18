@@ -1,3 +1,4 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 // NOTE: This code moved from old grid_core/header_filter/m_header_filter
 // with minimal possible modifications
 /* eslint-disable
@@ -19,7 +20,7 @@ import { normalizeDataSourceOptions as oldNormalizeDataSourceOptions } from '../
 import { convertDataFromUTCToLocal, getFormatOptions, isUTCFormat } from '../../../../../grids/grid_core/header_filter/m_header_filter';
 import { updateHeaderFilterItemSelectionState } from '../../../../../grids/grid_core/header_filter/m_header_filter_core';
 import gridCoreUtils from '../../../../../grids/grid_core/m_utils';
-const getHeaderItemText = (displayValue, column, currentLevel,
+export const getHeaderItemText = (displayValue, column, currentLevel,
 // NOTE: Only text used from header filter options
 headerFilterOptions) => {
   let text = gridCoreUtils.formatValue(displayValue, getFormatOptions(displayValue, column, currentLevel));
@@ -99,8 +100,11 @@ const _processGroupItems = (groupItems, currentLevel, path, options) => {
     path.pop();
   }
 };
-export const getDataSourceOptions = (storeLoadAdapter, column, headerFilterOptions, filter) => {
+export const getDataSourceOptions = (storeLoadAdapter, popupOptions, headerFilterOptions, filter) => {
   var _column$headerFilter;
+  const {
+    column
+  } = popupOptions;
   if (!storeLoadAdapter) {
     return undefined;
   }
@@ -114,33 +118,33 @@ export const getDataSourceOptions = (storeLoadAdapter, column, headerFilterOptio
   if (isDefined(headerFilterDataSource) && !isFunction(headerFilterDataSource)) {
     // @ts-expect-error
     options.dataSource = oldNormalizeDataSourceOptions(headerFilterDataSource);
-    return options.dataSource;
+  } else {
+    const cutoffLevel = Array.isArray(group) ? group.length - 1 : 0;
+    options.dataSource = {
+      filter,
+      group,
+      useDefaultSearch: true,
+      load: loadOptions => {
+        // @ts-expect-error Deferred ctor.
+        const d = new Deferred();
+        // NOTE: this marked as deprecated in original code
+        loadOptions.dataField = column.dataField || column.name;
+        storeLoadAdapter.load(loadOptions).done(data => {
+          const convertUTCDates = remoteGrouping && isUTCFormat(column.serializationFormat) && cutoffLevel > 3;
+          if (convertUTCDates) {
+            data = convertDataFromUTCToLocal(data, column);
+          }
+          _processGroupItems(data, null, null, {
+            level: cutoffLevel,
+            column,
+            headerFilterOptions
+          });
+          d.resolve(data);
+        }).fail(d.reject);
+        return d;
+      }
+    };
   }
-  const cutoffLevel = Array.isArray(group) ? group.length - 1 : 0;
-  options.dataSource = {
-    filter,
-    group,
-    useDefaultSearch: true,
-    load: loadOptions => {
-      // @ts-expect-error Deferred ctor.
-      const d = new Deferred();
-      // NOTE: this marked as deprecated in original code
-      loadOptions.dataField = column.dataField || column.name;
-      storeLoadAdapter.load(loadOptions).done(data => {
-        const convertUTCDates = remoteGrouping && isUTCFormat(column.serializationFormat) && cutoffLevel > 3;
-        if (convertUTCDates) {
-          data = convertDataFromUTCToLocal(data, column);
-        }
-        _processGroupItems(data, null, null, {
-          level: cutoffLevel,
-          column,
-          headerFilterOptions
-        });
-        d.resolve(data);
-      }).fail(d.reject);
-      return d;
-    }
-  };
   if (isFunction(headerFilterDataSource)) {
     headerFilterDataSource.call(column, options);
   }
@@ -148,12 +152,15 @@ export const getDataSourceOptions = (storeLoadAdapter, column, headerFilterOptio
   options.dataSource.postProcess = data => {
     let items = data;
     items = (origPostProcess === null || origPostProcess === void 0 ? void 0 : origPostProcess.call(this, items)) || items;
-    _updateSelectedState(items, column);
+    _updateSelectedState(items, _extends({}, column, {
+      filterType: popupOptions.filterType,
+      filterValues: popupOptions.filterValues
+    }));
     return items;
   };
   return options.dataSource;
 };
-export const getFilterType = column => {
+export const getHeaderFilterListType = column => {
   const groupInterval = filteringUtils.getGroupInterval(column);
   return groupInterval && groupInterval.length > 1 ? 'tree' : 'list';
 };

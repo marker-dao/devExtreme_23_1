@@ -4,7 +4,6 @@ import { name as wheelEventName } from '../../../common/core/events/core/wheel';
 import { addNamespace, createEvent, isCommandKeyPressed, normalizeKeyName } from '../../../common/core/events/utils/index';
 import messageLocalization from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
-import { noop } from '../../../core/utils/common';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { isEmpty } from '../../../core/utils/string';
@@ -92,8 +91,7 @@ class TextEditorMask extends TextEditorBase {
     super._initMarkup();
   }
   _attachMouseWheelEventHandlers() {
-    const hasMouseWheelHandler = this._onMouseWheel !== noop;
-    if (!hasMouseWheelHandler) {
+    if (!this._hasMouseWheelHandler()) {
       return;
     }
     const input = this._input();
@@ -115,6 +113,9 @@ class TextEditorMask extends TextEditorBase {
         event: e
       });
     });
+  }
+  _hasMouseWheelHandler() {
+    return false;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _onMouseWheel(e) {}

@@ -282,20 +282,35 @@ export class HeaderFilterView extends Modules.View {
         return $element.html(data.text);
       }
     };
-    function onOptionChanged(e) {
-      // T835492, T833015
-      if (e.fullName === 'searchValue' && needShowSelectAllCheckbox && that.option('headerFilter.hideSelectAllOnSearch') !== false) {
-        if (options.type === 'tree') {
-          e.component.option('showCheckBoxesMode', e.value ? 'normal' : 'selectAll');
-        } else {
-          e.component.option('selectionMode', e.value ? 'multiple' : 'all');
-        }
+    const shouldChangeSelectAllCheckBoxVisibility = () => needShowSelectAllCheckbox && that.option('headerFilter.hideSelectAllOnSearch') !== false;
+    const onTreeViewOptionChanged = event => {
+      switch (true) {
+        case event.fullName === 'searchValue' && shouldChangeSelectAllCheckBoxVisibility():
+          event.component.option('showCheckBoxesMode', event.value ? 'normal' : 'selectAll');
+          break;
+        // TODO TreeView: remove this WA after Navigation squad re-render fix
+        // NOTE: WA for TreeView re-render after changing the "showCheckBoxesMode" option
+        // After this option change the whole TreeView re-render and search input loose the focus
+        case event.fullName === 'showCheckBoxesMode':
+          // NOTE: the TreeView render is async
+          // So we should focus the searchEditor only after render will be completed
+          Promise.resolve().then(() => {
+            event.component._searchEditor.focus();
+          }).catch(() => {});
+          break;
+        default:
+          break;
       }
-    }
+    };
+    const onListOptionChanged = event => {
+      if (event.fullName === 'searchValue' && shouldChangeSelectAllCheckBoxVisibility()) {
+        event.component.option('selectionMode', event.value ? 'multiple' : 'all');
+      }
+    };
     if (options.type === 'tree') {
       that._listComponent = that._createComponent($('<div>').appendTo($content), TreeView, extend(widgetOptions, {
         showCheckBoxesMode: needShowSelectAllCheckbox ? 'selectAll' : 'normal',
-        onOptionChanged,
+        onOptionChanged: onTreeViewOptionChanged,
         keyExpr: 'id'
       }));
     } else {
@@ -304,7 +319,7 @@ export class HeaderFilterView extends Modules.View {
         pageLoadMode: 'scrollBottom',
         showSelectionControls: true,
         selectionMode: needShowSelectAllCheckbox ? 'all' : 'multiple',
-        onOptionChanged,
+        onOptionChanged: onListOptionChanged,
         onSelectionChanged(event) {
           const {
             component: listComponent

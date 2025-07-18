@@ -98,7 +98,7 @@ class RecurrenceProcessor {
   }
   _getLocalMachineOffset(rruleDate) {
     const machineTimezoneOffset = _m_utils_time_zone.default.getClientTimezoneOffset(rruleDate);
-    const machineTimezoneName = _date.default.getMachineTimezoneName();
+    const machineTimezoneName = _m_utils_time_zone.default.getMachineTimezoneName();
     const result = [machineTimezoneOffset];
     // NOTE: Workaround for the RRule bug with timezones greater than GMT+12 (e.g. Apia Standard Time GMT+13)
     // GitHub issue: https://github.com/jakubroztocil/rrule/issues/555

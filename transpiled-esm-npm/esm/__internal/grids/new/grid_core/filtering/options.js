@@ -1,1 +1,3 @@
-export { defaultOptions } from './filter_panel/options';
+export const defaultOptions = {
+  filterValue: null
+};

@@ -13,8 +13,9 @@ import { isDefined, isEmptyObject, isObject, isString } from '../../../../core/u
 import Toolbar from '../../../../ui/toolbar';
 import errors from '../../../../ui/widget/ui.errors';
 import { capitalize } from '../../../core/utils/capitalize';
+import { DX_MENU_ITEM_CLASS } from '../../../ui/menu/m_menu';
 import Quill from 'devextreme-quill';
-import { buildCommandsMap, defaultCommandNames, getDefaultOptionsByCommand } from '../utils/ai';
+import { buildCommandsMap, defaultCommandNames, getDefaultOptionsByCommand, hasInvalidCustomCommand } from '../utils/ai';
 import { getTableFormats, TABLE_OPERATIONS } from '../utils/m_table_helper';
 import { applyFormat, getDefaultClickHandler, getFormatHandlers, ICON_MAP } from '../utils/m_toolbar_helper';
 import BaseModule from './m_base';
@@ -174,22 +175,6 @@ if (Quill) {
       this.editorInstance.$element().prepend($container);
       return $container;
     }
-    _detectRenamedOptions(item) {
-      const optionsInfo = [{
-        newName: 'name',
-        oldName: 'formatName'
-      }, {
-        newName: 'acceptedValues',
-        oldName: 'formatValues'
-      }];
-      if (isObject(item)) {
-        each(optionsInfo, (index, optionName) => {
-          if (Object.prototype.hasOwnProperty.call(item, optionName.oldName)) {
-            errors.log('W1016', optionName.oldName, optionName.newName);
-          }
-        });
-      }
-    }
     _subscribeFormatHotKeys() {
       this.quill.keyboard.addBinding({
         which: KEY_CODES.b,
@@ -225,7 +210,6 @@ if (Quill) {
       const resultItems = [];
       each(this.options.items, (index, item) => {
         let newItem;
-        this._detectRenamedOptions(item);
         if (isObject(item)) {
           newItem = this._handleObjectItem(item);
         } else if (item === TOOLBAR_AI_ITEM_NAME) {
@@ -340,6 +324,7 @@ if (Quill) {
                 };
                 return result;
               }),
+              disabled: !prompt,
               prompt
             };
             customCommandIndex += 1;
@@ -351,6 +336,17 @@ if (Quill) {
       });
       return items;
     }
+    _validateAIToolbarItemConfig(commandsMap) {
+      const {
+        aiIntegration
+      } = this.editorInstance.option();
+      if (!aiIntegration) {
+        errors.log('W1026');
+      }
+      if (hasInvalidCustomCommand(commandsMap)) {
+        errors.log('W1027');
+      }
+    }
     _prepareAIMenuItemConfig(item) {
       var _dataSource$0$items;
       const {
@@ -359,19 +355,29 @@ if (Quill) {
       } = item;
       const commandsMap = buildCommandsMap(commands);
       const menuItems = this._buildMenuItems(commands);
+      this._validateAIToolbarItemConfig(commandsMap);
       const dataSource = [{
         id: 'root',
         icon: 'sparkle',
         items: menuItems
       }];
+      const {
+        aiIntegration
+      } = this.editorInstance.option();
+      const isMenuDisabled = !((_dataSource$0$items = dataSource[0].items) !== null && _dataSource$0$items !== void 0 && _dataSource$0$items.length) || !aiIntegration;
       const options = {
         dataSource,
+        disabled: isMenuDisabled,
+        onContentReady: e => {
+          const $item = $(e.element).find(`.${DX_MENU_ITEM_CLASS}`).first();
+          $item.attr('aria-label', localizationMessage.format('dxHtmlEditor-aiToolbarItemAriaLabel'));
+        },
         onItemClick: e => {
           var _itemData$items;
           const {
             itemData
           } = e;
-          if ((_itemData$items = itemData.items) !== null && _itemData$items !== void 0 && _itemData$items.length) {
+          if (!itemData || (_itemData$items = itemData.items) !== null && _itemData$items !== void 0 && _itemData$items.length) {
             return;
           }
           const aiDialogOptions = {
@@ -381,8 +387,7 @@ if (Quill) {
             prompt: itemData.prompt
           };
           this._formatHandlers[name](aiDialogOptions);
-        },
-        disabled: !((_dataSource$0$items = dataSource[0].items) !== null && _dataSource$0$items !== void 0 && _dataSource$0$items.length)
+        }
       };
       return extend(true, {
         widget: 'dxMenu',

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "PublicMethods", {
 Object.defineProperty(exports, "SortingController", {
   enumerable: true,
   get: function () {
-    return _sorting_controller.SortingController;
+    return _controller.SortingController;
   }
 });
 Object.defineProperty(exports, "defaultOptions", {
@@ -21,6 +21,6 @@ Object.defineProperty(exports, "defaultOptions", {
     return _options.defaultOptions;
   }
 });
+var _controller = require("./controller");
 var _options = require("./options");
 var _public_methods = require("./public_methods");
-var _sorting_controller = require("./sorting_controller");

@@ -5,20 +5,19 @@ var _translator = require("../../../common/core/animation/translator");
 var _click = require("../../../common/core/events/click");
 var _emitter = require("../../../common/core/events/core/emitter.feedback");
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
-var _index = require("../../../common/core/events/utils/index");
+var _utils = require("../../../common/core/events/utils");
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _common = require("../../../core/utils/common");
 var _size = require("../../../core/utils/size");
 var _themes = require("../../../ui/themes");
-var _m_action_sheet = _interopRequireDefault(require("../../ui/m_action_sheet"));
+var _action_sheet = _interopRequireDefault(require("../../ui/action_sheet"));
 var _m_listEditDecorator = _interopRequireDefault(require("./m_list.edit.decorator.switchable"));
-var _m_listEdit = _interopRequireDefault(require("./m_list.edit.decorator_menu_helper"));
-var _m_listEdit2 = require("./m_list.edit.decorator_registry");
+var _m_listEdit = require("./m_list.edit.decorator_registry");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const LIST_EDIT_DECORATOR = 'dxListEditDecorator';
-const CLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, LIST_EDIT_DECORATOR);
-const ACTIVE_EVENT_NAME = (0, _index.addNamespace)(_emitter.active, LIST_EDIT_DECORATOR);
+const CLICK_EVENT_NAME = (0, _utils.addNamespace)(_click.name, LIST_EDIT_DECORATOR);
+const ACTIVE_EVENT_NAME = (0, _utils.addNamespace)(_emitter.active, LIST_EDIT_DECORATOR);
 const SLIDE_MENU_CLASS = 'dx-list-slide-menu';
 const SLIDE_MENU_WRAPPER_CLASS = 'dx-list-slide-menu-wrapper';
 const SLIDE_MENU_CONTENT_CLASS = 'dx-list-slide-menu-content';
@@ -44,12 +43,12 @@ class SwitchableEditDecoratorSlide extends _m_listEditDecorator.default {
     this._renderDeleteButton();
   }
   _renderMenu() {
-    // @ts-expect-error ts-error
-    if (!this._menuEnabled()) {
+    const {
+      menuItems
+    } = this._list.option();
+    if (!menuItems.length) {
       return;
     }
-    // @ts-expect-error ts-error
-    const menuItems = this._menuItems();
     if (menuItems.length === 1) {
       const menuItem = menuItems[0];
       this._renderMenuButton(menuItem.text, e => {
@@ -58,7 +57,7 @@ class SwitchableEditDecoratorSlide extends _m_listEditDecorator.default {
       });
     } else {
       const $menu = (0, _renderer.default)('<div>').addClass(SLIDE_MENU_CLASS);
-      this._menu = this._list._createComponent($menu, _m_action_sheet.default, {
+      this._menu = this._list._createComponent($menu, _action_sheet.default, {
         showTitle: false,
         items: menuItems,
         onItemClick: function (args) {
@@ -81,8 +80,10 @@ class SwitchableEditDecoratorSlide extends _m_listEditDecorator.default {
     return $menuButton;
   }
   _renderDeleteButton() {
-    // @ts-expect-error ts-error
-    if (!this._deleteEnabled()) {
+    const {
+      allowItemDeleting
+    } = this._list.option();
+    if (!allowItemDeleting) {
       return;
     }
     const $deleteButton = (0, _renderer.default)('<div>').addClass(SLIDE_MENU_BUTTON_CLASS).addClass(SLIDE_MENU_BUTTON_DELETE_CLASS)
@@ -95,8 +96,9 @@ class SwitchableEditDecoratorSlide extends _m_listEditDecorator.default {
     this._$buttons.append($deleteButton);
   }
   _fireAction(menuItem) {
-    // @ts-expect-error ts-error
-    this._fireMenuAction((0, _renderer.default)(this._cachedNode), menuItem.action);
+    this._list._itemEventHandlerByHandler((0, _renderer.default)(this._cachedNode), menuItem.action, {}, {
+      excludeValidators: ['disabled', 'readOnly']
+    });
     this._cancelDeleteReadyItem();
   }
   modifyElement(config) {
@@ -249,6 +251,4 @@ class SwitchableEditDecoratorSlide extends _m_listEditDecorator.default {
     super.dispose.apply(this, arguments);
   }
 }
-(0, _m_listEdit2.register)('menu', 'slide',
-// @ts-expect-error ts-error
-SwitchableEditDecoratorSlide.include(_m_listEdit.default));
+(0, _m_listEdit.register)('menu', 'slide', SwitchableEditDecoratorSlide);

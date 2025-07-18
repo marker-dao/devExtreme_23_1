@@ -10,24 +10,21 @@ import { isDefined, isPlainObject } from '../../../core/utils/type';
 import { current as currentTheme, isFluent, isMaterialBased } from '../../../ui/themes';
 import supportUtils from '../../core/utils/m_support';
 import MultiView from '../../ui/m_multi_view';
-import Tabs from '../../ui/tabs/tabs';
+import Tabs, { TABS_ITEM_TEXT_CLASS, TABS_ITEM_TEXT_SPAN_CLASS, TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS } from '../../ui/tabs/tabs';
 // eslint-disable-next-line import/no-named-default
 import { default as TabPanelItem } from './item';
 export const TABPANEL_CLASS = 'dx-tabpanel';
 const TABPANEL_TABS_CLASS = 'dx-tabpanel-tabs';
-const TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
-const TABPANEL_CONTAINER_CLASS = 'dx-tabpanel-container';
-const TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
-const DISABLED_FOCUSED_TAB_CLASS = 'dx-disabled-focused-tab';
-const TABS_ITEM_TEXT_SPAN_CLASS = 'dx-tab-text-span';
-const TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS = 'dx-tab-text-span-pseudo';
-const TABPANEL_TABS_POSITION_CLASS = {
+export const TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
+export const TABPANEL_CONTAINER_CLASS = 'dx-tabpanel-container';
+export const DISABLED_FOCUSED_TAB_CLASS = 'dx-disabled-focused-tab';
+export const TABPANEL_TABS_POSITION_CLASS = {
   top: 'dx-tabpanel-tabs-position-top',
   right: 'dx-tabpanel-tabs-position-right',
   bottom: 'dx-tabpanel-tabs-position-bottom',
   left: 'dx-tabpanel-tabs-position-left'
 };
-const TABS_POSITION = {
+export const TABS_POSITION = {
   top: 'top',
   right: 'right',
   bottom: 'bottom',
@@ -39,7 +36,7 @@ const TABS_INDICATOR_POSITION_BY_TABS_POSITION = {
   bottom: 'top',
   left: 'right'
 };
-const TABS_ORIENTATION = {
+export const TABS_ORIENTATION = {
   horizontal: 'horizontal',
   vertical: 'vertical'
 };
@@ -185,6 +182,18 @@ class TabPanel extends MultiView {
     this._tabs = this._createComponent($tabs, Tabs, this._tabConfig());
     this._$container = $('<div>').addClass(TABPANEL_CONTAINER_CLASS).appendTo($element);
     this._$container.append(this._$wrapper);
+    const {
+      focusStateEnabled,
+      selectedIndex
+    } = this.option();
+    if (focusStateEnabled && isDefined(selectedIndex)) {
+      const selectedItem = this._tabs.itemElements().get(selectedIndex);
+      if (selectedItem) {
+        this._tabs.option({
+          focusedElement: selectedItem
+        });
+      }
+    }
   }
   _refreshActiveDescendant() {
     if (!this._tabs) {
@@ -238,6 +247,7 @@ class TabPanel extends MultiView {
       onSelectionChanging: e => {
         const newTabsSelectedItemData = e.addedItems[0];
         const newTabsSelectedIndex = this._getIndexByItemData(newTabsSelectedItemData);
+        // @ts-expect-error ts-error
         const selectingResult = this.selectItem(newTabsSelectedIndex);
         // @ts-expect-error ts-error
         const promiseState = selectingResult.state();

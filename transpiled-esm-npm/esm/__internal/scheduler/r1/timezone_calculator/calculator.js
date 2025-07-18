@@ -1,7 +1,6 @@
 import dateUtils from '../../../../core/utils/date';
 import { isDefined } from '../../../../core/utils/type';
 import { dateUtilsTs } from '../../../core/utils/date';
-import { PathTimeZoneConversion } from './const';
 const MS_IN_MINUTE = 60000;
 const MS_IN_HOUR = 60 * MS_IN_MINUTE;
 const toMs = dateUtils.dateToMilliseconds;
@@ -9,16 +8,16 @@ export class TimeZoneCalculator {
   constructor(options) {
     this.options = options;
   }
-  createDate(sourceDate, info) {
+  createDate(sourceDate, path, appointmentTimeZone) {
     const date = new Date(sourceDate);
-    switch (info.path) {
-      case PathTimeZoneConversion.fromSourceToAppointment:
-        return this.getConvertedDate(date, info.appointmentTimeZone, false);
-      case PathTimeZoneConversion.fromAppointmentToSource:
-        return this.getConvertedDate(date, info.appointmentTimeZone, true);
-      case PathTimeZoneConversion.fromSourceToGrid:
+    switch (path) {
+      case 'toAppointment':
+        return this.getConvertedDate(date, appointmentTimeZone, false);
+      case 'fromAppointment':
+        return this.getConvertedDate(date, appointmentTimeZone, true);
+      case 'toGrid':
         return this.getConvertedDate(date, undefined, false);
-      case PathTimeZoneConversion.fromGridToSource:
+      case 'fromGrid':
         return this.getConvertedDate(date, undefined, true);
       default:
         throw new Error('not specified pathTimeZoneConversion');

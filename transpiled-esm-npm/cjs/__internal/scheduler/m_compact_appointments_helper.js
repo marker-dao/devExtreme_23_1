@@ -11,9 +11,9 @@ var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _function_template = require("../../core/templates/function_template");
 var _button = _interopRequireDefault(require("../../ui/button"));
 var _constants = require("./constants");
-var _m_appointment_adapter = require("./m_appointment_adapter");
 var _m_data_structures = require("./m_data_structures");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const APPOINTMENT_COLLECTOR_CLASS = 'dx-scheduler-appointment-collector';
 const COMPACT_APPOINTMENT_COLLECTOR_CLASS = `${APPOINTMENT_COLLECTOR_CLASS}-compact`;
 const APPOINTMENT_COLLECTOR_CONTENT_CLASS = `${APPOINTMENT_COLLECTOR_CLASS}-content`;
@@ -46,15 +46,15 @@ class CompactAppointmentsHelper {
   _createTooltipInfos(items) {
     return items.data.map((appointment, index) => {
       var _items$settings;
-      const targetedAdapter = (0, _m_appointment_adapter.createAppointmentAdapter)(appointment, this.instance._dataAccessors, this.instance.timeZoneCalculator).clone();
+      const targeted = _extends({}, appointment);
       if (((_items$settings = items.settings) === null || _items$settings === void 0 ? void 0 : _items$settings.length) > 0) {
         const {
           info
         } = items.settings[index];
-        targetedAdapter.startDate = info.sourceAppointment.startDate;
-        targetedAdapter.endDate = info.sourceAppointment.endDate;
+        this.instance._dataAccessors.set('startDate', targeted, info.sourceAppointment.startDate);
+        this.instance._dataAccessors.set('endDate', targeted, info.sourceAppointment.endDate);
       }
-      return new _m_data_structures.AppointmentTooltipInfo(appointment, targetedAdapter.source(), items.colors[index], items.settings[index]);
+      return new _m_data_structures.AppointmentTooltipInfo(appointment, targeted, items.colors[index], items.settings[index]);
     });
   }
   _onButtonClick(e, options) {
@@ -170,9 +170,10 @@ class CompactAppointmentsHelper {
     return date ? new Date(date) : null;
   }
   _getDateText(appointment) {
-    const adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(appointment, this.instance._dataAccessors, this.instance.timeZoneCalculator);
-    const startDateText = adapter.startDate ? this._localizeDate(adapter.startDate) : '';
-    const endDateText = adapter.endDate ? this._localizeDate(adapter.endDate) : '';
+    const startDate = this.instance._dataAccessors.get('startDate', appointment);
+    const endDate = this.instance._dataAccessors.get('endDate', appointment);
+    const startDateText = startDate ? this._localizeDate(startDate) : '';
+    const endDateText = endDate ? this._localizeDate(endDate) : '';
     const dateText = startDateText === endDateText ? `${startDateText}` : `${startDateText} - ${endDateText}`;
     return `${dateText}`;
   }

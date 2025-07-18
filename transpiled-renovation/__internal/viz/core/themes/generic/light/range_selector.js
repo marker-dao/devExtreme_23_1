@@ -13,7 +13,6 @@ var _default = exports.default = {
       color: _contants.BLACK,
       opacity: 0.1,
       showCustomBoundaryTicks: true,
-      aggregateByCategory: true,
       label: {
         overlappingBehavior: 'hide',
         alignment: _contants.CENTER,

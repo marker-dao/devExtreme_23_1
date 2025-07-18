@@ -1,3 +1,4 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../core/renderer';
 import Widget from '../widget/ui.widget';
 import { getGanttViewCore } from './gantt_importer';
@@ -26,6 +27,7 @@ export class GanttView extends Widget {
     this._onAdjustControl = this._createActionByOption('onAdjustControl');
   }
   _initMarkup() {
+    var _this$option;
     const GanttView = getGanttViewCore();
     this._ganttViewCore = new GanttView(this.$element().get(0), this, {
       showResources: this.option('showResources'),
@@ -38,7 +40,7 @@ export class GanttView extends Widget {
       editing: this._parseEditingSettings(this.option('editing')),
       validation: this.option('validation'),
       stripLines: {
-        stripLines: this.option('stripLines')
+        stripLines: (_this$option = this.option('stripLines')) === null || _this$option === void 0 ? void 0 : _this$option.map(item => _extends({}, item))
       },
       areHorizontalBordersEnabled: this.option('showRowLines'),
       areAlternateRowsEnabled: false,
@@ -247,7 +249,7 @@ export class GanttView extends Widget {
         break;
       case 'stripLines':
         this._ganttViewCore.setStripLines({
-          stripLines: args.value
+          stripLines: this.option('stripLines')
         });
         break;
       case 'taskTooltipContentTemplate':

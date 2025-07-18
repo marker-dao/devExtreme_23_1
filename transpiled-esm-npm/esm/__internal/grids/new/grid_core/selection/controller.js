@@ -4,6 +4,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../../../localization/message';
 import { computed, effect, signal } from '@preact/signals-core';
 import { DataController } from '../../../../grids/new/grid_core/data_controller/index';
+import { OptionsValidationController } from '../../../../grids/new/grid_core/options_validation/index';
 import { ShowCheckBoxesMode } from '../../../../grids/new/grid_core/selection/const';
 import Selection from '../../../../ui/selection/m_selection';
 import { ItemsController } from '../items_controller/items_controller';
@@ -11,12 +12,22 @@ import { OptionsController } from '../options_controller/options_controller';
 import { ToolbarController } from '../toolbar/controller';
 import { SelectionMode } from './const';
 export class SelectionController {
-  constructor(options, dataController, itemsController, toolbarController) {
+  constructor(options, dataController, itemsController, toolbarController, optionsValidationController) {
     this.options = options;
     this.dataController = dataController;
     this.itemsController = itemsController;
     this.toolbarController = toolbarController;
+    this.optionsValidationController = optionsValidationController;
     this.selectedCardKeys = this.options.twoWay('selectedCardKeys');
+    // Note: moved option validation logic to computed to make it execute before other effects
+    this.normalizedSelectedCardKeys = computed(() => {
+      const selectedCardKeys = this.selectedCardKeys.value;
+      const isSelectionEnabled = this.selectionOption.value.mode !== SelectionMode.None;
+      if (isSelectionEnabled && Array.isArray(selectedCardKeys) && selectedCardKeys.length) {
+        this.optionsValidationController.validateKeyExpr();
+      }
+      return this.selectedCardKeys.value;
+    });
     this.selectionOption = this.options.oneWay('selection');
     this._isCheckBoxesRendered = signal(false);
     this.onSelectionChanging = this.options.action('onSelectionChanging');
@@ -85,7 +96,7 @@ export class SelectionController {
       return new Selection(selectionConfig);
     });
     effect(() => {
-      const selectedCardKeys = this.selectedCardKeys.value;
+      const selectedCardKeys = this.normalizedSelectedCardKeys.value;
       const selectionOption = this.selectionOption.value;
       if (selectionOption.mode !== SelectionMode.None) {
         this.itemsController.setSelectionState(selectedCardKeys);
@@ -106,7 +117,9 @@ export class SelectionController {
     effect(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       this.dataController.items.value;
-      this.updateSelectionToolbarButtons(this.selectedCardKeys.value);
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this.dataController.isLoaded.value;
+      this.updateSelectionToolbarButtons(this.normalizedSelectedCardKeys.value);
     });
   }
   getSelectionConfig(dataSource, selectionOption) {
@@ -165,6 +178,7 @@ export class SelectionController {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectionChanged(e) {
     if (e.addedItemKeys.length || e.removedItemKeys.length) {
+      this.optionsValidationController.validateKeyExpr();
       const onSelectionChanged = this.onSelectionChanged.peek();
       const eventArgs = this.getSelectionEventArgs(e);
       this.selectedCardKeys.value = [...e.selectedItemKeys];
@@ -249,7 +263,7 @@ export class SelectionController {
     return this.deselectCards(keys);
   }
   isCardSelected(key) {
-    const selectedCardKeys = this.selectedCardKeys.peek();
+    const selectedCardKeys = this.normalizedSelectedCardKeys.peek();
     return selectedCardKeys.includes(key);
   }
   selectAll() {
@@ -275,7 +289,7 @@ export class SelectionController {
     return selectedCardKey.map(key => this.itemsController.getCardByKey(key)).filter(item => !!item).map(item => item.data);
   }
   getSelectedCardKeys() {
-    return this.selectedCardKeys.peek();
+    return this.normalizedSelectedCardKeys.peek();
   }
   toggleSelectionCheckBoxes() {
     const isCheckBoxesRendered = this._isCheckBoxesRendered.peek();
@@ -305,4 +319,4 @@ export class SelectionController {
     }
   }
 }
-SelectionController.dependencies = [OptionsController, DataController, ItemsController, ToolbarController];
+SelectionController.dependencies = [OptionsController, DataController, ItemsController, ToolbarController, OptionsValidationController];

@@ -1,6 +1,5 @@
 import dateLocalization from '../../../common/core/localization/date';
 import messageLocalization from '../../../common/core/localization/message';
-import { isObject } from '../../../core/utils/type';
 const KEYS = {
   dateRange: 'dxScheduler-dateRange',
   label: 'dxScheduler-ariaLabel',
@@ -31,8 +30,8 @@ const localizeName = (viewName, viewType) => {
   return '';
 };
 export const getA11yStatusText = (view, startDate, endDate, appointmentCount, indicatorTime) => {
-  const viewType = isObject(view) ? view.type : view;
-  const viewName = isObject(view) ? view.name : undefined;
+  const viewType = view === null || view === void 0 ? void 0 : view.type;
+  const viewName = view === null || view === void 0 ? void 0 : view.name;
   const viewTypeLabel = localizeName(viewName, viewType);
   const isMonth = viewType === 'month' || viewType === 'timelineMonth';
   const startDateText = isMonth ? localizeMonth(startDate) : localizeDate(startDate);

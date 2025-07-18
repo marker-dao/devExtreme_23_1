@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_responsive_box = _interopRequireDefault(require("../__internal/ui/m_responsive_box"));
+var _responsive_box = _interopRequireDefault(require("../__internal/ui/responsive_box"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_responsive_box.default;
+var _default = exports.default = _responsive_box.default;
 /**
  * @name dxResponsiveBoxOptions.activeStateEnabled
  * @hidden

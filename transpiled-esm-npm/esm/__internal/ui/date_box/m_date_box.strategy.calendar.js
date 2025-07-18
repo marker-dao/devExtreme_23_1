@@ -16,7 +16,7 @@ class CalendarStrategy extends DateBoxStrategy {
   }
   getDefaultOptions() {
     return _extends({}, super.getDefaultOptions(), {
-      todayButtonText: messageLocalization.format('dxCalendar-todayButtonText')
+      todayButtonText: this.dateBox.option('todayButtonText') ?? messageLocalization.format('dxCalendar-todayButtonText')
     });
   }
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
@@ -80,18 +80,24 @@ class CalendarStrategy extends DateBoxStrategy {
     return this._widget;
   }
   _getWidgetOptions() {
-    const disabledDates = this.dateBox.option('disabledDates');
+    const {
+      disabledDates,
+      min,
+      max,
+      todayButtonText
+    } = this.dateBox.option();
     return extend(this.dateBox.option('calendarOptions'), {
       value: this.dateBoxValue() || null,
       selectionMode: 'single',
       dateSerializationFormat: null,
-      min: this.dateBox.dateOption('min'),
-      max: this.dateBox.dateOption('max'),
+      min,
+      max,
       onValueChanged: this._valueChangedHandler.bind(this),
       onCellClick: this._cellClickHandler.bind(this),
       disabledDates: isFunction(disabledDates) ? this._injectComponent(disabledDates.bind(this.dateBox)) : disabledDates,
       onContouredChanged: this._refreshActiveDescendant.bind(this),
-      skipFocusCheck: true
+      skipFocusCheck: true,
+      todayButtonText
     });
   }
   _injectComponent(func) {

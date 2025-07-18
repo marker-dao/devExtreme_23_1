@@ -3,41 +3,52 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.addDataFieldToComputedColumns = addDataFieldToComputedColumns;
+exports.columnOptionUpdate = void 0;
 exports.getColumnByIndexOrName = getColumnByIndexOrName;
 exports.getColumnFormat = void 0;
 exports.getColumnIndexByName = getColumnIndexByName;
 exports.getValueDataType = exports.getColumnOptionsFromDataItem = void 0;
 exports.getVisibleIndexes = getVisibleIndexes;
+exports.normalizeColumn = normalizeColumn;
 exports.normalizeColumns = normalizeColumns;
+exports.normalizeColumnsVisibleIndexes = normalizeColumnsVisibleIndexes;
 exports.normalizeStringColumn = normalizeStringColumn;
 exports.normalizeVisibleIndexes = normalizeVisibleIndexes;
 exports.preNormalizeColumns = preNormalizeColumns;
 var _data = require("../../../../../core/utils/data");
 var _inflector = require("../../../../../core/utils/inflector");
 var _type = require("../../../../../core/utils/type");
+var _index = require("../../../../grids/new/grid_core/utils/tree/index");
 var _options = require("./options");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 function normalizeColumn(column, templateNormalizationFunc, columnFromDataOptions) {
   const dataType = column.dataType ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.dataType) ?? _options.defaultColumnProperties.dataType;
   const columnDataTypeDefaultOptions = _options.defaultColumnPropertiesByDataType[dataType];
-  const columnFormat = column.format ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.format);
+  const columnFormat = column.format ?? (columnDataTypeDefaultOptions === null || columnDataTypeDefaultOptions === void 0 ? void 0 : columnDataTypeDefaultOptions.format) ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.format);
   const caption = (0, _inflector.captionize)(column.name);
   const colWithDefaults = _extends({}, _options.defaultColumnProperties, columnDataTypeDefaultOptions, {
     caption
   }, column);
-  return _extends({}, colWithDefaults, {
+  const normalizedColumn = _extends({}, colWithDefaults, {
     dataType
   }, !!columnFormat && {
     format: columnFormat
   }, {
     calculateDisplayValue: (0, _type.isString)(colWithDefaults.calculateDisplayValue) ? (0, _data.compileGetter)(colWithDefaults.calculateDisplayValue) : colWithDefaults.calculateDisplayValue,
-    headerItemTemplate: templateNormalizationFunc(colWithDefaults.headerItemTemplate),
-    fieldTemplate: templateNormalizationFunc(colWithDefaults.fieldTemplate),
-    fieldCaptionTemplate: templateNormalizationFunc(colWithDefaults.fieldCaptionTemplate),
-    fieldValueTemplate: templateNormalizationFunc(colWithDefaults.fieldValueTemplate),
+    headerItemTemplate: templateNormalizationFunc === null || templateNormalizationFunc === void 0 ? void 0 : templateNormalizationFunc(colWithDefaults.headerItemTemplate),
+    fieldTemplate: templateNormalizationFunc === null || templateNormalizationFunc === void 0 ? void 0 : templateNormalizationFunc(colWithDefaults.fieldTemplate),
+    fieldCaptionTemplate: templateNormalizationFunc === null || templateNormalizationFunc === void 0 ? void 0 : templateNormalizationFunc(colWithDefaults.fieldCaptionTemplate),
+    fieldValueTemplate: templateNormalizationFunc === null || templateNormalizationFunc === void 0 ? void 0 : templateNormalizationFunc(colWithDefaults.fieldValueTemplate),
     // @ts-expect-error for compatibility
-    calculateCellValue: colWithDefaults.calculateFieldValue
+    calculateCellValue: colWithDefaults.calculateFieldValue,
+    allowFiltering: colWithDefaults.allowFiltering ?? !!colWithDefaults.dataField,
+    allowHeaderFiltering: colWithDefaults.allowHeaderFiltering ?? colWithDefaults.allowFiltering ?? !!colWithDefaults.dataField,
+    allowSearch: colWithDefaults.allowSearch ?? colWithDefaults.allowFiltering ?? !!colWithDefaults.dataField,
+    allowSorting: colWithDefaults.allowSorting ?? !!colWithDefaults.dataField
   });
+  normalizedColumn.selector ?? (normalizedColumn.selector = data => normalizedColumn.calculateFieldValue(data));
+  return normalizedColumn;
 }
 function getVisibleIndexes(indexes) {
   const newIndexes = [...indexes];
@@ -73,6 +84,14 @@ function normalizeVisibleIndexes(indexes, forceIndex) {
     returnIndexes[index] = visibleIndex;
   });
   return returnIndexes;
+}
+function normalizeColumnsVisibleIndexes(columns, forceIndex) {
+  const result = [...columns];
+  const visibleIndexes = normalizeVisibleIndexes(columns.map(c => c.visibleIndex), forceIndex);
+  visibleIndexes.forEach((visibleIndex, i) => {
+    result[i].visibleIndex = visibleIndex;
+  });
+  return result;
 }
 function normalizeColumns(columns, templateNormalizationFunc, columnsFromData) {
   return columns.map(col => {
@@ -152,3 +171,25 @@ const getColumnOptionsFromDataItem = dataItem => {
   };
 };
 exports.getColumnOptionsFromDataItem = getColumnOptionsFromDataItem;
+const columnOptionUpdate = (settings, columnIdx, updatePath, value) => {
+  const newSettings = [...settings];
+  const updatePathParts = (0, _data.getPathParts)(updatePath);
+  const columnTreeNode = (0, _index.getTreeNodeByPath)(newSettings[columnIdx], updatePathParts);
+  if (columnTreeNode === value) {
+    return settings;
+  }
+  newSettings[columnIdx] = (0, _index.setTreeNodeByPath)(settings[columnIdx], value, updatePathParts);
+  return normalizeColumnsVisibleIndexes(newSettings, columnIdx);
+};
+exports.columnOptionUpdate = columnOptionUpdate;
+function addDataFieldToComputedColumns(columns) {
+  return columns.map(column => {
+    if (column.dataField) {
+      return column;
+    }
+    // NOTE: same logic in datagrid
+    return _extends({}, column, {
+      dataField: column.name
+    });
+  });
+}

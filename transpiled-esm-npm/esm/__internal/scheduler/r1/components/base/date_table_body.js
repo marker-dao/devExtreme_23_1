@@ -56,7 +56,7 @@ export class DateTableBody extends BaseInfernoComponent {
             let {
               key: cellKey,
               endDate,
-              firstDayOfMonth,
+              isFirstDayMonthHighlighting,
               groupIndex: cellGroupIndex,
               groups,
               index: cellIndex,
@@ -85,7 +85,7 @@ export class DateTableBody extends BaseInfernoComponent {
                 text,
                 today,
                 otherMonth,
-                firstDayOfMonth,
+                isFirstDayMonthHighlighting,
                 isSelected,
                 isFocused
               }

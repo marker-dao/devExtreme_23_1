@@ -14,7 +14,6 @@ var _size = require("../../../../core/utils/size");
 var _type = require("../../../../core/utils/type");
 var _button = _interopRequireDefault(require("../../../../ui/button"));
 var _ui = _interopRequireDefault(require("../../../../ui/popup/ui.popup"));
-var _themes = require("../../../../ui/themes");
 var _tree_view = _interopRequireDefault(require("../../../../ui/tree_view"));
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_columns_view = require("../views/m_columns_view");
@@ -88,11 +87,12 @@ class ColumnChooserController extends _m_modules.default.ViewController {
     }
   }
   getPosition() {
+    var _this$_rowsView;
     const position = this.option('columnChooser.position');
     return (0, _type.isDefined)(position) ? position : {
       my: 'right bottom',
       at: 'right bottom',
-      of: this._rowsView && this._rowsView.element(),
+      of: (_this$_rowsView = this._rowsView) === null || _this$_rowsView === void 0 ? void 0 : _this$_rowsView.element(),
       collision: 'fit',
       offset: '-2 -2',
       boundaryOffset: '2 2'
@@ -125,13 +125,10 @@ class ColumnChooserView extends _m_columns_view.ColumnsView {
     const $element = that.element().addClass(columnChooserClass);
     const columnChooserOptions = that.option('columnChooser');
     const popupPosition = this._columnChooserController.getPosition();
-    const themeName = (0, _themes.current)();
-    const isGenericTheme = (0, _themes.isGeneric)(themeName);
-    const isMaterial = (0, _themes.isMaterial)(themeName);
     const dxPopupOptions = {
       visible: false,
       shading: false,
-      showCloseButton: false,
+      showCloseButton: true,
       dragEnabled: true,
       resizeEnabled: true,
       wrapperAttr: {
@@ -140,7 +137,7 @@ class ColumnChooserView extends _m_columns_view.ColumnsView {
       toolbarItems: [{
         text: columnChooserOptions.title,
         toolbar: 'top',
-        location: isGenericTheme || isMaterial ? 'before' : 'center'
+        location: 'before'
       }],
       position: popupPosition,
       width: columnChooserOptions.width,
@@ -154,16 +151,6 @@ class ColumnChooserView extends _m_columns_view.ColumnsView {
       container: columnChooserOptions.container,
       _loopFocus: true
     };
-    if (isGenericTheme || isMaterial) {
-      (0, _extend.extend)(dxPopupOptions, {
-        showCloseButton: true
-      });
-    } else {
-      // @ts-expect-error
-      dxPopupOptions.toolbarItems[dxPopupOptions.toolbarItems.length] = {
-        shortcut: 'cancel'
-      };
-    }
     if (!(0, _type.isDefined)(this._popupContainer)) {
       that._popupContainer = that._createComponent($element, _ui.default, dxPopupOptions);
       that._popupContainer.on('optionChanged', args => {
@@ -349,11 +336,12 @@ class ColumnChooserView extends _m_columns_view.ColumnsView {
     }
   }
   getColumnElements() {
+    var _this$_popupContainer;
     const result = [];
     const isSelectMode = this.isSelectMode();
     const chooserColumns = this._columnsController.getChooserColumns(isSelectMode);
-    const $content = this._popupContainer && this._popupContainer.$content();
-    const $nodes = $content && $content.find('.dx-treeview-node');
+    const $content = (_this$_popupContainer = this._popupContainer) === null || _this$_popupContainer === void 0 ? void 0 : _this$_popupContainer.$content();
+    const $nodes = $content === null || $content === void 0 ? void 0 : $content.find('.dx-treeview-node');
     if ($nodes) {
       chooserColumns.forEach(column => {
         const $node = $nodes.filter(`[data-item-id = '${column.index}']`);
@@ -379,9 +367,10 @@ class ColumnChooserView extends _m_columns_view.ColumnsView {
     return isDragMode && this.isColumnChooserVisible() && column.allowHiding;
   }
   getBoundingRect() {
+    var _that$_popupContainer;
     const that = this;
-    const container = that._popupContainer && that._popupContainer.$overlayContent();
-    if (container && container.is(':visible')) {
+    const container = (_that$_popupContainer = that._popupContainer) === null || _that$_popupContainer === void 0 ? void 0 : _that$_popupContainer.$overlayContent();
+    if (container !== null && container !== void 0 && container.is(':visible')) {
       const offset = container.offset();
       return {
         left: offset.left,
@@ -409,7 +398,7 @@ class ColumnChooserView extends _m_columns_view.ColumnsView {
   }
   isColumnChooserVisible() {
     const popupContainer = this._popupContainer;
-    return popupContainer && popupContainer.option('visible');
+    return popupContainer === null || popupContainer === void 0 ? void 0 : popupContainer.option('visible');
   }
   isSelectMode() {
     return this.option('columnChooser.mode') === 'select';

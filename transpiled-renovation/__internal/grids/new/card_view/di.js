@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.register = register;
+var BaseContentViewModule = _interopRequireWildcard(require("../grid_core/content_view/index"));
 var _controller = require("../grid_core/context_menu/controller");
 var _di = require("../grid_core/di");
 var ContentViewModule = _interopRequireWildcard(require("./content_view/index"));
@@ -16,9 +17,12 @@ function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; 
 function register(diContext) {
   (0, _di.register)(diContext);
   diContext.register(ContentViewModule.View);
+  // TODO: fix after refactoring View Composition
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  diContext.addAlias(BaseContentViewModule.View, ContentViewModule.View);
   diContext.register(_controller3.HeaderPanelController);
   diContext.register(_view2.HeaderPanelView);
   diContext.register(_view.ContextMenuView);
   diContext.register(_controller2.ContextMenuController);
-  diContext.register(_controller.BaseContextMenuController, _controller2.ContextMenuController);
+  diContext.addAlias(_controller.BaseContextMenuController, _controller2.ContextMenuController);
 }

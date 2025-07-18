@@ -6,7 +6,8 @@ import { createComponentVNode, normalizeProps } from "inferno";
 /* eslint-disable max-classes-per-file */
 import { effect } from '@preact/signals-core';
 import { infernoRenderer } from '../../../../core/m_inferno_renderer';
-import { Component } from 'inferno';
+import { BaseInfernoComponent } from '../../../../core/r1/runtime/inferno/base_component';
+import { hasWindow } from '../../../../core/utils/m_window';
 export class View {
   constructor() {
     this.firstRender = true;
@@ -28,21 +29,24 @@ export class View {
   }
   _asInferno() {
     const view = this;
-    return class InfernoView extends Component {
+    return class InfernoView extends BaseInfernoComponent {
       constructor() {
         super();
         const props = view.getProps();
-        this.subscription = effect(() => {
+        this.unsubscribe = effect(() => {
           view.props = props.value;
           this.state ?? (this.state = {
             props: props.value
           });
-          if (this.state.props !== props.value) {
+          if (this.state.props !== props.value && hasWindow()) {
             this.setState({
               props: props.value
             });
           }
         });
+      }
+      componentWillUnmount() {
+        this.unsubscribe();
       }
       render() {
         const ViewComponent = view.component;

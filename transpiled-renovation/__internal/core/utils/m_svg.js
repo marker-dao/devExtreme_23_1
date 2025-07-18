@@ -13,30 +13,23 @@ var _window = require("../../../core/utils/window");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const window = (0, _window.getWindow)();
 function getMarkup(element, backgroundColor) {
-  const temp = _dom_adapter.default.createElement('div');
   const clone = element.cloneNode(true);
+  const serializer = new XMLSerializer();
   if (backgroundColor) {
     (0, _renderer.default)(clone).css('backgroundColor', backgroundColor);
   }
-  temp.appendChild(clone);
-  return temp.innerHTML;
+  return serializer.serializeToString(clone);
 }
 function fixNamespaces(markup) {
-  let first = true;
   if (markup.indexOf('xmlns:xlink') === -1) {
     markup = markup.replace('<svg', '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
   }
-  markup = markup.replace(/xmlns="[\s\S]*?"/gi, function (match) {
-    if (!first) return '';
-    first = false;
-    return match;
-  });
   return markup.replace(/xmlns:NS1="[\s\S]*?"/gi, '').replace(/NS1:xmlns:xlink="([\s\S]*?)"/gi, 'xmlns:xlink="$1"');
 }
 // T428345 we decode only restricted HTML entities, looks like other entities do not cause problems
 // as they presented as symbols itself, not named entities
 function decodeHtmlEntities(markup) {
-  return markup.replace(/&quot;/gi, '&#34;').replace(/&amp;/gi, '&#38;').replace(/&apos;/gi, '&#39;').replace(/&lt;/gi, '&#60;').replace(/&gt;/gi, '&#62;').replace(/&nbsp;/gi, '&#160;').replace(/&shy;/gi, '&#173;');
+  return markup.replace(/&quot;/gi, '&#34;').replace(/&amp;/gi, '&#38;').replace(/&apos;/gi, '&#39;').replace(/&lt;/gi, '&#60;').replace(/&gt;/gi, '&#62;').replace(/&nbsp;/gi, '&#160;').replace(/\u00A0/g, '&#160;').replace(/&shy;/gi, '&#173;').replace(/\u00AD/g, '&#173;');
 }
 const HIDDEN_FOR_EXPORT = exports.HIDDEN_FOR_EXPORT = 'hidden-for-export';
 function getSvgMarkup(element, backgroundColor) {

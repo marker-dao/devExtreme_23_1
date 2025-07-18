@@ -6,13 +6,13 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _position = require("../../../core/utils/position");
-var _constants = require("../constants");
+var _constants_view = require("../utils/options/constants_view");
 var _m_timeline = _interopRequireDefault(require("./m_timeline"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const TIMELINE_CLASS = 'dx-scheduler-timeline-week';
 class SchedulerTimelineWeek extends _m_timeline.default {
   get type() {
-    return _constants.VIEWS.TIMELINE_WEEK;
+    return _constants_view.VIEWS.TIMELINE_WEEK;
   }
   _getElementClass() {
     return TIMELINE_CLASS;

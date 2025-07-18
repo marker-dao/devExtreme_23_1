@@ -13,7 +13,6 @@ var _translator2d = require("../translators/translator2d");
 var _range = require("../translators/range");
 var _tick = require("./tick");
 var _math2 = require("../../core/utils/math");
-var _errors = _interopRequireDefault(require("../../core/errors"));
 var _date = _interopRequireDefault(require("../../core/utils/date"));
 var _common = require("../../core/utils/common");
 var _xy_axes = _interopRequireDefault(require("./xy_axes"));
@@ -213,11 +212,6 @@ function configureGenerator(options, axisDivisionFactor, viewPort, screenDelta, 
 }
 function getConstantLineSharpDirection(coord, axisCanvas) {
   return Math.max(axisCanvas.start, axisCanvas.end) !== coord ? 1 : -1;
-}
-function checkDeprecatedOptions(isValueAxis, options) {
-  if (isValueAxis && options.visualRangeUpdateMode === 'shift') {
-    _errors.default.log('W0016', 'valueAxis.visualRangeUpdateMode', 'shift', '23.1', 'Specify another value');
-  }
 }
 const Axis = function (renderSettings) {
   const that = this;
@@ -812,7 +806,6 @@ Axis.prototype = {
     const that = this;
     const labelOpt = options.label;
     validateAxisOptions(options);
-    checkDeprecatedOptions(!that.isArgumentAxis, options);
     that._options = options;
     options.tick = options.tick || {};
     options.minorTick = options.minorTick || {};
@@ -1273,64 +1266,73 @@ Axis.prototype = {
     var _that$_seriesData;
     const that = this;
     const options = that._options;
-    const marginOptions = that._marginOptions;
     const businessRange = new _range.Range(that.getTranslator().getBusinessRange()).addRange(range);
     const visualRange = that.getViewport();
     const minVisible = (visualRange === null || visualRange === void 0 ? void 0 : visualRange.startValue) ?? businessRange.minVisible;
     const maxVisible = (visualRange === null || visualRange === void 0 ? void 0 : visualRange.endValue) ?? businessRange.maxVisible;
-    let ticks = [];
-    if (options.type === _axes_constants.default.discrete && options.aggregateByCategory) {
-      return {
-        aggregateByCategory: true
-      };
-    }
     const aggregationInterval = options.aggregationInterval;
-    let aggregationGroupWidth = options.aggregationGroupWidth;
-    if (!aggregationGroupWidth && marginOptions) {
-      if (marginOptions.checkInterval) {
-        aggregationGroupWidth = options.axisDivisionFactor;
-      }
-      if (marginOptions.sizePointNormalState) {
-        aggregationGroupWidth = Math.min(marginOptions.sizePointNormalState, options.axisDivisionFactor);
-      }
-    }
+    const aggregationGroupWidth = that._getAggregationGroupWidth();
     const minInterval = !options.aggregationGroupWidth && !aggregationInterval && range.interval;
     const generateTicks = configureGenerator(options, aggregationGroupWidth, businessRange, that._getScreenDelta(), minInterval);
     const tickInterval = generateTicks(aggregationInterval, true, minVisible, maxVisible, (_that$_seriesData = that._seriesData) === null || _that$_seriesData === void 0 ? void 0 : _that$_seriesData.breaks).tickInterval;
-    if (options.type !== _axes_constants.default.discrete) {
-      const min = useAllAggregatedPoints ? businessRange.min : minVisible;
-      const max = useAllAggregatedPoints ? businessRange.max : maxVisible;
-      if ((0, _type.isDefined)(min) && (0, _type.isDefined)(max)) {
-        const add = (0, _utils.getAddFunction)({
-          base: options.logarithmBase,
-          axisType: options.type,
-          dataType: options.dataType
-        }, false);
-        let start = min;
-        let end = max;
-        if (!useAllAggregatedPoints && (0, _type.isDefined)(tickInterval)) {
-          const maxMinDistance = Math.max(that.calculateInterval(max, min), options.dataType === 'datetime' ? _date.default.dateToMilliseconds(tickInterval) : tickInterval);
-          start = add(min, maxMinDistance, -1);
-          end = add(max, maxMinDistance);
-        }
-        start = start < businessRange.min ? businessRange.min : start;
-        end = end > businessRange.max ? businessRange.max : end;
-        const breaks = that._getScaleBreaks(options, {
-          minVisible: start,
-          maxVisible: end
-        }, that._series, that.isArgumentAxis);
-        const filteredBreaks = that._filterBreaks(breaks, {
-          minVisible: start,
-          maxVisible: end
-        }, options.breakStyle);
-        ticks = generateTicks(tickInterval, false, start, end, filteredBreaks).ticks;
-      }
-    }
+    const ticks = that._generateTick(useAllAggregatedPoints, businessRange, minVisible, maxVisible, tickInterval, generateTicks);
     that._aggregationInterval = tickInterval;
     return {
       interval: tickInterval,
       ticks: ticks
     };
+  },
+  _getAggregationGroupWidth() {
+    const {
+      checkInterval,
+      sizePointNormalState
+    } = this._marginOptions || {};
+    const {
+      aggregationGroupWidth,
+      axisDivisionFactor
+    } = this._options;
+    if (aggregationGroupWidth) {
+      return aggregationGroupWidth;
+    }
+    if (sizePointNormalState) {
+      return Math.min(sizePointNormalState, axisDivisionFactor);
+    }
+    if (checkInterval) {
+      return axisDivisionFactor;
+    }
+    return aggregationGroupWidth;
+  },
+  _generateTick(useAllAggregatedPoints, businessRange, minVisible, maxVisible, tickInterval, generateTicks) {
+    const min = useAllAggregatedPoints ? businessRange.min : minVisible;
+    const max = useAllAggregatedPoints ? businessRange.max : maxVisible;
+    if (!(0, _type.isDefined)(min) || !(0, _type.isDefined)(max)) {
+      return [];
+    }
+    const that = this;
+    const options = that._options;
+    const add = (0, _utils.getAddFunction)({
+      base: options.logarithmBase,
+      axisType: options.type,
+      dataType: options.dataType
+    }, false);
+    let start = min;
+    let end = max;
+    if (!useAllAggregatedPoints && (0, _type.isDefined)(tickInterval)) {
+      const maxMinDistance = Math.max(that.calculateInterval(max, min), options.dataType === 'datetime' ? _date.default.dateToMilliseconds(tickInterval) : tickInterval);
+      start = add(min, maxMinDistance, -1);
+      end = add(max, maxMinDistance);
+    }
+    start = start < businessRange.min ? businessRange.min : start;
+    end = end > businessRange.max ? businessRange.max : end;
+    const breaks = that._getScaleBreaks(options, {
+      minVisible: start,
+      maxVisible: end
+    }, that._series, that.isArgumentAxis);
+    const filteredBreaks = that._filterBreaks(breaks, {
+      minVisible: start,
+      maxVisible: end
+    }, options.breakStyle);
+    return generateTicks(tickInterval, false, start, end, filteredBreaks).ticks;
   },
   getTickInterval() {
     return this._tickInterval;
@@ -1582,13 +1584,25 @@ Axis.prototype = {
       isSpacedMargin: minPadding === maxPadding && minPadding !== 0
     };
   },
+  _shouldCorrectValuesToZero(minValue, maxValue) {
+    if (this.isArgumentAxis || this._options.dataType === 'datetime') {
+      return false;
+    }
+    const dataRange = this._getViewportRange();
+    if (minValue > dataRange.max || minValue > dataRange.maxVisible) {
+      return false;
+    }
+    if (maxValue < dataRange.min || maxValue < dataRange.minVisible) {
+      return false;
+    }
+    return true;
+  },
   getCorrectedValuesToZero(minValue, maxValue) {
     const that = this;
     const translator = that._translator;
     const canvasStartEnd = that._getCanvasStartEnd();
     const dataRange = that._getViewportRange();
     const screenDelta = that._getScreenDelta();
-    const options = that._options;
     let start;
     let end;
     let correctedMin;
@@ -1600,7 +1614,7 @@ Axis.prototype = {
       start = minExpectedPadding / coeff;
       end = maxExpectedPadding / coeff;
     };
-    if (!that.isArgumentAxis && options.dataType !== 'datetime') {
+    if (that._shouldCorrectValuesToZero(minValue, maxValue)) {
       if (minValue * dataRange.min <= 0 && minValue * dataRange.minVisible <= 0) {
         correctZeroLevel(translator.translate(0), translator.translate(maxValue));
         correctedMin = 0;

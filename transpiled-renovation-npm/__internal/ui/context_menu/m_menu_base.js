@@ -12,8 +12,8 @@ var _iterator = require("../../../core/utils/iterator");
 var _type = require("../../../core/utils/type");
 var _utils = require("../../../ui/widget/utils.ink_ripple");
 var _item = _interopRequireDefault(require("../../ui/collection/item"));
-var _m_menu_baseEdit = _interopRequireDefault(require("../../ui/context_menu/m_menu_base.edit.strategy"));
-var _m_hierarchical_collection_widget = _interopRequireDefault(require("../../ui/hierarchical_collection/m_hierarchical_collection_widget"));
+var _menu_baseEdit = _interopRequireDefault(require("../../ui/context_menu/menu_base.edit.strategy"));
+var _hierarchical_collection_widget = _interopRequireDefault(require("../../ui/hierarchical_collection/hierarchical_collection_widget"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 // @ts-expect-error
 
@@ -42,7 +42,7 @@ const DEFAULT_DELAY = {
 const DX_MENU_ITEM_CAPTION_URL_CLASS = `${DX_MENU_ITEM_CAPTION_CLASS}-with-url`;
 const DX_ICON_WITH_URL_CLASS = 'dx-icon-with-url';
 const ITEM_URL_CLASS = 'dx-item-url';
-class MenuBase extends _m_hierarchical_collection_widget.default {
+class MenuBase extends _hierarchical_collection_widget.default {
   _getDefaultOptions() {
     return (0, _extend.extend)(super._getDefaultOptions(), {
       items: [],
@@ -184,6 +184,7 @@ class MenuBase extends _m_hierarchical_collection_widget.default {
     }
     return $popOutContainer;
   }
+  // eslint-disable-next-line class-methods-use-this
   _getDataAdapterOptions() {
     return {
       rootValue: 0,
@@ -196,6 +197,7 @@ class MenuBase extends _m_hierarchical_collection_widget.default {
   _selectByItem(selectedItem) {
     if (!selectedItem) return;
     const nodeToSelect = this._dataAdapter.getNodeByItem(selectedItem);
+    // @ts-expect-error ts-error
     this._dataAdapter.toggleSelection(nodeToSelect.internalFields.key, true);
   }
   _renderSelectedItem() {
@@ -254,8 +256,7 @@ class MenuBase extends _m_hierarchical_collection_widget.default {
     return _devices.default.real().deviceType === 'desktop';
   }
   _initEditStrategy() {
-    const Strategy = _m_menu_baseEdit.default;
-    this._editStrategy = new Strategy(this);
+    this._editStrategy = new _menu_baseEdit.default(this);
   }
   _addCustomCssClass($element) {
     // @ts-expect-error
@@ -452,11 +453,15 @@ class MenuBase extends _m_hierarchical_collection_widget.default {
       itemData
     } = actionArgs.args[0];
     const $itemElement = this._getItemElementByEventArgs(event);
-    const link = $itemElement && $itemElement.find(`.${ITEM_URL_CLASS}`).get(0);
-    if (itemData.url && link) {
-      // @ts-expect-error
-      link.click();
+    const link = $itemElement && $itemElement.find(`.${ITEM_URL_CLASS}`)[0];
+    if (!itemData.url || !link) {
+      return;
     }
+    const isNativeLinkClick = (0, _renderer.default)(event.target).closest(`.${ITEM_URL_CLASS}`).length;
+    if (isNativeLinkClick) {
+      return;
+    }
+    this._clickByLink(link);
   }
   _updateSubmenuVisibilityOnClick(actionArgs) {
     this._updateSelectedItemOnClick(actionArgs);
@@ -502,6 +507,7 @@ class MenuBase extends _m_hierarchical_collection_widget.default {
           const node = this._dataAdapter.getNodeByItem(args.value);
           const selectedKey = this._dataAdapter.getSelectedNodesKeys()[0];
           if (node && node.internalFields.key !== selectedKey) {
+            // @ts-expect-error ts-error
             if (node.selectable === false) break;
             if (selectedKey) {
               this._toggleItemSelection(this._dataAdapter.getNodeByKey(selectedKey), false);

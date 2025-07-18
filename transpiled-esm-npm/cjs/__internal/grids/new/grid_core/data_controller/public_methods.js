@@ -23,8 +23,8 @@ function PublicMethods(GridCore) {
       }
       return store.byKey(key);
     }
-    getFilter() {
-      return this.getDataSource().filter();
+    getCombinedFilter() {
+      return this.dataController.getCombinedFilter();
     }
     keyOf(obj) {
       return this.dataController.getDataKey(obj);
@@ -42,8 +42,8 @@ function PublicMethods(GridCore) {
       if (newIndex === undefined) {
         return this.dataController.pageIndex.peek();
       }
-      // TODO: Promise<void> (jQuery or native)
       this.dataController.pageIndex.value = newIndex;
+      return this.dataController.waitLoaded();
     }
     totalCount() {
       return this.dataController.totalCount.peek();

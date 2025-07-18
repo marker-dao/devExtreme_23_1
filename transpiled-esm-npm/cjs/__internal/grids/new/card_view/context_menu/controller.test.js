@@ -2,14 +2,12 @@
 
 var _globals = require("@jest/globals");
 var _context_menu = _interopRequireDefault(require("../../../../../ui/context_menu"));
-var _index = require("../../grid_core/columns_controller/index");
-var _options_controller = require("../options_controller.mock");
-var _controller = require("./controller.mock");
+var _di = require("../di.test_utils");
+var _controller = require("./controller");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const setup = options => {
-  const optionsController = new _options_controller.OptionsControllerMock(options);
-  const columnsController = new _index.ColumnsController(optionsController);
-  const controller = new _controller.ContextMenuControllerMock(columnsController, optionsController);
+  const context = (0, _di.getContext)(options);
+  const controller = context.get(_controller.ContextMenuController);
   const container = document.createElement('div');
   // eslint-disable-next-line new-cap
   const contextMenu = new _context_menu.default(container, {

@@ -9,6 +9,7 @@ var _common = require("../../../core/utils/common");
 var _deferred = require("../../../core/utils/deferred");
 var _type = require("../../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class SelectionStrategy {
   constructor(options) {
     this._lastSelectAllPageDeferred = (0, _deferred.Deferred)().reject();
@@ -113,14 +114,30 @@ class SelectionStrategy {
     }
     return remoteFilter;
   }
+  _getQueryParams() {
+    const {
+      sensitivity
+    } = this.options;
+    if (!sensitivity) {
+      return;
+    }
+    return {
+      langParams: {
+        collatorOptions: {
+          sensitivity
+        }
+      }
+    };
+  }
   _loadFilteredData(remoteFilter, localFilter, select, isSelectAll) {
     const filterLength = encodeURI(JSON.stringify(this._removeTemplateProperty(remoteFilter))).length;
     const needLoadAllData = this.options.maxFilterLengthInRequest && filterLength > this.options.maxFilterLengthInRequest;
     const deferred = (0, _deferred.Deferred)();
-    const loadOptions = {
+    const queryParams = this._getQueryParams();
+    const loadOptions = _extends({
       filter: needLoadAllData ? undefined : remoteFilter,
       select: needLoadAllData ? this.options.dataFields() : select || this.options.dataFields()
-    };
+    }, queryParams);
     if (remoteFilter && remoteFilter.length === 0) {
       deferred.resolve([]);
     } else {

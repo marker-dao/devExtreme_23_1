@@ -174,7 +174,6 @@ class RangeSlider extends Slider {
     // @ts-expect-error ts-error
     const newValue = newRatio * (max - min) + min;
     this._updateSelectedRangePosition(newRatio, newRatio);
-    SliderHandle.getInstance(this._activeHandle()).fitTooltipPosition;
     this._changeValueOnSwipe(newRatio);
     const [startValue, endValue] = this._getActualValue();
     if (startValue === endValue) {

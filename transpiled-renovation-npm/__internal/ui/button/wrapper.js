@@ -4,13 +4,16 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _icon = require("../../../core/utils/icon");
 var _validation_engine = _interopRequireDefault(require("../../../ui/validation_engine"));
 var _component_wrapper = require("../../core/r1/component_wrapper");
+var _button = require("./button");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-class ButtonWrapper extends _component_wrapper.ComponentWrapper {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+class Button extends _component_wrapper.ComponentWrapper {
+  // eslint-disable-next-line @stylistic/max-len
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
   get _validationGroupConfig() {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return _validation_engine.default.getGroupConfig(this._findGroup());
@@ -32,11 +35,15 @@ class ButtonWrapper extends _component_wrapper.ComponentWrapper {
         validationGroup: this._validationGroupConfig
       });
     };
+    props.onKeyDown = this._wrapKeyDownHandler(props.onKeyDown);
     const iconType = (0, _icon.getImageSourceType)(props.icon);
     if (iconType === 'svg') {
       props.iconTemplate = this._createTemplateComponent(() => props.icon);
     }
     return props;
+  }
+  get viewRef() {
+    return super.viewRef;
   }
   get _templatesInfo() {
     return {
@@ -44,14 +51,18 @@ class ButtonWrapper extends _component_wrapper.ComponentWrapper {
     };
   }
   _toggleActiveState(_, value) {
-    const button = this.viewRef;
-    value ? button.activate() : button.deactivate();
+    if (value) {
+      var _this$viewRef;
+      (_this$viewRef = this.viewRef) === null || _this$viewRef === void 0 || _this$viewRef.activate();
+    } else {
+      var _this$viewRef2;
+      (_this$viewRef2 = this.viewRef) === null || _this$viewRef2 === void 0 || _this$viewRef2.deactivate();
+    }
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _getSubmitAction() {
     let needValidate = true;
     let validationStatus = 'valid';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // @ts-expect-error badly typed base class
     return this._createAction(_ref2 => {
       let {
         event,
@@ -71,13 +82,17 @@ class ButtonWrapper extends _component_wrapper.ComponentWrapper {
               } = _ref3;
               this.option('disabled', false);
               validationStatus = status;
-              validationStatus === 'valid' && submitInput.click();
+              if (validationStatus === 'valid') {
+                submitInput.click();
+              }
               needValidate = true;
             });
           }
         }
       }
-      validationStatus !== 'valid' && event.preventDefault();
+      if (validationStatus !== 'valid') {
+        event.preventDefault();
+      }
       event.stopPropagation();
     });
   }
@@ -107,11 +122,11 @@ class ButtonWrapper extends _component_wrapper.ComponentWrapper {
     const $element = this.$element();
     const validationGroup = this.option('validationGroup');
     return validationGroup !== undefined && validationGroup !== '' ? validationGroup
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // @ts-expect-error badly typed base class and ValidationEngine
     : _validation_engine.default.findGroup($element, this._modelByElement($element));
   }
   _createClickAction() {
-    // @ts-expect-error
+    // @ts-expect-error badly typed base class
     return this._createActionByOption('onClick', {
       excludeValidators: ['readOnly']
     });
@@ -126,6 +141,41 @@ class ButtonWrapper extends _component_wrapper.ComponentWrapper {
     }
     super._optionChanged(option);
   }
+  focus() {
+    var _this$viewRef3;
+    (_this$viewRef3 = this.viewRef) === null || _this$viewRef3 === void 0 || _this$viewRef3.focus();
+  }
+  activate() {
+    var _this$viewRef4;
+    (_this$viewRef4 = this.viewRef) === null || _this$viewRef4 === void 0 || _this$viewRef4.activate();
+  }
+  deactivate() {
+    var _this$viewRef5;
+    (_this$viewRef5 = this.viewRef) === null || _this$viewRef5 === void 0 || _this$viewRef5.deactivate();
+  }
+  _getActionConfigs() {
+    return {
+      onClick: {
+        excludeValidators: ['readOnly']
+      },
+      onSubmit: {}
+    };
+  }
+  get _propsInfo() {
+    return {
+      twoWay: [],
+      allowNull: [],
+      elements: ['onSubmit'],
+      templates: ['template', 'iconTemplate'],
+      props: _button.buttonComponentProps
+    };
+  }
+  // @ts-expect-error types error in R1
+  get _viewComponent() {
+    return _button.Button;
+  }
 }
-/* eslint-enable @typescript-eslint/no-unsafe-member-access */
-exports.default = ButtonWrapper;
+exports.default = Button;
+(0, _component_registrator.default)('dxButton', Button);
+// @ts-expect-error types error in R1
+Button.defaultOptions = _button.defaultOptions;

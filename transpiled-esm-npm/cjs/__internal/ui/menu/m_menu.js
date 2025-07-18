@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.DX_MENU_ITEM_CLASS = void 0;
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
 var _hover = require("../../../common/core/events/hover");
 var _pointer = _interopRequireDefault(require("../../../common/core/events/pointer"));
@@ -26,7 +26,7 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 const DX_MENU_CLASS = 'dx-menu';
 const DX_MENU_VERTICAL_CLASS = `${DX_MENU_CLASS}-vertical`;
 const DX_MENU_HORIZONTAL_CLASS = `${DX_MENU_CLASS}-horizontal`;
-const DX_MENU_ITEM_CLASS = `${DX_MENU_CLASS}-item`;
+const DX_MENU_ITEM_CLASS = exports.DX_MENU_ITEM_CLASS = `${DX_MENU_CLASS}-item`;
 const DX_MENU_ITEMS_CONTAINER_CLASS = `${DX_MENU_CLASS}-items-container`;
 const DX_MENU_ITEM_EXPANDED_CLASS = `${DX_MENU_ITEM_CLASS}-expanded`;
 const DX_CONTEXT_MENU_CLASS = 'dx-context-menu';
@@ -203,7 +203,6 @@ class Menu extends _m_menu_base.default {
     });
   }
   _initMarkup() {
-    // @ts-expect-error
     this._visibleSubmenu = null;
     this.$element().addClass(DX_MENU_CLASS);
     super._initMarkup();
@@ -258,7 +257,8 @@ class Menu extends _m_menu_base.default {
     this._toggleHamburgerActiveState(state);
   }
   _toggleHamburgerActiveState(state) {
-    this._hamburger && this._hamburger.$element().toggleClass(DX_STATE_ACTIVE_CLASS, state);
+    var _this$_hamburger;
+    (_this$_hamburger = this._hamburger) === null || _this$_hamburger === void 0 || _this$_hamburger.$element().toggleClass(DX_STATE_ACTIVE_CLASS, state);
   }
   _toggleAdaptiveMode(state) {
     const $menuItemsContainer = this.$element().find(`.${DX_MENU_HORIZONTAL_CLASS}`);
@@ -301,6 +301,7 @@ class Menu extends _m_menu_base.default {
     const position = rtl ? 'right' : 'left';
     return {
       _ignoreFunctionValueDeprecation: true,
+      // @ts-expect-error ts-error
       maxHeight: () => (0, _m_utils.getElementMaxHeightByWindow)(this.$element()),
       deferRendering: false,
       shading: false,
@@ -483,7 +484,7 @@ class Menu extends _m_menu_base.default {
     const cleanAllSubmenus = !arguments.length;
     (0, _iterator.each)(this._submenus, (index, submenu) => {
       const $submenu = submenu._itemContainer();
-      const isOtherItem = !$submenu.is(targetSubmenu && targetSubmenu._itemContainer());
+      const isOtherItem = !$submenu.is(targetSubmenu === null || targetSubmenu === void 0 ? void 0 : targetSubmenu._itemContainer());
       const $selectedItem = $submenu.find(`.${this._selectedItemClass()}`);
       if (isOtherItem && $selectedItem.length || cleanAllSubmenus) {
         $selectedItem.removeClass(this._selectedItemClass());
@@ -549,9 +550,21 @@ class Menu extends _m_menu_base.default {
     eventArgs.submenuContainer = params.submenuContainer;
     eventArgs.submenu = params.submenu;
     this._actions.onSubmenuHiding(eventArgs);
+    const {
+      focusedElement
+    } = this.option();
+    const {
+      focusedElement: submenuFocusedElement
+    } = submenu.option();
+    const isVisibleSubmenuHiding = this._visibleSubmenu === submenu;
+    const isFocusedElementHiding = focusedElement === submenuFocusedElement;
+    if (isVisibleSubmenuHiding && isFocusedElementHiding) {
+      this.option('focusedElement', $menuAnchorItem);
+    }
     if (!eventArgs.cancel) {
-      // @ts-expect-error
-      if (this._visibleSubmenu === submenu) this._visibleSubmenu = null;
+      if (isVisibleSubmenuHiding) {
+        this._visibleSubmenu = null;
+      }
       $border.hide();
       $menuAnchorItem.removeClass(DX_MENU_ITEM_EXPANDED_CLASS);
     }
@@ -719,15 +732,15 @@ class Menu extends _m_menu_base.default {
       submenu.hide();
     }
     if (this._visibleSubmenu === submenu) {
-      // @ts-expect-error
       this._visibleSubmenu = null;
     }
     // @ts-expect-error
     this._hoveredRootItem = null;
   }
   _itemMouseMoveHandler(e) {
+    var _e$pointers;
     // todo: replace mousemove with hover event
-    if (e.pointers && e.pointers.length) {
+    if ((_e$pointers = e.pointers) !== null && _e$pointers !== void 0 && _e$pointers.length) {
       return;
     }
     const $item = (0, _renderer.default)(e.currentTarget);

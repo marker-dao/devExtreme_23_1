@@ -3,36 +3,33 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.InkRipple = void 0;
+exports.defaultInkRippleProps = exports.InkRipple = void 0;
 var _inferno = require("inferno");
 var _utils = require("../../../ui/widget/utils.ink_ripple");
 var _index = require("../../core/r1/runtime/inferno/index");
+const _excluded = ["config"];
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+const defaultInkRippleProps = exports.defaultInkRippleProps = {
+  config: {}
+};
 class InkRipple extends _index.BaseInfernoComponent {
   constructor(props) {
     super(props);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.__getterCache = {};
     this.state = {};
     this.hideWave = this.hideWave.bind(this);
     this.showWave = this.showWave.bind(this);
   }
   get getConfig() {
-    if (this.__getterCache.getConfig !== undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return this.__getterCache.getConfig;
+    if (this.__getterCache.getConfig === undefined) {
+      this.__getterCache.getConfig = (0, _utils.initConfig)(this.props.config);
     }
-    // eslint-disable-next-line no-return-assign
-    return this.__getterCache.getConfig = (() => {
-      const {
-        config
-      } = this.props;
-      return (0, _utils.initConfig)(config);
-    })();
+    return this.__getterCache.getConfig;
   }
   get restAttributes() {
-    const restProps = _extends({}, this.props);
-    delete restProps.config;
+    const _this$props = this.props,
+      restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
     return restProps;
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -53,6 +50,4 @@ class InkRipple extends _index.BaseInfernoComponent {
   }
 }
 exports.InkRipple = InkRipple;
-InkRipple.defaultProps = {
-  config: {}
-};
+InkRipple.defaultProps = defaultInkRippleProps;

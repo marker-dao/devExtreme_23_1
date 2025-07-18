@@ -7,6 +7,7 @@ exports.SelectionController = void 0;
 var _message = _interopRequireDefault(require("../../../../../localization/message"));
 var _signalsCore = require("@preact/signals-core");
 var _index = require("../../../../grids/new/grid_core/data_controller/index");
+var _index2 = require("../../../../grids/new/grid_core/options_validation/index");
 var _const = require("../../../../grids/new/grid_core/selection/const");
 var _m_selection = _interopRequireDefault(require("../../../../ui/selection/m_selection"));
 var _items_controller = require("../items_controller/items_controller");
@@ -16,12 +17,22 @@ var _const2 = require("./const");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-unsafe-return */ /* eslint-disable @typescript-eslint/explicit-function-return-type */
 class SelectionController {
-  constructor(options, dataController, itemsController, toolbarController) {
+  constructor(options, dataController, itemsController, toolbarController, optionsValidationController) {
     this.options = options;
     this.dataController = dataController;
     this.itemsController = itemsController;
     this.toolbarController = toolbarController;
+    this.optionsValidationController = optionsValidationController;
     this.selectedCardKeys = this.options.twoWay('selectedCardKeys');
+    // Note: moved option validation logic to computed to make it execute before other effects
+    this.normalizedSelectedCardKeys = (0, _signalsCore.computed)(() => {
+      const selectedCardKeys = this.selectedCardKeys.value;
+      const isSelectionEnabled = this.selectionOption.value.mode !== _const2.SelectionMode.None;
+      if (isSelectionEnabled && Array.isArray(selectedCardKeys) && selectedCardKeys.length) {
+        this.optionsValidationController.validateKeyExpr();
+      }
+      return this.selectedCardKeys.value;
+    });
     this.selectionOption = this.options.oneWay('selection');
     this._isCheckBoxesRendered = (0, _signalsCore.signal)(false);
     this.onSelectionChanging = this.options.action('onSelectionChanging');
@@ -90,7 +101,7 @@ class SelectionController {
       return new _m_selection.default(selectionConfig);
     });
     (0, _signalsCore.effect)(() => {
-      const selectedCardKeys = this.selectedCardKeys.value;
+      const selectedCardKeys = this.normalizedSelectedCardKeys.value;
       const selectionOption = this.selectionOption.value;
       if (selectionOption.mode !== _const2.SelectionMode.None) {
         this.itemsController.setSelectionState(selectedCardKeys);
@@ -111,7 +122,9 @@ class SelectionController {
     (0, _signalsCore.effect)(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       this.dataController.items.value;
-      this.updateSelectionToolbarButtons(this.selectedCardKeys.value);
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this.dataController.isLoaded.value;
+      this.updateSelectionToolbarButtons(this.normalizedSelectedCardKeys.value);
     });
   }
   getSelectionConfig(dataSource, selectionOption) {
@@ -170,6 +183,7 @@ class SelectionController {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectionChanged(e) {
     if (e.addedItemKeys.length || e.removedItemKeys.length) {
+      this.optionsValidationController.validateKeyExpr();
       const onSelectionChanged = this.onSelectionChanged.peek();
       const eventArgs = this.getSelectionEventArgs(e);
       this.selectedCardKeys.value = [...e.selectedItemKeys];
@@ -254,7 +268,7 @@ class SelectionController {
     return this.deselectCards(keys);
   }
   isCardSelected(key) {
-    const selectedCardKeys = this.selectedCardKeys.peek();
+    const selectedCardKeys = this.normalizedSelectedCardKeys.peek();
     return selectedCardKeys.includes(key);
   }
   selectAll() {
@@ -280,7 +294,7 @@ class SelectionController {
     return selectedCardKey.map(key => this.itemsController.getCardByKey(key)).filter(item => !!item).map(item => item.data);
   }
   getSelectedCardKeys() {
-    return this.selectedCardKeys.peek();
+    return this.normalizedSelectedCardKeys.peek();
   }
   toggleSelectionCheckBoxes() {
     const isCheckBoxesRendered = this._isCheckBoxesRendered.peek();
@@ -311,4 +325,4 @@ class SelectionController {
   }
 }
 exports.SelectionController = SelectionController;
-SelectionController.dependencies = [_options_controller.OptionsController, _index.DataController, _items_controller.ItemsController, _controller.ToolbarController];
+SelectionController.dependencies = [_options_controller.OptionsController, _index.DataController, _items_controller.ItemsController, _controller.ToolbarController, _index2.OptionsValidationController];

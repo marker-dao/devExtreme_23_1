@@ -4,10 +4,10 @@ import localizationMessage from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
 import { extend } from '../../../core/utils/extend';
 import { isNumeric, isObject } from '../../core/utils/m_type';
-import { NOT_EXISTING_INDEX } from '../../ui/collection/m_collection_widget.edit';
+import { NOT_EXISTING_INDEX } from '../../ui/collection/collection_widget.edit';
+import GroupedEditStrategy from './list.edit.strategy.grouped';
 import { ListBase } from './m_list.base';
 import EditProvider from './m_list.edit.provider';
-import GroupedEditStrategy from './m_list.edit.strategy.grouped';
 const LIST_ITEM_SELECTED_CLASS = 'dx-list-item-selected';
 const LIST_ITEM_RESPONSE_WAIT_CLASS = 'dx-list-item-response-wait';
 class ListEdit extends ListBase {
@@ -28,7 +28,6 @@ class ListEdit extends ListBase {
       // @ts-expect-error ts-error
       const focusedItemIndex = editStrategy.getNormalizedIndex(focusedElement);
       const isLastIndexFocused = focusedItemIndex === this._getLastItemIndex();
-      // @ts-expect-error ts-error
       if (isLastIndexFocused && this._dataController.isLoading()) {
         return;
       }
@@ -154,7 +153,6 @@ class ListEdit extends ListBase {
   }
   _initEditStrategy() {
     if (this.option('grouped')) {
-      // @ts-expect-error ts-error
       this._editStrategy = new GroupedEditStrategy(this);
     } else {
       super._initEditStrategy();
@@ -222,15 +220,6 @@ class ListEdit extends ListBase {
     // @ts-expect-error ts-error
     super._itemHoldHandler(...arguments);
   }
-  _getItemContainer(changeData) {
-    if (this.option('grouped')) {
-      var _this$_editStrategy$g;
-      const groupIndex = (_this$_editStrategy$g = this._editStrategy.getIndexByItemData(changeData)) === null || _this$_editStrategy$g === void 0 ? void 0 : _this$_editStrategy$g.group;
-      return this._getGroupContainerByIndex(groupIndex);
-    }
-    // @ts-expect-error ts-error
-    return super._getItemContainer(changeData);
-  }
   _itemContextMenuHandler(e) {
     const $itemElement = $(e.currentTarget);
     if ($itemElement.is('.dx-state-disabled, .dx-state-disabled *')) {
@@ -274,14 +263,11 @@ class ListEdit extends ListBase {
     switch (args.name) {
       case 'selectAllMode':
         this._initDataSource();
-        // @ts-expect-error ts-error
         this._dataController.pageIndex(0);
-        // @ts-expect-error ts-error
         this._dataController.load();
         break;
       case 'grouped':
         this._clearSelectedItems();
-        delete this._renderingGroupIndex;
         this._initEditStrategy();
         super._optionChanged(args);
         break;

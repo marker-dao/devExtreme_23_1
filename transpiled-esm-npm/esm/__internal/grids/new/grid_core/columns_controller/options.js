@@ -1,24 +1,23 @@
 import messageLocalization from '../../../../../localization/message';
 import filterUtils from '../../../../../ui/shared/filtering';
 import { defaultSetFieldValue } from '../editing/utils';
+import { parseValue } from '../utils/parse_value/index';
 export const defaultColumnProperties = {
   dataType: 'string',
   calculateFieldValue(data) {
     // @ts-expect-error
-    return data[this.dataField];
+    const value = data[this.dataField];
+    return parseValue(this, value) ?? value;
   },
   calculateDisplayValue(data) {
     return this.calculateFieldValue(data);
   },
   calculateFilterExpression: filterUtils.defaultCalculateFilterExpression,
+  defaultCalculateFilterExpression: filterUtils.defaultCalculateFilterExpression,
   alignment: 'left',
   visible: true,
   allowReordering: true,
-  allowSorting: true,
   allowHiding: true,
-  allowFiltering: true,
-  allowHeaderFiltering: true,
-  allowSearch: true,
   trueText: messageLocalization.format('dxDataGrid-trueText'),
   falseText: messageLocalization.format('dxDataGrid-falseText'),
   showInColumnChooser: true,
@@ -39,8 +38,12 @@ export const defaultColumnPropertiesByDataType = {
     }
   },
   string: {},
-  date: {},
-  datetime: {},
+  date: {
+    format: 'shortDate'
+  },
+  datetime: {
+    format: 'shortDateShortTime'
+  },
   number: {},
   object: {}
 };

@@ -6,11 +6,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
-var _extend = require("../../../core/utils/extend");
 var _text_box = _interopRequireDefault(require("../../../ui/text_box"));
 var _ui = _interopRequireDefault(require("../../../ui/widget/ui.search_box_mixin"));
 var _m_tree_view = _interopRequireDefault(require("./m_tree_view.base"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // @ts-expect-error
 _ui.default.setEditorClass(_text_box.default);
 const WIDGET_CLASS = 'dx-treeview';
@@ -49,7 +49,7 @@ const TreeViewSearch = _m_tree_view.default.inherit(_ui.default).inherit({
     this._setOptionWithoutOptionChange('expandNodesRecursive', true);
   },
   _getDataAdapterOptions() {
-    return (0, _extend.extend)(this.callBase(), {
+    return _extends({}, this.callBase(), {
       searchValue: this.option('searchValue'),
       searchMode: this.option('searchMode') || 'contains',
       searchExpr: this.option('searchExpr')

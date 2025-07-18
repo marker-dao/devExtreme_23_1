@@ -15,7 +15,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 const DateTableCallBaseDefaultProps = exports.DateTableCallBaseDefaultProps = _extends({}, _cell.CellBaseDefaultProps, {
   otherMonth: false,
   today: false,
-  firstDayOfMonth: false,
+  isFirstDayMonthHighlighting: false,
   isSelected: false,
   isFocused: false
 });

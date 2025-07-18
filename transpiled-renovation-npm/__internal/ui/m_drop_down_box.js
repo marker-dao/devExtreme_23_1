@@ -252,6 +252,7 @@ class DropDownBox extends _m_drop_down_editor.default {
         of: this.$element()
       }),
       _ignoreFunctionValueDeprecation: true,
+      // @ts-expect-error ts-error
       maxHeight: function () {
         var _this$_popupPosition;
         const popupLocation = (_this$_popupPosition = this._popupPosition) === null || _this$_popupPosition === void 0 ? void 0 : _this$_popupPosition.v.location;

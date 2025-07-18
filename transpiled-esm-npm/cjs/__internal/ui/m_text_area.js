@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.TEXTAREA_CLASS = void 0;
 var _events_engine = _interopRequireDefault(require("../../common/core/events/core/events_engine"));
 var _emitterGesture = _interopRequireDefault(require("../../common/core/events/gesture/emitter.gesture.scroll"));
 var _pointer = _interopRequireDefault(require("../../common/core/events/pointer"));
@@ -18,14 +18,23 @@ var _m_text_box = _interopRequireDefault(require("../ui/text_box/m_text_box"));
 var _m_utils = require("../ui/text_box/m_utils.scroll");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const TEXTAREA_CLASS = 'dx-textarea';
+const TEXTAREA_CLASS = exports.TEXTAREA_CLASS = 'dx-textarea';
 const TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE = 'dx-texteditor-input-auto-resize';
 class TextArea extends _m_text_box.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       spellcheck: true,
-      autoResizeEnabled: false
+      autoResizeEnabled: false,
+      _shouldAttachKeyboardEvents: false
     });
+  }
+  _shouldAttachKeyboardEvents() {
+    const {
+      _shouldAttachKeyboardEvents: shouldAttachKeyboardEvents,
+      readOnly
+    } = this.option();
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    return shouldAttachKeyboardEvents || !readOnly;
   }
   _initMarkup() {
     this.$element().addClass(TEXTAREA_CLASS);
@@ -171,6 +180,7 @@ class TextArea extends _m_text_box.default {
       value
     } = args;
     switch (name) {
+      case '_shouldAttachKeyboardEvents':
       case 'autoResizeEnabled':
         this._updateInputAutoResizeAppearance(this._input(), value);
         this._refreshEvents();

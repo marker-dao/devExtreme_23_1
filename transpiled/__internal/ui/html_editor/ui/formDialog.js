@@ -85,7 +85,7 @@ class FormDialog extends _m_baseDialog.default {
           }
         }, getCancelButtonConfig())
       }]
-    }, this._popupUserConfig));
+    }, this._popupConfig));
   }
   _renderContent($contentElem) {
     const $formContainer = (0, _renderer.default)('<div>').appendTo($contentElem);

@@ -9,7 +9,6 @@ import pointerEvents from '../../common/core/events/pointer';
 import { addNamespace } from '../../common/core/events/utils/index';
 import { isDefined } from '../../core/utils/type';
 import { noop as _noop } from '../../core/utils/common';
-import errors from '../../core/errors';
 const _floor = Math.floor;
 const eventsConsts = consts.events;
 const statesConsts = consts.states;
@@ -52,17 +51,11 @@ function getData(event, dataKey, tryCheckParent) {
   }
   return data;
 }
-function eventCanceled(_ref, target, clickTarget) {
+function eventCanceled(_ref, target) {
   let {
-    event,
     cancel
   } = _ref;
-  const deprecatedCancel = event.cancel; // DEPRECATED_22_1
-  const eventCanceled = cancel || deprecatedCancel;
-  if (deprecatedCancel) {
-    errors.log('W0003', `${clickTarget}Click handler argument`, 'event.cancel', '22.1', 'Use the \'cancel\' field instead');
-  }
-  return eventCanceled || !target.getOptions();
+  return cancel || !target.getOptions();
 }
 function correctLegendHoverMode(mode) {
   if (LEGEND_HOVER_MODES.indexOf(mode) > -1) {
@@ -474,8 +467,8 @@ extend(ChartTracker.prototype, baseTrackerPrototype, {
     }
     return null;
   },
-  _isPointerOut: function (canvas) {
-    return !canvas && this._stuckSeries;
+  _isPointerOut: function (canvas, point) {
+    return !canvas && this._stuckSeries && (point === null || point === void 0 ? void 0 : point.series) !== this._stuckSeries;
   },
   _hideCrosshair: function () {
     var _this$_crosshair;

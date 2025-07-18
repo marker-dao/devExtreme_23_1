@@ -9,7 +9,6 @@ var _wheel = require("../../../common/core/events/core/wheel");
 var _index = require("../../../common/core/events/utils/index");
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
-var _common = require("../../../core/utils/common");
 var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _string = require("../../../core/utils/string");
@@ -99,8 +98,7 @@ class TextEditorMask extends _m_text_editor.default {
     super._initMarkup();
   }
   _attachMouseWheelEventHandlers() {
-    const hasMouseWheelHandler = this._onMouseWheel !== _common.noop;
-    if (!hasMouseWheelHandler) {
+    if (!this._hasMouseWheelHandler()) {
       return;
     }
     const input = this._input();
@@ -122,6 +120,9 @@ class TextEditorMask extends _m_text_editor.default {
         event: e
       });
     });
+  }
+  _hasMouseWheelHandler() {
+    return false;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _onMouseWheel(e) {}

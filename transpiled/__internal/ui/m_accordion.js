@@ -22,7 +22,7 @@ var iteratorUtils = _interopRequireWildcard(require("../../core/utils/iterator")
 var _size = require("../../core/utils/size");
 var _type = require("../../core/utils/type");
 var _themes = require("../../ui/themes");
-var _m_collection_widget = _interopRequireDefault(require("../ui/collection/m_collection_widget.live_update"));
+var _collection_widget = _interopRequireDefault(require("../ui/collection/collection_widget.live_update"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -36,7 +36,7 @@ const ACCORDION_ITEM_TITLE_CLASS = 'dx-accordion-item-title';
 const ACCORDION_ITEM_BODY_CLASS = 'dx-accordion-item-body';
 const ACCORDION_ITEM_TITLE_CAPTION_CLASS = 'dx-accordion-item-title-caption';
 const ACCORDION_ITEM_DATA_KEY = 'dxAccordionItemData';
-class Accordion extends _m_collection_widget.default {
+class Accordion extends _collection_widget.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
@@ -346,8 +346,8 @@ class Accordion extends _m_collection_widget.default {
             repaintChangesOnly
           } = this.option();
           if (repaintChangesOnly === true && args.fullName === 'items') {
-            this._updateItemHeightsWrapper(true);
             this._renderSelection(this._getSelectedItemIndices(), []);
+            this._updateItemHeightsWrapper(true);
           }
           break;
         }

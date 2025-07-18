@@ -74,6 +74,7 @@ class KbnFocusTrapEnabled extends _inferno.Component {
       "onKeyDown": this.onKeyDown.bind(this)
     }, restProps), null, ref));
   }
+  // TODO: KeyboardEvent
   onKeyDown(event) {
     var _this$props$onKeyDown, _this$props2;
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -82,6 +83,7 @@ class KbnFocusTrapEnabled extends _inferno.Component {
     }
     (_this$props$onKeyDown = (_this$props2 = this.props).onKeyDown) === null || _this$props$onKeyDown === void 0 || _this$props$onKeyDown.call(_this$props2, event);
   }
+  // TODO: KeyboardEvent
   onContentKeyDown(event) {
     if (event.key === 'Escape') {
       var _this$getActualRef$cu;
@@ -117,8 +119,12 @@ class KbnFocusTrapEnabled extends _inferno.Component {
   }
 }
 exports.KbnFocusTrapEnabled = KbnFocusTrapEnabled;
-__decorate([_index.eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", [KeyboardEvent]), __metadata("design:returntype", void 0)], KbnFocusTrapEnabled.prototype, "onKeyDown", null);
-__decorate([_index.eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", [KeyboardEvent]), __metadata("design:returntype", void 0)], KbnFocusTrapEnabled.prototype, "onContentKeyDown", null);
+__decorate([_index.eventHandler
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+, __metadata("design:type", Function), __metadata("design:paramtypes", [Object]), __metadata("design:returntype", void 0)], KbnFocusTrapEnabled.prototype, "onKeyDown", null);
+__decorate([_index.eventHandler
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+, __metadata("design:type", Function), __metadata("design:paramtypes", [Object]), __metadata("design:returntype", void 0)], KbnFocusTrapEnabled.prototype, "onContentKeyDown", null);
 __decorate([_index.eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", []), __metadata("design:returntype", void 0)], KbnFocusTrapEnabled.prototype, "onFirstDecoyFocusIn", null);
 __decorate([_index.eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", []), __metadata("design:returntype", void 0)], KbnFocusTrapEnabled.prototype, "onLastDecoyFocusIn", null);
 const KbnFocusTrap = props => {

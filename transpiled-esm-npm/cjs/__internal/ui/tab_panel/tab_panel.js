@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.TABPANEL_CLASS = void 0;
+exports.default = exports.TABS_POSITION = exports.TABS_ORIENTATION = exports.TABPANEL_TABS_POSITION_CLASS = exports.TABPANEL_TABS_ITEM_CLASS = exports.TABPANEL_CONTAINER_CLASS = exports.TABPANEL_CLASS = exports.DISABLED_FOCUSED_TAB_CLASS = void 0;
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _devices = _interopRequireDefault(require("../../../core/devices"));
 var _dom_adapter = _interopRequireDefault(require("../../../core/dom_adapter"));
@@ -15,25 +15,24 @@ var _type = require("../../../core/utils/type");
 var _themes = require("../../../ui/themes");
 var _m_support = _interopRequireDefault(require("../../core/utils/m_support"));
 var _m_multi_view = _interopRequireDefault(require("../../ui/m_multi_view"));
-var _tabs = _interopRequireDefault(require("../../ui/tabs/tabs"));
+var _tabs = _interopRequireWildcard(require("../../ui/tabs/tabs"));
 var _item = _interopRequireDefault(require("./item"));
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // eslint-disable-next-line import/no-named-default
 const TABPANEL_CLASS = exports.TABPANEL_CLASS = 'dx-tabpanel';
 const TABPANEL_TABS_CLASS = 'dx-tabpanel-tabs';
-const TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
-const TABPANEL_CONTAINER_CLASS = 'dx-tabpanel-container';
-const TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
-const DISABLED_FOCUSED_TAB_CLASS = 'dx-disabled-focused-tab';
-const TABS_ITEM_TEXT_SPAN_CLASS = 'dx-tab-text-span';
-const TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS = 'dx-tab-text-span-pseudo';
-const TABPANEL_TABS_POSITION_CLASS = {
+const TABPANEL_TABS_ITEM_CLASS = exports.TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
+const TABPANEL_CONTAINER_CLASS = exports.TABPANEL_CONTAINER_CLASS = 'dx-tabpanel-container';
+const DISABLED_FOCUSED_TAB_CLASS = exports.DISABLED_FOCUSED_TAB_CLASS = 'dx-disabled-focused-tab';
+const TABPANEL_TABS_POSITION_CLASS = exports.TABPANEL_TABS_POSITION_CLASS = {
   top: 'dx-tabpanel-tabs-position-top',
   right: 'dx-tabpanel-tabs-position-right',
   bottom: 'dx-tabpanel-tabs-position-bottom',
   left: 'dx-tabpanel-tabs-position-left'
 };
-const TABS_POSITION = {
+const TABS_POSITION = exports.TABS_POSITION = {
   top: 'top',
   right: 'right',
   bottom: 'bottom',
@@ -45,7 +44,7 @@ const TABS_INDICATOR_POSITION_BY_TABS_POSITION = {
   bottom: 'top',
   left: 'right'
 };
-const TABS_ORIENTATION = {
+const TABS_ORIENTATION = exports.TABS_ORIENTATION = {
   horizontal: 'horizontal',
   vertical: 'vertical'
 };
@@ -149,9 +148,9 @@ class TabPanel extends _m_multi_view.default {
     }
     const title = (0, _type.isPlainObject)(data) ? data === null || data === void 0 ? void 0 : data.title : data;
     if ((0, _type.isDefined)(title) && !(0, _type.isPlainObject)(title)) {
-      const $tabTextSpan = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_CLASS);
+      const $tabTextSpan = (0, _renderer.default)('<span>').addClass(_tabs.TABS_ITEM_TEXT_SPAN_CLASS);
       $tabTextSpan.append(_dom_adapter.default.createTextNode(title));
-      const $tabTextSpanPseudo = (0, _renderer.default)('<span>').addClass(TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
+      const $tabTextSpanPseudo = (0, _renderer.default)('<span>').addClass(_tabs.TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS);
       $tabTextSpanPseudo.append(_dom_adapter.default.createTextNode(title));
       $tabTextSpanPseudo.appendTo($tabTextSpan);
       $tabTextSpan.appendTo($container);
@@ -162,7 +161,7 @@ class TabPanel extends _m_multi_view.default {
     this._templateManager.addDefaultTemplates({
       title: new _bindable_template.BindableTemplate(($container, data) => {
         this._prepareTabsItemTemplate(data, $container);
-        const $tabItem = (0, _renderer.default)('<div>').addClass(TABS_ITEM_TEXT_CLASS);
+        const $tabItem = (0, _renderer.default)('<div>').addClass(_tabs.TABS_ITEM_TEXT_CLASS);
         $container.wrapInner($tabItem);
       }, ['title', 'icon'], this.option('integrationOptions.watchMethod'))
     });
@@ -191,6 +190,18 @@ class TabPanel extends _m_multi_view.default {
     this._tabs = this._createComponent($tabs, _tabs.default, this._tabConfig());
     this._$container = (0, _renderer.default)('<div>').addClass(TABPANEL_CONTAINER_CLASS).appendTo($element);
     this._$container.append(this._$wrapper);
+    const {
+      focusStateEnabled,
+      selectedIndex
+    } = this.option();
+    if (focusStateEnabled && (0, _type.isDefined)(selectedIndex)) {
+      const selectedItem = this._tabs.itemElements().get(selectedIndex);
+      if (selectedItem) {
+        this._tabs.option({
+          focusedElement: selectedItem
+        });
+      }
+    }
   }
   _refreshActiveDescendant() {
     if (!this._tabs) {
@@ -244,6 +255,7 @@ class TabPanel extends _m_multi_view.default {
       onSelectionChanging: e => {
         const newTabsSelectedItemData = e.addedItems[0];
         const newTabsSelectedIndex = this._getIndexByItemData(newTabsSelectedItemData);
+        // @ts-expect-error ts-error
         const selectingResult = this.selectItem(newTabsSelectedIndex);
         // @ts-expect-error ts-error
         const promiseState = selectingResult.state();

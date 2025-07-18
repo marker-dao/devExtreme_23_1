@@ -19,6 +19,7 @@ var _type = require("../../../../core/utils/type");
 var _toolbar = _interopRequireDefault(require("../../../../ui/toolbar"));
 var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
 var _capitalize = require("../../../core/utils/capitalize");
+var _m_menu = require("../../../ui/menu/m_menu");
 var _devextremeQuill = _interopRequireDefault(require("devextreme-quill"));
 var _ai = require("../utils/ai");
 var _m_table_helper = require("../utils/m_table_helper");
@@ -181,22 +182,6 @@ if (_devextremeQuill.default) {
       this.editorInstance.$element().prepend($container);
       return $container;
     }
-    _detectRenamedOptions(item) {
-      const optionsInfo = [{
-        newName: 'name',
-        oldName: 'formatName'
-      }, {
-        newName: 'acceptedValues',
-        oldName: 'formatValues'
-      }];
-      if ((0, _type.isObject)(item)) {
-        (0, _iterator.each)(optionsInfo, (index, optionName) => {
-          if (Object.prototype.hasOwnProperty.call(item, optionName.oldName)) {
-            _ui.default.log('W1016', optionName.oldName, optionName.newName);
-          }
-        });
-      }
-    }
     _subscribeFormatHotKeys() {
       this.quill.keyboard.addBinding({
         which: KEY_CODES.b,
@@ -232,7 +217,6 @@ if (_devextremeQuill.default) {
       const resultItems = [];
       (0, _iterator.each)(this.options.items, (index, item) => {
         let newItem;
-        this._detectRenamedOptions(item);
         if ((0, _type.isObject)(item)) {
           newItem = this._handleObjectItem(item);
         } else if (item === TOOLBAR_AI_ITEM_NAME) {
@@ -390,13 +374,17 @@ if (_devextremeQuill.default) {
       const isMenuDisabled = !((_dataSource$0$items = dataSource[0].items) !== null && _dataSource$0$items !== void 0 && _dataSource$0$items.length) || !aiIntegration;
       const options = {
         dataSource,
+        disabled: isMenuDisabled,
+        onContentReady: e => {
+          const $item = (0, _renderer.default)(e.element).find(`.${_m_menu.DX_MENU_ITEM_CLASS}`).first();
+          $item.attr('aria-label', _message.default.format('dxHtmlEditor-aiToolbarItemAriaLabel'));
+        },
         onItemClick: e => {
           var _itemData$items;
           const {
             itemData
           } = e;
-          debugger;
-          if ((_itemData$items = itemData.items) !== null && _itemData$items !== void 0 && _itemData$items.length) {
+          if (!itemData || (_itemData$items = itemData.items) !== null && _itemData$items !== void 0 && _itemData$items.length) {
             return;
           }
           const aiDialogOptions = {
@@ -406,8 +394,7 @@ if (_devextremeQuill.default) {
             prompt: itemData.prompt
           };
           this._formatHandlers[name](aiDialogOptions);
-        },
-        disabled: isMenuDisabled
+        }
       };
       return (0, _extend.extend)(true, {
         widget: 'dxMenu',

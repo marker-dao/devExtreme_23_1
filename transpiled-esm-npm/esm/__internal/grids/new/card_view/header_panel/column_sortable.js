@@ -1,24 +1,34 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 import _extends from "@babel/runtime/helpers/esm/extends";
-const _excluded = ["source", "getColumnByIndex", "allowDragging", "columnChooserDragModeOpened", "onColumnMove", "columnDragTemplate", "dropFeedbackMode"];
-import { createComponentVNode, normalizeProps } from "inferno";
+const _excluded = ["source", "getColumnByIndex", "allowDragging", "onColumnMove", "columnDragTemplate", "dropFeedbackMode"];
+import { createVNode, createComponentVNode, normalizeProps } from "inferno";
 import $ from '../../../../../core/renderer';
+import messageLocalization from '../../../../../localization/message';
+import { combineClasses } from '../../../../core/utils/combine_classes';
 import { Component, render } from 'inferno';
+import { Icon } from '../../grid_core/icon';
 import { Sortable } from '../../grid_core/inferno_wrappers/sortable';
 const ALLOWED_DRAGGING_DISTANCE = 20;
+const CLASS = {
+  widget: 'dx-widget',
+  columnSortable: 'dx-cardview-column-sortable',
+  dropzone: 'dx-cardview-dropzone',
+  dropzoneVisible: 'dx-cardview-dropzone-visible'
+};
 export class ColumnSortable extends Component {
   constructor() {
     super(...arguments);
     this.onDragStart = e => {
+      var _this$props$isColumnD, _this$props, _this$props$onDragSta, _this$props2;
       const column = this.props.getColumnByIndex(e.fromIndex);
-      const {
-        source
-      } = this.props;
-      const isDraggable = this.isColumnDraggable(column);
+      const isDraggable = ((_this$props$isColumnD = (_this$props = this.props).isColumnDraggable) === null || _this$props$isColumnD === void 0 ? void 0 : _this$props$isColumnD.call(_this$props, column)) ?? true;
       if (!isDraggable) {
         e.cancel = true;
         return;
       }
+      const {
+        source
+      } = this.props;
       e.itemData = {
         column,
         status: 'moving',
@@ -26,6 +36,12 @@ export class ColumnSortable extends Component {
         destination: source
       };
       e.itemData = _extends({}, e.itemData, this.getNeighborColumns(e));
+      (_this$props$onDragSta = (_this$props2 = this.props).onDragStart) === null || _this$props$onDragSta === void 0 || _this$props$onDragSta.call(_this$props2, e);
+    };
+    this.onDraggableElementShown = e => {
+      // add dx-widget for correct font
+      $(e.dragElement).addClass(CLASS.widget);
+      $(e.dragElement).addClass(CLASS.columnSortable);
     };
     this.onDragMove = e => {
       // @ts-expect-error
@@ -41,10 +57,11 @@ export class ColumnSortable extends Component {
       this.renderDragTemplate(e.itemData);
     };
     this.onColumnMove = e => {
+      var _this$props$onColumnM, _this$props3;
       if (e.itemData.status === 'forbid') {
         return;
       }
-      this.props.onColumnMove(e.itemData.column, e.toIndex, e.itemData);
+      (_this$props$onColumnM = (_this$props3 = this.props).onColumnMove) === null || _this$props$onColumnM === void 0 || _this$props$onColumnM.call(_this$props3, e.itemData.column, e.toIndex, e.itemData);
     };
     // TODO: move all none-native approaches to sortable wrapper
     this.renderDragTemplate = itemData => {
@@ -61,16 +78,15 @@ export class ColumnSortable extends Component {
     };
   }
   render() {
-    const _this$props = this.props,
+    const _this$props4 = this.props,
       {
         source,
         allowDragging,
-        columnChooserDragModeOpened,
         columnDragTemplate,
         dropFeedbackMode
-      } = _this$props,
-      restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
-    const needSortable = allowDragging || columnChooserDragModeOpened;
+      } = _this$props4,
+      restProps = _objectWithoutPropertiesLoose(_this$props4, _excluded);
+    const needSortable = allowDragging ?? true;
     if (!needSortable) {
       return this.props.children;
     }
@@ -78,7 +94,13 @@ export class ColumnSortable extends Component {
       this.dragItemContainer = $(container).get(0);
       this.renderDragTemplate(e.itemData);
     } : undefined;
-    return normalizeProps(createComponentVNode(2, Sortable, _extends({}, restProps, {
+    const dropzoneClasses = combineClasses({
+      [CLASS.dropzone]: true,
+      [CLASS.dropzoneVisible]: !!this.props.showDropzone
+    });
+    return normalizeProps(createComponentVNode(2, Sortable, _extends({
+      "boundary": 'body'
+    }, restProps, {
       "dropFeedbackMode": dropFeedbackMode ?? 'indicate',
       "onDragStart": this.onDragStart,
       "group": 'dx-cardview-columns',
@@ -87,18 +109,12 @@ export class ColumnSortable extends Component {
       "onDragMove": this.onDragMove,
       "dragTemplate": dragTemplate,
       "_source": source,
-      children: this.props.children
+      "onPlaceholderPrepared": this.props.onPlaceholderPrepared,
+      "onDraggableElementShown": this.onDraggableElementShown,
+      children: [this.props.children, createVNode(1, "div", dropzoneClasses, [createComponentVNode(2, Icon, {
+        "name": 'dropzone'
+      }), createVNode(1, "span", null, messageLocalization.format('dxCardView-headerItemDropZoneText'), 0)], 4)]
     })));
-  }
-  isColumnDraggable(column) {
-    if (this.props.source === 'header-panel-main') {
-      const canBeHidden = column.allowHiding && !!this.props.columnChooserDragModeOpened;
-      return column.allowReordering || canBeHidden;
-    }
-    if (this.props.source === 'column-chooser') {
-      return true;
-    }
-    return false;
   }
   getDraggingStatus(e) {
     const {

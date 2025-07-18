@@ -401,7 +401,9 @@ export class Widget extends InfernoWrapperComponent {
       height
     } = this.props;
     const style = this.props.style || {};
+    // @ts-expect-error ts-error
     const computedWidth = normalizeStyleProp('width', isFunction(width) ? width() : width);
+    // @ts-expect-error ts-error
     const computedHeight = normalizeStyleProp('height', isFunction(height) ? height() : height);
     return _extends({}, style, {
       height: computedHeight ?? style.height,

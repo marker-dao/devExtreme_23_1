@@ -34,12 +34,12 @@ describe('ColumnsController', () => {
       const {
         columnsController
       } = setup({
+        dataSource: [{
+          id: 1,
+          price: 9.99,
+          createdAt: new Date('2023-01-01T00:00:00Z')
+        }],
         columns: ['id', 'price', 'createdAt']
-      });
-      columnsController.setColumnOptionsFromDataItem({
-        id: 1,
-        price: 9.99,
-        createdAt: new Date('2023-01-01T00:00:00Z')
       });
       const columns = columnsController.columns.peek();
       expect(columns).toMatchObject([{
@@ -57,12 +57,13 @@ describe('ColumnsController', () => {
     it('should generate columns from firstItems when no columns config is provided', () => {
       const {
         columnsController
-      } = setup();
-      columnsController.setColumnOptionsFromDataItem({
-        id: 1,
-        title: 'Hello',
-        price: 99.99,
-        createdAt: new Date('2024-01-01T00:00:00Z')
+      } = setup({
+        dataSource: [{
+          id: 1,
+          title: 'Hello',
+          price: 99.99,
+          createdAt: new Date('2024-01-01T00:00:00Z')
+        }]
       });
       const columns = columnsController.columns.peek();
       expect(columns).toMatchObject([{
@@ -265,6 +266,183 @@ describe('ColumnsController', () => {
         dataField: 'c',
         visibleIndex: 0
       }]);
+    });
+    it('should not touch the option manager columns', () => {
+      const {
+        options,
+        columnsController
+      } = setup({
+        columns: ['a', 'b', 'c']
+      });
+      const [col] = columnsController.columns.peek();
+      columnsController.columnOption(col, 'sortOrder', 'desc');
+      const result = options.oneWay('columns').peek();
+      expect(result).toStrictEqual(['a', 'b', 'c']);
+    });
+    it('should update complex path with dots (nested options)', () => {
+      const {
+        columnsController
+      } = setup({
+        columns: [{
+          dataField: 'a'
+        }]
+      });
+      const [col] = columnsController.columns.peek();
+      // @ts-expect-error fix columnOption type
+      columnsController.columnOption(col, 'headerFilter.search.enabled', true);
+      const [result] = columnsController.columns.peek();
+      expect(result).toMatchObject({
+        dataField: 'a',
+        headerFilter: {
+          search: {
+            enabled: true
+          }
+        }
+      });
+    });
+    it('should not be overridden by another column public option change', () => {
+      const {
+        options,
+        columnsController
+      } = setup({
+        columns: [{
+          dataField: 'a'
+        }]
+      });
+      const [col] = columnsController.columns.peek();
+      columnsController.columnOption(col, 'sortOrder', 'asc');
+      const [resultFirst] = columnsController.columns.peek();
+      expect(resultFirst).toMatchObject({
+        dataField: 'a',
+        sortOrder: 'asc'
+      });
+      options.option('columns[0].sortIndex', 99);
+      const [resultSecond] = columnsController.columns.peek();
+      expect(resultSecond).toMatchObject({
+        dataField: 'a',
+        sortOrder: 'asc'
+      });
+    });
+    it('should be overridden by same column public option change', () => {
+      const {
+        options,
+        columnsController
+      } = setup({
+        columns: [{
+          dataField: 'a'
+        }]
+      });
+      const [col] = columnsController.columns.peek();
+      columnsController.columnOption(col, 'sortOrder', 'asc');
+      const [resultFirst] = columnsController.columns.peek();
+      expect(resultFirst).toMatchObject({
+        dataField: 'a',
+        sortOrder: 'asc'
+      });
+      options.option('columns[0].sortOrder', 'desc');
+      const [resultSecond] = columnsController.columns.peek();
+      expect(resultSecond).toMatchObject({
+        dataField: 'a',
+        sortOrder: 'desc'
+      });
+    });
+    it('should be overridden by parent column public option change', () => {
+      const {
+        options,
+        columnsController
+      } = setup({
+        columns: [{
+          dataField: 'a'
+        }]
+      });
+      const [col] = columnsController.columns.peek();
+      // @ts-expect-error fix columnOption type
+      columnsController.columnOption(col, 'headerFilter.allowSelectAll', false);
+      const [resultFirst] = columnsController.columns.peek();
+      expect(resultFirst).toMatchObject({
+        dataField: 'a',
+        headerFilter: {
+          allowSelectAll: false
+        }
+      });
+      options.option('columns[0].headerFilter', {
+        height: 300
+      });
+      const [resultSecond] = columnsController.columns.peek();
+      expect(resultSecond).toMatchObject({
+        dataField: 'a',
+        headerFilter: {
+          height: 300
+        }
+      });
+    });
+    it('should be overridden by whole column array public option change', () => {
+      const {
+        options,
+        columnsController
+      } = setup({
+        columns: ['a']
+      });
+      const [col] = columnsController.columns.peek();
+      columnsController.columnOption(col, 'sortIndex', 35);
+      const [resultFirst] = columnsController.columns.peek();
+      expect(resultFirst).toMatchObject({
+        dataField: 'a',
+        sortIndex: 35
+      });
+      options.option('columns', ['a', 'b']);
+      const [resultSecond, resultThird] = columnsController.columns.peek();
+      expect(resultSecond.dataField).toBe('a');
+      expect(resultSecond.sortIndex).toBeUndefined();
+      expect(resultThird.dataField).toBe('b');
+      expect(resultThird.sortIndex).toBeUndefined();
+    });
+    it('should be overridden by specific column public option change', () => {
+      const {
+        options,
+        columnsController
+      } = setup({
+        columns: ['a']
+      });
+      const [col] = columnsController.columns.peek();
+      columnsController.columnOption(col, 'sortIndex', 35);
+      const [resultFirst] = columnsController.columns.peek();
+      expect(resultFirst).toMatchObject({
+        dataField: 'a',
+        sortIndex: 35
+      });
+      options.option('columns[0]', {
+        dataField: 'b'
+      });
+      const [resultSecond] = columnsController.columns.peek();
+      expect(resultSecond.dataField).toBe('b');
+      expect(resultSecond.sortIndex).toBeUndefined();
+    });
+    it('should not be overridden by another column public option change', () => {
+      const {
+        options,
+        columnsController
+      } = setup({
+        columns: ['a', 'b']
+      });
+      const [col] = columnsController.columns.peek();
+      columnsController.columnOption(col, 'sortIndex', 35);
+      const [resultFirst] = columnsController.columns.peek();
+      expect(resultFirst).toMatchObject({
+        dataField: 'a',
+        sortIndex: 35
+      });
+      options.option('columns[1]', {
+        dataField: 'b',
+        sortOrder: 'asc'
+      });
+      const [resultSecond, resultThird] = columnsController.columns.peek();
+      expect(resultSecond.dataField).toBe('a');
+      expect(resultSecond.sortOrder).toBeUndefined();
+      expect(resultSecond.sortIndex).toBe(35);
+      expect(resultThird.dataField).toBe('b');
+      expect(resultThird.sortOrder).toBe('asc');
+      expect(resultThird.sortIndex).toBeUndefined();
     });
   });
 });

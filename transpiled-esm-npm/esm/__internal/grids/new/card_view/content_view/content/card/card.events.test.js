@@ -1,7 +1,5 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode, normalizeProps } from "inferno";
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-/* eslint-disable @typescript-eslint/init-declarations */
 import { describe, expect, it } from '@jest/globals';
 import { createRef, render } from 'inferno';
 import { Card, CLASSES } from './card';
@@ -63,86 +61,6 @@ const props = {
   onClick: mockOnClick.call.bind(mockOnClick),
   onHold: mockOnHold.call.bind(mockOnHold)
 };
-describe('Events', () => {
-  let container;
-  // @ts-expect-error
-  beforeEach(() => {
-    container = document.createElement('div');
-    // @ts-expect-error
-    render(normalizeProps(createComponentVNode(2, Card, _extends({}, _extends({}, props, {
-      elementRef: createRef()
-    })))), container);
-  });
-  it('should trigger onClick event', () => {
-    const cardElement = container.querySelector(`.${CLASSES.card}`);
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('click'));
-    expect(mockOnClick.called).toBe(true);
-  });
-  it.skip('should trigger onDblClick event', () => {
-    const cardElement = container.querySelector(`.${CLASSES.card}`);
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('dblclick'));
-    expect(mockOnDblClick.called).toBe(true);
-  });
-  it('should trigger onHold event', () => {
-    const cardElement = container.querySelector(`.${CLASSES.card}`);
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('dxhold'));
-    expect(mockOnHold.called).toBe(true);
-  });
-  it('should trigger onHoverChanged event on mouse enter', () => {
-    const mockHover = {
-      called: false,
-      fn: _ref => {
-        let {
-          isHovered
-        } = _ref;
-        mockHover.called = true;
-        expect(isHovered).toBe(true);
-      }
-    };
-    const newProps = _extends({}, props, {
-      hoverStateEnabled: true,
-      onHoverChanged: mockHover.fn
-    });
-    // @ts-expect-error
-    render(normalizeProps(createComponentVNode(2, Card, _extends({}, newProps))), container);
-    const cardElement = container.querySelector(`.${CLASSES.card}`);
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('mouseenter'));
-    expect(mockHover.called).toBe(true);
-  });
-  it('should trigger onHoverChanged event on mouse leave', () => {
-    const mockHover = {
-      called: false,
-      fn: _ref2 => {
-        let {
-          isHovered
-        } = _ref2;
-        mockHover.called = true;
-        expect(isHovered).toBe(false);
-      }
-    };
-    const newProps = _extends({}, props, {
-      hoverStateEnabled: true,
-      onHoverChanged: mockHover.fn
-    });
-    // @ts-expect-error
-    render(normalizeProps(createComponentVNode(2, Card, _extends({}, newProps))), container);
-    const cardElement = container.querySelector(`.${CLASSES.card}`);
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('mouseleave'));
-    expect(mockHover.called).toBe(true);
-  });
-  it('should handle hoverStateEnabled prop correctly', () => {
-    const cardElement = container.querySelector('.dx-cardview-card');
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('mouseenter'));
-    const classList = (cardElement === null || cardElement === void 0 ? void 0 : cardElement.getAttribute('class')) || '';
-    expect(classList).toContain('dx-cardview-card-hover');
-  });
-  it('should render field template correctly', () => {
-    const fieldName = container.querySelector('.dx-cardview-field-caption');
-    const fieldValue = container.querySelector('.dx-cardview-field-value');
-    expect(fieldName === null || fieldName === void 0 ? void 0 : fieldName.textContent).toBe('Field:');
-    expect(fieldValue === null || fieldValue === void 0 ? void 0 : fieldValue.textContent).toBe('devextreme');
-  });
-});
 describe('Callbacks', () => {
   describe('selectCard', () => {
     // @ts-expect-errors

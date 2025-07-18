@@ -3,7 +3,9 @@ import registerComponent from '../../../core/component_registrator';
 import $ from '../../../core/renderer';
 import { getImageContainer } from '../../core/utils/m_icon';
 import Widget from '../../core/widget/widget';
-const INFORMER_CLASS = 'dx-informer';
+export const INFORMER_CLASS = 'dx-informer';
+const INFORMER_ERROR_CLASS = 'dx-informer-error';
+const INFORMER_INFO_CLASS = 'dx-informer-info';
 const INFORMER_ALIGNMENT_START_CLASS = 'dx-informer-alignment-start';
 const INFORMER_ALIGNMENT_CENTER_CLASS = 'dx-informer-alignment-center';
 const INFORMER_ALIGNMENT_END_CLASS = 'dx-informer-alignment-end';
@@ -16,7 +18,8 @@ class Informer extends Widget {
       contentAlignment: 'center',
       icon: '',
       showBackground: true,
-      text: ''
+      text: '',
+      type: 'error'
     });
   }
   _initMarkup() {
@@ -26,6 +29,7 @@ class Informer extends Widget {
     this.$element().addClass(INFORMER_CLASS);
     this.$element().toggleClass(INFORMER_BG_CLASS, showBackground);
     this._setAlignmentClass();
+    this._setTypeClass();
     super._initMarkup();
     this._renderIcon();
     this._renderText();
@@ -45,6 +49,21 @@ class Informer extends Widget {
       case 'center':
       default:
         this.$element().addClass(INFORMER_ALIGNMENT_CENTER_CLASS);
+        break;
+    }
+  }
+  _setTypeClass() {
+    this.$element().removeClass(INFORMER_ERROR_CLASS).removeClass(INFORMER_INFO_CLASS);
+    const {
+      type
+    } = this.option();
+    switch (type) {
+      case 'info':
+        this.$element().addClass(INFORMER_INFO_CLASS);
+        break;
+      case 'error':
+      default:
+        this.$element().addClass(INFORMER_ERROR_CLASS);
         break;
     }
   }
@@ -89,6 +108,9 @@ class Informer extends Widget {
         break;
       case 'text':
         this._updateText();
+        break;
+      case 'type':
+        this._setTypeClass();
         break;
       default:
         super._optionChanged(args);

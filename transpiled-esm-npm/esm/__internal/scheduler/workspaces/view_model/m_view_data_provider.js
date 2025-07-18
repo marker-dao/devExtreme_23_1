@@ -1,14 +1,14 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-const _excluded = ["groups", "groupOrientation", "groupByDate", "isAllDayPanelVisible", "viewOffset"];
+const _excluded = ["getResourceManager", "groupOrientation", "groupByDate", "isAllDayPanelVisible", "viewOffset"];
 import dateUtils from '../../../../core/utils/date';
 import { dateUtilsTs } from '../../../core/utils/date';
-import { calculateIsGroupedAllDayPanel, getGroupPanelData, isGroupingByDate, isHorizontalGroupingApplied, isHorizontalView, isVerticalGroupingApplied } from '../../../scheduler/r1/utils/index';
 import timeZoneUtils from '../../m_utils_time_zone';
+import { calculateIsGroupedAllDayPanel, getGroupPanelData, isGroupingByDate, isHorizontalGroupingApplied, isHorizontalView, isVerticalGroupingApplied } from '../../r1/utils/index';
 import { DateHeaderDataGenerator } from './m_date_header_data_generator';
 import { GroupedDataMapProvider } from './m_grouped_data_map_provider';
 import { TimePanelDataGenerator } from './m_time_panel_data_generator';
-import { getViewDataGeneratorByViewType } from './m_utils';
+import { getViewDataGeneratorByViewType } from './utils/view_provider_utils';
 // TODO: Vinogradov types refactoring.
 export default class ViewDataProvider {
   constructor(viewType) {
@@ -17,7 +17,10 @@ export default class ViewDataProvider {
     this.viewData = {};
     this.completeViewDataMap = [];
     this.completeDateHeaderMap = [];
-    this.viewDataMap = {};
+    this.viewDataMap = {
+      dateTableMap: [],
+      allDayPanelMap: []
+    };
     this._groupedDataMapProvider = null;
   }
   get groupedDataMap() {
@@ -37,7 +40,6 @@ export default class ViewDataProvider {
     const dateHeaderDataGenerator = new DateHeaderDataGenerator(viewDataGenerator);
     const timePanelDataGenerator = new TimePanelDataGenerator(viewDataGenerator);
     const renderOptions = this._transformRenderOptions(options);
-    renderOptions.interval = this.viewDataGenerator.getInterval(renderOptions.hoursInterval);
     this._options = renderOptions;
     if (isGenerateNewViewData) {
       this.completeViewDataMap = viewDataGenerator.getCompleteViewDataMap(renderOptions);
@@ -71,30 +73,34 @@ export default class ViewDataProvider {
   }
   _transformRenderOptions(renderOptions) {
     const {
-        groups,
+        getResourceManager,
         groupOrientation,
         groupByDate,
         isAllDayPanelVisible,
         viewOffset
       } = renderOptions,
       restOptions = _objectWithoutPropertiesLoose(renderOptions, _excluded);
+    const resourceManager = getResourceManager();
+    const interval = this.viewDataGenerator.getInterval(renderOptions.hoursInterval);
     return _extends({}, restOptions, {
-      startViewDate: this.viewDataGenerator._calculateStartViewDate(renderOptions),
-      isVerticalGrouping: isVerticalGroupingApplied(groups, groupOrientation),
-      isHorizontalGrouping: isHorizontalGroupingApplied(groups, groupOrientation),
-      isGroupedByDate: isGroupingByDate(groups, groupOrientation, groupByDate),
-      isGroupedAllDayPanel: calculateIsGroupedAllDayPanel(groups, groupOrientation, isAllDayPanelVisible),
-      groups,
+      startViewDate: this.viewDataGenerator.getStartViewDate(renderOptions),
+      isVerticalGrouping: isVerticalGroupingApplied(resourceManager.groups, groupOrientation),
+      isHorizontalGrouping: isHorizontalGroupingApplied(resourceManager.groups, groupOrientation),
+      isGroupedByDate: isGroupingByDate(resourceManager.groups, groupOrientation, groupByDate),
+      isGroupedAllDayPanel: calculateIsGroupedAllDayPanel(resourceManager.groups, groupOrientation, isAllDayPanelVisible),
+      getResourceManager,
       groupOrientation,
       isAllDayPanelVisible,
-      viewOffset
+      viewOffset,
+      interval
     });
   }
   getGroupPanelData(options) {
     const renderOptions = this._transformRenderOptions(options);
-    if (renderOptions.groups.length > 0) {
+    const groupResources = renderOptions.getResourceManager().groupResources();
+    if (groupResources.length > 0) {
       const cellCount = this.getCellCount(renderOptions);
-      return getGroupPanelData(renderOptions.groups, cellCount, renderOptions.isGroupedByDate, renderOptions.isGroupedByDate ? 1 : cellCount);
+      return getGroupPanelData(groupResources, cellCount, renderOptions.isGroupedByDate, renderOptions.isGroupedByDate ? 1 : cellCount);
     }
     return undefined;
   }
@@ -115,15 +121,6 @@ export default class ViewDataProvider {
     let isAppointmentRender = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     return this._groupedDataMapProvider.findCellPositionInMap(cellInfo, isAppointmentRender);
   }
-  hasAllDayPanel() {
-    const {
-      viewData
-    } = this.viewDataMap;
-    const {
-      allDayPanel
-    } = viewData.groupedData[0];
-    return !viewData.isGroupedAllDayPanel && (allDayPanel === null || allDayPanel === void 0 ? void 0 : allDayPanel.length) > 0;
-  }
   getCellsGroup(groupIndex) {
     return this._groupedDataMapProvider.getCellsGroup(groupIndex);
   }
@@ -139,7 +136,9 @@ export default class ViewDataProvider {
   getRowCountInGroup(groupIndex) {
     return this._groupedDataMapProvider.getRowCountInGroup(groupIndex);
   }
-  getCellData(rowIndex, columnIndex, isAllDay, rtlEnabled) {
+  getCellData(rowIndex, columnIndex) {
+    let isAllDay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    let rtlEnabled = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
     const row = isAllDay && !this._options.isVerticalGrouping ? this.viewDataMap.allDayPanelMap : this.viewDataMap.dateTableMap[rowIndex];
     const actualColumnIndex = !rtlEnabled ? columnIndex : row.length - 1 - columnIndex;
     const {
@@ -147,13 +146,13 @@ export default class ViewDataProvider {
     } = row[actualColumnIndex];
     return cellData;
   }
-  getCellsByGroupIndexAndAllDay(groupIndex, allDay) {
+  getCellsByGroupIndexAndAllDay(groupIndex, isAllDay) {
     const rowsPerGroup = this._getRowCountWithAllDayRows();
     const isShowAllDayPanel = this._options.isAllDayPanelVisible;
     const firstRowInGroup = this._options.isVerticalGrouping ? groupIndex * rowsPerGroup : 0;
     const lastRowInGroup = this._options.isVerticalGrouping ? (groupIndex + 1) * rowsPerGroup - 1 : rowsPerGroup;
-    const correctedFirstRow = isShowAllDayPanel && !allDay ? firstRowInGroup + 1 : firstRowInGroup;
-    const correctedLastRow = allDay ? correctedFirstRow : lastRowInGroup;
+    const correctedFirstRow = isShowAllDayPanel && !isAllDay ? firstRowInGroup + 1 : firstRowInGroup;
+    const correctedLastRow = isAllDay ? correctedFirstRow : lastRowInGroup;
     return this.completeViewDataMap.slice(correctedFirstRow, correctedLastRow + 1).map(row => row.filter(_ref => {
       let {
         groupIndex: currentGroupIndex

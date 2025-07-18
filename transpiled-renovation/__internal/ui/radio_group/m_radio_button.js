@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _click = require("../../../common/core/events/click");
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
-var _index = require("../../../common/core/events/utils/index");
+var _utils = require("../../../common/core/events/utils");
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _devices = _interopRequireDefault(require("../../../core/devices"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
@@ -74,7 +74,7 @@ class RadioButton extends _editor.default {
   }
   _renderClick() {
     // @ts-expect-error ts-error
-    const eventName = (0, _index.addNamespace)(_click.name, this.NAME);
+    const eventName = (0, _utils.addNamespace)(_click.name, this.NAME);
     this._clickAction = this._createAction(args => {
       this._clickHandler(args.event);
     });
@@ -89,11 +89,16 @@ class RadioButton extends _editor.default {
   _clickHandler(e) {
     this._saveValueChangeEvent(e);
     this.option('value', true);
+    this._saveValueChangeEvent(undefined);
   }
   _optionChanged(args) {
-    switch (args.name) {
+    const {
+      name,
+      value
+    } = args;
+    switch (name) {
       case 'value':
-        this._renderCheckedState(args.value);
+        this._renderCheckedState(value);
         super._optionChanged(args);
         break;
       default:

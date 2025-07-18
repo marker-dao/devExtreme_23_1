@@ -1,7 +1,9 @@
 import { createVNode, createFragment, createComponentVNode } from "inferno";
 import { isCommandKeyPressed } from '../../../../../../../common/core/events/utils/index';
+import messageLocalization from '../../../../../../../localization/message';
 import { isDefined } from '../../../../../../core/utils/m_type';
 import { Toolbar } from '../../../../../../grids/new/grid_core/inferno_wrappers/toolbar';
+import { normalizeToolbarItems } from '../../../../../../grids/new/grid_core/toolbar/utils';
 import { Component } from 'inferno';
 export const CLASSES = {
   cardHeader: 'dx-cardview-card-header',
@@ -17,9 +19,13 @@ export class CardHeader extends Component {
     if (card && isCheckBoxesRendered) {
       return {
         location: 'before',
+        name: 'selectionCheckBox',
         widget: 'dxCheckBox',
         cssClass: CLASSES.cardSelectCheckBox,
         options: {
+          elementAttr: {
+            'aria-label': messageLocalization.format('dxCardView-ariaSelectCard')
+          },
           value: card.isSelected,
           onValueChanged: e => {
             const event = e.event;
@@ -35,12 +41,9 @@ export class CardHeader extends Component {
     }
     return null;
   }
-  render() {
+  getDefaultToolbarItems() {
     const {
-      visible: visibleProp,
-      items = [],
       captionExpr,
-      template: Template,
       card,
       allowUpdating,
       allowDeleting,
@@ -48,11 +51,13 @@ export class CardHeader extends Component {
       onDelete
     } = this.props;
     const checkBoxItem = this.getCheckBoxItem();
-    const captionItem = captionExpr && card !== null && card !== void 0 && card[captionExpr] ? {
+    const captionItem = !!captionExpr && (card === null || card === void 0 ? void 0 : card[captionExpr]) && {
+      name: 'caption',
       location: 'before',
       text: card[captionExpr]
-    } : null;
-    const updateButton = allowUpdating ? {
+    };
+    const updateButton = allowUpdating && {
+      name: 'updateButton',
       location: 'after',
       widget: 'dxButton',
       options: {
@@ -60,25 +65,37 @@ export class CardHeader extends Component {
         onClick: onEdit,
         stylingMode: 'text'
       }
-    } : null;
-    const deleteButton = allowDeleting ? {
+    };
+    const deleteButton = allowDeleting && {
+      name: 'deleteButton',
       location: 'after',
       widget: 'dxButton',
       options: {
-        icon: 'remove',
+        icon: 'trash',
         onClick: onDelete,
         stylingMode: 'text'
       }
-    } : null;
-    const finalItems = [checkBoxItem, captionItem, updateButton, deleteButton, ...items].filter(item => !!item);
-    const visible = isDefined(visibleProp) ? visibleProp : !!finalItems.length;
+    };
+    const items = [checkBoxItem, captionItem, updateButton, deleteButton].filter(item => !!item);
+    // TODO: fix typings
+    return items;
+  }
+  render() {
+    const {
+      visible: visibleProp,
+      items: userToolbarItems,
+      template: Template,
+      card
+    } = this.props;
+    const toolbarItems = normalizeToolbarItems(this.getDefaultToolbarItems(), userToolbarItems, ['caption', 'selectionCheckBox', 'updateButton', 'deleteButton']);
+    const visible = isDefined(visibleProp) ? visibleProp : !!toolbarItems.length;
     if (!visible) {
       return createFragment();
     }
     return createVNode(1, "div", CLASSES.cardHeader, Template ? createComponentVNode(2, Template, {
       "card": card
     }) : createComponentVNode(2, Toolbar, {
-      "items": finalItems
+      "items": toolbarItems
     }), 0);
   }
 }

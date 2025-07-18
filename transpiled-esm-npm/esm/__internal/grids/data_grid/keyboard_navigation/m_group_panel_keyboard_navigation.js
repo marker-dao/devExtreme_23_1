@@ -4,25 +4,19 @@ import { isCommandKeyPressed } from '../../../../common/core/events/utils/index'
 import $ from '../../../../core/renderer';
 import { hiddenFocus } from '../../../../ui/shared/accessibility';
 import { Direction } from '../../../grids/grid_core/keyboard_navigation/const';
-import { KeyboardNavigationController as KeyboardNavigationControllerCore } from '../../../grids/grid_core/keyboard_navigation/m_keyboard_navigation_core';
+import { ColumnKeyboardNavigationController } from '../../../grids/grid_core/keyboard_navigation/m_column_keyboard_navigation_core';
 import { CLASSES as GROUPING_CLASSES } from '../grouping/const';
 import gridCore from '../m_core';
-export class GroupPanelKeyboardNavigationController extends KeyboardNavigationControllerCore {
+import { ColumnKeyboardNavigationMixin } from './m_column_keyboard_navigation_mixin';
+export class GroupPanelKeyboardNavigationController extends ColumnKeyboardNavigationMixin(ColumnKeyboardNavigationController) {
   constructor() {
     super(...arguments);
     this.isNeedToHiddenFocusAfterClick = false;
   }
-  isGroupColumnValidForReordering(groupColumn, direction) {
-    const allowDragging = this.headerPanel.allowDragging(groupColumn);
-    if (!allowDragging) {
-      return false;
-    }
-    const groupedColumns = this._columnsController.getGroupColumns();
-    return direction === Direction.Next ? groupColumn.groupIndex !== groupedColumns.length - 1 : groupColumn.groupIndex !== 0;
-  }
   groupItemClickHandler(e) {
     var _this$_columnsControl;
-    const groupColumn = $(e.originalEvent.target).data('columnData');
+    const $groupedColumnElement = $(e.originalEvent.target);
+    const groupColumn = this._columnsController.columnOption(`groupIndex:${$groupedColumnElement.index()}`);
     this.isNeedToHiddenFocusAfterClick = (_this$_columnsControl = this._columnsController) === null || _this$_columnsControl === void 0 ? void 0 : _this$_columnsControl.allowColumnSorting(groupColumn);
   }
   unsubscribeFromGroupItemClick() {
@@ -42,27 +36,26 @@ export class GroupPanelKeyboardNavigationController extends KeyboardNavigationCo
       originalEvent
     } = e;
     if (isCommandKeyPressed(originalEvent)) {
-      const groupColumn = $(originalEvent.target).data('columnData');
+      const $groupedColumnElement = $(originalEvent.target);
+      const column = this._columnsController.columnOption(`groupIndex:${$groupedColumnElement.index()}`);
       const direction = this.getDirectionByKeyName(e.keyName);
-      if (this.isGroupColumnValidForReordering(groupColumn, direction)) {
-        /*
-          We need to add 2 to the index instead of 1,
-          because that's how normalization of these indexes works.
-                   For example, we have columns with the following indexes:
-          0 1 2 3
-                   We drag 1 to the right. Its index becomes 3.
-          0 2 3(1) 3(3)
-                   After normalization of the indexes:
-          0 1(2) 2(1) 3(3)
-        */
-        const newGroupIndex = direction === Direction.Next ? groupColumn.groupIndex + 2 : groupColumn.groupIndex - 1;
-        const newFocusedGroupColumnIndex = direction === Direction.Next ? groupColumn.groupIndex + 1 : groupColumn.groupIndex - 1;
-        this.isNeedToFocus = true;
-        this.setFocusedCellPosition(0, newFocusedGroupColumnIndex);
-        this._columnsController.columnOption(groupColumn.index, 'groupIndex', newGroupIndex);
+      if (this.canReorderColumn(column, direction)) {
+        this.moveColumn(column, direction);
       }
       originalEvent === null || originalEvent === void 0 || originalEvent.preventDefault();
     }
+  }
+  getVisibleIndex(column) {
+    return column.groupIndex;
+  }
+  getColumnFromEvent(e) {
+    const $groupedColumnElement = $(e.originalEvent.target);
+    return this._columnsController.columnOption(`groupIndex:${$groupedColumnElement.index()}`);
+  }
+  getNewFocusedColumnBeforeUngrouping(column) {
+    const visibleColumnIndex = column.groupIndex;
+    const groupColumns = this._columnsController.getGroupColumns();
+    return visibleColumnIndex === groupColumns.length - 1 ? groupColumns[visibleColumnIndex - 1] : groupColumns[visibleColumnIndex + 1];
   }
   _getCell(cellPosition) {
     var _this$headerPanel;
@@ -83,22 +76,24 @@ export class GroupPanelKeyboardNavigationController extends KeyboardNavigationCo
     this.setFocusedCellPosition(0, $(e.target).index());
   }
   keyDownHandler(e) {
-    const isHandled = this.processOnKeyDown(e);
+    let isHandled = super.keyDownHandler(e);
     if (isHandled) {
-      return;
+      return true;
     }
     if (e.keyName === 'leftArrow' || e.keyName === 'rightArrow') {
       this.leftRightKeysHandler(e);
+      isHandled = true;
     }
+    return isHandled;
   }
   renderCompleted(e) {
     const {
-      isNeedToFocus
+      needToRestoreFocus
     } = this;
     super.renderCompleted(e);
     this.unsubscribeFromGroupItemClick();
     this.subscribeToGroupItemClick();
-    if (!isNeedToFocus && this.isNeedToHiddenFocusAfterClick) {
+    if (!needToRestoreFocus && this.isNeedToHiddenFocusAfterClick) {
       const $focusElement = this._getFocusedCell();
       if ($focusElement !== null && $focusElement !== void 0 && $focusElement.length) {
         hiddenFocus($focusElement.get(0));
@@ -106,10 +101,30 @@ export class GroupPanelKeyboardNavigationController extends KeyboardNavigationCo
       this.isNeedToHiddenFocusAfterClick = false;
     }
   }
+  canUngroupColumnByPressingKey(e) {
+    return super.canUngroupColumnByPressingKey(e) || e.keyName === 'backspace' || e.keyName === 'del';
+  }
+  getFirstFocusableVisibleIndex() {
+    var _this$headerPanel3;
+    const columns = (_this$headerPanel3 = this.headerPanel) === null || _this$headerPanel3 === void 0 ? void 0 : _this$headerPanel3.getColumns();
+    return columns !== null && columns !== void 0 && columns.length ? 0 : -1;
+  }
   init() {
     this.headerPanel = this.getView('headerPanel');
     this.groupItemClickHandlerContext = this.groupItemClickHandlerContext ?? this.groupItemClickHandler.bind(this);
     super.init();
+  }
+  canReorderColumn(groupColumn, direction) {
+    const allowDragging = this.headerPanel.allowDragging(groupColumn);
+    if (!allowDragging) {
+      return false;
+    }
+    const groupedColumns = this._columnsController.getGroupColumns();
+    return direction === Direction.Next ? groupColumn.groupIndex !== groupedColumns.length - 1 : groupColumn.groupIndex !== 0;
+  }
+  ungroupAllColumns() {
+    this.updateViewFocusPosition();
+    super.ungroupAllColumns();
   }
 }
 gridCore.registerModule('groupPanelKeyboardNavigation', {

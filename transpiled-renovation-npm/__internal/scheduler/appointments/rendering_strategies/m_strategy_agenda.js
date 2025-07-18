@@ -6,11 +6,12 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _iterator = require("../../../../core/utils/iterator");
-var _m_appointment_adapter = require("../../m_appointment_adapter");
-var _m_utils = require("../../resources/m_utils");
-var _m_utils2 = require("../data_provider/m_utils");
+var _appointment_adapter = require("../../utils/appointment_adapter/appointment_adapter");
+var _appointment_groups_utils = require("../../utils/resource_manager/appointment_groups_utils");
+var _m_utils = require("../data_provider/m_utils");
 var _m_strategy_base = _interopRequireDefault(require("./m_strategy_base"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class AgendaRenderingStrategy extends _m_strategy_base.default {
   get instance() {
     return this.options.instance;
@@ -27,13 +28,12 @@ class AgendaRenderingStrategy extends _m_strategy_base.default {
     return geometry;
   }
   groupAppointmentByResources(appointments) {
-    const groups = this.instance._getCurrentViewOption('groups');
-    const config = {
-      loadedResources: this.options.loadedResources,
-      resources: this.options.resources,
-      dataAccessors: this.dataAccessors.resources
-    };
-    return (0, _m_utils.groupAppointmentsByResources)(config, appointments, groups);
+    const resourceManager = this.options.getResourceManager();
+    const grouped = (0, _appointment_groups_utils.groupAppointmentsByGroupLeafs)(resourceManager.resourceById, resourceManager.groupsLeafs, appointments);
+    // TODO(9): Get rid of it as soon as you can. Unnecessary copy of appointments
+    // NOTE: one appointment in different groups has the same link,
+    //       and on render it will be removed by link
+    return grouped.map(group => group.map(item => _extends({}, item)));
   }
   createTaskPositionMap(appointments) {
     let height;
@@ -43,10 +43,10 @@ class AgendaRenderingStrategy extends _m_strategy_base.default {
       height = this.instance.fire('getAgendaVerticalStepHeight');
       appointmentsByResources = this.groupAppointmentByResources(appointments);
       let groupedAppts = [];
-      (0, _iterator.each)(appointmentsByResources, (i, appts) => {
+      appointmentsByResources.forEach(appts => {
         let additionalAppointments = [];
         let recurrentIndexes = [];
-        (0, _iterator.each)(appts, (index, appointment) => {
+        appts.forEach((appointment, index) => {
           const recurrenceBatch = this.instance.getAppointmentsInstance()._processRecurrenceAppointment(appointment, index);
           let appointmentBatch = null;
           if (!recurrenceBatch.indexes.length) {
@@ -152,8 +152,8 @@ class AgendaRenderingStrategy extends _m_strategy_base.default {
         }
         for (let j = 0; j < appointmentCount; j++) {
           const appointmentData = currentAppointments[j].settings || currentAppointments[j];
-          const adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(currentAppointments[j], this.dataAccessors, this.timeZoneCalculator);
-          const appointmentIsLong = (0, _m_utils2.getAppointmentTakesSeveralDays)(adapter);
+          const adapter = new _appointment_adapter.AppointmentAdapter(currentAppointments[j], this.dataAccessors);
+          const appointmentIsLong = (0, _m_utils.getAppointmentTakesSeveralDays)(adapter);
           const appointmentIsRecurrence = this.dataAccessors.get('recurrenceRule', currentAppointments[j]);
           if (this.instance.fire('dayHasAppointment', day, appointmentData, true) || !appointmentIsRecurrence && appointmentIsLong && this.instance.fire('dayHasAppointment', day, currentAppointments[j], true)) {
             groupResult[i] += 1;

@@ -149,4 +149,11 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       (0, _globals.expect)(item.data.endDate.getMinutes()).toBe(item.expectedEndDate.getMinutes());
     });
   });
+  (0, _globals.it)('should return false for incorrect startDate', () => {
+    [{}, {
+      startDate: 'Invalid date format'
+    }].forEach(data => {
+      (0, _globals.expect)((0, _get_appointment_data_items.replaceIncorrectEndDate)(data, 30, _appointment_data_accessor.mockAppointmentDataAccessor)).toBe(false);
+    });
+  });
 });

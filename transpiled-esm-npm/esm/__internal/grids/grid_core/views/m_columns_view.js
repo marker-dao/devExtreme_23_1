@@ -227,11 +227,6 @@ export class ColumnsView extends ColumnStateMixin(modules.View) {
     const cell = domAdapter.createElement('td');
     cell.style.textAlign = alignment;
     const $cell = $(cell);
-    if (options.rowType === 'data' && column.headerId && !column.type) {
-      if (this.component.option('showColumnHeaders')) {
-        this.setAria('describedby', column.headerId, $cell);
-      }
-    }
     if (column.cssClass) {
       $cell.addClass(column.cssClass);
     }
@@ -870,6 +865,14 @@ export class ColumnsView extends ColumnStateMixin(modules.View) {
       $scrollContainer.remove();
     }
   }
+  handleScroll(e) {
+    const scrollLeft = $(e.target).scrollLeft();
+    if (scrollLeft !== this._scrollLeft) {
+      this.scrollChanged.fire({
+        left: scrollLeft
+      }, this.name);
+    }
+  }
   /**
    * @extended: column_fixing
    */
@@ -879,14 +882,7 @@ export class ColumnsView extends ColumnStateMixin(modules.View) {
     if (useNative === false || useNative === 'auto' && !supportUtils.nativeScrolling) {
       $scrollContainer.addClass(this.addWidgetPrefix(SCROLLABLE_SIMULATED_CLASS));
     }
-    eventsEngine.on($scrollContainer, 'scroll', () => {
-      const scrollLeft = $scrollContainer.scrollLeft();
-      if (scrollLeft !== this._scrollLeft) {
-        this.scrollChanged.fire({
-          left: scrollLeft
-        }, this.name);
-      }
-    });
+    eventsEngine.on($scrollContainer, 'scroll', this.handleScroll.bind(this));
     $scrollContainer.addClass(this.addWidgetPrefix(CONTENT_CLASS)).addClass(this.addWidgetPrefix(SCROLL_CONTAINER_CLASS)).append($table).appendTo(this.element());
     this.setAria('role', 'presentation', $scrollContainer);
     return $scrollContainer;

@@ -1,13 +1,18 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../common/core/localization/message';
+import devices from '../../../core/devices';
 import $ from '../../../core/renderer';
 import Button from '../../../ui/button';
 import DOMComponent from '../../core/widget/dom_component';
+import EditingPreview from '../../ui/chat/editing_preview';
 import TextArea from '../../ui/m_text_area';
-const CHAT_MESSAGEBOX_CLASS = 'dx-chat-messagebox';
-const CHAT_MESSAGEBOX_TEXTAREA_CLASS = 'dx-chat-messagebox-textarea';
-const CHAT_MESSAGEBOX_BUTTON_CLASS = 'dx-chat-messagebox-button';
+export const CHAT_MESSAGEBOX_CLASS = 'dx-chat-messagebox';
+export const CHAT_MESSAGEBOX_INPUT_CONTAINER_CLASS = 'dx-chat-messagebox-input-container';
+export const CHAT_MESSAGEBOX_TEXTAREA_CLASS = 'dx-chat-messagebox-textarea';
+export const CHAT_MESSAGEBOX_BUTTON_CLASS = 'dx-chat-messagebox-button';
 export const TYPING_END_DELAY = 2000;
+const ESCAPE_KEY = 'escape';
+const isMobile = () => devices.current().deviceType !== 'desktop';
 class MessageBox extends DOMComponent {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -16,7 +21,10 @@ class MessageBox extends DOMComponent {
       hoverStateEnabled: true,
       onMessageEntered: undefined,
       onTypingStart: undefined,
-      onTypingEnd: undefined
+      onTypingEnd: undefined,
+      onMessageEditCanceled: undefined,
+      onMessageUpdating: undefined,
+      text: ''
     });
   }
   _init() {
@@ -28,16 +36,48 @@ class MessageBox extends DOMComponent {
   _initMarkup() {
     $(this.element()).addClass(CHAT_MESSAGEBOX_CLASS);
     super._initMarkup();
-    this._renderTextArea();
-    this._renderButton();
+    if (this.option('text')) {
+      this._renderEditingPreview();
+    }
+    this._renderInputContainer();
   }
-  _renderTextArea() {
+  _renderInputContainer() {
+    const $messageBox = $('<div>').addClass(CHAT_MESSAGEBOX_INPUT_CONTAINER_CLASS).appendTo(this.element());
+    this._renderTextArea($messageBox);
+    this._renderButton($messageBox);
+  }
+  _cancelMessageEdit() {
+    const {
+      onMessageEditCanceled
+    } = this.option();
+    this.option('text', '');
+    this._textArea.focus();
+    onMessageEditCanceled === null || onMessageEditCanceled === void 0 || onMessageEditCanceled();
+  }
+  _renderEditingPreview() {
+    const $editingPreview = $('<div>').prependTo(this.element());
+    const {
+      activeStateEnabled,
+      focusStateEnabled,
+      hoverStateEnabled,
+      text
+    } = this.option();
+    this._editingPreview = this._createComponent($editingPreview, EditingPreview, {
+      activeStateEnabled,
+      focusStateEnabled,
+      hoverStateEnabled,
+      text,
+      onCancel: () => this._cancelMessageEdit()
+    });
+  }
+  _renderTextArea($parent) {
     const {
       activeStateEnabled,
       focusStateEnabled,
       hoverStateEnabled
     } = this.option();
-    const $textArea = $('<div>').addClass(CHAT_MESSAGEBOX_TEXTAREA_CLASS).appendTo(this.element());
+    const $textArea = $('<div>').addClass(CHAT_MESSAGEBOX_TEXTAREA_CLASS);
+    $parent.append($textArea);
     this._textArea = this._createComponent($textArea, TextArea, {
       activeStateEnabled,
       focusStateEnabled,
@@ -55,24 +95,33 @@ class MessageBox extends DOMComponent {
       },
       onEnterKey: e => {
         var _e$event;
+        if (isMobile()) {
+          return;
+        }
         if (!((_e$event = e.event) !== null && _e$event !== void 0 && _e$event.shiftKey)) {
           this._sendHandler(e);
         }
       }
     });
     this._textArea.registerKeyHandler('enter', event => {
-      if (!event.shiftKey && this._isValuableTextEntered()) {
+      if (!event.shiftKey && this._isValuableTextEntered() && !isMobile()) {
         event.preventDefault();
       }
     });
+    this._textArea.registerKeyHandler(ESCAPE_KEY, () => {
+      if (this.option('text')) {
+        this._cancelMessageEdit();
+      }
+    });
   }
-  _renderButton() {
+  _renderButton($parent) {
     const {
       activeStateEnabled,
       focusStateEnabled,
       hoverStateEnabled
     } = this.option();
-    const $button = $('<div>').addClass(CHAT_MESSAGEBOX_BUTTON_CLASS).appendTo(this.element());
+    const $button = $('<div>').addClass(CHAT_MESSAGEBOX_BUTTON_CLASS);
+    $parent.append($button);
     this._button = this._createComponent($button, Button, {
       activeStateEnabled,
       focusStateEnabled,
@@ -133,8 +182,20 @@ class MessageBox extends DOMComponent {
     this._clearTypingEndTimeout();
     (_this$_typingEndActio2 = this._typingEndAction) === null || _this$_typingEndActio2 === void 0 || _this$_typingEndActio2.call(this);
     const {
-      text
+      text = ''
     } = this._textArea.option();
+    const {
+      text: previewText
+    } = this.option();
+    if (previewText) {
+      const {
+        onMessageUpdating
+      } = this.option();
+      onMessageUpdating === null || onMessageUpdating === void 0 || onMessageUpdating({
+        text
+      });
+      return;
+    }
     this._textArea.reset();
     this._toggleButtonDisableState(true);
     (_this$_messageEntered = this._messageEnteredAction) === null || _this$_messageEntered === void 0 || _this$_messageEntered.call(this, {
@@ -161,8 +222,10 @@ class MessageBox extends DOMComponent {
       case 'focusStateEnabled':
       case 'hoverStateEnabled':
         {
+          var _this$_editingPreview;
           this._button.option(name, value);
           this._textArea.option(name, value);
+          (_this$_editingPreview = this._editingPreview) === null || _this$_editingPreview === void 0 || _this$_editingPreview.option(name, value);
           break;
         }
       case 'onMessageEntered':
@@ -173,6 +236,10 @@ class MessageBox extends DOMComponent {
         break;
       case 'onTypingEnd':
         this._createTypingEndAction();
+        break;
+      case 'text':
+        this._updateEditingPreview(value);
+        this._updateInputContainer(value);
         break;
       default:
         super._optionChanged(args);
@@ -188,6 +255,21 @@ class MessageBox extends DOMComponent {
         'aria-labelledby': emptyViewId
       }
     });
+  }
+  _updateEditingPreview(text) {
+    if (this._editingPreview) {
+      this._editingPreview.option('text', text);
+      if (!text) {
+        this._editingPreview = null;
+      }
+    } else {
+      this._renderEditingPreview();
+    }
+  }
+  _updateInputContainer(value) {
+    this._textArea.option('value', value);
+    const shouldButtonBeDisabled = !this._isValuableTextEntered();
+    this._toggleButtonDisableState(shouldButtonBeDisabled);
   }
 }
 export default MessageBox;

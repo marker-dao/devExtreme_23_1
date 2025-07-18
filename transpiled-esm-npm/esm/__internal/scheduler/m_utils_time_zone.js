@@ -3,9 +3,11 @@ import errors from '../../core/errors';
 import { dateUtilsTs } from '../core/utils/date';
 import { macroTaskArray } from '../scheduler/utils/index';
 import dateUtils from '../../core/utils/date';
+import { globalCache } from './global_cache';
 import DateAdapter from './m_date_adapter';
 import timeZoneDataUtils from './timezones/m_utils_timezones_data';
 import timeZoneList from './timezones/timezone_list';
+const timeZoneListSet = new Set(timeZoneList.value);
 const toMs = dateUtils.dateToMilliseconds;
 const MINUTES_IN_HOUR = 60;
 const MS_IN_MINUTE = 60000;
@@ -58,7 +60,7 @@ const calculateTimezoneByValue = function (timeZone) {
   if (!timeZone) {
     return undefined;
   }
-  const isValidTimezone = timeZoneList.value.includes(timeZone);
+  const isValidTimezone = timeZoneListSet.has(timeZone);
   if (!isValidTimezone) {
     errors.log('W0009', timeZone);
     return undefined;
@@ -78,10 +80,10 @@ const getStringOffset = function (timeZone) {
   let result = '';
   try {
     var _dateTimeFormat$forma;
-    const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
+    const dateTimeFormat = globalCache.timezones.memo(`intl${timeZone}`, () => new Intl.DateTimeFormat('en-US', {
       timeZone,
       timeZoneName: 'longOffset'
-    });
+    }));
     result = ((_dateTimeFormat$forma = dateTimeFormat.formatToParts(date).find(_ref => {
       let {
         type
@@ -170,13 +172,12 @@ const getDiffBetweenClientTimezoneOffsets = function () {
   let secondDate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Date();
   return getClientTimezoneOffset(firstDate) - getClientTimezoneOffset(secondDate);
 };
+const getMachineTimezoneName = () => globalCache.timezones.memo('localTimezone', () => dateUtils.getMachineTimezoneName());
 const isEqualLocalTimeZone = function (timeZoneName) {
   let date = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Date();
-  if (Intl) {
-    const localTimeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (localTimeZoneName === timeZoneName) {
-      return true;
-    }
+  const localTimeZoneName = getMachineTimezoneName();
+  if (localTimeZoneName && localTimeZoneName === timeZoneName) {
+    return true;
   }
   return isEqualLocalTimeZoneByDeclaration(timeZoneName, date);
 };
@@ -261,21 +262,15 @@ const getTimeZones = function () {
   }));
 };
 const GET_TIMEZONES_BATCH_SIZE = 10;
-let timeZoneDataCache = [];
-let timeZoneDataCachePromise;
-const cacheTimeZones = async function () {
-  let date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
-  if (timeZoneDataCachePromise) {
-    return timeZoneDataCachePromise;
-  }
-  timeZoneDataCachePromise = macroTaskArray.map(timeZoneList.value, timezoneId => ({
-    id: timezoneId,
-    title: getTimezoneTitle(timezoneId, date)
-  }), GET_TIMEZONES_BATCH_SIZE);
-  timeZoneDataCache = await timeZoneDataCachePromise;
-  return timeZoneDataCache;
+const cacheTimeZones = async () => globalCache.timezones.memo('timeZonesCachePromise', () => macroTaskArray.map(timeZoneList.value, timezoneId => ({
+  id: timezoneId,
+  title: getTimezoneTitle(timezoneId, new Date())
+}), GET_TIMEZONES_BATCH_SIZE).then(data => globalCache.timezones.memo('timeZonesCache', () => data)));
+const getTimeZonesCache = () => globalCache.timezones.get('timeZonesCache') ?? [];
+const isLocalTimeMidnightDST = date => {
+  const startDayDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  return startDayDate.getHours() === 1;
 };
-const getTimeZonesCache = () => timeZoneDataCache;
 const utils = {
   getDaylightOffset,
   getDaylightOffsetInMs,
@@ -293,12 +288,14 @@ const utils = {
   isTimezoneChangeInDate,
   getDateWithoutTimezoneChange,
   hasDSTInLocalTimeZone,
+  getMachineTimezoneName,
   isEqualLocalTimeZone,
   isEqualLocalTimeZoneByDeclaration,
   setOffsetsToDate,
   addOffsetsWithoutDST,
   getTimeZones,
   getTimeZonesCache,
-  cacheTimeZones
+  cacheTimeZones,
+  isLocalTimeMidnightDST
 };
 export default utils;

@@ -1,3 +1,4 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import dataQuery from '../../../common/data/query';
 import { equalByValue, getKeyHash, noop } from '../../../core/utils/common';
 import { Deferred } from '../../../core/utils/deferred';
@@ -106,14 +107,30 @@ export default class SelectionStrategy {
     }
     return remoteFilter;
   }
+  _getQueryParams() {
+    const {
+      sensitivity
+    } = this.options;
+    if (!sensitivity) {
+      return;
+    }
+    return {
+      langParams: {
+        collatorOptions: {
+          sensitivity
+        }
+      }
+    };
+  }
   _loadFilteredData(remoteFilter, localFilter, select, isSelectAll) {
     const filterLength = encodeURI(JSON.stringify(this._removeTemplateProperty(remoteFilter))).length;
     const needLoadAllData = this.options.maxFilterLengthInRequest && filterLength > this.options.maxFilterLengthInRequest;
     const deferred = Deferred();
-    const loadOptions = {
+    const queryParams = this._getQueryParams();
+    const loadOptions = _extends({
       filter: needLoadAllData ? undefined : remoteFilter,
       select: needLoadAllData ? this.options.dataFields() : select || this.options.dataFields()
-    };
+    }, queryParams);
     if (remoteFilter && remoteFilter.length === 0) {
       deferred.resolve([]);
     } else {

@@ -14,11 +14,11 @@ var _date2 = _interopRequireDefault(require("../../../core/utils/date"));
 var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _size = require("../../../core/utils/size");
-var _index = require("../../scheduler/r1/utils/index");
-var _constants = require("../constants");
 var _m_classes = require("../m_classes");
 var _m_table_creator = _interopRequireDefault(require("../m_table_creator"));
-var _m_utils = require("../resources/m_utils");
+var _index = require("../r1/utils/index");
+var _constants_view = require("../utils/options/constants_view");
+var _agenda_group_utils = require("../utils/resource_manager/agenda_group_utils");
 var _m_work_space = _interopRequireDefault(require("./m_work_space"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const {
@@ -35,7 +35,7 @@ const INNER_CELL_MARGIN = 5;
 const OUTER_CELL_MARGIN = 20;
 class SchedulerAgenda extends _m_work_space.default {
   get type() {
-    return _constants.VIEWS.AGENDA;
+    return _constants_view.VIEWS.AGENDA;
   }
   get renderingStrategy() {
     return this.invoke('getLayoutManager').getRenderingStrategyInstance();
@@ -222,11 +222,14 @@ class SchedulerAgenda extends _m_work_space.default {
     return this._$groupTable;
   }
   _makeGroupRows() {
-    const tree = (0, _m_utils.createReducedResourcesTree)(this.option('loadedResources'), (field, action) => (0, _m_utils.getDataAccessors)(this.option('getResourceDataAccessors')(), field, action), this.option('getFilteredItems')());
+    const resourceManager = this.option('getResourceManager')();
+    const allAppointments = this.option('getFilteredItems')();
+    const tree = (0, _agenda_group_utils.reduceResourcesTree)(resourceManager.resourceById, resourceManager.groupsTree, allAppointments);
+    const oldTree = (0, _agenda_group_utils.convertToOldTree)(resourceManager.resourceById, tree);
     const cellTemplate = this.option('resourceCellTemplate');
     const getGroupHeaderContentClass = _m_classes.GROUP_HEADER_CONTENT_CLASS;
     const cellTemplates = [];
-    const table = tableCreator.makeGroupedTableFromJSON(tableCreator.VERTICAL, tree, {
+    const table = tableCreator.makeGroupedTableFromJSON(tableCreator.VERTICAL, oldTree, {
       cellTag: 'th',
       groupTableClass: GROUP_TABLE_CLASS,
       groupRowClass: _m_classes.GROUP_ROW_CLASS,
@@ -303,15 +306,9 @@ class SchedulerAgenda extends _m_work_space.default {
     return false;
   }
   _prepareCellTemplateOptions(text, date, rowIndex, $cell) {
-    const groupsOpt = this.option('groups');
-    const groups = {};
-    const isGroupedView = !!groupsOpt.length;
-    const path = isGroupedView && (0, _m_utils.getPathToLeaf)(rowIndex, groupsOpt) || [];
-    path.forEach((resourceValue, resourceIndex) => {
-      const resourceName = groupsOpt[resourceIndex].name;
-      groups[resourceName] = resourceValue;
-    });
-    const groupIndex = isGroupedView ? this._getGroupIndexByResourceId(groups) : undefined;
+    const leaf = this.resourceManager.groupsLeafs[rowIndex];
+    const groups = (leaf === null || leaf === void 0 ? void 0 : leaf.grouped) ?? {};
+    const groupIndex = leaf === null || leaf === void 0 ? void 0 : leaf.groupIndex;
     return {
       model: {
         text,
@@ -425,16 +422,8 @@ class SchedulerAgenda extends _m_work_space.default {
   getEndViewDateByEndDayHour() {
     return this.getEndViewDate();
   }
-  getCellDataByCoordinates() {
-    return {
-      startDate: null,
-      endDate: null
-    };
-  }
   updateScrollPosition(date) {
-    const newDate = this.timeZoneCalculator.createDate(date, {
-      path: 'toGrid'
-    });
+    const newDate = this.timeZoneCalculator.createDate(date, 'toGrid');
     const bounds = this.getVisibleBounds();
     const startDateHour = newDate.getHours();
     const startDateMinutes = newDate.getMinutes();

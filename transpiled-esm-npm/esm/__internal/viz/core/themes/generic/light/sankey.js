@@ -27,7 +27,7 @@ export default {
         color: WHITE
       },
       customizeText(info) {
-        return info.title;
+        return info.label;
       },
       shadow: {
         opacity: 0.2,

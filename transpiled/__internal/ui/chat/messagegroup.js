@@ -85,17 +85,21 @@ class MessageGroup extends _widget.default {
   }
   _getMessageBubbleOptions(message) {
     const options = {
-      text: message.text,
-      isDeleted: message.isDeleted
+      isDeleted: message.isDeleted,
+      type: message.type
     };
     const {
       messageTemplate
     } = this.option();
+    if (message.type === 'image') {
+      options.alt = message.alt;
+      options.src = message.src;
+    } else {
+      options.text = message.text;
+    }
     if (messageTemplate) {
-      options.template = (text, container) => {
-        messageTemplate(_extends({}, message, {
-          text
-        }), container);
+      options.template = (messageData, container) => {
+        messageTemplate(_extends({}, message, messageData), container);
       };
     }
     return options;
@@ -103,7 +107,8 @@ class MessageGroup extends _widget.default {
   _renderMessageBubbles(items) {
     this._$messageBubbleContainer = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGEGROUP_CONTENT_CLASS);
     items.forEach((message, index) => {
-      if (index !== 0 && message.isEdited === true && !message.isDeleted) {
+      const shouldCreateEditedElement = index !== 0 && message.type !== 'image' && message.isEdited === true && !message.isDeleted;
+      if (shouldCreateEditedElement) {
         const $edited = this._createEditedElement();
         $edited.appendTo(this._$messageBubbleContainer);
       }
@@ -120,7 +125,7 @@ class MessageGroup extends _widget.default {
       timestamp,
       author
     } = message;
-    const isEdited = (0, _type.isDefined)(shouldRenderEditedMessage) ? shouldRenderEditedMessage : message.isEdited;
+    const isEdited = (0, _type.isDefined)(shouldRenderEditedMessage) ? shouldRenderEditedMessage : message.type !== 'image' && message.isEdited;
     const isAlignmentStart = this._isAlignmentStart();
     this.$element().find(`.${CHAT_MESSAGEGROUP_INFORMATION_CLASS}`).remove();
     const $information = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGEGROUP_INFORMATION_CLASS);

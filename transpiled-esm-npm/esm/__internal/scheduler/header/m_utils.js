@@ -1,10 +1,6 @@
 import dateLocalization from '../../../common/core/localization/date';
-import messageLocalization from '../../../common/core/localization/message';
-import errors from '../../../core/errors';
 import dateUtils from '../../../core/utils/date';
-import { camelize } from '../../../core/utils/inflector';
-import { isFunction, isObject } from '../../../core/utils/type';
-import { VIEWS } from '../constants';
+import { isFunction } from '../../../core/utils/type';
 const DAY_FORMAT = 'd';
 const DAYS_IN_WORK_WEEK = 5;
 const {
@@ -267,50 +263,6 @@ const STEP_MAP = {
   timelineMonth: 'month',
   agenda: 'agenda'
 };
-export const getViewType = view => isObject(view) ? view.type : view;
-export const getStep = view => {
-  const type = getViewType(view);
-  return type ? STEP_MAP[type] : undefined;
-};
-export const getViewName = view => {
-  if (isObject(view)) {
-    return view.name ?? view.type;
-  }
-  return view;
-};
-export const getViewText = view => {
-  if (isObject(view) && view.name) {
-    return view.name;
-  }
-  const viewName = camelize(getViewType(view), true);
-  return messageLocalization.format(`dxScheduler-switcher${viewName}`);
-};
-const isValidView = view => Boolean(view && Object.values(VIEWS).includes(view));
-export const validateViews = function () {
-  let views = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  views.forEach(view => {
-    const viewType = getViewType(view);
-    if (!isValidView(viewType)) {
-      errors.log('W0008', viewType);
-    }
-  });
-};
-export const formatViews = function () {
-  let views = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  validateViews(views);
-  return views.map(view => {
-    const text = getViewText(view);
-    const type = getViewType(view);
-    const name = getViewName(view);
-    return {
-      text,
-      name,
-      view: {
-        text,
-        type,
-        name
-      }
-    };
-  });
-};
-export const isOneView = (views, selectedView) => views.length === 1 && views[0].name === selectedView;
+export const getStep = type => STEP_MAP[type];
+export const getViewName = view => view.name ?? view.type;
+export const isOneView = (views, selectedView) => views.length === 1 && getViewName(views[0]) === selectedView;

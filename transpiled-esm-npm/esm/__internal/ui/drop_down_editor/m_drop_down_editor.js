@@ -512,7 +512,6 @@ class DropDownEditor extends TextBox {
   _renderPopupContent() {}
   _renderPopup() {
     const popupConfig = extend(this._popupConfig(), this._options.cache('dropDownOptions'));
-    delete popupConfig.closeOnOutsideClick;
     // @ts-expect-error ts-error
     this._popup = this._createComponent(this._$popup, Popup, popupConfig);
     this._popup.on({
@@ -572,6 +571,7 @@ class DropDownEditor extends TextBox {
       // @ts-expect-error ts-error
       showTitle: this.option('dropDownOptions.showTitle'),
       _ignoreFunctionValueDeprecation: true,
+      // @ts-expect-error ts-error
       width: () => getElementWidth(this.$element()),
       height: 'auto',
       shading: false,

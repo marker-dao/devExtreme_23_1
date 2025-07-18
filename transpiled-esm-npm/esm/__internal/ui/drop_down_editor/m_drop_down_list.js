@@ -307,10 +307,11 @@ class DropDownList extends DropDownEditor {
   }
   _getPlainItems(items) {
     let plainItems = [];
+    const grouped = this._getGroupedOption();
     items = items || this.option('items') || this._dataSource.items() || [];
     for (let i = 0; i < items.length; i++) {
       var _items$i;
-      if ((_items$i = items[i]) !== null && _items$i !== void 0 && _items$i.items) {
+      if (grouped && (_items$i = items[i]) !== null && _items$i !== void 0 && _items$i.items) {
         plainItems = plainItems.concat(items[i].items);
       } else {
         plainItems.push(items[i]);
@@ -406,9 +407,9 @@ class DropDownList extends DropDownEditor {
   }
   _popupConfig() {
     return _extends({}, super._popupConfig(), {
-      // @ts-expect-error ts-error
       templatesRenderAsynchronously: false,
       autoResizeEnabled: false,
+      // @ts-expect-error ts-error
       maxHeight: this._getMaxHeight.bind(this)
     });
   }

@@ -9,10 +9,10 @@ var _message = _interopRequireDefault(require("../../../common/core/localization
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _extend = require("../../../core/utils/extend");
 var _m_type = require("../../core/utils/m_type");
-var _m_collection_widget = require("../../ui/collection/m_collection_widget.edit");
+var _collection_widget = require("../../ui/collection/collection_widget.edit");
+var _listEditStrategy = _interopRequireDefault(require("./list.edit.strategy.grouped"));
 var _m_list = require("./m_list.base");
 var _m_listEdit = _interopRequireDefault(require("./m_list.edit.provider"));
-var _m_listEditStrategy = _interopRequireDefault(require("./m_list.edit.strategy.grouped"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const LIST_ITEM_SELECTED_CLASS = 'dx-list-item-selected';
@@ -35,7 +35,6 @@ class ListEdit extends _m_list.ListBase {
       // @ts-expect-error ts-error
       const focusedItemIndex = editStrategy.getNormalizedIndex(focusedElement);
       const isLastIndexFocused = focusedItemIndex === this._getLastItemIndex();
-      // @ts-expect-error ts-error
       if (isLastIndexFocused && this._dataController.isLoading()) {
         return;
       }
@@ -161,8 +160,7 @@ class ListEdit extends _m_list.ListBase {
   }
   _initEditStrategy() {
     if (this.option('grouped')) {
-      // @ts-expect-error ts-error
-      this._editStrategy = new _m_listEditStrategy.default(this);
+      this._editStrategy = new _listEditStrategy.default(this);
     } else {
       super._initEditStrategy();
     }
@@ -229,15 +227,6 @@ class ListEdit extends _m_list.ListBase {
     // @ts-expect-error ts-error
     super._itemHoldHandler(...arguments);
   }
-  _getItemContainer(changeData) {
-    if (this.option('grouped')) {
-      var _this$_editStrategy$g;
-      const groupIndex = (_this$_editStrategy$g = this._editStrategy.getIndexByItemData(changeData)) === null || _this$_editStrategy$g === void 0 ? void 0 : _this$_editStrategy$g.group;
-      return this._getGroupContainerByIndex(groupIndex);
-    }
-    // @ts-expect-error ts-error
-    return super._getItemContainer(changeData);
-  }
   _itemContextMenuHandler(e) {
     const $itemElement = (0, _renderer.default)(e.currentTarget);
     if ($itemElement.is('.dx-state-disabled, .dx-state-disabled *')) {
@@ -268,7 +257,7 @@ class ListEdit extends _m_list.ListBase {
   }
   _getFlatIndex() {
     const {
-      selectedIndex = _m_collection_widget.NOT_EXISTING_INDEX
+      selectedIndex = _collection_widget.NOT_EXISTING_INDEX
     } = this.option();
     if ((0, _m_type.isNumeric)(selectedIndex) || !selectedIndex) {
       return selectedIndex;
@@ -281,14 +270,11 @@ class ListEdit extends _m_list.ListBase {
     switch (args.name) {
       case 'selectAllMode':
         this._initDataSource();
-        // @ts-expect-error ts-error
         this._dataController.pageIndex(0);
-        // @ts-expect-error ts-error
         this._dataController.load();
         break;
       case 'grouped':
         this._clearSelectedItems();
-        delete this._renderingGroupIndex;
         this._initEditStrategy();
         super._optionChanged(args);
         break;

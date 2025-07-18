@@ -1120,6 +1120,9 @@ const resizing = Base => class VirtualScrollingResizingControllerExtender extend
   hasResizeTimeout() {
     return (0, _type.isDefined)(this._resizeTimeout);
   }
+  resetLastResizeTime() {
+    this._lastTime = undefined;
+  }
   resize() {
     let result;
     if (isVirtualMode(this) || _m_utils.default.isVirtualRowRendering(this)) {

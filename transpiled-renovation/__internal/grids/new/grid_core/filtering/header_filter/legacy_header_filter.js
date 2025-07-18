@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getFilterType = exports.getDataSourceOptions = void 0;
+exports.getHeaderItemText = exports.getHeaderFilterListType = exports.getDataSourceOptions = void 0;
 var _deferred = require("../../../../../../core/utils/deferred");
 var _type = require("../../../../../../core/utils/type");
 var _filtering = _interopRequireDefault(require("../../../../../../ui/shared/filtering"));
@@ -13,7 +13,7 @@ var _m_header_filter = require("../../../../../grids/grid_core/header_filter/m_h
 var _m_header_filter_core = require("../../../../../grids/grid_core/header_filter/m_header_filter_core");
 var _m_utils2 = _interopRequireDefault(require("../../../../../grids/grid_core/m_utils"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-// NOTE: This code moved from old grid_core/header_filter/m_header_filter
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // NOTE: This code moved from old grid_core/header_filter/m_header_filter
 // with minimal possible modifications
 /* eslint-disable
    @typescript-eslint/explicit-function-return-type,
@@ -26,7 +26,6 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
    @typescript-eslint/explicit-module-boundary-types,
    @typescript-eslint/no-explicit-any,
 */
-
 const getHeaderItemText = (displayValue, column, currentLevel,
 // NOTE: Only text used from header filter options
 headerFilterOptions) => {
@@ -37,6 +36,7 @@ headerFilterOptions) => {
   }
   return text;
 };
+exports.getHeaderItemText = getHeaderItemText;
 const _updateSelectedState = (items, column) => {
   let i = items.length;
   const isExclude = column.filterType === 'exclude';
@@ -107,8 +107,11 @@ const _processGroupItems = (groupItems, currentLevel, path, options) => {
     path.pop();
   }
 };
-const getDataSourceOptions = (storeLoadAdapter, column, headerFilterOptions, filter) => {
+const getDataSourceOptions = (storeLoadAdapter, popupOptions, headerFilterOptions, filter) => {
   var _column$headerFilter;
+  const {
+    column
+  } = popupOptions;
   if (!storeLoadAdapter) {
     return undefined;
   }
@@ -122,33 +125,33 @@ const getDataSourceOptions = (storeLoadAdapter, column, headerFilterOptions, fil
   if ((0, _type.isDefined)(headerFilterDataSource) && !(0, _type.isFunction)(headerFilterDataSource)) {
     // @ts-expect-error
     options.dataSource = (0, _m_utils.normalizeDataSourceOptions)(headerFilterDataSource);
-    return options.dataSource;
+  } else {
+    const cutoffLevel = Array.isArray(group) ? group.length - 1 : 0;
+    options.dataSource = {
+      filter,
+      group,
+      useDefaultSearch: true,
+      load: loadOptions => {
+        // @ts-expect-error Deferred ctor.
+        const d = new _deferred.Deferred();
+        // NOTE: this marked as deprecated in original code
+        loadOptions.dataField = column.dataField || column.name;
+        storeLoadAdapter.load(loadOptions).done(data => {
+          const convertUTCDates = remoteGrouping && (0, _m_header_filter.isUTCFormat)(column.serializationFormat) && cutoffLevel > 3;
+          if (convertUTCDates) {
+            data = (0, _m_header_filter.convertDataFromUTCToLocal)(data, column);
+          }
+          _processGroupItems(data, null, null, {
+            level: cutoffLevel,
+            column,
+            headerFilterOptions
+          });
+          d.resolve(data);
+        }).fail(d.reject);
+        return d;
+      }
+    };
   }
-  const cutoffLevel = Array.isArray(group) ? group.length - 1 : 0;
-  options.dataSource = {
-    filter,
-    group,
-    useDefaultSearch: true,
-    load: loadOptions => {
-      // @ts-expect-error Deferred ctor.
-      const d = new _deferred.Deferred();
-      // NOTE: this marked as deprecated in original code
-      loadOptions.dataField = column.dataField || column.name;
-      storeLoadAdapter.load(loadOptions).done(data => {
-        const convertUTCDates = remoteGrouping && (0, _m_header_filter.isUTCFormat)(column.serializationFormat) && cutoffLevel > 3;
-        if (convertUTCDates) {
-          data = (0, _m_header_filter.convertDataFromUTCToLocal)(data, column);
-        }
-        _processGroupItems(data, null, null, {
-          level: cutoffLevel,
-          column,
-          headerFilterOptions
-        });
-        d.resolve(data);
-      }).fail(d.reject);
-      return d;
-    }
-  };
   if ((0, _type.isFunction)(headerFilterDataSource)) {
     headerFilterDataSource.call(column, options);
   }
@@ -156,14 +159,17 @@ const getDataSourceOptions = (storeLoadAdapter, column, headerFilterOptions, fil
   options.dataSource.postProcess = data => {
     let items = data;
     items = (origPostProcess === null || origPostProcess === void 0 ? void 0 : origPostProcess.call(void 0, items)) || items;
-    _updateSelectedState(items, column);
+    _updateSelectedState(items, _extends({}, column, {
+      filterType: popupOptions.filterType,
+      filterValues: popupOptions.filterValues
+    }));
     return items;
   };
   return options.dataSource;
 };
 exports.getDataSourceOptions = getDataSourceOptions;
-const getFilterType = column => {
+const getHeaderFilterListType = column => {
   const groupInterval = _filtering.default.getGroupInterval(column);
   return groupInterval && groupInterval.length > 1 ? 'tree' : 'list';
 };
-exports.getFilterType = getFilterType;
+exports.getHeaderFilterListType = getHeaderFilterListType;

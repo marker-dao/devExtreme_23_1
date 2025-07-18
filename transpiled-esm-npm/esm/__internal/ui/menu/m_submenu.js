@@ -9,6 +9,9 @@ import ContextMenu from '../../ui/context_menu/m_context_menu';
 const DX_CONTEXT_MENU_CONTENT_DELIMITER_CLASS = 'dx-context-menu-content-delimiter';
 const DX_SUBMENU_CLASS = 'dx-submenu';
 class Submenu extends ContextMenu {
+  _getMaxUsableSpace(offsetTop, windowHeight, anchorHeight) {
+    return Math.max(offsetTop, windowHeight - offsetTop - anchorHeight);
+  }
   _getDefaultOptions() {
     return extend(super._getDefaultOptions(), {
       orientation: 'horizontal',

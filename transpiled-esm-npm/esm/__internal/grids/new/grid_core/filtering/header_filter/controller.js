@@ -1,10 +1,11 @@
 import { computed } from '@preact/signals-core';
 import { ColumnsController } from '../../../../../grids/new/grid_core/columns_controller/index';
-import { getComposedHeaderFilter } from './utils';
+import { getComposedHeaderFilter, getHeaderFilterInfoArray } from './utils';
 export class HeaderFilterController {
   constructor(columnsController) {
     this.columnsController = columnsController;
-    this.composedHeaderFilter = computed(() => getComposedHeaderFilter(this.columnsController.visibleColumns.value));
+    this.headerFilterInfoArray = computed(() => getHeaderFilterInfoArray(this.columnsController.visibleColumns.value));
+    this.composedHeaderFilter = computed(() => getComposedHeaderFilter(this.headerFilterInfoArray.value));
   }
   clearHeaderFilters() {
     this.columnsController.updateColumns(columns => columns.map(col => {

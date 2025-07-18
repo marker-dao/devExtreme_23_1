@@ -9,7 +9,7 @@ var _icon = require("../../../core/utils/icon");
 var _index = require("../../core/r1/runtime/inferno/index");
 var _index2 = require("../../core/r1/utils/index");
 var _combine_classes = require("../../core/utils/combine_classes");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // with short path tests cant run
 const defaultIconProps = exports.defaultIconProps = {
   position: 'left',
   source: ''
@@ -53,26 +53,16 @@ class Icon extends _index.BaseInfernoComponent {
     }
     return '';
   }
-  get restAttributes() {
-    const restProps = _extends({}, this.props);
-    ['iconTemplate', 'position', 'source'].forEach(excluded => {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete restProps[excluded];
-    });
-    return restProps;
-  }
   render() {
     const {
       iconClassName,
-      props: {
-        source
-      },
+      props,
       sourceType
     } = this;
-    const IconTemplate = (0, _index2.getTemplate)(this.props.iconTemplate);
+    const IconTemplate = (0, _index2.getTemplate)(props.iconTemplate);
     return (0, _inferno.createFragment)([sourceType === 'dxIcon' && (0, _inferno.createVNode)(1, "i", iconClassName), sourceType === 'fontIcon' && (0, _inferno.createVNode)(1, "i", iconClassName), sourceType === 'image' && (0, _inferno.createVNode)(1, "img", iconClassName, null, 1, {
       "alt": "",
-      "src": source
+      "src": props.source
     }), IconTemplate && (0, _inferno.createVNode)(1, "i", iconClassName, IconTemplate({}), 0)], 0);
   }
 }

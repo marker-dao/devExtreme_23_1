@@ -26,7 +26,7 @@ var _type = require("../core/utils/type");
 var _view_port = require("../core/utils/view_port");
 var _window = require("../core/utils/window");
 var _dom_component = _interopRequireDefault(require("./core/widget/dom_component"));
-var _m_animator = _interopRequireDefault(require("./ui/scroll_view/m_animator"));
+var _animator = _interopRequireDefault(require("./ui/scroll_view/animator"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */ // @ts-expect-error
 // @ts-expect-error
@@ -187,9 +187,9 @@ class ScrollHelper {
     return location < start || location > start + size;
   }
 }
-class ScrollAnimator extends _m_animator.default {
-  ctor(strategy) {
-    super.ctor();
+class ScrollAnimator extends _animator.default {
+  constructor(strategy) {
+    super();
     this._strategy = strategy;
   }
   _step() {
@@ -252,7 +252,6 @@ class Draggable extends _dom_component.default {
   _init() {
     super._init();
     this._attachEventHandlers();
-    // @ts-expect-error ts-error
     this._scrollAnimator = new ScrollAnimator(this);
     this._horizontalScrollHelper = new ScrollHelper('horizontal', this);
     this._verticalScrollHelper = new ScrollHelper('vertical', this);

@@ -3,9 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.needCreateHeaderFilter = exports.mergeColumnHeaderFilterOptions = exports.getFilterOperator = exports.getComposedHeaderFilter = exports.getColumnName = exports.getColumnIdentifier = void 0;
+exports.needCreateHeaderFilter = exports.mergeColumnHeaderFilterOptions = exports.isColumnFilterable = exports.getHeaderFilterValuesType = exports.getHeaderFilterInfoArray = exports.getHeaderFilterInfo = exports.getFilterOperator = exports.getComposedHeaderFilter = exports.getColumnName = exports.getColumnIdentifier = void 0;
 var _errors = _interopRequireDefault(require("../../../../../../core/errors"));
 var _type = require("../../../../../../core/utils/type");
+var _filtering = _interopRequireDefault(require("../../../../../../ui/shared/filtering"));
+var _m_utils = _interopRequireDefault(require("../../../../../grids/grid_core/m_utils"));
 const _excluded = ["texts", "visible"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -49,22 +51,94 @@ const getFilterOperator = (values, filterType) => {
   }
 };
 exports.getFilterOperator = getFilterOperator;
+const isFilteringAllowed = column => column.allowFiltering || column.allowHeaderFiltering;
+const isColumnFilterable = column => isFilteringAllowed(column);
+exports.isColumnFilterable = isColumnFilterable;
 const needCreateHeaderFilter = column => {
-  const allowFiltering = column.allowFiltering && column.allowHeaderFiltering;
   const values = column.filterValues;
   const hasSelectedItems = (0, _type.isDefined)(values) && values.length > 0;
-  return allowFiltering && hasSelectedItems;
+  return isFilteringAllowed(column) && hasSelectedItems;
 };
 exports.needCreateHeaderFilter = needCreateHeaderFilter;
-const getComposedHeaderFilter = columns => {
-  const filterValue = [];
-  const filterableColumns = columns.filter(col => needCreateHeaderFilter(col));
-  filterableColumns.forEach((col, index) => {
-    filterValue.push([getColumnName(col), getFilterOperator(col.filterValues, col.filterType), col.filterValues]);
-    if (index < filterableColumns.length - 1) {
-      filterValue.push('and');
-    }
-  });
-  return filterValue;
+const getFilterExpression = (filterValues, column) => {
+  var _column$headerFilter2;
+  const columnName = getColumnName(column);
+  const hasGroupInterval = !!((_column$headerFilter2 = column.headerFilter) !== null && _column$headerFilter2 !== void 0 && _column$headerFilter2.groupInterval);
+  const needNormalizeFilterValues = (filterValues === null || filterValues === void 0 ? void 0 : filterValues.length) === 1 && !hasGroupInterval;
+  const normalizedFilterValues = needNormalizeFilterValues ? filterValues[0] : filterValues;
+  const filterOperator = getFilterOperator(normalizedFilterValues, column.filterType);
+  return [columnName, filterOperator, normalizedFilterValues];
 };
+// NOTE: Logic from util function grid_core/filter/m_filter_sync "getConditionFromHeaderFilter"
+const getHeaderFilterValuesType = column => {
+  var _column$headerFilter3;
+  const {
+    filterValues
+  } = column;
+  // NOTE: if empty or an empty array
+  if (!(filterValues !== null && filterValues !== void 0 && filterValues.length)) {
+    return 'empty';
+  }
+  const [firstFilterItem] = filterValues;
+  const hasGroupInterval = !!_filtering.default.getGroupInterval(column);
+  const hasCustomDataSource = !!((_column$headerFilter3 = column.headerFilter) !== null && _column$headerFilter3 !== void 0 && _column$headerFilter3.dataSource);
+  const isSingleValue = filterValues.length === 1 && !Array.isArray(firstFilterItem)
+  // NOTE: "canSyncHeaderFilterWithFilterRow" logic part
+  && (!hasGroupInterval && !hasCustomDataSource || filterValues.length === 1 && firstFilterItem === null);
+  return isSingleValue ? 'single-value' : 'values-or-condition';
+};
+exports.getHeaderFilterValuesType = getHeaderFilterValuesType;
+const getHeaderFilterInfo = column => {
+  if (!isFilteringAllowed(column)) {
+    return null;
+  }
+  const columnId = getColumnIdentifier(column);
+  const headerFilterValueType = getHeaderFilterValuesType(column);
+  if (headerFilterValueType === 'empty') {
+    return {
+      type: 'empty',
+      columnId,
+      filterType: 'include',
+      filterValues: [],
+      composedFilterValues: []
+    };
+  }
+  const {
+    filterType,
+    filterValues
+  } = column;
+  const normalizedFilterType = filterType ?? 'include';
+  const normalizedFilterValues = Array.isArray(filterValues) ? filterValues : [filterValues];
+  const filterValuesWithExpressions = normalizedFilterValues.filter(value => Array.isArray(value));
+  const filterValuesWithoutExpressions = normalizedFilterValues.filter(value => !Array.isArray(value));
+  const filterExpression = filterValuesWithoutExpressions.length ? [getFilterExpression(filterValuesWithoutExpressions, column)] : [];
+  const composedFilterValues = _m_utils.default.combineFilters([...filterExpression, ...filterValuesWithExpressions], 'or');
+  return {
+    type: headerFilterValueType,
+    columnId,
+    filterType: normalizedFilterType,
+    filterValues,
+    composedFilterValues
+  };
+};
+exports.getHeaderFilterInfo = getHeaderFilterInfo;
+const getHeaderFilterInfoArray = columns => columns.map(column => getHeaderFilterInfo(column)).filter(info => !!info);
+exports.getHeaderFilterInfoArray = getHeaderFilterInfoArray;
+const getComposedHeaderFilter = headerFilterInfoArray => headerFilterInfoArray
+// NOTE: Exclude empty header filters from the composed header filter value
+.filter(_ref2 => {
+  let {
+    type
+  } = _ref2;
+  return type !== 'empty';
+}).reduce((result, _ref3, idx, infoArray) => {
+  let {
+    composedFilterValues
+  } = _ref3;
+  result.push(composedFilterValues);
+  if (idx < infoArray.length - 1) {
+    result.push('and');
+  }
+  return result;
+}, []);
 exports.getComposedHeaderFilter = getComposedHeaderFilter;

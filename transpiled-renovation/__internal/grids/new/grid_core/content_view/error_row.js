@@ -5,11 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ErrorRow = exports.CLASSES = void 0;
 var _inferno = require("inferno");
+var _index = require("../../../../core/r1/runtime/inferno/index");
 var _toast = require("../../../../grids/new/grid_core/inferno_wrappers/toast");
+var _utils = require("../inferno_wrappers/utils");
 const CLASSES = exports.CLASSES = {
   errorRow: 'dx-gridcore-error-row'
 };
-class ErrorRow extends _inferno.Component {
+class ErrorRow extends _index.BaseInfernoComponent {
   constructor() {
     super(...arguments);
     this.ref = (0, _inferno.createRef)();
@@ -21,16 +23,14 @@ class ErrorRow extends _inferno.Component {
       "componentRef": this.toastRef,
       "visible": true,
       "message": lastError.text,
-      "type": 'error'
+      "type": 'error',
+      "position": {
+        my: 'bottom',
+        at: 'bottom',
+        // @ts-expect-error
+        of: (0, _utils.wrapRef)(this.ref)
+      }
     }, lastError.id), 0, null, null, this.ref);
-  }
-  componentDidUpdate() {
-    var _this$toastRef$curren;
-    (_this$toastRef$curren = this.toastRef.current) === null || _this$toastRef$curren === void 0 || _this$toastRef$curren.option('position', {
-      my: 'bottom',
-      at: 'bottom',
-      of: this.ref.current
-    });
   }
 }
 exports.ErrorRow = ErrorRow;

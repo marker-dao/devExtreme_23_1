@@ -8,7 +8,7 @@ var _query = _interopRequireDefault(require("../../../../common/data/query"));
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _date2 = require("../../../core/utils/date");
 var _index = require("../../../scheduler/r1/utils/index");
-var _m_utils = require("../../resources/m_utils");
+var _group_utils = require("../../../scheduler/utils/resource_manager/group_utils");
 var _m_appointment_filter = require("./m_appointment_filter");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 // TODO Vinogradov refactoring: this module should be refactored :)
@@ -100,8 +100,8 @@ class AppointmentFilterVirtualStrategy extends _m_appointment_filter.Appointment
     return this.filterAllDayAppointments(preparedItems).length > 0;
   }
   _getPrerenderFilterResources(groupIndex) {
-    const cellGroup = this.viewDataProvider.getCellsGroup(groupIndex);
-    return (0, _m_utils.getResourcesDataByGroups)(this.loadedResources, this.resources, [cellGroup]);
+    const resourceManager = this.options.getResourceManager();
+    return (0, _group_utils.getResourcesByGroupIndex)(resourceManager.groupsLeafs, resourceManager.resourceById, groupIndex);
   }
 }
 exports.AppointmentFilterVirtualStrategy = AppointmentFilterVirtualStrategy;

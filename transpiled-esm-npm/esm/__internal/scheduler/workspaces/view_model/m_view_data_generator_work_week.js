@@ -1,10 +1,9 @@
-import { isDataOnWeekend, workWeekUtils } from '../../../scheduler/r1/utils/index';
+import { isDataOnWeekend, workWeekUtils } from '../../r1/utils/index';
 import { ViewDataGeneratorWeek } from './m_view_data_generator_week';
 export class ViewDataGeneratorWorkWeek extends ViewDataGeneratorWeek {
   constructor() {
     super(...arguments);
     this.daysInInterval = 5;
-    this.isWorkView = true;
   }
   isSkippedDate(date) {
     return isDataOnWeekend(date);

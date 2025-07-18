@@ -1,4 +1,5 @@
 import { computed, effect, signal } from '@preact/signals-core';
+import { MAX_PAGES_COUNT } from '../../../../grids/grid_core/pager/m_pager';
 import { View } from '../core/view';
 import { DataController } from '../data_controller/index';
 import { OptionsController } from '../options_controller/options_controller';
@@ -31,13 +32,16 @@ export class PagerView extends View {
       pageSizeChanged: value => {
         this.dataController.pageSize.value = value;
       },
-      isGridCompatibility: false,
       pageCount: this.dataController.pageCount.value,
       showPageSizeSelector: this.options.oneWay('pager.showPageSizeSelector').value,
       _skipValidation: true,
       tabIndex: 0,
       showInfo: this.options.oneWay('pager.showInfo').value,
-      showNavigationButtons: this.options.oneWay('pager.showNavigationButtons').value
+      showNavigationButtons: this.options.oneWay('pager.showNavigationButtons').value,
+      label: this.options.oneWay('pager.label').value,
+      pagesNavigatorVisible: this.options.oneWay('pager.visible').value,
+      displayMode: this.options.oneWay('pager.displayMode').value,
+      maxPagesCount: MAX_PAGES_COUNT
     }));
   }
 }

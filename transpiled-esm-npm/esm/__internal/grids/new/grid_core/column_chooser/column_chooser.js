@@ -1,13 +1,14 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import { createFragment, createComponentVNode, normalizeProps } from "inferno";
-import $ from '../../../../../core/renderer';
+import { createVNode, createFragment, createComponentVNode, normalizeProps } from "inferno";
 import messageLocalization from '../../../../../localization/message';
 import { Component } from 'inferno';
 import { ColumnSortable } from '../../card_view/header_panel/column_sortable';
 import { Item } from '../../card_view/header_panel/item';
+import { CLASSES as ROOT_CLASSES } from '../const';
 import { Popup } from '../inferno_wrappers/popup';
 import { TreeView } from '../inferno_wrappers/tree_view';
 export const CLASS = {
+  excludeFlexBox: ROOT_CLASSES.excludeFlexBox,
   root: 'column-chooser',
   toolbarBtn: 'column-chooser-button',
   list: 'column-chooser-list',
@@ -15,8 +16,7 @@ export const CLASS = {
   dragMode: 'column-chooser-mode-drag',
   selectMode: 'column-chooser-mode-select',
   treeviewItem: 'dx-treeview-item',
-  treeviewExpanderIcon: 'dx-treeview-expander-icon-stub',
-  hidden: 'dx-hidden'
+  treeviewExpanderIcon: 'dx-treeview-expander-icon-stub'
 };
 export class ColumnChooser extends Component {
   constructor() {
@@ -25,10 +25,10 @@ export class ColumnChooser extends Component {
       const popup = e.component;
       if (this.props.popupConfig.position === undefined) {
         popup.option('position', {
-          my: 'right bottom',
+          my: 'right top',
           at: 'right bottom',
           // TODO: replace with content view element
-          of: '.dx-gridcore-contentview',
+          of: '.dx-cardview-column-chooser-button',
           collision: 'fit',
           offset: '-2 -2',
           boundaryOffset: '2 2'
@@ -42,29 +42,26 @@ export class ColumnChooser extends Component {
       const column = treeView.getNodes()[index].itemData.column;
       return column;
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.onSortablePlaceholderPrepared = e => {
-      $(e.placeholderElement).addClass(CLASS.hidden);
-    };
   }
   render() {
     const {
       visible,
       popupConfig,
-      popupRef
+      popupRef,
+      sortableConfig
     } = this.props;
     if (!visible) {
       return createFragment();
     }
     const treeView = this.getTreeView();
-    return createComponentVNode(2, Popup, {
+    return createVNode(1, "div", CLASS.excludeFlexBox, createComponentVNode(2, Popup, {
       "componentRef": popupRef,
       "visible": true,
       "shading": false,
       "dragEnabled": true,
       "resizeEnabled": true,
+      "showCloseButton": true,
       "_loopFocus": true,
-      "showCloseButton": popupConfig.showCloseButton,
       "toolbarItems": popupConfig.toolbarItems,
       "wrapperAttr": {
         class: this.getPopupWrapperClass()
@@ -80,14 +77,17 @@ export class ColumnChooser extends Component {
         "source": 'column-chooser',
         "filter": `.${CLASS.treeviewItem}`,
         "getColumnByIndex": this.getColumnByIndex,
+        "isColumnDraggable": sortableConfig.isColumnDraggable,
         "visibleColumns": this.props.visibleColumns,
         "allowDragging": !this.isSelectMode(),
         "columnDragTemplate": Item,
         "onColumnMove": this.props.onColumnMove,
-        "onPlaceholderPrepared": this.onSortablePlaceholderPrepared,
+        "onDragStart": sortableConfig.onDragStart,
+        "onDragEnd": sortableConfig.onDragEnd,
+        "onPlaceholderPrepared": sortableConfig.onPlaceholderPrepared,
         children: treeView
       })
-    });
+    }), 2);
   }
   isSelectMode() {
     return this.props.mode === 'select';

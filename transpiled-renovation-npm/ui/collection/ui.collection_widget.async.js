@@ -1,8 +1,8 @@
 "use strict";
 
 exports.default = void 0;
-var _m_collection_widget = _interopRequireDefault(require("../../__internal/ui/collection/m_collection_widget.async"));
+var _collection_widget = _interopRequireDefault(require("../../__internal/ui/collection/collection_widget.async"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_collection_widget.default;
+var _default = exports.default = _collection_widget.default;
 module.exports = exports.default;
 module.exports.default = exports.default;

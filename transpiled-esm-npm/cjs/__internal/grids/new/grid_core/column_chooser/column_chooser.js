@@ -5,15 +5,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ColumnChooser = exports.CLASS = void 0;
 var _inferno = require("inferno");
-var _renderer = _interopRequireDefault(require("../../../../../core/renderer"));
 var _message = _interopRequireDefault(require("../../../../../localization/message"));
 var _column_sortable = require("../../card_view/header_panel/column_sortable");
 var _item = require("../../card_view/header_panel/item");
+var _const = require("../const");
 var _popup = require("../inferno_wrappers/popup");
 var _tree_view = require("../inferno_wrappers/tree_view");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CLASS = exports.CLASS = {
+  excludeFlexBox: _const.CLASSES.excludeFlexBox,
   root: 'column-chooser',
   toolbarBtn: 'column-chooser-button',
   list: 'column-chooser-list',
@@ -21,8 +22,7 @@ const CLASS = exports.CLASS = {
   dragMode: 'column-chooser-mode-drag',
   selectMode: 'column-chooser-mode-select',
   treeviewItem: 'dx-treeview-item',
-  treeviewExpanderIcon: 'dx-treeview-expander-icon-stub',
-  hidden: 'dx-hidden'
+  treeviewExpanderIcon: 'dx-treeview-expander-icon-stub'
 };
 class ColumnChooser extends _inferno.Component {
   constructor() {
@@ -31,10 +31,10 @@ class ColumnChooser extends _inferno.Component {
       const popup = e.component;
       if (this.props.popupConfig.position === undefined) {
         popup.option('position', {
-          my: 'right bottom',
+          my: 'right top',
           at: 'right bottom',
           // TODO: replace with content view element
-          of: '.dx-gridcore-contentview',
+          of: '.dx-cardview-column-chooser-button',
           collision: 'fit',
           offset: '-2 -2',
           boundaryOffset: '2 2'
@@ -48,29 +48,26 @@ class ColumnChooser extends _inferno.Component {
       const column = treeView.getNodes()[index].itemData.column;
       return column;
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.onSortablePlaceholderPrepared = e => {
-      (0, _renderer.default)(e.placeholderElement).addClass(CLASS.hidden);
-    };
   }
   render() {
     const {
       visible,
       popupConfig,
-      popupRef
+      popupRef,
+      sortableConfig
     } = this.props;
     if (!visible) {
       return (0, _inferno.createFragment)();
     }
     const treeView = this.getTreeView();
-    return (0, _inferno.createComponentVNode)(2, _popup.Popup, {
+    return (0, _inferno.createVNode)(1, "div", CLASS.excludeFlexBox, (0, _inferno.createComponentVNode)(2, _popup.Popup, {
       "componentRef": popupRef,
       "visible": true,
       "shading": false,
       "dragEnabled": true,
       "resizeEnabled": true,
+      "showCloseButton": true,
       "_loopFocus": true,
-      "showCloseButton": popupConfig.showCloseButton,
       "toolbarItems": popupConfig.toolbarItems,
       "wrapperAttr": {
         class: this.getPopupWrapperClass()
@@ -86,14 +83,17 @@ class ColumnChooser extends _inferno.Component {
         "source": 'column-chooser',
         "filter": `.${CLASS.treeviewItem}`,
         "getColumnByIndex": this.getColumnByIndex,
+        "isColumnDraggable": sortableConfig.isColumnDraggable,
         "visibleColumns": this.props.visibleColumns,
         "allowDragging": !this.isSelectMode(),
         "columnDragTemplate": _item.Item,
         "onColumnMove": this.props.onColumnMove,
-        "onPlaceholderPrepared": this.onSortablePlaceholderPrepared,
+        "onDragStart": sortableConfig.onDragStart,
+        "onDragEnd": sortableConfig.onDragEnd,
+        "onPlaceholderPrepared": sortableConfig.onPlaceholderPrepared,
         children: treeView
       })
-    });
+    }), 2);
   }
   isSelectMode() {
     return this.props.mode === 'select';

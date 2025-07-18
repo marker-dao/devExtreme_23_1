@@ -7,11 +7,10 @@ exports.default = exports.STEP_TEXT_CLASS = exports.STEP_SELECTED_CLASS = export
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
-var _deferred = require("../../../core/utils/deferred");
 var _type = require("../../../core/utils/type");
 var _m_bindable_template = require("../../core/templates/m_bindable_template");
 var _m_icon = require("../../core/utils/m_icon");
-var _m_collection_widget = _interopRequireDefault(require("../../ui/collection/m_collection_widget.async"));
+var _collection_widget = _interopRequireDefault(require("../../ui/collection/collection_widget.async"));
 var _connector = _interopRequireDefault(require("../../ui/stepper/connector"));
 var _stepper_item = _interopRequireWildcard(require("../../ui/stepper/stepper_item"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
@@ -34,7 +33,7 @@ const ORIENTATION = exports.ORIENTATION = {
   horizontal: 'horizontal',
   vertical: 'vertical'
 };
-class Stepper extends _m_collection_widget.default {
+class Stepper extends _collection_widget.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       orientation: 'horizontal',
@@ -166,6 +165,13 @@ class Stepper extends _m_collection_widget.default {
   _selectedItemClass() {
     return STEP_SELECTED_CLASS;
   }
+  _isItemSelected(index) {
+    const {
+      items = [],
+      selectedItem
+    } = this.option();
+    return selectedItem === items[index];
+  }
   _itemDataKey() {
     return STEPPER_ITEM_DATA_KEY;
   }
@@ -290,10 +296,11 @@ class Stepper extends _m_collection_widget.default {
     this._processChangeCompletedItems();
   }
   _syncSelectionOptions(byOption) {
-    super._syncSelectionOptions(byOption).done(() => {
+    const parentDeferred = super._syncSelectionOptions(byOption);
+    parentDeferred.done(() => {
       this._postProcessSyncSelection();
     });
-    return (0, _deferred.Deferred)().resolve().promise();
+    return parentDeferred;
   }
   _itemOptionChanged(item, property, value, prevValue) {
     switch (property) {

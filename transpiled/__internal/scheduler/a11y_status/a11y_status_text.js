@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.getA11yStatusText = void 0;
 var _date = _interopRequireDefault(require("../../../common/core/localization/date"));
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
-var _type = require("../../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const KEYS = {
   dateRange: 'dxScheduler-dateRange',
@@ -38,8 +37,8 @@ const localizeName = (viewName, viewType) => {
   return '';
 };
 const getA11yStatusText = (view, startDate, endDate, appointmentCount, indicatorTime) => {
-  const viewType = (0, _type.isObject)(view) ? view.type : view;
-  const viewName = (0, _type.isObject)(view) ? view.name : undefined;
+  const viewType = view === null || view === void 0 ? void 0 : view.type;
+  const viewName = view === null || view === void 0 ? void 0 : view.name;
   const viewTypeLabel = localizeName(viewName, viewType);
   const isMonth = viewType === 'month' || viewType === 'timelineMonth';
   const startDateText = isMonth ? localizeMonth(startDate) : localizeDate(startDate);

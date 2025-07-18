@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { ERROR_MESSAGES, RequestManager } from '../../../core/ai_integration/core/request_manager';
+import { RequestManager } from '../../../core/ai_integration/core/request_manager';
 import { Provider } from '../../../core/ai_integration/test_utils/provider_mock';
+const INVALID_SEND_REQUEST_ERROR_MESSAGE = 'E0122 - AIIntegration: The sendRequest method is missing.';
 describe('RequestManager', () => {
   let provider = null;
   let requestManager = null;
@@ -13,19 +14,13 @@ describe('RequestManager', () => {
       // @ts-expect-error Access to protected property for a test
       expect(requestManager.provider).toBe(provider);
     });
+    it('should throw an error when constructed with invalid sendRequest method', () => {
+      const invalidProvider = {};
+      const createRequestManager = () => new RequestManager(invalidProvider);
+      expect(createRequestManager).toThrow(INVALID_SEND_REQUEST_ERROR_MESSAGE);
+    });
   });
   describe('sendRequest', () => {
-    describe('if the provider does not have a valid sendRequest method', () => {
-      it('should throw an error', () => {
-        const aIProvider = {};
-        requestManager = new RequestManager(aIProvider);
-        expect(() => {
-          requestManager.sendRequest({
-            user: 'test'
-          }, {});
-        }).toThrow(ERROR_MESSAGES.METHOD_NOT_IMPLEMENTED);
-      });
-    });
     it('should call provider.sendRequest with the propmpt and onChunk once', () => {
       const prompt = {
         user: 'User',

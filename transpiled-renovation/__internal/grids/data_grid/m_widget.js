@@ -25,7 +25,7 @@ require("./module_not_extended/search");
 require("./module_not_extended/pager");
 require("./module_not_extended/columns_resizing_reordering");
 require("./module_not_extended/keyboard_navigation");
-require("./module_not_extended/headers_keyboard_navigation");
+require("./keyboard_navigation/m_headers_keyboard_navigation");
 require("./keyboard_navigation/m_group_panel_keyboard_navigation");
 require("./summary/m_summary");
 require("./module_not_extended/sticky_columns");

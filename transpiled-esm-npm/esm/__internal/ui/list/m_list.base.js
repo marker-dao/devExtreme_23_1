@@ -3,7 +3,7 @@ import { fx } from '../../../common/core/animation';
 import { name as clickEventName } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { end as swipeEventEnd } from '../../../common/core/events/swipe';
-import { addNamespace } from '../../../common/core/events/utils/index';
+import { addNamespace } from '../../../common/core/events/utils';
 import messageLocalization from '../../../common/core/localization/message';
 import devices from '../../../core/devices';
 import { getPublicElement } from '../../../core/element';
@@ -24,11 +24,11 @@ import ScrollView from '../../../ui/scroll_view';
 import { current, isMaterial, isMaterialBased } from '../../../ui/themes';
 import { render } from '../../../ui/widget/utils.ink_ripple';
 import supportUtils from '../../core/utils/m_support';
-import CollectionWidget from '../../ui/collection/m_collection_widget.live_update';
-import { deviceDependentOptions } from '../../ui/scroll_view/m_scrollable.device';
+import CollectionWidget from '../../ui/collection/collection_widget.live_update';
+import { deviceDependentOptions } from '../../ui/scroll_view/scrollable.device';
 import { getElementMargin } from '../../ui/scroll_view/utils/get_element_style';
 import DataConverterMixin from '../../ui/shared/m_grouped_data_converter_mixin';
-import ListItem from './m_item';
+import ListItem from './item';
 const LIST_CLASS = 'dx-list';
 const LIST_ITEMS_CLASS = 'dx-list-items';
 const LIST_ITEM_CLASS = 'dx-list-item';
@@ -54,64 +54,83 @@ const groupItemsGetter = compileGetter('items');
 let _scrollView;
 export class ListBase extends CollectionWidget {
   _supportedKeys() {
-    const that = this;
-    const moveFocusPerPage = function (direction) {
-      let $item = getEdgeVisibleItem(direction);
-      const {
-        focusedElement
-      } = that.option();
-      // @ts-expect-error ts-error
-      const isFocusedItem = $item.is(focusedElement);
-      if (isFocusedItem) {
-        scrollListTo($item, direction);
-        $item = getEdgeVisibleItem(direction);
-      }
-      that.option('focusedElement', getPublicElement($item));
-      that.scrollToItem($item);
-    };
-    function getEdgeVisibleItem(direction) {
-      const scrollTop = that.scrollTop();
-      const containerHeight = getHeight(that.$element());
-      const {
-        focusedElement
-      } = that.option();
-      let $item = $(focusedElement);
-      let isItemVisible = true;
-      if (!$item.length) {
-        return $();
-      }
-      while (isItemVisible) {
-        const $nextItem = $item[direction]();
-        if (!$nextItem.length) {
-          break;
-        }
-        const nextItemLocation = $nextItem.position().top + getOuterHeight($nextItem) / 2;
-        isItemVisible = nextItemLocation < containerHeight + scrollTop && nextItemLocation > scrollTop;
-        if (isItemVisible) {
-          $item = $nextItem;
-        }
-      }
-      return $item;
-    }
-    function scrollListTo($item, direction) {
-      let resultPosition = $item.position().top;
-      if (direction === 'prev') {
-        resultPosition = $item.position().top - getHeight(that.$element()) + getOuterHeight($item);
-      }
-      that.scrollTo(resultPosition);
-    }
     return _extends({}, super._supportedKeys(), {
       leftArrow: noop,
       rightArrow: noop,
-      pageUp() {
-        moveFocusPerPage('prev');
-        return false;
+      pageUp(e) {
+        this._moveFocusPerPage(e, 'prev');
       },
-      pageDown() {
-        moveFocusPerPage('next');
-        return false;
+      pageDown(e) {
+        this._moveFocusPerPage(e, 'next');
       }
     });
+  }
+  _moveFocusPerPage(e, direction) {
+    if (this._isLastItemFocused(direction)) {
+      return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    let $item = this._getEdgeVisibleItem(direction);
+    const {
+      focusedElement
+    } = this.option();
+    const isFocusedItem = $item.is($(focusedElement));
+    if (isFocusedItem) {
+      this.scrollTo(this._getItemLocation($item, direction));
+      $item = this._getEdgeVisibleItem(direction);
+    }
+    this.option('focusedElement', getPublicElement($item));
+    this.scrollToItem($item);
+  }
+  _isLastItemFocused(direction) {
+    const lastItemInDirection = direction === 'prev' ? this._itemElements().first() : this._itemElements().last();
+    const {
+      focusedElement
+    } = this.option();
+    return lastItemInDirection.is($(focusedElement));
+  }
+  _getNextItem($item, direction) {
+    const $items = this._getAvailableItems();
+    const itemIndex = $items.index($item);
+    if (direction === 'prev') {
+      return $($items[itemIndex - 1]);
+    }
+    return $($items[itemIndex + 1]);
+  }
+  _getEdgeVisibleItem(direction) {
+    const scrollTop = this.scrollTop();
+    const containerHeight = getHeight(this.$element());
+    const {
+      focusedElement
+    } = this.option();
+    let $item = $(focusedElement);
+    let isItemVisible = true;
+    if (!$item.length) {
+      return $();
+    }
+    while (isItemVisible) {
+      var _$nextItem$position;
+      const $nextItem = this._getNextItem($item, direction);
+      if (!$nextItem.length) {
+        break;
+      }
+      const nextItemLocation = (((_$nextItem$position = $nextItem.position()) === null || _$nextItem$position === void 0 ? void 0 : _$nextItem$position.top) ?? 0) + getOuterHeight($nextItem) / 2;
+      isItemVisible = nextItemLocation < containerHeight + scrollTop && nextItemLocation > scrollTop;
+      if (isItemVisible) {
+        $item = $nextItem;
+      }
+    }
+    return $item;
+  }
+  _getItemLocation($item, direction) {
+    if (direction === 'prev') {
+      // @ts-expect-error ts-error
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return $item.position().top - getHeight(this.$element()) + getOuterHeight($item);
+    }
+    // @ts-expect-error ts-error
+    return $item.position().top;
   }
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -162,7 +181,6 @@ export class ListBase extends CollectionWidget {
   }
   _defaultOptionsRules() {
     const themeName = current();
-    // @ts-expect-error ts-error
     return super._defaultOptionsRules().concat(deviceDependentOptions(), [{
       device() {
         return !supportUtils.nativeScrolling;
@@ -320,7 +338,6 @@ export class ListBase extends CollectionWidget {
   _init() {
     super._init();
     this._updateActiveStateUnit();
-    // @ts-expect-error ts-error
     this._dataController.resetDataSourcePageIndex();
     this._$container = this.$element();
     this._$listContainer = $('<div>').addClass(LIST_ITEMS_CLASS);
@@ -360,7 +377,6 @@ export class ListBase extends CollectionWidget {
   _initScrollView() {
     const scrollingEnabled = this.option('scrollingEnabled');
     const pullRefreshEnabled = scrollingEnabled && this.option('pullRefreshEnabled');
-    // @ts-expect-error ts-error
     const autoPagingEnabled = scrollingEnabled && this._scrollBottomMode() && !!this._dataController.getDataSource();
     this._scrollView = this._createComponent(this.$element(), getScrollView(), {
       height: this.option('height'),
@@ -425,10 +441,12 @@ export class ListBase extends CollectionWidget {
     return ['text', 'html', 'icon'];
   }
   _updateLoadingState(tryLoadMore) {
-    // @ts-expect-error ts-error
     const dataController = this._dataController;
+    const scrollBottomMode = this._scrollBottomMode();
+    const isDataControllerLoading = dataController.isLoading();
     // @ts-expect-error ts-error
-    const shouldLoadNextPage = this._scrollBottomMode() && tryLoadMore && !dataController.isLoading() && !this._isLastPage();
+    const isLastPage = this._isLastPage();
+    const shouldLoadNextPage = scrollBottomMode && Boolean(tryLoadMore) && !isDataControllerLoading && !isLastPage;
     if (this._shouldContinueLoading(shouldLoadNextPage)) {
       this._infiniteDataLoading();
     } else {
@@ -439,7 +457,6 @@ export class ListBase extends CollectionWidget {
     }
   }
   _shouldRenderNextButton() {
-    // @ts-expect-error ts-error
     return this._nextButtonMode() && this._dataController.isLoaded();
   }
   _isDataSourceFirstLoadCompleted(newValue) {
@@ -502,7 +519,6 @@ export class ListBase extends CollectionWidget {
   _pullDownHandler(e) {
     var _this$_pullRefreshAct;
     (_this$_pullRefreshAct = this._pullRefreshAction) === null || _this$_pullRefreshAct === void 0 || _this$_pullRefreshAct.call(this, e);
-    // @ts-expect-error ts-error
     const dataController = this._dataController;
     if (dataController.getDataSource() && !dataController.isLoading()) {
       this._clearSelectedItems();
@@ -514,8 +530,18 @@ export class ListBase extends CollectionWidget {
   }
   _shouldContinueLoading(shouldLoadNextPage) {
     var _this$_scrollView$scr;
-    const isBottomReached = getHeight(this._scrollView.content()) - getHeight(this._scrollView.container()) < (((_this$_scrollView$scr = this._scrollView.scrollOffset()) === null || _this$_scrollView$scr === void 0 ? void 0 : _this$_scrollView$scr.top) ?? 0);
-    return shouldLoadNextPage && (!this._scrollViewIsFull() || isBottomReached);
+    if (!shouldLoadNextPage) {
+      return false;
+    }
+    const $content = this._scrollView.content();
+    const $container = this._scrollView.container();
+    const contentHeight = getHeight($content);
+    const containerHeight = getHeight($container);
+    const offsetTop = ((_this$_scrollView$scr = this._scrollView.scrollOffset()) === null || _this$_scrollView$scr === void 0 ? void 0 : _this$_scrollView$scr.top) ?? 0;
+    const isBottomReached = contentHeight - containerHeight < offsetTop;
+    const isFull = this._scrollViewIsFull();
+    const shouldContinueLoading = shouldLoadNextPage && !isFull || isBottomReached;
+    return shouldContinueLoading;
   }
   _infiniteDataLoading() {
     const isElementVisible = this.$element().is(':visible');
@@ -529,7 +555,6 @@ export class ListBase extends CollectionWidget {
   _scrollBottomHandler(e) {
     var _this$_pageLoadingAct;
     (_this$_pageLoadingAct = this._pageLoadingAction) === null || _this$_pageLoadingAct === void 0 || _this$_pageLoadingAct.call(this, e);
-    // @ts-expect-error ts-error
     const dataController = this._dataController;
     // @ts-expect-error ts-error
     if (!dataController.isLoading() && !this._isLastPage()) {
@@ -622,11 +647,14 @@ export class ListBase extends CollectionWidget {
     const $groupBody = $group.children(`.${LIST_GROUP_BODY_CLASS}`);
     const startHeight = getOuterHeight($groupBody);
     let endHeight = 0;
-    if (startHeight === 0) {
+    if (collapsed) {
       setHeight($groupBody, 'auto');
       endHeight = getOuterHeight($groupBody);
     }
     $group.toggleClass(LIST_GROUP_COLLAPSED_CLASS, toggle);
+    if (fx.isAnimating($groupBody)) {
+      fx.stop($groupBody, false);
+    }
     fx.animate($groupBody, {
       // @ts-expect-error
       type: 'custom',
@@ -741,7 +769,6 @@ export class ListBase extends CollectionWidget {
   _nextButtonHandler(e) {
     var _this$_pageLoadingAct2;
     (_this$_pageLoadingAct2 = this._pageLoadingAction) === null || _this$_pageLoadingAct2 === void 0 || _this$_pageLoadingAct2.call(this, e);
-    // @ts-expect-error ts-error
     const dataController = this._dataController;
     if (dataController.getDataSource() && !dataController.isLoading()) {
       var _this$_$nextButton;
@@ -807,7 +834,6 @@ export class ListBase extends CollectionWidget {
     // @ts-expect-error ts-error
     this._createItemByTemplate(groupTemplate, renderArgs);
     $('<div>').addClass(LIST_GROUP_HEADER_INDICATOR_CLASS).prependTo($groupHeaderElement);
-    this._renderingGroupIndex = index;
     const groupBodyId = `dx-${new Guid().toString()}`;
     const $groupBody = $('<div>').addClass(LIST_GROUP_BODY_CLASS).attr('id', groupBodyId).appendTo($groupElement);
     // @ts-expect-error ts-error
@@ -875,7 +901,6 @@ export class ListBase extends CollectionWidget {
     this._scrollView.option('disabled', value || !this.option('scrollingEnabled'));
   }
   _toggleNextButton(value) {
-    // @ts-expect-error ts-error
     const dataController = this._dataController;
     const $nextButton = this._getNextButton();
     this.$element().toggleClass(LIST_HAS_NEXT_CLASS, value);
@@ -1084,10 +1109,9 @@ export class ListBase extends CollectionWidget {
     this.updateDimensions();
   }
 }
+ListBase.ItemClass = ListItem;
 // @ts-expect-error ts-error
 ListBase.include(DataConverterMixin);
-// @ts-expect-error ts-error
-ListBase.ItemClass = ListItem;
 function getScrollView() {
   return _scrollView || ScrollView;
 }

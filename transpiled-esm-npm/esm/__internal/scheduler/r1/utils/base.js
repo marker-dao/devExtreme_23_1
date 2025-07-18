@@ -1,12 +1,12 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import dateLocalization from '../../../../common/core/localization/date';
-import { equalByValue } from '../../../../core/utils/common';
 import dateUtils from '../../../../core/utils/date';
-import { isDefined } from '../../../../core/utils/type';
+import { isDefined, isObject } from '../../../../core/utils/type';
 import { dateUtilsTs } from '../../../core/utils/date';
-import { HORIZONTAL_GROUP_ORIENTATION, TIMELINE_VIEWS, VERTICAL_GROUP_ORIENTATION, VIEWS } from '../../constants';
+import { HORIZONTAL_GROUP_ORIENTATION, VERTICAL_GROUP_ORIENTATION } from '../../constants';
 import { VERTICAL_GROUP_COUNT_CLASSES } from '../../m_classes';
 import timeZoneUtils from '../../m_utils_time_zone';
+import { VIEWS } from '../../utils/options/constants_view';
 const toMs = dateUtils.dateToMilliseconds;
 const DAY_HOURS = 24;
 const HOUR_IN_MS = 1000 * 60 * 60;
@@ -50,7 +50,6 @@ export const getAppointmentKey = geometry => {
   } = geometry;
   return `${left}-${top}-${width}-${height}`;
 };
-export const hasResourceValue = (resourceValues, itemValue) => isDefined(resourceValues.find(value => equalByValue(value, itemValue)));
 export const getOverflowIndicatorColor = (color, colors) => !colors.length || colors.filter(item => item !== color).length === 0 ? color : undefined;
 export const getVerticalGroupCountClass = groups => {
   switch (groups === null || groups === void 0 ? void 0 : groups.length) {
@@ -108,22 +107,12 @@ export const getHeaderCellText = (headerIndex, date, headerCellTextFormat, getDa
   return dateLocalization.format(validDate, headerCellTextFormat);
 };
 export const isVerticalGroupingApplied = (groups, groupOrientation) => groupOrientation === VERTICAL_GROUP_ORIENTATION && !!groups.length;
-export const getGroupCount = groups => {
-  let result = 0;
-  for (let i = 0, len = groups.length; i < len; i += 1) {
-    if (!i) {
-      result = groups[i].items.length;
-    } else {
-      result *= groups[i].items.length;
-    }
-  }
-  return result;
+// TODO(9): Get rid of it as soon as you can. More parameters then needed
+export const getHorizontalGroupCount = (groupLeafs, groupOrientation) => {
+  const isVerticalGrouping = isVerticalGroupingApplied(groupLeafs, groupOrientation);
+  return isVerticalGrouping ? 1 : groupLeafs.length;
 };
-export const getHorizontalGroupCount = (groups, groupOrientation) => {
-  const groupCount = getGroupCount(groups) || 1;
-  const isVerticalGrouping = isVerticalGroupingApplied(groups, groupOrientation);
-  return isVerticalGrouping ? 1 : groupCount;
-};
+const TIMELINE_VIEWS = [VIEWS.TIMELINE_DAY, VIEWS.TIMELINE_WEEK, VIEWS.TIMELINE_WORK_WEEK, VIEWS.TIMELINE_MONTH];
 export const isTimelineView = viewType => Boolean(viewType && TIMELINE_VIEWS.includes(viewType));
 export const isDateAndTimeView = viewType => viewType !== VIEWS.TIMELINE_MONTH && viewType !== VIEWS.MONTH;
 export const isHorizontalView = viewType => {
@@ -182,9 +171,7 @@ export const getKeyByGroup = (groupIndex, isVerticalGrouping) => {
 };
 export const getToday = (indicatorTime, timeZoneCalculator) => {
   const todayDate = indicatorTime ?? new Date();
-  return (timeZoneCalculator === null || timeZoneCalculator === void 0 ? void 0 : timeZoneCalculator.createDate(todayDate, {
-    path: 'toGrid'
-  })) || todayDate;
+  return (timeZoneCalculator === null || timeZoneCalculator === void 0 ? void 0 : timeZoneCalculator.createDate(todayDate, 'toGrid')) || todayDate;
 };
 export const getCalculatedFirstDayOfWeek = firstDayOfWeekOption => isDefined(firstDayOfWeekOption) ? firstDayOfWeekOption : dateLocalization.firstDayOfWeekIndex();
 export const isHorizontalGroupingApplied = (groups, groupOrientation) => groupOrientation === HORIZONTAL_GROUP_ORIENTATION && !!groups.length;
@@ -246,16 +233,18 @@ export const extendGroupItemsForGroupingByDate = (groupRenderItems, columnCountP
     isLastGroupCell: columnIndex === groupsRow.length - 1
   }))];
 }), []);
-export const getGroupPanelData = (groups, columnCountPerGroup, groupByDate, baseColSpan) => {
+const stringifyId = id => isObject(id) ? JSON.stringify(id) : String(id);
+export const getGroupPanelData = (groupResources, columnCountPerGroup, groupByDate, baseColSpan) => {
   let repeatCount = 1;
-  let groupPanelItems = groups.map(group => {
+  let groupPanelItems = groupResources.map(group => {
     const result = [];
     const {
-      name: resourceName,
+      resourceName,
+      resourceIndex,
       items,
       data
     } = group;
-    for (let iterator = 0; iterator < repeatCount; iterator += 1) {
+    for (let i = 0; i < repeatCount; i += 1) {
       result.push(...items.map((_ref2, index) => {
         let {
           id,
@@ -266,7 +255,7 @@ export const getGroupPanelData = (groups, columnCountPerGroup, groupByDate, base
           id,
           text,
           color,
-          key: `${iterator}_${resourceName}_${id}`,
+          key: `${i}_${resourceIndex}_${stringifyId(id)}`,
           resourceName,
           data: data === null || data === void 0 ? void 0 : data[index]
         };
@@ -274,7 +263,7 @@ export const getGroupPanelData = (groups, columnCountPerGroup, groupByDate, base
     }
     repeatCount *= items.length;
     return result;
-  });
+  }).filter(group => group.length);
   if (groupByDate) {
     groupPanelItems = extendGroupItemsForGroupingByDate(groupPanelItems, columnCountPerGroup);
   }

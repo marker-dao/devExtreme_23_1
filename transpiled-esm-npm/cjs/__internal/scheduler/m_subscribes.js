@@ -10,14 +10,15 @@ var _extend = require("../../core/utils/extend");
 var _iterator = require("../../core/utils/iterator");
 var _type = require("../../core/utils/type");
 var _m_text_utils = require("./appointments/m_text_utils");
-var _m_appointment_adapter = require("./m_appointment_adapter");
 var _m_classes = require("./m_classes");
 var _m_utils = require("./m_utils");
+var _appointment_adapter = require("./utils/appointment_adapter/appointment_adapter");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const toMs = _date.default.dateToMilliseconds;
 const subscribes = {
   isCurrentViewAgenda() {
-    return this.currentViewType === 'agenda';
+    return this.currentView.type === 'agenda';
   },
   currentViewUpdated(currentView) {
     this.option('currentView', currentView);
@@ -33,9 +34,6 @@ const subscribes = {
   },
   isVirtualScrolling() {
     return this.isVirtualScrolling();
-  },
-  setCellDataCacheAlias(appointment, geometry) {
-    this._workSpace.setCellDataCacheAlias(appointment, geometry);
   },
   isGroupedByDate() {
     return this.getWorkSpace().isGroupedByDate();
@@ -102,18 +100,16 @@ const subscribes = {
     this.hideAppointmentTooltip();
   },
   getTextAndFormatDate(appointmentRaw, targetedAppointmentRaw, format) {
-    const appointmentAdapter = (0, _m_appointment_adapter.createAppointmentAdapter)(appointmentRaw, this._dataAccessors, this.timeZoneCalculator);
-    const targetedAdapter = (0, _m_appointment_adapter.createAppointmentAdapter)(targetedAppointmentRaw || appointmentRaw, this._dataAccessors, this.timeZoneCalculator);
+    const targetedAppointment = _extends({}, appointmentRaw, targetedAppointmentRaw);
     // pull out time zone converting from appointment adapter for knockout(T947938)
-    const startDate = this.timeZoneCalculator.createDate(targetedAdapter.startDate, {
-      path: 'toGrid'
-    });
-    const endDate = this.timeZoneCalculator.createDate(targetedAdapter.endDate, {
-      path: 'toGrid'
-    });
-    const formatType = format || (0, _m_text_utils.getFormatType)(startDate, endDate, targetedAdapter.allDay, this.currentViewType !== 'month');
+    const adapter = new _appointment_adapter.AppointmentAdapter(targetedAppointment, this._dataAccessors);
+    const {
+      startDate,
+      endDate
+    } = adapter.getCalculatedDates(this.timeZoneCalculator, 'toGrid');
+    const formatType = format || (0, _m_text_utils.getFormatType)(startDate, endDate, adapter.allDay, this.currentView.type !== 'month');
     return {
-      text: targetedAdapter.text || appointmentAdapter.text,
+      text: adapter.text,
       formatDate: (0, _m_text_utils.formatDates)(startDate, endDate, formatType)
     };
   },
@@ -127,7 +123,7 @@ const subscribes = {
     const {
       allDay
     } = options;
-    const groups = this._getCurrentViewOption('groups');
+    const groups = this.getViewOption('groups');
     if (groups !== null && groups !== void 0 && groups.length) {
       if (allDay || this.getLayoutManager().getRenderingStrategyInstance()._needHorizontalGroupBounds()) {
         const horizontalGroupBounds = this._workSpace.getGroupBounds(options.coordinates);
@@ -163,7 +159,7 @@ const subscribes = {
     return this.getLayoutManager().getRenderingStrategyInstance().getDeltaTime(e, initialSize, itemData);
   },
   getDropDownAppointmentWidth(isAllDay) {
-    return this.getLayoutManager().getRenderingStrategyInstance().getDropDownAppointmentWidth(this._getViewCountConfig().intervalCount, isAllDay);
+    return this.getLayoutManager().getRenderingStrategyInstance().getDropDownAppointmentWidth(this.currentView.intervalCount, isAllDay);
   },
   getDropDownAppointmentHeight() {
     return this.getLayoutManager().getRenderingStrategyInstance().getDropDownAppointmentHeight();
@@ -187,8 +183,8 @@ const subscribes = {
     const {
       endDate
     } = options;
-    const endDayHour = this._getCurrentViewOption('endDayHour');
-    const startDayHour = this._getCurrentViewOption('startDayHour');
+    const endDayHour = this.getViewOption('endDayHour');
+    const startDayHour = this.getViewOption('startDayHour');
     let updatedEndDate = endDate;
     if (endDate.getHours() >= endDayHour) {
       updatedEndDate.setHours(endDayHour, 0, 0, 0);
@@ -233,7 +229,7 @@ const subscribes = {
     return this.getWorkSpace().getAgendaVerticalStepHeight();
   },
   getAgendaDuration() {
-    return this._getCurrentViewOption('agendaDuration');
+    return this.getViewOption('agendaDuration');
   },
   getStartViewDate() {
     return this.getStartViewDate();
@@ -255,9 +251,6 @@ const subscribes = {
     for (let i = 0; i < rows.length; i++) {
       (0, _iterator.each)(rows[i], applyClass);
     }
-  },
-  getTimezone() {
-    return this._getTimezoneOffsetByOption();
   },
   getTargetedAppointmentData(appointment, element) {
     return this.getTargetedAppointment(appointment, element);

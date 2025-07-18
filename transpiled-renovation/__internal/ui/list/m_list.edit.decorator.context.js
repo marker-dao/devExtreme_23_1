@@ -6,8 +6,7 @@ var _size = require("../../../core/utils/size");
 var _m_overlay = _interopRequireDefault(require("../../ui/overlay/m_overlay"));
 var _m_list = require("./m_list.base");
 var _m_listEdit = _interopRequireDefault(require("./m_list.edit.decorator"));
-var _m_listEdit2 = _interopRequireDefault(require("./m_list.edit.decorator_menu_helper"));
-var _m_listEdit3 = require("./m_list.edit.decorator_registry");
+var _m_listEdit2 = require("./m_list.edit.decorator_registry");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const CONTEXTMENU_CLASS = 'dx-list-context-menu';
 const CONTEXTMENU_MENUCONTENT_CLASS = 'dx-list-context-menucontent';
@@ -63,10 +62,12 @@ class EditDecoratorContext extends _m_listEdit.default {
   }
   _renderMenuContent(e) {
     const $overlayContent = e.component.$content();
-    // @ts-expect-error ts-error
-    const items = this._menuItems().slice();
-    // @ts-expect-error ts-error
-    if (this._deleteEnabled()) {
+    const {
+      menuItems,
+      allowItemDeleting
+    } = this._list.option();
+    const items = menuItems.slice();
+    if (allowItemDeleting) {
       items.push({
         text: _message.default.format('dxListEditDecorator-delete'),
         action: this._deleteItem.bind(this)
@@ -84,8 +85,9 @@ class EditDecoratorContext extends _m_listEdit.default {
   }
   _menuItemClickHandler(args) {
     this._menu.hide();
-    // @ts-expect-error ts-error
-    this._fireMenuAction(this._$itemWithMenu, args.itemData.action);
+    this._list._itemEventHandlerByHandler(this._$itemWithMenu, args.itemData.action, {}, {
+      excludeValidators: ['disabled', 'readOnly']
+    });
   }
   _deleteItem() {
     this._list.deleteItem(this._$itemWithMenu);
@@ -111,6 +113,4 @@ class EditDecoratorContext extends _m_listEdit.default {
     super.dispose.apply(this, arguments);
   }
 }
-(0, _m_listEdit3.register)('menu', 'context',
-// @ts-expect-error ts-error
-EditDecoratorContext.include(_m_listEdit2.default));
+(0, _m_listEdit2.register)('menu', 'context', EditDecoratorContext);

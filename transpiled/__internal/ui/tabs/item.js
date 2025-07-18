@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.TABS_ITEM_BADGE_CLASS = void 0;
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _item = _interopRequireDefault(require("../../ui/collection/item"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-const TABS_ITEM_BADGE_CLASS = 'dx-tabs-item-badge';
+const TABS_ITEM_BADGE_CLASS = exports.TABS_ITEM_BADGE_CLASS = 'dx-tabs-item-badge';
 const BADGE_CLASS = 'dx-badge';
 class TabsItem extends _item.default {
   _renderWatchers() {

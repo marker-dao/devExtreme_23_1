@@ -95,9 +95,11 @@ class Lookup extends DropDownList {
       focusStateEnabled: false,
       dropDownOptions: {
         showTitle: true,
+        // @ts-expect-error ts-error
         width() {
           return getSize('width');
         },
+        // @ts-expect-error ts-error
         height() {
           return getSize('height');
         },
@@ -115,17 +117,9 @@ class Lookup extends DropDownList {
       useHiddenSubmitElement: true
     });
   }
-  _setDeprecatedOptions() {
-    super._setDeprecatedOptions();
-    extend(this._deprecatedOptions, {
-      valueChangeEvent: {
-        since: '22.1',
-        alias: 'searchStartEvent'
-      }
-    });
-  }
   _defaultOptionsRules() {
     const themeName = current();
+    // @ts-expect-error ts-error
     return super._defaultOptionsRules().concat([{
       device() {
         return !supportUtils.nativeScrolling;
@@ -185,7 +179,6 @@ class Lookup extends DropDownList {
         dropDownCentered: true,
         _scrollToSelectedItemEnabled: true,
         dropDownOptions: {
-          // @ts-expect-error ts-error
           _ignoreFunctionValueDeprecation: true,
           width: () => getElementWidth(this.$element()),
           height: function () {
@@ -480,9 +473,9 @@ class Lookup extends DropDownList {
     if ((_this$_list8 = this._list) !== null && _this$_list8 !== void 0 && _this$_list8.itemElements().length) {
       return this._calculateListHeight(this.option('grouped')) + (this._$searchWrapper ? getOuterHeight(this._$searchWrapper) : 0)
       // @ts-expect-error ts-error
-      + (this._popup._$bottom ? getOuterHeight(this._popup._$bottom) : 0)
+      + (this._popup.bottomToolbar() ? getOuterHeight(this._popup.bottomToolbar()) : 0)
       // @ts-expect-error ts-error
-      + (this._popup._$title ? getOuterHeight(this._popup._$title) : 0);
+      + (this._popup.topToolbar() ? getOuterHeight(this._popup.topToolbar()) : 0);
     }
     return 'auto';
   }
@@ -582,8 +575,7 @@ class Lookup extends DropDownList {
       // @ts-expect-error ts-error
       shading: dropDownOptions.shading,
       // @ts-expect-error ts-error
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      hideOnOutsideClick: dropDownOptions.hideOnOutsideClick || dropDownOptions.closeOnOutsideClick,
+      hideOnOutsideClick: dropDownOptions.hideOnOutsideClick,
       _loopFocus: shouldLoopFocusInsidePopup
     });
     delete result.animation;

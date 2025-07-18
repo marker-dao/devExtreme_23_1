@@ -6,14 +6,14 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _index = require("../../scheduler/r1/utils/index");
-var _constants = require("../constants");
+var _constants_view = require("../utils/options/constants_view");
 var _m_timeline_week = _interopRequireDefault(require("./m_timeline_week"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const TIMELINE_CLASS = 'dx-scheduler-timeline-work-week';
 const LAST_DAY_WEEK_INDEX = 5;
 class SchedulerTimelineWorkWeek extends _m_timeline_week.default {
   get type() {
-    return _constants.VIEWS.TIMELINE_WORK_WEEK;
+    return _constants_view.VIEWS.TIMELINE_WORK_WEEK;
   }
   constructor() {
     // @ts-expect-error

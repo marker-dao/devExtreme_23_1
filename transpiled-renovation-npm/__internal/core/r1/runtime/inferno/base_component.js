@@ -77,8 +77,9 @@ class InfernoWrapperComponent extends InfernoComponent {
     this.vDomElement = null;
   }
   vDomUpdateClasses() {
+    var _el$className;
     const el = this.vDomElement;
-    const currentClasses = el.className.length ? el.className.split(' ') : [];
+    const currentClasses = (_el$className = el.className) !== null && _el$className !== void 0 && _el$className.length ? el.className.split(' ') : [];
     const addedClasses = currentClasses.filter(className => !el.dxClasses.previous.includes(className));
     const removedClasses = el.dxClasses.previous.filter(className => !currentClasses.includes(className));
     addedClasses.forEach(value => {
@@ -99,6 +100,7 @@ class InfernoWrapperComponent extends InfernoComponent {
     });
   }
   componentDidMount() {
+    var _el$className2;
     const el = (0, _inferno.findDOMFromVNode)(this.$LI, true);
     this.vDomElement = el;
     super.componentDidMount();
@@ -107,15 +109,16 @@ class InfernoWrapperComponent extends InfernoComponent {
       added: [],
       previous: []
     };
-    el.dxClasses.previous = el !== null && el !== void 0 && el.className.length ? el.className.split(' ') : [];
+    el.dxClasses.previous = el !== null && el !== void 0 && (_el$className2 = el.className) !== null && _el$className2 !== void 0 && _el$className2.length ? el.className.split(' ') : [];
   }
   componentDidUpdate() {
     super.componentDidUpdate();
     const el = this.vDomElement;
     if (el !== null) {
+      var _el$className3;
       el.dxClasses.added.forEach(className => el.classList.add(className));
       el.dxClasses.removed.forEach(className => el.classList.remove(className));
-      el.dxClasses.previous = el.className.length ? el.className.split(' ') : [];
+      el.dxClasses.previous = (_el$className3 = el.className) !== null && _el$className3 !== void 0 && _el$className3.length ? el.className.split(' ') : [];
     }
   }
   shouldComponentUpdate(nextProps, nextState) {

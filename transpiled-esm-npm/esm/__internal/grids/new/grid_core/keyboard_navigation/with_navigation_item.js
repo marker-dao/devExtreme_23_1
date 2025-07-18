@@ -63,6 +63,7 @@ export const withKbnNavigationItem = WrappedComponent => {
         children: children
       })));
     }
+    // TODO: KeyboardEvent
     onKeyDown(event) {
       const {
         navigationStrategy,
@@ -94,7 +95,9 @@ export const withKbnNavigationItem = WrappedComponent => {
       return this.props.elementRef ?? this.elementRef;
     }
   }
-  __decorate([eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", [KeyboardEvent]), __metadata("design:returntype", void 0)], WithKbnNavigationItem.prototype, "onKeyDown", null);
+  __decorate([eventHandler
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  , __metadata("design:type", Function), __metadata("design:paramtypes", [Object]), __metadata("design:returntype", void 0)], WithKbnNavigationItem.prototype, "onKeyDown", null);
   __decorate([eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", []), __metadata("design:returntype", void 0)], WithKbnNavigationItem.prototype, "onFocusIn", null);
   return WithKbnNavigationItem;
 };

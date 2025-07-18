@@ -4,7 +4,7 @@ import dateUtils from '../../../core/utils/date';
 // NOTE: Renovation component import.
 import { HeaderPanelComponent } from '../../scheduler/r1/components/index';
 import { formatWeekdayAndDay, monthUtils } from '../../scheduler/r1/utils/index';
-import { VIEWS } from '../constants';
+import { VIEWS } from '../utils/options/constants_view';
 import SchedulerTimeline from './m_timeline';
 const TIMELINE_CLASS = 'dx-scheduler-timeline-month';
 class SchedulerTimelineMonth extends SchedulerTimeline {

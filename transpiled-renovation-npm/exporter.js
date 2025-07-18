@@ -8,12 +8,12 @@ Object.defineProperty(exports, "fileSaver", {
   }
 });
 exports.svg = exports.pdf = exports.image = void 0;
-var _file_saver = require("./exporter/file_saver");
-var _image_creator = require("./exporter/image_creator");
-var _svg_creator = require("./exporter/svg_creator");
+var _file_saver = require("./__internal/exporter/file_saver");
+var _image_creator = require("./__internal/exporter/image_creator");
+var _svg_creator = require("./__internal/exporter/svg_creator");
 var _type = require("./core/utils/type");
 var _deferred = require("./core/utils/deferred");
-var _pdf_creator = require("./exporter/pdf_creator");
+var _pdf_creator = require("./__internal/exporter/pdf_creator");
 function _export(data, options, getData) {
   if (!data) {
     return new _deferred.Deferred().resolve();

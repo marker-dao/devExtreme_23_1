@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.defaultOptionRules = exports.Button = exports.BUTTON_CLASS = void 0;
+exports.defaultOptionRules = exports.defaultButtonProps = exports.buttonComponentProps = exports.Button = exports.BUTTON_CLASS = void 0;
 exports.defaultOptions = defaultOptions;
 var _inferno = require("inferno");
 var _short = require("../../../common/core/events/short");
@@ -13,17 +13,18 @@ var _utils = require("../../../core/options/utils");
 var _icon = require("../../../core/utils/icon");
 var _inflector = require("../../../core/utils/inflector");
 var _themes = require("../../../ui/themes");
+var _base_props = require("../../core/r1/base_props");
 var _index = require("../../core/r1/runtime/inferno/index");
 var _index2 = require("../../core/r1/utils/index");
 var _widget = require("../../core/r1/widget");
 var _combine_classes = require("../../core/utils/combine_classes");
 var _icon2 = require("./icon");
 var _ink_ripple = require("./ink_ripple");
-var _props = require("./props");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/prefer-optional-chain */ /* eslint-disable @typescript-eslint/no-non-null-assertion */ /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const BUTTON_CLASS = exports.BUTTON_CLASS = 'dx-button';
 const stylingModes = ['outlined', 'text', 'contained'];
+const buttonComponentProps = exports.buttonComponentProps = ['accessKey', 'activeStateEnabled', 'className', 'disabled', 'focusStateEnabled', 'height', 'hint', 'hoverStateEnabled', 'icon', 'iconPosition', 'iconTemplate', 'onClick', 'onKeyDown', 'onSubmit', 'pressed', 'rtlEnabled', 'stylingMode', 'tabIndex', 'template', 'templateData', 'text', 'type', 'useInkRipple', 'useSubmitBehavior', 'visible', 'width'];
 const getCssClasses = model => {
   const {
     icon,
@@ -43,6 +44,27 @@ const getCssClasses = model => {
   };
   return (0, _combine_classes.combineClasses)(classesMap);
 };
+const omit = (obj, excludedKeys) => {
+  const excludedSet = new Set(excludedKeys);
+  return Object.keys(obj).reduce((result, key) => {
+    if (!excludedSet.has(key)) {
+      result[key] = obj[key];
+    }
+    return result;
+  }, {});
+};
+const defaultButtonProps = exports.defaultButtonProps = _extends({}, _base_props.BaseWidgetDefaultProps, {
+  activeStateEnabled: true,
+  hoverStateEnabled: true,
+  icon: '',
+  iconPosition: 'left',
+  stylingMode: 'contained',
+  text: '',
+  type: 'normal',
+  useInkRipple: false,
+  useSubmitBehavior: false,
+  templateData: {}
+});
 const defaultOptionRules = exports.defaultOptionRules = (0, _utils.createDefaultOptionRules)([{
   device: () => _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator(),
   options: {
@@ -61,7 +83,6 @@ class Button extends _index.InfernoWrapperComponent {
     this.inkRippleRef = (0, _inferno.createRef)();
     this.submitInputRef = (0, _inferno.createRef)();
     this.widgetRef = (0, _inferno.createRef)();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.__getterCache = {};
     this.state = {};
     this.focus = this.focus.bind(this);
@@ -86,38 +107,37 @@ class Button extends _index.InfernoWrapperComponent {
       onSubmit,
       useSubmitBehavior
     } = this.props;
+    const submitInput = this.submitInputRef.current;
     if (useSubmitBehavior && onSubmit) {
-      _short.click.on(this.submitInputRef.current, event => onSubmit({
+      _short.click.on(submitInput, event => onSubmit({
         event,
-        submitInput: this.submitInputRef.current
+        submitInput
       }), {
         namespace
       });
-      return () => _short.click.off(this.submitInputRef.current, {
+      return () => _short.click.off(submitInput, {
         namespace
       });
     }
     return undefined;
   }
   onActive(event) {
-    const {
-      useInkRipple
-    } = this.props;
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    useInkRipple && this.inkRippleRef.current.showWave({
-      element: this.contentRef.current,
-      event
-    });
+    if (this.props.useInkRipple) {
+      var _this$inkRippleRef$cu;
+      (_this$inkRippleRef$cu = this.inkRippleRef.current) === null || _this$inkRippleRef$cu === void 0 || _this$inkRippleRef$cu.showWave({
+        element: this.contentRef.current,
+        event
+      });
+    }
   }
   onInactive(event) {
-    const {
-      useInkRipple
-    } = this.props;
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    useInkRipple && this.inkRippleRef.current.hideWave({
-      element: this.contentRef.current,
-      event
-    });
+    if (this.props.useInkRipple) {
+      var _this$inkRippleRef$cu2;
+      (_this$inkRippleRef$cu2 = this.inkRippleRef.current) === null || _this$inkRippleRef$cu2 === void 0 || _this$inkRippleRef$cu2.hideWave({
+        element: this.contentRef.current,
+        event
+      });
+    }
   }
   onWidgetClick(event) {
     const {
@@ -128,9 +148,11 @@ class Button extends _index.InfernoWrapperComponent {
       event
     });
     if (useSubmitBehavior) {
-      this.submitInputRef.current.click();
+      var _this$submitInputRef$;
+      (_this$submitInputRef$ = this.submitInputRef.current) === null || _this$submitInputRef$ === void 0 || _this$submitInputRef$.click();
     }
   }
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   keyDown(e) {
     const {
       onKeyDown
@@ -176,8 +198,7 @@ class Button extends _index.InfernoWrapperComponent {
           {
             var _titleRegexp$exec;
             const titleRegexp = /<title>(.*?)<\/title>/;
-            const title = ((_titleRegexp$exec = titleRegexp.exec(icon)) === null || _titleRegexp$exec === void 0 ? void 0 : _titleRegexp$exec[1]) ?? '';
-            label = title;
+            label = ((_titleRegexp$exec = titleRegexp.exec(icon)) === null || _titleRegexp$exec === void 0 ? void 0 : _titleRegexp$exec[1]) ?? '';
             break;
           }
         default:
@@ -194,28 +215,21 @@ class Button extends _index.InfernoWrapperComponent {
     return getCssClasses(this.props);
   }
   get iconSource() {
-    const {
-      icon
-    } = this.props;
-    return icon ?? '';
+    return this.props.icon ?? '';
   }
   get inkRippleConfig() {
-    if (this.__getterCache.inkRippleConfig !== undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return this.__getterCache.inkRippleConfig;
-    }
-    // eslint-disable-next-line no-return-assign
-    return this.__getterCache.inkRippleConfig = (() => {
+    if (this.__getterCache.inkRippleConfig === undefined) {
       const {
         icon,
         text
       } = this.props;
-      return !text && icon ? {
+      this.__getterCache.inkRippleConfig = !text && icon ? {
         isCentered: true,
         useHoldAnimation: false,
         waveSizeCoefficient: 1
       } : {};
-    })();
+    }
+    return this.__getterCache.inkRippleConfig;
   }
   get buttonTemplateData() {
     const {
@@ -228,23 +242,21 @@ class Button extends _index.InfernoWrapperComponent {
       text
     }, templateData);
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get restAttributes() {
-    const restProps = _extends({}, this.props);
-    ['accessKey', 'activeStateEnabled', 'children', 'className', 'disabled', 'focusStateEnabled', 'height', 'hint', 'hoverStateEnabled', 'icon', 'iconPosition', 'iconTemplate', 'onClick', 'onKeyDown', 'onSubmit', 'pressed', 'rtlEnabled', 'stylingMode', 'tabIndex', 'template', 'templateData', 'text', 'type', 'useInkRipple', 'useSubmitBehavior', 'visible', 'width'].forEach(excluded => {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete restProps[excluded];
-    });
-    return restProps;
+    const excludedKeys = [...buttonComponentProps, 'children'];
+    return omit(this.props, excludedKeys);
   }
   focus() {
-    this.widgetRef.current.focus();
+    var _this$widgetRef$curre;
+    (_this$widgetRef$curre = this.widgetRef.current) === null || _this$widgetRef$curre === void 0 || _this$widgetRef$curre.focus();
   }
   activate() {
-    this.widgetRef.current.activate();
+    var _this$widgetRef$curre2;
+    (_this$widgetRef$curre2 = this.widgetRef.current) === null || _this$widgetRef$curre2 === void 0 || _this$widgetRef$curre2.activate();
   }
   deactivate() {
-    this.widgetRef.current.deactivate();
+    var _this$widgetRef$curre3;
+    (_this$widgetRef$curre3 = this.widgetRef.current) === null || _this$widgetRef$curre3 === void 0 || _this$widgetRef$curre3.deactivate();
   }
   componentWillUpdate(nextProps) {
     super.componentWillUpdate();
@@ -258,9 +270,7 @@ class Button extends _index.InfernoWrapperComponent {
       iconPosition,
       text
     } = this.props;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ButtonTemplate = (0, _index2.getTemplate)(this.props.template);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const IconTemplate = (0, _index2.getTemplate)(this.props.iconTemplate);
     const renderText = !this.props.template && !children && text !== '';
     const isIconLeft = iconPosition === 'left';
@@ -289,9 +299,9 @@ class Button extends _index.InfernoWrapperComponent {
       "visible": this.props.visible,
       "width": this.props.width
     }, this.restAttributes, {
-      children: (0, _inferno.createVNode)(1, "div", "dx-button-content", [ButtonTemplate && ButtonTemplate({
+      children: (0, _inferno.createVNode)(1, "div", "dx-button-content", [ButtonTemplate ? ButtonTemplate({
         data: this.buttonTemplateData
-      }), !ButtonTemplate && children, isIconLeft && iconComponent, renderText && (0, _inferno.createVNode)(1, "span", "dx-button-text", text, 0), !isIconLeft && iconComponent, this.props.useSubmitBehavior && (0, _inferno.createVNode)(64, "input", "dx-button-submit-input", null, 1, {
+      }) : children, isIconLeft && iconComponent, renderText && (0, _inferno.createVNode)(1, "span", "dx-button-text", text, 0), !isIconLeft && iconComponent, this.props.useSubmitBehavior && (0, _inferno.createVNode)(64, "input", "dx-button-submit-input", null, 1, {
         "type": "submit",
         "tabindex": -1
       }, null, this.submitInputRef), this.props.useInkRipple && (0, _inferno.createComponentVNode)(2, _ink_ripple.InkRipple, {
@@ -301,12 +311,10 @@ class Button extends _index.InfernoWrapperComponent {
   }
 }
 exports.Button = Button;
-Button.defaultProps = _extends({}, _props.defaultButtonProps, (0, _utils.convertRulesToOptions)(defaultOptionRules));
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-explicit-any
+Button.defaultProps = _extends({}, defaultButtonProps, (0, _utils.convertRulesToOptions)(defaultOptionRules));
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const __defaultOptionRules = [];
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function defaultOptions(rule) {
   __defaultOptionRules.push(rule);
-  // eslint-disable-next-line @stylistic/max-len
   Button.defaultProps = Object.create(Object.prototype, Object.assign(Object.getOwnPropertyDescriptors(Button.defaultProps), Object.getOwnPropertyDescriptors((0, _utils.convertRulesToOptions)(defaultOptionRules)), Object.getOwnPropertyDescriptors((0, _utils.convertRulesToOptions)(__defaultOptionRules))));
 }

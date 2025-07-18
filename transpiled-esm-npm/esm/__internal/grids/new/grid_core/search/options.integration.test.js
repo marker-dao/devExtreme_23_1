@@ -1,5 +1,6 @@
 /* eslint-disable spellcheck/spell-checker */
-import { describe, expect, it } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { Guid } from '../../../../core/m_guid';
 import CardView from '../../../../grids/new/card_view/widget';
 import { rerender } from 'inferno';
 const SELECTORS = {
@@ -22,6 +23,12 @@ function getCardContent(container) {
   return container.querySelector(`.${SELECTORS.cardContent}`);
 }
 describe('Options', () => {
+  beforeEach(() => {
+    jest.spyOn(Guid.prototype, '_normalize').mockReturnValue('guidmock');
+  });
+  afterEach(() => {
+    jest.spyOn(Guid.prototype, '_normalize').mockRestore();
+  });
   it('searchPanel.text (card contains match)', async () => {
     const {
       container,

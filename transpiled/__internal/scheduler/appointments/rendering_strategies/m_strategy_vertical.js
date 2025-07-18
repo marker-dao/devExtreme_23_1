@@ -9,8 +9,8 @@ var _extend = require("../../../../core/utils/extend");
 var _math = require("../../../../core/utils/math");
 var _type = require("../../../../core/utils/type");
 var _index = require("../../../scheduler/r1/utils/index");
-var _m_appointment_adapter = require("../../m_appointment_adapter");
 var _m_utils_time_zone = _interopRequireDefault(require("../../m_utils_time_zone"));
+var _appointment_adapter = require("../../utils/appointment_adapter/appointment_adapter");
 var _m_strategy_base = _interopRequireDefault(require("./m_strategy_base"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -61,10 +61,12 @@ class VerticalRenderingStrategy extends _m_strategy_base.default {
       return super._getItemPosition(initialAppointment);
     }
     const appointment = super.shiftAppointmentByViewOffset(initialAppointment);
-    const adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(appointment, this.dataAccessors, this.timeZoneCalculator);
-    const isRecurring = !!adapter.recurrenceRule;
-    const appointmentStartDate = adapter.calculateStartDate('toGrid');
-    const appointmentEndDate = adapter.calculateEndDate('toGrid');
+    const adapter = new _appointment_adapter.AppointmentAdapter(appointment, this.dataAccessors);
+    const isRecurring = adapter.isRecurrent;
+    const {
+      startDate: appointmentStartDate,
+      endDate: appointmentEndDate
+    } = adapter.getCalculatedDates(this.timeZoneCalculator, 'toGrid');
     const appointmentDuration = appointmentEndDate.getTime() - appointmentStartDate.getTime();
     const appointmentBeginInCurrentView = this.options.startViewDate < appointmentStartDate;
     const isAppointmentTakesSeveralDays = !_m_utils_time_zone.default.isSameAppointmentDates(appointmentStartDate, appointmentEndDate);
@@ -270,7 +272,7 @@ class VerticalRenderingStrategy extends _m_strategy_base.default {
     return this.cellWidth;
   }
   isAllDay(appointmentData) {
-    return (0, _index.isAppointmentTakesAllDay)((0, _m_appointment_adapter.createAppointmentAdapter)(appointmentData, this.dataAccessors, this.timeZoneCalculator), this.allDayPanelMode);
+    return (0, _index.isAppointmentTakesAllDay)(new _appointment_adapter.AppointmentAdapter(appointmentData, this.dataAccessors), this.allDayPanelMode);
   }
   _getAppointmentMaxWidth() {
     return this.cellWidth - this._getAppointmentDefaultOffset();

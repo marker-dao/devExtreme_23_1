@@ -3,10 +3,12 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getSortedToolbarItems = getSortedToolbarItems;
 exports.isVisible = isVisible;
 exports.normalizeToolbarItems = normalizeToolbarItems;
 var _extend = require("../../../../../core/utils/extend");
 var _type = require("../../../../../core/utils/type");
+var _const = require("./const");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 function isVisible(visibleConfig, items) {
   if (visibleConfig === undefined) {
@@ -35,12 +37,19 @@ function normalizeToolbarItem(item, defaultButtonsMap, defaultItemNames) {
   }
   return (0, _extend.extend)(true, {}, defaultProps, button);
 }
-function normalizeToolbarItems(defaultItems, userItems, defaultItemNames) {
+function getSortedToolbarItems(defaultItemsCollection) {
+  return Object.values(defaultItemsCollection).sort((a, b) => {
+    const aIndex = _const.DEFAULT_TOOLBAR_ITEMS.indexOf(a.name);
+    const bIndex = _const.DEFAULT_TOOLBAR_ITEMS.indexOf(b.name);
+    return aIndex - bIndex;
+  });
+}
+function normalizeToolbarItems(sortedDefaultItems, userItems, defaultItemNames) {
   if (!(0, _type.isDefined)(userItems)) {
-    return defaultItems;
+    return sortedDefaultItems;
   }
   const defaultButtonsMap = {};
-  defaultItems.forEach(button => {
+  sortedDefaultItems.forEach(button => {
     defaultButtonsMap[button.name] = button;
   });
   return userItems.map(item => normalizeToolbarItem(item, defaultButtonsMap, defaultItemNames));

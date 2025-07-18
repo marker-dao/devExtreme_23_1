@@ -12,5 +12,5 @@ Object.defineProperty(exports, "exportPivotGrid", {
     return _export_pivot_grid.exportPivotGrid;
   }
 });
-var _export_data_grid = require("../../exporter/exceljs/export_data_grid");
-var _export_pivot_grid = require("../../exporter/exceljs/export_pivot_grid");
+var _export_data_grid = require("../../__internal/exporter/exceljs/export_data_grid");
+var _export_pivot_grid = require("../../__internal/exporter/exceljs/export_pivot_grid");

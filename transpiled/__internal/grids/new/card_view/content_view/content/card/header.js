@@ -6,8 +6,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.CardHeader = exports.CLASSES = void 0;
 var _inferno = require("inferno");
 var _index = require("../../../../../../../common/core/events/utils/index");
+var _message = _interopRequireDefault(require("../../../../../../../localization/message"));
 var _m_type = require("../../../../../../core/utils/m_type");
 var _toolbar = require("../../../../../../grids/new/grid_core/inferno_wrappers/toolbar");
+var _utils = require("../../../../../../grids/new/grid_core/toolbar/utils");
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const CLASSES = exports.CLASSES = {
   cardHeader: 'dx-cardview-card-header',
   cardSelectCheckBox: 'dx-cardview-select-checkbox'
@@ -22,9 +25,13 @@ class CardHeader extends _inferno.Component {
     if (card && isCheckBoxesRendered) {
       return {
         location: 'before',
+        name: 'selectionCheckBox',
         widget: 'dxCheckBox',
         cssClass: CLASSES.cardSelectCheckBox,
         options: {
+          elementAttr: {
+            'aria-label': _message.default.format('dxCardView-ariaSelectCard')
+          },
           value: card.isSelected,
           onValueChanged: e => {
             const event = e.event;
@@ -40,12 +47,9 @@ class CardHeader extends _inferno.Component {
     }
     return null;
   }
-  render() {
+  getDefaultToolbarItems() {
     const {
-      visible: visibleProp,
-      items = [],
       captionExpr,
-      template: Template,
       card,
       allowUpdating,
       allowDeleting,
@@ -53,11 +57,13 @@ class CardHeader extends _inferno.Component {
       onDelete
     } = this.props;
     const checkBoxItem = this.getCheckBoxItem();
-    const captionItem = captionExpr && card !== null && card !== void 0 && card[captionExpr] ? {
+    const captionItem = !!captionExpr && (card === null || card === void 0 ? void 0 : card[captionExpr]) && {
+      name: 'caption',
       location: 'before',
       text: card[captionExpr]
-    } : null;
-    const updateButton = allowUpdating ? {
+    };
+    const updateButton = allowUpdating && {
+      name: 'updateButton',
       location: 'after',
       widget: 'dxButton',
       options: {
@@ -65,25 +71,37 @@ class CardHeader extends _inferno.Component {
         onClick: onEdit,
         stylingMode: 'text'
       }
-    } : null;
-    const deleteButton = allowDeleting ? {
+    };
+    const deleteButton = allowDeleting && {
+      name: 'deleteButton',
       location: 'after',
       widget: 'dxButton',
       options: {
-        icon: 'remove',
+        icon: 'trash',
         onClick: onDelete,
         stylingMode: 'text'
       }
-    } : null;
-    const finalItems = [checkBoxItem, captionItem, updateButton, deleteButton, ...items].filter(item => !!item);
-    const visible = (0, _m_type.isDefined)(visibleProp) ? visibleProp : !!finalItems.length;
+    };
+    const items = [checkBoxItem, captionItem, updateButton, deleteButton].filter(item => !!item);
+    // TODO: fix typings
+    return items;
+  }
+  render() {
+    const {
+      visible: visibleProp,
+      items: userToolbarItems,
+      template: Template,
+      card
+    } = this.props;
+    const toolbarItems = (0, _utils.normalizeToolbarItems)(this.getDefaultToolbarItems(), userToolbarItems, ['caption', 'selectionCheckBox', 'updateButton', 'deleteButton']);
+    const visible = (0, _m_type.isDefined)(visibleProp) ? visibleProp : !!toolbarItems.length;
     if (!visible) {
       return (0, _inferno.createFragment)();
     }
     return (0, _inferno.createVNode)(1, "div", CLASSES.cardHeader, Template ? (0, _inferno.createComponentVNode)(2, Template, {
       "card": card
     }) : (0, _inferno.createComponentVNode)(2, _toolbar.Toolbar, {
-      "items": finalItems
+      "items": toolbarItems
     }), 0);
   }
 }

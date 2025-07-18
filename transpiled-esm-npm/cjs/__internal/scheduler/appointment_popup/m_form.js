@@ -18,7 +18,6 @@ var _date_serialization = _interopRequireDefault(require("../../../core/utils/da
 var _extend = require("../../../core/utils/extend");
 var _form = _interopRequireDefault(require("../../../ui/form"));
 var _themes = require("../../../ui/themes");
-var _m_appointment_adapter = require("../m_appointment_adapter");
 var _m_utils_time_zone = _interopRequireDefault(require("../m_utils_time_zone"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -133,9 +132,6 @@ class AppointmentForm {
         class: E2E_TEST_CLASSES.form
       }
     });
-  }
-  _createAppointmentAdapter(rawAppointment) {
-    return (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this.scheduler.getDataAccessors());
   }
   _dateBoxValueChanged(args, dateExpr, isNeedCorrect) {
     validateAppointmentFormDate(args.component, args.value, args.previousValue);
@@ -310,7 +306,7 @@ class AppointmentForm {
       editorOptions: {
         firstDayOfWeek: this.scheduler.getFirstDayOfWeek(),
         timeZoneCalculator: this.scheduler.getTimeZoneCalculator(),
-        getStartDateTimeZone: () => this._createAppointmentAdapter(this.formData).startDateTimeZone
+        getStartDateTimeZone: () => this.scheduler.getDataAccessors().get('startDateTimeZone', this.formData)
       },
       label: {
         text: ' ',

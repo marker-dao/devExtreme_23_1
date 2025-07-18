@@ -418,7 +418,6 @@ class Slider extends TrackBar {
     // @ts-expect-error ts-error
     const newRatio = Math.min(this._startOffset + offsetDirection * e.event.offset / this._swipePixelRatio(), 1);
     setWidth(this._$range, `${newRatio * 100}%`);
-    SliderHandle.getInstance(this._activeHandle()).fitTooltipPosition;
     this._changeValueOnSwipe(newRatio);
   }
   _swipePixelRatio() {

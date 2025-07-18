@@ -2,10 +2,11 @@
   @typescript-eslint/explicit-module-boundary-types,
   @typescript-eslint/no-explicit-any
 */
-import { isFunction, isString } from '../../../../../core/utils/type';
+import { isFunction } from '../../../../../core/utils/type';
 import messageLocalization from '../../../../../localization/message';
 import gridCoreUtils from '../../../../grids/grid_core/m_utils';
-import { addWidgetPrefix, getName, parseValue } from '../utils';
+import { addWidgetPrefix, getName } from '../utils/common';
+import { parseValue } from '../utils/parse_value/index';
 const HIGHLIGHT_SPLIT_SEPARATOR = '<--|-->';
 const FILTERING_TIMEOUT = 700;
 const CLASS = {
@@ -34,10 +35,9 @@ export const splitHighlightedText = (text, _ref) => {
   }));
 };
 export const allowSearch = (column, searchVisibleColumnsOnly) => {
-  const allowSearchByDataField = !!column.dataField && isString(column.dataField);
   const allowSearchByVisibility = !searchVisibleColumnsOnly || column.visible;
-  const allowSearchByConfig = column.allowSearch ?? column.allowFiltering;
-  return allowSearchByDataField && allowSearchByVisibility && allowSearchByConfig;
+  const allowSearchByConfig = column.allowSearch;
+  return allowSearchByVisibility && allowSearchByConfig;
 };
 export const createFilterExpression = (column, filterValue, selectedFilterOperation, target) => {
   let result = column.calculateFilterExpression(filterValue, selectedFilterOperation, target);

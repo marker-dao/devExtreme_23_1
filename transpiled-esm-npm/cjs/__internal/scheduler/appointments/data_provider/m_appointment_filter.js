@@ -5,14 +5,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.AppointmentFilterBaseStrategy = void 0;
 var _query = _interopRequireDefault(require("../../../../common/data/query"));
-var _array = require("../../../../core/utils/array");
+var _common = require("../../../../core/utils/common");
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
-var _iterator = require("../../../../core/utils/iterator");
 var _type = require("../../../../core/utils/type");
 var _date2 = require("../../../core/utils/date");
-var _index = require("../../../scheduler/r1/utils/index");
-var _m_appointment_adapter = require("../../m_appointment_adapter");
 var _m_recurrence = require("../../m_recurrence");
+var _index = require("../../r1/utils/index");
+var _appointment_adapter = require("../../utils/appointment_adapter/appointment_adapter");
+var _appointment_groups_utils = require("../../utils/resource_manager/appointment_groups_utils");
 var _m_utils = require("./m_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -91,7 +91,7 @@ class AppointmentFilterBaseStrategy {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   hasAllDayAppointments(filteredItems, preparedItems) {
-    return filteredItems.map(item => (0, _m_appointment_adapter.createAppointmentAdapter)(item, this.dataAccessors, this.timeZoneCalculator)).some(item => (0, _index.isAppointmentTakesAllDay)(item, this.allDayPanelMode));
+    return filteredItems.map(item => new _appointment_adapter.AppointmentAdapter(item, this.dataAccessors)).some(item => (0, _index.isAppointmentTakesAllDay)(item, this.allDayPanelMode));
   }
   _createAllDayAppointmentFilter() {
     return [[appointment => (0, _index.isAppointmentTakesAllDay)(appointment, this.allDayPanelMode)]];
@@ -182,36 +182,12 @@ class AppointmentFilterBaseStrategy {
       return true;
     }]];
   }
-  _filterAppointmentByResources(appointment, resources) {
-    const checkAppointmentResourceValues = (resourceName, resourceIndex) => {
-      const resourceGetter = this.dataAccessors.resources.getter[resourceName];
-      let resource;
-      if ((0, _type.isFunction)(resourceGetter)) {
-        resource = resourceGetter(appointment);
-      }
-      const appointmentResourceValues = (0, _array.wrapToArray)(resource);
-      const resourceData = (0, _iterator.map)(resources[resourceIndex].items, _ref => {
-        let {
-          id
-        } = _ref;
-        return id;
-      });
-      for (let i = 0; i < appointmentResourceValues.length; i++) {
-        if ((0, _index.hasResourceValue)(resourceData, appointmentResourceValues[i])) {
-          return true;
-        }
-      }
-      return false;
-    };
-    let result = false;
-    for (let i = 0; i < resources.length; i++) {
-      const resourceName = resources[i].name;
-      result = checkAppointmentResourceValues(resourceName, i);
-      if (!result) {
-        return false;
-      }
-    }
-    return result;
+  _filterAppointmentByResources(appointment, groupsResources) {
+    const appointmentGroupValues = (0, _appointment_groups_utils.getAppointmentGroupValues)(appointment, groupsResources);
+    return groupsResources.every(resource => {
+      const value = appointmentGroupValues[resource.resourceIndex];
+      return value === null || value === void 0 ? void 0 : value.some(id => resource.items.some(item => (0, _common.equalByValue)(id, item.id)));
+    });
   }
   _filterAppointmentByRRule(appointment, min, max, startDayHour, endDayHour, firstDayOfWeek) {
     const {
@@ -254,10 +230,10 @@ class AppointmentFilterBaseStrategy {
   }
   filterLoadedAppointments(filterOptions, preparedItems) {
     const filteredItems = this.filterPreparedItems(filterOptions, preparedItems);
-    return filteredItems.map(_ref2 => {
+    return filteredItems.map(_ref => {
       let {
         rawAppointment
-      } = _ref2;
+      } = _ref;
       return rawAppointment;
     });
   }
@@ -273,10 +249,10 @@ class AppointmentFilterBaseStrategy {
     // @ts-expect-error
     return (0, _query.default)(preparedItems)
     // @ts-expect-error
-    .filter(combinedFilter).toArray().map(_ref3 => {
+    .filter(combinedFilter).toArray().map(_ref2 => {
       let {
         rawAppointment
-      } = _ref3;
+      } = _ref2;
       return rawAppointment;
     });
   }

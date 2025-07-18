@@ -5,8 +5,8 @@ import { isNumeric, isObject } from '../../../../core/utils/type';
 import { current as currentTheme } from '../../../../ui/themes';
 import { dateUtilsTs } from '../../../core/utils/date';
 import { isAppointmentTakesAllDay } from '../../../scheduler/r1/utils/index';
-import { createAppointmentAdapter } from '../../m_appointment_adapter';
 import timeZoneUtils from '../../m_utils_time_zone';
+import { AppointmentAdapter } from '../../utils/appointment_adapter/appointment_adapter';
 import { AppointmentSettingsGenerator } from '../m_settings_generator';
 import AdaptivePositioningStrategy from './m_appointments_positioning_strategy_adaptive';
 import AppointmentPositioningStrategy from './m_appointments_positioning_strategy_base';
@@ -263,8 +263,7 @@ class BaseRenderingStrategy {
     return this.getAppointmentSettingsGenerator(rawAppointment).create();
   }
   isAppointmentTakesAllDay(rawAppointment) {
-    const adapter = createAppointmentAdapter(rawAppointment, this.dataAccessors, this.timeZoneCalculator);
-    return isAppointmentTakesAllDay(adapter, this.allDayPanelMode);
+    return isAppointmentTakesAllDay(new AppointmentAdapter(rawAppointment, this.dataAccessors), this.allDayPanelMode);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _getAppointmentParts(geometry, settings) {
@@ -759,9 +758,9 @@ class BaseRenderingStrategy {
     } = this.options;
     const startDateField = this.dataAccessors.expr.startDateExpr;
     const endDateField = this.dataAccessors.expr.endDateExpr;
-    let startDate = new Date(this.dataAccessors.get('startDate', appointment));
+    let startDate = this.dataAccessors.get('startDate', appointment);
     startDate = dateUtilsTs.addOffsets(startDate, [-viewOffset]);
-    let endDate = new Date(this.dataAccessors.get('endDate', appointment));
+    let endDate = this.dataAccessors.get('endDate', appointment);
     endDate = dateUtilsTs.addOffsets(endDate, [-viewOffset]);
     return _extends({}, appointment, {
       [startDateField]: startDate,

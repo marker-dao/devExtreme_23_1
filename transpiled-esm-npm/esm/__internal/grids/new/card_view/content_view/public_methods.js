@@ -6,7 +6,7 @@ import * as cardModule from './content/card/card';
 export function PublicMethods(GridCore) {
   return class CardViewWithContentView extends Base.PublicMethods(GridCore) {
     getCardElement(cardIndex) {
-      const card = $(this.element()).find(cardModule.CLASSES.card).eq(cardIndex);
+      const card = $(this.element()).find(`.${cardModule.CLASSES.card}`).eq(cardIndex);
       return getPublicElement(card);
     }
     getVisibleCards() {

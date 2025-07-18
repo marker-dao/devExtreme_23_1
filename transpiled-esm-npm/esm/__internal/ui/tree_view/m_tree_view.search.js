@@ -1,6 +1,6 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../../core/component_registrator';
 import $ from '../../../core/renderer';
-import { extend } from '../../../core/utils/extend';
 import TextBox from '../../../ui/text_box';
 import searchBoxMixin from '../../../ui/widget/ui.search_box_mixin';
 import TreeViewBase from './m_tree_view.base';
@@ -42,7 +42,7 @@ const TreeViewSearch = TreeViewBase.inherit(searchBoxMixin).inherit({
     this._setOptionWithoutOptionChange('expandNodesRecursive', true);
   },
   _getDataAdapterOptions() {
-    return extend(this.callBase(), {
+    return _extends({}, this.callBase(), {
       searchValue: this.option('searchValue'),
       searchMode: this.option('searchMode') || 'contains',
       searchExpr: this.option('searchExpr')

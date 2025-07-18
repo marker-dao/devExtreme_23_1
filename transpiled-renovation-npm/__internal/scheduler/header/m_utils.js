@@ -3,14 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.validateViews = exports.nextWeek = exports.isOneView = exports.getViewType = exports.getViewText = exports.getViewName = exports.getStep = exports.getNextIntervalDate = exports.getCaptionInterval = exports.getCaption = exports.formatViews = void 0;
+exports.nextWeek = exports.isOneView = exports.getViewName = exports.getStep = exports.getNextIntervalDate = exports.getCaptionInterval = exports.getCaption = void 0;
 var _date = _interopRequireDefault(require("../../../common/core/localization/date"));
-var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
-var _errors = _interopRequireDefault(require("../../../core/errors"));
 var _date2 = _interopRequireDefault(require("../../../core/utils/date"));
-var _inflector = require("../../../core/utils/inflector");
 var _type = require("../../../core/utils/type");
-var _constants = require("../constants");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const DAY_FORMAT = 'd';
 const DAYS_IN_WORK_WEEK = 5;
@@ -278,57 +274,9 @@ const STEP_MAP = {
   timelineMonth: 'month',
   agenda: 'agenda'
 };
-const getViewType = view => (0, _type.isObject)(view) ? view.type : view;
-exports.getViewType = getViewType;
-const getStep = view => {
-  const type = getViewType(view);
-  return type ? STEP_MAP[type] : undefined;
-};
+const getStep = type => STEP_MAP[type];
 exports.getStep = getStep;
-const getViewName = view => {
-  if ((0, _type.isObject)(view)) {
-    return view.name ?? view.type;
-  }
-  return view;
-};
+const getViewName = view => view.name ?? view.type;
 exports.getViewName = getViewName;
-const getViewText = view => {
-  if ((0, _type.isObject)(view) && view.name) {
-    return view.name;
-  }
-  const viewName = (0, _inflector.camelize)(getViewType(view), true);
-  return _message.default.format(`dxScheduler-switcher${viewName}`);
-};
-exports.getViewText = getViewText;
-const isValidView = view => Boolean(view && Object.values(_constants.VIEWS).includes(view));
-const validateViews = function () {
-  let views = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  views.forEach(view => {
-    const viewType = getViewType(view);
-    if (!isValidView(viewType)) {
-      _errors.default.log('W0008', viewType);
-    }
-  });
-};
-exports.validateViews = validateViews;
-const formatViews = function () {
-  let views = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  validateViews(views);
-  return views.map(view => {
-    const text = getViewText(view);
-    const type = getViewType(view);
-    const name = getViewName(view);
-    return {
-      text,
-      name,
-      view: {
-        text,
-        type,
-        name
-      }
-    };
-  });
-};
-exports.formatViews = formatViews;
-const isOneView = (views, selectedView) => views.length === 1 && views[0].name === selectedView;
+const isOneView = (views, selectedView) => views.length === 1 && getViewName(views[0]) === selectedView;
 exports.isOneView = isOneView;

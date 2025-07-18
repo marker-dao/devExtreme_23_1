@@ -2,7 +2,6 @@
 import positionUtils from '../../../../common/core/animation/position';
 import { name as clickEventName } from '../../../../common/core/events/click';
 import eventsEngine from '../../../../common/core/events/core/events_engine';
-import pointerEvents from '../../../../common/core/events/pointer';
 import { addNamespace, normalizeKeyName } from '../../../../common/core/events/utils/index';
 import domAdapter from '../../../../core/dom_adapter';
 import $ from '../../../../core/renderer';
@@ -24,7 +23,7 @@ const CONTENT_CLASS = 'content';
 const FOCUSED_ELEMENT_CLASS = 'dx-focused';
 const ROW_CLASS = 'dx-row';
 const MODULE_NAMESPACE = 'dxDataGridEditorFactory';
-const UPDATE_FOCUS_EVENTS = addNamespace([pointerEvents.down, 'focusin', clickEventName].join(' '), MODULE_NAMESPACE);
+const UPDATE_FOCUS_EVENTS = addNamespace([clickEventName, 'focusin'].join(' '), MODULE_NAMESPACE);
 const DX_HIDDEN = 'dx-hidden';
 const ViewControllerWithMixin = EditorFactoryMixin(modules.ViewController);
 export class EditorFactory extends ViewControllerWithMixin {

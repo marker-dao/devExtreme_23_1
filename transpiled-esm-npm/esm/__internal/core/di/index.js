@@ -4,6 +4,7 @@ export class DIContext {
   constructor() {
     this.instances = new Map();
     this.fabrics = new Map();
+    this.aliases = new Map();
     this.antiRecursionSet = new Set();
   }
   register(id, fabric) {
@@ -22,6 +23,8 @@ export class DIContext {
     throw new Error(`DI item is not registered: ${id}`);
   }
   tryGet(id) {
+    // eslint-disable-next-line no-param-reassign
+    id = this.resolveAlias(id);
     if (this.instances.get(id)) {
       return this.instances.get(id);
     }
@@ -43,5 +46,20 @@ export class DIContext {
     this.antiRecursionSet.delete(fabric);
     // eslint-disable-next-line new-cap
     return new fabric(...args);
+  }
+  addAlias(aliasId, id) {
+    this.aliases.set(aliasId, id);
+  }
+  resolveAlias(aliasId) {
+    let result = aliasId;
+    /*
+      NOTE: cycle it here for case when some alias resolves to another alias.
+      e.g. A -> B -> C
+      We need to resolve until we get class without aliases
+    */
+    while (this.aliases.has(result)) {
+      result = this.aliases.get(result);
+    }
+    return result;
   }
 }

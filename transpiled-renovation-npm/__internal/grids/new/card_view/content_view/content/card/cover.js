@@ -17,6 +17,7 @@ const CLASSES = exports.CLASSES = {
 class Cover extends _inferno.Component {
   render() {
     const {
+      id,
       imageSrc,
       alt,
       template: Template,
@@ -35,7 +36,9 @@ class Cover extends _inferno.Component {
     }), !src && (0, _inferno.createComponentVNode)(2, _icon.Icon, {
       "name": 'imagethumbnail',
       "aria-label": _message.default.format('dxCardView-cardNoImageAriaLabel')
-    })], 0), 0);
+    })], 0), 0, {
+      "id": id
+    });
   }
 }
 exports.Cover = Cover;

@@ -3,12 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "PathTimeZoneConversion", {
-  enumerable: true,
-  get: function () {
-    return _const.PathTimeZoneConversion;
-  }
-});
 Object.defineProperty(exports, "TimeZoneCalculator", {
   enumerable: true,
   get: function () {
@@ -22,5 +16,4 @@ Object.defineProperty(exports, "createTimeZoneCalculator", {
   }
 });
 var _calculator = require("./calculator");
-var _const = require("./const");
 var _utils = require("./utils");

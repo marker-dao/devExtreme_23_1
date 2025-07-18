@@ -73,7 +73,9 @@ function normalizeLocalOptions(normalizedRemoteOperations) {
   };
 }
 function getLocalLoadOptions(originOptions, localOperations) {
-  const localLoadOptions = {};
+  const localLoadOptions = {
+    langParams: originOptions.langParams
+  };
   if (localOperations.sorting) {
     localLoadOptions.sort = originOptions.sort;
   }

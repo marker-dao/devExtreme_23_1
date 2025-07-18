@@ -9,16 +9,17 @@ var _columns_controller = require("../../../../grids/new/grid_core/columns_contr
 var _view = require("../../../../grids/new/grid_core/core/view");
 var _index = require("../../../../grids/new/grid_core/keyboard_navigation/index");
 var _index2 = require("../../grid_core/column_chooser/index");
+var _filter_controller = require("../../grid_core/filtering/filter_controller");
 var _view_controller = require("../../grid_core/filtering/header_filter/view_controller");
-var _sorting_controller = require("../../grid_core/sorting_controller/sorting_controller");
-var _index3 = require("../context_menu/index");
+var _index3 = require("../../grid_core/sorting_controller/index");
+var _index4 = require("../context_menu/index");
 var _options_controller = require("../options_controller");
 var _controller = require("./controller");
 var _header_panel = require("./header_panel");
 /* eslint-disable spellcheck/spell-checker */
 
 class HeaderPanelView extends _view.View {
-  constructor(headerPanelController, contextMenuController, sortingController, columnsController, options, headerFilterViewController, keyboardNavigationController, columnChooserController, columnChooserView) {
+  constructor(headerPanelController, contextMenuController, sortingController, columnsController, options, headerFilterViewController, keyboardNavigationController, columnChooserController, filterController, columnChooserView) {
     super();
     this.headerPanelController = headerPanelController;
     this.contextMenuController = contextMenuController;
@@ -28,6 +29,7 @@ class HeaderPanelView extends _view.View {
     this.headerFilterViewController = headerFilterViewController;
     this.keyboardNavigationController = keyboardNavigationController;
     this.columnChooserController = columnChooserController;
+    this.filterController = filterController;
     this.columnChooserView = columnChooserView;
     this.component = _header_panel.HeaderPanel;
     this.navigationStrategy = new _index.NavigationStrategyHorizontalList();
@@ -66,7 +68,8 @@ class HeaderPanelView extends _view.View {
       showContextMenu: this.showContextMenu.bind(this),
       openColumnChooser: () => {
         this.columnChooserView.show();
-      }
+      },
+      filterSyncValue: this.filterController.filterSyncValue.value
     }));
   }
   onColumnSort(column, event) {
@@ -98,4 +101,4 @@ class HeaderPanelView extends _view.View {
   }
 }
 exports.HeaderPanelView = HeaderPanelView;
-HeaderPanelView.dependencies = [_controller.HeaderPanelController, _index3.ContextMenuController, _sorting_controller.SortingController, _columns_controller.ColumnsController, _options_controller.OptionsController, _view_controller.HeaderFilterViewController, _index.KeyboardNavigationController, _index2.ColumnChooserController, _index2.ColumnChooserView];
+HeaderPanelView.dependencies = [_controller.HeaderPanelController, _index4.ContextMenuController, _index3.SortingController, _columns_controller.ColumnsController, _options_controller.OptionsController, _view_controller.HeaderFilterViewController, _index.KeyboardNavigationController, _index2.ColumnChooserController, _filter_controller.FilterController, _index2.ColumnChooserView];

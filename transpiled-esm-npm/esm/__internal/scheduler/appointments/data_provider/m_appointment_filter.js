@@ -1,13 +1,13 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import query from '../../../../common/data/query';
-import { wrapToArray } from '../../../../core/utils/array';
+import { equalByValue } from '../../../../core/utils/common';
 import dateUtils from '../../../../core/utils/date';
-import { map } from '../../../../core/utils/iterator';
-import { isDefined, isFunction } from '../../../../core/utils/type';
+import { isDefined } from '../../../../core/utils/type';
 import { dateUtilsTs } from '../../../core/utils/date';
-import { getDatesWithoutTime, hasResourceValue, isAppointmentTakesAllDay, isTimelineView } from '../../../scheduler/r1/utils/index';
-import { createAppointmentAdapter } from '../../m_appointment_adapter';
 import { getRecurrenceProcessor } from '../../m_recurrence';
+import { getDatesWithoutTime, isAppointmentTakesAllDay, isTimelineView } from '../../r1/utils/index';
+import { AppointmentAdapter } from '../../utils/appointment_adapter/appointment_adapter';
+import { getAppointmentGroupValues } from '../../utils/resource_manager/appointment_groups_utils';
 import { _appointmentPartInInterval, compareDateWithEndDayHour, compareDateWithStartDayHour, getAppointmentTakesSeveralDays, getRecurrenceException } from './m_utils';
 // TODO Vinogradov refactoring: this module should be refactored :)
 const toMs = dateUtils.dateToMilliseconds;
@@ -84,7 +84,7 @@ export class AppointmentFilterBaseStrategy {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   hasAllDayAppointments(filteredItems, preparedItems) {
-    return filteredItems.map(item => createAppointmentAdapter(item, this.dataAccessors, this.timeZoneCalculator)).some(item => isAppointmentTakesAllDay(item, this.allDayPanelMode));
+    return filteredItems.map(item => new AppointmentAdapter(item, this.dataAccessors)).some(item => isAppointmentTakesAllDay(item, this.allDayPanelMode));
   }
   _createAllDayAppointmentFilter() {
     return [[appointment => isAppointmentTakesAllDay(appointment, this.allDayPanelMode)]];
@@ -175,36 +175,12 @@ export class AppointmentFilterBaseStrategy {
       return true;
     }]];
   }
-  _filterAppointmentByResources(appointment, resources) {
-    const checkAppointmentResourceValues = (resourceName, resourceIndex) => {
-      const resourceGetter = this.dataAccessors.resources.getter[resourceName];
-      let resource;
-      if (isFunction(resourceGetter)) {
-        resource = resourceGetter(appointment);
-      }
-      const appointmentResourceValues = wrapToArray(resource);
-      const resourceData = map(resources[resourceIndex].items, _ref => {
-        let {
-          id
-        } = _ref;
-        return id;
-      });
-      for (let i = 0; i < appointmentResourceValues.length; i++) {
-        if (hasResourceValue(resourceData, appointmentResourceValues[i])) {
-          return true;
-        }
-      }
-      return false;
-    };
-    let result = false;
-    for (let i = 0; i < resources.length; i++) {
-      const resourceName = resources[i].name;
-      result = checkAppointmentResourceValues(resourceName, i);
-      if (!result) {
-        return false;
-      }
-    }
-    return result;
+  _filterAppointmentByResources(appointment, groupsResources) {
+    const appointmentGroupValues = getAppointmentGroupValues(appointment, groupsResources);
+    return groupsResources.every(resource => {
+      const value = appointmentGroupValues[resource.resourceIndex];
+      return value === null || value === void 0 ? void 0 : value.some(id => resource.items.some(item => equalByValue(id, item.id)));
+    });
   }
   _filterAppointmentByRRule(appointment, min, max, startDayHour, endDayHour, firstDayOfWeek) {
     const {
@@ -247,10 +223,10 @@ export class AppointmentFilterBaseStrategy {
   }
   filterLoadedAppointments(filterOptions, preparedItems) {
     const filteredItems = this.filterPreparedItems(filterOptions, preparedItems);
-    return filteredItems.map(_ref2 => {
+    return filteredItems.map(_ref => {
       let {
         rawAppointment
-      } = _ref2;
+      } = _ref;
       return rawAppointment;
     });
   }
@@ -266,10 +242,10 @@ export class AppointmentFilterBaseStrategy {
     // @ts-expect-error
     return query(preparedItems)
     // @ts-expect-error
-    .filter(combinedFilter).toArray().map(_ref3 => {
+    .filter(combinedFilter).toArray().map(_ref2 => {
       let {
         rawAppointment
-      } = _ref3;
+      } = _ref2;
       return rawAppointment;
     });
   }

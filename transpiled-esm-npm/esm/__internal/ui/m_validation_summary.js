@@ -5,7 +5,7 @@ import registerComponent from '../../core/component_registrator';
 import { grep } from '../../core/utils/common';
 import { extend } from '../../core/utils/extend';
 import { each, map } from '../../core/utils/iterator';
-import CollectionWidget from '../ui/collection/m_collection_widget.edit';
+import CollectionWidget from '../ui/collection/collection_widget.edit';
 import ValidationEngine from './m_validation_engine';
 const VALIDATION_SUMMARY_CLASS = 'dx-validationsummary';
 const ITEM_CLASS = `${VALIDATION_SUMMARY_CLASS}-item`;

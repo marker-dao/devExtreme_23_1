@@ -3,7 +3,6 @@ import $ from '../../../../core/renderer';
 import { each } from '../../../../core/utils/iterator';
 import { setHeight, setWidth } from '../../../../core/utils/size';
 import { isDefined } from '../../../../core/utils/type';
-import Scrollable from '../../../../ui/scroll_view/ui.scrollable';
 import { AreaItem } from '../area_item/m_area_item';
 const PIVOTGRID_AREA_CLASS = 'dx-pivotgrid-area';
 const PIVOTGRID_AREA_COLUMN_CLASS = 'dx-pivotgrid-horizontal-headers';
@@ -16,7 +15,6 @@ const PIVOTGRID_COLLAPSED_CLASS = 'dx-pivotgrid-collapsed';
 const PIVOTGRID_LAST_CELL_CLASS = 'dx-last-cell';
 const PIVOTGRID_VERTICAL_SCROLL_CLASS = 'dx-vertical-scroll';
 const PIVOTGRID_EXPAND_BORDER = 'dx-expand-border';
-const isRenovatedScrollable = !!Scrollable.IS_RENOVATED_WIDGET;
 function getCellPath(tableElement, cell) {
   if (cell) {
     const {
@@ -110,17 +108,8 @@ const HorizontalHeadersArea = AreaItem.inherit({
       showScrollbar: 'never',
       bounceEnabled: false,
       direction: 'horizontal',
-      rtlEnabled: isRenovatedScrollable ? this.component.option('rtlEnabled') : false,
+      rtlEnabled: false,
       updateManually: true
-    });
-  },
-  updateScrollableOptions(_ref) {
-    let {
-      rtlEnabled
-    } = _ref;
-    const scrollable = this._getScrollable();
-    isRenovatedScrollable && scrollable.option({
-      rtlEnabled
     });
   },
   processScrollBarSpacing(scrollBarWidth) {

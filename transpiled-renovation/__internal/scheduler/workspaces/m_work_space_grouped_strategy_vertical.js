@@ -7,12 +7,12 @@ exports.default = void 0;
 var _position = require("../../../core/utils/position");
 var _index = require("../../scheduler/r1/utils/index");
 var _const = require("../../scheduler/workspaces/const");
+var _global_cache = require("../global_cache");
 var _m_classes = require("../m_classes");
-var _m_cache = require("./m_cache");
 class VerticalGroupedStrategy {
   constructor(_workSpace) {
     this._workSpace = _workSpace;
-    this.cache = new _m_cache.Cache();
+    this.cache = new _global_cache.Cache();
   }
   prepareCellIndexes(cellCoordinates, groupIndex, inAllDayRow) {
     let rowIndex = cellCoordinates.rowIndex + groupIndex * this._workSpace._getRowCount();
@@ -65,7 +65,7 @@ class VerticalGroupedStrategy {
   }
   getGroupBoundsOffset(groupIndex, _ref) {
     let [$firstCell, $lastCell] = _ref;
-    return this.cache.get(`groupBoundsOffset${groupIndex}`, () => {
+    return this.cache.memo(`groupBoundsOffset${groupIndex}`, () => {
       const startDayHour = this._workSpace.option('startDayHour');
       const endDayHour = this._workSpace.option('endDayHour');
       const hoursInterval = this._workSpace.option('hoursInterval');

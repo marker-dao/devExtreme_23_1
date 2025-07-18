@@ -7,7 +7,6 @@ exports.editorFactoryModule = exports.EditorFactory = void 0;
 var _position = _interopRequireDefault(require("../../../../common/core/animation/position"));
 var _click = require("../../../../common/core/events/click");
 var _events_engine = _interopRequireDefault(require("../../../../common/core/events/core/events_engine"));
-var _pointer = _interopRequireDefault(require("../../../../common/core/events/pointer"));
 var _index = require("../../../../common/core/events/utils/index");
 var _dom_adapter = _interopRequireDefault(require("../../../../core/dom_adapter"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
@@ -32,7 +31,7 @@ const CONTENT_CLASS = 'content';
 const FOCUSED_ELEMENT_CLASS = 'dx-focused';
 const ROW_CLASS = 'dx-row';
 const MODULE_NAMESPACE = 'dxDataGridEditorFactory';
-const UPDATE_FOCUS_EVENTS = (0, _index.addNamespace)([_pointer.default.down, 'focusin', _click.name].join(' '), MODULE_NAMESPACE);
+const UPDATE_FOCUS_EVENTS = (0, _index.addNamespace)([_click.name, 'focusin'].join(' '), MODULE_NAMESPACE);
 const DX_HIDDEN = 'dx-hidden';
 const ViewControllerWithMixin = (0, _ui.default)(_m_modules.default.ViewController);
 class EditorFactory extends ViewControllerWithMixin {

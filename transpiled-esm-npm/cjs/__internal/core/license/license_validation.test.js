@@ -614,3 +614,26 @@ _globals.jest.mock('./key', () => ({
     (0, _globals.expect)(trialPanelSpy).not.toHaveBeenCalled();
   });
 });
+(0, _globals.describe)('DevExpress license check', () => {
+  let trialPanelSpy = _globals.jest.spyOn(trialPanel, 'renderTrialPanel');
+  (0, _globals.beforeEach)(() => {
+    _globals.jest.spyOn(_errors.default, 'log').mockImplementation(() => {});
+    trialPanelSpy = _globals.jest.spyOn(trialPanel, 'renderTrialPanel');
+    (0, _license_validation.setLicenseCheckSkipCondition)(false);
+  });
+  (0, _globals.afterEach)(() => {
+    _globals.jest.restoreAllMocks();
+  });
+  (0, _globals.test)('DevExpress License Key copied from Download Manager (incorrect)', () => {
+    const token = 'LCXv1therestofthekey';
+    (0, _license_validation.validateLicense)(token, '25.1.3');
+    (0, _globals.expect)(_errors.default.log).toHaveBeenCalled();
+    (0, _globals.expect)(trialPanelSpy).toHaveBeenCalled();
+  });
+  (0, _globals.test)('DevExpress License Key generated from LCX key (incorrect)', () => {
+    const token = 'LCPtherestofthekey';
+    (0, _license_validation.validateLicense)(token, '25.1.3');
+    (0, _globals.expect)(_errors.default.log).toHaveBeenCalled();
+    (0, _globals.expect)(trialPanelSpy).toHaveBeenCalled();
+  });
+});

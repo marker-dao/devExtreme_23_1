@@ -471,6 +471,7 @@ const PivotGrid = Widget.inherit({
       headerFilter: that.option('headerFilter'),
       encodeHtml: that.option('fieldChooser.encodeHtml') ?? that.option('encodeHtml'),
       applyChangesMode: fieldChooserOptions.applyChangesMode,
+      rtlEnabled: that.option('rtlEnabled'),
       onContextMenuPreparing(e) {
         that._trigger('onContextMenuPreparing', e);
       }
@@ -1012,6 +1013,7 @@ const PivotGrid = Widget.inherit({
     deferUpdate(() => {
       const rowHeights = that._rowsArea.getRowsHeight();
       const descriptionCellHeight = getOuterHeight(descriptionCell[0], true) + (needSynchronizeFieldPanel ? rowHeights[0] : 0);
+      const dataAreaHeadHeight = getHeight(that._dataArea.headElement());
       let filterAreaHeight = 0;
       let dataAreaHeight = 0;
       if (that._hasHeight) {
@@ -1019,10 +1021,12 @@ const PivotGrid = Widget.inherit({
         const $dataHeader = tableElement.find('.dx-data-header');
         const dataHeaderHeight = getHeight($dataHeader);
         bordersWidth = getCommonBorderWidth([columnAreaCell, dataAreaCell, tableElement, columnHeaderCell, filterHeaderCell], 'height');
-        dataAreaHeight = getHeight(that.$element()) - filterAreaHeight - dataHeaderHeight - (Math.max(getHeight(that._dataArea.headElement()), getHeight(columnAreaCell), descriptionCellHeight) + bordersWidth);
+        dataAreaHeight = getHeight(that.$element()) - filterAreaHeight - dataHeaderHeight - (Math.max(dataAreaHeadHeight, getHeight(columnAreaCell), descriptionCellHeight) + bordersWidth);
       }
       const scrollBarWidth = that._dataArea.getScrollbarWidth();
-      const correctDataTableHeight = getHeight(that._dataArea.tableElement()) - getHeight(that._dataArea.headElement());
+      const rowsAreaTableHeight = getHeight(that._rowsArea.tableElement());
+      const dataAreaTableHeight = getHeight(that._dataArea.tableElement());
+      const correctDataTableHeight = Math.max(rowsAreaTableHeight, dataAreaTableHeight - dataAreaHeadHeight);
       const hasVerticalScrollbar = calculateHasScroll(dataAreaHeight, correctDataTableHeight);
       that._dataArea.tableElement().css({
         width: that._hasHeight && hasVerticalScrollbar && scrollBarWidth ? `calc(100% - ${scrollBarWidth}px)` : '100%'
@@ -1107,9 +1111,6 @@ const PivotGrid = Widget.inherit({
         const updateScrollableResults = [];
         that._dataArea.updateScrollableOptions({
           direction: that._dataArea.getScrollableDirection(hasColumnsScroll, hasRowsScroll),
-          rtlEnabled: that.option('rtlEnabled')
-        });
-        that._columnsArea.updateScrollableOptions({
           rtlEnabled: that.option('rtlEnabled')
         });
         each([that._columnsArea, that._rowsArea, that._dataArea], (_, area) => {

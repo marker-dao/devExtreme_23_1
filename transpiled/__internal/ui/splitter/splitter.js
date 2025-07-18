@@ -16,7 +16,7 @@ var _extend = require("../../../core/utils/extend");
 var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
-var _m_collection_widget = _interopRequireDefault(require("../../ui/collection/m_collection_widget.live_update"));
+var _collection_widget = _interopRequireDefault(require("../../ui/collection/collection_widget.live_update"));
 var _resize_handle = require("./resize_handle");
 var _splitter_item = _interopRequireDefault(require("./splitter_item"));
 var _component = require("./utils/component");
@@ -46,7 +46,7 @@ const ORIENTATION = {
   horizontal: 'horizontal',
   vertical: 'vertical'
 };
-class Splitter extends _m_collection_widget.default {
+class Splitter extends _collection_widget.default {
   constructor() {
     super(...arguments);
     this._renderQueue = [];

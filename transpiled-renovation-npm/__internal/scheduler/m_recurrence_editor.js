@@ -16,7 +16,6 @@ var _button_group = _interopRequireDefault(require("../../ui/button_group"));
 var _editor = _interopRequireDefault(require("../../ui/editor/editor"));
 var _form = _interopRequireDefault(require("../../ui/form"));
 var _themes = require("../../ui/themes");
-var _index = require("../scheduler/r1/timezone_calculator/index");
 var _m_recurrence = require("./m_recurrence");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable max-classes-per-file, spellcheck/spell-checker */
@@ -156,6 +155,7 @@ class RecurrenceEditor extends _editor.default {
     this._$container = (0, _renderer.default)('<div>').addClass(RECURRENCE_EDITOR_CONTAINER).appendTo(this.$element());
     this._prepareEditors();
     this._renderEditors(this._$container);
+    this._updateRepeatInputAriaLabel();
   }
   getEditorByField(fieldName) {
     let editor = this.getRecurrenceForm().getEditor(fieldName);
@@ -460,6 +460,7 @@ class RecurrenceEditor extends _editor.default {
       this._recurrenceRule.makeRule('until', '');
     }
     this._changeEditorValue();
+    this._updateRepeatInputAriaLabel();
   }
   _changeRepeatEndInputsVisibility() {
     let value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this._recurrenceRule.getRepeatEndRule();
@@ -501,6 +502,19 @@ class RecurrenceEditor extends _editor.default {
       }
     };
   }
+  _updateRepeatInputAriaLabel() {
+    const radioButtons = this.getEditorByField('repeatEnd').itemElements();
+    const untilLabel = _message.default.format('dxScheduler-recurrenceOn');
+    const untilValue = this._recurrenceForm.getEditor('until').option('value');
+    const untilValueFormat = `${_date.default.format(untilValue, 'd')} ${_date.default.format(untilValue, 'monthAndYear')}`;
+    const isUntilVisible = this._recurrenceForm.itemOption('until').visible;
+    const countLabel = _message.default.format('dxScheduler-recurrenceAfter');
+    const countPostfix = _message.default.format('dxScheduler-recurrenceRepeatCount');
+    const countValue = this._recurrenceForm.getEditor('count').option('value');
+    const isCountVisible = this._recurrenceForm.itemOption('count').visible;
+    radioButtons[1].setAttribute('aria-label', isUntilVisible ? `${untilLabel} ${untilValueFormat}` : untilLabel);
+    radioButtons[2].setAttribute('aria-label', isCountVisible ? `${countLabel} ${countValue} ${countPostfix}` : countLabel);
+  }
   _repeatCountValueChangeHandler(args) {
     if (this._recurrenceRule.getRepeatEndRule() === 'count') {
       const {
@@ -508,13 +522,8 @@ class RecurrenceEditor extends _editor.default {
       } = args;
       this._recurrenceRule.makeRule('count', value);
       this._changeEditorValue();
+      this._updateRepeatInputAriaLabel();
     }
-  }
-  _formatUntilDate(date) {
-    if (this._recurrenceRule.getRules().until && _date2.default.sameDate(this._recurrenceRule.getRules().until, date)) {
-      return date;
-    }
-    return _date2.default.setToDayEnd(date);
   }
   _getRepeatUntilEditorOptions() {
     const until = this._getUntilValue();
@@ -542,18 +551,21 @@ class RecurrenceEditor extends _editor.default {
       }
     };
   }
+  _formatUntilDate(date) {
+    const untilDate = this._recurrenceRule.getRules().until;
+    const isSameDate = _date2.default.sameDate(untilDate, date);
+    return untilDate && isSameDate ? date : _date2.default.setToDayEnd(date);
+  }
   _repeatUntilValueChangeHandler(args) {
     if (this._recurrenceRule.getRepeatEndRule() === 'until') {
       const dateInTimeZone = this._formatUntilDate(new Date(args.value));
       const getStartDateTimeZone = this.option('getStartDateTimeZone');
       const appointmentTimeZone = getStartDateTimeZone();
-      const path = appointmentTimeZone ? _index.PathTimeZoneConversion.fromAppointmentToSource : _index.PathTimeZoneConversion.fromGridToSource;
-      const dateInLocaleTimeZone = this.option('timeZoneCalculator').createDate(dateInTimeZone, {
-        path,
-        appointmentTimeZone
-      });
+      const path = appointmentTimeZone ? 'fromAppointment' : 'fromGrid';
+      const dateInLocaleTimeZone = this.option('timeZoneCalculator').createDate(dateInTimeZone, path, appointmentTimeZone);
       this._recurrenceRule.makeRule('until', dateInLocaleTimeZone);
       this._changeEditorValue();
+      this._updateRepeatInputAriaLabel();
     }
   }
   _valueChangedHandler(args) {
@@ -713,11 +725,8 @@ class RecurrenceEditor extends _editor.default {
     }
     const getStartDateTimeZone = this.option('getStartDateTimeZone');
     const appointmentTimeZone = getStartDateTimeZone();
-    const path = appointmentTimeZone ? _index.PathTimeZoneConversion.fromSourceToAppointment : _index.PathTimeZoneConversion.fromSourceToGrid;
-    return this.option('timeZoneCalculator').createDate(untilDate, {
-      path,
-      appointmentTimeZone
-    });
+    const path = appointmentTimeZone ? 'toAppointment' : 'toGrid';
+    return this.option('timeZoneCalculator').createDate(untilDate, path, appointmentTimeZone);
   }
 }
 (0, _component_registrator.default)('dxRecurrenceEditor', RecurrenceEditor);

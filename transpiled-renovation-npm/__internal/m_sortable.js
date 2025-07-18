@@ -77,6 +77,7 @@ class Sortable extends _m_draggable.default {
       onRemove: null,
       onReorder: null,
       onPlaceholderPrepared: null,
+      placeholderClassName: '',
       animation: {
         type: 'slide',
         duration: 300,
@@ -245,6 +246,7 @@ class Sortable extends _m_draggable.default {
     const $sourceElement = this._getSourceElement();
     const sourceDraggable = this._getSourceDraggable();
     const isSourceDraggable = sourceDraggable.NAME !== this.NAME;
+    // @ts-expect-error bad options type
     const toIndex = this.option('toIndex');
     const {
       event
@@ -298,16 +300,17 @@ class Sortable extends _m_draggable.default {
     }
   }
   _isIndicateMode() {
-    // @ts-expect-error ts-error
+    // @ts-expect-error bad option type
     return this.option('dropFeedbackMode') === 'indicate' || this.option('allowDropInsideItem');
   }
   _createPlaceholder() {
-    let $placeholderContainer;
-    if (this._isIndicateMode()) {
-      $placeholderContainer = (0, _renderer.default)('<div>').addClass(this._addWidgetPrefix(PLACEHOLDER_CLASS)).insertBefore(this._getSourceDraggable()._$dragElement);
+    if (!this._isIndicateMode()) {
+      return undefined;
     }
-    this._$placeholderElement = $placeholderContainer;
-    return $placeholderContainer;
+    // @ts-expect-error bad options type
+    const customCssClass = this.option('placeholderClassName');
+    this._$placeholderElement = (0, _renderer.default)('<div>').addClass(this._addWidgetPrefix(PLACEHOLDER_CLASS)).addClass(customCssClass ?? '').insertBefore(this._getSourceDraggable()._$dragElement);
+    return this._$placeholderElement;
   }
   _getItems() {
     const itemsSelector = this._getItemsSelector();
@@ -482,21 +485,20 @@ class Sortable extends _m_draggable.default {
     }
     return width;
   }
-  _updatePlaceholderSizes($placeholderElement, itemElement) {
-    const that = this;
-    const dropInsideItem = that.option('dropInsideItem');
-    const $item = (0, _renderer.default)(itemElement);
-    const isVertical = that._isVerticalOrientation();
+  _updatePlaceholderSizes($placeholderElement, $itemElement) {
+    // @ts-expect-error bad options type
+    const dropInsideItem = this.option('dropInsideItem');
+    const isVertical = this._isVerticalOrientation();
     let width = '';
     let height = '';
-    $placeholderElement.toggleClass(that._addWidgetPrefix('placeholder-inside'), dropInsideItem);
+    $placeholderElement.toggleClass(this._addWidgetPrefix('placeholder-inside'), dropInsideItem);
     if (isVertical || dropInsideItem) {
-      width = (0, _size.getOuterWidth)($item);
+      width = (0, _size.getOuterWidth)($itemElement);
     }
     if (!isVertical || dropInsideItem) {
-      height = (0, _size.getOuterHeight)($item);
+      height = (0, _size.getOuterHeight)($itemElement);
     }
-    width = that._makeWidthCorrection($item, width);
+    width = this._makeWidthCorrection($itemElement, width);
     $placeholderElement.css({
       width,
       height
@@ -555,18 +557,6 @@ class Sortable extends _m_draggable.default {
       case 'onReorder':
         this[`_${name}Action`] = this._createActionByOption(name);
         break;
-      case 'itemOrientation':
-      case 'allowDropInsideItem':
-      case 'moveItemOnDrop':
-      case 'dropFeedbackMode':
-      case 'itemPoints':
-      case 'animation':
-      case 'allowReordering':
-      case 'fromIndexOffset':
-      case 'offset':
-      case 'draggableElementSize':
-      case 'autoUpdate':
-        break;
       case 'fromIndex':
         [false, true].forEach(isDragSource => {
           const fromIndex = isDragSource ? args.value : args.previousValue;
@@ -582,6 +572,19 @@ class Sortable extends _m_draggable.default {
         break;
       case 'toIndex':
         this._optionChangedToIndex(args);
+        break;
+      case 'itemOrientation':
+      case 'allowDropInsideItem':
+      case 'moveItemOnDrop':
+      case 'dropFeedbackMode':
+      case 'itemPoints':
+      case 'animation':
+      case 'allowReordering':
+      case 'fromIndexOffset':
+      case 'offset':
+      case 'draggableElementSize':
+      case 'autoUpdate':
+      case 'placeholderClassName':
         break;
       default:
         super._optionChanged(args);
@@ -698,7 +701,7 @@ class Sortable extends _m_draggable.default {
         }
       }
     }
-    that._updatePlaceholderSizes($placeholderElement, itemElement);
+    that._updatePlaceholderSizes($placeholderElement, (0, _renderer.default)(itemElement));
     if (position && !that._isPositionVisible(position)) {
       position = null;
     }
@@ -709,6 +712,7 @@ class Sortable extends _m_draggable.default {
       position.top = isLastVerticalPosition && position.top >= outerPlaceholderHeight ? position.top - outerPlaceholderHeight : position.top;
       that._move(position, $placeholderElement);
     }
+    // @ts-expect-error bad toggle type
     $placeholderElement.toggle(!!position);
   }
   _getPositions(items, elementSize, fromIndex, toIndex) {

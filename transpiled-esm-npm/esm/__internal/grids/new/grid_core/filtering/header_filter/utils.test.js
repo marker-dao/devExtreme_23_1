@@ -271,21 +271,24 @@ describe('HeaderFilter', () => {
     };
     describe('needCreateHeaderFilter', () => {
       each`
-      column                                                      | expectedResult
+      column                                                                               | expectedResult
       ${{
         allowFiltering: true,
-        allowHeaderFiltering: false
-      }}    | ${false}
+        allowHeaderFiltering: false,
+        filterValues: [1, 2, 3]
+      }}    | ${true}
       ${{
         allowFiltering: false,
-        allowHeaderFiltering: true
-      }}    | ${false}
+        allowHeaderFiltering: true,
+        filterValues: [1, 2, 3]
+      }}    | ${true}
       ${{
         allowFiltering: false,
-        allowHeaderFiltering: false
+        allowHeaderFiltering: false,
+        filterValues: [1, 2, 3]
       }}   | ${false}
 
-`.it('should return false if filtering is prohibited', _ref6 => {
+`.it('should take into account allowFiltering and allowHeaderFiltering', _ref6 => {
         let {
           column,
           expectedResult
@@ -348,6 +351,16 @@ describe('HeaderFilter', () => {
         })],
         result: [['ID1', 'anyof', [1, 2, 3]], 'and', ['ID2', 'anyof', ['test1', 'test2']]]
       }, {
+        caseName: 'two columns have array values, one of them contain 1 item',
+        columns: [_extends({}, allowFilteringColumnConfig, {
+          dataField: 'ID1',
+          filterValues: [1]
+        }), _extends({}, allowFilteringColumnConfig, {
+          dataField: 'ID2',
+          filterValues: ['test1', 'test2']
+        })],
+        result: [['ID1', '=', 1], 'and', ['ID2', 'anyof', ['test1', 'test2']]]
+      }, {
         caseName: 'it is prohibited to sort the first column',
         columns: [{
           dataField: 'ID1',
@@ -369,12 +382,37 @@ describe('HeaderFilter', () => {
           filterType: 'exclude'
         })],
         result: [['ID1', 'noneof', [1, 2, 3]], 'and', ['ID2', '<>', 'test1']]
+      }, {
+        caseName: 'one column has an array of filter expressions',
+        columns: [_extends({}, allowFilteringColumnConfig, {
+          dataField: 'ID1',
+          filterValues: [['ID1', '>', 5], ['ID1', '<', 10]]
+        })],
+        result: [[['ID1', '>', 5], 'or', ['ID1', '<', 10]]]
+      }, {
+        caseName: 'one column has an array of plain value and filter expressions',
+        columns: [_extends({}, allowFilteringColumnConfig, {
+          dataField: 'ID1',
+          filterValues: [5, ['ID1', '=', 10]]
+        })],
+        result: [[['ID1', '=', 5], 'or', ['ID1', '=', 10]]]
+      }, {
+        caseName: 'two column have an array of filter expressions',
+        columns: [_extends({}, allowFilteringColumnConfig, {
+          dataField: 'ID1',
+          filterValues: [['ID1', '>', 5], ['ID1', '<', 10]]
+        }), _extends({}, allowFilteringColumnConfig, {
+          dataField: 'ID2',
+          filterValues: [['ID2', '>', 6], ['ID2', '<', 9]]
+        })],
+        result: [[['ID1', '>', 5], 'or', ['ID1', '<', 10]], 'and', [['ID2', '>', 6], 'or', ['ID2', '<', 9]]]
       }])('$caseName: should correctly calculate the header filter', _ref8 => {
         let {
           columns,
           result
         } = _ref8;
-        const headerFilter = utils.getComposedHeaderFilter(columns);
+        const headerFilterInfoArray = utils.getHeaderFilterInfoArray(columns);
+        const headerFilter = utils.getComposedHeaderFilter(headerFilterInfoArray);
         expect(headerFilter).toStrictEqual(result);
       });
     });

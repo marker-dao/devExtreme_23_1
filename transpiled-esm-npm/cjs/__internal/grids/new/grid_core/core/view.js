@@ -7,6 +7,8 @@ exports.View = void 0;
 var _inferno = require("inferno");
 var _signalsCore = require("@preact/signals-core");
 var _m_inferno_renderer = require("../../../../core/m_inferno_renderer");
+var _base_component = require("../../../../core/r1/runtime/inferno/base_component");
+var _m_window = require("../../../../core/utils/m_window");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-non-null-assertion */ /* eslint-disable @typescript-eslint/no-this-alias */ /* eslint-disable @typescript-eslint/explicit-function-return-type */ /* eslint-disable max-classes-per-file */
 class View {
   constructor() {
@@ -29,21 +31,24 @@ class View {
   }
   _asInferno() {
     const view = this;
-    return class InfernoView extends _inferno.Component {
+    return class InfernoView extends _base_component.BaseInfernoComponent {
       constructor() {
         super();
         const props = view.getProps();
-        this.subscription = (0, _signalsCore.effect)(() => {
+        this.unsubscribe = (0, _signalsCore.effect)(() => {
           view.props = props.value;
           this.state ?? (this.state = {
             props: props.value
           });
-          if (this.state.props !== props.value) {
+          if (this.state.props !== props.value && (0, _m_window.hasWindow)()) {
             this.setState({
               props: props.value
             });
           }
         });
+      }
+      componentWillUnmount() {
+        this.unsubscribe();
       }
       render() {
         const ViewComponent = view.component;

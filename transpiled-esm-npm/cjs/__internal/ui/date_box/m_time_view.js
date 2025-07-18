@@ -7,8 +7,8 @@ exports.default = void 0;
 var _date = _interopRequireDefault(require("../../../common/core/localization/date"));
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
+var _box = _interopRequireDefault(require("../../ui/box"));
 var _editor = _interopRequireDefault(require("../../ui/editor/editor"));
-var _m_box = _interopRequireDefault(require("../../ui/m_box"));
 var _m_select_box = _interopRequireDefault(require("../../ui/m_select_box"));
 var _m_number_box = _interopRequireDefault(require("../../ui/number_box/m_number_box"));
 var _m_date_utils = _interopRequireDefault(require("./m_date_utils"));
@@ -73,7 +73,7 @@ class TimeView extends _editor.default {
       baseSize: 'auto',
       template: this._renderField.bind(this)
     });
-    this._createComponent($box, _m_box.default, {
+    this._createComponent($box, _box.default, {
       height: '100%',
       width: '100%',
       direction: 'col',
@@ -129,7 +129,7 @@ class TimeView extends _editor.default {
     if (is12HourFormat) {
       this._createFormat12Box();
     }
-    return this._createComponent((0, _renderer.default)('<div>').addClass(TIMEVIEW_FIELD_CLASS), _m_box.default, {
+    return this._createComponent((0, _renderer.default)('<div>').addClass(TIMEVIEW_FIELD_CLASS), _box.default, {
       direction: 'row',
       align: 'center',
       crossAlign: 'center',

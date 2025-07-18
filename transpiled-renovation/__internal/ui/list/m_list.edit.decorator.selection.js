@@ -2,7 +2,7 @@
 
 var _click = require("../../../common/core/events/click");
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
-var _index = require("../../../common/core/events/utils/index");
+var _utils = require("../../../common/core/events/utils");
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _deferred = require("../../../core/utils/deferred");
@@ -22,7 +22,7 @@ const SELECT_CHECKBOX_CLASS = 'dx-list-select-checkbox';
 const SELECT_RADIO_BUTTON_CONTAINER_CLASS = 'dx-list-select-radiobutton-container';
 const SELECT_RADIO_BUTTON_CLASS = 'dx-list-select-radiobutton';
 const FOCUSED_STATE_CLASS = 'dx-state-focused';
-const CLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, 'dxListEditDecorator');
+const CLICK_EVENT_NAME = (0, _utils.addNamespace)(_click.name, 'dxListEditDecorator');
 class EditDecoratorSelection extends _m_listEdit.default {
   _init() {
     // @ts-expect-error ts-error

@@ -7,6 +7,7 @@ import { extend } from '../../../../core/utils/extend';
 import { each } from '../../../../core/utils/iterator';
 import { getHeight } from '../../../../core/utils/size';
 import { isDefined } from '../../../../core/utils/type';
+import { ColumnContextMenuMixin } from '../../../grids/grid_core/context_menu/m_column_context_menu_mixin';
 import { CLASSES as REORDERING_CLASSES } from '../columns_resizing_reordering/const';
 import { registerKeyboardAction } from '../m_accessibility';
 import { ColumnsView } from '../views/m_columns_view';
@@ -49,12 +50,13 @@ function addCssClassesToCellContent(that, $cell, column, $cellContent) {
   $cellContent = $cellContent || $cell.children(`.${that.addWidgetPrefix(CELL_CONTENT_CLASS)}`);
   $cellContent.toggleClass(TEXT_CONTENT_ALIGNMENT_CLASS_PREFIX + columnAlignment, indicatorCount > 0).toggleClass(TEXT_CONTENT_ALIGNMENT_CLASS_PREFIX + (columnAlignment === 'left' ? 'right' : 'left'), indicatorCount > 0 && column.alignment === 'center').toggleClass(SORT_INDICATOR_CLASS, !!$sortIndicator.length).toggleClass(SORT_INDEX_INDICATOR_CLASS, !!$sortIndexIndicator.length).toggleClass(HEADER_FILTER_INDICATOR_CLASS, !!$visibleIndicatorElements.filter(`.${that._getIndicatorClassName('headerFilter')}`).length);
 }
-export class ColumnHeadersView extends ColumnsView {
+export class ColumnHeadersView extends ColumnContextMenuMixin(ColumnsView) {
   init() {
     super.init();
     this._headerPanelView = this.getView('headerPanel');
     this._headerFilterController = this.getController('headerFilter');
     this._dataController = this.getController('data');
+    this._headersKeyboardNavigation = this.getController('headersKeyboardNavigation');
   }
   _createTable() {
     // @ts-expect-error
@@ -411,13 +413,13 @@ export class ColumnHeadersView extends ColumnsView {
   /**
    * @extended: column_chooser
    */
-  isReorderingEnabled(column) {
+  isColumnReorderingEnabled(column) {
     return column.allowReordering && (this.option('allowColumnReordering') ?? this._columnsController.isColumnOptionUsed('allowReordering'));
   }
   allowDragging(column) {
     const rowIndex = column && this._columnsController.getRowIndex(column.index);
     const columns = this.getColumns(rowIndex);
-    return this.isReorderingEnabled(column) && columns.length > 1;
+    return this.isColumnReorderingEnabled(column) && columns.length > 1;
   }
   getBoundingRect() {
     const that = this;
@@ -463,19 +465,19 @@ export class ColumnHeadersView extends ColumnsView {
    * @extended: column_fixing
    */
   getContextMenuItems(options) {
-    const that = this;
+    let items;
     const {
       column
     } = options;
     if (options.row && (options.row.rowType === 'header' || options.row.rowType === 'detailAdaptive')) {
-      const sortingOptions = that.option('sorting');
+      const sortingOptions = this.option('sorting');
       if (sortingOptions && sortingOptions.mode !== 'none' && column !== null && column !== void 0 && column.allowSorting) {
-        const onItemClick = function (params) {
+        const onItemClick = params => {
           setTimeout(() => {
-            that._columnsController.changeSortOrder(column.index, params.itemData.value);
+            this._columnsController.changeSortOrder(column.index, params.itemData.value);
           });
         };
-        return [{
+        items = [{
           text: sortingOptions.ascendingText,
           value: 'asc',
           disabled: column.sortOrder === 'asc',
@@ -488,6 +490,7 @@ export class ColumnHeadersView extends ColumnsView {
           icon: CONTEXT_MENU_SORT_DESC_ICON,
           onItemClick
         }, {
+          name: 'clearSorting',
           text: sortingOptions.clearText,
           value: 'none',
           disabled: !column.sortOrder,
@@ -495,8 +498,15 @@ export class ColumnHeadersView extends ColumnsView {
           onItemClick
         }];
       }
+      if (options.row.rowType === 'header') {
+        const moveColumnItems = this.getMoveColumnContextMenuItems(options);
+        if (moveColumnItems !== null && moveColumnItems !== void 0 && moveColumnItems.length) {
+          items = items ?? [];
+          items.push(...moveColumnItems);
+        }
+      }
     }
-    return undefined;
+    return items;
   }
   getRowCount() {
     var _this$_columnsControl;
@@ -531,6 +541,9 @@ export class ColumnHeadersView extends ColumnsView {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isFilterRowCell($cell) {
     return false;
+  }
+  getKeyboardNavigationController() {
+    return this._headersKeyboardNavigation;
   }
 }
 export const columnHeadersModule = {

@@ -496,6 +496,9 @@ export const dxBarGauge = BaseGauge.inherit({
   _factory: clone(BaseGauge.prototype._factory),
   _optionChangesOrder: ['VALUES', 'NODES'],
   _initialChanges: ['VALUES'],
+  _getChangesRequireCoreUpdate: function () {
+    return [...this.callBase(), 'LEGEND'];
+  },
   _change_NODES() {
     this._buildNodes();
   },

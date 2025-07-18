@@ -1,16 +1,17 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../core/renderer';
 import dateUtils from '../../core/utils/date';
 import { extend } from '../../core/utils/extend';
 import { each } from '../../core/utils/iterator';
 import { isPlainObject } from '../../core/utils/type';
 import { formatDates, getFormatType } from './appointments/m_text_utils';
-import { createAppointmentAdapter } from './m_appointment_adapter';
 import { AGENDA_LAST_IN_DATE_APPOINTMENT_CLASS } from './m_classes';
 import { utils } from './m_utils';
+import { AppointmentAdapter } from './utils/appointment_adapter/appointment_adapter';
 const toMs = dateUtils.dateToMilliseconds;
 const subscribes = {
   isCurrentViewAgenda() {
-    return this.currentViewType === 'agenda';
+    return this.currentView.type === 'agenda';
   },
   currentViewUpdated(currentView) {
     this.option('currentView', currentView);
@@ -26,9 +27,6 @@ const subscribes = {
   },
   isVirtualScrolling() {
     return this.isVirtualScrolling();
-  },
-  setCellDataCacheAlias(appointment, geometry) {
-    this._workSpace.setCellDataCacheAlias(appointment, geometry);
   },
   isGroupedByDate() {
     return this.getWorkSpace().isGroupedByDate();
@@ -95,18 +93,16 @@ const subscribes = {
     this.hideAppointmentTooltip();
   },
   getTextAndFormatDate(appointmentRaw, targetedAppointmentRaw, format) {
-    const appointmentAdapter = createAppointmentAdapter(appointmentRaw, this._dataAccessors, this.timeZoneCalculator);
-    const targetedAdapter = createAppointmentAdapter(targetedAppointmentRaw || appointmentRaw, this._dataAccessors, this.timeZoneCalculator);
+    const targetedAppointment = _extends({}, appointmentRaw, targetedAppointmentRaw);
     // pull out time zone converting from appointment adapter for knockout(T947938)
-    const startDate = this.timeZoneCalculator.createDate(targetedAdapter.startDate, {
-      path: 'toGrid'
-    });
-    const endDate = this.timeZoneCalculator.createDate(targetedAdapter.endDate, {
-      path: 'toGrid'
-    });
-    const formatType = format || getFormatType(startDate, endDate, targetedAdapter.allDay, this.currentViewType !== 'month');
+    const adapter = new AppointmentAdapter(targetedAppointment, this._dataAccessors);
+    const {
+      startDate,
+      endDate
+    } = adapter.getCalculatedDates(this.timeZoneCalculator, 'toGrid');
+    const formatType = format || getFormatType(startDate, endDate, adapter.allDay, this.currentView.type !== 'month');
     return {
-      text: targetedAdapter.text || appointmentAdapter.text,
+      text: adapter.text,
       formatDate: formatDates(startDate, endDate, formatType)
     };
   },
@@ -120,7 +116,7 @@ const subscribes = {
     const {
       allDay
     } = options;
-    const groups = this._getCurrentViewOption('groups');
+    const groups = this.getViewOption('groups');
     if (groups !== null && groups !== void 0 && groups.length) {
       if (allDay || this.getLayoutManager().getRenderingStrategyInstance()._needHorizontalGroupBounds()) {
         const horizontalGroupBounds = this._workSpace.getGroupBounds(options.coordinates);
@@ -156,7 +152,7 @@ const subscribes = {
     return this.getLayoutManager().getRenderingStrategyInstance().getDeltaTime(e, initialSize, itemData);
   },
   getDropDownAppointmentWidth(isAllDay) {
-    return this.getLayoutManager().getRenderingStrategyInstance().getDropDownAppointmentWidth(this._getViewCountConfig().intervalCount, isAllDay);
+    return this.getLayoutManager().getRenderingStrategyInstance().getDropDownAppointmentWidth(this.currentView.intervalCount, isAllDay);
   },
   getDropDownAppointmentHeight() {
     return this.getLayoutManager().getRenderingStrategyInstance().getDropDownAppointmentHeight();
@@ -180,8 +176,8 @@ const subscribes = {
     const {
       endDate
     } = options;
-    const endDayHour = this._getCurrentViewOption('endDayHour');
-    const startDayHour = this._getCurrentViewOption('startDayHour');
+    const endDayHour = this.getViewOption('endDayHour');
+    const startDayHour = this.getViewOption('startDayHour');
     let updatedEndDate = endDate;
     if (endDate.getHours() >= endDayHour) {
       updatedEndDate.setHours(endDayHour, 0, 0, 0);
@@ -226,7 +222,7 @@ const subscribes = {
     return this.getWorkSpace().getAgendaVerticalStepHeight();
   },
   getAgendaDuration() {
-    return this._getCurrentViewOption('agendaDuration');
+    return this.getViewOption('agendaDuration');
   },
   getStartViewDate() {
     return this.getStartViewDate();
@@ -248,9 +244,6 @@ const subscribes = {
     for (let i = 0; i < rows.length; i++) {
       each(rows[i], applyClass);
     }
-  },
-  getTimezone() {
-    return this._getTimezoneOffsetByOption();
   },
   getTargetedAppointmentData(appointment, element) {
     return this.getTargetedAppointment(appointment, element);

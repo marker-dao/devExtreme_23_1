@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.PagerView = void 0;
 var _signalsCore = require("@preact/signals-core");
+var _m_pager = require("../../../../grids/grid_core/pager/m_pager");
 var _view = require("../core/view");
 var _index = require("../data_controller/index");
 var _options_controller = require("../options_controller/options_controller");
@@ -37,13 +38,16 @@ class PagerView extends _view.View {
       pageSizeChanged: value => {
         this.dataController.pageSize.value = value;
       },
-      isGridCompatibility: false,
       pageCount: this.dataController.pageCount.value,
       showPageSizeSelector: this.options.oneWay('pager.showPageSizeSelector').value,
       _skipValidation: true,
       tabIndex: 0,
       showInfo: this.options.oneWay('pager.showInfo').value,
-      showNavigationButtons: this.options.oneWay('pager.showNavigationButtons').value
+      showNavigationButtons: this.options.oneWay('pager.showNavigationButtons').value,
+      label: this.options.oneWay('pager.label').value,
+      pagesNavigatorVisible: this.options.oneWay('pager.visible').value,
+      displayMode: this.options.oneWay('pager.displayMode').value,
+      maxPagesCount: _m_pager.MAX_PAGES_COUNT
     }));
   }
 }

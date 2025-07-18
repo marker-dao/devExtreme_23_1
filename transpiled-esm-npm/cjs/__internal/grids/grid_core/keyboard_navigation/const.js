@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.WIDGET_CLASS = exports.VIRTUAL_ROW_CLASS = exports.TABLE_CLASS = exports.ROW_CLASS = exports.ROWS_VIEW_CLASS = exports.ROWS_VIEW = exports.REVERT_BUTTON_CLASS = exports.NON_FOCUSABLE_ELEMENTS_SELECTOR = exports.MASTER_DETAIL_ROW_CLASS = exports.MASTER_DETAIL_CELL_CLASS = exports.INTERACTIVE_ELEMENTS_SELECTOR = exports.HEADER_ROW_CLASS = exports.GROUP_ROW_CLASS = exports.GROUP_FOOTER_CLASS = exports.FUNCTIONAL_KEYS = exports.FREESPACE_ROW_CLASS = exports.FOCUS_TYPE_ROW = exports.FOCUS_TYPE_CELL = exports.FOCUS_STATE_CLASS = exports.FOCUSED_CLASS = exports.FAST_EDITING_DELETE_KEY = exports.EDIT_MODE_FORM = exports.EDIT_FORM_ITEM_CLASS = exports.EDIT_FORM_CLASS = exports.EDITOR_CELL_CLASS = exports.Direction = exports.DROPDOWN_EDITOR_OVERLAY_CLASS = exports.DATEBOX_WIDGET_NAME = exports.DATA_ROW_CLASS = exports.COMMAND_SELECT_CLASS = exports.COMMAND_EXPAND_CLASS = exports.COMMAND_EDIT_CLASS = exports.COMMAND_CELL_SELECTOR = exports.COLUMN_HEADERS_VIEW = exports.CELL_FOCUS_DISABLED_CLASS = exports.ATTRIBUTES = exports.ADAPTIVE_ITEM_TEXT_CLASS = exports.ADAPTIVE_COLUMN_NAME_CLASS = void 0;
+exports.WIDGET_CLASS = exports.ViewName = exports.VIRTUAL_ROW_CLASS = exports.TABLE_CLASS = exports.ROW_CLASS = exports.ROWS_VIEW_CLASS = exports.ROWS_VIEW = exports.REVERT_BUTTON_CLASS = exports.NON_FOCUSABLE_ELEMENTS_SELECTOR = exports.MASTER_DETAIL_ROW_CLASS = exports.MASTER_DETAIL_CELL_CLASS = exports.KEY_CODES = exports.INTERACTIVE_ELEMENTS_SELECTOR = exports.HEADER_ROW_CLASS = exports.GROUP_ROW_CLASS = exports.GROUP_FOOTER_CLASS = exports.FUNCTIONAL_KEYS = exports.FREESPACE_ROW_CLASS = exports.FOCUS_TYPE_ROW = exports.FOCUS_TYPE_CELL = exports.FOCUS_STATE_CLASS = exports.FOCUSED_CLASS = exports.FAST_EDITING_DELETE_KEY = exports.EDIT_MODE_FORM = exports.EDIT_FORM_ITEM_CLASS = exports.EDIT_FORM_CLASS = exports.EDITOR_CELL_CLASS = exports.Direction = exports.DROPDOWN_EDITOR_OVERLAY_CLASS = exports.DRAG_COLUMN_NAME = exports.DATEBOX_WIDGET_NAME = exports.DATA_ROW_CLASS = exports.COMMAND_SELECT_CLASS = exports.COMMAND_EXPAND_CLASS = exports.COMMAND_EDIT_CLASS = exports.COMMAND_CELL_SELECTOR = exports.COLUMN_HEADERS_VIEW = exports.CELL_FOCUS_DISABLED_CLASS = exports.ATTRIBUTES = exports.ADAPTIVE_ITEM_TEXT_CLASS = exports.ADAPTIVE_COLUMN_NAME_CLASS = void 0;
 const ATTRIBUTES = exports.ATTRIBUTES = {
   ariaColIndex: 'aria-colindex',
   dragCell: 'dx-drag-cell'
@@ -52,8 +52,17 @@ const FOCUS_TYPE_CELL = exports.FOCUS_TYPE_CELL = 'cell';
 const COLUMN_HEADERS_VIEW = exports.COLUMN_HEADERS_VIEW = 'columnHeadersView';
 const ROWS_VIEW = exports.ROWS_VIEW = 'rowsView';
 const FUNCTIONAL_KEYS = exports.FUNCTIONAL_KEYS = ['shift', 'control', 'alt'];
+const DRAG_COLUMN_NAME = exports.DRAG_COLUMN_NAME = 'drag';
 var Direction;
 (function (Direction) {
   Direction["Next"] = "next";
   Direction["Previous"] = "previous";
 })(Direction || (exports.Direction = Direction = {}));
+var ViewName;
+(function (ViewName) {
+  ViewName["Group"] = "group";
+  ViewName["Headers"] = "headers";
+})(ViewName || (exports.ViewName = ViewName = {}));
+const KEY_CODES = exports.KEY_CODES = {
+  G: 71
+};

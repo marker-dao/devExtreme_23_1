@@ -7,6 +7,7 @@ exports.Content = exports.CLASSES = void 0;
 var _inferno = require("inferno");
 var _utils = require("../../../../../../common/core/events/utils");
 var _combine_classes = require("../../../../../core/utils/combine_classes");
+var _utils2 = require("../../../../../grids/new/grid_core/accessibility/utils");
 var _index = require("../../../../../grids/new/grid_core/keyboard_navigation/index");
 var _card = require("./card/card");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable
@@ -126,6 +127,7 @@ class Content extends _inferno.Component {
         },
         "caughtEventPreventDefault": true,
         "card": item,
+        "position": (0, _utils2.getPosition)(idx, this.props.cardsPerRow ?? 1),
         "onContextMenu": e => {
           var _this$props$showCardC, _this$props3;
           (_this$props$showCardC = (_this$props3 = this.props).showCardContextMenu) === null || _this$props$showCardC === void 0 || _this$props$showCardC.call(_this$props3, e, item, idx);
@@ -139,16 +141,18 @@ class Content extends _inferno.Component {
     });
   }
   updateSizesInfo() {
-    var _this$cardElementRefs, _this$props$onFirstEl, _this$props4, _this$props$onRowHeig, _this$props5;
+    var _this$cardElementRefs, _this$props$onFirstEl, _this$props4, _this$props$onRowHeig, _this$props5, _this$props$onColumnG, _this$props6;
     const firstCardElement = ((_this$cardElementRefs = this.cardElementRefs[0]) === null || _this$cardElementRefs === void 0 ? void 0 : _this$cardElementRefs.current) ?? undefined;
     (_this$props$onFirstEl = (_this$props4 = this.props).onFirstElementChange) === null || _this$props$onFirstEl === void 0 || _this$props$onFirstEl.call(_this$props4, firstCardElement);
     if (!firstCardElement || !this.containerRef.current) {
       return;
     }
     const cardHeight = firstCardElement.offsetHeight;
-    const gapHeight = parseFloat(getComputedStyle(this.containerRef.current).rowGap);
-    const rowHeight = cardHeight + gapHeight;
+    const rowGap = parseFloat(getComputedStyle(this.containerRef.current).rowGap);
+    const rowHeight = cardHeight + rowGap;
     (_this$props$onRowHeig = (_this$props5 = this.props).onRowHeightChange) === null || _this$props$onRowHeig === void 0 || _this$props$onRowHeig.call(_this$props5, rowHeight);
+    const columnGap = parseFloat(getComputedStyle(this.containerRef.current).columnGap);
+    (_this$props$onColumnG = (_this$props6 = this.props).onColumnGapChange) === null || _this$props$onColumnG === void 0 || _this$props$onColumnG.call(_this$props6, columnGap);
   }
   componentDidMount() {
     this.updateSizesInfo();

@@ -8,7 +8,7 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _common = require("../../../core/utils/common");
 var _extend = require("../../../core/utils/extend");
 var _ui = _interopRequireDefault(require("../../../ui/editor/ui.data_expression"));
-var _m_collection_widget = _interopRequireDefault(require("../../ui/collection/m_collection_widget.edit"));
+var _collection_widget = _interopRequireDefault(require("../../ui/collection/collection_widget.edit"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const RADIO_BUTTON_CHECKED_CLASS = 'dx-radiobutton-checked';
 const RADIO_BUTTON_ICON_CHECKED_CLASS = 'dx-radiobutton-icon-checked';
@@ -16,7 +16,7 @@ const RADIO_BUTTON_ICON_CLASS = 'dx-radiobutton-icon';
 const RADIO_BUTTON_ICON_DOT_CLASS = 'dx-radiobutton-icon-dot';
 const RADIO_VALUE_CONTAINER_CLASS = 'dx-radio-value-container';
 const RADIO_BUTTON_CLASS = 'dx-radiobutton';
-class RadioCollection extends _m_collection_widget.default {
+class RadioCollection extends _collection_widget.default {
   _focusTarget() {
     return (0, _renderer.default)(this.element()).parent();
   }

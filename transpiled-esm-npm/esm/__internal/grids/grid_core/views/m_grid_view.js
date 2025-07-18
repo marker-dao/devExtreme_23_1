@@ -43,6 +43,9 @@ const restoreFocus = function (focusedElement, selectionRange) {
   gridCoreUtils.setSelectionRange(focusedElement, selectionRange);
 };
 export class ResizingController extends modules.ViewController {
+  callbackNames() {
+    return ['resizeCompleted'];
+  }
   init() {
     this._prevContentMinHeight = null;
     this._dataController = this.getController('data');
@@ -68,7 +71,7 @@ export class ResizingController extends modules.ViewController {
         }
         if (needFireContentReady) {
           when(resizeDeferred).done(() => {
-            this._setAriaLabel();
+            this._setAriaLabel(e);
             this.fireContentReadyAction();
           });
         }
@@ -119,8 +122,10 @@ export class ResizingController extends modules.ViewController {
   _getWidgetAriaLabel() {
     return 'dxDataGrid-ariaDataGrid';
   }
-  _setAriaLabel() {
+  _setAriaLabel(e) {
     var _this$_columnsControl;
+    let widgetStatusText = '';
+    let labelParts = [];
     const columnCount = ((_this$_columnsControl = this._columnsController) === null || _this$_columnsControl === void 0 || (_this$_columnsControl = _this$_columnsControl._columns) === null || _this$_columnsControl === void 0 ? void 0 : _this$_columnsControl.filter(_ref => {
       let {
         visible
@@ -129,18 +134,20 @@ export class ResizingController extends modules.ViewController {
     }).length) ?? 0;
     const totalItemsCount = Math.max(0, this._dataController.totalItemsCount());
     const widgetAriaLabel = this._getWidgetAriaLabel();
-    const widgetStatusText = messageLocalization
+    widgetStatusText = messageLocalization
     // @ts-expect-error Badly typed format method
     .format(widgetAriaLabel, totalItemsCount, columnCount);
-    const $ariaLabelElement = this.component.$element().children(`.${GRIDBASE_CONTAINER_CLASS}`);
     // @ts-expect-error Treelist Variable
     const expandableWidgetAriaLabel = messageLocalization.format(this._expandableWidgetAriaId);
-    const labelParts = [widgetStatusText];
+    labelParts = [widgetStatusText];
     if (expandableWidgetAriaLabel) {
       labelParts.push(expandableWidgetAriaLabel);
     }
+    const $ariaLabelElement = this.component.$element().children(`.${GRIDBASE_CONTAINER_CLASS}`);
     this.component.setAria('label', labelParts.join('. '), $ariaLabelElement);
-    this._gridView.setWidgetA11yStatusText(widgetStatusText);
+    if (!(e !== null && e !== void 0 && e.isFirstRender)) {
+      this._gridView.setWidgetA11yStatusText(widgetStatusText);
+    }
   }
   _getBestFitWidths() {
     var _widths;
@@ -517,7 +524,9 @@ export class ResizingController extends modules.ViewController {
     this._waitAsyncTemplates().done(() => {
       when(this.updateDimensions()).done(d.resolve).fail(d.reject);
     }).fail(d.reject);
-    return d.promise();
+    return d.promise().done(() => {
+      this.resizeCompleted.fire();
+    });
   }
   updateDimensions(checkSize) {
     const that = this;
@@ -662,6 +671,10 @@ export class ResizingController extends modules.ViewController {
         super.optionChanged(args);
     }
   }
+  /**
+   * @extended: virtual_scrolling
+   */
+  resetLastResizeTime() {}
 }
 export class SynchronizeScrollingController extends modules.ViewController {
   _scrollChangedHandler(views, pos, viewName) {

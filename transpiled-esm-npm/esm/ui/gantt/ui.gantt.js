@@ -1,3 +1,4 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import { getHeight } from '../../core/utils/size';
 import $ from '../../core/renderer';
 import { compileGetter } from '../../core/utils/data';
@@ -144,6 +145,7 @@ class Gantt extends Widget {
     this._dataProcessingHelper = new GanttDataChangesProcessingHelper();
   }
   _initGanttView() {
+    var _this$option;
     if (this._ganttView) {
       return;
     }
@@ -169,7 +171,7 @@ class Gantt extends Widget {
       scaleTypeRange: this.option('scaleTypeRange'),
       editing: this.option('editing'),
       validation: this.option('validation'),
-      stripLines: this.option('stripLines'),
+      stripLines: (_this$option = this.option('stripLines')) === null || _this$option === void 0 ? void 0 : _this$option.map(item => _extends({}, item)),
       bars: this._bars,
       mainElement: this.$element(),
       onSelectionChanged: e => {
@@ -655,9 +657,7 @@ class Gantt extends Widget {
   assignResourceToTask(resourceKey, taskKey) {
     this._ganttView._ganttViewCore.assignResourceToTask(resourceKey, taskKey);
   }
-  // eslint-disable-next-line spellcheck/spell-checker
   unassignResourceFromTask(resourceKey, taskKey) {
-    // eslint-disable-next-line spellcheck/spell-checker
     this._ganttView._ganttViewCore.unassignResourceFromTask(resourceKey, taskKey);
   }
   unassignAllResourcesFromTask(taskKey) {
@@ -848,11 +848,9 @@ class Gantt extends Widget {
         (_this$_actionsManager22 = this._actionsManager) === null || _this$_actionsManager22 === void 0 || _this$_actionsManager22.createResourceAssignedAction();
         break;
       case 'onResourceUnassigning':
-        // eslint-disable-next-line spellcheck/spell-checker
         (_this$_actionsManager23 = this._actionsManager) === null || _this$_actionsManager23 === void 0 || _this$_actionsManager23.createResourceUnassigningAction();
         break;
       case 'onResourceUnassigned':
-        // eslint-disable-next-line spellcheck/spell-checker
         (_this$_actionsManager24 = this._actionsManager) === null || _this$_actionsManager24 === void 0 || _this$_actionsManager24.createResourceUnassignedAction();
         break;
       case 'onCustomCommand':
@@ -873,7 +871,7 @@ class Gantt extends Widget {
         this._setGanttViewOption('showRowLines', args.value);
         break;
       case 'stripLines':
-        this._setGanttViewOption('stripLines', args.value);
+        this._setGanttViewOption(args.fullName, args.value);
         break;
       case 'scaleType':
         this._setGanttViewOption('scaleType', args.value);

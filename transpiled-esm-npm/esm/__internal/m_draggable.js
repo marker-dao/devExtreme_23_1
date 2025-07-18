@@ -24,7 +24,7 @@ import { isFunction, isNumeric, isObject } from '../core/utils/type';
 import { value as viewPort } from '../core/utils/view_port';
 import { getWindow } from '../core/utils/window';
 import DOMComponent from './core/widget/dom_component';
-import Animator from './ui/scroll_view/m_animator';
+import Animator from './ui/scroll_view/animator';
 const window = getWindow();
 const KEYDOWN_EVENT = 'keydown';
 const DRAGGABLE = 'dxDraggable';
@@ -183,8 +183,8 @@ class ScrollHelper {
   }
 }
 class ScrollAnimator extends Animator {
-  ctor(strategy) {
-    super.ctor();
+  constructor(strategy) {
+    super();
     this._strategy = strategy;
   }
   _step() {
@@ -247,7 +247,6 @@ class Draggable extends DOMComponent {
   _init() {
     super._init();
     this._attachEventHandlers();
-    // @ts-expect-error ts-error
     this._scrollAnimator = new ScrollAnimator(this);
     this._horizontalScrollHelper = new ScrollHelper('horizontal', this);
     this._verticalScrollHelper = new ScrollHelper('vertical', this);

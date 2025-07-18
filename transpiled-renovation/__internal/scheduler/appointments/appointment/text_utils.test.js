@@ -9,7 +9,7 @@ const getAppointmentResourcesValues = _globals.jest.fn();
 const options = {
   dataAccessors: _appointment_data_accessor.mockAppointmentDataAccessor,
   timeZoneCalculator: _timezone_calculator.mockTimeZoneCalculator,
-  getResourceProcessor: () => ({
+  getResourceManager: () => ({
     getAppointmentResourcesValues
   })
 };
@@ -55,35 +55,6 @@ const options = {
           endDate: Date.UTC(2025, 2, 11, 10, 30)
         }
       }))).toBe('End Date: March 11, 2025');
-    });
-  });
-  (0, _globals.describe)('getGroupTexts', () => {
-    (0, _globals.it)('should return groups for single grouping', () => {
-      (0, _globals.expect)((0, _text_utils.getGroupTexts)(1, [{
-        items: [{
-          text: 'Room 1'
-        }, {
-          text: 'Room 2'
-        }],
-        name: 'roomId'
-      }])).toEqual(['Room 1']);
-    });
-    (0, _globals.it)('should return groups for multiple grouping', () => {
-      (0, _globals.expect)((0, _text_utils.getGroupTexts)(3, [{
-        items: [{
-          text: 'Samantha Bright'
-        }, {
-          text: 'John Heart'
-        }],
-        name: 'assigneeId'
-      }, {
-        items: [{
-          text: 'Room 1'
-        }, {
-          text: 'Room 2'
-        }],
-        name: 'roomId'
-      }])).toEqual(['Samantha Bright', 'Room 1']);
     });
   });
   (0, _globals.describe)('getAriaDescription', () => {

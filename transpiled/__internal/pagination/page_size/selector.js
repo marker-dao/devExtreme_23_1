@@ -78,7 +78,7 @@ class PageSizeSelector extends _index.InfernoComponent {
       isLargeDisplayMode
     } = this.props;
     return (0, _inferno.createVNode)(1, "div", _consts.PAGINATION_PAGE_SIZES_CLASS, [isLargeDisplayMode && (0, _inferno.createComponentVNode)(2, _large.PageSizeLarge, {
-      "allowedPageSizes": this.getNormalizedPageSizes(),
+      "allowedPageSizes": normalizedPageSizes,
       "pageSize": pageSize,
       "pageSizeChangedInternal": pageSizeChangedInternal
     }), !isLargeDisplayMode && (0, _inferno.createComponentVNode)(2, _small.PageSizeSmall, {

@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_scroll_view = _interopRequireDefault(require("../__internal/ui/scroll_view/m_scroll_view"));
+var _scroll_view = _interopRequireDefault(require("../__internal/ui/scroll_view/scroll_view"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_scroll_view.default;
+var _default = exports.default = _scroll_view.default;
 /**
  * @name dxScrollView.toggleLoading
  * @publicName toggleLoading(showOrHide)

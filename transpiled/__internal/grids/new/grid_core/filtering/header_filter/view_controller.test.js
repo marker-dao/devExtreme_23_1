@@ -84,10 +84,12 @@ const setup = function () {
             visible: true
           },
           columns: [{
+            dataField: 'A',
             name: 'A'
           }]
         });
         viewController.openPopup({}, {
+          dataField: 'A',
           name: 'A'
         });
         const state = viewController.popupState.peek();
@@ -117,10 +119,11 @@ const setup = function () {
           headerFilter: _extends({}, expectedHeaderFilter),
           filterValues: 'test',
           columns: [{
-            name: 'A'
+            dataField: 'A'
           }]
         });
         viewController.openPopup({}, {
+          dataField: 'A',
           name: 'A',
           headerFilter: {
             search: expectedSearch
@@ -171,8 +174,8 @@ const setup = function () {
           name: 'A'
         });
         const state = viewController.popupState.peek();
-        (0, _globals.expect)(typeof (state === null || state === void 0 ? void 0 : state.options.dataSource.load)).toBe('function');
-        (0, _globals.expect)(typeof (state === null || state === void 0 ? void 0 : state.options.dataSource.postProcess)).toBe('function');
+        (0, _globals.expect)(typeof (state === null || state === void 0 ? void 0 : state.options.dataSource).load).toBe('function');
+        (0, _globals.expect)(typeof (state === null || state === void 0 ? void 0 : state.options.dataSource).postProcess).toBe('function');
       });
       // NOTE: Unfortunately, we cannot test perfectly local group functions here
       // Because these functions are local and too deep in the old grid_core
@@ -222,8 +225,8 @@ const setup = function () {
         });
         viewController.openPopup({}, column);
         const state = viewController.popupState.peek();
-        (0, _globals.expect)(state === null || state === void 0 ? void 0 : state.options.dataSource.group).toBeTruthy();
-        (0, _globals.expect)(checkFn(state === null || state === void 0 ? void 0 : state.options.dataSource.group)).toBeTruthy();
+        (0, _globals.expect)((state === null || state === void 0 ? void 0 : state.options.dataSource).group).toBeTruthy();
+        (0, _globals.expect)(checkFn((state === null || state === void 0 ? void 0 : state.options.dataSource).group)).toBeTruthy();
       });
     });
   });

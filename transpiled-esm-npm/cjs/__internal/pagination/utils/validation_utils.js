@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.validateOptions = validateOptions;
 function getPageSize(pageSize) {
-  if (pageSize < 1) {
+  if (pageSize < 0) {
     return 1;
   }
   return pageSize;

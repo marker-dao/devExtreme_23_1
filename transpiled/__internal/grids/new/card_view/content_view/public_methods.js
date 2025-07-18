@@ -15,7 +15,7 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 function PublicMethods(GridCore) {
   return class CardViewWithContentView extends Base.PublicMethods(GridCore) {
     getCardElement(cardIndex) {
-      const card = (0, _renderer.default)(this.element()).find(cardModule.CLASSES.card).eq(cardIndex);
+      const card = (0, _renderer.default)(this.element()).find(`.${cardModule.CLASSES.card}`).eq(cardIndex);
       return (0, _element.getPublicElement)(card);
     }
     getVisibleCards() {

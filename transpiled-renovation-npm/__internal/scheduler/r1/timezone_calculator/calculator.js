@@ -7,7 +7,6 @@ exports.TimeZoneCalculator = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _type = require("../../../../core/utils/type");
 var _date2 = require("../../../core/utils/date");
-var _const = require("./const");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const MS_IN_MINUTE = 60000;
 const MS_IN_HOUR = 60 * MS_IN_MINUTE;
@@ -16,16 +15,16 @@ class TimeZoneCalculator {
   constructor(options) {
     this.options = options;
   }
-  createDate(sourceDate, info) {
+  createDate(sourceDate, path, appointmentTimeZone) {
     const date = new Date(sourceDate);
-    switch (info.path) {
-      case _const.PathTimeZoneConversion.fromSourceToAppointment:
-        return this.getConvertedDate(date, info.appointmentTimeZone, false);
-      case _const.PathTimeZoneConversion.fromAppointmentToSource:
-        return this.getConvertedDate(date, info.appointmentTimeZone, true);
-      case _const.PathTimeZoneConversion.fromSourceToGrid:
+    switch (path) {
+      case 'toAppointment':
+        return this.getConvertedDate(date, appointmentTimeZone, false);
+      case 'fromAppointment':
+        return this.getConvertedDate(date, appointmentTimeZone, true);
+      case 'toGrid':
         return this.getConvertedDate(date, undefined, false);
-      case _const.PathTimeZoneConversion.fromGridToSource:
+      case 'fromGrid':
         return this.getConvertedDate(date, undefined, true);
       default:
         throw new Error('not specified pathTimeZoneConversion');

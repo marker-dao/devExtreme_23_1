@@ -1,5 +1,9 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import $ from '../../../../../../core/renderer';
 import { computed, signal } from '@preact/signals-core';
+import { extend } from '../../../../../core/utils/m_extend';
+import { forEachFormItems } from '../../../../../grids/grid_core/editing/m_editing_utils';
 import { createRef } from 'inferno';
 import { ColumnsController } from '../../columns_controller/columns_controller';
 import { View } from '../../core/view';
@@ -30,44 +34,90 @@ export class EditPopupView extends View {
     this.promises = new PendingPromises();
     this.formRef = createRef();
     this.component = EditPopup;
-    this.items = computed(() => this.columnsController.columns.value.map(column => _extends({
-      // @ts-expect-error
-      column,
-      name: column.name,
-      dataField: column.dataField,
-      validationRules: column.validationRules,
-      label: _extends({
-        text: column.caption
-      }, column.formItem.label),
-      editorType: EDITOR_TYPES_BY_DATA_TYPE[column.dataType],
-      editorOptions: _extends({}, column.editorOptions, {
-        disabled: !column.allowEditing
-      }, column.formItem.editorOptions)
-    }, column.formItem)));
-    this.formData = computed(() => {
-      const editCard = this.editingController.editingCard.value;
-      return (editCard === null || editCard === void 0 ? void 0 : editCard.data) && _extends({}, editCard.data);
+    this.items = computed(() => {
+      const userItems = this.options.oneWay('editing.form.items').value;
+      if (userItems) {
+        return userItems;
+      }
+      return this.columnsController.columns.value.map(column => ({
+        column,
+        name: column.name,
+        dataField: column.dataField
+      }));
     });
-    this.customizeItems = computed(() => item => {
-      var _editingCard$fields$f;
-      const editingCard = this.editingController.editingCard.value;
+    this.customEditorItems = computed(() => {
+      const items = this.items.value;
+      const result = [];
+      forEachFormItems(items, item => {
+        const itemId = (item === null || item === void 0 ? void 0 : item.name) || (item === null || item === void 0 ? void 0 : item.dataField);
+        if (itemId && !!item.editorType) {
+          result.push(itemId);
+        }
+      });
+      return result;
+    });
+    this.visible = computed(() => !!this.editingController.editingCard.value);
+    this.customizeItems = item => {
+      var _simpleFormItem$edito, _editingCard$fields$f;
+      const editingCard = this.editingController.editingCard.peek();
+      const columns = this.columnsController.columns.peek();
+      const customEditorItems = this.customEditorItems.peek();
       if (!editingCard) {
         return;
       }
-      const column = this.columnsController.columns.peek().find(c => c.name === item.name);
-      item.editorOptions ?? (item.editorOptions = {});
-      item.editorOptions.onValueChanged = async _ref => {
-        var _this$formRef$current;
-        let {
-          value
-        } = _ref;
-        const newData = {};
-        await this.promises.add(Promise.resolve(column.setFieldValue.bind(column)(newData, value, editingCard.data)));
-        this.editingController.addChange(editingCard.key, newData);
-        (_this$formRef$current = this.formRef.current) === null || _this$formRef$current === void 0 || _this$formRef$current.repaint();
-      };
-      item.editorOptions.value = editingCard === null || editingCard === void 0 || (_editingCard$fields$f = editingCard.fields.find(c => c.column.name === column.name)) === null || _editingCard$fields$f === void 0 ? void 0 : _editingCard$fields$f.value;
-    });
+      if (item.itemType !== 'simple') {
+        return;
+      }
+      const simpleFormItem = item;
+      const itemId = simpleFormItem.name ?? simpleFormItem.dataField;
+      const column = simpleFormItem.column ?? columns.find(c => c.name === itemId) ?? columns.find(c => c.dataField === itemId);
+      if (!column) {
+        return;
+      }
+      simpleFormItem.column = column;
+      if (itemId && !customEditorItems.includes(itemId)) {
+        simpleFormItem.editorType = EDITOR_TYPES_BY_DATA_TYPE[column.dataType];
+      }
+      extend(simpleFormItem, column.formItem);
+      simpleFormItem.dataField ?? (simpleFormItem.dataField = column.dataField);
+      simpleFormItem.validationRules ?? (simpleFormItem.validationRules = column.validationRules);
+      simpleFormItem.label = _extends({
+        text: column.caption
+      }, column.formItem.label);
+      const originalContentReady = simpleFormItem === null || simpleFormItem === void 0 || (_simpleFormItem$edito = simpleFormItem.editorOptions) === null || _simpleFormItem$edito === void 0 ? void 0 : _simpleFormItem$edito.onContentReady;
+      simpleFormItem.editorOptions = _extends({
+        stylingMode: 'outlined',
+        disabled: !column.allowEditing
+      }, column.editorOptions, column.formItem.editorOptions, simpleFormItem.editorOptions, {
+        onValueChanged: async _ref => {
+          let {
+            value
+          } = _ref;
+          const newData = {};
+          await this.promises.add(Promise.resolve(column.setFieldValue.bind(column)(newData, value, editingCard.data)));
+          this.editingController.addChange(editingCard.key, newData);
+        },
+        value: (editingCard === null || editingCard === void 0 || (_editingCard$fields$f = editingCard.fields.find(c => c.column.name === column.name)) === null || _editingCard$fields$f === void 0 ? void 0 : _editingCard$fields$f.value) ?? null,
+        onContentReady: e => {
+          // TODO: refactor
+          setTimeout(() => {
+            var _$$data;
+            // @ts-expect-error
+            (_$$data = $(e.element).data('dxValidator')) === null || _$$data === void 0 || _$$data.option('dataGetter', () => {
+              var _this$editingControll;
+              return {
+                data: (_this$editingControll = this.editingController.editingCard.peek()) === null || _this$editingControll === void 0 ? void 0 : _this$editingControll.data,
+                column
+              };
+            });
+          });
+          originalContentReady === null || originalContentReady === void 0 || originalContentReady(e);
+        }
+      });
+      if (simpleFormItem.editorType === 'dxDateBox') {
+        simpleFormItem.editorOptions.type = column.dataType;
+      }
+    };
     this.toolbar.addDefaultItem(signal({
       name: 'addCardButton',
       location: 'after',
@@ -77,13 +127,22 @@ export class EditPopupView extends View {
         onClick: () => this.editingController.addCard()
       }
     }), this.editingController.allowAdding);
+    this.editingController.provideValidateMethod(async () => {
+      const form = this.formRef.current;
+      if (!form) {
+        return true;
+      }
+      const preValidationResult = form.validate();
+      const validationResult = await (preValidationResult.complete ?? preValidationResult);
+      return !!validationResult.isValid;
+    });
   }
   getProps() {
     return computed(() => ({
+      visible: this.visible.value,
       formProps: this.options.oneWay('editing.form').value,
       popupProps: this.options.oneWay('editing.popup').value,
       formRef: this.formRef,
-      data: this.formData.value,
       onSave: () => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         this.editingController.save();
@@ -98,7 +157,8 @@ export class EditPopupView extends View {
         this.kbn.returnFocus();
       },
       items: this.items.value,
-      customizeItem: this.customizeItems.value
+      customizeItem: this.customizeItems,
+      texts: this.editingController.texts.value // TODO: bad typing
     }));
   }
 }

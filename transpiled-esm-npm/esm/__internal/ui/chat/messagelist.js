@@ -12,11 +12,11 @@ import { getHeight } from '../../../core/utils/size';
 import { isDate, isDefined } from '../../../core/utils/type';
 import Widget from '../../core/widget/widget';
 import ContextMenu from '../../ui/context_menu/m_context_menu';
-import ScrollView from '../../ui/scroll_view/m_scroll_view';
+import ScrollView from '../../ui/scroll_view/scroll_view';
 import { getScrollTopMax } from '../../ui/scroll_view/utils/get_scroll_top_max';
 import { isElementVisible } from '../splitter/utils/layout';
-import MessageBubble, { CHAT_MESSAGEBUBBLE_CLASS } from './messagebubble';
-import MessageGroup, { CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS, CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS, CHAT_MESSAGEGROUP_CLASS, MESSAGE_DATA_KEY } from './messagegroup';
+import MessageBubble, { CHAT_MESSAGEBUBBLE_CLASS, MESSAGE_DATA_KEY } from './messagebubble';
+import MessageGroup, { CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS, CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS, CHAT_MESSAGEGROUP_CLASS } from './messagegroup';
 import TypingIndicator from './typingindicator';
 const CHAT_MESSAGELIST_CLASS = 'dx-chat-messagelist';
 const CHAT_MESSAGELIST_CONTENT_CLASS = 'dx-chat-messagelist-content';
@@ -40,6 +40,7 @@ class MessageList extends Widget {
     return _extends({}, super._getDefaultOptions(), {
       allowUpdating: () => false,
       allowDeleting: () => false,
+      isEditActionDisabled: () => false,
       items: [],
       currentUserId: '',
       showDayHeaders: true,
@@ -160,21 +161,28 @@ class MessageList extends Widget {
     const {
       allowUpdating,
       allowDeleting,
+      isEditActionDisabled,
       onMessageEditingStart,
       onMessageDeleting
     } = this.option();
     const editText = messageLocalization.format('dxChat-editingEditMessage');
     const deleteText = messageLocalization.format('dxChat-editingDeleteMessage');
     const buttons = [];
-    if (allowUpdating(message)) {
+    if (allowUpdating(message) && message.type !== 'image') {
       buttons.push({
         icon: 'edit',
         text: editText,
-        onClick(e) {
-          onMessageEditingStart === null || onMessageEditingStart === void 0 || onMessageEditingStart({
+        disabled: isEditActionDisabled(message),
+        onClick: e => {
+          const onMessageEditStarted = onMessageEditingStart === null || onMessageEditingStart === void 0 ? void 0 : onMessageEditingStart({
             event: e.event,
-            message
+            message: message
           });
+          const onContextMenuHidden = () => {
+            this._contextMenu.off('hidden', onContextMenuHidden);
+            onMessageEditStarted === null || onMessageEditStarted === void 0 || onMessageEditStarted();
+          };
+          this._contextMenu.on('hidden', onContextMenuHidden);
         }
       });
     }
@@ -204,7 +212,7 @@ class MessageList extends Widget {
       },
       cssClass: CHAT_MESSAGELIST_CONTEXT_MENU_CONTENT_CLASS,
       hideOnParentScroll: false,
-      overlayContainer: this._scrollView.content(),
+      overlayContainer: this._scrollView.container(),
       visualContainer: this._scrollView.container(),
       boundaryOffset: {
         h: 16
@@ -214,9 +222,9 @@ class MessageList extends Widget {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this._contextMenu.hide();
       const {
-        onKeyHandled
+        onEscapeKeyPressed
       } = this.option();
-      onKeyHandled === null || onKeyHandled === void 0 || onKeyHandled(event);
+      onEscapeKeyPressed === null || onEscapeKeyPressed === void 0 || onEscapeKeyPressed(event);
     });
     $contextMenu.appendTo(this.$element());
   }
@@ -233,12 +241,17 @@ class MessageList extends Widget {
       currentTarget
     } = jQEvent;
     const message = this._getMessageData(currentTarget);
+    if (message !== null && message !== void 0 && message.isDeleted) {
+      e.cancel = true;
+      return;
+    }
     const items = this._getContextMenuButtons(message);
     if (!items.length) {
       e.cancel = true;
       return;
     }
     e.component.option('items', items);
+    e.element.focus();
   }
   _renderScrollView() {
     const $scrollable = $('<div>').appendTo(this.$element());
@@ -400,7 +413,6 @@ class MessageList extends Widget {
     this._processScrollDownContent(this._isCurrentUser(author === null || author === void 0 ? void 0 : author.id));
   }
   _getMessageData(message) {
-    // @ts-expect-error
     return $(message).data(MESSAGE_DATA_KEY);
   }
   _findMessageElementByKey(key) {
@@ -416,11 +428,22 @@ class MessageList extends Widget {
     });
     return result;
   }
+  _getMessageGroupByBubbleElement($bubble) {
+    const $currentMessageGroup = $bubble.closest(`.${CHAT_MESSAGEGROUP_CLASS}`);
+    const group = MessageGroup.getInstance($currentMessageGroup);
+    return group;
+  }
   _updateMessageByKey(key, data) {
-    if (key) {
+    if (isDefined(key)) {
       const $targetMessage = this._findMessageElementByKey(key);
       const bubble = MessageBubble.getInstance($targetMessage);
-      bubble.option('text', data.text);
+      bubble.option(data);
+      if (data.type !== 'image') {
+        const $currentMessageGroup = $targetMessage.closest(`.${CHAT_MESSAGEGROUP_CLASS}`);
+        const group = MessageGroup.getInstance($currentMessageGroup);
+        const isEdited = data.isEdited === true && !data.isDeleted;
+        group._updateMessageEditedText($targetMessage, isEdited);
+      }
     }
   }
   _removeMessageByKey(key) {
@@ -431,8 +454,7 @@ class MessageList extends Widget {
     if (!$targetMessage.length) {
       return;
     }
-    const $currentMessageGroup = $targetMessage.closest(`.${CHAT_MESSAGEGROUP_CLASS}`);
-    const group = MessageGroup.getInstance($currentMessageGroup);
+    const group = this._getMessageGroupByBubbleElement($targetMessage);
     const {
       items
     } = group.option();

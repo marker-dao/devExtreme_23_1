@@ -7,8 +7,8 @@ import { hasWindow } from '../../../core/utils/window';
 // NOTE: Renovation component import.
 import { DateTableMonthComponent } from '../../scheduler/r1/components/index';
 import { formatWeekday, monthUtils } from '../../scheduler/r1/utils/index';
-import { VIEWS } from '../constants';
 import { utils } from '../m_utils';
+import { VIEWS } from '../utils/options/constants_view';
 import SchedulerWorkSpace from './m_work_space_indicator';
 const MONTH_CLASS = 'dx-scheduler-work-space-month';
 const DATE_TABLE_CURRENT_DATE_CLASS = 'dx-scheduler-date-table-current-date';
@@ -42,7 +42,7 @@ class SchedulerWorkSpaceMonth extends SchedulerWorkSpace {
    *   when changing the layout, the test will also be useless
    */
   getCellWidth() {
-    return this.cache.get('cellWidth', () => {
+    return this.cache.memo('cellWidth', () => {
       const DAYS_IN_WEEK = 7;
       let averageWidth = 0;
       const cells = this._getCells().slice(0, DAYS_IN_WEEK);
@@ -131,7 +131,7 @@ class SchedulerWorkSpaceMonth extends SchedulerWorkSpace {
     return noop();
   }
   _setMonthClassesToCell($cell, data) {
-    $cell.toggleClass(DATE_TABLE_CURRENT_DATE_CLASS, data.isCurrentDate).toggleClass(DATE_TABLE_FIRST_OF_MONTH_CLASS, data.firstDayOfMonth).toggleClass(DATE_TABLE_OTHER_MONTH_DATE_CLASS, data.otherMonth);
+    $cell.toggleClass(DATE_TABLE_CURRENT_DATE_CLASS, data.isCurrentDate).toggleClass(DATE_TABLE_FIRST_OF_MONTH_CLASS, data.isFirstDayMonthHighlighting).toggleClass(DATE_TABLE_OTHER_MONTH_DATE_CLASS, data.otherMonth);
   }
   _createAllDayPanelElements() {}
   _renderTableBody(options) {

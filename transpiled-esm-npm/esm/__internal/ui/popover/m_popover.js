@@ -2,7 +2,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import positionUtils from '../../../common/core/animation/position';
 import { move } from '../../../common/core/animation/translator';
 import eventsEngine from '../../../common/core/events/core/events_engine';
-import { addNamespace } from '../../../common/core/events/utils/index';
+import { addNamespace } from '../../../common/core/events/utils';
 import registerComponent from '../../../core/component_registrator';
 import domAdapter from '../../../core/dom_adapter';
 import { getPublicElement } from '../../../core/element';
@@ -28,79 +28,6 @@ const POSITION_FLIP_MAP = {
   right: 'left',
   bottom: 'top',
   center: 'center'
-};
-const getEventNameByOption = function (optionValue) {
-  // @ts-expect-error
-  return isObject(optionValue) ? optionValue.name : optionValue;
-};
-const getEventName = function (that, optionName) {
-  const optionValue = that.option(optionName);
-  return getEventNameByOption(optionValue);
-};
-const getEventDelay = function (that, optionName) {
-  const optionValue = that.option(optionName);
-  // @ts-expect-error
-  return isObject(optionValue) && optionValue.delay;
-};
-const attachEvent = function (that, name) {
-  const {
-    target,
-    shading,
-    disabled,
-    hideEvent
-  } = that.option();
-  const isSelector = isString(target);
-  const shouldIgnoreHideEvent = shading && name === 'hide';
-  const event = shouldIgnoreHideEvent ? null : getEventName(that, `${name}Event`);
-  if (shouldIgnoreHideEvent && hideEvent) {
-    errors.log('W1020');
-  }
-  if (!event || disabled) {
-    return;
-  }
-  const eventName = addNamespace(event, that.NAME);
-  const action = that._createAction(function () {
-    const delay = getEventDelay(that, `${name}Event`);
-    this._clearEventsTimeouts();
-    if (delay) {
-      this._timeouts[name] = setTimeout(() => {
-        that[name]();
-      }, delay);
-    } else {
-      that[name]();
-    }
-  }.bind(that), {
-    validatingTargetName: 'target'
-  });
-  const handler = function (e) {
-    action({
-      event: e,
-      target: $(e.currentTarget)
-    });
-  };
-  const EVENT_HANDLER_NAME = `_${name}EventHandler`;
-  if (isSelector) {
-    that[EVENT_HANDLER_NAME] = handler;
-    eventsEngine.on(domAdapter.getDocument(), eventName, target, handler);
-  } else {
-    const targetElement = getPublicElement($(target));
-    that[EVENT_HANDLER_NAME] = undefined;
-    eventsEngine.on(targetElement, eventName, handler);
-  }
-};
-const detachEvent = function (that, target, name, event) {
-  let eventName = event || getEventName(that, `${name}Event`);
-  if (!eventName) {
-    return;
-  }
-  eventName = addNamespace(eventName, that.NAME);
-  const EVENT_HANDLER_NAME = `_${name}EventHandler`;
-  if (that[EVENT_HANDLER_NAME]) {
-    // @ts-expect-error ts-error
-    eventsEngine.off(domAdapter.getDocument(), eventName, target, that[EVENT_HANDLER_NAME]);
-  } else {
-    eventsEngine.off(getPublicElement($(target)), eventName);
-  }
 };
 class Popover extends Popup {
   _getDefaultOptions() {
@@ -196,12 +123,89 @@ class Popover extends Popup {
     this._attachEvents();
   }
   _detachEvents(target) {
-    detachEvent(this, target, 'show');
-    detachEvent(this, target, 'hide');
+    this._detachEvent(target, 'show');
+    this._detachEvent(target, 'hide');
   }
   _attachEvents() {
-    attachEvent(this, 'show');
-    attachEvent(this, 'hide');
+    this._attachEvent('show');
+    this._attachEvent('hide');
+  }
+  _createEventHandler(name) {
+    const action = this._createAction(() => {
+      const delay = this._getEventDelay(`${name}Event`);
+      this._clearEventsTimeouts();
+      if (delay) {
+        this._timeouts[name] = setTimeout(() => {
+          this[name]();
+        }, delay);
+      } else {
+        this[name]();
+      }
+    }, {
+      validatingTargetName: 'target'
+    });
+    return e => {
+      action({
+        event: e,
+        target: $(e.currentTarget)
+      });
+    };
+  }
+  _attachEvent(name) {
+    const {
+      target,
+      shading,
+      disabled,
+      hideEvent
+    } = this.option();
+    const shouldIgnoreHideEvent = shading && name === 'hide';
+    if (shouldIgnoreHideEvent && hideEvent) {
+      errors.log('W1020');
+    }
+    const event = shouldIgnoreHideEvent ? null : this._getEventName(`${name}Event`);
+    if (!event || disabled) {
+      return;
+    }
+    const EVENT_HANDLER_NAME = this._getEventHandlerName(name);
+    this[EVENT_HANDLER_NAME] = this._createEventHandler(name);
+    const eventName = addNamespace(event, this.NAME);
+    const isSelector = isString(target);
+    if (isSelector) {
+      eventsEngine.on(domAdapter.getDocument(), eventName, target, this[EVENT_HANDLER_NAME]);
+    } else {
+      eventsEngine.on(getPublicElement($(target)), eventName, this[EVENT_HANDLER_NAME]);
+    }
+  }
+  _detachEvent(target, name, event) {
+    let eventName = event || this._getEventName(`${name}Event`);
+    if (!eventName) {
+      return;
+    }
+    eventName = addNamespace(eventName, this.NAME);
+    const EVENT_HANDLER_NAME = this._getEventHandlerName(name);
+    const isSelector = isString(target);
+    if (isSelector) {
+      // @ts-expect-error ts-error
+      eventsEngine.off(domAdapter.getDocument(), eventName, target, this[EVENT_HANDLER_NAME]);
+    } else {
+      eventsEngine.off(getPublicElement($(target)), eventName, this[EVENT_HANDLER_NAME]);
+    }
+  }
+  _getEventHandlerName(name) {
+    return `_${name}EventHandler`;
+  }
+  _getEventNameByOption(optionValue) {
+    // @ts-expect-error
+    return isObject(optionValue) ? optionValue.name : optionValue;
+  }
+  _getEventName(optionName) {
+    const optionValue = this.option(optionName);
+    return this._getEventNameByOption(optionValue);
+  }
+  _getEventDelay(optionName) {
+    const optionValue = this.option(optionName);
+    // @ts-expect-error
+    return isObject(optionValue) && optionValue.delay;
   }
   _renderArrow() {
     this._$arrow = $('<div>').addClass(POPOVER_ARROW_CLASS).prependTo(this.$overlayContent());
@@ -232,9 +236,9 @@ class Popover extends Popup {
     // @ts-expect-error ts-error
     super._stopAnimation.apply(this, arguments);
   }
-  _renderTitle() {
+  _renderTopToolbar() {
     this.$wrapper().toggleClass(POPOVER_WITHOUT_TITLE_CLASS, !this.option('showTitle'));
-    super._renderTitle();
+    super._renderTopToolbar();
   }
   _renderPosition() {
     let shouldUpdateDimensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
@@ -390,33 +394,43 @@ class Popover extends Popup {
     super._clean.apply(this, arguments);
   }
   _optionChanged(args) {
-    switch (args.name) {
+    const {
+      name,
+      value,
+      previousValue
+    } = args;
+    switch (name) {
       case 'arrowPosition':
       case 'arrowOffset':
         this._renderGeometry();
         break;
       case 'fullScreen':
-        if (args.value) {
+        if (value) {
           this.option('fullScreen', false);
         }
         break;
       case 'target':
-        args.previousValue && this._detachEvents(args.previousValue);
-        this._positionController.updateTarget(args.value);
+        if (previousValue) {
+          this._detachEvents(previousValue);
+        }
+        this._positionController.updateTarget(value);
         this._invalidate();
         break;
       case 'showEvent':
       case 'hideEvent':
         {
-          const name = args.name.substring(0, 4);
-          const event = getEventNameByOption(args.previousValue);
+          const eventName = name.substring(0, 4);
+          const event = this._getEventNameByOption(previousValue);
           this.hide();
-          detachEvent(this, this.option('target'), name, event);
-          attachEvent(this, name);
+          const {
+            target
+          } = this.option();
+          this._detachEvent(target, eventName, event);
+          this._attachEvent(eventName);
           break;
         }
       case 'visible':
-        this._clearEventTimeout(args.value ? 'show' : 'hide');
+        this._clearEventTimeout(value ? 'show' : 'hide');
         super._optionChanged(args);
         break;
       case 'disabled':

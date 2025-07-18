@@ -158,6 +158,10 @@ export class HeaderPanel extends ColumnsView {
     return false;
   }
   hasGroupedColumns() {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getContextMenuItems(options) {
+    return undefined;
+  }
 }
 const resizing = Base => class HeaderPanelResizingExtender extends Base {
   _updateDimensionsCore() {

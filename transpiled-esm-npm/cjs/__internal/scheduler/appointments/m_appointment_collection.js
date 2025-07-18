@@ -13,7 +13,6 @@ var _dom_adapter = _interopRequireDefault(require("../../../core/dom_adapter"));
 var _element = require("../../../core/element");
 var _element_data = require("../../../core/element_data");
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
-var _array = require("../../../core/utils/array");
 var _common = require("../../../core/utils/common");
 var _date = _interopRequireDefault(require("../../../core/utils/date"));
 var _dom = require("../../../core/utils/dom");
@@ -26,13 +25,14 @@ var _type = require("../../../core/utils/type");
 var _uiCollection_widget = _interopRequireDefault(require("../../../ui/collection/ui.collection_widget.edit"));
 var _date2 = require("../../core/utils/date");
 var _constants = require("../constants");
-var _m_appointment_adapter = require("../m_appointment_adapter");
 var _m_classes = require("../m_classes");
 var _m_recurrence = require("../m_recurrence");
 var _m_utils_time_zone = _interopRequireDefault(require("../m_utils_time_zone"));
+var _appointment_adapter = require("../utils/appointment_adapter/appointment_adapter");
+var _appointment_groups_utils = require("../utils/resource_manager/appointment_groups_utils");
+var _group_utils = require("../utils/resource_manager/group_utils");
 var _agenda_appointment = require("./appointment/agenda_appointment");
 var _m_appointment = require("./appointment/m_appointment");
-var _text_utils = require("./appointment/text_utils");
 var _m_utils = require("./data_provider/m_utils");
 var _m_appointment_layout = require("./m_appointment_layout");
 var _m_core = require("./resizing/m_core");
@@ -345,7 +345,6 @@ class SchedulerAppointments extends _uiCollection_widget.default {
     };
     const formatText = this.invoke('getTextAndFormatDate', model.appointmentData, ((_this$_currentAppoint = this._currentAppointmentSettings) === null || _this$_currentAppoint === void 0 ? void 0 : _this$_currentAppoint.agendaSettings) || model.targetedAppointmentData, 'TIME');
     $container.append(this.isAgendaView ? (0, _m_appointment_layout.createAgendaAppointmentLayout)(formatText, config) : (0, _m_appointment_layout.createAppointmentLayout)(formatText, config));
-    $container.parent().prepend((0, _renderer.default)('<span>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.ARIA_DESCRIPTION).attr('hidden', true));
     if (!this.isAgendaView) {
       $container.parent().prepend((0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.STRIP));
     }
@@ -446,10 +445,12 @@ class SchedulerAppointments extends _uiCollection_widget.default {
       container,
       index
     } = renderArgs;
+    const parent = (0, _renderer.default)(container).parent();
+    parent.prepend((0, _renderer.default)('<span>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.ARIA_DESCRIPTION).attr('hidden', true));
     return itemTemplate.render({
       model: {
         appointmentData: itemData,
-        targetedAppointmentData: this.invoke('getTargetedAppointmentData', itemData, (0, _renderer.default)(container).parent())
+        targetedAppointmentData: this.invoke('getTargetedAppointmentData', itemData, parent)
       },
       container,
       index
@@ -473,7 +474,6 @@ class SchedulerAppointments extends _uiCollection_widget.default {
     const {
       allDay
     } = settings;
-    this.invoke('setCellDataCacheAlias', this._currentAppointmentSettings, geometry);
     if (settings.virtual) {
       const appointmentConfig = {
         itemData: rawAppointment,
@@ -484,10 +484,15 @@ class SchedulerAppointments extends _uiCollection_widget.default {
       this._processVirtualAppointment(settings, element, rawAppointment, deferredColor);
     } else {
       var _settings$info;
+      const {
+        groups,
+        groupsLeafs,
+        resourceById
+      } = this.option('getResourceManager')();
       const config = {
         data: rawAppointment,
         groupIndex: settings.groupIndex,
-        groupTexts: (0, _text_utils.getGroupTexts)(settings.groupIndex, this.option('getLoadedResources')()),
+        groupTexts: (0, _group_utils.getGroupTexts)(groups, groupsLeafs, resourceById, settings.groupIndex),
         observer: this.option('observer'),
         geometry,
         direction: settings.direction || 'vertical',
@@ -505,22 +510,23 @@ class SchedulerAppointments extends _uiCollection_widget.default {
         partTotalCount: settings.partTotalCount,
         dataAccessors: this.dataAccessors,
         timeZoneCalculator: this.option('timeZoneCalculator'),
-        getAppointmentColor: this.option('getAppointmentColor'),
-        getResourceDataAccessors: this.option('getResourceDataAccessors'),
-        getResourceProcessor: this.option('getResourceProcessor'),
-        getResizableStep: this.option('getResizableStep')
+        getResizableStep: this.option('getResizableStep'),
+        getResourceManager: this.option('getResourceManager')
       };
       this._createComponent(element, this.isAgendaView ? _agenda_appointment.AgendaAppointment : _m_appointment.Appointment, config);
     }
   }
   _applyResourceDataAttr($appointment) {
-    const dataAccessors = this.option('getResourceDataAccessors')();
+    const {
+      resources
+    } = this.option('getResourceManager')();
     const rawAppointment = this._getItemData($appointment);
-    (0, _iterator.each)(dataAccessors.getter, key => {
-      const value = dataAccessors.getter[key](rawAppointment);
-      if ((0, _type.isDefined)(value)) {
-        const prefix = `data-${(0, _common.normalizeKey)(key.toLowerCase())}-`;
-        (0, _array.wrapToArray)(value).forEach(value => $appointment.attr(prefix + (0, _common.normalizeKey)(value), true));
+    const appointmentGroups = (0, _appointment_groups_utils.getAppointmentGroupValues)(rawAppointment, resources);
+    Object.entries(appointmentGroups).forEach(_ref => {
+      let [resourceIndex, resourceIds] = _ref;
+      if (resourceIds.length) {
+        const prefix = `data-${(0, _common.normalizeKey)(resourceIndex.toLowerCase())}-`;
+        resourceIds.forEach(value => $appointment.attr(prefix + (0, _common.normalizeKey)(value), true));
       }
     });
   }
@@ -606,7 +612,7 @@ class SchedulerAppointments extends _uiCollection_widget.default {
   }
   updateResizedAppointment($element, dateRange, dataAccessors, timeZoneCalculator) {
     const sourceAppointment = this._getItemData($element);
-    const gridAdapter = (0, _m_appointment_adapter.createAppointmentAdapter)(sourceAppointment, dataAccessors, timeZoneCalculator);
+    const gridAdapter = new _appointment_adapter.AppointmentAdapter(sourceAppointment, dataAccessors).clone();
     gridAdapter.startDate = new Date(dateRange.startDate);
     gridAdapter.endDate = new Date(dateRange.endDate);
     /*
@@ -614,36 +620,31 @@ class SchedulerAppointments extends _uiCollection_widget.default {
      * If we transform dates fromGrid and back through DST then we'll lose one hour.
      * TODO(1): refactor computation around DST globally
      */
-    const convertedBackAdapter = gridAdapter.clone();
-    convertedBackAdapter.calculateDates('fromGrid').calculateDates('toGrid');
+    const convertedBackAdapter = gridAdapter.clone().calculateDates(timeZoneCalculator, 'fromGrid').calculateDates(timeZoneCalculator, 'toGrid');
     const startDateDelta = gridAdapter.startDate.getTime() - convertedBackAdapter.startDate.getTime();
     const endDateDelta = gridAdapter.endDate.getTime() - convertedBackAdapter.endDate.getTime();
     gridAdapter.startDate = _date2.dateUtilsTs.addOffsets(gridAdapter.startDate, [startDateDelta]);
     gridAdapter.endDate = _date2.dateUtilsTs.addOffsets(gridAdapter.endDate, [endDateDelta]);
+    const data = gridAdapter.calculateDates(timeZoneCalculator, 'fromGrid').source;
     this.notifyObserver('updateAppointmentAfterResize', {
       target: sourceAppointment,
-      data: gridAdapter.calculateDates('fromGrid').source(),
+      data,
       $appointment: $element
     });
   }
   _getEndResizeAppointmentStartDate(e, rawAppointment, appointmentInfo) {
     const timeZoneCalculator = this.option('timeZoneCalculator');
-    const appointmentAdapter = (0, _m_appointment_adapter.createAppointmentAdapter)(rawAppointment, this.dataAccessors, timeZoneCalculator);
+    const appointmentAdapter = new _appointment_adapter.AppointmentAdapter(rawAppointment, this.dataAccessors);
     let {
       startDate
     } = appointmentInfo;
-    const recurrenceProcessor = (0, _m_recurrence.getRecurrenceProcessor)();
     const {
-      recurrenceRule,
-      startDateTimeZone
+      startDateTimeZone,
+      isRecurrent
     } = appointmentAdapter;
     const isAllDay = this.invoke('isAllDay', rawAppointment);
-    const isRecurrent = recurrenceProcessor.isValidRecurrenceRule(recurrenceRule);
     if (!e.handles.top && !isRecurrent && !isAllDay) {
-      startDate = timeZoneCalculator.createDate(appointmentAdapter.startDate, {
-        appointmentTimeZone: startDateTimeZone,
-        path: 'toGrid'
-      });
+      startDate = timeZoneCalculator.createDate(appointmentAdapter.startDate, 'toGrid', startDateTimeZone);
     }
     return startDate;
   }
@@ -798,9 +799,9 @@ class SchedulerAppointments extends _uiCollection_widget.default {
     };
     if (recurrenceRule) {
       const dates = appointment.settings || appointment;
-      const startDate = new Date(this.dataAccessors.get('startDate', dates));
+      const startDate = this.dataAccessors.get('startDate', dates);
       const startDateTimeZone = this.dataAccessors.get('startDateTimeZone', appointment);
-      const endDate = new Date(this.dataAccessors.get('endDate', dates));
+      const endDate = this.dataAccessors.get('endDate', dates);
       const appointmentDuration = endDate.getTime() - startDate.getTime();
       const recurrenceException = this.dataAccessors.get('recurrenceException', appointment);
       const startViewDate = this.invoke('getStartViewDate');
@@ -847,9 +848,7 @@ class SchedulerAppointments extends _uiCollection_widget.default {
       (0, _extend.extend)(appointment, parts[0]);
       for (let i = 1; i < partCount; i++) {
         let startDate = this.dataAccessors.get('startDate', parts[i].settings);
-        startDate = timeZoneCalculator.createDate(startDate.getTime(), {
-          path: 'toGrid'
-        });
+        startDate = timeZoneCalculator.createDate(startDate.getTime(), 'toGrid');
         if (startDate < endViewDate && startDate > startViewDate) {
           result.parts.push(parts[i]);
         }
@@ -909,22 +908,18 @@ class SchedulerAppointments extends _uiCollection_widget.default {
   }
   splitAppointmentByDay(appointment) {
     const dates = appointment.settings || appointment;
-    const originalStartDate = new Date(this.dataAccessors.get('startDate', dates));
+    const originalStartDate = this.dataAccessors.get('startDate', dates);
     let startDate = _date.default.makeDate(originalStartDate);
     let endDate = _date.default.makeDate(this.dataAccessors.get('endDate', dates));
     const maxAllowedDate = this.invoke('getEndViewDate');
     const startDayHour = this.invoke('getStartDayHour');
     const endDayHour = this.invoke('getEndDayHour');
     const timeZoneCalculator = this.option('timeZoneCalculator');
-    const adapter = (0, _m_appointment_adapter.createAppointmentAdapter)(appointment, this.dataAccessors, timeZoneCalculator);
+    const adapter = new _appointment_adapter.AppointmentAdapter(appointment, this.dataAccessors);
     const appointmentIsLong = (0, _m_utils.getAppointmentTakesSeveralDays)(adapter);
     const result = [];
-    startDate = timeZoneCalculator.createDate(startDate, {
-      path: 'toGrid'
-    });
-    endDate = timeZoneCalculator.createDate(endDate, {
-      path: 'toGrid'
-    });
+    startDate = timeZoneCalculator.createDate(startDate, 'toGrid');
+    endDate = timeZoneCalculator.createDate(endDate, 'toGrid');
     if (startDate.getHours() <= endDayHour && startDate.getHours() >= startDayHour && !appointmentIsLong) {
       result.push(this._applyStartDateToObj(new Date(startDate), {
         appointmentData: appointment

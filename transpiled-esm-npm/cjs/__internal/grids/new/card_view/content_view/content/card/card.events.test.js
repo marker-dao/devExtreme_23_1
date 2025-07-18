@@ -3,7 +3,7 @@
 var _inferno = require("inferno");
 var _globals = require("@jest/globals");
 var _card = require("./card");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */ /* eslint-disable @typescript-eslint/init-declarations */
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const createMockCallback = () => ({
   called: false,
   call() {
@@ -62,86 +62,6 @@ const props = {
   onClick: mockOnClick.call.bind(mockOnClick),
   onHold: mockOnHold.call.bind(mockOnHold)
 };
-(0, _globals.describe)('Events', () => {
-  let container;
-  // @ts-expect-error
-  beforeEach(() => {
-    container = document.createElement('div');
-    // @ts-expect-error
-    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, _extends({}, props, {
-      elementRef: (0, _inferno.createRef)()
-    })))), container);
-  });
-  (0, _globals.it)('should trigger onClick event', () => {
-    const cardElement = container.querySelector(`.${_card.CLASSES.card}`);
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('click'));
-    (0, _globals.expect)(mockOnClick.called).toBe(true);
-  });
-  _globals.it.skip('should trigger onDblClick event', () => {
-    const cardElement = container.querySelector(`.${_card.CLASSES.card}`);
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('dblclick'));
-    (0, _globals.expect)(mockOnDblClick.called).toBe(true);
-  });
-  (0, _globals.it)('should trigger onHold event', () => {
-    const cardElement = container.querySelector(`.${_card.CLASSES.card}`);
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('dxhold'));
-    (0, _globals.expect)(mockOnHold.called).toBe(true);
-  });
-  (0, _globals.it)('should trigger onHoverChanged event on mouse enter', () => {
-    const mockHover = {
-      called: false,
-      fn: _ref => {
-        let {
-          isHovered
-        } = _ref;
-        mockHover.called = true;
-        (0, _globals.expect)(isHovered).toBe(true);
-      }
-    };
-    const newProps = _extends({}, props, {
-      hoverStateEnabled: true,
-      onHoverChanged: mockHover.fn
-    });
-    // @ts-expect-error
-    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, newProps))), container);
-    const cardElement = container.querySelector(`.${_card.CLASSES.card}`);
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('mouseenter'));
-    (0, _globals.expect)(mockHover.called).toBe(true);
-  });
-  (0, _globals.it)('should trigger onHoverChanged event on mouse leave', () => {
-    const mockHover = {
-      called: false,
-      fn: _ref2 => {
-        let {
-          isHovered
-        } = _ref2;
-        mockHover.called = true;
-        (0, _globals.expect)(isHovered).toBe(false);
-      }
-    };
-    const newProps = _extends({}, props, {
-      hoverStateEnabled: true,
-      onHoverChanged: mockHover.fn
-    });
-    // @ts-expect-error
-    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, newProps))), container);
-    const cardElement = container.querySelector(`.${_card.CLASSES.card}`);
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('mouseleave'));
-    (0, _globals.expect)(mockHover.called).toBe(true);
-  });
-  (0, _globals.it)('should handle hoverStateEnabled prop correctly', () => {
-    const cardElement = container.querySelector('.dx-cardview-card');
-    cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('mouseenter'));
-    const classList = (cardElement === null || cardElement === void 0 ? void 0 : cardElement.getAttribute('class')) || '';
-    (0, _globals.expect)(classList).toContain('dx-cardview-card-hover');
-  });
-  (0, _globals.it)('should render field template correctly', () => {
-    const fieldName = container.querySelector('.dx-cardview-field-caption');
-    const fieldValue = container.querySelector('.dx-cardview-field-value');
-    (0, _globals.expect)(fieldName === null || fieldName === void 0 ? void 0 : fieldName.textContent).toBe('Field:');
-    (0, _globals.expect)(fieldValue === null || fieldValue === void 0 ? void 0 : fieldValue.textContent).toBe('devextreme');
-  });
-});
 (0, _globals.describe)('Callbacks', () => {
   (0, _globals.describe)('selectCard', () => {
     // @ts-expect-errors

@@ -1,18 +1,17 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { isFluent } from '../../../ui/themes';
-import { formatViews, getViewName, isOneView } from './m_utils';
+import { getViewName, isOneView } from './m_utils';
 const ClASS = {
   container: 'dx-scheduler-view-switcher',
   dropDownButton: 'dx-scheduler-view-switcher-dropdown-button',
   dropDownButtonContent: 'dx-scheduler-view-switcher-dropdown-button-content'
 };
 const getViewsAndSelectedView = header => {
-  const views = formatViews(header.views);
-  let selectedView = getViewName(header.currentView);
+  const views = header.option('views');
+  const selectedView = header.option('currentView').name;
   const isSelectedViewInViews = views.some(view => view.name === selectedView);
-  selectedView = isSelectedViewInViews ? selectedView : undefined;
   return {
-    selectedView,
+    selectedView: isSelectedViewInViews ? selectedView : undefined,
     views
   };
 };
@@ -23,6 +22,9 @@ export const getTabViewSwitcher = (header, item) => {
   } = getViewsAndSelectedView(header);
   // @ts-expect-error
   const stylingMode = isFluent() ? 'outlined' : 'contained';
+  const items = views.map(view => _extends({}, view, {
+    text: view.name
+  }));
   return _extends({
     widget: 'dxButtonGroup',
     locateInMenu: 'auto',
@@ -30,15 +32,12 @@ export const getTabViewSwitcher = (header, item) => {
     name: 'viewSwitcher',
     cssClass: ClASS.container,
     options: {
-      items: views,
+      items,
       keyExpr: 'name',
       selectedItemKeys: [selectedView],
       stylingMode,
       onItemClick: e => {
-        const {
-          view
-        } = e.itemData;
-        header._updateCurrentView(view);
+        header._updateCurrentView(e.itemData);
       },
       onContentReady: e => {
         const viewSwitcher = e.component;
@@ -54,7 +53,7 @@ export const getDropDownViewSwitcher = (header, item) => {
     selectedView,
     views
   } = getViewsAndSelectedView(header);
-  const oneView = isOneView(views, selectedView);
+  const isOnlyOneView = isOneView(views, selectedView);
   return _extends({
     widget: 'dxDropDownButton',
     locateInMenu: 'never',
@@ -66,28 +65,25 @@ export const getDropDownViewSwitcher = (header, item) => {
       useSelectMode: true,
       keyExpr: 'name',
       selectedItemKey: selectedView,
-      displayExpr: 'text',
-      showArrowIcon: !oneView,
+      displayExpr: 'name',
+      showArrowIcon: !isOnlyOneView,
       elementAttr: {
         class: ClASS.dropDownButton
       },
       onItemClick: e => {
-        const {
-          view
-        } = e.itemData;
-        header._updateCurrentView(view);
+        header._updateCurrentView(e.itemData);
       },
       onContentReady: e => {
         const viewSwitcher = e.component;
         header._addEvent('currentView', view => {
-          const currentViews = formatViews(header.views);
-          viewSwitcher.option('showArrowIcon', !isOneView(currentViews, view));
+          const currentViews = header.option('views');
+          viewSwitcher.option('showArrowIcon', !isOneView(currentViews, view.name));
           viewSwitcher.option('selectedItemKey', getViewName(view));
         });
       },
       dropDownOptions: {
         onShowing: e => {
-          if (oneView) {
+          if (isOnlyOneView) {
             e.cancel = true;
           }
         },

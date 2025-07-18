@@ -97,8 +97,7 @@ class RadioGroup extends _editor.default {
       }
     }
   }
-  _getSelectedItemKeys() {
-    let value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.option('value');
+  _getSelectedItemKeys(value) {
     // @ts-expect-error
     const isNullSelectable = this.option('valueExpr') !== 'this';
     const shouldSelectValue = isNullSelectable && value === null || (0, _type.isDefined)(value);
@@ -178,7 +177,8 @@ class RadioGroup extends _editor.default {
       accessKey,
       focusStateEnabled,
       itemTemplate,
-      tabIndex
+      tabIndex,
+      value
     } = this.option();
     this._createComponent($radios, _m_radio_collection.default, {
       onInitialized: _ref2 => {
@@ -205,7 +205,7 @@ class RadioGroup extends _editor.default {
       scrollingEnabled: false,
       selectByClick: false,
       selectionMode: 'single',
-      selectedItemKeys: this._getSelectedItemKeys(),
+      selectedItemKeys: this._getSelectedItemKeys(value),
       tabIndex
     });
     this._areRadiosCreated.resolve();
@@ -231,7 +231,6 @@ class RadioGroup extends _editor.default {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _setCollectionWidgetOption(name, value) {
     // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this._areRadiosCreated.done(this._setWidgetOption.bind(this, '_radios', arguments));
   }
   _updateItemsSize() {

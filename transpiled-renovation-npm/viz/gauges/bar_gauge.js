@@ -500,6 +500,9 @@ const dxBarGauge = exports.dxBarGauge = _base_gauge.BaseGauge.inherit({
   _factory: (0, _object.clone)(_base_gauge.BaseGauge.prototype._factory),
   _optionChangesOrder: ['VALUES', 'NODES'],
   _initialChanges: ['VALUES'],
+  _getChangesRequireCoreUpdate: function () {
+    return [...this.callBase(), 'LEGEND'];
+  },
   _change_NODES() {
     this._buildNodes();
   },

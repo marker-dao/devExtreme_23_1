@@ -17,7 +17,7 @@ import { isDefined, isPromise } from '../../core/utils/type';
 import DropDownList from '../ui/drop_down_editor/m_drop_down_list';
 // STYLE selectBox
 const DISABLED_STATE_SELECTOR = '.dx-state-disabled';
-const SELECTBOX_CLASS = 'dx-selectbox';
+export const SELECTBOX_CLASS = 'dx-selectbox';
 const SELECTBOX_POPUP_CLASS = 'dx-selectbox-popup';
 const SELECTBOX_CONTAINER_CLASS = 'dx-selectbox-container';
 const SELECTBOX_POPUP_WRAPPER_CLASS = 'dx-selectbox-popup-wrapper';
@@ -161,7 +161,6 @@ class SelectBox extends DropDownList {
       placeholder: messageLocalization.format('Select'),
       fieldTemplate: null,
       customItemCreateEvent: 'change',
-      valueChangeEvent: 'change',
       acceptCustomValue: false,
       onCustomItemCreating(e) {
         if (!isDefined(e.customItem)) {
@@ -196,15 +195,6 @@ class SelectBox extends DropDownList {
   }
   _popupWrapperClass() {
     return `${super._popupWrapperClass()} ${SELECTBOX_POPUP_WRAPPER_CLASS}`;
-  }
-  _setDeprecatedOptions() {
-    super._setDeprecatedOptions();
-    extend(this._deprecatedOptions, {
-      valueChangeEvent: {
-        since: '22.2',
-        alias: 'customItemCreateEvent'
-      }
-    });
   }
   _cancelEditing() {
     if (!this.option('searchEnabled') && this._list) {

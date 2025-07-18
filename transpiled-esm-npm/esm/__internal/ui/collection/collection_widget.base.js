@@ -1046,7 +1046,6 @@ class CollectionWidget extends Widget {
     return $($element).closest(this._itemSelector());
   }
   _getItemData(itemElement) {
-    // @ts-expect-error ts-error
     return $(itemElement).data(this._itemDataKey());
   }
   _getSummaryItemsSize(dimension, items, includeMargin) {

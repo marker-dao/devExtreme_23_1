@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_tile_view = _interopRequireDefault(require("../__internal/ui/m_tile_view"));
+var _tile_view = _interopRequireDefault(require("../__internal/ui/tile_view"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_tile_view.default; // STYLE tileView
+var _default = exports.default = _tile_view.default; // STYLE tileView
 /**
  * @name dxTileViewOptions.selectedIndex
  * @hidden

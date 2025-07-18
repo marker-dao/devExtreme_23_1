@@ -8,7 +8,7 @@ var _component_registrator = _interopRequireDefault(require("../../../core/compo
 var _date = _interopRequireDefault(require("../../../core/utils/date"));
 var _index = require("../../scheduler/r1/components/index");
 var _index2 = require("../../scheduler/r1/utils/index");
-var _constants = require("../constants");
+var _constants_view = require("../utils/options/constants_view");
 var _m_timeline = _interopRequireDefault(require("./m_timeline"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // NOTE: Renovation component import.
@@ -19,7 +19,7 @@ class SchedulerTimelineMonth extends _m_timeline.default {
     this.viewDirection = 'horizontal';
   }
   get type() {
-    return _constants.VIEWS.TIMELINE_MONTH;
+    return _constants_view.VIEWS.TIMELINE_MONTH;
   }
   get renovatedHeaderPanelComponent() {
     return _index.HeaderPanelComponent;

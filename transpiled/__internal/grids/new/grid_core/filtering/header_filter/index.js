@@ -3,6 +3,12 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+Object.defineProperty(exports, "CompatibilityHeaderFilterController", {
+  enumerable: true,
+  get: function () {
+    return _compatibility.CompatibilityHeaderFilterController;
+  }
+});
 Object.defineProperty(exports, "HeaderFilterController", {
   enumerable: true,
   get: function () {
@@ -24,6 +30,7 @@ Object.defineProperty(exports, "defaultOptions", {
 exports.headerFilterUtils = void 0;
 var headerFilterUtils = _interopRequireWildcard(require("./utils"));
 exports.headerFilterUtils = headerFilterUtils;
+var _compatibility = require("./compatibility");
 var _controller = require("./controller");
 var _options = require("./options");
 var _view = require("./view");

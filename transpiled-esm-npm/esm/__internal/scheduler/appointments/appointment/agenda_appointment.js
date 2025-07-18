@@ -6,8 +6,9 @@ export class AgendaAppointment extends Appointment {
     return this.$element().find(`.${APPOINTMENT_CONTENT_CLASSES.AGENDA_MARKER}`);
   }
   _renderResourceList() {
+    const resourceManager = this.option('getResourceManager')();
     // eslint-disable-next-line no-void
-    void this.resourceProcessor.getAppointmentResourcesValues(this.rawAppointment).then(list => {
+    void resourceManager.getAppointmentResourcesValues(this.rawAppointment).then(list => {
       const parent = this.$element().find(`.${APPOINTMENT_CONTENT_CLASSES.APPOINTMENT_CONTENT_DETAILS}`);
       const container = $('<div>').addClass(APPOINTMENT_CONTENT_CLASSES.AGENDA_RESOURCE_LIST).appendTo(parent);
       list.forEach(item => {

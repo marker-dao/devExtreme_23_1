@@ -13,3 +13,20 @@ var _utils = require("./utils");
     (0, _globals.expect)((0, _utils.getVisibleIndexes)([3, undefined, 0, undefined])).toEqual([3, 1, 0, 2]);
   });
 });
+(0, _globals.describe)('normalizeColumn', () => {
+  (0, _globals.describe)('when column is unbound', () => {
+    const column = (0, _utils.normalizeColumn)({
+      name: 'asd',
+      visibleIndex: 0
+    });
+    (0, _globals.it)('should have allowSorting=false by default', () => {
+      (0, _globals.expect)(column.allowSorting).toBe(false);
+    });
+    (0, _globals.it)('should have allowFiltering=false by default', () => {
+      (0, _globals.expect)(column.allowSorting).toBe(false);
+    });
+    (0, _globals.it)('should have allowHeaderFiltering=false by default', () => {
+      (0, _globals.expect)(column.allowSorting).toBe(false);
+    });
+  });
+});

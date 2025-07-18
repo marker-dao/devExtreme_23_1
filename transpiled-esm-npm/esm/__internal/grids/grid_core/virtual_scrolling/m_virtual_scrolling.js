@@ -1110,6 +1110,9 @@ export const resizing = Base => class VirtualScrollingResizingControllerExtender
   hasResizeTimeout() {
     return isDefined(this._resizeTimeout);
   }
+  resetLastResizeTime() {
+    this._lastTime = undefined;
+  }
   resize() {
     let result;
     if (isVirtualMode(this) || gridCoreUtils.isVirtualRowRendering(this)) {

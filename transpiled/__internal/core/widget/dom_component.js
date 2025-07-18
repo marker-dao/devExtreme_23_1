@@ -93,9 +93,13 @@ class DOMComponent extends _component.Component {
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   _setOptionsByDevice(instanceCustomRules) {
+    const ctor = this.constructor;
+    const hasOwnCustomRules = Object.prototype.hasOwnProperty.call(ctor, '_classCustomRules');
+    const hasOwnDefaultOptions = Object.prototype.hasOwnProperty.call(ctor, 'defaultOptions');
+    const ownClassCustomRules = hasOwnCustomRules || hasOwnDefaultOptions
     // @ts-expect-error
-    // eslint-disable-next-line @stylistic/max-len
-    super._setOptionsByDevice([].concat(this.constructor._classCustomRules || [], instanceCustomRules || []));
+    ? ctor._classCustomRules : [];
+    super._setOptionsByDevice([].concat(ownClassCustomRules || [], instanceCustomRules || []));
   }
   _isInitialOptionValue(name) {
     // @ts-expect-error

@@ -10,35 +10,34 @@ import dateUtils from '../../../core/utils/date';
 import { extend } from '../../../core/utils/extend';
 import Toolbar from '../../../ui/toolbar';
 import Widget from '../../../ui/widget/ui.widget';
-import { viewsUtils } from '../../scheduler/r1/utils/index';
 import SchedulerCalendar from './m_calendar';
 import { getDateNavigator } from './m_date_navigator';
-import { getCaption, getNextIntervalDate, getStep, getViewName, getViewType, nextWeek, validateViews } from './m_utils';
+import { getCaption, getNextIntervalDate, getStep, nextWeek } from './m_utils';
 import { getDropDownViewSwitcher, getTabViewSwitcher } from './m_view_switcher';
 import { getTodayButtonOptions } from './today';
-const COMPONENT_CLASS = 'dx-scheduler-header';
+const CLASSES = {
+  component: 'dx-scheduler-header',
+  invisible: 'dx-state-invisible'
+};
 const ITEM_NAMES = {
   today: 'today',
   dateNavigator: 'dateNavigator',
   viewSwitcher: 'viewSwitcher'
 };
 export class SchedulerHeader extends Widget {
-  get views() {
-    return this.option('views');
-  }
   get captionText() {
     return this._getCaption().text;
   }
-  get intervalOptions() {
-    const step = getStep(this.currentView);
-    const intervalCount = this.option('intervalCount');
+  getIntervalOptions(date) {
+    const currentView = this.option('currentView');
+    const step = getStep(currentView.type);
     const firstDayOfWeek = this.option('firstDayOfWeek');
-    const agendaDuration = this.option('agendaDuration');
     return {
+      date,
       step,
-      intervalCount,
       firstDayOfWeek,
-      agendaDuration
+      intervalCount: currentView.intervalCount,
+      agendaDuration: currentView.agendaDuration
     };
   }
   _getDefaultOptions() {
@@ -48,9 +47,7 @@ export class SchedulerHeader extends Widget {
     });
   }
   _createEventMap() {
-    this.eventMap = new Map([['currentView', [view => {
-      this.currentView = viewsUtils.getCurrentView(getViewName(view), this.option('views'));
-    }]], ['views', [validateViews]], ['currentDate', [this._getCalendarOptionUpdater('value')]], ['min', [this._getCalendarOptionUpdater('min')]], ['max', [this._getCalendarOptionUpdater('max')]], ['tabIndex', [this.repaint.bind(this)]], ['focusStateEnabled', [this.repaint.bind(this)]], ['useDropDownViewSwitcher', [this.repaint.bind(this)]], ['indicatorTime', []]]);
+    this.eventMap = new Map([['currentView', []], ['views', []], ['currentDate', [this._getCalendarOptionUpdater('value')]], ['min', [this._getCalendarOptionUpdater('min')]], ['max', [this._getCalendarOptionUpdater('max')]], ['tabIndex', [this.repaint.bind(this)]], ['focusStateEnabled', [this.repaint.bind(this)]], ['useDropDownViewSwitcher', [this.repaint.bind(this)]], ['indicatorTime', []]]);
   }
   _addEvent(name, event) {
     if (!this.eventMap.has(name)) {
@@ -75,6 +72,7 @@ export class SchedulerHeader extends Widget {
     const parts = getPathParts(fullName);
     const optionName = fullName.replace(/^toolbar\./, '');
     this.option(fullName, value);
+    this._toggleVisibility();
     switch (true) {
       case fullName === 'toolbar':
         this.repaint();
@@ -96,14 +94,14 @@ export class SchedulerHeader extends Widget {
     // @ts-expect-error
     super._init();
     this._createEventMap();
-    this.$element().addClass(COMPONENT_CLASS);
-    this.currentView = viewsUtils.getCurrentView(getViewName(this.option('currentView')), this.option('views'));
+    this.$element().addClass(CLASSES.component);
   }
   _render() {
     // @ts-expect-error
     super._render();
     this._createEventMap();
     this._renderToolbar();
+    this._toggleVisibility();
   }
   _renderToolbar() {
     const config = this._createToolbarConfig();
@@ -111,6 +109,15 @@ export class SchedulerHeader extends Widget {
     toolbarElement.appendTo(this.$element());
     // @ts-expect-error
     this._toolbar = this._createComponent(toolbarElement, Toolbar, config);
+  }
+  _toggleVisibility() {
+    const toolbarOptions = this.option('toolbar');
+    const isHeaderShown = toolbarOptions.visible || toolbarOptions.visible === undefined && toolbarOptions.items.length;
+    if (isHeaderShown) {
+      this.$element().removeClass(CLASSES.invisible);
+    } else {
+      this.$element().addClass(CLASSES.invisible);
+    }
   }
   _createToolbarConfig() {
     const options = this.option('toolbar');
@@ -144,17 +151,14 @@ export class SchedulerHeader extends Widget {
     }
   }
   _updateCurrentView(view) {
-    const onCurrentViewChange = this.option('onCurrentViewChange');
-    onCurrentViewChange(view.name);
-    this._callEvent('currentView', view);
+    this.option('onCurrentViewChange')(view.name);
   }
   _updateCalendarValueAndCurrentDate(date) {
     this._updateCurrentDate(date);
     this._calendar.option('value', date);
   }
   _updateCurrentDate(date) {
-    const onCurrentDateChange = this.option('onCurrentDateChange');
-    onCurrentDateChange(date);
+    this.option('onCurrentDateChange')(date);
     this._callEvent('currentDate', date);
   }
   _renderCalendar() {
@@ -182,17 +186,14 @@ export class SchedulerHeader extends Widget {
   }
   _getNextDate(direction, initialDate) {
     const date = initialDate ?? this.option('currentDate');
-    const options = _extends({}, this.intervalOptions, {
-      date
-    });
+    const options = this.getIntervalOptions(date);
     return getNextIntervalDate(options, direction);
   }
-  _isMonth() {
-    return getViewType(this.currentView) === 'month';
-  }
   _getDisplayedDate() {
+    var _this$option;
     const startViewDate = new Date(this.option('startViewDate'));
-    return this._isMonth() ? nextWeek(startViewDate) : startViewDate;
+    const isMonth = ((_this$option = this.option('currentView')) === null || _this$option === void 0 ? void 0 : _this$option.type) === 'month';
+    return isMonth ? nextWeek(startViewDate) : startViewDate;
   }
   _getCaptionOptions() {
     let date = this.option('currentDate');
@@ -200,9 +201,7 @@ export class SchedulerHeader extends Widget {
       date = this._getDisplayedDate();
     }
     date = dateUtils.trimTime(date);
-    return _extends({}, this.intervalOptions, {
-      date
-    });
+    return this.getIntervalOptions(date);
   }
   _getCaption() {
     const options = this._getCaptionOptions();

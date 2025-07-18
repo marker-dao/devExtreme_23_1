@@ -22,9 +22,9 @@ class Row extends _index.BaseInfernoComponent {
       className,
       isHeaderRow,
       leftVirtualCellCount,
-      leftVirtualCellWidth,
+      leftVirtualCellWidth = RowDefaultProps.leftVirtualCellWidth,
       rightVirtualCellCount,
-      rightVirtualCellWidth,
+      rightVirtualCellWidth = RowDefaultProps.rightVirtualCellWidth,
       styles
     } = this.props;
     const hasLeftVirtualCell = !!leftVirtualCellCount;

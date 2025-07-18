@@ -17,7 +17,7 @@ import * as iteratorUtils from '../../core/utils/iterator';
 import { getHeight, getOuterHeight, setHeight } from '../../core/utils/size';
 import { isDefined, isPlainObject } from '../../core/utils/type';
 import { isMaterialBased } from '../../ui/themes';
-import CollectionWidget from '../ui/collection/m_collection_widget.live_update';
+import CollectionWidget from '../ui/collection/collection_widget.live_update';
 const ACCORDION_CLASS = 'dx-accordion';
 const ACCORDION_WRAPPER_CLASS = 'dx-accordion-wrapper';
 const ACCORDION_ITEM_CLASS = 'dx-accordion-item';
@@ -337,8 +337,8 @@ class Accordion extends CollectionWidget {
             repaintChangesOnly
           } = this.option();
           if (repaintChangesOnly === true && args.fullName === 'items') {
-            this._updateItemHeightsWrapper(true);
             this._renderSelection(this._getSelectedItemIndices(), []);
+            this._updateItemHeightsWrapper(true);
           }
           break;
         }

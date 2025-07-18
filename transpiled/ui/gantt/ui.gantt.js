@@ -27,6 +27,7 @@ var _uiGantt12 = require("./ui.gantt.view");
 var _uiGantt13 = require("./ui.gantt.data_changes_processing_helper");
 var _m_utils = _interopRequireDefault(require("../../__internal/grids/grid_core/m_utils"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = (0, _window.getWindow)();
 
 // STYLE gantt
@@ -148,6 +149,7 @@ class Gantt extends _ui.default {
     this._dataProcessingHelper = new _uiGantt13.GanttDataChangesProcessingHelper();
   }
   _initGanttView() {
+    var _this$option;
     if (this._ganttView) {
       return;
     }
@@ -173,7 +175,7 @@ class Gantt extends _ui.default {
       scaleTypeRange: this.option('scaleTypeRange'),
       editing: this.option('editing'),
       validation: this.option('validation'),
-      stripLines: this.option('stripLines'),
+      stripLines: (_this$option = this.option('stripLines')) === null || _this$option === void 0 ? void 0 : _this$option.map(item => _extends({}, item)),
       bars: this._bars,
       mainElement: this.$element(),
       onSelectionChanged: e => {
@@ -659,9 +661,7 @@ class Gantt extends _ui.default {
   assignResourceToTask(resourceKey, taskKey) {
     this._ganttView._ganttViewCore.assignResourceToTask(resourceKey, taskKey);
   }
-  // eslint-disable-next-line spellcheck/spell-checker
   unassignResourceFromTask(resourceKey, taskKey) {
-    // eslint-disable-next-line spellcheck/spell-checker
     this._ganttView._ganttViewCore.unassignResourceFromTask(resourceKey, taskKey);
   }
   unassignAllResourcesFromTask(taskKey) {
@@ -852,11 +852,9 @@ class Gantt extends _ui.default {
         (_this$_actionsManager22 = this._actionsManager) === null || _this$_actionsManager22 === void 0 || _this$_actionsManager22.createResourceAssignedAction();
         break;
       case 'onResourceUnassigning':
-        // eslint-disable-next-line spellcheck/spell-checker
         (_this$_actionsManager23 = this._actionsManager) === null || _this$_actionsManager23 === void 0 || _this$_actionsManager23.createResourceUnassigningAction();
         break;
       case 'onResourceUnassigned':
-        // eslint-disable-next-line spellcheck/spell-checker
         (_this$_actionsManager24 = this._actionsManager) === null || _this$_actionsManager24 === void 0 || _this$_actionsManager24.createResourceUnassignedAction();
         break;
       case 'onCustomCommand':
@@ -877,7 +875,7 @@ class Gantt extends _ui.default {
         this._setGanttViewOption('showRowLines', args.value);
         break;
       case 'stripLines':
-        this._setGanttViewOption('stripLines', args.value);
+        this._setGanttViewOption(args.fullName, args.value);
         break;
       case 'scaleType':
         this._setGanttViewOption('scaleType', args.value);

@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.AppointmentDataProvider = void 0;
 var _config = _interopRequireDefault(require("../../../../core/config"));
-var _index = require("../../../scheduler/r1/filterting/index");
+var _index = require("../../r1/filterting/index");
 var _m_appointment_data_source = require("./m_appointment_data_source");
 var _m_appointment_filter = require("./m_appointment_filter");
 var _m_appointment_filter_virtual = require("./m_appointment_filter_virtual");
@@ -41,6 +41,7 @@ class AppointmentDataProvider {
   initFilterStrategy() {
     const filterOptions = {
       resources: this.options.resources,
+      getResourceManager: this.options.getResourceManager,
       dataAccessors: this.dataAccessors,
       startDayHour: this.options.startDayHour,
       endDayHour: this.options.endDayHour,
@@ -48,7 +49,7 @@ class AppointmentDataProvider {
       showAllDayPanel: this.options.showAllDayPanel,
       timeZoneCalculator: this.options.timeZoneCalculator,
       //
-      loadedResources: this.options.getLoadedResources,
+      loadedResources: this.options.getLoadedResources(),
       supportAllDayRow: this.options.getSupportAllDayRow,
       viewType: this.options.getViewType,
       viewDirection: this.options.getViewDirection,

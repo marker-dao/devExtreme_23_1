@@ -1,2 +1,2 @@
-import CollectionWidget from '../../__internal/ui/collection/m_collection_widget.async';
+import CollectionWidget from '../../__internal/ui/collection/collection_widget.async';
 export default CollectionWidget;

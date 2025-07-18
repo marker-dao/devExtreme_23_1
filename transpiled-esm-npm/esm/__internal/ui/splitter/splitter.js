@@ -11,7 +11,7 @@ import { extend } from '../../../core/utils/extend';
 import { getOuterHeight, getOuterWidth } from '../../../core/utils/size';
 import { isDefined, isObject } from '../../../core/utils/type';
 import { hasWindow } from '../../../core/utils/window';
-import CollectionWidgetLiveUpdate from '../../ui/collection/m_collection_widget.live_update';
+import CollectionWidgetLiveUpdate from '../../ui/collection/collection_widget.live_update';
 import { RESIZE_HANDLE_CLASS } from './resize_handle';
 import SplitterItem from './splitter_item';
 import { getComponentInstance } from './utils/component';

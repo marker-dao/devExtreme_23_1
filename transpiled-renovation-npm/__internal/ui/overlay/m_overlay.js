@@ -108,7 +108,6 @@ class Overlay extends _widget.default {
           }
         }
       },
-      closeOnOutsideClick: false,
       hideOnOutsideClick: false,
       _ignorePreventScrollEventsDeprecation: false,
       onShowing: null,
@@ -157,15 +156,6 @@ class Overlay extends _widget.default {
   }
   _eventBindingTarget() {
     return this._$content;
-  }
-  _setDeprecatedOptions() {
-    super._setDeprecatedOptions();
-    (0, _extend.extend)(this._deprecatedOptions, {
-      closeOnOutsideClick: {
-        since: '22.1',
-        alias: 'hideOnOutsideClick'
-      }
-    });
   }
   ctor(element, options) {
     super.ctor(element, options);
@@ -440,13 +430,7 @@ class Overlay extends _widget.default {
         };
         this._processShowingHidingCancel(showingArgs.cancel, applyShow, cancelShow);
       };
-      if (this.option('templatesRenderAsynchronously')) {
-        this._stopShowTimer();
-        // NOTE: T390360, T386038
-        this._asyncShowTimeout = setTimeout(show);
-      } else {
-        show();
-      }
+      show();
     }
     return this._showingDeferred.promise();
   }
@@ -519,7 +503,6 @@ class Overlay extends _widget.default {
         this._forceFocusLost();
         this._toggleShading(false);
         this._toggleSubscriptions(false);
-        this._stopShowTimer();
         this._animateHiding();
       };
       this._processShowingHidingCancel(hidingArgs.cancel, applyHide, cancelHide);
@@ -618,8 +601,13 @@ class Overlay extends _widget.default {
     if (_loopFocus || enabled) {
       _events_engine.default.on(_dom_adapter.default.getDocument(), eventName, this._proxiedTabTerminatorHandler);
     } else {
-      _events_engine.default.off(_dom_adapter.default.getDocument(), eventName, this._proxiedTabTerminatorHandler);
+      this._destroyTabTerminator();
     }
+  }
+  _destroyTabTerminator() {
+    // @ts-expect-error ts-error
+    const eventName = (0, _index.addNamespace)('keydown', this.NAME);
+    _events_engine.default.off(_dom_adapter.default.getDocument(), eventName, this._proxiedTabTerminatorHandler);
   }
   _findTabbableBounds() {
     const $elements = this._$wrapper.find('*');
@@ -728,7 +716,8 @@ class Overlay extends _widget.default {
   _render() {
     super._render();
     this._appendContentToElement();
-    this._renderVisibilityAnimate(this.option('visible'));
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    this._renderVisibilityAnimate(Boolean(this.option('visible')));
   }
   _appendContentToElement() {
     if (!this._$content.parent().is(this.$element())) {
@@ -794,12 +783,15 @@ class Overlay extends _widget.default {
     } = this.option();
     this._toggleWrapperScrollEventsSubscription(preventScrollEvents);
     whenContentRendered.done(() => {
-      if (this.option('visible')) {
-        this._moveToContainer();
-      }
+      this._processContentRendering();
     });
     // @ts-expect-error ts-error
     return whenContentRendered.promise();
+  }
+  _processContentRendering() {
+    if (this.option('visible')) {
+      this._moveToContainer();
+    }
   }
   _getPositionControllerConfig() {
     const {
@@ -986,9 +978,11 @@ class Overlay extends _widget.default {
   _visibilityChanged(visible) {
     if (visible) {
       if (this.option('visible')) {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         this._renderVisibilityAnimate(visible);
       }
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this._renderVisibilityAnimate(visible);
     }
   }
@@ -996,21 +990,11 @@ class Overlay extends _widget.default {
     this._renderGeometry();
   }
   _clean() {
-    const {
-      isRenovated
-    } = this.option();
-    if (!this._contentAlreadyRendered && !isRenovated) {
+    if (!this._contentAlreadyRendered) {
       this.$content().empty();
     }
     this._renderVisibility(false);
-    this._stopShowTimer();
     this._cleanFocusState();
-  }
-  _stopShowTimer() {
-    if (this._asyncShowTimeout) {
-      clearTimeout(this._asyncShowTimeout);
-    }
-    this._asyncShowTimeout = null;
   }
   _dispose() {
     // @ts-expect-error
@@ -1018,7 +1002,6 @@ class Overlay extends _widget.default {
     this._toggleViewPortSubscription(false);
     this._toggleSubscriptions(false);
     this._updateZIndexStackPosition(false);
-    this._toggleTabTerminator(false);
     this._actions = null;
     this._parentsScrollSubscriptionInfo = null;
     super._dispose();
@@ -1026,6 +1009,7 @@ class Overlay extends _widget.default {
     this.option('visible') && zIndexPool.remove(this._zIndex);
     this._$wrapper.remove();
     this._$content.remove();
+    this._destroyTabTerminator();
   }
   _toggleRTLDirection(rtl) {
     this._$content.toggleClass(RTL_DIRECTION_CLASS, rtl);
@@ -1077,7 +1061,7 @@ class Overlay extends _widget.default {
         this._toggleSafariScrolling();
         break;
       case 'visible':
-        this._renderVisibilityAnimate(value)
+        this._renderVisibilityAnimate(Boolean(value))
         // @ts-expect-error ts-error
         .done(() => {
           var _this$_animateDeferre;
@@ -1121,7 +1105,6 @@ class Overlay extends _widget.default {
           this._toggleHideOnParentsScrollSubscription(visible);
           break;
         }
-      case 'closeOnOutsideClick':
       case 'hideOnOutsideClick':
       case 'propagateOutsideClick':
         break;

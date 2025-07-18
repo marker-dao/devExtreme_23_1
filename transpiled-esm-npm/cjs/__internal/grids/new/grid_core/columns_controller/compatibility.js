@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CompatibilityColumnsController = void 0;
 var _columns_controller = require("./columns_controller");
+var _utils = require("./utils");
 class CompatibilityColumnsController {
   constructor(realColumnsController) {
     this.realColumnsController = realColumnsController;
@@ -13,7 +14,7 @@ class CompatibilityColumnsController {
     return this.realColumnsController.columns.peek();
   }
   getFilteringColumns() {
-    return this.realColumnsController.columns.peek();
+    return (0, _utils.addDataFieldToComputedColumns)(this.realColumnsController.filterableColumns.peek());
   }
 }
 exports.CompatibilityColumnsController = CompatibilityColumnsController;

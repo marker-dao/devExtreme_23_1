@@ -104,7 +104,9 @@ class ColumnSortable extends _inferno.Component {
       [CLASS.dropzone]: true,
       [CLASS.dropzoneVisible]: !!this.props.showDropzone
     });
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _sortable.Sortable, _extends({}, restProps, {
+    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _sortable.Sortable, _extends({
+      "boundary": 'body'
+    }, restProps, {
       "dropFeedbackMode": dropFeedbackMode ?? 'indicate',
       "onDragStart": this.onDragStart,
       "group": 'dx-cardview-columns',

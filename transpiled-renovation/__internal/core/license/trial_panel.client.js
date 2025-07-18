@@ -80,7 +80,6 @@ class DxLicense extends SafeHTMLElement {
     super();
     this._observer = null;
     this._inReassign = false;
-    this._hidden = false;
     this._spanStyles = createImportantStyles(textStyles, (_DxLicense$customStyl = DxLicense.customStyles) === null || _DxLicense$customStyl === void 0 ? void 0 : _DxLicense$customStyl.textStyles);
     this._linkStyles = createImportantStyles(textStyles, (_DxLicense$customStyl2 = DxLicense.customStyles) === null || _DxLicense$customStyl2 === void 0 ? void 0 : _DxLicense$customStyl2.linkStyles);
     this._containerStyles = createImportantStyles(containerStyles, (_DxLicense$customStyl3 = DxLicense.customStyles) === null || _DxLicense$customStyl3 === void 0 ? void 0 : _DxLicense$customStyl3.containerStyles);
@@ -122,7 +121,7 @@ class DxLicense extends SafeHTMLElement {
     svg.appendChild(polygon);
     button.appendChild(svg);
     button.onclick = () => {
-      this._hidden = true;
+      DxLicense.closed = true;
       this.style.cssText = createImportantStyles({
         display: 'none'
       });
@@ -144,7 +143,7 @@ class DxLicense extends SafeHTMLElement {
     this._reassignComponent();
     if (!this._observer) {
       this._observer = new MutationObserver(() => {
-        if (this._hidden) {
+        if (DxLicense.closed) {
           var _this$_observer;
           (_this$_observer = this._observer) === null || _this$_observer === void 0 || _this$_observer.disconnect();
           return;
@@ -164,27 +163,35 @@ class DxLicense extends SafeHTMLElement {
     }
   }
   disconnectedCallback() {
-    setTimeout(() => {
+    if (DxLicense.closed) {
+      return;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    Promise.resolve().then(() => {
+      if (!document) {
+        return;
+      }
       const licensePanel = document.getElementsByTagName(componentNames.panel);
       if (!licensePanel.length) {
         document.body.prepend(this);
       }
-    }, 100);
+    });
   }
 }
 DxLicense.customStyles = undefined;
+DxLicense.closed = false;
 class DxLicenseTrigger extends SafeHTMLElement {
   connectedCallback() {
     this.style.cssText = createImportantStyles({
       display: 'none'
     });
     const licensePanel = document.getElementsByTagName(componentNames.panel);
-    if (!licensePanel.length) {
+    if (!licensePanel.length && !DxLicense.closed) {
       const license = document.createElement(componentNames.panel);
       license.setAttribute(attributeNames.version, this.getAttribute(attributeNames.version));
       license.setAttribute(attributeNames.buyNow, this.getAttribute(attributeNames.buyNow));
       license.setAttribute(attributeNames.licensingDoc, this.getAttribute(attributeNames.licensingDoc));
-      license.setAttribute(DATA_PERMANENT_ATTRIBUTE, 'true');
+      license.setAttribute(DATA_PERMANENT_ATTRIBUTE, '');
       document.body.prepend(license);
     }
   }

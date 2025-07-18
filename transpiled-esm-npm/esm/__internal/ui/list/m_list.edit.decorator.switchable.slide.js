@@ -3,15 +3,14 @@ import { locate, move } from '../../../common/core/animation/translator';
 import { name as clickEventName } from '../../../common/core/events/click';
 import { active } from '../../../common/core/events/core/emitter.feedback';
 import eventsEngine from '../../../common/core/events/core/events_engine';
-import { addNamespace } from '../../../common/core/events/utils/index';
+import { addNamespace } from '../../../common/core/events/utils';
 import messageLocalization from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
 import { noop } from '../../../core/utils/common';
 import { getOuterWidth, setWidth } from '../../../core/utils/size';
 import { isMaterialBased } from '../../../ui/themes';
-import ActionSheet from '../../ui/m_action_sheet';
+import ActionSheet from '../../ui/action_sheet';
 import SwitchableEditDecorator from './m_list.edit.decorator.switchable';
-import EditDecoratorMenuHelperMixin from './m_list.edit.decorator_menu_helper';
 import { register as registerDecorator } from './m_list.edit.decorator_registry';
 const LIST_EDIT_DECORATOR = 'dxListEditDecorator';
 const CLICK_EVENT_NAME = addNamespace(clickEventName, LIST_EDIT_DECORATOR);
@@ -41,12 +40,12 @@ class SwitchableEditDecoratorSlide extends SwitchableEditDecorator {
     this._renderDeleteButton();
   }
   _renderMenu() {
-    // @ts-expect-error ts-error
-    if (!this._menuEnabled()) {
+    const {
+      menuItems
+    } = this._list.option();
+    if (!menuItems.length) {
       return;
     }
-    // @ts-expect-error ts-error
-    const menuItems = this._menuItems();
     if (menuItems.length === 1) {
       const menuItem = menuItems[0];
       this._renderMenuButton(menuItem.text, e => {
@@ -78,8 +77,10 @@ class SwitchableEditDecoratorSlide extends SwitchableEditDecorator {
     return $menuButton;
   }
   _renderDeleteButton() {
-    // @ts-expect-error ts-error
-    if (!this._deleteEnabled()) {
+    const {
+      allowItemDeleting
+    } = this._list.option();
+    if (!allowItemDeleting) {
       return;
     }
     const $deleteButton = $('<div>').addClass(SLIDE_MENU_BUTTON_CLASS).addClass(SLIDE_MENU_BUTTON_DELETE_CLASS)
@@ -92,8 +93,9 @@ class SwitchableEditDecoratorSlide extends SwitchableEditDecorator {
     this._$buttons.append($deleteButton);
   }
   _fireAction(menuItem) {
-    // @ts-expect-error ts-error
-    this._fireMenuAction($(this._cachedNode), menuItem.action);
+    this._list._itemEventHandlerByHandler($(this._cachedNode), menuItem.action, {}, {
+      excludeValidators: ['disabled', 'readOnly']
+    });
     this._cancelDeleteReadyItem();
   }
   modifyElement(config) {
@@ -246,6 +248,4 @@ class SwitchableEditDecoratorSlide extends SwitchableEditDecorator {
     super.dispose.apply(this, arguments);
   }
 }
-registerDecorator('menu', 'slide',
-// @ts-expect-error ts-error
-SwitchableEditDecoratorSlide.include(EditDecoratorMenuHelperMixin));
+registerDecorator('menu', 'slide', SwitchableEditDecoratorSlide);

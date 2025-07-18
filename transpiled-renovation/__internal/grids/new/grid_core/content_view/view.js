@@ -17,6 +17,7 @@ var _controller2 = require("../../../../grids/new/grid_core/selection/controller
 var _inferno = require("inferno");
 var _controller3 = require("../editing/controller");
 var _items_controller = require("../items_controller/items_controller");
+var _controller4 = require("../lifecycle/controller");
 var _options_controller = require("../options_controller/options_controller");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable
@@ -24,7 +25,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
   @typescript-eslint/explicit-module-boundary-types
 */
 class ContentView extends _view.View {
-  constructor(dataController, options, errorController, columnsController, selectionController, itemsController, editingController, contextMenuController, searchUIController, keyboardNavigationController) {
+  constructor(dataController, options, errorController, columnsController, selectionController, itemsController, editingController, contextMenuController, searchUIController, keyboardNavigationController, lifecycle) {
     super();
     this.dataController = dataController;
     this.options = options;
@@ -36,6 +37,7 @@ class ContentView extends _view.View {
     this.contextMenuController = contextMenuController;
     this.searchUIController = searchUIController;
     this.keyboardNavigationController = keyboardNavigationController;
+    this.lifecycle = lifecycle;
     this.isNoData = (0, _signalsCore.computed)(() => {
       const {
         isLoading,
@@ -120,7 +122,10 @@ class ContentView extends _view.View {
           }
         }
       },
-      showContextMenu: this.showContextMenu.bind(this)
+      showContextMenu: this.showContextMenu.bind(this),
+      onRendered: () => {
+        this.lifecycle.contentRendered.trigger();
+      }
     };
   }
   showContextMenu(e) {
@@ -131,4 +136,4 @@ class ContentView extends _view.View {
   }
 }
 exports.ContentView = ContentView;
-ContentView.dependencies = [_index.DataController, _options_controller.OptionsController, _error_controller.ErrorController, _columns_controller.ColumnsController, _controller2.SelectionController, _items_controller.ItemsController, _controller3.EditingController, _controller.BaseContextMenuController, _index3.SearchUIController, _index2.KeyboardNavigationController];
+ContentView.dependencies = [_index.DataController, _options_controller.OptionsController, _error_controller.ErrorController, _columns_controller.ColumnsController, _controller2.SelectionController, _items_controller.ItemsController, _controller3.EditingController, _controller.BaseContextMenuController, _index3.SearchUIController, _index2.KeyboardNavigationController, _controller4.LifeCycleController];

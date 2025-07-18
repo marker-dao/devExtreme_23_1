@@ -7,7 +7,6 @@ exports.stickyColumnsModule = void 0;
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _position = require("../../../../core/utils/position");
 var _size = require("../../../../core/utils/size");
-var _get_element_location_internal = require("../../../ui/scroll_view/utils/get_element_location_internal");
 var _const = require("../adaptivity/const");
 var _m_keyboard_navigation_utils = require("../keyboard_navigation/m_keyboard_navigation_utils");
 var _m_utils = _interopRequireDefault(require("../m_utils"));
@@ -544,34 +543,41 @@ const resizing = Base => class ResizingStickyColumnsExtender extends Base {
   }
 };
 const headersKeyboardNavigation = Base => class HeadersKeyboardNavigationStickyColumnsExtender extends Base {
+  getContainerBoundingRect($container) {
+    var _this$_columnHeadersV5;
+    // @ts-expect-error columnHeadersView's method
+    const hasStickyColumns = (_this$_columnHeadersV5 = this._columnHeadersView) === null || _this$_columnHeadersV5 === void 0 ? void 0 : _this$_columnHeadersV5.hasStickyColumns();
+    if (hasStickyColumns) {
+      const $cells = (0, _renderer.default)(this._columnHeadersView.getColumnElements());
+      return _dom.GridCoreStickyColumnsDom.getNonFixedAreaBoundingRect($cells, $container, this.addWidgetPrefix.bind(this));
+    }
+    return super.getContainerBoundingRect($container);
+  }
   // TODO Salimov: Most likely, we will need to remove the subscription
   // for headers after we implement sticky headers (pqKdLLL1).
   // Perhaps the headers will be rendered in the same table with data cells.
   // And this code will no longer be needed.
   tabKeyHandler(_ref) {
-    var _this$_columnHeadersV5, _this$getView;
+    var _this$_columnHeadersV6, _this$getView;
     let {
       originalEvent,
       shift
     } = _ref;
     // @ts-expect-error columnHeadersView's method
-    const hasStickyColumns = (_this$_columnHeadersV5 = this._columnHeadersView) === null || _this$_columnHeadersV5 === void 0 ? void 0 : _this$_columnHeadersV5.hasStickyColumns();
+    const hasStickyColumns = (_this$_columnHeadersV6 = this._columnHeadersView) === null || _this$_columnHeadersV6 === void 0 ? void 0 : _this$_columnHeadersV6.hasStickyColumns();
     const scrollable = (_this$getView = this.getView('rowsView')) === null || _this$getView === void 0 ? void 0 : _this$getView.getScrollable();
-    if (hasStickyColumns && scrollable) {
-      const $cell = (0, _renderer.default)(originalEvent.target).closest('td');
-      const $nextCell = _dom.GridCoreStickyColumnsDom.getNextHeaderCell($cell, shift ? 'previous' : 'next');
-      const isFixedCell = _dom.GridCoreStickyColumnsDom.isFixedCell($nextCell, this.addWidgetPrefix.bind(this));
-      if ($nextCell.length && !isFixedCell) {
-        const $cells = (0, _renderer.default)(this._columnHeadersView.getColumnElements());
-        const cellIsOutsideVisibleArea = _dom.GridCoreStickyColumnsDom.isOutsideVisibleArea($nextCell, $cells, (0, _renderer.default)(this._columnHeadersView.getContent()), this.addWidgetPrefix.bind(this));
-        if (cellIsOutsideVisibleArea) {
-          const scrollPadding = _dom.GridCoreStickyColumnsDom.getScrollPadding($cells, (0, _renderer.default)(scrollable.container()), this.addWidgetPrefix.bind(this));
-          const scrollPosition = (0, _get_element_location_internal.getElementLocationInternal)($nextCell[0], 'horizontal', (0, _renderer.default)(this._columnHeadersView.getContent())[0], scrollable.scrollOffset(), scrollPadding, this.addWidgetPrefix('table'));
-          scrollable.scrollTo({
-            x: scrollPosition
-          });
-        }
-      }
+    if (!hasStickyColumns || !scrollable) {
+      return;
+    }
+    const $cell = (0, _renderer.default)(originalEvent.target).closest('td');
+    const $nextCell = _dom.GridCoreStickyColumnsDom.getNextHeaderCell($cell, shift ? 'previous' : 'next');
+    const isFixedCell = _dom.GridCoreStickyColumnsDom.isFixedCell($nextCell, this.addWidgetPrefix.bind(this));
+    if (isFixedCell) {
+      return;
+    }
+    const nextCellIsOutsideVisibleArea = $nextCell.length && this.isOutsideVisibleArea($nextCell, (0, _renderer.default)(this._columnHeadersView.getContent()));
+    if (nextCellIsOutsideVisibleArea) {
+      this.scrollToColumn($nextCell);
     }
   }
 };

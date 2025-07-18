@@ -8,8 +8,8 @@ export const keyboardNavigationScrollableA11yExtender = Base => class Scrollable
     this.translateFocusIfNeed(event, $target);
     super.focusinHandler(event);
   }
-  focusOutHandler() {
-    super.focusOutHandler();
+  focusOutHandler(e) {
+    super.focusOutHandler(e);
     this.makeScrollableFocusableIfNeed();
   }
   translateFocusIfNeed(event, $target) {

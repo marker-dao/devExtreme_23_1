@@ -38,6 +38,8 @@ const ACTIVE_CLASS = 'dx-state-active';
 const FILTER_BUILDER_MENU_CUSTOM_OPERATION_CLASS = `${FILTER_BUILDER_CLASS}-menu-custom-operation`;
 const SOURCE = 'filterBuilder';
 const DISABLED_STATE_CLASS = 'dx-state-disabled';
+const OVERLAY_CONTENT_CLASS = 'dx-overlay-content';
+const TREEVIEW_NODE_CONTAINER = 'dx-treeview-node-container';
 const TAB_KEY = 'tab';
 const ENTER_KEY = 'enter';
 const ESCAPE_KEY = 'escape';
@@ -206,7 +208,7 @@ class FilterBuilder extends Widget {
     this.$element().addClass(FILTER_BUILDER_CLASS);
     // @ts-expect-error
     super._initMarkup();
-    this._addAriaAttributes(this.$element(), messageLocalization.format('dxFilterBuilder-filterAriaRootElement'), 'tree');
+    this._addAriaAttributes(this.$element(), messageLocalization.format('dxFilterBuilder-filterAriaRootElement'), 'group');
     this._createGroupElementByCriteria(this._model).appendTo(this.$element());
   }
   _addAriaAttributes($element, ariaLabel, role, hasPopup, hasExpanded, ariaLevel) {
@@ -234,7 +236,7 @@ class FilterBuilder extends Widget {
     $element.attr(attributes);
   }
   _createConditionElement(condition, parent, groupLevel) {
-    return $('<div>').addClass(FILTER_BUILDER_GROUP_CLASS).append(this._createConditionItem(condition, parent, groupLevel));
+    return $('<div>').addClass(FILTER_BUILDER_GROUP_CLASS).append(this._createConditionItem(condition, parent, groupLevel)).attr('role', 'group');
   }
   _createGroupElementByCriteria(criteria, parent) {
     let groupLevel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
@@ -263,8 +265,12 @@ class FilterBuilder extends Widget {
         this._updateFilter();
       }, 'group').appendTo($groupItem);
     }
-    this._addAriaAttributes($groupItem, messageLocalization.format('dxFilterBuilder-filterAriaGroupItem'), 'treeitem', null, null, `${groupLevel + 1}`);
-    this._addAriaAttributes($groupContent, '', 'group');
+    let groupItemLevel = groupLevel;
+    if (groupLevel === 0) {
+      this._addAriaAttributes($group, '', 'tree');
+      groupItemLevel += 1;
+    }
+    this._addAriaAttributes($groupItem, messageLocalization.format('dxFilterBuilder-filterAriaGroupItem'), 'treeitem', null, null, groupItemLevel);
     $groupItem.attr('aria-owns', `${$guid}`);
     this._createGroupOperationButton(criteria).appendTo($groupItem);
     this._createAddButton(() => {
@@ -329,7 +335,10 @@ class FilterBuilder extends Widget {
     };
     const position = rtlEnabled ? 'right' : 'left';
     const $button = this._createButton(options.caption);
+    const $guid = new Guid();
+    $button.attr('aria-controls', `${$guid}`);
     extend(options.menu, {
+      id: $guid,
       focusStateEnabled: true,
       selectionMode: 'single',
       onItemClick: menuOnItemClickWrapper(options.menu.onItemClick),
@@ -352,9 +361,11 @@ class FilterBuilder extends Widget {
     });
     options.popup = {
       onShown(info) {
-        const treeViewElement = $(info.component.content()).find('.dx-treeview');
-        // @ts-expect-error dxElementWrapper doesn't contain widget creation methods types
-        const treeView = treeViewElement.dxTreeView('instance');
+        const treeViewContentElement = $(info.component.content());
+        const treeViewElement = treeViewContentElement.find('.dx-treeview');
+        if (treeViewElement.length) {
+          that._applyAccessibilityAttributes(treeViewElement);
+        }
         eventsEngine.on(treeViewElement, 'keyup keydown', e => {
           const keyName = normalizeKeyName(e);
           if (e.type === 'keydown' && keyName === TAB_KEY || e.type === 'keyup' && (keyName === ESCAPE_KEY || keyName === ENTER_KEY)) {
@@ -363,6 +374,8 @@ class FilterBuilder extends Widget {
             eventsEngine.trigger(options.menu.position.of, 'focus');
           }
         });
+        // @ts-expect-error dxElementWrapper doesn't contain widget creation methods types
+        const treeView = treeViewElement.dxTreeView('instance');
         treeView.focus();
         treeView.option('focusedElement', null);
       }
@@ -709,6 +722,7 @@ class FilterBuilder extends Widget {
         const $menuContainer = $('<div>').appendTo(contentElement);
         // @ts-expect-error
         that._createComponent($menuContainer, TreeView, options.menu);
+        $menuContainer.attr('id', `${options.menu.id}`);
         // T852701
         this.repaint();
       },
@@ -737,6 +751,13 @@ class FilterBuilder extends Widget {
         handler(e);
       }
     });
+  }
+  _applyAccessibilityAttributes($element) {
+    var _treeViewPopup$find;
+    const treeViewPopup = $element.closest(`.${OVERLAY_CONTENT_CLASS}`);
+    treeViewPopup === null || treeViewPopup === void 0 || treeViewPopup.removeAttr('role');
+    const treeViewNode = treeViewPopup === null || treeViewPopup === void 0 || (_treeViewPopup$find = treeViewPopup.find) === null || _treeViewPopup$find === void 0 ? void 0 : _treeViewPopup$find.call(treeViewPopup, `.${TREEVIEW_NODE_CONTAINER}`);
+    treeViewNode === null || treeViewNode === void 0 || treeViewNode.attr('role', 'presentation');
   }
 }
 registerComponent('dxFilterBuilder', FilterBuilder);

@@ -7,24 +7,27 @@ exports.WidgetMock = void 0;
 class WidgetMock {
   constructor(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  widget, data, columns) {
+  widget, data, columns, headerFilter, filterSync) {
     this.widget = widget;
     this.data = data;
     this.columns = columns;
+    this.headerFilter = headerFilter;
+    this.filterSync = filterSync;
     this.NAME = 'dxDataGrid';
     this._controllers = {
       data: this.data,
       columns: this.columns,
-      filterSync: {
-        getCustomFilterOperations() {
-          return [];
-        }
-      }
+      headerFilter: this.headerFilter,
+      filterSync: this.filterSync
     };
   }
   option() {
     // @ts-expect-error
     return this.widget.option(...arguments);
+  }
+  columnOption() {
+    // @ts-expect-error
+    return this.widget.columnOption(...arguments);
   }
   _createActionByOption() {
     // @ts-expect-error

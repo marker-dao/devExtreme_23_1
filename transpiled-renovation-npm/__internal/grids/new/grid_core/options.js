@@ -11,8 +11,10 @@ var columnsController = _interopRequireWildcard(require("./columns_controller/in
 var contentView = _interopRequireWildcard(require("./content_view/index"));
 var dataController = _interopRequireWildcard(require("./data_controller/index"));
 var editing = _interopRequireWildcard(require("./editing/index"));
+var filterSync = _interopRequireWildcard(require("./filtering/filter_sync/index"));
 var headerFilter = _interopRequireWildcard(require("./filtering/header_filter/index"));
-var _index7 = require("./filtering/index");
+var _index8 = _interopRequireWildcard(require("./filtering/index"));
+var filterController = _index8;
 var keyboardNavigation = _interopRequireWildcard(require("./keyboard_navigation/index"));
 var pager = _interopRequireWildcard(require("./pager/index"));
 var searchPanel = _interopRequireWildcard(require("./search/index"));
@@ -23,9 +25,7 @@ function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return 
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const defaultOptions = exports.defaultOptions = _extends({}, dataController.defaultOptions, sortingController.defaultOptions, columnsController.defaultOptions, pager.defaultOptions, _index7.filterPanel.defaultOptions, headerFilter.defaultOptions, contentView.defaultOptions, searchPanel.defaultOptions, columnChooser.defaultOptions, selection.defaultOptions, toolbar.defaultOptions, editing.defaultOptions, keyboardNavigation.defaultOptions, {
-  searchText: ''
-});
+const defaultOptions = exports.defaultOptions = _extends({}, dataController.defaultOptions, sortingController.defaultOptions, columnsController.defaultOptions, pager.defaultOptions, _index8.filterPanel.defaultOptions, filterController.defaultOptions, headerFilter.defaultOptions, filterSync.defaultOptions, contentView.defaultOptions, searchPanel.defaultOptions, columnChooser.defaultOptions, selection.defaultOptions, toolbar.defaultOptions, editing.defaultOptions, keyboardNavigation.defaultOptions);
 // TODO: separate by modules
 // TODO: add typing for defaultOptionRules
 const defaultOptionsRules = exports.defaultOptionsRules = [{

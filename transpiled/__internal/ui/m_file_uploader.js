@@ -59,6 +59,7 @@ const FILEUPLOADER_CHUNK_META_DATA_NAME = 'chunkMetadata';
 const DRAG_EVENT_DELTA = 1;
 const DIALOG_TRIGGER_EVENT_NAMESPACE = 'dxFileUploaderDialogTrigger';
 const keyUpEventName = 'keyup';
+const nativeClickEvent = 'click';
 const ENTER_KEY = 'enter';
 const SPACE_KEY = 'space';
 let renderFileUploaderInput = () => (0, _renderer.default)('<input>').attr('type', 'file');
@@ -141,7 +142,6 @@ class FileUploader extends _editor.default {
     });
   }
   _defaultOptionsRules() {
-    // @ts-expect-error
     return super._defaultOptionsRules().concat([{
       device: () => _devices.default.real().deviceType === 'desktop' && !_devices.default.isSimulator(),
       options: {
@@ -159,17 +159,15 @@ class FileUploader extends _editor.default {
     }, {
       device: () => _devices.default.real().deviceType !== 'desktop',
       options: {
-        useDragOver: false
+        // @ts-expect-error
+        useDragOver: false,
+        nativeDropSupported: false,
+        labelText: ''
       }
     }, {
       device: () => !isFormDataSupported(),
       options: {
         uploadMode: 'useForm'
-      }
-    }, {
-      device: () => _devices.default.real().deviceType !== 'desktop',
-      options: {
-        nativeDropSupported: false
       }
     }, {
       // @ts-expect-error
@@ -677,7 +675,7 @@ class FileUploader extends _editor.default {
     }
     this._detachSelectFileDialogHandlers(target);
     const $target = (0, _renderer.default)(target);
-    _events_engine.default.on($target, (0, _index.addNamespace)(_click.name, DIALOG_TRIGGER_EVENT_NAMESPACE), () => {
+    _events_engine.default.on($target, (0, _index.addNamespace)(nativeClickEvent, DIALOG_TRIGGER_EVENT_NAMESPACE), () => {
       this._selectFileDialogClickHandler();
     });
     _events_engine.default.on($target, (0, _index.addNamespace)(keyUpEventName, DIALOG_TRIGGER_EVENT_NAMESPACE), e => {

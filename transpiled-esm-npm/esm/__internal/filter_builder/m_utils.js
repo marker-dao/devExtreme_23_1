@@ -6,7 +6,7 @@ import { compileGetter } from '../../core/utils/data';
 import { Deferred, when } from '../../core/utils/deferred';
 import { extend } from '../../core/utils/extend';
 import { captionize } from '../../core/utils/inflector';
-import { isDefined, isFunction } from '../../core/utils/type';
+import { isBoolean, isDefined, isFunction } from '../../core/utils/type';
 import formatHelper from '../../format_helper';
 import filterUtils from '../../ui/shared/filtering';
 import errors from '../../ui/widget/ui.errors';
@@ -38,6 +38,15 @@ const FILTER_BUILDER_ITEM_TEXT_SEPARATOR_CLASS = `${FILTER_BUILDER_ITEM_TEXT_CLA
 const FILTER_BUILDER_ITEM_TEXT_SEPARATOR_EMPTY_CLASS = `${FILTER_BUILDER_ITEM_TEXT_SEPARATOR_CLASS}-empty`;
 function getFormattedValueText(field, value) {
   const fieldFormat = field.format || DEFAULT_FORMAT[field.dataType];
+  if (isBoolean(value)) {
+    const trueText = field.trueText || messageLocalization.format('dxDataGrid-trueText');
+    const falseText = field.falseText || messageLocalization.format('dxDataGrid-falseText');
+    return value ? trueText : falseText;
+  }
+  if (field.dataType === 'date' || field.dataType === 'datetime') {
+    // value can be string or number, we need to convert it to Date object
+    return formatHelper.format(new Date(value), fieldFormat);
+  }
   return formatHelper.format(value, fieldFormat);
 }
 function isNegationGroup(group) {
@@ -460,14 +469,7 @@ export function getCurrentLookupValueText(field, value, handler) {
   }
 }
 function getPrimitiveValueText(field, value, customOperation, target, options) {
-  let valueText;
-  if (value === true) {
-    valueText = field.trueText || messageLocalization.format('dxDataGrid-trueText');
-  } else if (value === false) {
-    valueText = field.falseText || messageLocalization.format('dxDataGrid-falseText');
-  } else {
-    valueText = getFormattedValueText(field, value);
-  }
+  let valueText = getFormattedValueText(field, value);
   if (field.customizeText) {
     valueText = field.customizeText.call(field, {
       value,
@@ -658,6 +660,7 @@ export function removeFieldConditionsFromFilter(filter, dataField) {
 }
 function syncConditionIntoGroup(filter, addedFilter, canPush) {
   const result = [];
+  const isNegation = isNegationGroup(filter);
   filter.forEach(item => {
     if (isCondition(item)) {
       if (isMatchedCondition(item, addedFilter[0])) {
@@ -680,6 +683,9 @@ function syncConditionIntoGroup(filter, addedFilter, canPush) {
   if (canPush) {
     result.push(AND_GROUP_OPERATION);
     result.push(addedFilter);
+  }
+  if (isNegation) {
+    return ['!', result.length === 1 ? result[0] : result];
   }
   return result.length === 1 ? result[0] : result;
 }

@@ -32,7 +32,14 @@ const isKeysEqual = function (oldKeys, newKeys) {
   return true;
 };
 exports.isKeysEqual = isKeysEqual;
-const findChanges = function (oldItems, newItems, getKey, isItemEquals) {
+const findChanges = function (_ref) {
+  let {
+    oldItems,
+    newItems,
+    getKey,
+    isItemEquals,
+    detectReorders = false
+  } = _ref;
   const oldIndexByKey = {};
   const newIndexByKey = {};
   let addedCount = 0;
@@ -85,9 +92,30 @@ const findChanges = function (oldItems, newItems, getKey, isItemEquals) {
           });
         }
       } else {
-        return;
+        if (!detectReorders) {
+          return;
+        }
+        result.push({
+          type: 'remove',
+          key: getKey(oldItem),
+          index: oldIndex,
+          oldItem
+        });
+        result.push({
+          type: 'insert',
+          data: newItem,
+          index
+        });
+        addedCount++;
+        removeCount++;
       }
     }
+  }
+  if (detectReorders) {
+    const removes = result.filter(r => r.type === 'remove').sort((a, b) => b.index - a.index);
+    const inserts = result.filter(i => i.type === 'insert').sort((a, b) => a.index - b.index);
+    const updates = result.filter(u => u.type === 'update');
+    return [...removes, ...inserts, ...updates];
   }
   return result;
 };

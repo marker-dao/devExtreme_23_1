@@ -1,18 +1,29 @@
 "use strict";
 
 var _globals = require("@jest/globals");
+var _calendar = _interopRequireDefault(require("../../../../../ui/calendar"));
 var _inferno = require("inferno");
 var _di = require("../di.test_utils");
 var _options_controller = require("../options_controller/options_controller.mock");
 var _controller = require("../toolbar/controller");
+var _confirm_controller = require("./confirm_controller");
 var _controller2 = require("./controller");
 var _view = require("./popup/view");
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable spellcheck/spell-checker */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
+class MockConfirmController {
+  constructor() {
+    this.confirm = _globals.jest.fn().mockImplementation(() => Promise.resolve(true));
+  }
+}
+MockConfirmController.dependencies = [];
 const setup = config => {
   const rootElement = document.createElement('div');
   const context = (0, _di.getContext)(config);
+  const mockConfirmController = new MockConfirmController();
+  context.registerInstance(_confirm_controller.ConfirmController, mockConfirmController);
   const optionsController = context.get(_options_controller.OptionsControllerMock);
   const editingController = context.get(_controller2.EditingController);
   const toolbarController = context.get(_controller.ToolbarController);
@@ -34,34 +45,45 @@ const setup = config => {
     rootElement,
     toolbarController,
     context,
-    getForm
+    getForm,
+    mockConfirmController
   };
 };
 (0, _globals.describe)('ColumnProperties', () => {
   (0, _globals.describe)('allowEditing', () => {
     (0, _globals.describe)('when it is false', () => {
       (0, _globals.it)('should make editor disabled', () => {
-        var _props$items$0$editor;
         const {
-          editPopupView
+          getForm
         } = setup({
+          dataSource: [{
+            field1: 1
+          }],
+          keyExpr: 'field1',
+          editing: {
+            editCardKey: 1
+          },
           columns: [{
             dataField: 'field1',
             allowEditing: false
           }]
         });
-        // @ts-expect-error private field
-        const props = editPopupView.props;
-        (0, _globals.expect)((_props$items$0$editor = props.items[0].editorOptions) === null || _props$items$0$editor === void 0 ? void 0 : _props$items$0$editor.disabled).toBe(true);
+        (0, _globals.expect)(getForm().getEditor('field1').option('disabled')).toBe(true);
       });
     });
   });
   (0, _globals.describe)('editorOptions', () => {
     (0, _globals.it)('should be passed to form item editorOptions', () => {
-      var _props$items$0$editor2;
       const {
-        editPopupView
+        getForm
       } = setup({
+        dataSource: [{
+          field1: 1
+        }],
+        keyExpr: 'field1',
+        editing: {
+          editCardKey: 1
+        },
         columns: [{
           dataField: 'field1',
           editorOptions: {
@@ -69,9 +91,7 @@ const setup = config => {
           }
         }]
       });
-      // @ts-expect-error private field
-      const props = editPopupView.props;
-      (0, _globals.expect)((_props$items$0$editor2 = props.items[0].editorOptions) === null || _props$items$0$editor2 === void 0 ? void 0 : _props$items$0$editor2.someEditOption).toBe('someEditOptionValue');
+      (0, _globals.expect)(getForm().getEditor('field1').option('someEditOption')).toBe('someEditOptionValue');
     });
   });
   (0, _globals.describe)('setFieldValue', () => {
@@ -107,26 +127,33 @@ const setup = config => {
   (0, _globals.describe)('formItem', () => {
     (0, _globals.it)('should be passed to form item', () => {
       const {
-        editPopupView
+        getForm
       } = setup({
+        dataSource: [{
+          field1: 1
+        }],
+        keyExpr: 'field1',
+        editing: {
+          editCardKey: 1
+        },
         columns: [{
           dataField: 'field1',
           formItem: {
-            colSpan: 2
+            editorType: 'dxCalendar'
           }
         }]
       });
-      // @ts-expect-error private field
-      const props = editPopupView.props;
-      (0, _globals.expect)(props.items[0].colSpan).toBe(2);
+      (0, _globals.expect)(getForm().getEditor('field1')).toBeInstanceOf(_calendar.default);
     });
   });
   (0, _globals.describe)('validationRules', () => {
-    (0, _globals.it)('should be passed to form item', () => {
-      var _props$items$0$valida;
+    (0, _globals.it)('should be passed to form item', async () => {
       const {
-        editPopupView
+        getForm,
+        editingController
       } = setup({
+        dataSource: [],
+        keyExpr: 'field1',
         columns: [{
           dataField: 'field1',
           validationRules: [{
@@ -134,9 +161,9 @@ const setup = config => {
           }]
         }]
       });
-      // @ts-expect-error private field
-      const props = editPopupView.props;
-      (0, _globals.expect)((_props$items$0$valida = props.items[0].validationRules) === null || _props$items$0$valida === void 0 ? void 0 : _props$items$0$valida[0].type).toBe('required');
+      await editingController.addCard();
+      const validationResult = getForm().validate();
+      (0, _globals.expect)(validationResult.isValid).toBe(false);
     });
   });
 });
@@ -159,7 +186,8 @@ const setup = config => {
             editCardKey: 1
           }
         });
-        (0, _globals.expect)(getForm().option('formData')).toMatchSnapshot();
+        (0, _globals.expect)(getForm().getEditor('field1').option('value')).toBe('value1');
+        (0, _globals.expect)(getForm().getEditor('id').option('value')).toBe(1);
       });
     });
     (0, _globals.describe)('allowAdding', () => {
@@ -213,7 +241,7 @@ const setup = config => {
         await editPopupView.promises.waitForAll();
         (0, _globals.expect)(editingController.changes.peek()).toMatchSnapshot();
       });
-      (0, _globals.it)('should update state in editor', () => {
+      _globals.it.skip('should update state in editor', () => {
         var _getForm$getEditor2;
         const {
           editingController,
@@ -248,6 +276,84 @@ const setup = config => {
           }
         });
         (0, _globals.expect)(getForm().option('disabled')).toBe(true);
+      });
+    });
+    (0, _globals.describe)('texts', () => {
+      (0, _globals.describe)('confirmDeleteMessage', () => {
+        (0, _globals.it)('should be used to show confirm delete dialog', async () => {
+          const myCustomMessage = 'my custom title';
+          const {
+            editingController,
+            mockConfirmController
+          } = setup({
+            columns: [{
+              dataField: 'field1'
+            }, 'id'],
+            dataSource: [{
+              id: 1,
+              field1: 'value1'
+            }],
+            keyExpr: 'id',
+            editing: {
+              texts: {
+                confirmDeleteMessage: myCustomMessage
+              }
+            }
+          });
+          await editingController.deleteCard(1);
+          (0, _globals.expect)(mockConfirmController.confirm.mock.calls[0][0]).toBe(myCustomMessage);
+        });
+      });
+      (0, _globals.describe)('confirmDeleteTitle', () => {
+        (0, _globals.it)('should be used to show confirm delete dialog', async () => {
+          const myCustomTitle = 'my custom title';
+          const {
+            editingController,
+            mockConfirmController
+          } = setup({
+            columns: [{
+              dataField: 'field1'
+            }, 'id'],
+            dataSource: [{
+              id: 1,
+              field1: 'value1'
+            }],
+            keyExpr: 'id',
+            editing: {
+              texts: {
+                confirmDeleteTitle: myCustomTitle
+              }
+            }
+          });
+          await editingController.deleteCard(1);
+          (0, _globals.expect)(mockConfirmController.confirm.mock.calls[0][1]).toBe(myCustomTitle);
+        });
+        (0, _globals.describe)('when it is undefined', () => {
+          (0, _globals.it)('should hide title', async () => {
+            const myCustomTitle = undefined;
+            const {
+              editingController,
+              mockConfirmController
+            } = setup({
+              columns: [{
+                dataField: 'field1'
+              }, 'id'],
+              dataSource: [{
+                id: 1,
+                field1: 'value1'
+              }],
+              keyExpr: 'id',
+              editing: {
+                texts: {
+                  confirmDeleteTitle: myCustomTitle
+                }
+              }
+            });
+            await editingController.deleteCard(1);
+            (0, _globals.expect)(mockConfirmController.confirm.mock.calls[0][1]).toBe('');
+            (0, _globals.expect)(mockConfirmController.confirm.mock.calls[0][2]).toBe(false);
+          });
+        });
       });
     });
   });

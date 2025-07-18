@@ -9,33 +9,47 @@ var _columns_controller = require("../../../../grids/new/grid_core/columns_contr
 var _view = require("../../../../grids/new/grid_core/core/view");
 var _index = require("../../../../grids/new/grid_core/keyboard_navigation/index");
 var _index2 = require("../../grid_core/column_chooser/index");
+var _filter_controller = require("../../grid_core/filtering/filter_controller");
 var _view_controller = require("../../grid_core/filtering/header_filter/view_controller");
-var _sorting_controller = require("../../grid_core/sorting_controller/sorting_controller");
-var _index3 = require("../context_menu/index");
+var _index3 = require("../../grid_core/sorting_controller/index");
+var _index4 = require("../context_menu/index");
 var _options_controller = require("../options_controller");
+var _controller = require("./controller");
 var _header_panel = require("./header_panel");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable spellcheck/spell-checker */
+/* eslint-disable spellcheck/spell-checker */
+
 class HeaderPanelView extends _view.View {
-  constructor(contextMenuController, sortingController, columnsController, options, headerFilterViewController, keyboardNavigationController, columnChooserView) {
+  constructor(headerPanelController, contextMenuController, sortingController, columnsController, options, headerFilterViewController, keyboardNavigationController, columnChooserController, filterController, columnChooserView) {
     super();
+    this.headerPanelController = headerPanelController;
     this.contextMenuController = contextMenuController;
     this.sortingController = sortingController;
     this.columnsController = columnsController;
     this.options = options;
     this.headerFilterViewController = headerFilterViewController;
     this.keyboardNavigationController = keyboardNavigationController;
+    this.columnChooserController = columnChooserController;
+    this.filterController = filterController;
     this.columnChooserView = columnChooserView;
     this.component = _header_panel.HeaderPanel;
     this.navigationStrategy = new _index.NavigationStrategyHorizontalList();
+    this.showDropzone = (0, _signalsCore.computed)(() => {
+      var _this$columnChooserCo;
+      const allowReordering = this.columnsController.allowColumnReordering.value;
+      const column = (_this$columnChooserCo = this.columnChooserController.draggingItem.value) === null || _this$columnChooserCo === void 0 ? void 0 : _this$columnChooserCo.column;
+      if (!column) {
+        return false;
+      }
+      const allColumnsHidden = this.columnsController.visibleColumns.value.length === 0;
+      const canReorder = allowReordering && column.allowReordering;
+      return !canReorder || allColumnsHidden;
+    });
   }
   getProps() {
     return (0, _signalsCore.computed)(() => ({
       visibleColumns: this.columnsController.visibleColumns.value,
       kbnEnabled: this.keyboardNavigationController.enabled.value,
       navigationStrategy: this.navigationStrategy,
-      onColumnMove: this.onColumnMove.bind(this),
-      allowColumnReordering: this.columnsController.allowColumnReordering.value,
-      columnChooserDragModeOpened: this.columnChooserView.dragModeOpened.value,
       showSortIndexes: this.sortingController.showSortIndexes.value,
       onColumnSort: this.onColumnSort.bind(this),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,38 +59,18 @@ class HeaderPanelView extends _view.View {
       visible: this.options.oneWay('headerPanel.visible').value,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       draggingOptions: this.options.oneWay('headerPanel.dragging').value,
-      showContextMenu: this.showContextMenu.bind(this)
+      sortableConfig: {
+        onColumnMove: this.headerPanelController.onColumnMove,
+        showDropzone: this.showDropzone.value,
+        isColumnDraggable: this.headerPanelController.isColumnDraggable,
+        onPlaceholderPrepared: this.headerPanelController.onPlaceholderPrepared
+      },
+      showContextMenu: this.showContextMenu.bind(this),
+      openColumnChooser: () => {
+        this.columnChooserView.show();
+      },
+      filterSyncValue: this.filterController.filterSyncValue.value
     }));
-  }
-  onColumnMove(column, toIndex, draggingColumnData) {
-    const {
-      columnAfter
-    } = draggingColumnData;
-    const needPreserveOrder = !column.allowReordering;
-    if (needPreserveOrder) {
-      this.columnsController.columnOption(column, 'visible', true);
-      return;
-    }
-    if (columnAfter === undefined) {
-      const columnsCount = this.columnsController.columns.peek().length;
-      this.columnsController.columnOption(column, 'visible', true);
-      this.columnsController.columnOption(column, 'visibleIndex', columnsCount);
-      return;
-    }
-    this.columnsController.updateColumns(columns => {
-      const newColumns = [...columns];
-      newColumns.forEach((oldColumn, index) => {
-        const updatedColumn = _extends({}, oldColumn);
-        if (oldColumn.name === column.name) {
-          updatedColumn.visibleIndex = columnAfter.visibleIndex;
-          updatedColumn.visible = true;
-        } else if (oldColumn.visibleIndex >= columnAfter.visibleIndex) {
-          updatedColumn.visibleIndex = oldColumn.visibleIndex + 1;
-        }
-        newColumns[index] = updatedColumn;
-      });
-      return newColumns;
-    });
   }
   onColumnSort(column, event) {
     const mode = this.sortingController.mode.peek();
@@ -107,4 +101,4 @@ class HeaderPanelView extends _view.View {
   }
 }
 exports.HeaderPanelView = HeaderPanelView;
-HeaderPanelView.dependencies = [_index3.ContextMenuController, _sorting_controller.SortingController, _columns_controller.ColumnsController, _options_controller.OptionsController, _view_controller.HeaderFilterViewController, _index.KeyboardNavigationController, _index2.ColumnChooserView];
+HeaderPanelView.dependencies = [_controller.HeaderPanelController, _index4.ContextMenuController, _index3.SortingController, _columns_controller.ColumnsController, _options_controller.OptionsController, _view_controller.HeaderFilterViewController, _index.KeyboardNavigationController, _index2.ColumnChooserController, _filter_controller.FilterController, _index2.ColumnChooserView];

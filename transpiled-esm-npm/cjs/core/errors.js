@@ -99,6 +99,9 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
     * @name ErrorsCore.E0121
     */
 /**
+    * @name ErrorsCore.E0122
+    */
+/**
     * @name ErrorsCore.W0000
     */
 /**
@@ -169,6 +172,9 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
     */
 /**
     * @name ErrorsCore.W0023
+    */
+/**
+    * @name ErrorsCore.W0024
     */
 var _default = exports.default = _m_errors.default;
 module.exports = exports.default;

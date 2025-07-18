@@ -17,7 +17,7 @@ var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _m_context_menu = _interopRequireDefault(require("../../ui/context_menu/m_context_menu"));
-var _m_scroll_view = _interopRequireDefault(require("../../ui/scroll_view/m_scroll_view"));
+var _scroll_view = _interopRequireDefault(require("../../ui/scroll_view/scroll_view"));
 var _get_scroll_top_max = require("../../ui/scroll_view/utils/get_scroll_top_max");
 var _layout = require("../splitter/utils/layout");
 var _messagebubble = _interopRequireWildcard(require("./messagebubble"));
@@ -177,7 +177,7 @@ class MessageList extends _widget.default {
     const editText = _message.default.format('dxChat-editingEditMessage');
     const deleteText = _message.default.format('dxChat-editingDeleteMessage');
     const buttons = [];
-    if (allowUpdating(message)) {
+    if (allowUpdating(message) && message.type !== 'image') {
       buttons.push({
         icon: 'edit',
         text: editText,
@@ -185,7 +185,7 @@ class MessageList extends _widget.default {
         onClick: e => {
           const onMessageEditStarted = onMessageEditingStart === null || onMessageEditingStart === void 0 ? void 0 : onMessageEditingStart({
             event: e.event,
-            message
+            message: message
           });
           const onContextMenuHidden = () => {
             this._contextMenu.off('hidden', onContextMenuHidden);
@@ -264,7 +264,7 @@ class MessageList extends _widget.default {
   }
   _renderScrollView() {
     const $scrollable = (0, _renderer.default)('<div>').appendTo(this.$element());
-    this._scrollView = this._createComponent($scrollable, _m_scroll_view.default, {
+    this._scrollView = this._createComponent($scrollable, _scroll_view.default, {
       useKeyboard: false,
       bounceEnabled: false,
       reachBottomText: '',
@@ -422,7 +422,6 @@ class MessageList extends _widget.default {
     this._processScrollDownContent(this._isCurrentUser(author === null || author === void 0 ? void 0 : author.id));
   }
   _getMessageData(message) {
-    // @ts-expect-error
     return (0, _renderer.default)(message).data(_messagebubble.MESSAGE_DATA_KEY);
   }
   _findMessageElementByKey(key) {
@@ -448,9 +447,12 @@ class MessageList extends _widget.default {
       const $targetMessage = this._findMessageElementByKey(key);
       const bubble = _messagebubble.default.getInstance($targetMessage);
       bubble.option(data);
-      const isEdited = data.isEdited === true && !data.isDeleted;
-      const group = this._getMessageGroupByBubbleElement($targetMessage);
-      group._updateMessageEditedText($targetMessage, isEdited);
+      if (data.type !== 'image') {
+        const $currentMessageGroup = $targetMessage.closest(`.${_messagegroup.CHAT_MESSAGEGROUP_CLASS}`);
+        const group = _messagegroup.default.getInstance($currentMessageGroup);
+        const isEdited = data.isEdited === true && !data.isDeleted;
+        group._updateMessageEditedText($targetMessage, isEdited);
+      }
     }
   }
   _removeMessageByKey(key) {

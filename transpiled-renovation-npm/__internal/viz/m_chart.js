@@ -442,15 +442,6 @@ const dxChart = _m_advanced_chart.AdvancedChart.inherit({
   _correctAxes() {
     this._correctValueAxes(true);
   },
-  _setDeprecatedOptions() {
-    this.callBase();
-    (0, _extend2.extend)(this._deprecatedOptions, {
-      'argumentAxis.aggregateByCategory': {
-        since: '23.1',
-        message: 'Use the aggregation.enabled property'
-      }
-    });
-  },
   _getExtraOptions: _common.noop,
   _createPanes() {
     let panes = this.option('panes');

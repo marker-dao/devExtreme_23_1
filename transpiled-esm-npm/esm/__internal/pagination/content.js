@@ -51,16 +51,35 @@ export class PaginationContent extends InfernoComponent {
       rootElementRef.current = this.widgetRootElementRef.current;
     }
   }
+  getWidgetRootElement() {
+    var _this$widgetRootEleme;
+    return (_this$widgetRootEleme = this.widgetRootElementRef) === null || _this$widgetRootEleme === void 0 ? void 0 : _this$widgetRootEleme.current;
+  }
   createFakeInstance() {
     return {
       option: () => false,
-      element: () => {
-        var _this$widgetRootEleme;
-        return (_this$widgetRootEleme = this.widgetRootElementRef) === null || _this$widgetRootEleme === void 0 ? void 0 : _this$widgetRootEleme.current;
+      element: () => this.getWidgetRootElement(),
+      // NOTE: Fix of the T1285596
+      //
+      // 1) For Pagination used inside the DataGrid
+      // In this case the instance element should be
+      // DataGrid for correct keyboard shortcuts handling.
+      //
+      // 2) For standalone Pagination pass the instance mock
+      // In this case the element should be Pagination root node
+      //
+      // See the ui/shared/accessibility.js "selectView" util function for more details.
+      component: this.props._getParentComponentRootNode ? {
+        element: () => {
+          var _this$props$_getParen, _this$props;
+          return (_this$props$_getParen = (_this$props = this.props)._getParentComponentRootNode) === null || _this$props$_getParen === void 0 ? void 0 : _this$props$_getParen.call(_this$props);
+        }
+      } : {
+        element: () => this.getWidgetRootElement()
       },
       _createActionByOption: () => e => {
-        var _this$props$onKeyDown, _this$props;
-        (_this$props$onKeyDown = (_this$props = this.props).onKeyDown) === null || _this$props$onKeyDown === void 0 || _this$props$onKeyDown.call(_this$props, e);
+        var _this$props$onKeyDown, _this$props2;
+        (_this$props$onKeyDown = (_this$props2 = this.props).onKeyDown) === null || _this$props$onKeyDown === void 0 || _this$props$onKeyDown.call(_this$props2, e);
       }
     };
   }
@@ -68,6 +87,7 @@ export class PaginationContent extends InfernoComponent {
     return {
       registerKeyboardAction: (element, action) => {
         const fakePaginationInstance = this.createFakeInstance();
+        // TODO Pager: Get rid of this utils usage
         return registerKeyboardAction('pager', fakePaginationInstance, element, undefined, action);
       }
     };
@@ -185,6 +205,7 @@ export class PaginationContent extends InfernoComponent {
       children: [showPageSizeSelector && createComponentVNode(2, PageSizeSelector, {
         "rootElementRef": allowedPageSizesRef,
         "isLargeDisplayMode": this.getIsLargeDisplayMode(),
+        "itemCount": itemCount,
         "pageSize": pageSize,
         "pageSizeChangedInternal": pageSizeChangedInternal,
         "allowedPageSizes": allowedPageSizes

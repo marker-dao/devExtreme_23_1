@@ -1,4 +1,5 @@
-import { createVNode, createFragment, createComponentVNode } from "inferno";
+import _extends from "@babel/runtime/helpers/esm/extends";
+import { createVNode, createFragment, createComponentVNode, normalizeProps } from "inferno";
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Component, createRef } from 'inferno';
 import { Caption } from './caption';
@@ -23,13 +24,13 @@ export class Field extends Component {
         "field": this.props.field
       }), 2);
     }
-    return createFragment([createComponentVNode(2, Caption, {
+    return createFragment([normalizeProps(createComponentVNode(2, Caption, _extends({
       "field": this.props.field,
       "template": this.props.captionTemplate
-    }), createComponentVNode(2, ValueText, {
+    }, this.props.captionProps))), normalizeProps(createComponentVNode(2, ValueText, _extends({
       "fieldHintEnabled": this.props.fieldHintEnabled,
       "field": this.props.field,
       "template": this.props.valueTemplate
-    })], 4);
+    }, this.props.valueProps)))], 4);
   }
 }

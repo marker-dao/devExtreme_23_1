@@ -11,8 +11,8 @@ var _position = require("../../../core/utils/position");
 var _window = require("../../../core/utils/window");
 var _index = require("../../scheduler/r1/components/index");
 var _index2 = require("../../scheduler/r1/utils/index");
-var _constants = require("../constants");
 var _m_utils = require("../m_utils");
+var _constants_view = require("../utils/options/constants_view");
 var _m_work_space_indicator = _interopRequireDefault(require("./m_work_space_indicator"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // NOTE: Renovation component import.
@@ -24,7 +24,7 @@ const DATE_TABLE_OTHER_MONTH_DATE_CLASS = 'dx-scheduler-date-table-other-month';
 const toMs = _date.default.dateToMilliseconds;
 class SchedulerWorkSpaceMonth extends _m_work_space_indicator.default {
   get type() {
-    return _constants.VIEWS.MONTH;
+    return _constants_view.VIEWS.MONTH;
   }
   _getElementClass() {
     return MONTH_CLASS;
@@ -48,7 +48,7 @@ class SchedulerWorkSpaceMonth extends _m_work_space_indicator.default {
    *   when changing the layout, the test will also be useless
    */
   getCellWidth() {
-    return this.cache.get('cellWidth', () => {
+    return this.cache.memo('cellWidth', () => {
       const DAYS_IN_WEEK = 7;
       let averageWidth = 0;
       const cells = this._getCells().slice(0, DAYS_IN_WEEK);
@@ -137,7 +137,7 @@ class SchedulerWorkSpaceMonth extends _m_work_space_indicator.default {
     return (0, _common.noop)();
   }
   _setMonthClassesToCell($cell, data) {
-    $cell.toggleClass(DATE_TABLE_CURRENT_DATE_CLASS, data.isCurrentDate).toggleClass(DATE_TABLE_FIRST_OF_MONTH_CLASS, data.firstDayOfMonth).toggleClass(DATE_TABLE_OTHER_MONTH_DATE_CLASS, data.otherMonth);
+    $cell.toggleClass(DATE_TABLE_CURRENT_DATE_CLASS, data.isCurrentDate).toggleClass(DATE_TABLE_FIRST_OF_MONTH_CLASS, data.isFirstDayMonthHighlighting).toggleClass(DATE_TABLE_OTHER_MONTH_DATE_CLASS, data.otherMonth);
   }
   _createAllDayPanelElements() {}
   _renderTableBody(options) {

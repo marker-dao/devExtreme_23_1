@@ -13,7 +13,7 @@ const DROPDOWN_EDITOR_OVERLAY_CLASS = 'dx-dropdowneditor-overlay';
 class BaseDialog {
   constructor($container, popupConfig) {
     this._$container = $container;
-    this._popupUserConfig = popupConfig;
+    this._popupConfig = popupConfig;
     this._renderPopup();
   }
   _escKeyHandler() {

@@ -13,6 +13,7 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 /* eslint-disable max-classes-per-file */
 
 const CONTEXT_MENU = 'dx-context-menu';
+const GROUP_ROW_CLASS = 'dx-group-row';
 const viewName = {
   columnHeadersView: 'header',
   rowsView: 'content',
@@ -30,19 +31,21 @@ class ContextMenuController extends _m_modules.default.ViewController {
     }
     const that = this;
     const $targetElement = (0, _renderer.default)(dxEvent.target);
-    let $element;
-    let $targetRowElement;
-    let $targetCellElement;
     let menuItems;
     (0, _iterator.each)(VIEW_NAMES, function () {
       const view = that.getView(this);
-      $element = view && view.element();
-      if ($element && ($element.is($targetElement) || $element.find($targetElement).length)) {
-        var _rowOptions$cells;
-        $targetCellElement = $targetElement.closest('.dx-row > td, .dx-row > tr');
-        $targetRowElement = $targetCellElement.parent();
+      if (!view) {
+        return;
+      }
+      const $viewElement = view.element();
+      const isTargetElementInsideView = ($viewElement === null || $viewElement === void 0 ? void 0 : $viewElement.is($targetElement)) || ($viewElement === null || $viewElement === void 0 ? void 0 : $viewElement.find($targetElement).length);
+      if (isTargetElementInsideView) {
+        var _$targetCellElement$, _rowOptions$cells, _view$getContextMenuI;
+        const isGroupRow = $targetElement.hasClass(GROUP_ROW_CLASS);
+        const $targetCellElement = isGroupRow ? $targetElement.find('.dx-group-cell').first() : $targetElement.closest('.dx-row > td, .dx-row > tr');
+        const $targetRowElement = $targetCellElement.parent();
         const rowIndex = view.getRowIndex($targetRowElement);
-        const columnIndex = $targetCellElement[0] && $targetCellElement[0].cellIndex;
+        const columnIndex = (_$targetCellElement$ = $targetCellElement[0]) === null || _$targetCellElement$ === void 0 ? void 0 : _$targetCellElement$.cellIndex;
         const rowOptions = $targetRowElement.data('options');
         const options = {
           event: dxEvent,
@@ -51,9 +54,10 @@ class ContextMenuController extends _m_modules.default.ViewController {
           rowIndex,
           row: view._getRows()[rowIndex],
           columnIndex,
+          // @ts-expect-error
           column: rowOptions === null || rowOptions === void 0 || (_rowOptions$cells = rowOptions.cells) === null || _rowOptions$cells === void 0 || (_rowOptions$cells = _rowOptions$cells[columnIndex]) === null || _rowOptions$cells === void 0 ? void 0 : _rowOptions$cells.column
         };
-        options.items = view.getContextMenuItems && view.getContextMenuItems(options);
+        options.items = (_view$getContextMenuI = view.getContextMenuItems) === null || _view$getContextMenuI === void 0 ? void 0 : _view$getContextMenuI.call(view, options);
         that.executeAction('onContextMenuPreparing', options);
         that._contextMenuPrepared(options);
         menuItems = options.items;
@@ -77,13 +81,6 @@ class ContextMenuView extends _m_modules.default.View {
     super.init();
     this._contextMenuController = this.getController('contextMenu');
   }
-  contextMenuHiddenHandler(e) {
-    (0, _iterator.each)(VIEW_NAMES, (_, viewName) => {
-      var _view$contextMenuHidd;
-      const view = this.getView(viewName);
-      view === null || view === void 0 || (_view$contextMenuHidd = view.contextMenuHiddenHandler) === null || _view$contextMenuHidd === void 0 || _view$contextMenuHidd.call(view, e);
-    });
-  }
   _renderCore() {
     const $element = this.element().addClass(CONTEXT_MENU);
     this.setAria('role', 'presentation', $element);
@@ -106,7 +103,6 @@ class ContextMenuView extends _m_modules.default.View {
         var _params$itemData, _params$itemData$onIt;
         (_params$itemData = params.itemData) === null || _params$itemData === void 0 || (_params$itemData$onIt = _params$itemData.onItemClick) === null || _params$itemData$onIt === void 0 || _params$itemData$onIt.call(_params$itemData, params);
       },
-      onHidden: this.contextMenuHiddenHandler.bind(this),
       cssClass: this.getWidgetContainerClass(),
       // @ts-expect-error
       target: this.component.$element()

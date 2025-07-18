@@ -24,7 +24,7 @@ import ConverterController from '../../ui/html_editor/m_converterController';
 import { getQuill } from '../../ui/html_editor/m_quill_importer';
 import QuillRegistrator from '../../ui/html_editor/m_quill_registrator';
 import getWordMatcher from '../../ui/html_editor/matchers/m_wordLists';
-import FormDialog from '../../ui/html_editor/ui/m_formDialog';
+import FormDialog from '../../ui/html_editor/ui/formDialog';
 import { sanitizeHtml } from '../../ui/html_editor/utils/html_sanitizer';
 import { prepareScrollData } from '../../ui/text_box/m_utils.scroll';
 import AIDialog from './ui/aiDialog';

@@ -77,7 +77,12 @@ const extractTemplateMarkup = element => {
 };
 exports.extractTemplateMarkup = extractTemplateMarkup;
 const normalizeTemplateElement = element => {
-  let $element = (0, _type.isDefined)(element) && (element.nodeType || (0, _type.isRenderer)(element)) ? (0, _renderer.default)(element) : (0, _renderer.default)('<div>').html(element).contents();
+  let $element = (0, _renderer.default)();
+  if ((0, _type.isDefined)(element) && (element.nodeType || (0, _type.isRenderer)(element))) {
+    $element = (0, _renderer.default)(element);
+  } else if (typeof element !== 'object') {
+    $element = (0, _renderer.default)('<div>').html(element).contents();
+  }
   if ($element.length === 1) {
     if ($element.is('script')) {
       $element = normalizeTemplateElement($element.html().trim());

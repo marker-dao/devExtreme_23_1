@@ -1,2 +1,2 @@
-import Scrollable from '../../__internal/ui/scroll_view/m_scrollable';
+import Scrollable from '../../__internal/ui/scroll_view/scrollable';
 export default Scrollable;

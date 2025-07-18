@@ -3,7 +3,7 @@ import animationPosition from '../../../common/core/animation/position';
 import { name as contextMenuEventName } from '../../../common/core/events/contextmenu';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import holdEvent from '../../../common/core/events/hold';
-import { addNamespace } from '../../../common/core/events/utils/index';
+import { addNamespace } from '../../../common/core/events/utils';
 import registerComponent from '../../../core/component_registrator';
 import devices from '../../../core/devices';
 import domAdapter from '../../../core/dom_adapter';
@@ -16,7 +16,7 @@ import { contains } from '../../../core/utils/dom';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { getOuterHeight } from '../../../core/utils/size';
-import { isDefined, isFunction, isObject, isPlainObject, isRenderer, isWindow } from '../../../core/utils/type';
+import { isDefined, isFunction, isObject, isPlainObject, isRenderer, isString } from '../../../core/utils/type';
 import { getWindow, hasWindow } from '../../../core/utils/window';
 import Overlay from '../../../ui/overlay/ui.overlay';
 import Scrollable from '../../../ui/scroll_view/ui.scrollable';
@@ -96,15 +96,6 @@ class ContextMenu extends MenuBase {
         animation: null
       }
     }]);
-  }
-  _setDeprecatedOptions() {
-    super._setDeprecatedOptions();
-    extend(this._deprecatedOptions, {
-      closeOnOutsideClick: {
-        since: '22.2',
-        alias: 'hideOnOutsideClick'
-      }
-    });
   }
   _initActions() {
     this._actions = {};
@@ -276,6 +267,7 @@ class ContextMenu extends MenuBase {
   }
   _initMarkup() {
     this.$element().addClass(DX_HAS_CONTEXT_MENU_CLASS);
+    this._eventNamespace = `${this.NAME}${new Guid()}`;
     super._initMarkup();
   }
   _render() {
@@ -302,6 +294,7 @@ class ContextMenu extends MenuBase {
   }
   _renderContentImpl() {
     this._detachShowContextMenuEvents(this._getTarget());
+    this._showContextMenuEventHandler = this._createShowContextMenuEventHandler();
     this._attachShowContextMenuEvents();
   }
   _attachKeyboardEvents() {
@@ -324,7 +317,7 @@ class ContextMenu extends MenuBase {
   }
   preventShowingDefaultContextMenuAboveOverlay() {
     const $itemContainer = this._itemContainer();
-    const eventName = addNamespace(contextMenuEventName, this.NAME);
+    const eventName = addNamespace(contextMenuEventName, this._eventNamespace);
     eventsEngine.off($itemContainer, eventName, `.${DX_SUBMENU_CLASS}`);
     eventsEngine.on($itemContainer, eventName, `.${DX_SUBMENU_CLASS}`, e => {
       e.stopPropagation();
@@ -341,32 +334,13 @@ class ContextMenu extends MenuBase {
       $element.addClass(DX_MENU_PHONE_CLASS);
     }
   }
-  _detachShowContextMenuEvents(target) {
-    // @ts-expect-error
-    const showEvent = this.getShowEvent(this.option('showEvent'));
-    if (!showEvent) {
-      return;
-    }
-    const eventName = addNamespace(showEvent, this.NAME);
-    if (this._showContextMenuEventHandler) {
-      eventsEngine.off(domAdapter.getDocument(), eventName, target,
+  _createShowContextMenuEventHandler() {
+    const showContextMenuAction = this._createAction(e => {
       // @ts-expect-error
-      this._showContextMenuEventHandler);
-    } else {
-      eventsEngine.off($(target), eventName);
-    }
-  }
-  _attachShowContextMenuEvents() {
-    const target = this._getTarget();
-    // @ts-expect-error
-    const showEvent = this.getShowEvent(this.option('showEvent'));
-    if (!showEvent) {
-      return;
-    }
-    const eventName = addNamespace(showEvent, this.NAME);
-    let contextMenuAction = this._createAction(e => {
-      // @ts-expect-error
-      const delay = this.getShowDelay(this.option('showEvent'));
+      const {
+        showEvent
+      } = this.option();
+      const delay = this.getShowDelay(showEvent);
       if (delay) {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         setTimeout(() => this._show(e.event), delay);
@@ -376,18 +350,47 @@ class ContextMenu extends MenuBase {
     }, {
       validatingTargetName: 'target'
     });
-    const handler = e => contextMenuAction({
+    return e => showContextMenuAction({
       event: e,
       target: $(e.currentTarget)
     });
-    contextMenuAction = this._createAction(contextMenuAction);
+  }
+  _detachShowContextMenuEvents(target, event) {
     // @ts-expect-error
-    if (isRenderer(target) || target.nodeType || isWindow(target)) {
-      this._showContextMenuEventHandler = undefined;
-      eventsEngine.on(target, eventName, handler);
+    const {
+      showEvent: showEventOption
+    } = this.option();
+    const showEvent = this.getShowEvent(event ?? showEventOption);
+    if (!showEvent) {
+      return;
+    }
+    const isSelector = isString(target);
+    const eventName = addNamespace(showEvent, this._eventNamespace);
+    if (isSelector) {
+      eventsEngine.off(domAdapter.getDocument(), eventName, target,
+      // @ts-expect-error
+      this._showContextMenuEventHandler);
     } else {
-      this._showContextMenuEventHandler = handler;
+      eventsEngine.off($(target), eventName, this._showContextMenuEventHandler);
+    }
+  }
+  _attachShowContextMenuEvents() {
+    // @ts-expect-error
+    const {
+      showEvent: showEventOption,
+      disabled
+    } = this.option();
+    const showEvent = this.getShowEvent(showEventOption);
+    if (!showEvent || disabled) {
+      return;
+    }
+    const target = this._getTarget();
+    const isSelector = isString(target);
+    const eventName = addNamespace(showEvent, this._eventNamespace);
+    if (isSelector) {
       eventsEngine.on(domAdapter.getDocument(), eventName, target, this._showContextMenuEventHandler);
+    } else {
+      eventsEngine.on(target, eventName, this._showContextMenuEventHandler);
     }
   }
   _hoverEndHandler(e) {
@@ -476,18 +479,11 @@ class ContextMenu extends MenuBase {
     this._actions.onHidden(arg);
   }
   _shouldHideOnOutsideClick(e) {
-    // @ts-expect-error
-    const {
-      closeOnOutsideClick,
-      hideOnOutsideClick
-    } = this.option();
+    const hideOnOutsideClick = this.option('hideOnOutsideClick');
     if (isFunction(hideOnOutsideClick)) {
       return hideOnOutsideClick(e);
     }
-    if (isFunction(closeOnOutsideClick)) {
-      return closeOnOutsideClick(e);
-    }
-    return hideOnOutsideClick || closeOnOutsideClick;
+    return hideOnOutsideClick;
   }
   _hideOnOutsideClickHandler(e) {
     if (!this._shouldHideOnOutsideClick(e)) {
@@ -556,6 +552,10 @@ class ContextMenu extends MenuBase {
     const menuHeight = Math.min(contentHeight, maxHeight);
     $submenu.css('height', isNestedSubmenu ? menuHeight : '100%');
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _getMaxUsableSpace(offsetTop, windowHeight, anchorHeight) {
+    return windowHeight;
+  }
   _getMaxHeight(anchor) {
     let considerAnchorHeight = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     const windowHeight = getOuterHeight(window);
@@ -567,7 +567,7 @@ class ContextMenu extends MenuBase {
     }
     const offsetTop = anchor[0].getBoundingClientRect().top;
     const anchorHeight = getOuterHeight(anchor);
-    const availableHeight = considerAnchorHeight ? Math.max(offsetTop, windowHeight - offsetTop - anchorHeight) : Math.max(offsetTop + anchorHeight, windowHeight - offsetTop);
+    const availableHeight = considerAnchorHeight ? this._getMaxUsableSpace(offsetTop, windowHeight, anchorHeight) : Math.max(offsetTop + anchorHeight, windowHeight - offsetTop);
     return availableHeight - SUBMENU_PADDING;
   }
   _dimensionChanged() {
@@ -773,24 +773,36 @@ class ContextMenu extends MenuBase {
     }
   }
   _optionChanged(args) {
-    if (ACTIONS.includes(args.name)) {
+    const {
+      name,
+      value,
+      previousValue
+    } = args;
+    if (ACTIONS.includes(name)) {
       this._initActions();
       return;
     }
-    switch (args.name) {
+    switch (name) {
       case 'visible':
-        this._renderVisibility(args.value);
+        this._renderVisibility(value);
         break;
-      case 'showEvent':
+      case 'disabled':
       case 'position':
       case 'submenuDirection':
         this._invalidate();
         break;
-      case 'target':
-        args.previousValue && this._detachShowContextMenuEvents(args.previousValue);
+      case 'showEvent':
+        if (previousValue) {
+          this._detachShowContextMenuEvents(this._getTarget(), previousValue);
+        }
         this._invalidate();
         break;
-      case 'closeOnOutsideClick':
+      case 'target':
+        if (previousValue) {
+          this._detachShowContextMenuEvents(previousValue);
+        }
+        this._invalidate();
+        break;
       case 'hideOnOutsideClick':
       case 'hideOnParentScroll':
       case 'visualContainer':
@@ -827,6 +839,7 @@ class ContextMenu extends MenuBase {
       }
       const $subMenu = $(this._overlay.content()).children(`.${DX_SUBMENU_CLASS}`);
       this._setOptionWithoutOptionChange('visible', true);
+      // @ts-expect-error ts-error
       this._overlay.option({
         height: () => this._getMaxHeight(position.of),
         maxHeight: () => {

@@ -1,3 +1,5 @@
+import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
+const _excluded = ["selector"];
 import { describe, expect, it } from '@jest/globals';
 import { DataController } from '../data_controller';
 import { getContext } from '../di.test_utils';
@@ -55,7 +57,12 @@ describe('Options', () => {
           }]
         });
         const columns2 = columnsController2.columns.peek();
-        expect(columns1).toEqual(columns2);
+        // selector is newly created func, so it can't be compared
+        const removeSelector = _ref => {
+          let column = _objectWithoutPropertiesLoose(_ref, _excluded);
+          return column;
+        };
+        expect(columns1.map(removeSelector)).toStrictEqual(columns2.map(removeSelector));
       });
     });
     describe('when given as object', () => {
@@ -157,6 +164,8 @@ describe('Options', () => {
       const CardInfo = itemsController.createCardInfo(dataObject, columns, 0);
       expect(CardInfo.fields).toHaveLength(1);
       expect(CardInfo.fields[0].value).toBe('a b');
+      expect(CardInfo.fields[0].displayValue).toBe('a b');
+      expect(CardInfo.fields[0].text).toBe('a b');
     });
     it('should take priority over dataField', () => {
       const {
@@ -206,10 +215,10 @@ describe('Options', () => {
       } = setup({
         columns: [{
           dataField: 'a',
-          customizeText: _ref => {
+          customizeText: _ref2 => {
             let {
               valueText
-            } = _ref;
+            } = _ref2;
             return `aa ${valueText} aa`;
           }
         }]

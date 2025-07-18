@@ -36,6 +36,7 @@ export const withKeyDownHandler = WrappedComponent => {
         children: children
       })));
     }
+    // TODO: KeyboardEvent
     onKeyDown(event) {
       const {
         keyDownConfig,
@@ -58,6 +59,8 @@ export const withKeyDownHandler = WrappedComponent => {
       return this.props.elementRef ?? this.elementRef;
     }
   }
-  __decorate([eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", [KeyboardEvent]), __metadata("design:returntype", void 0)], WithKeyDownHandler.prototype, "onKeyDown", null);
+  __decorate([eventHandler
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  , __metadata("design:type", Function), __metadata("design:paramtypes", [Object]), __metadata("design:returntype", void 0)], WithKeyDownHandler.prototype, "onKeyDown", null);
   return WithKeyDownHandler;
 };

@@ -1,3 +1,4 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import { locate, move } from '../../common/core/animation/translator';
 import dateLocalization from '../../common/core/localization/date';
 import messageLocalization from '../../common/core/localization/message';
@@ -5,7 +6,6 @@ import $ from '../../core/renderer';
 import { FunctionTemplate } from '../../core/templates/function_template';
 import Button from '../../ui/button';
 import { APPOINTMENT_SETTINGS_KEY, LIST_ITEM_CLASS, LIST_ITEM_DATA_KEY } from './constants';
-import { createAppointmentAdapter } from './m_appointment_adapter';
 import { AppointmentTooltipInfo } from './m_data_structures';
 const APPOINTMENT_COLLECTOR_CLASS = 'dx-scheduler-appointment-collector';
 const COMPACT_APPOINTMENT_COLLECTOR_CLASS = `${APPOINTMENT_COLLECTOR_CLASS}-compact`;
@@ -39,15 +39,15 @@ export class CompactAppointmentsHelper {
   _createTooltipInfos(items) {
     return items.data.map((appointment, index) => {
       var _items$settings;
-      const targetedAdapter = createAppointmentAdapter(appointment, this.instance._dataAccessors, this.instance.timeZoneCalculator).clone();
+      const targeted = _extends({}, appointment);
       if (((_items$settings = items.settings) === null || _items$settings === void 0 ? void 0 : _items$settings.length) > 0) {
         const {
           info
         } = items.settings[index];
-        targetedAdapter.startDate = info.sourceAppointment.startDate;
-        targetedAdapter.endDate = info.sourceAppointment.endDate;
+        this.instance._dataAccessors.set('startDate', targeted, info.sourceAppointment.startDate);
+        this.instance._dataAccessors.set('endDate', targeted, info.sourceAppointment.endDate);
       }
-      return new AppointmentTooltipInfo(appointment, targetedAdapter.source(), items.colors[index], items.settings[index]);
+      return new AppointmentTooltipInfo(appointment, targeted, items.colors[index], items.settings[index]);
     });
   }
   _onButtonClick(e, options) {
@@ -163,9 +163,10 @@ export class CompactAppointmentsHelper {
     return date ? new Date(date) : null;
   }
   _getDateText(appointment) {
-    const adapter = createAppointmentAdapter(appointment, this.instance._dataAccessors, this.instance.timeZoneCalculator);
-    const startDateText = adapter.startDate ? this._localizeDate(adapter.startDate) : '';
-    const endDateText = adapter.endDate ? this._localizeDate(adapter.endDate) : '';
+    const startDate = this.instance._dataAccessors.get('startDate', appointment);
+    const endDate = this.instance._dataAccessors.get('endDate', appointment);
+    const startDateText = startDate ? this._localizeDate(startDate) : '';
+    const endDateText = endDate ? this._localizeDate(endDate) : '';
     const dateText = startDateText === endDateText ? `${startDateText}` : `${startDateText} - ${endDateText}`;
     return `${dateText}`;
   }

@@ -102,9 +102,11 @@ class Lookup extends _m_drop_down_list.default {
       focusStateEnabled: false,
       dropDownOptions: {
         showTitle: true,
+        // @ts-expect-error ts-error
         width() {
           return getSize('width');
         },
+        // @ts-expect-error ts-error
         height() {
           return getSize('height');
         },
@@ -122,17 +124,9 @@ class Lookup extends _m_drop_down_list.default {
       useHiddenSubmitElement: true
     });
   }
-  _setDeprecatedOptions() {
-    super._setDeprecatedOptions();
-    (0, _extend.extend)(this._deprecatedOptions, {
-      valueChangeEvent: {
-        since: '22.1',
-        alias: 'searchStartEvent'
-      }
-    });
-  }
   _defaultOptionsRules() {
     const themeName = (0, _themes.current)();
+    // @ts-expect-error ts-error
     return super._defaultOptionsRules().concat([{
       device() {
         return !_m_support.default.nativeScrolling;
@@ -192,7 +186,6 @@ class Lookup extends _m_drop_down_list.default {
         dropDownCentered: true,
         _scrollToSelectedItemEnabled: true,
         dropDownOptions: {
-          // @ts-expect-error ts-error
           _ignoreFunctionValueDeprecation: true,
           width: () => (0, _m_utils.getElementWidth)(this.$element()),
           height: function () {
@@ -487,9 +480,9 @@ class Lookup extends _m_drop_down_list.default {
     if ((_this$_list8 = this._list) !== null && _this$_list8 !== void 0 && _this$_list8.itemElements().length) {
       return this._calculateListHeight(this.option('grouped')) + (this._$searchWrapper ? (0, _size.getOuterHeight)(this._$searchWrapper) : 0)
       // @ts-expect-error ts-error
-      + (this._popup._$bottom ? (0, _size.getOuterHeight)(this._popup._$bottom) : 0)
+      + (this._popup.bottomToolbar() ? (0, _size.getOuterHeight)(this._popup.bottomToolbar()) : 0)
       // @ts-expect-error ts-error
-      + (this._popup._$title ? (0, _size.getOuterHeight)(this._popup._$title) : 0);
+      + (this._popup.topToolbar() ? (0, _size.getOuterHeight)(this._popup.topToolbar()) : 0);
     }
     return 'auto';
   }
@@ -589,8 +582,7 @@ class Lookup extends _m_drop_down_list.default {
       // @ts-expect-error ts-error
       shading: dropDownOptions.shading,
       // @ts-expect-error ts-error
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      hideOnOutsideClick: dropDownOptions.hideOnOutsideClick || dropDownOptions.closeOnOutsideClick,
+      hideOnOutsideClick: dropDownOptions.hideOnOutsideClick,
       _loopFocus: shouldLoopFocusInsidePopup
     });
     delete result.animation;

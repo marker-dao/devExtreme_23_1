@@ -33,7 +33,7 @@ var _default = exports.default = {
         color: _contants.WHITE
       },
       customizeText(info) {
-        return info.title;
+        return info.label;
       },
       shadow: {
         opacity: 0.2,

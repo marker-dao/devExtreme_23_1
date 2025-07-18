@@ -1,9 +1,12 @@
 "use strict";
 
 var _globals = require("@jest/globals");
+var _renderer = _interopRequireDefault(require("../../../../../core/renderer"));
+var _data_controller = require("../data_controller");
 var _di = require("../di.test_utils");
 var _options_controller = require("../options_controller/options_controller.mock");
 var _view = require("./view");
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const createPagerView = options => {
   const context = (0, _di.getContext)(options ?? {
     dataSource: [],
@@ -17,55 +20,28 @@ const createPagerView = options => {
   pager.render(rootElement);
   return {
     rootElement,
-    optionsController
+    optionsController,
+    dataController: context.get(_data_controller.DataController)
   };
 };
-(0, _globals.describe)('render', () => {
-  (0, _globals.it)('empty PagerView', () => {
-    const {
-      rootElement
-    } = createPagerView();
-    (0, _globals.expect)(rootElement).toMatchSnapshot();
-  });
-  (0, _globals.it)('PagerView with options', () => {
-    const {
-      rootElement
-    } = createPagerView({
-      dataSource: [...new Array(20)].map((_, index) => ({
-        field: `test_${index}`
-      })),
-      paging: {
-        pageIndex: 2
-      },
-      pager: {
-        showPageSizeSelector: true
-      }
-    });
-    (0, _globals.expect)(rootElement).toMatchSnapshot();
-  });
-});
-(0, _globals.describe)('Applying options', () => {
-  (0, _globals.describe)('when visible = \'auto\' and pageCount <= 1', () => {
-    (0, _globals.it)('Pager should be hidden', () => {
+const isPaginationVisible = rootElement => {
+  const visible = rootElement.querySelector('.dx-pagination') !== null;
+  return visible;
+};
+const getPagination = rootElement => {
+  const element = rootElement.querySelector('.dx-pagination');
+  const component = (0, _renderer.default)(element).dxPagination('instance');
+  return component;
+};
+(0, _globals.describe)('Pager View', () => {
+  (0, _globals.describe)('render', () => {
+    (0, _globals.it)('empty PagerView', () => {
       const {
         rootElement
-      } = createPagerView({
-        dataSource: [...new Array(4)].map((_, index) => ({
-          field: `test_${index}`
-        })),
-        paging: {
-          pageIndex: 6
-        },
-        pager: {
-          visible: 'auto',
-          showPageSizeSelector: true
-        }
-      });
+      } = createPagerView();
       (0, _globals.expect)(rootElement).toMatchSnapshot();
     });
-  });
-  (0, _globals.describe)('when visible = \'auto\' and pageCount > 1', () => {
-    (0, _globals.it)('Pager should be visible', () => {
+    (0, _globals.it)('PagerView with options', () => {
       const {
         rootElement
       } = createPagerView({
@@ -73,18 +49,17 @@ const createPagerView = options => {
           field: `test_${index}`
         })),
         paging: {
-          pageIndex: 6
+          pageIndex: 2
         },
         pager: {
-          visible: 'auto',
           showPageSizeSelector: true
         }
       });
       (0, _globals.expect)(rootElement).toMatchSnapshot();
     });
   });
-  (0, _globals.describe)('when visible = \'true\'', () => {
-    (0, _globals.it)('Pager should be visible', () => {
+  (0, _globals.describe)('Visibility', () => {
+    (0, _globals.it)('should be visible when visible = \'true\'', () => {
       const {
         rootElement
       } = createPagerView({
@@ -99,11 +74,9 @@ const createPagerView = options => {
           showPageSizeSelector: true
         }
       });
-      (0, _globals.expect)(rootElement).toMatchSnapshot();
+      (0, _globals.expect)(isPaginationVisible(rootElement)).toBeTruthy();
     });
-  });
-  (0, _globals.describe)('when visible = \'false\'', () => {
-    (0, _globals.it)('Pager should be hidden', () => {
+    (0, _globals.it)('should be hidden when visible = \'false\'', () => {
       const {
         rootElement
       } = createPagerView({
@@ -118,11 +91,43 @@ const createPagerView = options => {
           showPageSizeSelector: true
         }
       });
-      (0, _globals.expect)(rootElement).toMatchSnapshot();
+      (0, _globals.expect)(isPaginationVisible(rootElement)).toBeFalsy();
     });
-  });
-  (0, _globals.describe)('when changing a visible to \'false\' at runtime', () => {
-    (0, _globals.it)('Pager should be hidden', () => {
+    (0, _globals.it)('should be hidden when visible = \'auto\' and pageCount <= 1', () => {
+      const {
+        rootElement
+      } = createPagerView({
+        dataSource: [...new Array(4)].map((_, index) => ({
+          field: `test_${index}`
+        })),
+        paging: {
+          pageIndex: 6
+        },
+        pager: {
+          visible: 'auto',
+          showPageSizeSelector: true
+        }
+      });
+      (0, _globals.expect)(isPaginationVisible(rootElement)).toBeFalsy();
+    });
+    (0, _globals.it)('should be visibl visible = \'auto\' and pageCount > 1', () => {
+      const {
+        rootElement
+      } = createPagerView({
+        dataSource: [...new Array(20)].map((_, index) => ({
+          field: `test_${index}`
+        })),
+        paging: {
+          pageIndex: 6
+        },
+        pager: {
+          visible: 'auto',
+          showPageSizeSelector: true
+        }
+      });
+      (0, _globals.expect)(isPaginationVisible(rootElement)).toBeTruthy();
+    });
+    (0, _globals.it)('should be hidden when changing a visible to \'false\' at runtime', () => {
       const {
         rootElement,
         optionsController
@@ -139,11 +144,9 @@ const createPagerView = options => {
         }
       });
       optionsController.option('pager.visible', false);
-      (0, _globals.expect)(rootElement).toMatchSnapshot();
+      (0, _globals.expect)(isPaginationVisible(rootElement)).toBeFalsy();
     });
-  });
-  (0, _globals.describe)('when changing a visible to \'true\' at runtime', () => {
-    (0, _globals.it)('Pager should be visible', () => {
+    (0, _globals.it)('should be visible when changing a visible to \'true\' at runtime', () => {
       const {
         rootElement,
         optionsController
@@ -160,11 +163,11 @@ const createPagerView = options => {
         }
       });
       optionsController.option('pager.visible', true);
-      (0, _globals.expect)(rootElement).toMatchSnapshot();
+      (0, _globals.expect)(isPaginationVisible(rootElement)).toBeTruthy();
     });
   });
-  (0, _globals.describe)('when allowedPageSizes = \'auto\'', () => {
-    (0, _globals.it)('calculates pageSizes by pageSize', () => {
+  (0, _globals.describe)('allowedPageSizes', () => {
+    (0, _globals.it)('allowedPageSizes = \'auto\'', () => {
       const {
         rootElement
       } = createPagerView({
@@ -180,11 +183,10 @@ const createPagerView = options => {
           showPageSizeSelector: true
         }
       });
-      (0, _globals.expect)(rootElement).toMatchSnapshot();
+      const pagination = getPagination(rootElement);
+      (0, _globals.expect)(pagination.option('allowedPageSizes')).toEqual([3, 6, 12]);
     });
-  });
-  (0, _globals.describe)('when allowedPageSizes with custom values', () => {
-    (0, _globals.it)('displays custom values', () => {
+    (0, _globals.it)('allowedPageSizes = custom values', () => {
       const {
         rootElement
       } = createPagerView({
@@ -200,11 +202,10 @@ const createPagerView = options => {
           showPageSizeSelector: true
         }
       });
-      (0, _globals.expect)(rootElement).toMatchSnapshot();
+      const pagination = getPagination(rootElement);
+      (0, _globals.expect)(pagination.option('allowedPageSizes')).toEqual([4, 10, 20]);
     });
-  });
-  (0, _globals.describe)('when changing an allowedPageSizes to custom values at runtime', () => {
-    (0, _globals.it)('applies custom values', () => {
+    (0, _globals.it)('allowedPageSizes changed to custom values at runtime', () => {
       const {
         rootElement,
         optionsController
@@ -221,7 +222,8 @@ const createPagerView = options => {
         }
       });
       optionsController.option('pager.allowedPageSizes', [4, 10, 20]);
-      (0, _globals.expect)(rootElement).toMatchSnapshot();
+      const pagination = getPagination(rootElement);
+      (0, _globals.expect)(pagination.option('allowedPageSizes')).toEqual([4, 10, 20]);
     });
   });
 });

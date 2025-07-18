@@ -2,6 +2,7 @@
 
 exports.plugin = exports.Tooltip = exports.DEBUG_set_tooltip = void 0;
 var _size = require("../../core/utils/size");
+var _style = require("../../core/utils/style");
 var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
 var _window = require("../../core/utils/window");
 var _dom = require("../../core/utils/dom");
@@ -272,7 +273,8 @@ Tooltip.prototype = {
     // text area
     const normalizedCSS = {};
     for (const name in that._textFontStyles) {
-      normalizedCSS[(0, _inflector.camelize)(name)] = that._textFontStyles[name];
+      const normalizedName = (0, _inflector.camelize)(name);
+      normalizedCSS[normalizedName] = (0, _style.normalizeStyleProp)(normalizedName, that._textFontStyles[name]);
     }
     that._textGroupHtml.css(normalizedCSS);
     that._text.css(that._textFontStyles);

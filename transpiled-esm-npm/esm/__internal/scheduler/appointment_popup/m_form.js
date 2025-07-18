@@ -13,7 +13,6 @@ import dateSerialization from '../../../core/utils/date_serialization';
 import { extend } from '../../../core/utils/extend';
 import Form from '../../../ui/form';
 import { current, isFluent } from '../../../ui/themes';
-import { createAppointmentAdapter } from '../m_appointment_adapter';
 import timeZoneUtils from '../m_utils_time_zone';
 const SCREEN_SIZE_OF_SINGLE_COLUMN = 600;
 export const APPOINTMENT_FORM_GROUP_NAMES = {
@@ -126,9 +125,6 @@ export class AppointmentForm {
         class: E2E_TEST_CLASSES.form
       }
     });
-  }
-  _createAppointmentAdapter(rawAppointment) {
-    return createAppointmentAdapter(rawAppointment, this.scheduler.getDataAccessors());
   }
   _dateBoxValueChanged(args, dateExpr, isNeedCorrect) {
     validateAppointmentFormDate(args.component, args.value, args.previousValue);
@@ -303,7 +299,7 @@ export class AppointmentForm {
       editorOptions: {
         firstDayOfWeek: this.scheduler.getFirstDayOfWeek(),
         timeZoneCalculator: this.scheduler.getTimeZoneCalculator(),
-        getStartDateTimeZone: () => this._createAppointmentAdapter(this.formData).startDateTimeZone
+        getStartDateTimeZone: () => this.scheduler.getDataAccessors().get('startDateTimeZone', this.formData)
       },
       label: {
         text: ' ',

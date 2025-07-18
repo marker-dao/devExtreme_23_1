@@ -1,0 +1,1 @@
+export { updateColumnSettings } from './strategy';

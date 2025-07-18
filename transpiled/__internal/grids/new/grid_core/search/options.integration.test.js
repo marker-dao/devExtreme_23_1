@@ -1,6 +1,7 @@
 "use strict";
 
 var _globals = require("@jest/globals");
+var _m_guid = require("../../../../core/m_guid");
 var _widget = _interopRequireDefault(require("../../../../grids/new/card_view/widget"));
 var _inferno = require("inferno");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -26,6 +27,12 @@ function getCardContent(container) {
   return container.querySelector(`.${SELECTORS.cardContent}`);
 }
 (0, _globals.describe)('Options', () => {
+  (0, _globals.beforeEach)(() => {
+    _globals.jest.spyOn(_m_guid.Guid.prototype, '_normalize').mockReturnValue('guidmock');
+  });
+  (0, _globals.afterEach)(() => {
+    _globals.jest.spyOn(_m_guid.Guid.prototype, '_normalize').mockRestore();
+  });
   (0, _globals.it)('searchPanel.text (card contains match)', async () => {
     const {
       container,

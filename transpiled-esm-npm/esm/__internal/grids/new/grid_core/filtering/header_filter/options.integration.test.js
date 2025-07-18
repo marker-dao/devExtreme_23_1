@@ -424,6 +424,49 @@ describe('Options', () => {
       } = getPopup();
       expect(popupContentElement).toMatchSnapshot();
     });
+    // NOTE: Skip test because FilterSync feature disabled
+    it.skip.each([{
+      filterValue: ['!', [['A', '=', 'A_0']]],
+      result: 4
+    }])('should render correct list total count if filterValue has negation', _ref9 => {
+      let {
+        filterValue,
+        result
+      } = _ref9;
+      const cardView = setup({
+        dataSource: [{
+          A: 'A_0'
+        }, {
+          A: 'A_1'
+        }, {
+          A: 'A_2'
+        }, {
+          A: 'A_3'
+        }, {
+          A: 'A_4'
+        }],
+        columns: [{
+          dataField: 'A'
+        }],
+        filterValue,
+        headerFilter: {
+          visible: true
+        },
+        _filterSyncEnabled: true,
+        filterPanel: {
+          visible: true
+        }
+      });
+      openHeaderFilterPopup(cardView);
+      const {
+        element: popupContentElement
+      } = getPopup();
+      const {
+        instance
+      } = getPopupList(popupContentElement);
+      const listCount = instance._selection.options.totalCount();
+      expect(listCount).toStrictEqual(result);
+    });
   });
   describe('Column.HeaderFilter', () => {
     it.each([{
@@ -435,11 +478,11 @@ describe('Options', () => {
     }, {
       value: 1000,
       result: 1000
-    }])('width: $value', _ref9 => {
+    }])('width: $value', _ref10 => {
       let {
         value,
         result
-      } = _ref9;
+      } = _ref10;
       const cardView = setup({
         dataSource: [{
           A: 'A_0'
@@ -478,11 +521,11 @@ describe('Options', () => {
     }, {
       value: 1000,
       result: 1000
-    }])('height: $value', _ref10 => {
+    }])('height: $value', _ref11 => {
       let {
         value,
         result
-      } = _ref10;
+      } = _ref11;
       const cardView = setup({
         dataSource: [{
           A: 'A_0'
@@ -521,11 +564,11 @@ describe('Options', () => {
     }, {
       value: false,
       result: 'multiple'
-    }])('allowSelectAll: $value', _ref11 => {
+    }])('allowSelectAll: $value', _ref12 => {
       let {
         value,
         result
-      } = _ref11;
+      } = _ref12;
       const cardView = setup({
         dataSource: [{
           A: 'A_0'
@@ -567,11 +610,11 @@ describe('Options', () => {
     }, {
       value: false,
       result: false
-    }])('search.enabled: $value', _ref12 => {
+    }])('search.enabled: $value', _ref13 => {
       let {
         value,
         result
-      } = _ref12;
+      } = _ref13;
       const cardView = setup({
         dataSource: [{
           A: 'A_0'
@@ -617,11 +660,11 @@ describe('Options', () => {
     }, {
       value: 1000,
       result: 1000
-    }])('search.timeout: $value', _ref13 => {
+    }])('search.timeout: $value', _ref14 => {
       let {
         value,
         result
-      } = _ref13;
+      } = _ref14;
       const cardView = setup({
         dataSource: [{
           A: 'A_0'
@@ -671,11 +714,11 @@ describe('Options', () => {
     }, {
       value: 'startswith',
       result: 'startswith'
-    }])('search.mode: $value', _ref14 => {
+    }])('search.mode: $value', _ref15 => {
       let {
         value,
         result
-      } = _ref14;
+      } = _ref15;
       const cardView = setup({
         dataSource: [{
           A: 'A_0'
@@ -728,11 +771,11 @@ describe('Options', () => {
       result: {
         height: 999
       }
-    }])('search.editorOptions: $value', _ref15 => {
+    }])('search.editorOptions: $value', _ref16 => {
       let {
         value,
         result
-      } = _ref15;
+      } = _ref16;
       const cardView = setup({
         dataSource: [{
           A: 'A_0'
@@ -823,11 +866,11 @@ describe('Options', () => {
     }, {
       value: ['B', () => {}, 'D'],
       result: ['B', () => {}, 'D']
-    }])('search.searchExpr: $value', _ref16 => {
+    }])('search.searchExpr: $value', _ref17 => {
       let {
         value,
         result
-      } = _ref16;
+      } = _ref17;
       const cardView = setup({
         dataSource: [{
           A: 'A_0'
@@ -882,11 +925,11 @@ describe('Options', () => {
       caseName: 'exclude filter with values',
       filterType: 'exclude',
       filterValues: ['B']
-    }])('filterType + values: $caseName', _ref17 => {
+    }])('filterType + values: $caseName', _ref18 => {
       let {
         filterType,
         filterValues
-      } = _ref17;
+      } = _ref18;
       const cardView = setup({
         dataSource: [{
           A: 'A_0',
@@ -962,12 +1005,12 @@ describe('Options', () => {
       }],
       filterType: 'exclude',
       filterValues: ['B']
-    }])('dataSource: $caseName', _ref18 => {
+    }])('dataSource: $caseName', _ref19 => {
       let {
         dataSource,
         filterType,
         filterValues
-      } = _ref18;
+      } = _ref19;
       const cardView = setup({
         dataSource: [{
           A: 'A_0',

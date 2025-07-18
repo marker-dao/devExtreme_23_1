@@ -11,6 +11,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 const defaultOptions = exports.defaultOptions = _extends({
   wordWrapEnabled: false,
   cardsPerRow: 3,
+  cardMinWidth: 250,
   cardCover: {
     aspectRatio: '1 / 1'
   },

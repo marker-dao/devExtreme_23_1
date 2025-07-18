@@ -368,20 +368,10 @@ const AreaItem = exports.AreaItem = _class.default.inherit({
       width: params.width,
       height: params.height
     });
-    const scrollable = this._getScrollable();
-    if (scrollable !== null && scrollable !== void 0 && scrollable.isRenovated()) {
-      this._getScrollable().option('classes', 'dx-virtual-mode');
-    } else {
-      this.groupElement().addClass('dx-virtual-mode');
-    }
+    this.groupElement().addClass('dx-virtual-mode');
   },
   disableVirtualMode() {
-    const scrollable = this._getScrollable();
-    if (scrollable !== null && scrollable !== void 0 && scrollable.isRenovated()) {
-      this._getScrollable().option('classes', '');
-    } else {
-      this.groupElement().removeClass('dx-virtual-mode');
-    }
+    this.groupElement().removeClass('dx-virtual-mode');
   },
   _renderVirtualContent() {
     const that = this;

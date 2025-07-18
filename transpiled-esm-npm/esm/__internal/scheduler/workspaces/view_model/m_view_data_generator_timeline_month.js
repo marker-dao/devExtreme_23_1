@@ -1,12 +1,9 @@
 import dateUtils from '../../../../core/utils/date';
-import { monthUtils, setOptionHour, timelineMonthUtils } from '../../../scheduler/r1/utils/index';
+import { setOptionHour, timelineMonthUtils } from '../../../scheduler/r1/utils/index';
 import timezoneUtils from '../../m_utils_time_zone';
 import { ViewDataGenerator } from './m_view_data_generator';
 const toMs = dateUtils.dateToMilliseconds;
 export class ViewDataGeneratorTimelineMonth extends ViewDataGenerator {
-  _calculateCellIndex(rowIndex, columnIndex, rowCount, columnCount) {
-    return monthUtils.calculateCellIndex(rowIndex, columnIndex, rowCount, columnCount);
-  }
   calculateEndDate(startDate, interval, endDayHour) {
     return setOptionHour(startDate, endDayHour);
   }

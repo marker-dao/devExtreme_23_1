@@ -29,7 +29,7 @@ class AppointmentLayoutManager {
     this.appointmentViewModel = new _m_view_model_generator.AppointmentViewModelGenerator();
   }
   get appointmentRenderingStrategyName() {
-    return appointmentRenderingStrategyMap[this.instance.currentViewType];
+    return appointmentRenderingStrategyMap[this.instance.currentView.type];
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCellDimensions(options) {
@@ -51,7 +51,7 @@ class AppointmentLayoutManager {
       cellCountInsideLeftVirtualCell,
       cellCountInsideTopVirtualRow
     } = virtualScrollingDispatcher;
-    const groupCount = (0, _index.getGroupCount)(this.instance.option('loadedResources'));
+    const groupCount = this.instance.resourceManager.groupCount();
     const DOMMetaData = workspace.getDOMElementsMetaData();
     const allDayHeight = (0, _m_position_helper.getAllDayHeight)(workspace.option('showAllDayPanel'), workspace._isVerticalGroupedWorkSpace(), DOMMetaData);
     const rowCount = workspace._getRowCount();
@@ -64,15 +64,16 @@ class AppointmentLayoutManager {
     return {
       resources: this.instance.option('resources'),
       loadedResources: this.instance.option('loadedResources'),
+      getResourceManager: () => this.instance.resourceManager,
       getAppointmentColor: this.instance.createGetAppointmentColor(),
       dataAccessors: this.instance._dataAccessors,
       appointmentRenderingStrategyName: this.appointmentRenderingStrategyName,
       adaptivityEnabled: this.instance.option('adaptivityEnabled'),
       rtlEnabled: this.instance.option('rtlEnabled'),
-      startDayHour: this.instance._getCurrentViewOption('startDayHour'),
-      endDayHour: this.instance._getCurrentViewOption('endDayHour'),
-      viewOffset: this.instance._getCurrentViewOption('offset') * toMs('minute'),
-      maxAppointmentsPerCell: this.instance._getCurrentViewOption('maxAppointmentsPerCell'),
+      startDayHour: this.instance.getViewOption('startDayHour'),
+      endDayHour: this.instance.getViewOption('endDayHour'),
+      viewOffset: this.instance.getViewOption('offset') * toMs('minute'),
+      maxAppointmentsPerCell: this.instance.getViewOption('maxAppointmentsPerCell'),
       currentDate: this.instance.option('currentDate'),
       isVirtualScrolling: this.instance.isVirtualScrolling(),
       leftVirtualCellCount: cellCountInsideLeftVirtualCell,
@@ -81,7 +82,7 @@ class AppointmentLayoutManager {
       hoursInterval: workspace.option('hoursInterval'),
       showAllDayPanel: workspace.option('showAllDayPanel'),
       isGroupedAllDayPanel: workspace.isGroupedAllDayPanel(),
-      groups: this.instance._getCurrentViewOption('groups'),
+      groups: this.instance.getViewOption('groups'),
       groupCount,
       rowCount,
       appointmentCountPerCell: this.instance.option('_appointmentCountPerCell'),
@@ -95,13 +96,13 @@ class AppointmentLayoutManager {
       allDayHeight,
       resizableStep: positionHelper.getResizableStep(),
       visibleDayDuration,
-      allDayPanelMode: this.instance._getCurrentViewOption('allDayPanelMode'),
+      allDayPanelMode: this.instance.getViewOption('allDayPanelMode'),
       // appointment settings
       timeZoneCalculator: this.instance.timeZoneCalculator,
       timeZone: this.instance.option('timeZone'),
       firstDayOfWeek: this.instance.getFirstDayOfWeek(),
-      viewStartDayHour: this.instance._getCurrentViewOption('startDayHour'),
-      viewEndDayHour: this.instance._getCurrentViewOption('endDayHour'),
+      viewStartDayHour: this.instance.getViewOption('startDayHour'),
+      viewEndDayHour: this.instance.getViewOption('endDayHour'),
       viewType: workspace.type,
       endViewDate: workspace.getEndViewDate(),
       positionHelper,

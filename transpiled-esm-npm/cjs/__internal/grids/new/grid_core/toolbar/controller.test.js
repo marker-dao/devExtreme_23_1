@@ -93,5 +93,32 @@ const setup = config => {
         location: 'after'
       }]);
     });
+    (0, _globals.it)('should add item with order specified in consts', () => {
+      const {
+        toolbarController
+      } = setup();
+      const needRender = (0, _signalsCore.signal)(true);
+      toolbarController.addDefaultItem((0, _signalsCore.signal)({
+        name: 'addCardButton'
+      }), needRender);
+      toolbarController.addDefaultItem((0, _signalsCore.signal)({
+        name: 'searchPanel'
+      }), (0, _signalsCore.signal)(true));
+      (0, _globals.expect)(toolbarController.items.peek()).toStrictEqual([{
+        name: 'addCardButton'
+      }, {
+        name: 'searchPanel'
+      }]);
+      needRender.value = false;
+      (0, _globals.expect)(toolbarController.items.peek()).toStrictEqual([{
+        name: 'searchPanel'
+      }]);
+      needRender.value = true;
+      (0, _globals.expect)(toolbarController.items.peek()).toStrictEqual([{
+        name: 'addCardButton'
+      }, {
+        name: 'searchPanel'
+      }]);
+    });
   });
 });

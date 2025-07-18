@@ -20,9 +20,9 @@ import { hasWindow } from '../../../core/utils/window';
 import CheckBox from '../../../ui/check_box';
 import LoadIndicator from '../../../ui/load_indicator';
 import supportUtils from '../../core/utils/m_support';
-import HierarchicalCollectionWidget from '../../ui/hierarchical_collection/m_hierarchical_collection_widget';
+import HierarchicalCollectionWidget from '../../ui/hierarchical_collection/hierarchical_collection_widget';
 import { DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, SCROLLABLE_CONTENT_CLASS } from '../../ui/scroll_view/consts';
-import Scrollable from '../../ui/scroll_view/m_scrollable';
+import Scrollable from '../../ui/scroll_view/scrollable';
 import { getRelativeOffset } from '../../ui/scroll_view/utils/get_relative_offset';
 const WIDGET_CLASS = 'dx-treeview';
 const NODE_CLASS = `${WIDGET_CLASS}-node`;
@@ -180,8 +180,8 @@ class TreeViewBase extends HierarchicalCollectionWidget {
       }
     }]);
   }
-  // TODO: implement these functions
   _initSelectedItems() {}
+  // @ts-expect-error ts-error
   _syncSelectionOptions() {
     return Deferred().resolve().promise();
   }
@@ -210,7 +210,6 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     if (previousValue === 'none' || value === 'none') {
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     const selectAllExists = this._$selectAllItem && this._$selectAllItem.length;
     // eslint-disable-next-line default-case
     switch (value) {
@@ -313,7 +312,6 @@ class TreeViewBase extends HierarchicalCollectionWidget {
   _initDataSource() {
     if (this._useCustomChildrenLoader()) {
       this._loadChildrenByCustomLoader(null).done(newItems => {
-        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
         if (newItems && newItems.length) {
           this.option('items', newItems);
         }
@@ -348,7 +346,6 @@ class TreeViewBase extends HierarchicalCollectionWidget {
   }
   _combineFilter() {
     // @ts-expect-error ts-error
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (!this._filter.custom || !this._filter.custom.length) {
       return this._filter.internal;
     }
@@ -407,7 +404,6 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     if (dataStructure !== 'plain') {
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     this._dataSource && this._dataSource.store().on('inserted', newItem => {
       // @ts-expect-error ts-error
       this.option().items = this.option('items').concat(newItem);
@@ -485,13 +481,20 @@ class TreeViewBase extends HierarchicalCollectionWidget {
   }
   _getDataAdapterOptions() {
     var _this$_dataSource, _this$_dataSource2, _this$_dataSource2$lo;
+    const {
+      rootValue,
+      expandNodesRecursive,
+      selectionRequired,
+      dataStructure
+    } = this.option();
     return {
-      rootValue: this.option('rootValue'),
+      rootValue,
       multipleSelection: !this._isSingleSelection(),
       recursiveSelection: this._isRecursiveSelection(),
-      recursiveExpansion: this.option('expandNodesRecursive'),
-      selectionRequired: this.option('selectionRequired'),
-      dataType: this.option('dataStructure'),
+      recursiveExpansion: expandNodesRecursive,
+      searchValue: '',
+      selectionRequired,
+      dataType: dataStructure,
       sort: (_this$_dataSource = this._dataSource) === null || _this$_dataSource === void 0 ? void 0 : _this$_dataSource.sort(),
       langParams: (_this$_dataSource2 = this._dataSource) === null || _this$_dataSource2 === void 0 || (_this$_dataSource2$lo = _this$_dataSource2.loadOptions) === null || _this$_dataSource2$lo === void 0 || (_this$_dataSource2$lo = _this$_dataSource2$lo.call(_this$_dataSource2)) === null || _this$_dataSource2$lo === void 0 ? void 0 : _this$_dataSource2$lo.langParams
     };
@@ -506,7 +509,6 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     const {
       items
     } = this.option();
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (items && items.length) {
       this.setAria({
         role: 'tree'
@@ -517,7 +519,6 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     const $nodeContainer = this._renderNodeContainer();
     $(this.getScrollable().content()).append($nodeContainer);
     // @ts-expect-error ts-error
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (!this.option('items') || !this.option('items').length) {
       return;
     }
@@ -553,9 +554,13 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     }
   }
   _renderScrollableContainer() {
+    const {
+      useNativeScrolling,
+      scrollDirection
+    } = this.option();
     this._scrollable = this._createComponent($('<div>').appendTo(this.$element()), Scrollable, {
-      useNative: this.option('useNativeScrolling'),
-      direction: this.option('scrollDirection'),
+      useNative: useNativeScrolling,
+      direction: scrollDirection,
       useKeyboard: false
     });
   }
@@ -763,6 +768,7 @@ class TreeViewBase extends HierarchicalCollectionWidget {
       return identifier;
     }
     if (isPrimitive(identifier)) {
+      // @ts-expect-error ts-error
       return this._dataAdapter.getNodeByKey(identifier);
     }
     const itemElement = $(identifier).get(0);
@@ -772,6 +778,7 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     if (domAdapter.isElementNode(itemElement)) {
       return this._getNodeByElement(itemElement);
     }
+    // @ts-expect-error ts-error
     return this._dataAdapter.getNodeByItem(itemElement);
   }
   _getNodeByElement(itemElement) {
@@ -907,7 +914,6 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     this._loadNestedItems(node).done(items => {
       const actualNodeData = this._getActualNode(node);
       this._renderSublevel($node, actualNodeData, this._dataAdapter.getNodesByItems(items));
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       if (!items || !items.length) {
         completionCallback.resolve();
         return;
@@ -1022,7 +1028,6 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     const {
       items
     } = this.option();
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (items && items.length) {
       this._contentAlreadyRendered = true;
     }
@@ -1303,11 +1308,14 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     };
   }
   _itemClick(actionArgs) {
-    const args = actionArgs.args[0];
-    const target = args.event.target[0] || args.event.target;
+    const {
+      event,
+      itemData
+    } = actionArgs.args[0];
+    const target = event.target[0] || event.target;
     const link = target.getElementsByClassName(ITEM_URL_CLASS)[0];
-    if (args.itemData.url && link) {
-      link.click();
+    if (itemData.url && link) {
+      this._clickByLink(link);
     }
   }
   _itemClickHandler(e, $item) {
@@ -1396,7 +1404,6 @@ class TreeViewBase extends HierarchicalCollectionWidget {
       fx.stop(this, true);
     });
     const $items = this._nodeElements();
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (!$items || !$items.length) {
       return;
     }
@@ -1614,7 +1621,6 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     // @ts-expect-error ts-error
     this._expandNodes(nodeKeysToExpand.reverse()).always(() => {
       const $element = this._getNodeElement(node);
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       if ($element && $element.length) {
         this.scrollToElementTopLeft($element.get(0));
         scrollCallback.resolve();

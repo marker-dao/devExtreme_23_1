@@ -3,6 +3,7 @@ import { compileGetter, compileSetter } from '../../../../core/utils/data';
 import dateSerialization from '../../../../core/utils/date_serialization';
 import { DataAccessor } from './data_accessor';
 const isDateField = field => field === 'startDate' || field === 'endDate';
+const isBooleanField = field => field === 'allDay' || field === 'disabled';
 export class AppointmentDataAccessor extends DataAccessor {
   constructor(fields) {
     let forceIsoDateParsing = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
@@ -27,7 +28,10 @@ export class AppointmentDataAccessor extends DataAccessor {
     // TODO: check cache usage, it sets once and forever now
     // eslint-disable-next-line @typescript-eslint/init-declarations
     let serializationFormatCache;
-    const getter = object => this.forceIsoDateParsing ? dateSerialization.deserializeDate(commonGetter(object)) : commonGetter(object);
+    const getter = object => {
+      const date = this.forceIsoDateParsing ? dateSerialization.deserializeDate(commonGetter(object)) : commonGetter(object);
+      return date === undefined ? date : new Date(date);
+    };
     const setter = (object, value) => {
       if (this.dateSerializationFormat) {
         serializationFormatCache = this.dateSerializationFormat;
@@ -43,8 +47,26 @@ export class AppointmentDataAccessor extends DataAccessor {
       setter
     };
   }
+  getBooleanFieldAccessExpressions(expr) {
+    const {
+      getter: commonGetter,
+      setter
+    } = this.getCommonAccessExpressions(expr);
+    const getter = object => Boolean(commonGetter(object));
+    return {
+      getter,
+      setter
+    };
+  }
   getAccessExpressions(name, expr) {
-    return isDateField(name) ? this.getDateFieldAccessExpressions(expr) : this.getCommonAccessExpressions(expr);
+    switch (true) {
+      case isBooleanField(name):
+        return this.getBooleanFieldAccessExpressions(expr);
+      case isDateField(name):
+        return this.getDateFieldAccessExpressions(expr);
+      default:
+        return this.getCommonAccessExpressions(expr);
+    }
   }
   updateExpression(field, expr) {
     const name = field.replace('Expr', '');

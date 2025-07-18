@@ -210,6 +210,7 @@ class PaginationContent extends _index.InfernoComponent {
       children: [showPageSizeSelector && (0, _inferno.createComponentVNode)(2, _selector.PageSizeSelector, {
         "rootElementRef": allowedPageSizesRef,
         "isLargeDisplayMode": this.getIsLargeDisplayMode(),
+        "itemCount": itemCount,
         "pageSize": pageSize,
         "pageSizeChangedInternal": pageSizeChangedInternal,
         "allowedPageSizes": allowedPageSizes

@@ -180,7 +180,6 @@ class SpeedDialMainItem extends _m_speed_dial_item.default {
     var _speedDialMainItem;
     const visibleActions = (_speedDialMainItem = speedDialMainItem) === null || _speedDialMainItem === void 0 ? void 0 : _speedDialMainItem._getVisibleActions(actions);
     const defaultOptions = this._getDefaultOptions();
-    delete defaultOptions.closeOnOutsideClick;
     return visibleActions.length === 1 ? (0, _extend.extend)(modifyActionOptions(visibleActions[0]), {
       position: this._getPosition()
     }) : (0, _extend.extend)(defaultOptions, {

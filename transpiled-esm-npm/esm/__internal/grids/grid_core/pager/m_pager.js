@@ -4,7 +4,7 @@ import { hasWindow } from '../../../../core/utils/window';
 import Pagination from '../../../pagination/wrappers/pagination';
 import modules from '../m_modules';
 const PAGER_CLASS = 'pager';
-const MAX_PAGES_COUNT = 10;
+export const MAX_PAGES_COUNT = 10;
 const getPageIndex = function (dataController) {
   // eslint-disable-next-line radix
   return 1 + (parseInt(dataController.pageIndex()) || 0);
@@ -85,6 +85,7 @@ export class PagerView extends modules.View {
       hasKnownLastPage: dataController.hasKnownLastPage(),
       rtlEnabled: that.option('rtlEnabled'),
       isGridCompatibilityMode: true,
+      _getParentComponentRootNode: () => this.component.element(),
       _skipValidation: true,
       pageIndexChanged(pageIndex) {
         if (dataController.pageIndex() !== pageIndex - 1) {

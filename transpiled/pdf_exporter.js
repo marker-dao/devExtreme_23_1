@@ -9,7 +9,7 @@ Object.defineProperty(exports, "exportDataGrid", {
 Object.defineProperty(exports, "exportDataGridWithAutoTable", {
   enumerable: true,
   get: function () {
-    return _export_data_grid.exportDataGrid;
+    return _pdf.exportDataGridWithAutoTable;
   }
 });
 Object.defineProperty(exports, "exportGantt", {
@@ -19,4 +19,3 @@ Object.defineProperty(exports, "exportGantt", {
   }
 });
 var _pdf = require("./common/export/pdf");
-var _export_data_grid = require("./exporter/jspdf/autotable/export_data_grid");

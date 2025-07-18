@@ -23,9 +23,6 @@ export class Appointment extends DOMComponent {
   get rawAppointment() {
     return this.option('data');
   }
-  get resourceProcessor() {
-    return this.option('getResourceProcessor')();
-  }
   get dataAccessors() {
     return this.option('dataAccessors');
   }
@@ -137,11 +134,10 @@ export class Appointment extends DOMComponent {
   _setResourceColor() {
     const appointmentConfig = {
       itemData: this.rawAppointment,
-      groupIndex: this.option('groupIndex'),
-      groups: this.option('groups')
+      groupIndex: this.option('groupIndex') ?? 0
     };
-    const deferredColor = this.option('getAppointmentColor')(appointmentConfig);
-    deferredColor.done(color => {
+    const resourceManager = this.option('getResourceManager')();
+    resourceManager.getAppointmentColor(appointmentConfig).then(color => {
       if (color) {
         this.coloredElement.css('backgroundColor', color);
         this.coloredElement.addClass(APPOINTMENT_HAS_RESOURCE_COLOR_CLASS);
@@ -154,10 +150,12 @@ export class Appointment extends DOMComponent {
     // eslint-disable-next-line no-void
     void getAriaDescription(this.option()).then(text => {
       if (text) {
-        var _$element$find;
         const id = `dx-${new Guid()}`;
-        $element.attr('aria-describedby', id);
-        (_$element$find = $element.find(`.${APPOINTMENT_CONTENT_CLASSES.ARIA_DESCRIPTION}`)) === null || _$element$find === void 0 || (_$element$find = _$element$find.text(text)) === null || _$element$find === void 0 || _$element$find.attr('id', id);
+        const $description = $element.find(`.${APPOINTMENT_CONTENT_CLASSES.ARIA_DESCRIPTION}`);
+        if ($description) {
+          $element.attr('aria-describedby', id);
+          $description.text(text).attr('id', id);
+        }
       }
     });
   }

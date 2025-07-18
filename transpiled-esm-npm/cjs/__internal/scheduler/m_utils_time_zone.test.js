@@ -2,11 +2,28 @@
 
 var _globals = require("@jest/globals");
 var _index = require("../scheduler/utils/index");
+var _global_cache = require("./global_cache");
 var _m_utils_time_zone = _interopRequireDefault(require("./m_utils_time_zone"));
 var _timezone_list = _interopRequireDefault(require("./timezones/timezone_list"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const defaultTimeZones = _timezone_list.default.value;
 (0, _globals.describe)('timezone utils', () => {
+  (0, _globals.beforeAll)(() => {
+    _global_cache.globalCache.timezones.clear();
+  });
+  (0, _globals.describe)('calculateTimezoneByValue', () => {
+    (0, _globals.it)('should cache the results', () => {
+      _timezone_list.default.value.forEach(timezone => {
+        _m_utils_time_zone.default.calculateTimezoneByValue(timezone);
+      });
+      _globals.jest.spyOn(Intl, 'DateTimeFormat');
+      _timezone_list.default.value.forEach(timezone => {
+        _m_utils_time_zone.default.calculateTimezoneByValue(timezone);
+      });
+      (0, _globals.expect)(_global_cache.globalCache.timezones.size).toBe(_timezone_list.default.value.length);
+      (0, _globals.expect)(Intl.DateTimeFormat).toHaveBeenCalledTimes(0);
+    });
+  });
   (0, _globals.describe)('cacheTimeZones / getTimeZonesCache', () => {
     (0, _globals.beforeAll)(() => {
       _timezone_list.default.value = ['Etc/GMT+12', 'Etc/GMT+11'];

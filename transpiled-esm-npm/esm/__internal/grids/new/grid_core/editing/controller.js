@@ -3,21 +3,24 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable spellcheck/spell-checker */
 import { applyChanges } from '../../../../../common/data';
 import { isDefined } from '../../../../../core/utils/type';
-import { confirm } from '../../../../../ui/dialog';
 import { computed } from '@preact/signals-core';
 import { generateNewRowTempKey } from '../../../../grids/grid_core/editing/m_editing_utils';
+import { OptionsValidationController } from '../../../../grids/new/grid_core/options_validation/index';
 import { ColumnsController } from '../columns_controller/columns_controller';
 import { DataController } from '../data_controller/data_controller';
 import { ItemsController } from '../items_controller/items_controller';
 import { KeyboardNavigationController } from '../keyboard_navigation/index';
 import { OptionsController } from '../options_controller/options_controller';
+import { ConfirmController } from './confirm_controller';
 export class EditingController {
-  constructor(options, itemsController, columnController, dataController, kbn) {
+  constructor(options, itemsController, columnController, dataController, kbn, optionsValidationController, confirmController) {
     this.options = options;
     this.itemsController = itemsController;
     this.columnController = columnController;
     this.dataController = dataController;
     this.kbn = kbn;
+    this.optionsValidationController = optionsValidationController;
+    this.confirmController = confirmController;
     // todo: fix typing, remove explicit type here
     this.changes = this.options.twoWay('editing.changes');
     this.editCardKey = this.options.twoWay('editing.editCardKey');
@@ -46,15 +49,24 @@ export class EditingController {
         return null;
       }
       const oldItem = this.itemsController.findItemByKey(items, editCardKey);
-      const newData = applyChanges([oldItem.data], changes, {
+      if (!oldItem) {
+        return null;
+      }
+      const insertChange = changes.find(change => change.key === editCardKey && change.type === 'insert');
+      const oldData = (insertChange === null || insertChange === void 0 ? void 0 : insertChange.data) ?? oldItem.data;
+      const newData = applyChanges([oldData], changes, {
         keyExpr: this.dataController.dataSource.peek().key(),
         immutable: true
       })[0];
-      const newItem = this.itemsController.createCardInfo(newData, this.columnController.columns.peek(), oldItem.index);
+      const newItem = this.itemsController.createCardInfo(newData, this.columnController.columns.peek(), oldItem.index, undefined, oldItem.key);
       return newItem;
     });
   }
+  provideValidateMethod(validateMethod) {
+    this.validateMethod = validateMethod;
+  }
   editCard(key) {
+    this.optionsValidationController.validateKeyExpr();
     const eventArgs = {
       cancel: false,
       key,
@@ -65,7 +77,12 @@ export class EditingController {
       this.editCardKey.value = key;
     }
   }
+  async validate() {
+    var _this$validateMethod;
+    return ((_this$validateMethod = this.validateMethod) === null || _this$validateMethod === void 0 ? void 0 : _this$validateMethod.call(this)) ?? true;
+  }
   async addCard() {
+    this.optionsValidationController.validateKeyExpr();
     const eventArgs = {
       promise: undefined,
       data: {}
@@ -74,7 +91,7 @@ export class EditingController {
     // eslint-disable-next-line @typescript-eslint/await-thenable
     await eventArgs.promise;
     const newItemKey = this.dataController.getDataKey(eventArgs.data) ?? generateNewRowTempKey();
-    this.itemsController.additionalItems.value = [...this.itemsController.additionalItems.peek(), this.itemsController.createCardInfo(eventArgs.data, this.columnController.columns.peek(), -1, [], newItemKey)];
+    this.itemsController.additionalItems.value = [...this.itemsController.additionalItems.peek(), this.itemsController.createCardInfo(eventArgs.data, this.columnController.columns.peek(), -1, [], newItemKey, false)];
     this.changes.value = [...this.changes.peek(), {
       type: 'insert',
       key: newItemKey,
@@ -86,24 +103,30 @@ export class EditingController {
     if (!this.needConfirmDelete.peek()) {
       return Promise.resolve(true);
     }
-    const result = await confirm(
-    // @ts-expect-error wrong typing in optionController
-    this.texts.peek().confirmDeleteMessage,
-    // @ts-expect-error wrong typing in optionController
-    this.texts.peek().confirmDeleteTitle);
+    const {
+      confirmDeleteMessage,
+      confirmDeleteTitle
+    } = this.texts.peek();
+    const showDialogTitle = isDefined(confirmDeleteTitle) && confirmDeleteTitle.length > 0;
+    const result = await this.confirmController.confirm(confirmDeleteMessage ?? '',
+    // TODO: bad typing
+    confirmDeleteTitle ?? '',
+    // TODO: bad typing
+    showDialogTitle);
     return result;
   }
   async deleteCard(key) {
+    this.optionsValidationController.validateKeyExpr();
     const confirmStatus = await this.confirmDelete();
     if (!confirmStatus) {
       this.kbn.returnFocus();
       return;
     }
     // @ts-expect-error
-    this.changes.update([...this.changes.peek(), {
+    this.changes.value = [...this.changes.peek(), {
       type: 'remove',
       key
-    }]);
+    }];
     await this.save();
     this.kbn.returnFocus();
   }
@@ -133,6 +156,10 @@ export class EditingController {
     return true;
   }
   async save() {
+    const validationSuccessful = await this.validate();
+    if (!validationSuccessful) {
+      return;
+    }
     const changes = this.changes.peek();
     const eventArgs = {
       promise: undefined,
@@ -231,4 +258,4 @@ export class EditingController {
     this.changes.value = [...this.changes.peek().filter(change => change !== existingChange), newChange];
   }
 }
-EditingController.dependencies = [OptionsController, ItemsController, ColumnsController, DataController, KeyboardNavigationController];
+EditingController.dependencies = [OptionsController, ItemsController, ColumnsController, DataController, KeyboardNavigationController, OptionsValidationController, ConfirmController];

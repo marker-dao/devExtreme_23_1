@@ -34,6 +34,7 @@ const viewItemSelectorMap = {
 let isMouseDown = false;
 let isHiddenFocusing = false;
 let focusedElementInfo = null;
+let needToSkipFocusin = false;
 function processKeyDown(viewName, instance, event, action, $mainElement, executeKeyDown) {
   const isHandled = fireKeyDownEvent(instance, event.originalEvent, executeKeyDown);
   if (isHandled) {
@@ -74,11 +75,15 @@ function getActiveAccessibleElements(ariaLabel, viewElement) {
   }
   return $activeElements;
 }
-function findFocusedViewElement(viewSelectors, element) {
-  const root = (element === null || element === void 0 ? void 0 : element.getRootNode()) || _dom_adapter.default.getDocument();
+function findFocusedViewElement(instanceRootDomNode, viewSelectors, element) {
+  const root = instanceRootDomNode ?? (element === null || element === void 0 ? void 0 : element.getRootNode()) ?? _dom_adapter.default.getDocument();
+  if (!root) {
+    return;
+  }
+  const $root = (0, _renderer.default)(root);
   for (const index in viewSelectors) {
     const selector = viewSelectors[index];
-    const $focusViewElement = (0, _renderer.default)(root).find(selector).first();
+    const $focusViewElement = $root.find(selector).first();
     if ($focusViewElement.length) {
       return $focusViewElement;
     }
@@ -97,7 +102,8 @@ function fireKeyDownEvent(instance, event, executeAction) {
   return args.handled;
 }
 function onDocumentVisibilityChange() {
-  isHiddenFocusing = _dom_adapter.default.getDocument().visibilityState === 'visible';
+  const focusedElement = _dom_adapter.default.getActiveElement();
+  needToSkipFocusin = focusedElement && !focusedElement.closest(`.${FOCUS_STATE_CLASS}`);
 }
 function subscribeVisibilityChange() {
   _events_engine.default.on(_dom_adapter.default.getDocument(), 'visibilitychange', onDocumentVisibilityChange);
@@ -123,19 +129,28 @@ function registerKeyboardAction(viewName, instance, $element, selector, action, 
     getMainElement().removeClass(FOCUS_STATE_CLASS);
   };
   const focusinHandler = () => {
+    if (needToSkipFocusin) {
+      needToSkipFocusin = false;
+      return;
+    }
     const needShowOverlay = !isMouseDown && !isHiddenFocusing;
     if (needShowOverlay) {
       getMainElement().addClass(FOCUS_STATE_CLASS);
     }
     isMouseDown = false;
   };
+  const mouseUpHandler = () => {
+    isMouseDown = false;
+  };
   _events_engine.default.on($element, 'keydown', selector, keyDownHandler);
   _events_engine.default.on($element, 'mousedown', selector, mouseDownHandler);
   _events_engine.default.on($element, 'focusin', selector, focusinHandler);
+  _events_engine.default.on($element, 'mouseup contextmenu', selector, mouseUpHandler);
   return () => {
     _events_engine.default.off($element, 'keydown', selector, keyDownHandler);
     _events_engine.default.off($element, 'mousedown', selector, mouseDownHandler);
     _events_engine.default.off($element, 'focusin', selector, focusinHandler);
+    _events_engine.default.off($element, 'mouseup contextmenu', selector, mouseUpHandler);
   };
 }
 function restoreFocus(instance) {
@@ -152,13 +167,15 @@ function restoreFocus(instance) {
 function selectView(viewName, instance, event) {
   const keyName = (0, _index.normalizeKeyName)(event);
   if (event.ctrlKey && (keyName === 'upArrow' || keyName === 'downArrow')) {
+    var _instance$component, _instance$component$e;
     const viewNames = Object.keys(viewItemSelectorMap);
     let viewItemIndex = viewNames.indexOf(viewName);
+    const instanceRootDomNode = instance === null || instance === void 0 || (_instance$component = instance.component) === null || _instance$component === void 0 || (_instance$component$e = _instance$component.element) === null || _instance$component$e === void 0 ? void 0 : _instance$component$e.call(_instance$component);
     while (viewItemIndex >= 0 && viewItemIndex < viewNames.length) {
       viewItemIndex = keyName === 'upArrow' ? --viewItemIndex : ++viewItemIndex;
       const viewName = viewNames[viewItemIndex];
       const viewSelectors = viewItemSelectorMap[viewName];
-      const $focusViewElement = findFocusedViewElement(viewSelectors, event.target);
+      const $focusViewElement = findFocusedViewElement(instanceRootDomNode, viewSelectors, event.target);
       if ($focusViewElement && $focusViewElement.length) {
         $focusViewElement.attr('tabindex', instance.option('tabindex') || 0);
         _events_engine.default.trigger($focusViewElement, 'focus');

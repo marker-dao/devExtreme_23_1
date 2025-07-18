@@ -14,30 +14,46 @@ export class ContentView extends Component {
     super(...arguments);
     this.scrollableRef = createRef();
     this.containerRef = createRef();
+    this.resizeObserverTimeout = null;
   }
   render() {
-    return createVNode(1, "div", CLASSES.contentView, [normalizeProps(createComponentVNode(2, LoadPanel, _extends({}, this.props.loadPanelProps))), this.props.noDataTextProps.visible && normalizeProps(createComponentVNode(2, NoDataText, _extends({}, this.props.noDataTextProps))), normalizeProps(createComponentVNode(2, Scrollable, _extends({
+    return createVNode(1, "div", CLASSES.contentView, [normalizeProps(createComponentVNode(2, LoadPanel, _extends({}, this.props.loadPanelProps))), this.props.noDataTextProps.visible ? normalizeProps(createComponentVNode(2, NoDataText, _extends({}, this.props.noDataTextProps))) : normalizeProps(createComponentVNode(2, Scrollable, _extends({
       "componentRef": this.props.scrollableRef
     }, this.props.scrollableProps, {
       children: this.props.children
-    }), null, this.scrollableRef)), normalizeProps(createComponentVNode(2, ErrorRow, _extends({}, this.props.errorRowProps)))], 0, null, null, this.containerRef);
+    }), null, this.scrollableRef)), normalizeProps(createComponentVNode(2, ErrorRow, _extends({}, this.props.errorRowProps)))], 0, {
+      "oncontextmenu": this.props.showContextMenu
+    }, null, this.containerRef);
   }
   updateSizesInfo() {
-    var _this$props, _this$props$onViewpor;
-    const clientHeight = this.scrollableRef.current.clientHeight();
-    (_this$props = this.props) === null || _this$props === void 0 || (_this$props$onViewpor = _this$props.onViewportHeightChange) === null || _this$props$onViewpor === void 0 || _this$props$onViewpor.call(_this$props, clientHeight);
+    if (this.scrollableRef.current) {
+      var _this$props, _this$props$onViewpor;
+      const clientHeight = this.scrollableRef.current.clientHeight();
+      (_this$props = this.props) === null || _this$props === void 0 || (_this$props$onViewpor = _this$props.onViewportHeightChange) === null || _this$props$onViewpor === void 0 || _this$props$onViewpor.call(_this$props, clientHeight);
+    }
   }
   componentDidMount() {
+    var _this$props$onRendere, _this$props3;
     this.updateSizesInfo();
     resizeObserverSingleton.observe(this.containerRef.current, entry => {
-      var _this$props$onWidthCh, _this$props2;
-      (_this$props$onWidthCh = (_this$props2 = this.props).onWidthChange) === null || _this$props$onWidthCh === void 0 || _this$props$onWidthCh.call(_this$props2, entry.contentRect.width);
+      // NOTE: Hotfix for demos test resize windows issue
+      this.resizeObserverTimeout = setTimeout(() => {
+        var _this$props$onWidthCh, _this$props2;
+        this.resizeObserverTimeout = null;
+        (_this$props$onWidthCh = (_this$props2 = this.props).onWidthChange) === null || _this$props$onWidthCh === void 0 || _this$props$onWidthCh.call(_this$props2, entry.contentRect.width);
+      }, 0);
     });
+    (_this$props$onRendere = (_this$props3 = this.props).onRendered) === null || _this$props$onRendere === void 0 || _this$props$onRendere.call(_this$props3);
   }
   componentDidUpdate() {
+    var _this$props$onRendere2, _this$props4;
     this.updateSizesInfo();
+    (_this$props$onRendere2 = (_this$props4 = this.props).onRendered) === null || _this$props$onRendere2 === void 0 || _this$props$onRendere2.call(_this$props4);
   }
   componentWillUnmount() {
     resizeObserverSingleton.unobserve(this.containerRef.current);
+    if (this.resizeObserverTimeout !== null) {
+      clearTimeout(this.resizeObserverTimeout);
+    }
   }
 }

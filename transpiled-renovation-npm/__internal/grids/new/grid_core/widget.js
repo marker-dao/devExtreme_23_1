@@ -6,23 +6,26 @@ Object.defineProperty(exports, "__esModule", {
 exports.GridCoreNewBase = exports.GridCoreNew = void 0;
 var _extend = require("../../../../core/utils/extend");
 var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.widget"));
+var _signalsCore = require("@preact/signals-core");
 var _index = require("../../../core/di/index");
 var _m_inferno_renderer = require("../../../core/m_inferno_renderer");
 var _view = require("../../../grids/new/grid_core/search/view");
+var _inferno = require("inferno");
+var _index2 = require("./accessibility/index");
 var ColumnChooserModule = _interopRequireWildcard(require("./column_chooser/index"));
 var _compatibility = require("./columns_controller/compatibility");
 var ColumnsControllerModule = _interopRequireWildcard(require("./columns_controller/index"));
 var DataControllerModule = _interopRequireWildcard(require("./data_controller/index"));
 var di = _interopRequireWildcard(require("./di"));
-var _controller = require("./editing/controller");
+var EditingModule = _interopRequireWildcard(require("./editing/index"));
 var _view2 = require("./editing/popup/view");
 var _error_controller = require("./error_controller/error_controller");
-var _clear_filter_visitor = require("./filtering/filter_visitors/clear_filter_visitor");
-var _get_applied_filters_visitor = require("./filtering/filter_visitors/get_applied_filters_visitor");
-var _index5 = require("./filtering/header_filter/index");
+var _index7 = require("./filtering/filter_sync/index");
+var _index8 = require("./filtering/header_filter/index");
 var _view_controller = require("./filtering/header_filter/view_controller");
 var FilterControllerModule = _interopRequireWildcard(require("./filtering/index"));
 var _items_controller = require("./items_controller/items_controller");
+var _controller = require("./lifecycle/controller");
 var _main_view = require("./main_view");
 var _options = require("./options");
 var _view3 = require("./pager/view");
@@ -42,7 +45,7 @@ class GridCoreNewBase extends _ui.default {
     di.register(this.diContext);
   }
   _initWidgetMock() {
-    this.diContext.registerInstance(_widget_mock.WidgetMock, new _widget_mock.WidgetMock(this, this.diContext.get(DataControllerModule.CompatibilityDataController), this.diContext.get(_compatibility.CompatibilityColumnsController)));
+    this.diContext.registerInstance(_widget_mock.WidgetMock, new _widget_mock.WidgetMock(this, this.diContext.get(DataControllerModule.CompatibilityDataController), this.diContext.get(_compatibility.CompatibilityColumnsController), this.diContext.get(_index8.CompatibilityHeaderFilterController), this.diContext.get(_index7.CompatibilityFilterSyncController)));
   }
   _initDIContext() {
     this.dataController = this.diContext.get(DataControllerModule.DataController);
@@ -52,7 +55,7 @@ class GridCoreNewBase extends _ui.default {
     this.itemsController = this.diContext.get(_items_controller.ItemsController);
     this.toolbarController = this.diContext.get(_controller2.ToolbarController);
     this.toolbarView = this.diContext.get(_view4.ToolbarView);
-    this.editingController = this.diContext.get(_controller.EditingController);
+    this.editingController = this.diContext.get(EditingModule.Controller);
     this.editPopupView = this.diContext.get(_view2.EditPopupView);
     this.pagerView = this.diContext.get(_view3.PagerView);
     this.searchController = this.diContext.get(SearchControllerModule.SearchController);
@@ -60,19 +63,28 @@ class GridCoreNewBase extends _ui.default {
     this.columnChooserView = this.diContext.get(ColumnChooserModule.ColumnChooserView);
     this.errorController = this.diContext.get(_error_controller.ErrorController);
     this.filterController = this.diContext.get(FilterControllerModule.FilterController);
-    this.headerFilterController = this.diContext.get(_index5.HeaderFilterController);
+    this.headerFilterController = this.diContext.get(_index8.HeaderFilterController);
     this.filterPanelView = this.diContext.get(FilterControllerModule.FilterPanelView);
     this.headerFilterViewController = this.diContext.get(_view_controller.HeaderFilterViewController);
+    this.accessibilityController = this.diContext.get(_index2.AccessibilityController);
+    this.filterSyncController = this.diContext.get(_index7.FilterSyncController);
     this.searchView = this.diContext.get(_view.SearchView);
-    this.clearFilterVisitor = this.diContext.get(_clear_filter_visitor.ClearFilterVisitor);
-    this.getAppliedFiltersVisitor = this.diContext.get(_get_applied_filters_visitor.GetAppliedFilterVisitor);
+  }
+  _initLifeCycleController() {
+    this.lifeCycleController = this.diContext.get(_controller.LifeCycleController);
+    this.lifeCycleController.provideContentReadyCallback(() => {
+      // @ts-expect-error
+      this._fireContentReadyAction();
+    });
   }
   _init() {
     // @ts-expect-error
     super._init();
+    this.initialized = (0, _signalsCore.signal)(false);
     this._registerDIContext();
     this._initWidgetMock();
     this._initDIContext();
+    this._initLifeCycleController();
   }
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), (0, _extend.extend)(true, {}, _options.defaultOptions));
@@ -82,10 +94,23 @@ class GridCoreNewBase extends _ui.default {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return super._defaultOptionsRules().concat(_options.defaultOptionsRules);
   }
+  _initializeComponent() {
+    // @ts-expect-error usage of base method not described in d.ts
+    super._initializeComponent();
+    this.initialized.value = true;
+  }
+  // NOTE: this disables calling of _fireContentReadyAction on initial render
+  _renderContent() {
+    // @ts-expect-error
+    this._renderContentImpl();
+  }
   _initMarkup() {
     // @ts-expect-error
     super._initMarkup();
     this.renderSubscription = this.diContext.get(_main_view.MainView).render(this.$element().get(0));
+    // NOTE: We flush all Inferno async render operations after initial render
+    // Because after component creation markup should be ready
+    (0, _inferno.rerender)();
   }
   _optionChanged(args) {
     [this.filterPanelView].forEach(c => {
@@ -107,5 +132,5 @@ class GridCoreNewBase extends _ui.default {
   }
 }
 exports.GridCoreNewBase = GridCoreNewBase;
-class GridCoreNew extends ColumnsControllerModule.PublicMethods(DataControllerModule.PublicMethods(SortingControllerModule.PublicMethods(FilterControllerModule.PublicMethods(ColumnChooserModule.PublicMethods(SelectionControllerModule.PublicMethods(SearchControllerModule.PublicMethods(GridCoreNewBase))))))) {}
+class GridCoreNew extends ColumnsControllerModule.PublicMethods(DataControllerModule.PublicMethods(SortingControllerModule.PublicMethods(FilterControllerModule.PublicMethods(ColumnChooserModule.PublicMethods(SelectionControllerModule.PublicMethods(SearchControllerModule.PublicMethods(EditingModule.PublicMethods(GridCoreNewBase)))))))) {}
 exports.GridCoreNew = GridCoreNew;

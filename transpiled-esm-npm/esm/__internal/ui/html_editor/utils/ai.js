@@ -144,3 +144,4 @@ export const buildAICommandParams = (uiCommandName, askAIPrompt, option, getCust
       }
   }
 };
+export const hasInvalidCustomCommand = commandsMap => Object.keys(commandsMap).some(command => command.startsWith('custom') && !commandsMap[command].prompt);

@@ -9,7 +9,7 @@ var _animation = require("../../../common/core/animation");
 var _click = require("../../../common/core/events/click");
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
 var _swipe = require("../../../common/core/events/swipe");
-var _index = require("../../../common/core/events/utils/index");
+var _utils = require("../../../common/core/events/utils");
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
 var _devices = _interopRequireDefault(require("../../../core/devices"));
 var _element = require("../../../core/element");
@@ -28,13 +28,13 @@ var _window = require("../../../core/utils/window");
 var _button = _interopRequireDefault(require("../../../ui/button"));
 var _scroll_view = _interopRequireDefault(require("../../../ui/scroll_view"));
 var _themes = require("../../../ui/themes");
-var _utils = require("../../../ui/widget/utils.ink_ripple");
+var _utils2 = require("../../../ui/widget/utils.ink_ripple");
 var _m_support = _interopRequireDefault(require("../../core/utils/m_support"));
-var _m_collection_widget = _interopRequireDefault(require("../../ui/collection/m_collection_widget.live_update"));
-var _m_scrollable = require("../../ui/scroll_view/m_scrollable.device");
+var _collection_widget = _interopRequireDefault(require("../../ui/collection/collection_widget.live_update"));
+var _scrollable = require("../../ui/scroll_view/scrollable.device");
 var _get_element_style = require("../../ui/scroll_view/utils/get_element_style");
 var _m_grouped_data_converter_mixin = _interopRequireDefault(require("../../ui/shared/m_grouped_data_converter_mixin"));
-var _m_item = _interopRequireDefault(require("./m_item"));
+var _item = _interopRequireDefault(require("./item"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const LIST_CLASS = 'dx-list';
@@ -60,66 +60,85 @@ const LIST_FEEDBACK_SHOW_TIMEOUT = 70;
 const groupItemsGetter = (0, _data.compileGetter)('items');
 // eslint-disable-next-line @typescript-eslint/naming-convention
 let _scrollView;
-class ListBase extends _m_collection_widget.default {
+class ListBase extends _collection_widget.default {
   _supportedKeys() {
-    const that = this;
-    const moveFocusPerPage = function (direction) {
-      let $item = getEdgeVisibleItem(direction);
-      const {
-        focusedElement
-      } = that.option();
-      // @ts-expect-error ts-error
-      const isFocusedItem = $item.is(focusedElement);
-      if (isFocusedItem) {
-        scrollListTo($item, direction);
-        $item = getEdgeVisibleItem(direction);
-      }
-      that.option('focusedElement', (0, _element.getPublicElement)($item));
-      that.scrollToItem($item);
-    };
-    function getEdgeVisibleItem(direction) {
-      const scrollTop = that.scrollTop();
-      const containerHeight = (0, _size.getHeight)(that.$element());
-      const {
-        focusedElement
-      } = that.option();
-      let $item = (0, _renderer.default)(focusedElement);
-      let isItemVisible = true;
-      if (!$item.length) {
-        return (0, _renderer.default)();
-      }
-      while (isItemVisible) {
-        const $nextItem = $item[direction]();
-        if (!$nextItem.length) {
-          break;
-        }
-        const nextItemLocation = $nextItem.position().top + (0, _size.getOuterHeight)($nextItem) / 2;
-        isItemVisible = nextItemLocation < containerHeight + scrollTop && nextItemLocation > scrollTop;
-        if (isItemVisible) {
-          $item = $nextItem;
-        }
-      }
-      return $item;
-    }
-    function scrollListTo($item, direction) {
-      let resultPosition = $item.position().top;
-      if (direction === 'prev') {
-        resultPosition = $item.position().top - (0, _size.getHeight)(that.$element()) + (0, _size.getOuterHeight)($item);
-      }
-      that.scrollTo(resultPosition);
-    }
     return _extends({}, super._supportedKeys(), {
       leftArrow: _common.noop,
       rightArrow: _common.noop,
-      pageUp() {
-        moveFocusPerPage('prev');
-        return false;
+      pageUp(e) {
+        this._moveFocusPerPage(e, 'prev');
       },
-      pageDown() {
-        moveFocusPerPage('next');
-        return false;
+      pageDown(e) {
+        this._moveFocusPerPage(e, 'next');
       }
     });
+  }
+  _moveFocusPerPage(e, direction) {
+    if (this._isLastItemFocused(direction)) {
+      return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    let $item = this._getEdgeVisibleItem(direction);
+    const {
+      focusedElement
+    } = this.option();
+    const isFocusedItem = $item.is((0, _renderer.default)(focusedElement));
+    if (isFocusedItem) {
+      this.scrollTo(this._getItemLocation($item, direction));
+      $item = this._getEdgeVisibleItem(direction);
+    }
+    this.option('focusedElement', (0, _element.getPublicElement)($item));
+    this.scrollToItem($item);
+  }
+  _isLastItemFocused(direction) {
+    const lastItemInDirection = direction === 'prev' ? this._itemElements().first() : this._itemElements().last();
+    const {
+      focusedElement
+    } = this.option();
+    return lastItemInDirection.is((0, _renderer.default)(focusedElement));
+  }
+  _getNextItem($item, direction) {
+    const $items = this._getAvailableItems();
+    const itemIndex = $items.index($item);
+    if (direction === 'prev') {
+      return (0, _renderer.default)($items[itemIndex - 1]);
+    }
+    return (0, _renderer.default)($items[itemIndex + 1]);
+  }
+  _getEdgeVisibleItem(direction) {
+    const scrollTop = this.scrollTop();
+    const containerHeight = (0, _size.getHeight)(this.$element());
+    const {
+      focusedElement
+    } = this.option();
+    let $item = (0, _renderer.default)(focusedElement);
+    let isItemVisible = true;
+    if (!$item.length) {
+      return (0, _renderer.default)();
+    }
+    while (isItemVisible) {
+      var _$nextItem$position;
+      const $nextItem = this._getNextItem($item, direction);
+      if (!$nextItem.length) {
+        break;
+      }
+      const nextItemLocation = (((_$nextItem$position = $nextItem.position()) === null || _$nextItem$position === void 0 ? void 0 : _$nextItem$position.top) ?? 0) + (0, _size.getOuterHeight)($nextItem) / 2;
+      isItemVisible = nextItemLocation < containerHeight + scrollTop && nextItemLocation > scrollTop;
+      if (isItemVisible) {
+        $item = $nextItem;
+      }
+    }
+    return $item;
+  }
+  _getItemLocation($item, direction) {
+    if (direction === 'prev') {
+      // @ts-expect-error ts-error
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return $item.position().top - (0, _size.getHeight)(this.$element()) + (0, _size.getOuterHeight)($item);
+    }
+    // @ts-expect-error ts-error
+    return $item.position().top;
   }
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -170,8 +189,7 @@ class ListBase extends _m_collection_widget.default {
   }
   _defaultOptionsRules() {
     const themeName = (0, _themes.current)();
-    // @ts-expect-error ts-error
-    return super._defaultOptionsRules().concat((0, _m_scrollable.deviceDependentOptions)(), [{
+    return super._defaultOptionsRules().concat((0, _scrollable.deviceDependentOptions)(), [{
       device() {
         return !_m_support.default.nativeScrolling;
       },
@@ -328,7 +346,6 @@ class ListBase extends _m_collection_widget.default {
   _init() {
     super._init();
     this._updateActiveStateUnit();
-    // @ts-expect-error ts-error
     this._dataController.resetDataSourcePageIndex();
     this._$container = this.$element();
     this._$listContainer = (0, _renderer.default)('<div>').addClass(LIST_ITEMS_CLASS);
@@ -368,7 +385,6 @@ class ListBase extends _m_collection_widget.default {
   _initScrollView() {
     const scrollingEnabled = this.option('scrollingEnabled');
     const pullRefreshEnabled = scrollingEnabled && this.option('pullRefreshEnabled');
-    // @ts-expect-error ts-error
     const autoPagingEnabled = scrollingEnabled && this._scrollBottomMode() && !!this._dataController.getDataSource();
     this._scrollView = this._createComponent(this.$element(), getScrollView(), {
       height: this.option('height'),
@@ -433,10 +449,12 @@ class ListBase extends _m_collection_widget.default {
     return ['text', 'html', 'icon'];
   }
   _updateLoadingState(tryLoadMore) {
-    // @ts-expect-error ts-error
     const dataController = this._dataController;
+    const scrollBottomMode = this._scrollBottomMode();
+    const isDataControllerLoading = dataController.isLoading();
     // @ts-expect-error ts-error
-    const shouldLoadNextPage = this._scrollBottomMode() && tryLoadMore && !dataController.isLoading() && !this._isLastPage();
+    const isLastPage = this._isLastPage();
+    const shouldLoadNextPage = scrollBottomMode && Boolean(tryLoadMore) && !isDataControllerLoading && !isLastPage;
     if (this._shouldContinueLoading(shouldLoadNextPage)) {
       this._infiniteDataLoading();
     } else {
@@ -447,7 +465,6 @@ class ListBase extends _m_collection_widget.default {
     }
   }
   _shouldRenderNextButton() {
-    // @ts-expect-error ts-error
     return this._nextButtonMode() && this._dataController.isLoaded();
   }
   _isDataSourceFirstLoadCompleted(newValue) {
@@ -510,7 +527,6 @@ class ListBase extends _m_collection_widget.default {
   _pullDownHandler(e) {
     var _this$_pullRefreshAct;
     (_this$_pullRefreshAct = this._pullRefreshAction) === null || _this$_pullRefreshAct === void 0 || _this$_pullRefreshAct.call(this, e);
-    // @ts-expect-error ts-error
     const dataController = this._dataController;
     if (dataController.getDataSource() && !dataController.isLoading()) {
       this._clearSelectedItems();
@@ -522,8 +538,18 @@ class ListBase extends _m_collection_widget.default {
   }
   _shouldContinueLoading(shouldLoadNextPage) {
     var _this$_scrollView$scr;
-    const isBottomReached = (0, _size.getHeight)(this._scrollView.content()) - (0, _size.getHeight)(this._scrollView.container()) < (((_this$_scrollView$scr = this._scrollView.scrollOffset()) === null || _this$_scrollView$scr === void 0 ? void 0 : _this$_scrollView$scr.top) ?? 0);
-    return shouldLoadNextPage && (!this._scrollViewIsFull() || isBottomReached);
+    if (!shouldLoadNextPage) {
+      return false;
+    }
+    const $content = this._scrollView.content();
+    const $container = this._scrollView.container();
+    const contentHeight = (0, _size.getHeight)($content);
+    const containerHeight = (0, _size.getHeight)($container);
+    const offsetTop = ((_this$_scrollView$scr = this._scrollView.scrollOffset()) === null || _this$_scrollView$scr === void 0 ? void 0 : _this$_scrollView$scr.top) ?? 0;
+    const isBottomReached = contentHeight - containerHeight < offsetTop;
+    const isFull = this._scrollViewIsFull();
+    const shouldContinueLoading = shouldLoadNextPage && !isFull || isBottomReached;
+    return shouldContinueLoading;
   }
   _infiniteDataLoading() {
     const isElementVisible = this.$element().is(':visible');
@@ -537,7 +563,6 @@ class ListBase extends _m_collection_widget.default {
   _scrollBottomHandler(e) {
     var _this$_pageLoadingAct;
     (_this$_pageLoadingAct = this._pageLoadingAction) === null || _this$_pageLoadingAct === void 0 || _this$_pageLoadingAct.call(this, e);
-    // @ts-expect-error ts-error
     const dataController = this._dataController;
     // @ts-expect-error ts-error
     if (!dataController.isLoading() && !this._isLastPage()) {
@@ -573,7 +598,7 @@ class ListBase extends _m_collection_widget.default {
       collapsibleGroups
     } = this.option();
     // @ts-expect-error ts-error
-    const eventNameClick = (0, _index.addNamespace)(_click.name, this.NAME);
+    const eventNameClick = (0, _utils.addNamespace)(_click.name, this.NAME);
     const headerSelector = `.${LIST_GROUP_HEADER_CLASS}`;
     const $element = this.$element();
     $element.toggleClass(LIST_COLLAPSIBLE_GROUPS_CLASS, collapsibleGroups);
@@ -699,7 +724,7 @@ class ListBase extends _m_collection_widget.default {
     return this._itemContainer();
   }
   _renderInkRipple() {
-    this._inkRipple = (0, _utils.render)();
+    this._inkRipple = (0, _utils2.render)();
   }
   _toggleActiveState($element, value, e) {
     // @ts-expect-error ts-error
@@ -741,7 +766,7 @@ class ListBase extends _m_collection_widget.default {
   }
   _attachSwipeEvent($itemElement) {
     // @ts-expect-error ts-error
-    const endEventName = (0, _index.addNamespace)(_swipe.end, this.NAME);
+    const endEventName = (0, _utils.addNamespace)(_swipe.end, this.NAME);
     _events_engine.default.on($itemElement, endEventName, this._itemSwipeEndHandler.bind(this));
   }
   _itemSwipeEndHandler(e) {
@@ -752,7 +777,6 @@ class ListBase extends _m_collection_widget.default {
   _nextButtonHandler(e) {
     var _this$_pageLoadingAct2;
     (_this$_pageLoadingAct2 = this._pageLoadingAction) === null || _this$_pageLoadingAct2 === void 0 || _this$_pageLoadingAct2.call(this, e);
-    // @ts-expect-error ts-error
     const dataController = this._dataController;
     if (dataController.getDataSource() && !dataController.isLoading()) {
       var _this$_$nextButton;
@@ -818,7 +842,6 @@ class ListBase extends _m_collection_widget.default {
     // @ts-expect-error ts-error
     this._createItemByTemplate(groupTemplate, renderArgs);
     (0, _renderer.default)('<div>').addClass(LIST_GROUP_HEADER_INDICATOR_CLASS).prependTo($groupHeaderElement);
-    this._renderingGroupIndex = index;
     const groupBodyId = `dx-${new _guid.default().toString()}`;
     const $groupBody = (0, _renderer.default)('<div>').addClass(LIST_GROUP_BODY_CLASS).attr('id', groupBodyId).appendTo($groupElement);
     // @ts-expect-error ts-error
@@ -886,7 +909,6 @@ class ListBase extends _m_collection_widget.default {
     this._scrollView.option('disabled', value || !this.option('scrollingEnabled'));
   }
   _toggleNextButton(value) {
-    // @ts-expect-error ts-error
     const dataController = this._dataController;
     const $nextButton = this._getNextButton();
     this.$element().toggleClass(LIST_HAS_NEXT_CLASS, value);
@@ -1095,11 +1117,10 @@ class ListBase extends _m_collection_widget.default {
     this.updateDimensions();
   }
 }
-// @ts-expect-error ts-error
 exports.ListBase = ListBase;
-ListBase.include(_m_grouped_data_converter_mixin.default);
+ListBase.ItemClass = _item.default;
 // @ts-expect-error ts-error
-ListBase.ItemClass = _m_item.default;
+ListBase.include(_m_grouped_data_converter_mixin.default);
 function getScrollView() {
   return _scrollView || _scroll_view.default;
 }

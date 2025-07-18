@@ -1051,7 +1051,6 @@ class CollectionWidget extends _widget.default {
     return (0, _renderer.default)($element).closest(this._itemSelector());
   }
   _getItemData(itemElement) {
-    // @ts-expect-error ts-error
     return (0, _renderer.default)(itemElement).data(this._itemDataKey());
   }
   _getSummaryItemsSize(dimension, items, includeMargin) {

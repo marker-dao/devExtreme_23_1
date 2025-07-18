@@ -34,9 +34,9 @@ var _m_form2 = _interopRequireDefault(require("../../ui/form/m_form.item_options
 var _m_form3 = _interopRequireDefault(require("../../ui/form/m_form.items_runtime_info"));
 var _m_formLayout_manager = require("../../ui/form/m_form.layout_manager.utils");
 var _m_form4 = require("../../ui/form/m_form.utils");
-var _m_scrollable = _interopRequireDefault(require("../../ui/scroll_view/m_scrollable"));
+var _scrollable = _interopRequireDefault(require("../../ui/scroll_view/scrollable"));
 var _m_text_editor = require("../../ui/text_box/m_text_editor.base");
-var _m_constants = require("../../ui/toolbar/m_constants");
+var _constants2 = require("../../ui/toolbar/constants");
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -277,7 +277,7 @@ class Form extends _widget.default {
       items: this.option('items'),
       inOneColumn
     });
-    (0, _visibility_change.triggerResizeEvent)(this.$element().find(`.${_m_constants.TOOLBAR_CLASS}`));
+    (0, _visibility_change.triggerResizeEvent)(this.$element().find(`.${_constants2.TOOLBAR_CLASS}`));
   }
   _clean() {
     this._clearValidationSummary();
@@ -290,7 +290,7 @@ class Form extends _widget.default {
   _renderScrollable() {
     const useNativeScrolling = this.option('useNativeScrolling');
     // @ts-expect-error ts-error
-    this._scrollable = new _m_scrollable.default(this.$element(), {
+    this._scrollable = new _scrollable.default(this.$element(), {
       useNative: !!useNativeScrolling,
       useSimulatedScrollbar: !useNativeScrolling,
       useKeyboard: false,
@@ -1147,9 +1147,6 @@ class Form extends _widget.default {
     super._dispose();
   }
   clear() {
-    this._clear();
-  }
-  resetValues() {
     this._clear();
   }
   reset(editorsData) {

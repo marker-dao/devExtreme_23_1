@@ -26,48 +26,63 @@ class HeaderFilterViewController {
     this.popupStateInternal = (0, _signalsCore.signal)(null);
     this.popupState = this.popupStateInternal;
   }
-  openPopup(element, column, onFilterCloseCallback) {
+  openPopup(element, column, onFilterCloseCallback, customApply, isFilterBuilder) {
     const rootDataSource = this.dataController.getStoreLoadAdapter();
+    /*
+      Note: Root headerFilter options are used because the legacy code handles retrieving
+      options for specific columns on its own
+    */
     const rootHeaderFilterOptions = this.options.oneWay('headerFilter').peek();
     const filterExpression = this.getFilterExpressionWithoutCurrentColumn(column);
-    const filterDataSourceOptions = (0, _legacy_header_filter.getDataSourceOptions)(rootDataSource, _extends({}, column, {
+    const type = (0, _legacy_header_filter.getHeaderFilterListType)(column);
+    const {
+      columnsController
+    } = this;
+    const applyFilter = (filterValues, filterType) => {
+      if (customApply) {
+        customApply(filterValues);
+      } else {
+        columnsController.updateColumns(columns => {
+          const index = (0, _utils.getColumnIndexByName)(columns, column.name);
+          const newColumns = [...columns];
+          newColumns[index] = _extends({}, newColumns[index], {
+            // NOTE: Copy array because of mutations in legacy code
+            filterValues: Array.isArray(filterValues) ? [...filterValues] : filterValues,
+            filterType
+          });
+          return newColumns;
+        });
+      }
+      onFilterCloseCallback === null || onFilterCloseCallback === void 0 || onFilterCloseCallback();
+    };
+    const popupOptions = {
+      type,
+      column: _extends({}, column),
+      isFilterBuilder,
+      headerFilter: _extends({}, column.headerFilter),
       filterType: column.filterType,
-      filterValues: column.filterValues
-    }),
+      // NOTE: Copy array because of mutations in legacy code
+      filterValues: Array.isArray(column.filterValues) ? [...column.filterValues] : column.filterValues,
+      apply() {
+        applyFilter(this.filterValues, this.filterType);
+      },
+      hidePopupCallback: () => {
+        this.popupStateInternal.value = null;
+        onFilterCloseCallback === null || onFilterCloseCallback === void 0 || onFilterCloseCallback();
+      }
+    };
+    popupOptions.dataSource = (0, _legacy_header_filter.getDataSourceOptions)(rootDataSource, popupOptions,
     // NOTE: Only text used from root options
     {
       texts: rootHeaderFilterOptions.texts
     }, filterExpression);
-    const type = (0, _legacy_header_filter.getFilterType)(column);
-    const colsController = this.columnsController;
     this.popupStateInternal.value = {
       element,
-      options: {
-        type,
-        headerFilter: _extends({}, column.headerFilter),
-        dataSource: filterDataSourceOptions,
-        filterType: column.filterType,
-        // NOTE: Copy array because of mutations in legacy code
-        filterValues: Array.isArray(column.filterValues) ? [...column.filterValues] : column.filterValues,
-        apply() {
-          colsController.updateColumns(columns => {
-            const index = (0, _utils.getColumnIndexByName)(columns, column.name);
-            const newColumns = [...columns];
-            newColumns[index] = _extends({}, newColumns[index], {
-              headerFilter: _extends({}, newColumns[index].headerFilter),
-              filterValues: Array.isArray(this.filterValues) ? [...this.filterValues] : this.filterValues,
-              filterType: this.filterType
-            });
-            return newColumns;
-          });
-          onFilterCloseCallback === null || onFilterCloseCallback === void 0 || onFilterCloseCallback();
-        },
-        hidePopupCallback: () => {
-          this.popupStateInternal.value = null;
-          onFilterCloseCallback === null || onFilterCloseCallback === void 0 || onFilterCloseCallback();
-        }
-      }
+      options: popupOptions
     };
+  }
+  closePopup() {
+    this.popupStateInternal.value = null;
   }
   removeColumnFromFilters(appliedFilters, excludedColumn) {
     const columnId = (0, _utils3.getColumnIdentifier)(excludedColumn);
@@ -89,9 +104,10 @@ class HeaderFilterViewController {
   getFilterExpressionWithoutCurrentColumn(column) {
     const appliedFilters = this.filterController.appliedFilters.peek();
     const filtersWithoutCurrentColumn = this.removeColumnFromFilters(appliedFilters, column);
-    const allColumns = this.columnsController.columns.peek();
+    const filterableColumns = this.columnsController.filterableColumns.peek();
     const customOperations = this.filterController.customOperations.peek();
-    const appliedFilterExpresssionsArray = (0, _utils2.getAppliedFilterExpressions)(filtersWithoutCurrentColumn, allColumns, customOperations);
+    const filterSyncEnabled = this.filterController.filterSyncEnabled.peek();
+    const appliedFilterExpresssionsArray = (0, _utils2.getAppliedFilterExpressions)(filtersWithoutCurrentColumn, filterableColumns, customOperations, filterSyncEnabled);
     return this.combineFilterExpressions(appliedFilterExpresssionsArray);
   }
 }

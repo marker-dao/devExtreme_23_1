@@ -77,6 +77,7 @@ class Calendar extends Editor {
       selectionMode: 'single',
       selectWeekOnClick: true,
       showTodayButton: false,
+      todayButtonText: messageLocalization.format('dxCalendar-todayButtonText'),
       showWeekNumbers: false,
       weekNumberRule: 'auto',
       cellTemplate: 'cell',
@@ -963,11 +964,14 @@ class Calendar extends Editor {
     return normalizedDate === min || normalizedDate === max;
   }
   _renderFooter() {
-    const showTodayButton = this.option('showTodayButton');
+    const {
+      showTodayButton,
+      todayButtonText: text
+    } = this.option();
     if (showTodayButton) {
       const $todayButton = this._createComponent($('<div>'), Button, {
         focusStateEnabled: this.option('focusStateEnabled'),
-        text: messageLocalization.format('dxCalendar-todayButtonText'),
+        text,
         onClick: args => {
           this._toTodayView(args);
         },
@@ -980,7 +984,6 @@ class Calendar extends Editor {
       this._$footer = $('<div>').addClass(CALENDAR_FOOTER_CLASS).append($todayButton);
       this.$element().append(this._$footer);
     }
-    // @ts-expect-error ts-error
     this.$element().toggleClass(CALENDAR_HAS_FOOTER_CLASS, showTodayButton);
   }
   _renderSubmitElement() {
@@ -1352,6 +1355,7 @@ class Calendar extends Editor {
       case 'dateSerializationFormat':
       case 'cellTemplate':
       case 'showTodayButton':
+      case 'todayButtonText':
         this._invalidate();
         break;
       case 'readOnly':

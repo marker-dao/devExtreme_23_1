@@ -34,6 +34,7 @@ const viewItemSelectorMap = {
 let isMouseDown = false;
 let isHiddenFocusing = false;
 let focusedElementInfo = null;
+let needToSkipFocusin = false;
 function processKeyDown(viewName, instance, event, action, $mainElement, executeKeyDown) {
   const isHandled = fireKeyDownEvent(instance, event.originalEvent, executeKeyDown);
   if (isHandled) {
@@ -101,7 +102,8 @@ function fireKeyDownEvent(instance, event, executeAction) {
   return args.handled;
 }
 function onDocumentVisibilityChange() {
-  isHiddenFocusing = _dom_adapter.default.getDocument().visibilityState === 'visible';
+  const focusedElement = _dom_adapter.default.getActiveElement();
+  needToSkipFocusin = focusedElement && !focusedElement.closest(`.${FOCUS_STATE_CLASS}`);
 }
 function subscribeVisibilityChange() {
   _events_engine.default.on(_dom_adapter.default.getDocument(), 'visibilitychange', onDocumentVisibilityChange);
@@ -127,19 +129,28 @@ function registerKeyboardAction(viewName, instance, $element, selector, action, 
     getMainElement().removeClass(FOCUS_STATE_CLASS);
   };
   const focusinHandler = () => {
+    if (needToSkipFocusin) {
+      needToSkipFocusin = false;
+      return;
+    }
     const needShowOverlay = !isMouseDown && !isHiddenFocusing;
     if (needShowOverlay) {
       getMainElement().addClass(FOCUS_STATE_CLASS);
     }
     isMouseDown = false;
   };
+  const mouseUpHandler = () => {
+    isMouseDown = false;
+  };
   _events_engine.default.on($element, 'keydown', selector, keyDownHandler);
   _events_engine.default.on($element, 'mousedown', selector, mouseDownHandler);
   _events_engine.default.on($element, 'focusin', selector, focusinHandler);
+  _events_engine.default.on($element, 'mouseup contextmenu', selector, mouseUpHandler);
   return () => {
     _events_engine.default.off($element, 'keydown', selector, keyDownHandler);
     _events_engine.default.off($element, 'mousedown', selector, mouseDownHandler);
     _events_engine.default.off($element, 'focusin', selector, focusinHandler);
+    _events_engine.default.off($element, 'mouseup contextmenu', selector, mouseUpHandler);
   };
 }
 function restoreFocus(instance) {

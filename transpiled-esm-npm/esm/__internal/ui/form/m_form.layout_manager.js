@@ -19,7 +19,7 @@ import variableWrapper from '../../../core/utils/variable_wrapper';
 // @ts-expect-error ts-error
 import { getCurrentScreenFactor, hasWindow } from '../../../core/utils/window';
 import Widget from '../../core/widget/widget';
-import ResponsiveBox from '../../ui/m_responsive_box';
+import ResponsiveBox from '../../ui/responsive_box';
 import { renderButtonItem } from './components/m_button_item';
 import { renderEmptyItem } from './components/m_empty_item';
 import { renderFieldItem } from './components/m_field_item';
@@ -259,7 +259,6 @@ class LayoutManager extends Widget {
   _renderResponsiveBox() {
     const that = this;
     const templatesInfo = [];
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (that._items && that._items.length) {
       const colCount = that._getColCount();
       const $container = $('<div>').appendTo(that.$element());
@@ -307,7 +306,6 @@ class LayoutManager extends Widget {
     const that = this;
     const colCountByScreen = that.option('colCountByScreen');
     // @ts-expect-error ts-error
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     const xsColCount = colCountByScreen && colCountByScreen.xs;
     return {
       onItemStateChanged: this._itemStateChangedHandler.bind(this),
@@ -667,7 +665,6 @@ class LayoutManager extends Widget {
       const {
         form: formInstance
       } = this.option();
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       this._watch = formInstance && formInstance.option('integrationOptions.watchMethod');
     }
     return this._watch;

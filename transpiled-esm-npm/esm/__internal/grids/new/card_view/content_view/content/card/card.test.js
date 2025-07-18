@@ -1,7 +1,8 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode, normalizeProps } from "inferno";
-import { describe, expect, it } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { compileGetter } from '../../../../../../../common/data';
+import { Guid } from '../../../../../../core/m_guid';
 import { render } from 'inferno';
 import { Card } from './card';
 const props = {
@@ -51,6 +52,12 @@ const props = {
   }
 };
 describe('Rendering', () => {
+  beforeEach(() => {
+    jest.spyOn(Guid.prototype, '_normalize').mockReturnValue('guidmock');
+  });
+  afterEach(() => {
+    jest.spyOn(Guid.prototype, '_normalize').mockRestore();
+  });
   it('should be rendered correctly', () => {
     const container = document.createElement('div');
     // @ts-expect-error

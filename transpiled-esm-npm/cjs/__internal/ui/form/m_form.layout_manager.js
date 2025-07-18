@@ -23,7 +23,7 @@ var _type = require("../../../core/utils/type");
 var _variable_wrapper = _interopRequireDefault(require("../../../core/utils/variable_wrapper"));
 var _window = require("../../../core/utils/window");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
-var _m_responsive_box = _interopRequireDefault(require("../../ui/m_responsive_box"));
+var _responsive_box = _interopRequireDefault(require("../../ui/responsive_box"));
 var _m_button_item = require("./components/m_button_item");
 var _m_empty_item = require("./components/m_empty_item");
 var _m_field_item = require("./components/m_field_item");
@@ -265,14 +265,13 @@ class LayoutManager extends _widget.default {
   _renderResponsiveBox() {
     const that = this;
     const templatesInfo = [];
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (that._items && that._items.length) {
       const colCount = that._getColCount();
       const $container = (0, _renderer.default)('<div>').appendTo(that.$element());
       that._prepareItemsWithMerging(colCount);
       const layoutItems = that._generateLayoutItems();
       // @ts-expect-error ts-error
-      that._responsiveBox = that._createComponent($container, _m_responsive_box.default, that._getResponsiveBoxConfig(layoutItems, colCount, templatesInfo));
+      that._responsiveBox = that._createComponent($container, _responsive_box.default, that._getResponsiveBoxConfig(layoutItems, colCount, templatesInfo));
       if (!(0, _window.hasWindow)()) {
         that._renderTemplates(templatesInfo);
       }
@@ -313,7 +312,6 @@ class LayoutManager extends _widget.default {
     const that = this;
     const colCountByScreen = that.option('colCountByScreen');
     // @ts-expect-error ts-error
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     const xsColCount = colCountByScreen && colCountByScreen.xs;
     return {
       onItemStateChanged: this._itemStateChangedHandler.bind(this),
@@ -673,7 +671,6 @@ class LayoutManager extends _widget.default {
       const {
         form: formInstance
       } = this.option();
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       this._watch = formInstance && formInstance.option('integrationOptions.watchMethod');
     }
     return this._watch;

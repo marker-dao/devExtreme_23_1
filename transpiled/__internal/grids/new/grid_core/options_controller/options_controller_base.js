@@ -9,7 +9,7 @@ var _data = require("../../../../../core/utils/data");
 var _signalsCore = require("@preact/signals-core");
 var _m_extend = require("../../../../core/utils/m_extend");
 var _template_wrapper = require("../inferno_wrappers/template_wrapper");
-var _index = require("./utils/index");
+var _index = require("../utils/tree/index");
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
@@ -27,14 +27,20 @@ class OptionsController {
     this.component = component;
     this.cache = {
       oneWay: {},
+      oneWayWithChanges: {},
       twoWay: {},
       action: {},
       template: {}
     };
     this.isControlledMode = false;
+    // @ts-expect-error Component type doesn't have fields from widget.ts
+    this.initialized = this.component.initialized;
     // @ts-expect-error
     this.defaults = ((_component$_getDefaul = component._getDefaultOptions) === null || _component$_getDefaul === void 0 ? void 0 : _component$_getDefaul.call(component)) ?? {};
-    this.internalOptions = (0, _signalsCore.signal)((0, _m_extend.extend)(true, {}, component.option()));
+    this.internalOptions = (0, _signalsCore.signal)({
+      options: (0, _m_extend.extend)(true, {}, component.option()),
+      changes: null
+    });
     this.updateIsControlledMode();
     component.on('optionChanged', this.onOptionChangedHandler.bind(this));
   }
@@ -42,18 +48,40 @@ class OptionsController {
     const isControlledMode = this.component.option('integrationOptions.isControlledMode');
     this.isControlledMode = isControlledMode ?? false;
   }
-  onOptionChangedHandler(_ref) {
-    let {
+  onOptionChangedHandler(optionChanges) {
+    const {
       fullName
-    } = _ref;
+    } = optionChanges;
     this.updateIsControlledMode();
-    const pathParts = (0, _data.getPathParts)(fullName);
-    this.internalOptions.value = (0, _index.mergeOptionTrees)(this.internalOptions.peek(), this.component.option(), this.defaults, pathParts);
+    this.updateInternalOptionsState(fullName, optionChanges);
+  }
+  updateInternalOptionsState(optionFullName) {
+    let changes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    const pathParts = (0, _data.getPathParts)(optionFullName);
+    this.internalOptions.value = {
+      options: (0, _index.mergeOptionTrees)(this.internalOptions.peek().options, this.component.option(), this.defaults, pathParts),
+      changes
+    };
   }
   oneWay(name) {
     return getOr(this.cache.oneWay, name, () => {
       const pathArray = (0, _data.getPathParts)(name);
-      return (0, _signalsCore.computed)(() => (0, _index.getTreeNodeByPath)(this.internalOptions.value, pathArray));
+      return (0, _signalsCore.computed)(() => (0, _index.getTreeNodeByPath)(this.internalOptions.value.options, pathArray));
+    });
+  }
+  oneWayWithChanges(name) {
+    return getOr(this.cache.oneWayWithChanges, name, () => {
+      const pathArray = (0, _data.getPathParts)(name);
+      return (0, _signalsCore.computed)(() => {
+        const {
+          options,
+          changes
+        } = this.internalOptions.value;
+        return {
+          value: (0, _index.getTreeNodeByPath)(options, pathArray),
+          changes
+        };
+      });
     });
   }
   twoWay(name) {
@@ -69,15 +97,24 @@ class OptionsController {
           return obs.value;
         },
         set value(value) {
+          const isInitialized = that.initialized.peek();
           const callbackName = `on${name}Change`;
           const callback = that.component.option(callbackName);
           const isControlled = that.isControlledMode && that.component.option(name) !== undefined;
           if (isControlled) {
             callback === null || callback === void 0 || callback(value);
-          } else {
-            that.component.option(name, value);
-            callback === null || callback === void 0 || callback(value);
+            return;
           }
+          that.component.option(name, value);
+          // 🚨🚨🚨 Hotfix for filterSync
+          // Unit widget is initialized, the optionChange callback doesn't fire
+          // So, in this case we sync our internal options state with option manager manually
+          // TODO filterSync: refactor filter and get rid of set values to twoWay bindings
+          //   before the widget/optionManager is initialized
+          if (!isInitialized) {
+            that.updateInternalOptionsState(name);
+          }
+          callback === null || callback === void 0 || callback(value);
         },
         peek() {
           return obs.peek();

@@ -8,13 +8,13 @@ var _signalsCore = require("@preact/signals-core");
 var _m_filter_builder = require("../../../../../grids/grid_core/filter/m_filter_builder");
 var _m_filter_panel = require("../../../../../grids/grid_core/filter/m_filter_panel");
 var _view = require("../../core/view");
-var _options_controller = require("../../options_controller/options_controller");
 var _widget_mock = require("../../widget_mock");
+var _filter_controller = require("../filter_controller");
 var _filter_panel = require("./filter_panel");
 class FilterPanelView extends _view.View {
-  constructor(options, widget) {
+  constructor(filterController, widget) {
     super();
-    this.options = options;
+    this.filterController = filterController;
     this.widget = widget;
     this.component = _filter_panel.FilterPanelComponent;
     this.oldFilterPanelView = new _m_filter_panel.FilterPanelView(this.widget);
@@ -26,10 +26,10 @@ class FilterPanelView extends _view.View {
     return (0, _signalsCore.computed)(() => ({
       oldFilterBuilderView: this.oldFilterBuilderView,
       oldFilterPanelView: this.oldFilterPanelView,
-      filterValue: this.options.oneWay('filterValue').value,
-      filterPanel: this.options.oneWay('filterPanel').value,
-      filterBuilder: this.options.oneWay('filterBuilder').value,
-      filterBuilderPopup: this.options.oneWay('filterBuilderPopup').value
+      filterValue: this.filterController.filterValueOption.value,
+      filterPanel: this.filterController.filterPanelOptions.value,
+      filterBuilder: this.filterController.filterBuilderOptions.value,
+      filterBuilderPopup: this.filterController.filterBuilderPopupOptions.value
     }));
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -42,4 +42,4 @@ class FilterPanelView extends _view.View {
   }
 }
 exports.FilterPanelView = FilterPanelView;
-FilterPanelView.dependencies = [_options_controller.OptionsController, _widget_mock.WidgetMock];
+FilterPanelView.dependencies = [_filter_controller.FilterController, _widget_mock.WidgetMock];

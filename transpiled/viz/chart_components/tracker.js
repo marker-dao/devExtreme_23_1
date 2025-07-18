@@ -12,7 +12,6 @@ var _pointer = _interopRequireDefault(require("../../common/core/events/pointer"
 var _index = require("../../common/core/events/utils/index");
 var _type = require("../../core/utils/type");
 var _common = require("../../core/utils/common");
-var _errors = _interopRequireDefault(require("../../core/errors"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const _floor = Math.floor;
 const eventsConsts = _consts.default.events;
@@ -56,17 +55,11 @@ function getData(event, dataKey, tryCheckParent) {
   }
   return data;
 }
-function eventCanceled(_ref, target, clickTarget) {
+function eventCanceled(_ref, target) {
   let {
-    event,
     cancel
   } = _ref;
-  const deprecatedCancel = event.cancel; // DEPRECATED_22_1
-  const eventCanceled = cancel || deprecatedCancel;
-  if (deprecatedCancel) {
-    _errors.default.log('W0003', `${clickTarget}Click handler argument`, 'event.cancel', '22.1', 'Use the \'cancel\' field instead');
-  }
-  return eventCanceled || !target.getOptions();
+  return cancel || !target.getOptions();
 }
 function correctLegendHoverMode(mode) {
   if (LEGEND_HOVER_MODES.indexOf(mode) > -1) {
@@ -483,8 +476,8 @@ exports.ChartTracker = ChartTracker;
     }
     return null;
   },
-  _isPointerOut: function (canvas) {
-    return !canvas && this._stuckSeries;
+  _isPointerOut: function (canvas, point) {
+    return !canvas && this._stuckSeries && (point === null || point === void 0 ? void 0 : point.series) !== this._stuckSeries;
   },
   _hideCrosshair: function () {
     var _this$_crosshair;

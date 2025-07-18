@@ -7,7 +7,8 @@ exports.splitHighlightedText = exports.createFilterExpression = exports.compareT
 var _type = require("../../../../../core/utils/type");
 var _message = _interopRequireDefault(require("../../../../../localization/message"));
 var _m_utils = _interopRequireDefault(require("../../../../grids/grid_core/m_utils"));
-var _utils = require("../utils");
+var _common = require("../utils/common");
+var _index = require("../utils/parse_value/index");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable
   @typescript-eslint/explicit-module-boundary-types,
@@ -44,10 +45,9 @@ const splitHighlightedText = (text, _ref) => {
 };
 exports.splitHighlightedText = splitHighlightedText;
 const allowSearch = (column, searchVisibleColumnsOnly) => {
-  const allowSearchByDataField = !!column.dataField && (0, _type.isString)(column.dataField);
   const allowSearchByVisibility = !searchVisibleColumnsOnly || column.visible;
-  const allowSearchByConfig = column.allowSearch ?? column.allowFiltering;
-  return allowSearchByDataField && allowSearchByVisibility && allowSearchByConfig;
+  const allowSearchByConfig = column.allowSearch;
+  return allowSearchByVisibility && allowSearchByConfig;
 };
 exports.allowSearch = allowSearch;
 const createFilterExpression = (column, filterValue, selectedFilterOperation, target) => {
@@ -63,7 +63,7 @@ const calculateSearchFilter = (text, columns, searchVisibleColumnsOnly) => {
   if (!text) return null;
   for (const column of columns) {
     if (allowSearch(column, searchVisibleColumnsOnly)) {
-      const filterValue = (0, _utils.parseValue)(column, text);
+      const filterValue = (0, _index.parseValue)(column, text);
       if (filterValue !== undefined) {
         const expression = createFilterExpression(column, filterValue, undefined, 'search');
         filters.push(expression);
@@ -104,10 +104,10 @@ const addSearchTextBox = (props, setTextBoxRef) => ({
     placeholder: props.placeholder,
     width: props.width,
     inputAttr: {
-      'aria-label': _message.default.format(`${(0, _utils.getName)()}-ariaSearchInGrid`)
+      'aria-label': _message.default.format(`${(0, _common.getName)()}-ariaSearchInGrid`)
     },
     elementAttr: {
-      class: (0, _utils.addWidgetPrefix)(CLASS.searchPanel)
+      class: (0, _common.addWidgetPrefix)(CLASS.searchPanel)
     },
     mode: 'search',
     onDisposing: () => {

@@ -8,49 +8,37 @@ var _inferno = require("inferno");
 var _const = require("../../const");
 var _form = require("../../inferno_wrappers/form");
 var _popup = require("../../inferno_wrappers/popup");
-var _scrollable = require("../../inferno_wrappers/scrollable");
+var _buttons = require("./buttons");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class EditPopup extends _inferno.Component {
   render() {
-    if (!this.props.data) {
+    if (!this.props.visible) {
+      // TODO: research whether it is good approach
+      // @ts-expect-error
+      this.props.formRef.current = null;
       return (0, _inferno.createFragment)();
     }
-    const toolbarItems = [{
-      toolbar: 'bottom',
-      location: 'after',
-      widget: 'dxButton',
-      options: {
-        text: 'Save',
-        onClick: this.props.onSave,
-        stylingMode: 'contained',
-        type: 'default'
-      }
-    }, {
-      toolbar: 'bottom',
-      location: 'after',
-      widget: 'dxButton',
-      options: {
-        text: 'Cancel',
-        onClick: this.props.onCancel,
-        stylingMode: 'contained',
-        type: 'default'
-      }
-    }];
-    return (0, _inferno.createVNode)(1, "div", _const.CLASSES.excludeFlexBox, (0, _inferno.createComponentVNode)(2, _popup.Popup, {
+    const toolbarItems = [(0, _buttons.getSaveButtonConfig)({
+      onSave: this.props.onSave,
+      text: this.props.texts.saveCard
+    }), (0, _buttons.getCancelButtonConfig)({
+      onCancel: this.props.onCancel,
+      text: this.props.texts.cancel
+    })];
+    return (0, _inferno.createVNode)(1, "div", _const.CLASSES.excludeFlexBox, (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _popup.Popup, _extends({
       "visible": true,
       "toolbarItems": toolbarItems,
       "onHidden": this.props.onHide,
-      "showTitle": false,
-      children: (0, _inferno.createComponentVNode)(2, _scrollable.Scrollable, {
-        children: (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _form.Form, _extends({
-          "componentRef": this.props.formRef,
-          "colCount": 2,
-          "formData": this.props.data,
-          "customizeItem": this.props.customizeItem,
-          "items": this.props.items
-        }, this.props.formProps)))
-      })
-    }), 2);
+      "showTitle": false
+    }, this.props.popupProps, {
+      children: (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _form.Form, _extends({
+        "componentRef": this.props.formRef,
+        "colCount": 2,
+        "labelLocation": 'top',
+        "customizeItem": this.props.customizeItem,
+        "items": this.props.items
+      }, this.props.formProps)))
+    }))), 2);
   }
 }
 exports.EditPopup = EditPopup;

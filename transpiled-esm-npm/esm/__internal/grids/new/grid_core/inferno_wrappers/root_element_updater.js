@@ -1,6 +1,5 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["rootElementRef", "ref", "className", "children"];
-import { createFragment } from "inferno";
 import { Component } from 'inferno';
 export function normalizeEventName(name) {
   return name.substring(2).toLowerCase();
@@ -12,7 +11,8 @@ export class RootElementUpdater extends Component {
     this.previousAttributes = {};
   }
   render() {
-    return createFragment(this.props.children, 0);
+    // @ts-expect-error
+    return this.props.children;
   }
   updateClasses(element) {
     const currentClassName = this.props.className;

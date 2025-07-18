@@ -95,12 +95,6 @@ Object.defineProperty(exports, "getDisplayedRowCount", {
     return _base.getDisplayedRowCount;
   }
 });
-Object.defineProperty(exports, "getGroupCount", {
-  enumerable: true,
-  get: function () {
-    return _base.getGroupCount;
-  }
-});
 Object.defineProperty(exports, "getGroupPanelData", {
   enumerable: true,
   get: function () {
@@ -197,12 +191,6 @@ Object.defineProperty(exports, "getWeekendsCount", {
     return _base.getWeekendsCount;
   }
 });
-Object.defineProperty(exports, "hasResourceValue", {
-  enumerable: true,
-  get: function () {
-    return _base.hasResourceValue;
-  }
-});
 Object.defineProperty(exports, "isAppointmentTakesAllDay", {
   enumerable: true,
   get: function () {
@@ -276,7 +264,7 @@ Object.defineProperty(exports, "splitNumber", {
     return _base.splitNumber;
   }
 });
-exports.workWeekUtils = exports.weekUtils = exports.viewsUtils = exports.timelineWeekUtils = exports.timelineMonthUtils = exports.themeUtils = void 0;
+exports.workWeekUtils = exports.weekUtils = exports.timelineWeekUtils = exports.timelineMonthUtils = exports.themeUtils = void 0;
 var _themes = require("../../../scheduler/r1/utils/themes");
 var _agenda = require("./agenda");
 var _day = require("./day");
@@ -284,7 +272,6 @@ var _month = require("./month");
 var _render = require("./render");
 var _timeline_month = require("./timeline_month");
 var _timeline_week = require("./timeline_week");
-var _views = require("./views");
 var _week = require("./week");
 var _work_week = require("./work_week");
 var _base = require("./base");
@@ -317,9 +304,6 @@ const timelineWeekUtils = exports.timelineWeekUtils = {
 };
 const timelineMonthUtils = exports.timelineMonthUtils = {
   calculateStartViewDate: _timeline_month.calculateStartViewDate
-};
-const viewsUtils = exports.viewsUtils = {
-  getCurrentView: _views.getCurrentView
 };
 const renderUtils = exports.renderUtils = {
   addToStyles: _render.addToStyles,

@@ -7,28 +7,24 @@ exports.defaultOptions = exports.defaultColumnPropertiesByDataType = exports.def
 var _message = _interopRequireDefault(require("../../../../../localization/message"));
 var _filtering = _interopRequireDefault(require("../../../../../ui/shared/filtering"));
 var _utils = require("../editing/utils");
-var _utils2 = require("../utils");
+var _index = require("../utils/parse_value/index");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const defaultColumnProperties = exports.defaultColumnProperties = {
   dataType: 'string',
   calculateFieldValue(data) {
     // @ts-expect-error
     const value = data[this.dataField];
-    return (0, _utils2.parseValue)(this, value) ?? value;
+    return (0, _index.parseValue)(this, value) ?? value;
   },
   calculateDisplayValue(data) {
-    // @ts-expect-error
-    return data[this.dataField];
+    return this.calculateFieldValue(data);
   },
   calculateFilterExpression: _filtering.default.defaultCalculateFilterExpression,
+  defaultCalculateFilterExpression: _filtering.default.defaultCalculateFilterExpression,
   alignment: 'left',
   visible: true,
   allowReordering: true,
-  allowSorting: true,
   allowHiding: true,
-  allowFiltering: true,
-  allowHeaderFiltering: true,
-  allowSearch: true,
   trueText: _message.default.format('dxDataGrid-trueText'),
   falseText: _message.default.format('dxDataGrid-falseText'),
   showInColumnChooser: true,

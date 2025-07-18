@@ -1,6 +1,6 @@
 import registerComponent from '../../../core/component_registrator';
 import { getWeekendsCount } from '../../scheduler/r1/utils/index';
-import { VIEWS } from '../constants';
+import { VIEWS } from '../utils/options/constants_view';
 import SchedulerTimelineWeek from './m_timeline_week';
 const TIMELINE_CLASS = 'dx-scheduler-timeline-work-week';
 const LAST_DAY_WEEK_INDEX = 5;

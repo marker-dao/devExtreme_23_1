@@ -11,6 +11,7 @@ var _columns_controller = require("../columns_controller/columns_controller");
 var _utils = require("../columns_controller/utils");
 var _options_controller = require("../options_controller/options_controller");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CLASS = {
   hidden: 'dx-hidden'
 };
@@ -64,7 +65,9 @@ class ColumnChooserController {
         // in case when allowHiding=false and node.selected=false, we do not hide column
         const skip = !canHide && !node.selected;
         if (!skip) {
-          columns[columnIndex].visible = node.selected;
+          columns[columnIndex] = _extends({}, columns[columnIndex], {
+            visible: node.selected
+          });
         }
       }
       return [...columns];

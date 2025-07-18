@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_drawer = _interopRequireDefault(require("../__internal/ui/drawer/m_drawer"));
+var _drawer = _interopRequireDefault(require("../__internal/ui/drawer/drawer"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_drawer.default; // STYLE drawer
+var _default = exports.default = _drawer.default; // STYLE drawer
 /**
  * @name dxDrawerOptions.contentTemplate
  * @type_function_param1 contentElement:DxElement

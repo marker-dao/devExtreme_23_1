@@ -478,6 +478,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       headerFilter: that.option('headerFilter'),
       encodeHtml: that.option('fieldChooser.encodeHtml') ?? that.option('encodeHtml'),
       applyChangesMode: fieldChooserOptions.applyChangesMode,
+      rtlEnabled: that.option('rtlEnabled'),
       onContextMenuPreparing(e) {
         that._trigger('onContextMenuPreparing', e);
       }
@@ -1019,6 +1020,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
     (0, _common.deferUpdate)(() => {
       const rowHeights = that._rowsArea.getRowsHeight();
       const descriptionCellHeight = (0, _size.getOuterHeight)(descriptionCell[0], true) + (needSynchronizeFieldPanel ? rowHeights[0] : 0);
+      const dataAreaHeadHeight = (0, _size.getHeight)(that._dataArea.headElement());
       let filterAreaHeight = 0;
       let dataAreaHeight = 0;
       if (that._hasHeight) {
@@ -1026,10 +1028,12 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
         const $dataHeader = tableElement.find('.dx-data-header');
         const dataHeaderHeight = (0, _size.getHeight)($dataHeader);
         bordersWidth = getCommonBorderWidth([columnAreaCell, dataAreaCell, tableElement, columnHeaderCell, filterHeaderCell], 'height');
-        dataAreaHeight = (0, _size.getHeight)(that.$element()) - filterAreaHeight - dataHeaderHeight - (Math.max((0, _size.getHeight)(that._dataArea.headElement()), (0, _size.getHeight)(columnAreaCell), descriptionCellHeight) + bordersWidth);
+        dataAreaHeight = (0, _size.getHeight)(that.$element()) - filterAreaHeight - dataHeaderHeight - (Math.max(dataAreaHeadHeight, (0, _size.getHeight)(columnAreaCell), descriptionCellHeight) + bordersWidth);
       }
       const scrollBarWidth = that._dataArea.getScrollbarWidth();
-      const correctDataTableHeight = (0, _size.getHeight)(that._dataArea.tableElement()) - (0, _size.getHeight)(that._dataArea.headElement());
+      const rowsAreaTableHeight = (0, _size.getHeight)(that._rowsArea.tableElement());
+      const dataAreaTableHeight = (0, _size.getHeight)(that._dataArea.tableElement());
+      const correctDataTableHeight = Math.max(rowsAreaTableHeight, dataAreaTableHeight - dataAreaHeadHeight);
       const hasVerticalScrollbar = calculateHasScroll(dataAreaHeight, correctDataTableHeight);
       that._dataArea.tableElement().css({
         width: that._hasHeight && hasVerticalScrollbar && scrollBarWidth ? `calc(100% - ${scrollBarWidth}px)` : '100%'
@@ -1118,9 +1122,6 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
         const updateScrollableResults = [];
         that._dataArea.updateScrollableOptions({
           direction: that._dataArea.getScrollableDirection(hasColumnsScroll, hasRowsScroll),
-          rtlEnabled: that.option('rtlEnabled')
-        });
-        that._columnsArea.updateScrollableOptions({
           rtlEnabled: that.option('rtlEnabled')
         });
         (0, _iterator.each)([that._columnsArea, that._rowsArea, that._dataArea], (_, area) => {

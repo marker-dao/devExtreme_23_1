@@ -9,7 +9,13 @@ export const defaultOptions = {
     form: {},
     popup: {},
     texts: {
-      confirmDeleteMessage: messageLocalization.format('dxDataGrid-editingConfirmDeleteMessage')
+      confirmDeleteMessage: messageLocalization.format('dxDataGrid-editingConfirmDeleteMessage'),
+      confirmDeleteTitle: '',
+      deleteCard: messageLocalization.format('dxDataGrid-editingDeleteRow'),
+      editCard: messageLocalization.format('dxDataGrid-editingEditRow'),
+      saveCard: messageLocalization.format('dxDataGrid-editingSaveRowChanges'),
+      addCard: messageLocalization.format('dxDataGrid-editingAddRow'),
+      cancel: messageLocalization.format('dxDataGrid-editingCancelRowChanges')
     }
   }
 };

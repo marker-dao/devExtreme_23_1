@@ -11,6 +11,7 @@ export const CLASSES = {
 export class Cover extends Component {
   render() {
     const {
+      id,
       imageSrc,
       alt,
       template: Template,
@@ -29,6 +30,8 @@ export class Cover extends Component {
     }), !src && createComponentVNode(2, Icon, {
       "name": 'imagethumbnail',
       "aria-label": messageLocalization.format('dxCardView-cardNoImageAriaLabel')
-    })], 0), 0);
+    })], 0), 0, {
+      "id": id
+    });
   }
 }

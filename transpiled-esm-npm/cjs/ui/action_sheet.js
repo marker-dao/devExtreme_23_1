@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_action_sheet = _interopRequireDefault(require("../__internal/ui/m_action_sheet"));
+var _action_sheet = _interopRequireDefault(require("../__internal/ui/action_sheet"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_action_sheet.default;
+var _default = exports.default = _action_sheet.default;
 /**
  * @name dxActionSheetOptions.noDataText
  * @hidden

@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.DateHeaderDataGenerator = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
-var _constants = require("../../../scheduler/constants");
-var _index = require("../../../scheduler/r1/utils/index");
 var _m_utils_time_zone = _interopRequireDefault(require("../../m_utils_time_zone"));
+var _index = require("../../r1/utils/index");
+var _constants_view = require("../../utils/options/constants_view");
 const _excluded = ["startDate", "endDate", "isFirstGroupCell", "isLastGroupCell"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
@@ -32,7 +32,7 @@ class DateHeaderDataGenerator {
   _generateWeekDaysHeaderRowMap(options, completeViewDataMap) {
     const {
       isGroupedByDate,
-      groups,
+      getResourceManager,
       groupOrientation,
       startDayHour,
       endDayHour,
@@ -41,11 +41,12 @@ class DateHeaderDataGenerator {
       intervalCount,
       viewOffset
     } = options;
+    const resourceManager = getResourceManager();
+    const groupCount = resourceManager.groupCount();
     const cellCountInDay = this._viewDataGenerator.getCellCountInDay(startDayHour, endDayHour, hoursInterval);
-    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(groups, groupOrientation);
+    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(resourceManager.groupsLeafs, groupOrientation);
     const index = completeViewDataMap[0][0].allDay ? 1 : 0;
     const colSpan = isGroupedByDate ? horizontalGroupCount * cellCountInDay : cellCountInDay;
-    const groupCount = (0, _index.getGroupCount)(groups);
     const datesRepeatCount = isHorizontalGrouping && !isGroupedByDate ? groupCount : 1;
     const daysInGroup = this._viewDataGenerator.daysInInterval * intervalCount;
     const daysInView = daysInGroup * datesRepeatCount;
@@ -67,7 +68,7 @@ class DateHeaderDataGenerator {
       today,
       isGroupedByDate,
       groupOrientation,
-      groups,
+      getResourceManager,
       headerCellTextFormat,
       getDateForHeaderText,
       interval,
@@ -80,7 +81,7 @@ class DateHeaderDataGenerator {
       viewType,
       viewOffset
     } = options;
-    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(groups, groupOrientation);
+    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(getResourceManager().groupsLeafs, groupOrientation);
     const index = completeViewDataMap[0][0].allDay ? 1 : 0;
     const colSpan = isGroupedByDate ? horizontalGroupCount : 1;
     const isVerticalGrouping = groupOrientation === 'vertical';
@@ -95,7 +96,7 @@ class DateHeaderDataGenerator {
     const cellCountInDay = this._viewDataGenerator.getCellCountInDay(startDayHour, endDayHour, hoursInterval);
     const slicedByColumnsData = isGroupedByDate ? completeViewDataMap[index].filter((_, columnIndex) => columnIndex % horizontalGroupCount === 0) : completeViewDataMap[index];
     // NOTE: Should leave dates as is when creating time row in timelines.
-    const shouldShiftDatesForHeaderText = !(0, _index.isTimelineView)(viewType) || viewType === _constants.VIEWS.TIMELINE_MONTH;
+    const shouldShiftDatesForHeaderText = !(0, _index.isTimelineView)(viewType) || viewType === _constants_view.VIEWS.TIMELINE_MONTH;
     return slicedByColumnsData.map((_ref, idx) => {
       let {
           startDate,
@@ -159,11 +160,11 @@ class DateHeaderDataGenerator {
       startCellIndex,
       cellCount,
       isProvideVirtualCellsWidth,
-      groups,
+      getResourceManager,
       groupOrientation,
       isGroupedByDate
     } = options;
-    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(groups, groupOrientation);
+    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(getResourceManager().groupsLeafs, groupOrientation);
     const colSpan = isGroupedByDate ? horizontalGroupCount * baseColSpan : baseColSpan;
     const leftVirtualCellCount = Math.floor(startCellIndex / colSpan);
     const displayedCellCount = (0, _index.getDisplayedCellCount)(cellCount, completeViewDataMap);

@@ -12,6 +12,7 @@ var _string = require("../../core/utils/string");
 var _core = _interopRequireDefault(require("../../common/core/localization/core"));
 var _frame = require("../../common/core/animation/frame");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const visualStateKey = 'visualState';
 const fullScreenModeKey = 'fullScreen';
 class GanttView extends _ui.default {
@@ -30,6 +31,7 @@ class GanttView extends _ui.default {
     this._onAdjustControl = this._createActionByOption('onAdjustControl');
   }
   _initMarkup() {
+    var _this$option;
     const GanttView = (0, _gantt_importer.getGanttViewCore)();
     this._ganttViewCore = new GanttView(this.$element().get(0), this, {
       showResources: this.option('showResources'),
@@ -42,7 +44,7 @@ class GanttView extends _ui.default {
       editing: this._parseEditingSettings(this.option('editing')),
       validation: this.option('validation'),
       stripLines: {
-        stripLines: this.option('stripLines')
+        stripLines: (_this$option = this.option('stripLines')) === null || _this$option === void 0 ? void 0 : _this$option.map(item => _extends({}, item))
       },
       areHorizontalBordersEnabled: this.option('showRowLines'),
       areAlternateRowsEnabled: false,
@@ -251,7 +253,7 @@ class GanttView extends _ui.default {
         break;
       case 'stripLines':
         this._ganttViewCore.setStripLines({
-          stripLines: args.value
+          stripLines: this.option('stripLines')
         });
         break;
       case 'taskTooltipContentTemplate':

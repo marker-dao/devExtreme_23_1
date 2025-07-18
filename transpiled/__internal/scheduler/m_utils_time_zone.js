@@ -8,12 +8,14 @@ var _errors = _interopRequireDefault(require("../../core/errors"));
 var _date = require("../core/utils/date");
 var _index = require("../scheduler/utils/index");
 var _date2 = _interopRequireDefault(require("../../core/utils/date"));
+var _global_cache = require("./global_cache");
 var _m_date_adapter = _interopRequireDefault(require("./m_date_adapter"));
 var _m_utils_timezones_data = _interopRequireDefault(require("./timezones/m_utils_timezones_data"));
 var _timezone_list = _interopRequireDefault(require("./timezones/timezone_list"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 // TODO(Refactoring): move this module to ./utils directory
 
+const timeZoneListSet = new Set(_timezone_list.default.value);
 const toMs = _date2.default.dateToMilliseconds;
 const MINUTES_IN_HOUR = 60;
 const MS_IN_MINUTE = 60000;
@@ -66,7 +68,7 @@ const calculateTimezoneByValue = function (timeZone) {
   if (!timeZone) {
     return undefined;
   }
-  const isValidTimezone = _timezone_list.default.value.includes(timeZone);
+  const isValidTimezone = timeZoneListSet.has(timeZone);
   if (!isValidTimezone) {
     _errors.default.log('W0009', timeZone);
     return undefined;
@@ -86,10 +88,10 @@ const getStringOffset = function (timeZone) {
   let result = '';
   try {
     var _dateTimeFormat$forma;
-    const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
+    const dateTimeFormat = _global_cache.globalCache.timezones.memo(`intl${timeZone}`, () => new Intl.DateTimeFormat('en-US', {
       timeZone,
       timeZoneName: 'longOffset'
-    });
+    }));
     result = ((_dateTimeFormat$forma = dateTimeFormat.formatToParts(date).find(_ref => {
       let {
         type
@@ -178,13 +180,12 @@ const getDiffBetweenClientTimezoneOffsets = function () {
   let secondDate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Date();
   return getClientTimezoneOffset(firstDate) - getClientTimezoneOffset(secondDate);
 };
+const getMachineTimezoneName = () => _global_cache.globalCache.timezones.memo('localTimezone', () => _date2.default.getMachineTimezoneName());
 const isEqualLocalTimeZone = function (timeZoneName) {
   let date = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Date();
-  if (Intl) {
-    const localTimeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (localTimeZoneName === timeZoneName) {
-      return true;
-    }
+  const localTimeZoneName = getMachineTimezoneName();
+  if (localTimeZoneName && localTimeZoneName === timeZoneName) {
+    return true;
   }
   return isEqualLocalTimeZoneByDeclaration(timeZoneName, date);
 };
@@ -269,21 +270,15 @@ const getTimeZones = function () {
   }));
 };
 const GET_TIMEZONES_BATCH_SIZE = 10;
-let timeZoneDataCache = [];
-let timeZoneDataCachePromise;
-const cacheTimeZones = async function () {
-  let date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
-  if (timeZoneDataCachePromise) {
-    return timeZoneDataCachePromise;
-  }
-  timeZoneDataCachePromise = _index.macroTaskArray.map(_timezone_list.default.value, timezoneId => ({
-    id: timezoneId,
-    title: getTimezoneTitle(timezoneId, date)
-  }), GET_TIMEZONES_BATCH_SIZE);
-  timeZoneDataCache = await timeZoneDataCachePromise;
-  return timeZoneDataCache;
+const cacheTimeZones = async () => _global_cache.globalCache.timezones.memo('timeZonesCachePromise', () => _index.macroTaskArray.map(_timezone_list.default.value, timezoneId => ({
+  id: timezoneId,
+  title: getTimezoneTitle(timezoneId, new Date())
+}), GET_TIMEZONES_BATCH_SIZE).then(data => _global_cache.globalCache.timezones.memo('timeZonesCache', () => data)));
+const getTimeZonesCache = () => _global_cache.globalCache.timezones.get('timeZonesCache') ?? [];
+const isLocalTimeMidnightDST = date => {
+  const startDayDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  return startDayDate.getHours() === 1;
 };
-const getTimeZonesCache = () => timeZoneDataCache;
 const utils = {
   getDaylightOffset,
   getDaylightOffsetInMs,
@@ -301,12 +296,14 @@ const utils = {
   isTimezoneChangeInDate,
   getDateWithoutTimezoneChange,
   hasDSTInLocalTimeZone,
+  getMachineTimezoneName,
   isEqualLocalTimeZone,
   isEqualLocalTimeZoneByDeclaration,
   setOffsetsToDate,
   addOffsetsWithoutDST,
   getTimeZones,
   getTimeZonesCache,
-  cacheTimeZones
+  cacheTimeZones,
+  isLocalTimeMidnightDST
 };
 var _default = exports.default = utils;

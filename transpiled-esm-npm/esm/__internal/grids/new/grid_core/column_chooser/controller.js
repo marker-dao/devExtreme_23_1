@@ -1,14 +1,32 @@
-import { computed } from '@preact/signals-core';
+import _extends from "@babel/runtime/helpers/esm/extends";
+import $ from '../../../../../core/renderer';
+import { computed, signal } from '@preact/signals-core';
 import { sortColumns } from '../../../../grids/grid_core/columns_controller/m_columns_controller_utils';
 import { ColumnsController } from '../columns_controller/columns_controller';
 import { getColumnIndexByName } from '../columns_controller/utils';
 import { OptionsController } from '../options_controller/options_controller';
+const CLASS = {
+  hidden: 'dx-hidden'
+};
 export class ColumnChooserController {
   constructor(columnsController, options) {
     this.columnsController = columnsController;
     this.options = options;
+    this.draggingItem = signal(null);
     this.onColumnMove = column => {
       this.columnsController.columnOption(column, 'visible', false);
+    };
+    this.onDragStart = e => {
+      this.draggingItem.value = e.itemData;
+    };
+    this.onDragEnd = () => {
+      this.draggingItem.value = null;
+    };
+    this.isColumnDraggable = column => column.allowHiding;
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    this.onPlaceholderPrepared = e => {
+      const $placeholderElement = $(e.placeholderElement);
+      $placeholderElement.addClass(CLASS.hidden);
     };
     this.chooserColumns = computed(() => {
       const sortOrder = this.options.oneWay('columnChooser.sortOrder').value;
@@ -40,7 +58,9 @@ export class ColumnChooserController {
         // in case when allowHiding=false and node.selected=false, we do not hide column
         const skip = !canHide && !node.selected;
         if (!skip) {
-          columns[columnIndex].visible = node.selected;
+          columns[columnIndex] = _extends({}, columns[columnIndex], {
+            visible: node.selected
+          });
         }
       }
       return [...columns];

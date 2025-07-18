@@ -785,7 +785,12 @@ class DataController extends (0, _m_data_helper_mixin.DataHelperMixin)(_m_module
       newIndexByKey[key] = index;
       item.rowIndex = index;
     });
-    const result = (0, _array_compare.findChanges)(oldItems, change.items, getRowKey, isItemEquals);
+    const result = (0, _array_compare.findChanges)({
+      oldItems,
+      newItems: change.items,
+      getKey: getRowKey,
+      isItemEquals
+    });
     if (!result) {
       this._applyChangeFull(change);
       return;
@@ -917,6 +922,7 @@ class DataController extends (0, _m_data_helper_mixin.DataHelperMixin)(_m_module
   updateItems(change, isDataChanged) {
     change = change || {};
     const that = this;
+    change.isFirstRender = !that.changed.fired();
     if (that._repaintChangesOnly !== undefined) {
       change.repaintChangesOnly = change.repaintChangesOnly ?? that._repaintChangesOnly;
       change.needUpdateDimensions = change.needUpdateDimensions || that._needUpdateDimensions;

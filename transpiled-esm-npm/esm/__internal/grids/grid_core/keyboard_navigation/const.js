@@ -46,8 +46,17 @@ export const FOCUS_TYPE_CELL = 'cell';
 export const COLUMN_HEADERS_VIEW = 'columnHeadersView';
 export const ROWS_VIEW = 'rowsView';
 export const FUNCTIONAL_KEYS = ['shift', 'control', 'alt'];
+export const DRAG_COLUMN_NAME = 'drag';
 export var Direction;
 (function (Direction) {
   Direction["Next"] = "next";
   Direction["Previous"] = "previous";
 })(Direction || (Direction = {}));
+export var ViewName;
+(function (ViewName) {
+  ViewName["Group"] = "group";
+  ViewName["Headers"] = "headers";
+})(ViewName || (ViewName = {}));
+export const KEY_CODES = {
+  G: 71
+};

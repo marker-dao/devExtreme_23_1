@@ -10,8 +10,8 @@ var _date2 = _interopRequireDefault(require("../../../core/utils/date"));
 var _extend = require("../../../core/utils/extend");
 var _size = require("../../../core/utils/size");
 var _window = require("../../../core/utils/window");
+var _box = _interopRequireDefault(require("../../ui/box"));
 var _m_time_view = _interopRequireDefault(require("../../ui/date_box/m_time_view"));
-var _m_box = _interopRequireDefault(require("../../ui/m_box"));
 var _m_date_boxStrategy = _interopRequireDefault(require("./m_date_box.strategy.calendar"));
 var _m_date_utils = _interopRequireDefault(require("./m_date_utils"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -116,7 +116,7 @@ class CalendarWithTimeStrategy extends _m_date_boxStrategy.default {
     super.renderPopupContent();
     this._currentAdaptiveMode = this._isShrinkView();
     const $popupContent = this._getPopup().$content();
-    this._box = this.dateBox._createComponent((0, _renderer.default)('<div>').appendTo($popupContent), _m_box.default, {
+    this._box = this.dateBox._createComponent((0, _renderer.default)('<div>').appendTo($popupContent), _box.default, {
       direction: 'row',
       crossAlign: 'stretch',
       items: this._getBoxItems(),

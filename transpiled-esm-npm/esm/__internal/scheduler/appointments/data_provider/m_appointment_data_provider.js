@@ -1,5 +1,5 @@
 import config from '../../../../core/config';
-import { combineRemoteFilter } from '../../../scheduler/r1/filterting/index';
+import { combineRemoteFilter } from '../../r1/filterting/index';
 import { AppointmentDataSource } from './m_appointment_data_source';
 import { AppointmentFilterBaseStrategy } from './m_appointment_filter';
 import { AppointmentFilterVirtualStrategy } from './m_appointment_filter_virtual';
@@ -34,6 +34,7 @@ export class AppointmentDataProvider {
   initFilterStrategy() {
     const filterOptions = {
       resources: this.options.resources,
+      getResourceManager: this.options.getResourceManager,
       dataAccessors: this.dataAccessors,
       startDayHour: this.options.startDayHour,
       endDayHour: this.options.endDayHour,
@@ -41,7 +42,7 @@ export class AppointmentDataProvider {
       showAllDayPanel: this.options.showAllDayPanel,
       timeZoneCalculator: this.options.timeZoneCalculator,
       //
-      loadedResources: this.options.getLoadedResources,
+      loadedResources: this.options.getLoadedResources(),
       supportAllDayRow: this.options.getSupportAllDayRow,
       viewType: this.options.getViewType,
       viewDirection: this.options.getViewDirection,

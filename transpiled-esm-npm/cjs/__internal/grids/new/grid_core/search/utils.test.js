@@ -1,6 +1,7 @@
 "use strict";
 
 var _globals = require("@jest/globals");
+var _columns_controller = require("../columns_controller/columns_controller.mock");
 var _options = require("../columns_controller/options");
 var _utils = require("./utils");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -379,7 +380,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       searchVisibleColumnsOnly,
       expectedResult
     } = _ref4;
-    const result = (0, _utils.allowSearch)(column, searchVisibleColumnsOnly);
+    const result = (0, _utils.allowSearch)((0, _columns_controller.normalizeColumn)(column), searchVisibleColumnsOnly);
     (0, _globals.expect)(result).toEqual(expectedResult);
   });
 });
@@ -467,7 +468,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       searchVisibleColumnsOnly,
       expectedResult
     } = _ref6;
-    const result = (0, _utils.calculateSearchFilter)(text, columns, searchVisibleColumnsOnly);
+    const result = (0, _utils.calculateSearchFilter)(text, columns.map(_columns_controller.normalizeColumn), searchVisibleColumnsOnly);
     (0, _globals.expect)(result).toEqual(expectedResult);
   });
 });

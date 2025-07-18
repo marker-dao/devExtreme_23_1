@@ -1,7 +1,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createFragment } from "inferno";
 import { getImageSourceType } from '../../../core/utils/icon';
-import { BaseInfernoComponent } from '../../core/r1/runtime/inferno/index';
+import { BaseInfernoComponent } from '../../core/r1/runtime/inferno/index'; // with short path tests cant run
 import { getTemplate } from '../../core/r1/utils/index';
 import { combineClasses } from '../../core/utils/combine_classes';
 export const defaultIconProps = {
@@ -47,26 +47,16 @@ export class Icon extends BaseInfernoComponent {
     }
     return '';
   }
-  get restAttributes() {
-    const restProps = _extends({}, this.props);
-    ['iconTemplate', 'position', 'source'].forEach(excluded => {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete restProps[excluded];
-    });
-    return restProps;
-  }
   render() {
     const {
       iconClassName,
-      props: {
-        source
-      },
+      props,
       sourceType
     } = this;
-    const IconTemplate = getTemplate(this.props.iconTemplate);
+    const IconTemplate = getTemplate(props.iconTemplate);
     return createFragment([sourceType === 'dxIcon' && createVNode(1, "i", iconClassName), sourceType === 'fontIcon' && createVNode(1, "i", iconClassName), sourceType === 'image' && createVNode(1, "img", iconClassName, null, 1, {
       "alt": "",
-      "src": source
+      "src": props.source
     }), IconTemplate && createVNode(1, "i", iconClassName, IconTemplate({}), 0)], 0);
   }
 }

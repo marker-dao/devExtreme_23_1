@@ -9,7 +9,7 @@ import { CellBase, CellBaseDefaultProps } from './cell';
 export const DateTableCallBaseDefaultProps = _extends({}, CellBaseDefaultProps, {
   otherMonth: false,
   today: false,
-  firstDayOfMonth: false,
+  isFirstDayMonthHighlighting: false,
   isSelected: false,
   isFocused: false
 });

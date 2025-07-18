@@ -777,7 +777,12 @@ export class DataController extends DataHelperMixin(modules.Controller) {
       newIndexByKey[key] = index;
       item.rowIndex = index;
     });
-    const result = findChanges(oldItems, change.items, getRowKey, isItemEquals);
+    const result = findChanges({
+      oldItems,
+      newItems: change.items,
+      getKey: getRowKey,
+      isItemEquals
+    });
     if (!result) {
       this._applyChangeFull(change);
       return;
@@ -909,6 +914,7 @@ export class DataController extends DataHelperMixin(modules.Controller) {
   updateItems(change, isDataChanged) {
     change = change || {};
     const that = this;
+    change.isFirstRender = !that.changed.fired();
     if (that._repaintChangesOnly !== undefined) {
       change.repaintChangesOnly = change.repaintChangesOnly ?? that._repaintChangesOnly;
       change.needUpdateDimensions = change.needUpdateDimensions || that._needUpdateDimensions;

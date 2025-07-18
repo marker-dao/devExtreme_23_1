@@ -1,5 +1,5 @@
 import { getDiagram } from './diagram.importer';
-import { fileSaver } from '../../exporter/file_saver';
+import { fileSaver } from '../../__internal/exporter/file_saver';
 import { isFunction } from '../../core/utils/type';
 import { getWindow } from '../../core/utils/window';
 import { extend } from '../../core/utils/extend';
@@ -27,7 +27,6 @@ const DiagramCommandsManager = {
       separator: SEPARATOR_COMMAND,
       exportSvg: {
         command: DiagramCommand.ExportSvg,
-        // eslint-disable-line spellcheck/spell-checker
         text: messageLocalization.format('dxDiagram-commandExportToSvg'),
         getParameter: widget => {
           return dataURI => this._exportTo(widget, dataURI, 'SVG', 'image/svg+xml');
@@ -35,7 +34,6 @@ const DiagramCommandsManager = {
       },
       exportPng: {
         command: DiagramCommand.ExportPng,
-        // eslint-disable-line spellcheck/spell-checker
         text: messageLocalization.format('dxDiagram-commandExportToPng'),
         getParameter: widget => {
           return dataURI => this._exportTo(widget, dataURI, 'PNG', 'image/png');
@@ -43,7 +41,6 @@ const DiagramCommandsManager = {
       },
       exportJpg: {
         command: DiagramCommand.ExportJpg,
-        // eslint-disable-line spellcheck/spell-checker
         text: messageLocalization.format('dxDiagram-commandExportToJpg'),
         getParameter: widget => {
           return dataURI => this._exportTo(widget, dataURI, 'JPEG', 'image/jpeg');

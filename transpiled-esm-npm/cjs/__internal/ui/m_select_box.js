@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.SELECTBOX_CLASS = void 0;
 require("../ui/list/modules/m_selection");
 var _index = require("../../common/core/events/utils/index");
 var _message = _interopRequireDefault(require("../../common/core/localization/message"));
@@ -22,7 +22,7 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE selectBox
 const DISABLED_STATE_SELECTOR = '.dx-state-disabled';
-const SELECTBOX_CLASS = 'dx-selectbox';
+const SELECTBOX_CLASS = exports.SELECTBOX_CLASS = 'dx-selectbox';
 const SELECTBOX_POPUP_CLASS = 'dx-selectbox-popup';
 const SELECTBOX_CONTAINER_CLASS = 'dx-selectbox-container';
 const SELECTBOX_POPUP_WRAPPER_CLASS = 'dx-selectbox-popup-wrapper';
@@ -166,7 +166,6 @@ class SelectBox extends _m_drop_down_list.default {
       placeholder: _message.default.format('Select'),
       fieldTemplate: null,
       customItemCreateEvent: 'change',
-      valueChangeEvent: 'change',
       acceptCustomValue: false,
       onCustomItemCreating(e) {
         if (!(0, _type.isDefined)(e.customItem)) {
@@ -201,15 +200,6 @@ class SelectBox extends _m_drop_down_list.default {
   }
   _popupWrapperClass() {
     return `${super._popupWrapperClass()} ${SELECTBOX_POPUP_WRAPPER_CLASS}`;
-  }
-  _setDeprecatedOptions() {
-    super._setDeprecatedOptions();
-    (0, _extend.extend)(this._deprecatedOptions, {
-      valueChangeEvent: {
-        since: '22.2',
-        alias: 'customItemCreateEvent'
-      }
-    });
   }
   _cancelEditing() {
     if (!this.option('searchEnabled') && this._list) {

@@ -6,6 +6,8 @@ var _di = require("../di.test_utils");
 var _items_controller = require("../items_controller/items_controller");
 var _options_controller = require("../options_controller/options_controller.mock");
 var _columns_controller = require("./columns_controller");
+const _excluded = ["selector"];
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
 const setup = config => {
   const context = (0, _di.getContext)(config);
   return {
@@ -57,7 +59,12 @@ const setup = config => {
           }]
         });
         const columns2 = columnsController2.columns.peek();
-        (0, _globals.expect)(columns1).toEqual(columns2);
+        // selector is newly created func, so it can't be compared
+        const removeSelector = _ref => {
+          let column = _objectWithoutPropertiesLoose(_ref, _excluded);
+          return column;
+        };
+        (0, _globals.expect)(columns1.map(removeSelector)).toStrictEqual(columns2.map(removeSelector));
       });
     });
     (0, _globals.describe)('when given as object', () => {
@@ -159,6 +166,8 @@ const setup = config => {
       const CardInfo = itemsController.createCardInfo(dataObject, columns, 0);
       (0, _globals.expect)(CardInfo.fields).toHaveLength(1);
       (0, _globals.expect)(CardInfo.fields[0].value).toBe('a b');
+      (0, _globals.expect)(CardInfo.fields[0].displayValue).toBe('a b');
+      (0, _globals.expect)(CardInfo.fields[0].text).toBe('a b');
     });
     (0, _globals.it)('should take priority over dataField', () => {
       const {
@@ -208,10 +217,10 @@ const setup = config => {
       } = setup({
         columns: [{
           dataField: 'a',
-          customizeText: _ref => {
+          customizeText: _ref2 => {
             let {
               valueText
-            } = _ref;
+            } = _ref2;
             return `aa ${valueText} aa`;
           }
         }]

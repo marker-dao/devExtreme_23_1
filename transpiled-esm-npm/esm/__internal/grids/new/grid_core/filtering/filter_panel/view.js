@@ -2,13 +2,13 @@ import { computed } from '@preact/signals-core';
 import { FilterBuilderView as OldFilterBuilderView } from '../../../../../grids/grid_core/filter/m_filter_builder';
 import { FilterPanelView as OldFilterPanelView } from '../../../../../grids/grid_core/filter/m_filter_panel';
 import { View } from '../../core/view';
-import { OptionsController } from '../../options_controller/options_controller';
 import { WidgetMock } from '../../widget_mock';
+import { FilterController } from '../filter_controller';
 import { FilterPanelComponent } from './filter_panel';
 export class FilterPanelView extends View {
-  constructor(options, widget) {
+  constructor(filterController, widget) {
     super();
-    this.options = options;
+    this.filterController = filterController;
     this.widget = widget;
     this.component = FilterPanelComponent;
     this.oldFilterPanelView = new OldFilterPanelView(this.widget);
@@ -20,10 +20,10 @@ export class FilterPanelView extends View {
     return computed(() => ({
       oldFilterBuilderView: this.oldFilterBuilderView,
       oldFilterPanelView: this.oldFilterPanelView,
-      filterValue: this.options.oneWay('filterValue').value,
-      filterPanel: this.options.oneWay('filterPanel').value,
-      filterBuilder: this.options.oneWay('filterBuilder').value,
-      filterBuilderPopup: this.options.oneWay('filterBuilderPopup').value
+      filterValue: this.filterController.filterValueOption.value,
+      filterPanel: this.filterController.filterPanelOptions.value,
+      filterBuilder: this.filterController.filterBuilderOptions.value,
+      filterBuilderPopup: this.filterController.filterBuilderPopupOptions.value
     }));
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -35,4 +35,4 @@ export class FilterPanelView extends View {
     return true;
   }
 }
-FilterPanelView.dependencies = [OptionsController, WidgetMock];
+FilterPanelView.dependencies = [FilterController, WidgetMock];

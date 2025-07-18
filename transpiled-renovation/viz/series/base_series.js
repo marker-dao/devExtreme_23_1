@@ -365,8 +365,9 @@ Series.prototype = {
   _getData() {
     let data = this._data || [];
     if (this.useAggregation()) {
-      const argumentRange = this.argumentAxisType !== DISCRETE ? this.getArgumentRange() : {};
-      const aggregationInfo = this.getArgumentAxis().getAggregationInfo(this._useAllAggregatedPoints, argumentRange);
+      const aggregateByCategory = this.argumentAxisType === DISCRETE;
+      const argumentRange = aggregateByCategory ? {} : this.getArgumentRange();
+      const aggregationInfo = aggregateByCategory ? {} : this.getArgumentAxis().getAggregationInfo(this._useAllAggregatedPoints, argumentRange);
       data = this._resample(aggregationInfo, data);
     }
     return data;
@@ -739,34 +740,31 @@ Series.prototype = {
       selectionStyle: {}
     });
   },
-  _getAggregationMethod: function (isDiscrete, aggregateByCategory) {
+  _getAggregationMethod: function (isValueAxisDiscrete) {
     const options = this.getOptions().aggregation;
     const method = (0, _utils.normalizeEnum)(options.method);
     const customAggregator = method === 'custom' && options.calculate;
-    let aggregator;
-    if (isDiscrete && !aggregateByCategory) {
-      aggregator = _ref => {
+    if (customAggregator) {
+      return customAggregator;
+    }
+    if (isValueAxisDiscrete) {
+      return _ref => {
         let {
           data
         } = _ref;
         return data[0];
       };
-    } else {
-      aggregator = this._aggregators[method] || this._aggregators[this._defaultAggregator];
     }
-    return customAggregator || aggregator;
+    return this._aggregators[method] || this._aggregators[this._defaultAggregator];
   },
   _resample(_ref2, data) {
     let {
       interval,
-      ticks,
-      aggregateByCategory
+      ticks
     } = _ref2;
     const that = this;
-    const isDiscrete = that.argumentAxisType === DISCRETE || that.valueAxisType === DISCRETE;
-    let dataIndex = 0;
-    const dataSelector = this._getPointDataSelector();
     const options = that.getOptions();
+    const dataSelector = this._getPointDataSelector();
     const addAggregatedData = (target, data, aggregationInfo) => {
       if (!data) {
         return;
@@ -784,41 +782,42 @@ Series.prototype = {
         processData(data);
       }
     };
-    const aggregationMethod = this._getAggregationMethod(isDiscrete, aggregateByCategory);
-    if (isDiscrete) {
-      if (aggregateByCategory) {
-        const categories = this.getArgumentAxis().getTranslator().getBusinessRange().categories;
-        const groups = categories.reduce((g, category) => {
-          g[category.valueOf()] = [];
-          return g;
-        }, {});
-        data.forEach(dataItem => {
-          groups[dataItem.argument.valueOf()].push(dataItem);
-        });
-        return categories.reduce((result, c) => {
-          addAggregatedData(result, aggregationMethod({
-            aggregationInterval: null,
-            intervalStart: c,
-            intervalEnd: c,
-            data: groups[c.valueOf()].map(getData)
-          }, that));
-          return result;
-        }, []);
-      } else {
-        return data.reduce((result, dataItem, index, data) => {
-          result[1].push(dataItem);
-          if (index === data.length - 1 || (index + 1) % interval === 0) {
-            const dataInInterval = result[1];
-            const aggregationInfo = {
-              aggregationInterval: interval,
-              data: dataInInterval.map(getData)
-            };
-            addAggregatedData(result[0], aggregationMethod(aggregationInfo, that));
-            result[1] = [];
-          }
-          return result;
-        }, [[], []])[0];
-      }
+    const isValueAxisDiscrete = that.valueAxisType === DISCRETE;
+    const aggregateByCategory = that.argumentAxisType === DISCRETE;
+    const aggregationMethod = this._getAggregationMethod(isValueAxisDiscrete);
+    if (aggregateByCategory) {
+      const categories = this.getArgumentAxis().getTranslator().getBusinessRange().categories;
+      const groups = categories.reduce((g, category) => {
+        g[category.valueOf()] = [];
+        return g;
+      }, {});
+      data.forEach(dataItem => {
+        groups[dataItem.argument.valueOf()].push(dataItem);
+      });
+      return categories.reduce((result, c) => {
+        addAggregatedData(result, aggregationMethod({
+          aggregationInterval: null,
+          intervalStart: c,
+          intervalEnd: c,
+          data: groups[c.valueOf()].map(getData)
+        }, that));
+        return result;
+      }, []);
+    }
+    if (isValueAxisDiscrete) {
+      return data.reduce((result, dataItem, index, data) => {
+        result[1].push(dataItem);
+        if (index === data.length - 1 || (index + 1) % interval === 0) {
+          const dataInInterval = result[1];
+          const aggregationInfo = {
+            aggregationInterval: interval,
+            data: dataInInterval.map(getData)
+          };
+          addAggregatedData(result[0], aggregationMethod(aggregationInfo, that));
+          result[1] = [];
+        }
+        return result;
+      }, [[], []])[0];
     }
     const aggregatedData = [];
     if (ticks.length === 1) {
@@ -830,6 +829,7 @@ Series.prototype = {
       };
       addAggregatedData(aggregatedData, aggregationMethod(aggregationInfo, that), aggregationInfo);
     } else {
+      let dataIndex = 0;
       for (let i = 1; i < ticks.length; i++) {
         const intervalEnd = ticks[i];
         const intervalStart = ticks[i - 1];

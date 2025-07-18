@@ -130,6 +130,9 @@ class NumberBoxBase extends TextEditor {
     }
     this._keyPressed = true;
   }
+  _hasMouseWheelHandler() {
+    return true;
+  }
   _onMouseWheel(dxEvent) {
     dxEvent.delta > 0 ? this._spinValueChange(1, dxEvent) : this._spinValueChange(-1, dxEvent);
   }

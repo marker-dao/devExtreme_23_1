@@ -1,10 +1,12 @@
 import { createVNode, createComponentVNode } from "inferno";
+import { BaseInfernoComponent } from '../../../../core/r1/runtime/inferno/index';
 import { Toast } from '../../../../grids/new/grid_core/inferno_wrappers/toast';
-import { Component, createRef } from 'inferno';
+import { createRef } from 'inferno';
+import { wrapRef } from '../inferno_wrappers/utils';
 export const CLASSES = {
   errorRow: 'dx-gridcore-error-row'
 };
-export class ErrorRow extends Component {
+export class ErrorRow extends BaseInfernoComponent {
   constructor() {
     super(...arguments);
     this.ref = createRef();
@@ -16,15 +18,13 @@ export class ErrorRow extends Component {
       "componentRef": this.toastRef,
       "visible": true,
       "message": lastError.text,
-      "type": 'error'
+      "type": 'error',
+      "position": {
+        my: 'bottom',
+        at: 'bottom',
+        // @ts-expect-error
+        of: wrapRef(this.ref)
+      }
     }, lastError.id), 0, null, null, this.ref);
-  }
-  componentDidUpdate() {
-    var _this$toastRef$curren;
-    (_this$toastRef$curren = this.toastRef.current) === null || _this$toastRef$curren === void 0 || _this$toastRef$curren.option('position', {
-      my: 'bottom',
-      at: 'bottom',
-      of: this.ref.current
-    });
   }
 }

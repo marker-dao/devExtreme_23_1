@@ -1,7 +1,6 @@
 import $ from '../../../../core/renderer';
 import { getBoundingRect } from '../../../../core/utils/position';
 import { getWidth, setWidth } from '../../../../core/utils/size';
-import { getElementLocationInternal } from '../../../ui/scroll_view/utils/get_element_location_internal';
 import { HIDDEN_COLUMNS_WIDTH } from '../adaptivity/const';
 import { isAdaptiveItem, isGroupFooterRow, isGroupRow as isGroupRowElement } from '../keyboard_navigation/m_keyboard_navigation_utils';
 import gridCoreUtils from '../m_utils';
@@ -537,34 +536,41 @@ const resizing = Base => class ResizingStickyColumnsExtender extends Base {
   }
 };
 const headersKeyboardNavigation = Base => class HeadersKeyboardNavigationStickyColumnsExtender extends Base {
+  getContainerBoundingRect($container) {
+    var _this$_columnHeadersV5;
+    // @ts-expect-error columnHeadersView's method
+    const hasStickyColumns = (_this$_columnHeadersV5 = this._columnHeadersView) === null || _this$_columnHeadersV5 === void 0 ? void 0 : _this$_columnHeadersV5.hasStickyColumns();
+    if (hasStickyColumns) {
+      const $cells = $(this._columnHeadersView.getColumnElements());
+      return GridCoreStickyColumnsDom.getNonFixedAreaBoundingRect($cells, $container, this.addWidgetPrefix.bind(this));
+    }
+    return super.getContainerBoundingRect($container);
+  }
   // TODO Salimov: Most likely, we will need to remove the subscription
   // for headers after we implement sticky headers (pqKdLLL1).
   // Perhaps the headers will be rendered in the same table with data cells.
   // And this code will no longer be needed.
   tabKeyHandler(_ref) {
-    var _this$_columnHeadersV5, _this$getView;
+    var _this$_columnHeadersV6, _this$getView;
     let {
       originalEvent,
       shift
     } = _ref;
     // @ts-expect-error columnHeadersView's method
-    const hasStickyColumns = (_this$_columnHeadersV5 = this._columnHeadersView) === null || _this$_columnHeadersV5 === void 0 ? void 0 : _this$_columnHeadersV5.hasStickyColumns();
+    const hasStickyColumns = (_this$_columnHeadersV6 = this._columnHeadersView) === null || _this$_columnHeadersV6 === void 0 ? void 0 : _this$_columnHeadersV6.hasStickyColumns();
     const scrollable = (_this$getView = this.getView('rowsView')) === null || _this$getView === void 0 ? void 0 : _this$getView.getScrollable();
-    if (hasStickyColumns && scrollable) {
-      const $cell = $(originalEvent.target).closest('td');
-      const $nextCell = GridCoreStickyColumnsDom.getNextHeaderCell($cell, shift ? 'previous' : 'next');
-      const isFixedCell = GridCoreStickyColumnsDom.isFixedCell($nextCell, this.addWidgetPrefix.bind(this));
-      if ($nextCell.length && !isFixedCell) {
-        const $cells = $(this._columnHeadersView.getColumnElements());
-        const cellIsOutsideVisibleArea = GridCoreStickyColumnsDom.isOutsideVisibleArea($nextCell, $cells, $(this._columnHeadersView.getContent()), this.addWidgetPrefix.bind(this));
-        if (cellIsOutsideVisibleArea) {
-          const scrollPadding = GridCoreStickyColumnsDom.getScrollPadding($cells, $(scrollable.container()), this.addWidgetPrefix.bind(this));
-          const scrollPosition = getElementLocationInternal($nextCell[0], 'horizontal', $(this._columnHeadersView.getContent())[0], scrollable.scrollOffset(), scrollPadding, this.addWidgetPrefix('table'));
-          scrollable.scrollTo({
-            x: scrollPosition
-          });
-        }
-      }
+    if (!hasStickyColumns || !scrollable) {
+      return;
+    }
+    const $cell = $(originalEvent.target).closest('td');
+    const $nextCell = GridCoreStickyColumnsDom.getNextHeaderCell($cell, shift ? 'previous' : 'next');
+    const isFixedCell = GridCoreStickyColumnsDom.isFixedCell($nextCell, this.addWidgetPrefix.bind(this));
+    if (isFixedCell) {
+      return;
+    }
+    const nextCellIsOutsideVisibleArea = $nextCell.length && this.isOutsideVisibleArea($nextCell, $(this._columnHeadersView.getContent()));
+    if (nextCellIsOutsideVisibleArea) {
+      this.scrollToColumn($nextCell);
     }
   }
 };

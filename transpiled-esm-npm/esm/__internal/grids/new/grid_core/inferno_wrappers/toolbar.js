@@ -25,7 +25,7 @@ export class Toolbar extends InfernoWrapper {
                 const prevOptions = prevItem[key];
                 const currentOptions = item[key];
                 Object.keys(currentOptions).forEach(option => {
-                  const isOptionChanged = currentOptions[option] !== prevOptions[option];
+                  const isOptionChanged = !(prevOptions !== null && prevOptions !== void 0 && prevOptions[option]) || (currentOptions === null || currentOptions === void 0 ? void 0 : currentOptions[option]) !== prevOptions[option];
                   const isExcludedOption = excludedStateOptions.includes(option);
                   if (isOptionChanged && !isExcludedOption) {
                     var _this$component2;

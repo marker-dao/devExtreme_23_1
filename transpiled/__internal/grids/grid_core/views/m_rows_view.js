@@ -992,10 +992,7 @@ class RowsView extends _m_columns_view.ColumnsView {
     if (scrollable) {
       // @ts-expect-error
       scrollable.update();
-      // @ts-expect-error
-      if (scrollable.option('useNative') || !(scrollable !== null && scrollable !== void 0 && scrollable.isRenovated())) {
-        this._updateHorizontalScrollPosition();
-      }
+      this._updateHorizontalScrollPosition();
     }
   }
   _updateHorizontalScrollPosition() {
@@ -1099,7 +1096,6 @@ class RowsView extends _m_columns_view.ColumnsView {
     const $rows = this._getRowElements().not(`.${GROUP_ROW_CLASS}`) || [];
     this._toggleDraggableSourceColumnClass($rows, this.getColumns(), columnIndex, value);
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _getCellElementsCore(rowIndex) {
     const $cells = super._getCellElementsCore.apply(this, arguments);
     if ($cells) {

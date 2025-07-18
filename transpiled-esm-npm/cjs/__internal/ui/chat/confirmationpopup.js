@@ -39,7 +39,7 @@ class ConfirmationPopup {
   }
   _getPopupConfig() {
     const messageId = new _guid.default().toString();
-    const $message = (0, _renderer.default)('<div>').html(_message.default.format('dxChat-editingDeleteConfirmText')).attr('id', messageId);
+    const $message = (0, _renderer.default)('<div>').text(_message.default.format('dxChat-editingDeleteConfirmText')).attr('id', messageId);
     return (0, _extend.extend)(_extends({
       width: POPUP_WIDTH,
       height: 'auto',

@@ -18,7 +18,8 @@ class RootElementUpdater extends _inferno.Component {
     this.previousAttributes = {};
   }
   render() {
-    return (0, _inferno.createFragment)(this.props.children, 0);
+    // @ts-expect-error
+    return this.props.children;
   }
   updateClasses(element) {
     const currentClassName = this.props.className;

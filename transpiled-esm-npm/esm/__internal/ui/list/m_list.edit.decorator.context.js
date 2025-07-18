@@ -4,7 +4,6 @@ import { getOuterHeight, getOuterWidth } from '../../../core/utils/size';
 import Overlay from '../../ui/overlay/m_overlay';
 import { ListBase } from './m_list.base';
 import EditDecorator from './m_list.edit.decorator';
-import EditDecoratorMenuHelperMixin from './m_list.edit.decorator_menu_helper';
 import { register as registerDecorator } from './m_list.edit.decorator_registry';
 const CONTEXTMENU_CLASS = 'dx-list-context-menu';
 const CONTEXTMENU_MENUCONTENT_CLASS = 'dx-list-context-menucontent';
@@ -60,10 +59,12 @@ class EditDecoratorContext extends EditDecorator {
   }
   _renderMenuContent(e) {
     const $overlayContent = e.component.$content();
-    // @ts-expect-error ts-error
-    const items = this._menuItems().slice();
-    // @ts-expect-error ts-error
-    if (this._deleteEnabled()) {
+    const {
+      menuItems,
+      allowItemDeleting
+    } = this._list.option();
+    const items = menuItems.slice();
+    if (allowItemDeleting) {
       items.push({
         text: messageLocalization.format('dxListEditDecorator-delete'),
         action: this._deleteItem.bind(this)
@@ -81,8 +82,9 @@ class EditDecoratorContext extends EditDecorator {
   }
   _menuItemClickHandler(args) {
     this._menu.hide();
-    // @ts-expect-error ts-error
-    this._fireMenuAction(this._$itemWithMenu, args.itemData.action);
+    this._list._itemEventHandlerByHandler(this._$itemWithMenu, args.itemData.action, {}, {
+      excludeValidators: ['disabled', 'readOnly']
+    });
   }
   _deleteItem() {
     this._list.deleteItem(this._$itemWithMenu);
@@ -108,6 +110,4 @@ class EditDecoratorContext extends EditDecorator {
     super.dispose.apply(this, arguments);
   }
 }
-registerDecorator('menu', 'context',
-// @ts-expect-error ts-error
-EditDecoratorContext.include(EditDecoratorMenuHelperMixin));
+registerDecorator('menu', 'context', EditDecoratorContext);

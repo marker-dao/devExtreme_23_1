@@ -121,6 +121,9 @@ function parseLicenseKey(encodedKey) {
 function isPreview(patch) {
   return isNaN(patch) || patch < RTM_MIN_PATCH_VERSION;
 }
+function isDevExpressLicenseKey(licenseKey) {
+  return licenseKey.startsWith('LCX') || licenseKey.startsWith('LCP');
+}
 function getLicenseCheckParams(_ref2) {
   let {
     licenseKey,
@@ -137,6 +140,12 @@ function getLicenseCheckParams(_ref2) {
       return {
         preview,
         error: 'W0019'
+      };
+    }
+    if (isDevExpressLicenseKey(licenseKey)) {
+      return {
+        preview,
+        error: 'W0024'
       };
     }
     const license = parseLicenseKey(licenseKey);

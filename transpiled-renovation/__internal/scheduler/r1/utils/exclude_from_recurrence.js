@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.excludeFromRecurrence = void 0;
 var _date_serialization = _interopRequireDefault(require("../../../../core/utils/date_serialization"));
-var _m_appointment_adapter = require("../../m_appointment_adapter");
+var _appointment_adapter = require("../../utils/appointment_adapter/appointment_adapter");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const FULL_DATE_FORMAT = 'yyyyMMddTHHmmss';
@@ -24,8 +24,8 @@ const createRecurrenceException = (appointmentAdapter, exceptionDate) => {
   result.push(getSerializedDate(exceptionDate, appointmentAdapter.startDate, appointmentAdapter.allDay));
   return result.join();
 };
-const excludeFromRecurrence = (appointment, exceptionDate, dataAccessors, timeZoneCalculator) => {
-  const appointmentAdapter = (0, _m_appointment_adapter.createAppointmentAdapter)(_extends({}, appointment), dataAccessors, timeZoneCalculator);
+const excludeFromRecurrence = (appointment, exceptionDate, dataAccessors) => {
+  const appointmentAdapter = new _appointment_adapter.AppointmentAdapter(_extends({}, appointment), dataAccessors);
   appointmentAdapter.recurrenceException = createRecurrenceException(appointmentAdapter, exceptionDate);
   return appointmentAdapter;
 };

@@ -1,12 +1,14 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { ColumnsController } from '../../grid_core/columns_controller/index';
 import { BaseContextMenuController } from '../../grid_core/context_menu/controller';
+import { SortingController } from '../../grid_core/sorting_controller/index';
 import { OptionsController } from '../options_controller';
 export class ContextMenuController extends BaseContextMenuController {
-  constructor(columnsController, options) {
+  constructor(columnsController, options, sortingController) {
     super();
     this.columnsController = columnsController;
     this.options = options;
+    this.sortingController = sortingController;
   }
   show(event, view) {
     let contextInfo = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -34,29 +36,44 @@ export class ContextMenuController extends BaseContextMenuController {
     return event.items;
   }
   getSortingItems(column) {
-    const onItemClick = e => {
-      var _e$itemData;
-      this.columnsController.columnOption(column, 'sortOrder', (_e$itemData = e.itemData) === null || _e$itemData === void 0 ? void 0 : _e$itemData.value);
+    const mode = this.sortingController.mode.value;
+    const isDisabled = mode === 'none' || !column.allowSorting;
+    const onItemClick = event => {
+      this.handleSortMenuClick(event, mode, column);
     };
     return [{
       text: this.options.oneWay('sorting.ascendingText').peek(),
       value: 'asc',
-      disabled: column.sortOrder === 'asc',
+      disabled: isDisabled || column.sortOrder === 'asc',
       icon: 'sortuptext',
       onItemClick
     }, {
       text: this.options.oneWay('sorting.descendingText').peek(),
       value: 'desc',
-      disabled: column.sortOrder === 'desc',
+      disabled: isDisabled || column.sortOrder === 'desc',
       icon: 'sortdowntext',
       onItemClick
     }, {
       text: this.options.oneWay('sorting.clearText').peek(),
       value: undefined,
-      disabled: !column.sortOrder,
+      disabled: isDisabled || !column.sortOrder,
       icon: 'none',
       onItemClick
     }];
   }
+  handleSortMenuClick(e, mode, column) {
+    var _e$itemData;
+    const sortOrder = (_e$itemData = e.itemData) === null || _e$itemData === void 0 ? void 0 : _e$itemData.value;
+    switch (mode) {
+      case 'single':
+        this.sortingController.onSingleModeSortCore(column, true, sortOrder);
+        break;
+      case 'multiple':
+        this.sortingController.onMultipleModeSortCore(column, false, sortOrder);
+        break;
+      default:
+        break;
+    }
+  }
 }
-ContextMenuController.dependencies = [ColumnsController, OptionsController];
+ContextMenuController.dependencies = [ColumnsController, OptionsController, SortingController];

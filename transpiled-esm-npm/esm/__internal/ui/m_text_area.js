@@ -11,14 +11,23 @@ import { isDefined } from '../../core/utils/type';
 import { getWindow, hasWindow } from '../../core/utils/window';
 import TextBox from '../ui/text_box/m_text_box';
 import { allowScroll, prepareScrollData } from '../ui/text_box/m_utils.scroll';
-const TEXTAREA_CLASS = 'dx-textarea';
+export const TEXTAREA_CLASS = 'dx-textarea';
 const TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE = 'dx-texteditor-input-auto-resize';
 class TextArea extends TextBox {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       spellcheck: true,
-      autoResizeEnabled: false
+      autoResizeEnabled: false,
+      _shouldAttachKeyboardEvents: false
     });
+  }
+  _shouldAttachKeyboardEvents() {
+    const {
+      _shouldAttachKeyboardEvents: shouldAttachKeyboardEvents,
+      readOnly
+    } = this.option();
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    return shouldAttachKeyboardEvents || !readOnly;
   }
   _initMarkup() {
     this.$element().addClass(TEXTAREA_CLASS);
@@ -164,6 +173,7 @@ class TextArea extends TextBox {
       value
     } = args;
     switch (name) {
+      case '_shouldAttachKeyboardEvents':
       case 'autoResizeEnabled':
         this._updateInputAutoResizeAppearance(this._input(), value);
         this._refreshEvents();

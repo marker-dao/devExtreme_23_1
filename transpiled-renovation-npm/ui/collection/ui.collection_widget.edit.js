@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_collection_widget = _interopRequireDefault(require("../../__internal/ui/collection/m_collection_widget.edit"));
+var _collection_widget = _interopRequireDefault(require("../../__internal/ui/collection/collection_widget.edit"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_collection_widget.default;
+var _default = exports.default = _collection_widget.default;
 /**
  * @name CollectionWidgetOptions.selectionMode
  * @type string

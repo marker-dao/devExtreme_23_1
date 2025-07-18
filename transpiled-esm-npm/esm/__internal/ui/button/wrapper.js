@@ -1,9 +1,12 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
+import registerComponent from '../../../core/component_registrator';
 import { getImageSourceType } from '../../../core/utils/icon';
 import ValidationEngine from '../../../ui/validation_engine';
 import { ComponentWrapper } from '../../core/r1/component_wrapper';
-export default class ButtonWrapper extends ComponentWrapper {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+import { Button as ButtonComponent, buttonComponentProps, defaultOptions } from './button';
+export default class Button extends ComponentWrapper {
+  // eslint-disable-next-line @stylistic/max-len
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
   get _validationGroupConfig() {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return ValidationEngine.getGroupConfig(this._findGroup());
@@ -25,11 +28,15 @@ export default class ButtonWrapper extends ComponentWrapper {
         validationGroup: this._validationGroupConfig
       });
     };
+    props.onKeyDown = this._wrapKeyDownHandler(props.onKeyDown);
     const iconType = getImageSourceType(props.icon);
     if (iconType === 'svg') {
       props.iconTemplate = this._createTemplateComponent(() => props.icon);
     }
     return props;
+  }
+  get viewRef() {
+    return super.viewRef;
   }
   get _templatesInfo() {
     return {
@@ -37,14 +44,18 @@ export default class ButtonWrapper extends ComponentWrapper {
     };
   }
   _toggleActiveState(_, value) {
-    const button = this.viewRef;
-    value ? button.activate() : button.deactivate();
+    if (value) {
+      var _this$viewRef;
+      (_this$viewRef = this.viewRef) === null || _this$viewRef === void 0 || _this$viewRef.activate();
+    } else {
+      var _this$viewRef2;
+      (_this$viewRef2 = this.viewRef) === null || _this$viewRef2 === void 0 || _this$viewRef2.deactivate();
+    }
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _getSubmitAction() {
     let needValidate = true;
     let validationStatus = 'valid';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // @ts-expect-error badly typed base class
     return this._createAction(_ref2 => {
       let {
         event,
@@ -64,13 +75,17 @@ export default class ButtonWrapper extends ComponentWrapper {
               } = _ref3;
               this.option('disabled', false);
               validationStatus = status;
-              validationStatus === 'valid' && submitInput.click();
+              if (validationStatus === 'valid') {
+                submitInput.click();
+              }
               needValidate = true;
             });
           }
         }
       }
-      validationStatus !== 'valid' && event.preventDefault();
+      if (validationStatus !== 'valid') {
+        event.preventDefault();
+      }
       event.stopPropagation();
     });
   }
@@ -100,11 +115,11 @@ export default class ButtonWrapper extends ComponentWrapper {
     const $element = this.$element();
     const validationGroup = this.option('validationGroup');
     return validationGroup !== undefined && validationGroup !== '' ? validationGroup
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // @ts-expect-error badly typed base class and ValidationEngine
     : ValidationEngine.findGroup($element, this._modelByElement($element));
   }
   _createClickAction() {
-    // @ts-expect-error
+    // @ts-expect-error badly typed base class
     return this._createActionByOption('onClick', {
       excludeValidators: ['readOnly']
     });
@@ -119,5 +134,40 @@ export default class ButtonWrapper extends ComponentWrapper {
     }
     super._optionChanged(option);
   }
+  focus() {
+    var _this$viewRef3;
+    (_this$viewRef3 = this.viewRef) === null || _this$viewRef3 === void 0 || _this$viewRef3.focus();
+  }
+  activate() {
+    var _this$viewRef4;
+    (_this$viewRef4 = this.viewRef) === null || _this$viewRef4 === void 0 || _this$viewRef4.activate();
+  }
+  deactivate() {
+    var _this$viewRef5;
+    (_this$viewRef5 = this.viewRef) === null || _this$viewRef5 === void 0 || _this$viewRef5.deactivate();
+  }
+  _getActionConfigs() {
+    return {
+      onClick: {
+        excludeValidators: ['readOnly']
+      },
+      onSubmit: {}
+    };
+  }
+  get _propsInfo() {
+    return {
+      twoWay: [],
+      allowNull: [],
+      elements: ['onSubmit'],
+      templates: ['template', 'iconTemplate'],
+      props: buttonComponentProps
+    };
+  }
+  // @ts-expect-error types error in R1
+  get _viewComponent() {
+    return ButtonComponent;
+  }
 }
-/* eslint-enable @typescript-eslint/no-unsafe-member-access */
+registerComponent('dxButton', Button);
+// @ts-expect-error types error in R1
+Button.defaultOptions = defaultOptions;

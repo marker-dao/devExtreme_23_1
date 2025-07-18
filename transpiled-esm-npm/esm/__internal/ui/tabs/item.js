@@ -1,6 +1,6 @@
 import $ from '../../../core/renderer';
 import CollectionItem from '../../ui/collection/item';
-const TABS_ITEM_BADGE_CLASS = 'dx-tabs-item-badge';
+export const TABS_ITEM_BADGE_CLASS = 'dx-tabs-item-badge';
 const BADGE_CLASS = 'dx-badge';
 class TabsItem extends CollectionItem {
   _renderWatchers() {

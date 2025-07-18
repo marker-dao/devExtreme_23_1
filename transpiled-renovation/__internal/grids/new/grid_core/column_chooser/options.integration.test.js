@@ -145,9 +145,9 @@ const getTreeViewInstance = () => {
     _globals.it.each([{
       value: undefined,
       result: {
-        my: 'right bottom',
+        my: 'right top',
         at: 'right bottom',
-        of: '.dx-gridcore-contentview',
+        of: '.dx-cardview-column-chooser-button',
         collision: 'fit',
         offset: '-2 -2',
         boundaryOffset: '2 2'

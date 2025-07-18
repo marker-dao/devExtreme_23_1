@@ -69,6 +69,7 @@ export class KbnNavigationContainerEnabled extends Component {
       "data-dx-focus-container": true
     }), null, ref));
   }
+  // TODO: KeyboardEvent
   onKeyDown(event) {
     const {
       navigationStrategy,
@@ -103,7 +104,9 @@ export class KbnNavigationContainerEnabled extends Component {
     return this.props.elementRef ?? this.elementRef;
   }
 }
-__decorate([eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", [KeyboardEvent]), __metadata("design:returntype", void 0)], KbnNavigationContainerEnabled.prototype, "onKeyDown", null);
+__decorate([eventHandler
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+, __metadata("design:type", Function), __metadata("design:paramtypes", [Object]), __metadata("design:returntype", void 0)], KbnNavigationContainerEnabled.prototype, "onKeyDown", null);
 __decorate([eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", []), __metadata("design:returntype", void 0)], KbnNavigationContainerEnabled.prototype, "onFocusOut", null);
 __decorate([eventHandler, __metadata("design:type", Function), __metadata("design:paramtypes", []), __metadata("design:returntype", void 0)], KbnNavigationContainerEnabled.prototype, "onDecoyFocusIn", null);
 export const KbnNavigationContainer = props => {

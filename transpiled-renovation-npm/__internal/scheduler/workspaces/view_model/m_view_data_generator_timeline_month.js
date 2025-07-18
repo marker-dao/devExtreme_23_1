@@ -11,9 +11,6 @@ var _m_view_data_generator = require("./m_view_data_generator");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const toMs = _date.default.dateToMilliseconds;
 class ViewDataGeneratorTimelineMonth extends _m_view_data_generator.ViewDataGenerator {
-  _calculateCellIndex(rowIndex, columnIndex, rowCount, columnCount) {
-    return _index.monthUtils.calculateCellIndex(rowIndex, columnIndex, rowCount, columnCount);
-  }
   calculateEndDate(startDate, interval, endDayHour) {
     return (0, _index.setOptionHour)(startDate, endDayHour);
   }

@@ -5,18 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 class CellsSelectionState {
-  constructor(_viewDataProvider) {
-    this._viewDataProvider = _viewDataProvider;
+  constructor(viewDataProvider) {
+    this.viewDataProvider = viewDataProvider;
     this._focusedCell = null;
     this._selectedCells = null;
     this._firstSelectedCell = null;
     this._prevFocusedCell = null;
     this._prevSelectedCells = null;
   }
-  get viewDataProvider() {
-    return this._viewDataProvider;
-  }
-  get focusedCell() {
+  getFocusedCell() {
     const focusedCell = this._focusedCell;
     if (!focusedCell) {
       return undefined;
@@ -40,13 +37,15 @@ class CellsSelectionState {
   }
   setFocusedCell(rowIndex, columnIndex, isAllDay) {
     if (rowIndex >= 0) {
-      const cell = this._viewDataProvider.getCellData(rowIndex, columnIndex, isAllDay);
+      const cell = this.viewDataProvider.getCellData(rowIndex, columnIndex, isAllDay);
       this._focusedCell = cell;
     }
   }
   setSelectedCells(lastCellCoordinates) {
     let firstCellCoordinates = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-    const viewDataProvider = this._viewDataProvider;
+    const {
+      viewDataProvider
+    } = this;
     const {
       rowIndex: lastRowIndex,
       columnIndex: lastColumnIndex,
@@ -58,7 +57,7 @@ class CellsSelectionState {
     const firstCell = firstCellCoordinates ? viewDataProvider.getCellData(firstCellCoordinates.rowIndex, firstCellCoordinates.columnIndex, firstCellCoordinates.allDay) : this._firstSelectedCell;
     const lastCell = viewDataProvider.getCellData(lastRowIndex, lastColumnIndex, isLastCellAllDay);
     this._firstSelectedCell = firstCell;
-    this._selectedCells = this._viewDataProvider.getCellsBetween(firstCell, lastCell);
+    this._selectedCells = this.viewDataProvider.getCellsBetween(firstCell, lastCell);
   }
   setSelectedCellsByData(selectedCellsData) {
     this._selectedCells = selectedCellsData;

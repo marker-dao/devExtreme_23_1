@@ -21,6 +21,8 @@ class SearchController {
       };
     });
     this.searchTextOption = this.options.twoWay('searchPanel.text');
+    this.searchPlaceholder = this.options.oneWay('searchPanel.placeholder');
+    this.searchWidth = this.options.oneWay('searchPanel.width');
     this.searchVisibleColumnsOnly = this.options.oneWay('searchPanel.searchVisibleColumnsOnly');
     this.searchFilter = (0, _signalsCore.computed)(() => {
       const searchText = this.searchTextOption.value;

@@ -8,11 +8,9 @@ var _date = _interopRequireDefault(require("../../../../common/core/localization
 var _date2 = _interopRequireDefault(require("../../../../core/utils/date"));
 var _index = require("../../../scheduler/r1/utils/index");
 var _m_utils_time_zone = _interopRequireDefault(require("../../m_utils_time_zone"));
-var _m_utils = require("./m_utils");
 var _m_view_data_generator = require("./m_view_data_generator");
+var _view_generator_utils = require("./utils/view_generator_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-// eslint-disable-next-line import/no-cycle
-
 const toMs = _date2.default.dateToMilliseconds;
 const DAYS_IN_WEEK = 7;
 class ViewDataGeneratorMonth extends _m_view_data_generator.ViewDataGenerator {
@@ -20,8 +18,7 @@ class ViewDataGeneratorMonth extends _m_view_data_generator.ViewDataGenerator {
     super(...arguments);
     this.tableAllDay = undefined;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getCellData(rowIndex, columnIndex, options, allDay) {
+  getCellData(rowIndex, columnIndex, options) {
     const {
       indicatorTime,
       timeZoneCalculator,
@@ -32,7 +29,7 @@ class ViewDataGeneratorMonth extends _m_view_data_generator.ViewDataGenerator {
     const startDate = _m_utils_time_zone.default.addOffsetsWithoutDST(data.startDate, -viewOffset);
     data.today = this.isCurrentDate(startDate, indicatorTime, timeZoneCalculator);
     data.otherMonth = this.isOtherMonth(startDate, this._minVisibleDate, this._maxVisibleDate);
-    data.firstDayOfMonth = (0, _index.isFirstCellInMonthWithIntervalCount)(startDate, intervalCount);
+    data.isFirstDayMonthHighlighting = (0, _index.isFirstCellInMonthWithIntervalCount)(startDate, intervalCount);
     data.text = _index.monthUtils.getCellText(startDate, intervalCount);
     return data;
   }
@@ -75,7 +72,7 @@ class ViewDataGeneratorMonth extends _m_view_data_generator.ViewDataGenerator {
     const endDate = new Date(startDate);
     endDate.setMonth(endDate.getMonth() + options.intervalCount);
     endDate.setDate(0);
-    return (0, _m_utils.calculateAlignedWeeksBetweenDates)(startDate, endDate, options.firstDayOfWeek ?? _date.default.firstDayOfWeekIndex());
+    return (0, _view_generator_utils.calculateAlignedWeeksBetweenDates)(startDate, endDate, options.firstDayOfWeek ?? _date.default.firstDayOfWeekIndex());
   }
   getCellCountInDay() {
     return 1;

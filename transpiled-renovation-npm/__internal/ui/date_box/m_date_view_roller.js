@@ -15,7 +15,7 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _iterator = require("../../../core/utils/iterator");
 var _size = require("../../../core/utils/size");
 var _convert_location = require("../../ui/scroll_view/utils/convert_location");
-var _m_scrollable = _interopRequireDefault(require("../scroll_view/m_scrollable"));
+var _scrollable = _interopRequireDefault(require("../scroll_view/scrollable"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DATEVIEW_ROLLER_CLASS = 'dx-dateviewroller';
@@ -25,7 +25,7 @@ const DATEVIEW_ROLLER_ITEM_CLASS = 'dx-dateview-item';
 const DATEVIEW_ROLLER_ITEM_SELECTED_CLASS = 'dx-dateview-item-selected';
 const DATEVIEW_ROLLER_ITEM_SELECTED_FRAME_CLASS = 'dx-dateview-item-selected-frame';
 const DATEVIEW_ROLLER_ITEM_SELECTED_BORDER_CLASS = 'dx-dateview-item-selected-border';
-class DateViewRoller extends _m_scrollable.default {
+class DateViewRoller extends _scrollable.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       showScrollbar: 'never',
@@ -176,6 +176,7 @@ class DateViewRoller extends _m_scrollable.default {
           },
           complete() {
             (0, _translator.resetPosition)((0, _renderer.default)(that.content()));
+            // @ts-expect-error
             that.handleMove({
               delta
             });
@@ -183,6 +184,7 @@ class DateViewRoller extends _m_scrollable.default {
         });
         delete this._animation;
       } else {
+        // @ts-expect-error
         this.handleMove({
           delta
         });
@@ -287,6 +289,7 @@ class DateViewRoller extends _m_scrollable.default {
       case 'showOnClick':
         this._renderContainerClick();
         break;
+      // @ts-expect-error ts-error
       case 'onSelectedIndexChanged':
         this._renderSelectedIndexChanged();
         break;

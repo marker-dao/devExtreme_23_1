@@ -3,6 +3,7 @@
 var _inferno = require("inferno");
 var _globals = require("@jest/globals");
 var _data = require("../../../../../../../common/data");
+var _m_guid = require("../../../../../../core/m_guid");
 var _card = require("./card");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const props = {
@@ -52,6 +53,12 @@ const props = {
   }
 };
 (0, _globals.describe)('Rendering', () => {
+  (0, _globals.beforeEach)(() => {
+    _globals.jest.spyOn(_m_guid.Guid.prototype, '_normalize').mockReturnValue('guidmock');
+  });
+  (0, _globals.afterEach)(() => {
+    _globals.jest.spyOn(_m_guid.Guid.prototype, '_normalize').mockRestore();
+  });
   (0, _globals.it)('should be rendered correctly', () => {
     const container = document.createElement('div');
     // @ts-expect-error

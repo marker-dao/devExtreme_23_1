@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = exports.TYPING_END_DELAY = exports.CHAT_MESSAGEBOX_TEXTAREA_CLASS = exports.CHAT_MESSAGEBOX_INPUT_CONTAINER_CLASS = exports.CHAT_MESSAGEBOX_CLASS = exports.CHAT_MESSAGEBOX_BUTTON_CLASS = void 0;
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
+var _devices = _interopRequireDefault(require("../../../core/devices"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _button = _interopRequireDefault(require("../../../ui/button"));
 var _dom_component = _interopRequireDefault(require("../../core/widget/dom_component"));
@@ -18,6 +19,7 @@ const CHAT_MESSAGEBOX_TEXTAREA_CLASS = exports.CHAT_MESSAGEBOX_TEXTAREA_CLASS = 
 const CHAT_MESSAGEBOX_BUTTON_CLASS = exports.CHAT_MESSAGEBOX_BUTTON_CLASS = 'dx-chat-messagebox-button';
 const TYPING_END_DELAY = exports.TYPING_END_DELAY = 2000;
 const ESCAPE_KEY = 'escape';
+const isMobile = () => _devices.default.current().deviceType !== 'desktop';
 class MessageBox extends _dom_component.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -100,13 +102,16 @@ class MessageBox extends _dom_component.default {
       },
       onEnterKey: e => {
         var _e$event;
+        if (isMobile()) {
+          return;
+        }
         if (!((_e$event = e.event) !== null && _e$event !== void 0 && _e$event.shiftKey)) {
           this._sendHandler(e);
         }
       }
     });
     this._textArea.registerKeyHandler('enter', event => {
-      if (!event.shiftKey && this._isValuableTextEntered()) {
+      if (!event.shiftKey && this._isValuableTextEntered() && !isMobile()) {
         event.preventDefault();
       }
     });

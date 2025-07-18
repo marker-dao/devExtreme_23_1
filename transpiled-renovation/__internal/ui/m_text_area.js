@@ -25,16 +25,16 @@ class TextArea extends _m_text_box.default {
     return _extends({}, super._getDefaultOptions(), {
       spellcheck: true,
       autoResizeEnabled: false,
-      _shouldForceAttachKeyboardEvents: false
+      _shouldAttachKeyboardEvents: false
     });
   }
   _shouldAttachKeyboardEvents() {
     const {
-      _shouldForceAttachKeyboardEvents: shouldForceAttachKeyboardEvents,
+      _shouldAttachKeyboardEvents: shouldAttachKeyboardEvents,
       readOnly
     } = this.option();
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    return shouldForceAttachKeyboardEvents || !readOnly;
+    return shouldAttachKeyboardEvents || !readOnly;
   }
   _initMarkup() {
     this.$element().addClass(TEXTAREA_CLASS);
@@ -180,7 +180,7 @@ class TextArea extends _m_text_box.default {
       value
     } = args;
     switch (name) {
-      case '_shouldForceAttachKeyboardEvents':
+      case '_shouldAttachKeyboardEvents':
       case 'autoResizeEnabled':
         this._updateInputAutoResizeAppearance(this._input(), value);
         this._refreshEvents();

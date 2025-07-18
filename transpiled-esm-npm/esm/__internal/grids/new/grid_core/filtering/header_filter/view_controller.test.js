@@ -83,10 +83,12 @@ describe('HeaderFilter', () => {
             visible: true
           },
           columns: [{
+            dataField: 'A',
             name: 'A'
           }]
         });
         viewController.openPopup({}, {
+          dataField: 'A',
           name: 'A'
         });
         const state = viewController.popupState.peek();
@@ -116,10 +118,11 @@ describe('HeaderFilter', () => {
           headerFilter: _extends({}, expectedHeaderFilter),
           filterValues: 'test',
           columns: [{
-            name: 'A'
+            dataField: 'A'
           }]
         });
         viewController.openPopup({}, {
+          dataField: 'A',
           name: 'A',
           headerFilter: {
             search: expectedSearch
@@ -170,8 +173,8 @@ describe('HeaderFilter', () => {
           name: 'A'
         });
         const state = viewController.popupState.peek();
-        expect(typeof (state === null || state === void 0 ? void 0 : state.options.dataSource.load)).toBe('function');
-        expect(typeof (state === null || state === void 0 ? void 0 : state.options.dataSource.postProcess)).toBe('function');
+        expect(typeof (state === null || state === void 0 ? void 0 : state.options.dataSource).load).toBe('function');
+        expect(typeof (state === null || state === void 0 ? void 0 : state.options.dataSource).postProcess).toBe('function');
       });
       // NOTE: Unfortunately, we cannot test perfectly local group functions here
       // Because these functions are local and too deep in the old grid_core
@@ -221,8 +224,8 @@ describe('HeaderFilter', () => {
         });
         viewController.openPopup({}, column);
         const state = viewController.popupState.peek();
-        expect(state === null || state === void 0 ? void 0 : state.options.dataSource.group).toBeTruthy();
-        expect(checkFn(state === null || state === void 0 ? void 0 : state.options.dataSource.group)).toBeTruthy();
+        expect((state === null || state === void 0 ? void 0 : state.options.dataSource).group).toBeTruthy();
+        expect(checkFn((state === null || state === void 0 ? void 0 : state.options.dataSource).group)).toBeTruthy();
       });
     });
   });

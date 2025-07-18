@@ -4,14 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ColumnChooserView = void 0;
-var _themes = require("../../../../../ui/themes");
 var _signalsCore = require("@preact/signals-core");
 var _inferno = require("inferno");
 var _index = require("../columns_controller/index");
 var _view = require("../core/view");
 var _options_controller = require("../options_controller/options_controller");
 var _controller = require("../toolbar/controller");
-var _utils = require("../utils");
+var _common = require("../utils/common");
 var _column_chooser = require("./column_chooser");
 var _controller2 = require("./controller");
 class ColumnChooserView extends _view.View {
@@ -42,12 +41,6 @@ class ColumnChooserView extends _view.View {
         toolbar: 'top',
         location: 'before'
       }];
-      if (!this.isMaterialOrGeneric()) {
-        // @ts-expect-error
-        items.push({
-          shortcut: 'cancel'
-        });
-      }
       return items;
     });
     this.mode = this.options.oneWay('columnChooser.mode');
@@ -68,7 +61,7 @@ class ColumnChooserView extends _view.View {
         },
         elementAttr: {
           'aria-haspopup': 'dialog',
-          class: (0, _utils.addWidgetPrefix)(_column_chooser.CLASS.toolbarBtn)
+          class: (0, _common.addWidgetPrefix)(_column_chooser.CLASS.toolbarBtn)
         }
       },
       showText: 'inMenu',
@@ -103,7 +96,6 @@ class ColumnChooserView extends _view.View {
         container: this.options.oneWay('columnChooser.container').value,
         position: this.options.oneWay('columnChooser.position').value,
         toolbarItems: this.popupToolbarItems.value,
-        showCloseButton: this.isMaterialOrGeneric(),
         onHidden: () => {
           var _this$toolbarButtonEl;
           this.popupVisible.value = false;
@@ -125,9 +117,6 @@ class ColumnChooserView extends _view.View {
         onPlaceholderPrepared: this.columnChooserController.onPlaceholderPrepared
       }
     }));
-  }
-  isMaterialOrGeneric() {
-    return (0, _themes.isMaterial)((0, _themes.current)()) || (0, _themes.isGeneric)((0, _themes.current)());
   }
 }
 exports.ColumnChooserView = ColumnChooserView;

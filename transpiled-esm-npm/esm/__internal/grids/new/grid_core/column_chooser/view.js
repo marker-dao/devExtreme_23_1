@@ -1,11 +1,10 @@
-import { current, isGeneric, isMaterial } from '../../../../../ui/themes';
 import { computed, signal } from '@preact/signals-core';
 import { createRef } from 'inferno';
 import { ColumnsController } from '../columns_controller/index';
 import { View } from '../core/view';
 import { OptionsController } from '../options_controller/options_controller';
 import { ToolbarController } from '../toolbar/controller';
-import { addWidgetPrefix } from '../utils';
+import { addWidgetPrefix } from '../utils/common';
 import { CLASS, ColumnChooser } from './column_chooser';
 import { ColumnChooserController } from './controller';
 export class ColumnChooserView extends View {
@@ -34,14 +33,8 @@ export class ColumnChooserView extends View {
       const items = [{
         text: title,
         toolbar: 'top',
-        location: this.isMaterialOrGeneric() ? 'before' : 'center'
+        location: 'before'
       }];
-      if (!this.isMaterialOrGeneric()) {
-        // @ts-expect-error
-        items.push({
-          shortcut: 'cancel'
-        });
-      }
       return items;
     });
     this.mode = this.options.oneWay('columnChooser.mode');
@@ -97,7 +90,6 @@ export class ColumnChooserView extends View {
         container: this.options.oneWay('columnChooser.container').value,
         position: this.options.oneWay('columnChooser.position').value,
         toolbarItems: this.popupToolbarItems.value,
-        showCloseButton: this.isMaterialOrGeneric(),
         onHidden: () => {
           var _this$toolbarButtonEl;
           this.popupVisible.value = false;
@@ -111,11 +103,14 @@ export class ColumnChooserView extends View {
         items: this.columnChooserController.items.value
       },
       treeViewSelectModeConfig: this.selectModeConfig.value,
-      treeViewDragAndDropModeConfig: this.dragAndDropModeConfig.value
+      treeViewDragAndDropModeConfig: this.dragAndDropModeConfig.value,
+      sortableConfig: {
+        isColumnDraggable: this.columnChooserController.isColumnDraggable,
+        onDragStart: this.columnChooserController.onDragStart,
+        onDragEnd: this.columnChooserController.onDragEnd,
+        onPlaceholderPrepared: this.columnChooserController.onPlaceholderPrepared
+      }
     }));
-  }
-  isMaterialOrGeneric() {
-    return isMaterial(current()) || isGeneric(current());
   }
 }
 ColumnChooserView.dependencies = [ToolbarController, ColumnChooserController, ColumnsController, OptionsController];

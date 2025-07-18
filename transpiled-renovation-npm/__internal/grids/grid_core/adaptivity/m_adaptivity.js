@@ -727,6 +727,9 @@ const keyboardNavigation = Base => class AdaptivityKeyboardNavigationExtender ex
       _events_engine.default.trigger($cell, 'focus');
     }
   }
+  isFocusableColumn(column) {
+    return super.isFocusableColumn(column) && column.visibleWidth !== HIDDEN_COLUMNS_WIDTH;
+  }
   _isCellElement($cell) {
     return super._isCellElement($cell) || $cell.hasClass(ADAPTIVE_ITEM_TEXT_CLASS);
   }
@@ -1080,15 +1083,18 @@ const resizing = Base => class AdaptivityResizingControllerExtender extends Base
   }
 };
 const headersKeyboardNavigation = Base => class AdaptivityHeadersKeyboardNavigationExtender extends Base {
-  getNewVisibleIndex(visibleIndex, direction) {
-    let newVisibleIndex = super.getNewVisibleIndex(visibleIndex, direction);
-    let visibleColumns = this._columnsController.getVisibleColumns();
+  getColumnVisibleIndexCorrection(visibleIndex, rowIndex, direction) {
+    let indexCorrection = super.getColumnVisibleIndexCorrection(visibleIndex, rowIndex, direction);
+    let visibleColumns = this._columnsController.getVisibleColumns(rowIndex);
     visibleColumns = direction === 'next' ? visibleColumns.slice(visibleIndex + 1) : visibleColumns.slice(0, visibleIndex).reverse();
     while (((_visibleColumns = visibleColumns) === null || _visibleColumns === void 0 || (_visibleColumns = _visibleColumns.shift()) === null || _visibleColumns === void 0 ? void 0 : _visibleColumns.visibleWidth) === HIDDEN_COLUMNS_WIDTH) {
       var _visibleColumns;
-      newVisibleIndex += direction === 'next' ? 1 : -1;
+      indexCorrection += direction === 'next' ? 1 : -1;
     }
-    return newVisibleIndex;
+    return indexCorrection;
+  }
+  getFocusableColumns(rowIndex, bandColumnId) {
+    return super.getFocusableColumns(rowIndex, bandColumnId).filter(col => col.visibleWidth !== HIDDEN_COLUMNS_WIDTH);
   }
   getDraggableColumns(column, rowIndex) {
     return super.getDraggableColumns(column, rowIndex).filter(col => col.visibleWidth !== HIDDEN_COLUMNS_WIDTH);

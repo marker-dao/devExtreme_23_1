@@ -591,7 +591,7 @@ class Widget extends _dom_component.default {
   }
   registerKeyHandler(key, handler) {
     const currentKeys = this._supportedKeys();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @stylistic/max-len
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     this._supportedKeys = () => (0, _extend.extend)(currentKeys, {
       [key]: handler
     });

@@ -63,7 +63,6 @@ const FILTER_RANGE_CONTENT_CLASS = 'dx-filter-range-content';
 const FILTER_MODIFIED_CLASS = 'dx-filter-modified';
 const EDITORS_INPUT_SELECTOR = 'input:not([type=\'hidden\'])';
 const BETWEEN_OPERATION_DATA_TYPES = ['date', 'datetime', 'number'];
-const ARIA_SEARCH_BOX = messageLocalization.format('dxDataGrid-ariaSearchBox');
 function isOnClickApplyFilterMode(that) {
   return that.option('filterRow.applyFilter') === 'onClick';
 }
@@ -247,6 +246,8 @@ const columnHeadersView = Base => class ColumnHeadersViewFilterRowExtender exten
       showTitle: false,
       focusStateEnabled: false,
       hideOnOutsideClick: true,
+      hideOnParentScroll: true,
+      _hideOnParentScrollTarget: $overlay,
       wrapperAttr: {
         class: filterRangeOverlayClass
       },
@@ -492,6 +493,7 @@ const columnHeadersView = Base => class ColumnHeadersViewFilterRowExtender exten
       isCellWasFocused && that._focusEditor($editorContainer);
     };
     const editorFactoryController = this._editorFactoryController;
+    const ariaSearchBox = messageLocalization.format('dxDataGrid-ariaSearchBox');
     that._createComponent($menu, Menu, {
       // @ts-expect-error
       integrationOptions: {},
@@ -501,6 +503,7 @@ const columnHeadersView = Base => class ColumnHeadersViewFilterRowExtender exten
       showFirstSubmenuMode: 'onHover',
       hideSubmenuOnMouseLeave: true,
       items: [{
+        name: getColumnSelectedFilterOperation(that, column) || ariaSearchBox,
         disabled: !((_column$filterOperati2 = column.filterOperations) !== null && _column$filterOperati2 !== void 0 && _column$filterOperati2.length),
         icon: OPERATION_ICONS[getColumnSelectedFilterOperation(that, column) || 'default'],
         selectable: false,
@@ -508,9 +511,13 @@ const columnHeadersView = Base => class ColumnHeadersViewFilterRowExtender exten
       }],
       onItemRendered: _ref => {
         let {
-          itemElement
+          itemElement,
+          itemData
         } = _ref;
-        this.setAria('label', ARIA_SEARCH_BOX, $(itemElement));
+        if (itemData !== null && itemData !== void 0 && itemData.items && itemData !== null && itemData !== void 0 && itemData.name) {
+          const labelText = that._getOperationDescriptionFromDescriptor(itemData.name) || ariaSearchBox;
+          this.setAria('label', labelText, $(itemElement));
+        }
       },
       onItemClick(properties) {
         var _properties$itemData;
@@ -594,19 +601,14 @@ const columnHeadersView = Base => class ColumnHeadersViewFilterRowExtender exten
     const that = this;
     let result = [{}];
     const filterRowOptions = that.option('filterRow');
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    const operationDescriptions = (filterRowOptions === null || filterRowOptions === void 0 ? void 0 : filterRowOptions.operationDescriptions) || {};
     if ((_column$filterOperati3 = column.filterOperations) !== null && _column$filterOperati3 !== void 0 && _column$filterOperati3.length) {
       const availableFilterOperations = column.filterOperations.filter(value => isDefined(OPERATION_DESCRIPTORS[value]));
-      result = map(availableFilterOperations, value => {
-        const descriptionName = OPERATION_DESCRIPTORS[value];
-        return {
-          name: value,
-          selected: (getColumnSelectedFilterOperation(that, column) || column.defaultFilterOperation) === value,
-          text: operationDescriptions[descriptionName],
-          icon: OPERATION_ICONS[value]
-        };
-      });
+      result = map(availableFilterOperations, value => ({
+        name: value,
+        selected: (getColumnSelectedFilterOperation(that, column) || column.defaultFilterOperation) === value,
+        text: that._getOperationDescriptionFromDescriptor(value),
+        icon: OPERATION_ICONS[value]
+      }));
       result.push({
         name: null,
         text: filterRowOptions === null || filterRowOptions === void 0 ? void 0 : filterRowOptions.resetOperationText,
@@ -614,6 +616,13 @@ const columnHeadersView = Base => class ColumnHeadersViewFilterRowExtender exten
       });
     }
     return result;
+  }
+  _getOperationDescriptionFromDescriptor(value) {
+    const filterRowOptions = this.option('filterRow');
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const operationDescriptions = (filterRowOptions === null || filterRowOptions === void 0 ? void 0 : filterRowOptions.operationDescriptions) || {};
+    const descriptionName = OPERATION_DESCRIPTORS[value];
+    return operationDescriptions[descriptionName];
   }
   _handleDataChanged(e) {
     var _this$_dataController, _this$_dataController2, _dataSource$lastLoadO, _e$operationTypes, _e$operationTypes2;

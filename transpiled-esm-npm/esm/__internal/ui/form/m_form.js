@@ -31,9 +31,9 @@ import tryCreateItemOptionAction from '../../ui/form/m_form.item_options_actions
 import { default as FormItemsRunTimeInfo } from '../../ui/form/m_form.items_runtime_info';
 import { convertToLabelMarkOptions } from '../../ui/form/m_form.layout_manager.utils'; // TODO: remove reference to 'ui.form.layout_manager.utils.js'
 import { concatPaths, convertToLayoutManagerOptions, createItemPathByIndex, getFullOptionName, getItemPath, getOptionNameFromFullName, getTextWithoutSpaces, isEqualToDataFieldOrNameOrTitleOrCaption, isFullPathContainsTabs, tryGetTabPath } from '../../ui/form/m_form.utils';
-import Scrollable from '../../ui/scroll_view/m_scrollable';
+import Scrollable from '../../ui/scroll_view/scrollable';
 import { TEXTEDITOR_CLASS, TEXTEDITOR_INPUT_CLASS } from '../../ui/text_box/m_text_editor.base';
-import { TOOLBAR_CLASS } from '../../ui/toolbar/m_constants';
+import { TOOLBAR_CLASS } from '../../ui/toolbar/constants';
 const ITEM_OPTIONS_FOR_VALIDATION_UPDATING = ['items', 'isRequired', 'validationRules', 'visible'];
 class Form extends Widget {
   _init() {
@@ -1134,9 +1134,6 @@ class Form extends Widget {
     super._dispose();
   }
   clear() {
-    this._clear();
-  }
-  resetValues() {
     this._clear();
   }
   reset(editorsData) {

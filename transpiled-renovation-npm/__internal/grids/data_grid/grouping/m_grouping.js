@@ -12,6 +12,7 @@ var _iterator = require("../../../../core/utils/iterator");
 var _size = require("../../../../core/utils/size");
 var _type = require("../../../../core/utils/type");
 var _accessibility = require("../../../../ui/shared/accessibility");
+var _m_column_context_menu_mixin = require("../../../grids/grid_core/context_menu/m_column_context_menu_mixin");
 var _m_accessibility = require("../../../grids/grid_core/m_accessibility");
 var _m_core = _interopRequireDefault(require("../m_core"));
 var _m_data_source_adapter = _interopRequireDefault(require("../m_data_source_adapter"));
@@ -306,21 +307,25 @@ const GroupingDataControllerExtender = Base => class GroupingDataControllerExten
     super.optionChanged(args);
   }
 };
-const onGroupingMenuItemClick = function (column, params) {
-  const columnsController = this._columnsController;
+const onGroupingMenuItemClick = function (column, rowIndex, params) {
+  var _this$getKeyboardNavi, _keyboardNavigationCo2;
+  const keyboardNavigationController = (_this$getKeyboardNavi = this.getKeyboardNavigationController) === null || _this$getKeyboardNavi === void 0 ? void 0 : _this$getKeyboardNavi.call(this);
   // eslint-disable-next-line default-case
   switch (params.itemData.value) {
     case 'group':
       {
-        const groups = columnsController._dataSource.group() || [];
-        columnsController.columnOption(column.dataField, 'groupIndex', groups.length);
+        var _keyboardNavigationCo;
+        this.isNeedToFocusColumn = true;
+        keyboardNavigationController === null || keyboardNavigationController === void 0 || (_keyboardNavigationCo = keyboardNavigationController.groupColumn) === null || _keyboardNavigationCo === void 0 || _keyboardNavigationCo.call(keyboardNavigationController, column, rowIndex);
         break;
       }
     case 'ungroup':
-      columnsController.columnOption(column.dataField, 'groupIndex', -1);
+      this.isNeedToFocusColumn = true;
+      keyboardNavigationController === null || keyboardNavigationController === void 0 || (_keyboardNavigationCo2 = keyboardNavigationController.ungroupColumn) === null || _keyboardNavigationCo2 === void 0 || _keyboardNavigationCo2.call(keyboardNavigationController, column, rowIndex);
       break;
     case 'ungroupAll':
-      this.component.clearGrouping();
+      this.isNeedToFocusColumn = true;
+      keyboardNavigationController === null || keyboardNavigationController === void 0 || keyboardNavigationController.ungroupAllColumns();
       break;
   }
 };
@@ -333,7 +338,7 @@ const allowDragging = (groupPanelOptions, column) => {
   const canDrag = (groupPanelOptions === null || groupPanelOptions === void 0 ? void 0 : groupPanelOptions.allowColumnDragging) && (column === null || column === void 0 ? void 0 : column.allowGrouping);
   return isVisible && !!canDrag;
 };
-const GroupingHeaderPanelExtender = Base => class GroupingHeaderPanelExtender extends Base {
+const GroupingHeaderPanelExtender = Base => class GroupingHeaderPanelExtender extends (0, _m_column_context_menu_mixin.ColumnContextMenuMixin)(Base) {
   _getToolbarItems() {
     const items = super._getToolbarItems();
     return this._appendGroupingItem(items);
@@ -394,6 +399,33 @@ const GroupingHeaderPanelExtender = Base => class GroupingHeaderPanelExtender ex
     (0, _accessibility.setTabIndex)(this, $groupPanelItem);
     return $groupPanelItem;
   }
+  getGroupAndUngroupItems(options) {
+    const {
+      column
+    } = options;
+    const contextMenuEnabled = this.option('grouping.contextMenuEnabled');
+    if (contextMenuEnabled && column) {
+      const isGroupingAllowed = (0, _type.isDefined)(column.allowGrouping) ? column.allowGrouping : true;
+      if (isGroupingAllowed) {
+        const isColumnGrouped = (0, _type.isDefined)(column.groupIndex) && column.groupIndex > -1;
+        const groupingTexts = this.option('grouping.texts');
+        const onItemClick = onGroupingMenuItemClick.bind(this, column, 0);
+        return [{
+          text: groupingTexts.ungroup,
+          value: 'ungroup',
+          disabled: !isColumnGrouped,
+          onItemClick,
+          icon: _const.CONTEXT_MENU_UNGROUP_COLUMN_ICON_NAME
+        }, {
+          text: groupingTexts.ungroupAll,
+          value: 'ungroupAll',
+          onItemClick,
+          icon: _const.CONTEXT_MENU_UNGROUP_ALL_COLUMNS_ICON_NAME
+        }];
+      }
+    }
+    return [];
+  }
   _columnOptionChanged(e) {
     if (!this._requireReady && !_m_core.default.checkChanges(e.optionNames, ['width', 'visibleWidth'])) {
       const $toolbarElement = this.element();
@@ -442,37 +474,6 @@ const GroupingHeaderPanelExtender = Base => class GroupingHeaderPanelExtender ex
   getName() {
     return 'group';
   }
-  getContextMenuItems(options) {
-    const that = this;
-    const contextMenuEnabled = that.option('grouping.contextMenuEnabled');
-    const $groupedColumnElement = (0, _renderer.default)(options.targetElement).closest(`.${_const.CLASSES.groupPanelItem}`);
-    let items;
-    if ($groupedColumnElement.length) {
-      options.column = $groupedColumnElement.data('columnData');
-    }
-    if (contextMenuEnabled && options.column) {
-      const {
-        column
-      } = options;
-      const isGroupingAllowed = (0, _type.isDefined)(column.allowGrouping) ? column.allowGrouping : true;
-      if (isGroupingAllowed) {
-        const isColumnGrouped = (0, _type.isDefined)(column.groupIndex) && column.groupIndex > -1;
-        const groupingTexts = that.option('grouping.texts');
-        const onItemClick = onGroupingMenuItemClick.bind(that, column);
-        items = [{
-          text: groupingTexts.ungroup,
-          value: 'ungroup',
-          disabled: !isColumnGrouped,
-          onItemClick
-        }, {
-          text: groupingTexts.ungroupAll,
-          value: 'ungroupAll',
-          onItemClick
-        }];
-      }
-    }
-    return items;
-  }
   hasGroupedColumns() {
     return this._isGroupPanelVisible() && !!this.getColumns().length;
   }
@@ -483,6 +484,31 @@ const GroupingHeaderPanelExtender = Base => class GroupingHeaderPanelExtender ex
     } else {
       super.optionChanged(args);
     }
+  }
+  getKeyboardNavigationController() {
+    return this.getController('groupPanelKeyboardNavigation');
+  }
+  isColumnReorderingEnabled(column) {
+    return this.allowDragging(column);
+  }
+  getContextMenuItems(options) {
+    let items = super.getContextMenuItems(options);
+    const $groupedColumnElement = (0, _renderer.default)(options.targetElement).closest(`.${_const.CLASSES.groupPanelItem}`);
+    if (!$groupedColumnElement.length) {
+      return;
+    }
+    options.column = this._columnsController.columnOption(`groupIndex:${$groupedColumnElement.index()}`);
+    const groupAndUngroupItems = this.getGroupAndUngroupItems(options);
+    if (groupAndUngroupItems !== null && groupAndUngroupItems !== void 0 && groupAndUngroupItems.length) {
+      items = items ?? [];
+      items.push(...groupAndUngroupItems);
+    }
+    const moveColumnItems = this.getMoveColumnContextMenuItems(options);
+    if (moveColumnItems !== null && moveColumnItems !== void 0 && moveColumnItems.length) {
+      items = items ?? [];
+      items.push(...moveColumnItems);
+    }
+    return items;
   }
 };
 exports.GroupingHeaderPanelExtender = GroupingHeaderPanelExtender;
@@ -496,16 +522,25 @@ const GroupingRowsViewExtender = Base => class GroupingRowsViewExtender extends 
       const column = columnsController.columnOption(`groupIndex:${options.row.groupIndex}`);
       if (column && column.allowGrouping) {
         const groupingTexts = that.option('grouping.texts');
-        const onItemClick = onGroupingMenuItemClick.bind(that, column);
+        const onItemClick = e => {
+          var _e$itemData, _e$itemData2;
+          if (((_e$itemData = e.itemData) === null || _e$itemData === void 0 ? void 0 : _e$itemData.value) === 'ungroup') {
+            columnsController.columnOption(column.dataField, 'groupIndex', -1);
+          } else if (((_e$itemData2 = e.itemData) === null || _e$itemData2 === void 0 ? void 0 : _e$itemData2.value) === 'ungroupAll') {
+            columnsController.clearGrouping();
+          }
+        };
         items = [];
         items.push({
           text: groupingTexts.ungroup,
           value: 'ungroup',
-          onItemClick
+          onItemClick,
+          icon: _const.CONTEXT_MENU_UNGROUP_COLUMN_ICON_NAME
         }, {
           text: groupingTexts.ungroupAll,
           value: 'ungroupAll',
-          onItemClick
+          onItemClick,
+          icon: _const.CONTEXT_MENU_UNGROUP_ALL_COLUMNS_ICON_NAME
         });
       }
     }
@@ -537,39 +572,47 @@ const GroupingRowsViewExtender = Base => class GroupingRowsViewExtender extends 
 const columnHeadersViewExtender = Base => class GroupingHeadersViewExtender extends Base {
   getContextMenuItems(options) {
     const that = this;
+    const groupItems = [];
     const contextMenuEnabled = that.option('grouping.contextMenuEnabled');
     let items = super.getContextMenuItems(options);
     if (contextMenuEnabled && options.row && (options.row.rowType === 'header' || options.row.rowType === 'detailAdaptive')) {
       const {
-        column
+        column,
+        rowIndex
       } = options;
       if (!column.command && (!(0, _type.isDefined)(column.allowGrouping) || column.allowGrouping)) {
         const groupingTexts = that.option('grouping.texts');
         const isColumnGrouped = (0, _type.isDefined)(column.groupIndex) && column.groupIndex > -1;
-        const onItemClick = onGroupingMenuItemClick.bind(that, column);
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        items = items || [];
-        items.push({
+        const onItemClick = onGroupingMenuItemClick.bind(that, column, rowIndex);
+        groupItems.push({
           text: groupingTexts.groupByThisColumn,
           value: 'group',
           beginGroup: true,
           disabled: isColumnGrouped,
-          onItemClick
+          onItemClick,
+          icon: _const.CONTEXT_MENU_GROUP_BY_COLUMN_ICON_NAME
         });
         if (column.showWhenGrouped) {
-          items.push({
+          groupItems.push({
             text: groupingTexts.ungroup,
             value: 'ungroup',
             disabled: !isColumnGrouped,
-            onItemClick
+            onItemClick,
+            icon: _const.CONTEXT_MENU_UNGROUP_COLUMN_ICON_NAME
           });
         }
-        items.push({
+        groupItems.push({
           text: groupingTexts.ungroupAll,
           value: 'ungroupAll',
-          onItemClick
+          onItemClick,
+          icon: _const.CONTEXT_MENU_UNGROUP_ALL_COLUMNS_ICON_NAME
         });
       }
+    }
+    if (groupItems.length) {
+      items = items ?? [];
+      const clearSortingItemIndex = items.findIndex(item => item.name === 'clearSorting') + 1;
+      items.splice(clearSortingItemIndex, 0, ...groupItems);
     }
     return items;
   }
@@ -584,7 +627,7 @@ _m_core.default.registerModule('grouping', {
       grouping: {
         autoExpandAll: true,
         allowCollapsing: true,
-        contextMenuEnabled: false,
+        contextMenuEnabled: true,
         expandMode: 'buttonClick',
         texts: {
           groupContinuesMessage: _message.default.format('dxDataGrid-groupContinuesMessage'),

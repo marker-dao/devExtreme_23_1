@@ -16,25 +16,28 @@ class SearchView {
     this.toolbarController = toolbarController;
     this.searchUIController = searchUIController;
     this.searchController = searchController;
-    this.searchTextBox = null;
-    this.toolbarController.addDefaultItem((0, _signalsCore.computed)(() => (0, _utils.addSearchTextBox)(this.getProps().value, component => {
-      this.searchTextBox = component;
-    })), this.options.oneWay('searchPanel.visible'));
-    this.searchUIController.registerCallback('focusSearchTextBox', () => {
-      var _this$searchTextBox;
-      (_this$searchTextBox = this.searchTextBox) === null || _this$searchTextBox === void 0 || _this$searchTextBox.focus();
-    });
-  }
-  getProps() {
-    return (0, _signalsCore.computed)(() => ({
-      placeholder: this.options.oneWay('searchPanel.placeholder').value,
-      // TODO: resolve update cycle: editor - option - editor
-      // value: this.searchController.searchTextOption.value,
-      width: this.options.oneWay('searchPanel.width').value,
+    this.searchTextBox = (0, _signalsCore.signal)(null);
+    const toolbarItem = (0, _utils.addSearchTextBox)({
+      placeholder: this.searchController.searchPlaceholder.value,
+      value: this.searchController.searchTextOption.value,
+      width: this.searchController.searchWidth.value,
       onValueChanged: text => {
         this.searchController.updateSearchText(text);
       }
-    }));
+    }, component => {
+      this.searchTextBox.value = component;
+    });
+    this.toolbarController.addDefaultItem((0, _signalsCore.signal)(toolbarItem), this.options.oneWay('searchPanel.visible'));
+    (0, _signalsCore.effect)(() => {
+      var _this$searchTextBox$v, _this$searchTextBox$v2, _this$searchTextBox$v3;
+      (_this$searchTextBox$v = this.searchTextBox.value) === null || _this$searchTextBox$v === void 0 || _this$searchTextBox$v.option('value', this.searchController.searchTextOption.value);
+      (_this$searchTextBox$v2 = this.searchTextBox.value) === null || _this$searchTextBox$v2 === void 0 || _this$searchTextBox$v2.option('placeholder', this.searchController.searchPlaceholder.value);
+      (_this$searchTextBox$v3 = this.searchTextBox.value) === null || _this$searchTextBox$v3 === void 0 || _this$searchTextBox$v3.option('width', this.searchController.searchWidth.value);
+    });
+    this.searchUIController.registerCallback('focusSearchTextBox', () => {
+      var _this$searchTextBox$v4;
+      (_this$searchTextBox$v4 = this.searchTextBox.value) === null || _this$searchTextBox$v4 === void 0 || _this$searchTextBox$v4.focus();
+    });
   }
 }
 exports.SearchView = SearchView;

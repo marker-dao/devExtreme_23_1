@@ -314,10 +314,11 @@ class DropDownButton extends Widget {
     $content.empty();
     this._popupContentId = `dx-${new Guid()}`;
     this.setAria('id', this._popupContentId, $content);
-    return template.render({
+    const result = template.render({
       container: getPublicElement($content),
       model: this.option('items') || this._dataController.getDataSource()
     });
+    return result;
   }
   _popupOptions() {
     const horizontalAlignment = this.option('rtlEnabled') ? 'right' : 'left';
@@ -355,7 +356,8 @@ class DropDownButton extends Widget {
         my: `${horizontalAlignment} top`,
         at: `${horizontalAlignment} bottom`
       },
-      _wrapperClassExternal: DROP_DOWN_EDITOR_OVERLAY_CLASS
+      _wrapperClassExternal: DROP_DOWN_EDITOR_OVERLAY_CLASS,
+      contentTemplate: null
     }, this._options.cache('dropDownOptions'), {
       visible: this.option('opened')
     });

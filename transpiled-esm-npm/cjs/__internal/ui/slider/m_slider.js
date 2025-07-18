@@ -424,7 +424,6 @@ class Slider extends _m_track_bar.default {
     // @ts-expect-error ts-error
     const newRatio = Math.min(this._startOffset + offsetDirection * e.event.offset / this._swipePixelRatio(), 1);
     (0, _size.setWidth)(this._$range, `${newRatio * 100}%`);
-    _m_slider_handle.default.getInstance(this._activeHandle()).fitTooltipPosition;
     this._changeValueOnSwipe(newRatio);
   }
   _swipePixelRatio() {

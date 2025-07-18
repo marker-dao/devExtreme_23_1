@@ -19,6 +19,7 @@ class ContentView extends _inferno.Component {
     super(...arguments);
     this.scrollableRef = (0, _inferno.createRef)();
     this.containerRef = (0, _inferno.createRef)();
+    this.resizeObserverTimeout = null;
   }
   render() {
     return (0, _inferno.createVNode)(1, "div", CLASSES.contentView, [(0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _load_panel.LoadPanel, _extends({}, this.props.loadPanelProps))), this.props.noDataTextProps.visible ? (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _no_data_text.NoDataText, _extends({}, this.props.noDataTextProps))) : (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _scrollable.Scrollable, _extends({
@@ -37,17 +38,28 @@ class ContentView extends _inferno.Component {
     }
   }
   componentDidMount() {
+    var _this$props$onRendere, _this$props3;
     this.updateSizesInfo();
     _m_resize_observer.resizeObserverSingleton.observe(this.containerRef.current, entry => {
-      var _this$props$onWidthCh, _this$props2;
-      (_this$props$onWidthCh = (_this$props2 = this.props).onWidthChange) === null || _this$props$onWidthCh === void 0 || _this$props$onWidthCh.call(_this$props2, entry.contentRect.width);
+      // NOTE: Hotfix for demos test resize windows issue
+      this.resizeObserverTimeout = setTimeout(() => {
+        var _this$props$onWidthCh, _this$props2;
+        this.resizeObserverTimeout = null;
+        (_this$props$onWidthCh = (_this$props2 = this.props).onWidthChange) === null || _this$props$onWidthCh === void 0 || _this$props$onWidthCh.call(_this$props2, entry.contentRect.width);
+      }, 0);
     });
+    (_this$props$onRendere = (_this$props3 = this.props).onRendered) === null || _this$props$onRendere === void 0 || _this$props$onRendere.call(_this$props3);
   }
   componentDidUpdate() {
+    var _this$props$onRendere2, _this$props4;
     this.updateSizesInfo();
+    (_this$props$onRendere2 = (_this$props4 = this.props).onRendered) === null || _this$props$onRendere2 === void 0 || _this$props$onRendere2.call(_this$props4);
   }
   componentWillUnmount() {
     _m_resize_observer.resizeObserverSingleton.unobserve(this.containerRef.current);
+    if (this.resizeObserverTimeout !== null) {
+      clearTimeout(this.resizeObserverTimeout);
+    }
   }
 }
 exports.ContentView = ContentView;

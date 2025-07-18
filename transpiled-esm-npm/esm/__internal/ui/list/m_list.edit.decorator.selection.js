@@ -1,6 +1,6 @@
 import { name as clickEventName } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
-import { addNamespace } from '../../../common/core/events/utils/index';
+import { addNamespace } from '../../../common/core/events/utils';
 import messageLocalization from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
 import { Deferred } from '../../../core/utils/deferred';

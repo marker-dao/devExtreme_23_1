@@ -1,4 +1,5 @@
 import { describe, expect, it, jest } from '@jest/globals';
+import { DataSource } from '../../../../data/data_source/m_data_source';
 import ArrayStore from '../../../../data/m_array_store';
 import { getContext } from '../di.test_utils';
 import { OptionsControllerMock } from '../options_controller/options_controller.mock';
@@ -126,10 +127,6 @@ describe('PublicMethods', () => {
       });
     });
   });
-  describe('getFilter', () => {
-    // TODO: add test once some filter module (header filter, filter row etc) is implemented
-    it.skip('should return filter applied to dataSource', () => {});
-  });
   describe('keyOf', () => {
     it('should return key of given data object', () => {
       const {
@@ -213,8 +210,8 @@ describe('PublicMethods', () => {
         }
       });
       expect(gridCore.pageIndex()).toBe(0);
-      dataController.pageIndex.value = 3;
-      expect(gridCore.pageIndex()).toBe(3);
+      dataController.pageIndex.value = 1;
+      expect(gridCore.pageIndex()).toBe(1);
     });
   });
   describe('totalCount', () => {
@@ -236,6 +233,80 @@ describe('PublicMethods', () => {
         }
       });
       expect(gridCore.totalCount()).toBe(4);
+    });
+  });
+  describe('getCombinedFilter', () => {
+    const innerSetup = _ref => {
+      let {
+        dataSourceFilter,
+        columnFilterValues
+      } = _ref;
+      return setup({
+        dataSource: new DataSource({
+          store: {
+            type: 'array',
+            data: [{
+              a: 1
+            }, {
+              a: 2
+            }, {
+              a: 3
+            }]
+          },
+          filter: dataSourceFilter
+        }),
+        // if remoteOperations: false, selector are functions instead of dataFields
+        // it's harder to match them in test
+        remoteOperations: true,
+        columns: [{
+          dataField: 'a',
+          filterValues: columnFilterValues
+        }]
+      });
+    };
+    describe('when displayFilter and filter from dataSource are empty', () => {
+      it('should return empty filter', () => {
+        const {
+          gridCore
+        } = innerSetup({
+          dataSourceFilter: undefined,
+          columnFilterValues: undefined
+        });
+        expect(gridCore.getCombinedFilter()).toBe(undefined);
+      });
+    });
+    describe('when displayFilter is set and filter from dataSource is empty', () => {
+      it('should return displayFilter filter', () => {
+        const {
+          gridCore
+        } = innerSetup({
+          dataSourceFilter: undefined,
+          columnFilterValues: [1, 2]
+        });
+        expect(gridCore.getCombinedFilter()).toStrictEqual([['a', '=', 1], 'or', ['a', '=', 2]]);
+      });
+    });
+    describe('when displayFilter is empty and filter from dataSource is set', () => {
+      it('should return filter from dataSource', () => {
+        const {
+          gridCore
+        } = innerSetup({
+          dataSourceFilter: ['a', '=', 123],
+          columnFilterValues: undefined
+        });
+        expect(gridCore.getCombinedFilter()).toStrictEqual(['a', '=', 123]);
+      });
+    });
+    describe('when displayFilter and filter from dataSource are set', () => {
+      it('should combine filters', () => {
+        const {
+          gridCore
+        } = innerSetup({
+          dataSourceFilter: ['a', '=', 123],
+          columnFilterValues: [1, 2]
+        });
+        expect(gridCore.getCombinedFilter()).toStrictEqual([['a', '=', 123], 'and', [['a', '=', 1], 'or', ['a', '=', 2]]]);
+      });
     });
   });
 });

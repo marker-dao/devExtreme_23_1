@@ -6,13 +6,13 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _date2 = require("../../../core/utils/date");
-var _index = require("../../../scheduler/r1/utils/index");
 var _m_utils_time_zone = _interopRequireDefault(require("../../m_utils_time_zone"));
+var _index = require("../../r1/utils/index");
 var _m_date_header_data_generator = require("./m_date_header_data_generator");
 var _m_grouped_data_map_provider = require("./m_grouped_data_map_provider");
 var _m_time_panel_data_generator = require("./m_time_panel_data_generator");
-var _m_utils = require("./m_utils");
-const _excluded = ["groups", "groupOrientation", "groupByDate", "isAllDayPanelVisible", "viewOffset"];
+var _view_provider_utils = require("./utils/view_provider_utils");
+const _excluded = ["getResourceManager", "groupOrientation", "groupByDate", "isAllDayPanelVisible", "viewOffset"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
@@ -20,11 +20,14 @@ function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t =
 class ViewDataProvider {
   constructor(viewType) {
     this.viewType = viewType;
-    this.viewDataGenerator = (0, _m_utils.getViewDataGeneratorByViewType)(viewType);
+    this.viewDataGenerator = (0, _view_provider_utils.getViewDataGeneratorByViewType)(viewType);
     this.viewData = {};
     this.completeViewDataMap = [];
     this.completeDateHeaderMap = [];
-    this.viewDataMap = {};
+    this.viewDataMap = {
+      dateTableMap: [],
+      allDayPanelMap: []
+    };
     this._groupedDataMapProvider = null;
   }
   get groupedDataMap() {
@@ -37,14 +40,13 @@ class ViewDataProvider {
     return this.viewDataGenerator.isSkippedDate(date);
   }
   update(options, isGenerateNewViewData) {
-    this.viewDataGenerator = (0, _m_utils.getViewDataGeneratorByViewType)(options.viewType);
+    this.viewDataGenerator = (0, _view_provider_utils.getViewDataGeneratorByViewType)(options.viewType);
     const {
       viewDataGenerator
     } = this;
     const dateHeaderDataGenerator = new _m_date_header_data_generator.DateHeaderDataGenerator(viewDataGenerator);
     const timePanelDataGenerator = new _m_time_panel_data_generator.TimePanelDataGenerator(viewDataGenerator);
     const renderOptions = this._transformRenderOptions(options);
-    renderOptions.interval = this.viewDataGenerator.getInterval(renderOptions.hoursInterval);
     this._options = renderOptions;
     if (isGenerateNewViewData) {
       this.completeViewDataMap = viewDataGenerator.getCompleteViewDataMap(renderOptions);
@@ -78,30 +80,34 @@ class ViewDataProvider {
   }
   _transformRenderOptions(renderOptions) {
     const {
-        groups,
+        getResourceManager,
         groupOrientation,
         groupByDate,
         isAllDayPanelVisible,
         viewOffset
       } = renderOptions,
       restOptions = _objectWithoutPropertiesLoose(renderOptions, _excluded);
+    const resourceManager = getResourceManager();
+    const interval = this.viewDataGenerator.getInterval(renderOptions.hoursInterval);
     return _extends({}, restOptions, {
-      startViewDate: this.viewDataGenerator._calculateStartViewDate(renderOptions),
-      isVerticalGrouping: (0, _index.isVerticalGroupingApplied)(groups, groupOrientation),
-      isHorizontalGrouping: (0, _index.isHorizontalGroupingApplied)(groups, groupOrientation),
-      isGroupedByDate: (0, _index.isGroupingByDate)(groups, groupOrientation, groupByDate),
-      isGroupedAllDayPanel: (0, _index.calculateIsGroupedAllDayPanel)(groups, groupOrientation, isAllDayPanelVisible),
-      groups,
+      startViewDate: this.viewDataGenerator.getStartViewDate(renderOptions),
+      isVerticalGrouping: (0, _index.isVerticalGroupingApplied)(resourceManager.groups, groupOrientation),
+      isHorizontalGrouping: (0, _index.isHorizontalGroupingApplied)(resourceManager.groups, groupOrientation),
+      isGroupedByDate: (0, _index.isGroupingByDate)(resourceManager.groups, groupOrientation, groupByDate),
+      isGroupedAllDayPanel: (0, _index.calculateIsGroupedAllDayPanel)(resourceManager.groups, groupOrientation, isAllDayPanelVisible),
+      getResourceManager,
       groupOrientation,
       isAllDayPanelVisible,
-      viewOffset
+      viewOffset,
+      interval
     });
   }
   getGroupPanelData(options) {
     const renderOptions = this._transformRenderOptions(options);
-    if (renderOptions.groups.length > 0) {
+    const groupResources = renderOptions.getResourceManager().groupResources();
+    if (groupResources.length > 0) {
       const cellCount = this.getCellCount(renderOptions);
-      return (0, _index.getGroupPanelData)(renderOptions.groups, cellCount, renderOptions.isGroupedByDate, renderOptions.isGroupedByDate ? 1 : cellCount);
+      return (0, _index.getGroupPanelData)(groupResources, cellCount, renderOptions.isGroupedByDate, renderOptions.isGroupedByDate ? 1 : cellCount);
     }
     return undefined;
   }
@@ -122,15 +128,6 @@ class ViewDataProvider {
     let isAppointmentRender = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     return this._groupedDataMapProvider.findCellPositionInMap(cellInfo, isAppointmentRender);
   }
-  hasAllDayPanel() {
-    const {
-      viewData
-    } = this.viewDataMap;
-    const {
-      allDayPanel
-    } = viewData.groupedData[0];
-    return !viewData.isGroupedAllDayPanel && (allDayPanel === null || allDayPanel === void 0 ? void 0 : allDayPanel.length) > 0;
-  }
   getCellsGroup(groupIndex) {
     return this._groupedDataMapProvider.getCellsGroup(groupIndex);
   }
@@ -146,7 +143,9 @@ class ViewDataProvider {
   getRowCountInGroup(groupIndex) {
     return this._groupedDataMapProvider.getRowCountInGroup(groupIndex);
   }
-  getCellData(rowIndex, columnIndex, isAllDay, rtlEnabled) {
+  getCellData(rowIndex, columnIndex) {
+    let isAllDay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    let rtlEnabled = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
     const row = isAllDay && !this._options.isVerticalGrouping ? this.viewDataMap.allDayPanelMap : this.viewDataMap.dateTableMap[rowIndex];
     const actualColumnIndex = !rtlEnabled ? columnIndex : row.length - 1 - columnIndex;
     const {
@@ -154,13 +153,13 @@ class ViewDataProvider {
     } = row[actualColumnIndex];
     return cellData;
   }
-  getCellsByGroupIndexAndAllDay(groupIndex, allDay) {
+  getCellsByGroupIndexAndAllDay(groupIndex, isAllDay) {
     const rowsPerGroup = this._getRowCountWithAllDayRows();
     const isShowAllDayPanel = this._options.isAllDayPanelVisible;
     const firstRowInGroup = this._options.isVerticalGrouping ? groupIndex * rowsPerGroup : 0;
     const lastRowInGroup = this._options.isVerticalGrouping ? (groupIndex + 1) * rowsPerGroup - 1 : rowsPerGroup;
-    const correctedFirstRow = isShowAllDayPanel && !allDay ? firstRowInGroup + 1 : firstRowInGroup;
-    const correctedLastRow = allDay ? correctedFirstRow : lastRowInGroup;
+    const correctedFirstRow = isShowAllDayPanel && !isAllDay ? firstRowInGroup + 1 : firstRowInGroup;
+    const correctedLastRow = isAllDay ? correctedFirstRow : lastRowInGroup;
     return this.completeViewDataMap.slice(correctedFirstRow, correctedLastRow + 1).map(row => row.filter(_ref => {
       let {
         groupIndex: currentGroupIndex

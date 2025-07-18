@@ -13,6 +13,7 @@ var _extend = require("../../../../core/utils/extend");
 var _iterator = require("../../../../core/utils/iterator");
 var _size = require("../../../../core/utils/size");
 var _type = require("../../../../core/utils/type");
+var _m_column_context_menu_mixin = require("../../../grids/grid_core/context_menu/m_column_context_menu_mixin");
 var _const = require("../columns_resizing_reordering/const");
 var _m_accessibility = require("../m_accessibility");
 var _m_columns_view = require("../views/m_columns_view");
@@ -56,12 +57,13 @@ function addCssClassesToCellContent(that, $cell, column, $cellContent) {
   $cellContent = $cellContent || $cell.children(`.${that.addWidgetPrefix(CELL_CONTENT_CLASS)}`);
   $cellContent.toggleClass(TEXT_CONTENT_ALIGNMENT_CLASS_PREFIX + columnAlignment, indicatorCount > 0).toggleClass(TEXT_CONTENT_ALIGNMENT_CLASS_PREFIX + (columnAlignment === 'left' ? 'right' : 'left'), indicatorCount > 0 && column.alignment === 'center').toggleClass(SORT_INDICATOR_CLASS, !!$sortIndicator.length).toggleClass(SORT_INDEX_INDICATOR_CLASS, !!$sortIndexIndicator.length).toggleClass(HEADER_FILTER_INDICATOR_CLASS, !!$visibleIndicatorElements.filter(`.${that._getIndicatorClassName('headerFilter')}`).length);
 }
-class ColumnHeadersView extends _m_columns_view.ColumnsView {
+class ColumnHeadersView extends (0, _m_column_context_menu_mixin.ColumnContextMenuMixin)(_m_columns_view.ColumnsView) {
   init() {
     super.init();
     this._headerPanelView = this.getView('headerPanel');
     this._headerFilterController = this.getController('headerFilter');
     this._dataController = this.getController('data');
+    this._headersKeyboardNavigation = this.getController('headersKeyboardNavigation');
   }
   _createTable() {
     // @ts-expect-error
@@ -418,13 +420,13 @@ class ColumnHeadersView extends _m_columns_view.ColumnsView {
   /**
    * @extended: column_chooser
    */
-  isReorderingEnabled(column) {
+  isColumnReorderingEnabled(column) {
     return column.allowReordering && (this.option('allowColumnReordering') ?? this._columnsController.isColumnOptionUsed('allowReordering'));
   }
   allowDragging(column) {
     const rowIndex = column && this._columnsController.getRowIndex(column.index);
     const columns = this.getColumns(rowIndex);
-    return this.isReorderingEnabled(column) && columns.length > 1;
+    return this.isColumnReorderingEnabled(column) && columns.length > 1;
   }
   getBoundingRect() {
     const that = this;
@@ -470,19 +472,19 @@ class ColumnHeadersView extends _m_columns_view.ColumnsView {
    * @extended: column_fixing
    */
   getContextMenuItems(options) {
-    const that = this;
+    let items;
     const {
       column
     } = options;
     if (options.row && (options.row.rowType === 'header' || options.row.rowType === 'detailAdaptive')) {
-      const sortingOptions = that.option('sorting');
+      const sortingOptions = this.option('sorting');
       if (sortingOptions && sortingOptions.mode !== 'none' && column !== null && column !== void 0 && column.allowSorting) {
-        const onItemClick = function (params) {
+        const onItemClick = params => {
           setTimeout(() => {
-            that._columnsController.changeSortOrder(column.index, params.itemData.value);
+            this._columnsController.changeSortOrder(column.index, params.itemData.value);
           });
         };
-        return [{
+        items = [{
           text: sortingOptions.ascendingText,
           value: 'asc',
           disabled: column.sortOrder === 'asc',
@@ -495,6 +497,7 @@ class ColumnHeadersView extends _m_columns_view.ColumnsView {
           icon: CONTEXT_MENU_SORT_DESC_ICON,
           onItemClick
         }, {
+          name: 'clearSorting',
           text: sortingOptions.clearText,
           value: 'none',
           disabled: !column.sortOrder,
@@ -502,8 +505,15 @@ class ColumnHeadersView extends _m_columns_view.ColumnsView {
           onItemClick
         }];
       }
+      if (options.row.rowType === 'header') {
+        const moveColumnItems = this.getMoveColumnContextMenuItems(options);
+        if (moveColumnItems !== null && moveColumnItems !== void 0 && moveColumnItems.length) {
+          items = items ?? [];
+          items.push(...moveColumnItems);
+        }
+      }
     }
-    return undefined;
+    return items;
   }
   getRowCount() {
     var _this$_columnsControl;
@@ -538,6 +548,9 @@ class ColumnHeadersView extends _m_columns_view.ColumnsView {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isFilterRowCell($cell) {
     return false;
+  }
+  getKeyboardNavigationController() {
+    return this._headersKeyboardNavigation;
   }
 }
 exports.ColumnHeadersView = ColumnHeadersView;

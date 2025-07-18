@@ -1,8 +1,8 @@
 import { getBoundingRect } from '../../../core/utils/position';
 import { calculateDayDuration, getVerticalGroupCountClass } from '../../scheduler/r1/utils/index';
 import { WORK_SPACE_BORDER_PX } from '../../scheduler/workspaces/const';
+import { Cache } from '../global_cache';
 import { FIRST_GROUP_CELL_CLASS, LAST_GROUP_CELL_CLASS } from '../m_classes';
-import { Cache } from './m_cache';
 class VerticalGroupedStrategy {
   constructor(_workSpace) {
     this._workSpace = _workSpace;
@@ -59,7 +59,7 @@ class VerticalGroupedStrategy {
   }
   getGroupBoundsOffset(groupIndex, _ref) {
     let [$firstCell, $lastCell] = _ref;
-    return this.cache.get(`groupBoundsOffset${groupIndex}`, () => {
+    return this.cache.memo(`groupBoundsOffset${groupIndex}`, () => {
       const startDayHour = this._workSpace.option('startDayHour');
       const endDayHour = this._workSpace.option('endDayHour');
       const hoursInterval = this._workSpace.option('hoursInterval');

@@ -2,10 +2,11 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import holdEvent from '../../../common/core/events/hold';
 import pointerEvents from '../../../common/core/events/pointer';
-import { addNamespace } from '../../../common/core/events/utils/index';
+import { addNamespace } from '../../../common/core/events/utils';
 import registerComponent from '../../../core/component_registrator';
 import devices from '../../../core/devices';
 import $ from '../../../core/renderer';
+import resizeObserverSingleton from '../../../core/resize_observer';
 import { BindableTemplate } from '../../../core/templates/bindable_template';
 import { getImageContainer } from '../../../core/utils/icon';
 import { each } from '../../../core/utils/iterator';
@@ -17,47 +18,47 @@ import Button from '../../../ui/button';
 import { default as CollectionWidget } from '../../../ui/collection/ui.collection_widget.live_update';
 import { current as currentTheme, isFluent, isMaterial } from '../../../ui/themes';
 import { render } from '../../../ui/widget/utils.ink_ripple';
-import Scrollable from '../../ui/scroll_view/m_scrollable';
+import Scrollable from '../../ui/scroll_view/scrollable';
 import { isReachedBottom, isReachedLeft, isReachedRight, isReachedTop } from '../../ui/scroll_view/utils/get_boundary_props';
 import { getScrollLeftMax } from '../../ui/scroll_view/utils/get_scroll_left_max';
 import { TABS_EXPANDED_CLASS } from './constants';
 import TabsItem from './item';
 // STYLE tabs
-const TABS_CLASS = 'dx-tabs';
-const TABS_WRAPPER_CLASS = 'dx-tabs-wrapper';
-const TABS_STRETCHED_CLASS = 'dx-tabs-stretched';
-const TABS_SCROLLABLE_CLASS = 'dx-tabs-scrollable';
-const TABS_NAV_BUTTONS_CLASS = 'dx-tabs-nav-buttons';
+export const TABS_CLASS = 'dx-tabs';
+export const TABS_WRAPPER_CLASS = 'dx-tabs-wrapper';
+export const TABS_STRETCHED_CLASS = 'dx-tabs-stretched';
+export const TABS_SCROLLABLE_CLASS = 'dx-tabs-scrollable';
+export const TABS_NAV_BUTTONS_CLASS = 'dx-tabs-nav-buttons';
 const OVERFLOW_HIDDEN_CLASS = 'dx-overflow-hidden';
-const TABS_ITEM_CLASS = 'dx-tab';
-const TABS_ITEM_SELECTED_CLASS = 'dx-tab-selected';
-const TABS_SCROLLING_ENABLED_CLASS = 'dx-tabs-scrolling-enabled';
-const TABS_NAV_BUTTON_CLASS = 'dx-tabs-nav-button';
-const TABS_LEFT_NAV_BUTTON_CLASS = 'dx-tabs-nav-button-left';
-const TABS_RIGHT_NAV_BUTTON_CLASS = 'dx-tabs-nav-button-right';
-const TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
-const TABS_ITEM_TEXT_SPAN_CLASS = 'dx-tab-text-span';
-const TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS = 'dx-tab-text-span-pseudo';
+export const TABS_ITEM_CLASS = 'dx-tab';
+export const TABS_ITEM_SELECTED_CLASS = 'dx-tab-selected';
+export const TABS_SCROLLING_ENABLED_CLASS = 'dx-tabs-scrolling-enabled';
+export const TABS_NAV_BUTTON_CLASS = 'dx-tabs-nav-button';
+export const TABS_LEFT_NAV_BUTTON_CLASS = 'dx-tabs-nav-button-left';
+export const TABS_RIGHT_NAV_BUTTON_CLASS = 'dx-tabs-nav-button-right';
+export const TABS_ITEM_TEXT_CLASS = 'dx-tab-text';
+export const TABS_ITEM_TEXT_SPAN_CLASS = 'dx-tab-text-span';
+export const TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS = 'dx-tab-text-span-pseudo';
 const STATE_DISABLED_CLASS = 'dx-state-disabled';
-const FOCUSED_DISABLED_NEXT_TAB_CLASS = 'dx-focused-disabled-next-tab';
-const FOCUSED_DISABLED_PREV_TAB_CLASS = 'dx-focused-disabled-prev-tab';
-const TABS_ORIENTATION_CLASS = {
+export const FOCUSED_DISABLED_NEXT_TAB_CLASS = 'dx-focused-disabled-next-tab';
+export const FOCUSED_DISABLED_PREV_TAB_CLASS = 'dx-focused-disabled-prev-tab';
+export const TABS_ORIENTATION_CLASS = {
   vertical: 'dx-tabs-vertical',
   horizontal: 'dx-tabs-horizontal'
 };
-const INDICATOR_POSITION_CLASS = {
+export const TABS_INDICATOR_POSITION_CLASS = {
   top: 'dx-tab-indicator-position-top',
   right: 'dx-tab-indicator-position-right',
   bottom: 'dx-tab-indicator-position-bottom',
   left: 'dx-tab-indicator-position-left'
 };
-const TABS_ICON_POSITION_CLASS = {
+export const TABS_ICON_POSITION_CLASS = {
   top: 'dx-tabs-icon-position-top',
   end: 'dx-tabs-icon-position-end',
   bottom: 'dx-tabs-icon-position-bottom',
   start: 'dx-tabs-icon-position-start'
 };
-const TABS_STYLING_MODE_CLASS = {
+export const TABS_STYLING_MODE_CLASS = {
   primary: 'dx-tabs-styling-mode-primary',
   secondary: 'dx-tabs-styling-mode-secondary'
 };
@@ -222,6 +223,7 @@ class Tabs extends CollectionWidget {
       this._renderInkRipple();
     }
     this.$element().addClass(OVERFLOW_HIDDEN_CLASS);
+    this._attachResizeObserverSubscription();
   }
   _postProcessRenderItems() {
     this._renderScrolling();
@@ -265,8 +267,7 @@ class Tabs extends CollectionWidget {
   }
   _isItemsSizeExceeded() {
     const isVertical = this._isVertical();
-    const isItemsSizeExceeded = isVertical ? this._isItemsHeightExceeded() : this._isItemsWidthExceeded();
-    return isItemsSizeExceeded;
+    return isVertical ? this._isItemsHeightExceeded() : this._isItemsWidthExceeded();
   }
   _isItemsWidthExceeded() {
     const $visibleItems = this._getVisibleItems();
@@ -275,15 +276,13 @@ class Tabs extends CollectionWidget {
     if ([tabItemTotalWidth, elementWidth].includes(0)) {
       return false;
     }
-    const isItemsWidthExceeded = tabItemTotalWidth > elementWidth - 1;
-    return isItemsWidthExceeded;
+    return tabItemTotalWidth > elementWidth - 1;
   }
   _isItemsHeightExceeded() {
     const $visibleItems = this._getVisibleItems();
     const itemsHeight = this._getSummaryItemsSize('height', $visibleItems, true);
     const elementHeight = getHeight(this.$element());
-    const isItemsHeightExceeded = itemsHeight - 1 > elementHeight;
-    return isItemsHeightExceeded;
+    return itemsHeight - 1 > elementHeight;
   }
   _needStretchItems() {
     const $visibleItems = this._getVisibleItems();
@@ -295,8 +294,7 @@ class Tabs extends CollectionWidget {
     });
     const maxTabItemWidth = Math.max.apply(null, itemsWidth);
     const requireWidth = elementWidth / $visibleItems.length;
-    const needStretchItems = maxTabItemWidth > requireWidth + 1;
-    return needStretchItems;
+    return maxTabItemWidth > requireWidth + 1;
   }
   _cleanNavButtons() {
     if (!this._leftButton || !this._rightButton) return;
@@ -350,8 +348,7 @@ class Tabs extends CollectionWidget {
   }
   _getScrollableDirection() {
     const isVertical = this._isVertical();
-    const scrollableDirection = isVertical ? SCROLLABLE_DIRECTION.vertical : SCROLLABLE_DIRECTION.horizontal;
-    return scrollableDirection;
+    return isVertical ? SCROLLABLE_DIRECTION.vertical : SCROLLABLE_DIRECTION.horizontal;
   }
   _updateScrollable() {
     if (this.getScrollable()) {
@@ -361,12 +358,15 @@ class Tabs extends CollectionWidget {
   }
   _renderScrollable() {
     const $itemContainer = this.$element().wrapInner($('<div>').addClass(TABS_SCROLLABLE_CLASS)).children();
+    const {
+      scrollByContent
+    } = this.option();
     this._scrollable = this._createComponent($itemContainer, Scrollable, {
       direction: this._getScrollableDirection(),
       showScrollbar: 'never',
       useKeyboard: false,
       useNative: false,
-      scrollByContent: this.option('scrollByContent'),
+      scrollByContent,
       onScroll: () => {
         this._updateNavButtonsState();
       }
@@ -375,7 +375,6 @@ class Tabs extends CollectionWidget {
   }
   _scrollToItem(item) {
     if (!this._scrollable) return;
-    // @ts-expect-error ts-error
     const $item = this._editStrategy.getItemElement(item);
     this._scrollable.scrollToElement($item);
   }
@@ -482,6 +481,12 @@ class Tabs extends CollectionWidget {
       this._dimensionChanged();
     }
   }
+  _attachResizeObserverSubscription() {
+    resizeObserverSingleton.unobserve(this.$element().get(0));
+    resizeObserverSingleton.observe(this.$element().get(0), () => {
+      this._dimensionChanged();
+    });
+  }
   _dimensionChanged() {
     this._renderScrolling();
   }
@@ -502,6 +507,7 @@ class Tabs extends CollectionWidget {
     super._itemSelectHandler(e);
   }
   _clean() {
+    resizeObserverSingleton.unobserve(this.$element().get(0));
     this._cleanScrolling();
     super._clean();
   }
@@ -512,7 +518,7 @@ class Tabs extends CollectionWidget {
     this.$element().toggleClass(TABS_ORIENTATION_CLASS.horizontal, value);
   }
   _getIndicatorPositionClass(indicatorPosition) {
-    return INDICATOR_POSITION_CLASS[indicatorPosition];
+    return TABS_INDICATOR_POSITION_CLASS[indicatorPosition];
   }
   _getIndicatorPosition() {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -531,7 +537,7 @@ class Tabs extends CollectionWidget {
   }
   _toggleIndicatorPositionClass(indicatorPosition) {
     const newClass = this._getIndicatorPositionClass(indicatorPosition);
-    this._toggleElementClasses(INDICATOR_POSITION_CLASS, newClass);
+    this._toggleElementClasses(TABS_INDICATOR_POSITION_CLASS, newClass);
   }
   _toggleScrollingEnabledClass(scrollingEnabled) {
     this.$element().toggleClass(TABS_SCROLLING_ENABLED_CLASS, Boolean(scrollingEnabled));

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.pagerModule = exports.PagerView = void 0;
+exports.pagerModule = exports.PagerView = exports.MAX_PAGES_COUNT = void 0;
 var _message = _interopRequireDefault(require("../../../../common/core/localization/message"));
 var _type = require("../../../../core/utils/type");
 var _window = require("../../../../core/utils/window");
@@ -11,7 +11,7 @@ var _pagination = _interopRequireDefault(require("../../../pagination/wrappers/p
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const PAGER_CLASS = 'pager';
-const MAX_PAGES_COUNT = 10;
+const MAX_PAGES_COUNT = exports.MAX_PAGES_COUNT = 10;
 const getPageIndex = function (dataController) {
   // eslint-disable-next-line radix
   return 1 + (parseInt(dataController.pageIndex()) || 0);

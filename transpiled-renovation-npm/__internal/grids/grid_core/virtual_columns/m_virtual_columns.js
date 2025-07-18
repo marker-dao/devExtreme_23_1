@@ -37,6 +37,7 @@ const rowsView = Base => class VirtualColumnsRowsViewExtender extends baseView(B
     let {
       left
     } = e.scrollOffset;
+    this._scrollLeft = left;
     // @ts-expect-error
     super._handleScroll.apply(that, arguments);
     if (that.option('rtlEnabled') && scrollable) {
@@ -184,18 +185,22 @@ const columns = Base => class VirtualColumnsControllerExtender extends Base {
     this._setScrollPositionCore(this._position);
   }
   _setScrollPositionCore(position, event) {
-    const that = this;
-    if (that.isVirtualMode()) {
-      const beginPageIndex = that.getBeginPageIndex(position);
-      const endPageIndex = that.getEndPageIndex(position);
-      const needColumnsChanged = position < that._position ? that._beginPageIndex > beginPageIndex : that._endPageIndex < endPageIndex;
-      that._position = position;
-      if (needColumnsChanged) {
-        that._beginPageIndex = beginPageIndex;
-        that._endPageIndex = endPageIndex;
-        that._fireColumnsChanged(event);
-      }
+    const needColumnsChanged = this.isNeedToRenderVirtualColumns(position);
+    if (needColumnsChanged) {
+      this._position = position;
+      this._beginPageIndex = this.getBeginPageIndex(position);
+      this._endPageIndex = this.getEndPageIndex(position);
+      this._fireColumnsChanged(event);
     }
+  }
+  isNeedToRenderVirtualColumns(scrollPosition) {
+    if (this.isVirtualMode()) {
+      if (scrollPosition < this._position) {
+        return this._beginPageIndex > this.getBeginPageIndex(scrollPosition);
+      }
+      return this._endPageIndex < this.getEndPageIndex(scrollPosition);
+    }
+    return false;
   }
   getFixedColumns(rowIndex, isBase) {
     const fixedColumns = super.getFixedColumns(rowIndex);

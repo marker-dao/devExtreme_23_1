@@ -96,4 +96,34 @@ var _appointment_data_accessor = require("./appointment_data_accessor");
     (0, _globals.expect)(dataAccessor.has('startDate')).toBe(true);
     (0, _globals.expect)(dataAccessor.has('endDate')).toBe(false);
   });
+  (0, _globals.it)('should return date', () => {
+    const dataAccessor = new _appointment_data_accessor.AppointmentDataAccessor({
+      startDateExpr: 'startDate',
+      endDateExpr: 'endDate'
+    }, true);
+    const obj = {
+      startDate: '2025-05-30T15:00:00.000Z',
+      endDate: '2025-05-30T15:00:00.000Z'
+    };
+    (0, _globals.expect)(dataAccessor.get('startDate', obj)).toEqual(new Date('2025-05-30T15:00:00.000Z'));
+    (0, _globals.expect)(dataAccessor.get('endDate', obj)).toEqual(new Date('2025-05-30T15:00:00.000Z'));
+  });
+  (0, _globals.it)('should return undefined for date fields', () => {
+    const dataAccessor = new _appointment_data_accessor.AppointmentDataAccessor({
+      startDateExpr: 'startDate',
+      endDateExpr: 'endDate'
+    }, true);
+    const obj = {};
+    (0, _globals.expect)(dataAccessor.get('startDate', obj)).toBe(undefined);
+    (0, _globals.expect)(dataAccessor.get('endDate', obj)).toBe(undefined);
+  });
+  (0, _globals.it)('should return boolean', () => {
+    const dataAccessor = new _appointment_data_accessor.AppointmentDataAccessor({
+      disabledExpr: 'disabled',
+      allDayExpr: 'allDay'
+    }, true);
+    const obj = {};
+    (0, _globals.expect)(dataAccessor.get('disabled', obj)).toBe(false);
+    (0, _globals.expect)(dataAccessor.get('allDay', obj)).toBe(false);
+  });
 });

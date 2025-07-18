@@ -1,4 +1,4 @@
-import { AppointmentDataAccessor } from '../utils';
+import { AppointmentDataAccessor } from '../utils/data_accessor/appointment_data_accessor';
 export const mockFieldExpressions = {
   startDateExpr: 'startDate',
   endDateExpr: 'endDate',

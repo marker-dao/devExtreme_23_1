@@ -1,5 +1,6 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
+import { normalizeColumn } from '../columns_controller/columns_controller.mock';
 import { defaultColumnProperties } from '../columns_controller/options';
 import { allowSearch, calculateSearchFilter, compareTextPart, createFilterExpression, splitHighlightedText } from './utils';
 describe('Search', () => {
@@ -377,7 +378,7 @@ describe('allowSearch', () => {
       searchVisibleColumnsOnly,
       expectedResult
     } = _ref4;
-    const result = allowSearch(column, searchVisibleColumnsOnly);
+    const result = allowSearch(normalizeColumn(column), searchVisibleColumnsOnly);
     expect(result).toEqual(expectedResult);
   });
 });
@@ -465,7 +466,7 @@ describe('calculateSearchFilter', () => {
       searchVisibleColumnsOnly,
       expectedResult
     } = _ref6;
-    const result = calculateSearchFilter(text, columns, searchVisibleColumnsOnly);
+    const result = calculateSearchFilter(text, columns.map(normalizeColumn), searchVisibleColumnsOnly);
     expect(result).toEqual(expectedResult);
   });
 });

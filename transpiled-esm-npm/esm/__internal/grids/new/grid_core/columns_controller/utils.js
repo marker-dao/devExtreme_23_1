@@ -1,29 +1,36 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import { compileGetter } from '../../../../../core/utils/data';
+import { compileGetter, getPathParts } from '../../../../../core/utils/data';
 import { captionize } from '../../../../../core/utils/inflector';
 import { isDefined, isString, type } from '../../../../../core/utils/type';
+import { getTreeNodeByPath, setTreeNodeByPath } from '../../../../grids/new/grid_core/utils/tree/index';
 import { defaultColumnProperties, defaultColumnPropertiesByDataType } from './options';
-function normalizeColumn(column, templateNormalizationFunc, columnFromDataOptions) {
+export function normalizeColumn(column, templateNormalizationFunc, columnFromDataOptions) {
   const dataType = column.dataType ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.dataType) ?? defaultColumnProperties.dataType;
   const columnDataTypeDefaultOptions = defaultColumnPropertiesByDataType[dataType];
-  const columnFormat = column.format ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.format);
+  const columnFormat = column.format ?? (columnDataTypeDefaultOptions === null || columnDataTypeDefaultOptions === void 0 ? void 0 : columnDataTypeDefaultOptions.format) ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.format);
   const caption = captionize(column.name);
   const colWithDefaults = _extends({}, defaultColumnProperties, columnDataTypeDefaultOptions, {
     caption
   }, column);
-  return _extends({}, colWithDefaults, {
+  const normalizedColumn = _extends({}, colWithDefaults, {
     dataType
   }, !!columnFormat && {
     format: columnFormat
   }, {
     calculateDisplayValue: isString(colWithDefaults.calculateDisplayValue) ? compileGetter(colWithDefaults.calculateDisplayValue) : colWithDefaults.calculateDisplayValue,
-    headerItemTemplate: templateNormalizationFunc(colWithDefaults.headerItemTemplate),
-    fieldTemplate: templateNormalizationFunc(colWithDefaults.fieldTemplate),
-    fieldCaptionTemplate: templateNormalizationFunc(colWithDefaults.fieldCaptionTemplate),
-    fieldValueTemplate: templateNormalizationFunc(colWithDefaults.fieldValueTemplate),
+    headerItemTemplate: templateNormalizationFunc === null || templateNormalizationFunc === void 0 ? void 0 : templateNormalizationFunc(colWithDefaults.headerItemTemplate),
+    fieldTemplate: templateNormalizationFunc === null || templateNormalizationFunc === void 0 ? void 0 : templateNormalizationFunc(colWithDefaults.fieldTemplate),
+    fieldCaptionTemplate: templateNormalizationFunc === null || templateNormalizationFunc === void 0 ? void 0 : templateNormalizationFunc(colWithDefaults.fieldCaptionTemplate),
+    fieldValueTemplate: templateNormalizationFunc === null || templateNormalizationFunc === void 0 ? void 0 : templateNormalizationFunc(colWithDefaults.fieldValueTemplate),
     // @ts-expect-error for compatibility
-    calculateCellValue: colWithDefaults.calculateFieldValue
+    calculateCellValue: colWithDefaults.calculateFieldValue,
+    allowFiltering: colWithDefaults.allowFiltering ?? !!colWithDefaults.dataField,
+    allowHeaderFiltering: colWithDefaults.allowHeaderFiltering ?? colWithDefaults.allowFiltering ?? !!colWithDefaults.dataField,
+    allowSearch: colWithDefaults.allowSearch ?? colWithDefaults.allowFiltering ?? !!colWithDefaults.dataField,
+    allowSorting: colWithDefaults.allowSorting ?? !!colWithDefaults.dataField
   });
+  normalizedColumn.selector ?? (normalizedColumn.selector = data => normalizedColumn.calculateFieldValue(data));
+  return normalizedColumn;
 }
 export function getVisibleIndexes(indexes) {
   const newIndexes = [...indexes];
@@ -59,6 +66,14 @@ export function normalizeVisibleIndexes(indexes, forceIndex) {
     returnIndexes[index] = visibleIndex;
   });
   return returnIndexes;
+}
+export function normalizeColumnsVisibleIndexes(columns, forceIndex) {
+  const result = [...columns];
+  const visibleIndexes = normalizeVisibleIndexes(columns.map(c => c.visibleIndex), forceIndex);
+  visibleIndexes.forEach((visibleIndex, i) => {
+    result[i].visibleIndex = visibleIndex;
+  });
+  return result;
 }
 export function normalizeColumns(columns, templateNormalizationFunc, columnsFromData) {
   return columns.map(col => {
@@ -135,3 +150,24 @@ export const getColumnOptionsFromDataItem = dataItem => {
     }, {})
   };
 };
+export const columnOptionUpdate = (settings, columnIdx, updatePath, value) => {
+  const newSettings = [...settings];
+  const updatePathParts = getPathParts(updatePath);
+  const columnTreeNode = getTreeNodeByPath(newSettings[columnIdx], updatePathParts);
+  if (columnTreeNode === value) {
+    return settings;
+  }
+  newSettings[columnIdx] = setTreeNodeByPath(settings[columnIdx], value, updatePathParts);
+  return normalizeColumnsVisibleIndexes(newSettings, columnIdx);
+};
+export function addDataFieldToComputedColumns(columns) {
+  return columns.map(column => {
+    if (column.dataField) {
+      return column;
+    }
+    // NOTE: same logic in datagrid
+    return _extends({}, column, {
+      dataField: column.name
+    });
+  });
+}

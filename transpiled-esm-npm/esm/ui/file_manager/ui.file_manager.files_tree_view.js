@@ -171,7 +171,6 @@ class FileManagerFilesTreeView extends Widget {
   }
   _getPublicNode(key) {
     var _this$_filesTreeView2;
-    // eslint-disable-next-line no-unsafe-optional-chaining
     const nodesQueue = [...((_this$_filesTreeView2 = this._filesTreeView) === null || _this$_filesTreeView2 === void 0 ? void 0 : _this$_filesTreeView2.getNodes())];
     while (nodesQueue.length) {
       const node = nodesQueue.shift();

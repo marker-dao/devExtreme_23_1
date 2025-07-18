@@ -48,7 +48,7 @@ const compareDateWithEndDayHour = options => {
   return result;
 };
 exports.compareDateWithEndDayHour = compareDateWithEndDayHour;
-const getAppointmentTakesSeveralDays = adapter => !_date.default.sameDate(adapter.startDate, adapter.endDate);
+const getAppointmentTakesSeveralDays = dates => !_date.default.sameDate(dates.startDate, dates.endDate);
 // eslint-disable-next-line @typescript-eslint/naming-convention
 exports.getAppointmentTakesSeveralDays = getAppointmentTakesSeveralDays;
 const _appointmentPartInInterval = (startDate, endDate, startDayHour, endDayHour) => {
@@ -74,9 +74,7 @@ const getRecurrenceException = (appointmentAdapter, timeZoneCalculator, timeZone
 exports.getRecurrenceException = getRecurrenceException;
 const _convertRecurrenceException = (exceptionString, startDate, timeZoneCalculator, timeZone) => {
   exceptionString = exceptionString.replace(/\s/g, '');
-  const getConvertedToTimeZone = date => timeZoneCalculator.createDate(date, {
-    path: 'toGrid'
-  });
+  const getConvertedToTimeZone = date => timeZoneCalculator.createDate(date, 'toGrid');
   const exceptionDate = _date_serialization.default.deserializeDate(exceptionString);
   const convertedStartDate = getConvertedToTimeZone(startDate);
   let convertedExceptionDate = getConvertedToTimeZone(exceptionDate);
@@ -87,8 +85,8 @@ const _convertRecurrenceException = (exceptionString, startDate, timeZoneCalcula
 exports._convertRecurrenceException = _convertRecurrenceException;
 const sortAppointmentsByStartDate = (appointments, dataAccessors) => {
   appointments.sort((a, b) => {
-    const firstDate = new Date(dataAccessors.get('startDate', a.settings || a));
-    const secondDate = new Date(dataAccessors.get('startDate', b.settings || b));
+    const firstDate = dataAccessors.get('startDate', a.settings || a);
+    const secondDate = dataAccessors.get('startDate', b.settings || b);
     return Math.sign(firstDate.getTime() - secondDate.getTime());
   });
 };

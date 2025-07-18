@@ -1,7 +1,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { name as clickEventName } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
-import { addNamespace } from '../../../common/core/events/utils/index';
+import { addNamespace } from '../../../common/core/events/utils';
 import registerComponent from '../../../core/component_registrator';
 import devices from '../../../core/devices';
 import $ from '../../../core/renderer';
@@ -82,11 +82,16 @@ class RadioButton extends Editor {
   _clickHandler(e) {
     this._saveValueChangeEvent(e);
     this.option('value', true);
+    this._saveValueChangeEvent(undefined);
   }
   _optionChanged(args) {
-    switch (args.name) {
+    const {
+      name,
+      value
+    } = args;
+    switch (name) {
       case 'value':
-        this._renderCheckedState(args.value);
+        this._renderCheckedState(value);
         super._optionChanged(args);
         break;
       default:

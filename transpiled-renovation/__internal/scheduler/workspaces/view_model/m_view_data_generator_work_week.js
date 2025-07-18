@@ -4,13 +4,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ViewDataGeneratorWorkWeek = void 0;
-var _index = require("../../../scheduler/r1/utils/index");
+var _index = require("../../r1/utils/index");
 var _m_view_data_generator_week = require("./m_view_data_generator_week");
 class ViewDataGeneratorWorkWeek extends _m_view_data_generator_week.ViewDataGeneratorWeek {
   constructor() {
     super(...arguments);
     this.daysInInterval = 5;
-    this.isWorkView = true;
   }
   isSkippedDate(date) {
     return (0, _index.isDataOnWeekend)(date);

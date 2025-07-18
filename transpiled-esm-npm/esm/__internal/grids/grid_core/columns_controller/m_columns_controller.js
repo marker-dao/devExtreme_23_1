@@ -514,7 +514,8 @@ export class ColumnsController extends modules.Controller {
     const isDataColumnsInvisible = !this.hasVisibleDataColumns();
     if (isDataColumnsInvisible && this._columns.length) {
       visibleColumns[visibleColumns.length - 1].push({
-        command: 'empty'
+        command: 'empty',
+        type: 'empty'
       });
     }
     return visibleColumns;
@@ -1472,9 +1473,11 @@ export class ColumnsController extends modules.Controller {
     return result;
   }
   getParentColumn(column) {
+    let needDirectParent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     const bandColumnsCache = this.getBandColumnsCache();
-    const bandColumns = getParentBandColumns(column.index, bandColumnsCache.columnParentByIndex);
-    return bandColumns[0];
+    const parentColumns = getParentBandColumns(column.index, bandColumnsCache.columnParentByIndex);
+    const parentColumnIndex = needDirectParent ? -1 : 0;
+    return parentColumns.at(parentColumnIndex);
   }
   isFirstColumn(column, rowIndex) {
     let onlyWithinBandColumn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
@@ -1509,6 +1512,13 @@ export class ColumnsController extends modules.Controller {
     return columnAlignment;
   }
   isVirtualMode() {
+    return false;
+  }
+  /**
+   * @extended: virtual_column
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  isNeedToRenderVirtualColumns(scrollPosition) {
     return false;
   }
 }

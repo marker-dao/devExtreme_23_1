@@ -677,3 +677,77 @@ const setup = (options, defaultOptions) => {
     });
   });
 });
+(0, _globals.describe)('oneWayWithChanges', () => {
+  (0, _globals.it)('should return changes: null if optionChanged was not called', () => {
+    const publicOptions = {
+      value: {
+        str: 'str'
+      }
+    };
+    const {
+      optionsController
+    } = setup(publicOptions, {});
+    const value = optionsController.oneWayWithChanges('value');
+    (0, _globals.expect)(value.peek()).toStrictEqual({
+      changes: null,
+      value: publicOptions.value
+    });
+  });
+  (0, _globals.it)('should return changes if optionChanged was called', () => {
+    const publicOptions = {
+      value: 'str'
+    };
+    const {
+      component,
+      optionsController
+    } = setup(publicOptions, {});
+    component.option('value', 'str_2');
+    const value = optionsController.oneWayWithChanges('value');
+    const result = value.peek();
+    (0, _globals.expect)(result.changes).toMatchObject({
+      name: 'value',
+      fullName: 'value',
+      value: 'str_2',
+      previousValue: 'str'
+    });
+    (0, _globals.expect)(result.value).toStrictEqual('str_2');
+  });
+  (0, _globals.it)('should return changes of nested option if optionChanged was called', () => {
+    const publicOptions = {
+      a: {
+        b: {
+          c: 'C_0'
+        }
+      }
+    };
+    const {
+      component,
+      optionsController
+    } = setup(publicOptions, {});
+    component.option('a.b.c', 'C_1');
+    const value = optionsController.oneWayWithChanges('a.b.c');
+    const result = value.peek();
+    (0, _globals.expect)(result.changes).toMatchObject({
+      name: 'a',
+      fullName: 'a.b.c',
+      value: 'C_1',
+      previousValue: 'C_0'
+    });
+    (0, _globals.expect)(result.value).toStrictEqual('C_1');
+  });
+  (0, _globals.it)('should use different cache with oneWay', () => {
+    const publicOptions = {
+      value: '123'
+    };
+    const {
+      optionsController
+    } = setup(publicOptions, {});
+    const value = optionsController.oneWay('value');
+    const valueWithChanges = optionsController.oneWayWithChanges('value');
+    (0, _globals.expect)(value.peek()).toBe('123');
+    (0, _globals.expect)(valueWithChanges.peek()).toStrictEqual({
+      changes: null,
+      value: '123'
+    });
+  });
+});

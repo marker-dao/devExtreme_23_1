@@ -10,7 +10,7 @@ var _signalsCore = require("@preact/signals-core");
 var _columns_controller = require("../../../../grids/new/grid_core/columns_controller/columns_controller");
 var _data_controller = require("../../../../grids/new/grid_core/data_controller/data_controller");
 var _index = require("../../../../grids/new/grid_core/search/index");
-var _utils = require("../utils");
+var _index2 = require("../utils/parse_value/index");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class ItemsController {
   constructor(dataController, columnsController, searchController) {
@@ -31,15 +31,15 @@ class ItemsController {
     this.selectedCardKeys.value = keys;
   }
   findItemByKey(items, key) {
-    return items.find(item => item.key === key) ?? null;
+    return items.find(item => (0, _common.equalByValue)(item.key, key)) ?? null;
   }
   createCardInfo(data, columns, itemIndex, selectedCardKeys, key) {
+    let visible = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : true;
     const itemKey = key ?? this.dataController.getDataKey(data);
     const fields = columns.map((column, index) => {
       const value = column.calculateFieldValue(data);
       const displayValue = column.calculateDisplayValue(data);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const formattedText = _format_helper.default.format((0, _utils.parseValue)(column, displayValue), column.format);
+      const formattedText = _format_helper.default.format((0, _index2.parseValue)(column, displayValue), column.format);
       const text = column.customizeText ? column.customizeText({
         value: displayValue,
         valueText: formattedText
@@ -62,7 +62,8 @@ class ItemsController {
       key: itemKey,
       index: itemIndex,
       isSelected: !!(selectedCardKeys !== null && selectedCardKeys !== void 0 && selectedCardKeys.includes(itemKey)),
-      data
+      data,
+      visible
     };
     card.fields.forEach(f => {
       f.card = card;

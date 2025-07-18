@@ -10,7 +10,7 @@ var _widget_wrapper = require("./widget_wrapper");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class Sortable extends _widget_wrapper.InfernoWrapper {
   render() {
-    return (0, _inferno.createVNode)(1, "div", null, this.props.children, 0, null, null, this.ref);
+    return (0, _inferno.createVNode)(1, "div", this.props.className, this.props.children, 0, null, null, this.ref);
   }
   getComponentFabric() {
     return _sortable.default;

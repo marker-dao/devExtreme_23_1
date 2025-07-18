@@ -5,6 +5,7 @@ import { createVNode, createComponentVNode, normalizeProps } from "inferno";
 */
 import { isCommandKeyPressed } from '../../../../../../common/core/events/utils';
 import { combineClasses } from '../../../../../core/utils/combine_classes';
+import { getPosition } from '../../../../../grids/new/grid_core/accessibility/utils';
 import { KbnNavigationContainer, withKbnNavigationItem, withKeyDownHandler } from '../../../../../grids/new/grid_core/keyboard_navigation/index';
 import { Component, createRef } from 'inferno';
 import { Card } from './card/card';
@@ -122,30 +123,32 @@ export class Content extends Component {
         },
         "caughtEventPreventDefault": true,
         "card": item,
+        "position": getPosition(idx, this.props.cardsPerRow ?? 1),
         "onContextMenu": e => {
-          var _this$props$showConte, _this$props3;
-          (_this$props$showConte = (_this$props3 = this.props).showContextMenu) === null || _this$props$showConte === void 0 || _this$props$showConte.call(_this$props3, e, item, idx);
+          var _this$props$showCardC, _this$props3;
+          (_this$props$showCardC = (_this$props3 = this.props).showCardContextMenu) === null || _this$props$showCardC === void 0 || _this$props$showCardC.call(_this$props3, e, item, idx);
         },
         "onFocusMoved": (newIdx, element) => {
           this.onCardFocusMoved(newIdx, element);
         }
       }), getInfernoCardKey(item)))), 0, {
-        "style": this.getCssVariables(),
-        "onContextMenu": this.props.showContextMenu
+        "style": this.getCssVariables()
       }, null, this.containerRef)
     });
   }
   updateSizesInfo() {
-    var _this$cardElementRefs, _this$props$onFirstEl, _this$props4, _this$props$onRowHeig, _this$props5;
+    var _this$cardElementRefs, _this$props$onFirstEl, _this$props4, _this$props$onRowHeig, _this$props5, _this$props$onColumnG, _this$props6;
     const firstCardElement = ((_this$cardElementRefs = this.cardElementRefs[0]) === null || _this$cardElementRefs === void 0 ? void 0 : _this$cardElementRefs.current) ?? undefined;
     (_this$props$onFirstEl = (_this$props4 = this.props).onFirstElementChange) === null || _this$props$onFirstEl === void 0 || _this$props$onFirstEl.call(_this$props4, firstCardElement);
     if (!firstCardElement || !this.containerRef.current) {
       return;
     }
     const cardHeight = firstCardElement.offsetHeight;
-    const gapHeight = parseFloat(getComputedStyle(this.containerRef.current).rowGap);
-    const rowHeight = cardHeight + gapHeight;
+    const rowGap = parseFloat(getComputedStyle(this.containerRef.current).rowGap);
+    const rowHeight = cardHeight + rowGap;
     (_this$props$onRowHeig = (_this$props5 = this.props).onRowHeightChange) === null || _this$props$onRowHeig === void 0 || _this$props$onRowHeig.call(_this$props5, rowHeight);
+    const columnGap = parseFloat(getComputedStyle(this.containerRef.current).columnGap);
+    (_this$props$onColumnG = (_this$props6 = this.props).onColumnGapChange) === null || _this$props$onColumnG === void 0 || _this$props$onColumnG.call(_this$props6, columnGap);
   }
   componentDidMount() {
     this.updateSizesInfo();
