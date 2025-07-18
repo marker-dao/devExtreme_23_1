@@ -465,178 +465,178 @@ function prepareInsertTableHandler(module) {
 }
 function getTablePropertiesFormConfig(module, _ref10) {
   let {
-    $element,
+    $element: $table,
     formats,
     tableBlot
   } = _ref10;
-  const window = (0, _window.getWindow)();
   let alignmentEditorInstance;
   let borderColorEditorInstance;
   let backgroundColorEditorInstance;
-  const $table = $element;
   const {
     editorInstance
   } = module;
-  // eslint-disable-next-line radix
-  const startTableWidth = parseInt(formats.tableWidth) || (0, _size.getOuterWidth)($table);
+  const window = (0, _window.getWindow)();
   const tableStyles = window.getComputedStyle($table.get(0));
-  const startTextAlign = tableStyles.textAlign === 'start' ? 'left' : tableStyles.textAlign;
-  const formOptions = {
-    colCount: 2,
-    formData: {
-      width: startTableWidth,
-      // eslint-disable-next-line radix
-      height: (0, _type.isDefined)(formats.tableHeight) ? parseInt(formats.tableHeight) : (0, _size.getOuterHeight)($table),
-      backgroundColor: formats.tableBackgroundColor || tableStyles.backgroundColor,
-      borderStyle: formats.tableBorderStyle || tableStyles.borderTopStyle,
-      borderColor: formats.tableBorderColor || tableStyles.borderTopColor,
-      // eslint-disable-next-line radix
-      borderWidth: parseInt((0, _type.isDefined)(formats.tableBorderWidth) ? formats.tableBorderWidth : tableStyles.borderTopWidth),
-      alignment: formats.tableAlign || startTextAlign
+  const tableWidth = (0, _type.isDefined)(formats.tableWidth) ? parseFloat(formats.tableWidth) : null;
+  const textAlign = tableStyles.textAlign === 'start' ? 'left' : tableStyles.textAlign;
+  const formData = {
+    width: tableWidth,
+    height: (0, _type.isDefined)(formats.tableHeight) ? parseFloat(formats.tableHeight) : null,
+    backgroundColor: formats.tableBackgroundColor || tableStyles.backgroundColor,
+    borderStyle: formats.tableBorderStyle || tableStyles.borderTopStyle,
+    borderColor: formats.tableBorderColor || tableStyles.borderTopColor,
+    borderWidth: (0, _type.isDefined)(formats.tableBorderWidth) ? parseFloat(formats.tableBorderWidth) : DEFAULT_BORDER_WIDTH,
+    alignment: formats.tableAlign || textAlign
+  };
+  const items = [{
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-border'),
+    colCountByScreen: {
+      xs: 2
     },
+    colCount: 2,
     items: [{
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-border'),
-      colCountByScreen: {
-        xs: 2
+      dataField: 'borderStyle',
+      label: {
+        text: _message.default.format('dxHtmlEditor-style')
       },
-      colCount: 2,
-      items: [{
-        dataField: 'borderStyle',
-        label: {
-          text: _message.default.format('dxHtmlEditor-style')
-        },
-        editorType: 'dxSelectBox',
-        editorOptions: {
-          items: getBorderStylesTranslated(),
-          valueExpr: 'id',
-          displayExpr: 'value',
-          placeholder: 'Select style'
-        }
-      }, {
-        dataField: 'borderWidth',
-        label: {
-          text: _message.default.format('dxHtmlEditor-borderWidth')
-        },
-        editorOptions: {
-          placeholder: _message.default.format('dxHtmlEditor-pixels')
-        }
-      }, {
-        itemType: 'simple',
-        dataField: 'borderColor',
-        label: {
-          text: _message.default.format('dxHtmlEditor-borderColor')
-        },
-        colSpan: 2,
-        template: e => {
-          const $content = (0, _renderer.default)('<div>');
-          editorInstance._createComponent($content, _color_box.default, {
-            editAlphaChannel: true,
-            value: e.component.option('formData').borderColor,
-            onInitialized: e => {
-              borderColorEditorInstance = e.component;
-            }
-          });
-          return $content;
-        }
-      }]
+      editorType: 'dxSelectBox',
+      editorOptions: {
+        items: getBorderStylesTranslated(),
+        valueExpr: 'id',
+        displayExpr: 'value',
+        placeholder: 'Select style'
+      }
     }, {
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-dimensions'),
-      colCountByScreen: {
-        xs: 2
+      dataField: 'borderWidth',
+      label: {
+        text: _message.default.format('dxHtmlEditor-borderWidth')
       },
-      colCount: 2,
-      items: [{
-        dataField: 'width',
-        label: {
-          text: _message.default.format('dxHtmlEditor-width')
-        },
-        editorOptions: {
-          min: 0,
-          placeholder: _message.default.format('dxHtmlEditor-pixels')
-        }
-      }, {
-        dataField: 'height',
-        label: {
-          text: _message.default.format('dxHtmlEditor-height')
-        },
-        editorOptions: {
-          min: 0,
-          placeholder: _message.default.format('dxHtmlEditor-pixels')
-        }
-      }]
+      editorOptions: {
+        placeholder: _message.default.format('dxHtmlEditor-pixels')
+      }
     }, {
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-tableBackground'),
-      items: [{
-        itemType: 'simple',
-        dataField: 'backgroundColor',
-        label: {
-          text: _message.default.format('dxHtmlEditor-borderColor')
-        },
-        template: e => {
-          const $content = (0, _renderer.default)('<div>');
-          editorInstance._createComponent($content, _color_box.default, {
-            editAlphaChannel: true,
-            value: e.component.option('formData').backgroundColor,
-            onInitialized: e => {
-              backgroundColorEditorInstance = e.component;
-            }
-          });
-          return $content;
-        }
-      }]
+      itemType: 'simple',
+      dataField: 'borderColor',
+      label: {
+        text: _message.default.format('dxHtmlEditor-borderColor')
+      },
+      colSpan: 2,
+      template: e => {
+        const $content = (0, _renderer.default)('<div>');
+        editorInstance._createComponent($content, _color_box.default, {
+          editAlphaChannel: true,
+          value: e.component.option('formData').borderColor,
+          onInitialized: event => {
+            borderColorEditorInstance = event.component;
+          }
+        });
+        return $content;
+      }
+    }]
+  }, {
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-dimensions'),
+    colCountByScreen: {
+      xs: 2
+    },
+    colCount: 2,
+    items: [{
+      dataField: 'width',
+      label: {
+        text: _message.default.format('dxHtmlEditor-width')
+      },
+      editorOptions: {
+        min: 0,
+        placeholder: _message.default.format('dxHtmlEditor-pixels')
+      }
     }, {
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-alignment'),
-      items: [{
-        itemType: 'simple',
-        label: {
-          text: _message.default.format('dxHtmlEditor-horizontal')
-        },
-        template: () => {
-          const $content = (0, _renderer.default)('<div>');
-          editorInstance._createComponent($content, _button_group.default, {
-            items: [{
-              value: 'left',
-              icon: 'alignleft'
-            }, {
-              value: 'center',
-              icon: 'aligncenter'
-            }, {
-              value: 'right',
-              icon: 'alignright'
-            }, {
-              value: 'justify',
-              icon: 'alignjustify'
-            }],
-            keyExpr: 'value',
-            selectedItemKeys: [startTextAlign],
-            onInitialized: e => {
-              alignmentEditorInstance = e.component;
-            }
-          });
-          return $content;
-        }
-      }]
-    }],
+      dataField: 'height',
+      label: {
+        text: _message.default.format('dxHtmlEditor-height')
+      },
+      editorOptions: {
+        min: 0,
+        placeholder: _message.default.format('dxHtmlEditor-pixels')
+      }
+    }]
+  }, {
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-tableBackground'),
+    items: [{
+      itemType: 'simple',
+      dataField: 'backgroundColor',
+      label: {
+        text: _message.default.format('dxHtmlEditor-borderColor')
+      },
+      template: e => {
+        const $content = (0, _renderer.default)('<div>');
+        editorInstance._createComponent($content, _color_box.default, {
+          editAlphaChannel: true,
+          value: e.component.option('formData').backgroundColor,
+          onInitialized: event => {
+            backgroundColorEditorInstance = event.component;
+          }
+        });
+        return $content;
+      }
+    }]
+  }, {
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-alignment'),
+    items: [{
+      itemType: 'simple',
+      label: {
+        text: _message.default.format('dxHtmlEditor-horizontal')
+      },
+      template: () => {
+        const $content = (0, _renderer.default)('<div>');
+        editorInstance._createComponent($content, _button_group.default, {
+          items: [{
+            value: 'left',
+            icon: 'alignleft'
+          }, {
+            value: 'center',
+            icon: 'aligncenter'
+          }, {
+            value: 'right',
+            icon: 'alignright'
+          }, {
+            value: 'justify',
+            icon: 'alignjustify'
+          }],
+          keyExpr: 'value',
+          selectedItemKeys: [textAlign],
+          onInitialized: event => {
+            alignmentEditorInstance = event.component;
+          }
+        });
+        return $content;
+      }
+    }]
+  }];
+  const formOptions = {
+    formData,
+    items,
+    colCount: 2,
     showColonAfterLabel: true,
     labelLocation: 'top',
     minColWidth: 400
   };
   const applyHandler = formInstance => {
-    const formData = formInstance.option('formData');
-    const newWidth = formData.width === startTableWidth ? undefined : formData.width;
-    const newHeight = formData.height;
+    const {
+      formData: data
+    } = formInstance.option();
+    const newWidth = data.width === tableWidth ? null : data.width;
+    const newHeight = data.height;
     applyTableDimensionChanges(module, {
       $table,
       newHeight,
       newWidth,
       tableBlot
     });
-    module.editorInstance.format('tableBorderStyle', formData.borderStyle);
-    module.editorInstance.format('tableBorderWidth', `${formData.borderWidth}px`);
+    module.editorInstance.format('tableBorderStyle', data.borderStyle);
+    module.editorInstance.format('tableBorderWidth', `${data.borderWidth}px`);
     module.editorInstance.format('tableBorderColor', borderColorEditorInstance.option('value'));
     module.editorInstance.format('tableBackgroundColor', backgroundColorEditorInstance.option('value'));
     module.editorInstance.format('tableTextAlign', alignmentEditorInstance.option('selectedItemKeys')[0]);
@@ -662,35 +662,19 @@ function getCellPropertiesFormConfig(module, _ref11) {
   } = module;
   const window = (0, _window.getWindow)();
   const cellStyles = window.getComputedStyle($cell.get(0));
-  // const cellWidth = formats.cellWidth ?? getOuterWidth($cell);
-  const cellWidth = formats.cellWidth ? parseFloat(formats.cellWidth) : null;
-  // const cellHeight = isDefined(formats.cellHeight)
-  //   ? parseInt(formats.cellHeight, 10)
-  //   : getOuterHeight($cell);
-  const cellHeight = formats.cellHeight ? parseFloat(formats.cellHeight) : null;
+  const cellWidth = (0, _type.isDefined)(formats.cellWidth) ? parseFloat(formats.cellWidth) : null;
   const textAlign = cellStyles.textAlign === 'start' ? 'left' : cellStyles.textAlign;
-  // const borderWidth = parseFloat(formats.cellBorderWidth ?? cellStyles.borderTopWidth);
-  const borderWidth = formats.cellBorderWidth ? parseFloat(formats.cellBorderWidth) : DEFAULT_BORDER_WIDTH;
-  const backgroundColor = getColorFromFormat(formats.cellBackgroundColor) || cellStyles.backgroundColor;
-  const borderStyle = formats.cellBorderStyle || cellStyles.borderTopStyle;
-  const borderColor = getColorFromFormat(formats.cellBorderColor) || cellStyles.borderTopColor;
-  const alignment = formats.cellTextAlign || textAlign;
-  const verticalAlignment = formats.cellVerticalAlign || cellStyles.verticalAlign;
-  // const verticalPadding = parseInt(formats.cellPaddingTop ?? cellStyles.paddingTop, 10);
-  const verticalPadding = formats.cellPaddingTop ? parseFloat(formats.cellPaddingTop) : null;
-  // const horizontalPadding = parseInt(formats.cellPaddingLeft ?? cellStyles.paddingLeft, 10);
-  const horizontalPadding = formats.cellPaddingLeft ? parseFloat(formats.cellPaddingLeft) : null;
   const formData = {
     width: cellWidth,
-    height: cellHeight,
-    backgroundColor,
-    borderStyle,
-    borderColor,
-    borderWidth,
-    alignment,
-    verticalAlignment,
-    verticalPadding,
-    horizontalPadding
+    height: (0, _type.isDefined)(formats.cellHeight) ? parseFloat(formats.cellHeight) : null,
+    backgroundColor: getColorFromFormat(formats.cellBackgroundColor) || cellStyles.backgroundColor,
+    borderStyle: formats.cellBorderStyle || cellStyles.borderTopStyle,
+    borderColor: getColorFromFormat(formats.cellBorderColor) || cellStyles.borderTopColor,
+    borderWidth: (0, _type.isDefined)(formats.cellBorderWidth) ? parseFloat(formats.cellBorderWidth) : DEFAULT_BORDER_WIDTH,
+    alignment: formats.cellTextAlign || textAlign,
+    verticalAlignment: formats.cellVerticalAlign || cellStyles.verticalAlign,
+    verticalPadding: (0, _type.isDefined)(formats.cellPaddingTop) ? parseFloat(formats.cellPaddingTop) : null,
+    horizontalPadding: (0, _type.isDefined)(formats.cellPaddingLeft) ? parseFloat(formats.cellPaddingLeft) : null
   };
   const items = [{
     itemType: 'group',
@@ -873,7 +857,6 @@ function getCellPropertiesFormConfig(module, _ref11) {
     const {
       formData: data
     } = formInstance.option();
-    // Strange point. Needs to check
     const newWidth = data.width === cellWidth ? null : data.width;
     const newHeight = data.height;
     applyCellDimensionChanges(module, {
