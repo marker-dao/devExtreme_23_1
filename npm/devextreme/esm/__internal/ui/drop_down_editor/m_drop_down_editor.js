@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/drop_down_editor/m_drop_down_editor.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -140,7 +140,8 @@ class DropDownEditor extends TextBox {
       cancelButtonText: messageLocalization.format('Cancel'),
       buttonsLocation: 'default',
       useHiddenSubmitElement: false,
-      validationMessagePosition: 'auto'
+      validationMessagePosition: 'auto',
+      _cached_dropDownOptions: {}
     });
   }
   // eslint-disable-next-line class-methods-use-this
@@ -190,7 +191,6 @@ class DropDownEditor extends TextBox {
       dropDownOptions
     } = this.option();
     this._updatePopupPosition(rtlEnabled);
-    // @ts-expect-error ts-error
     this._options.cache('dropDownOptions', dropDownOptions);
   }
   _updatePopupPosition(isRtlEnabled) {
@@ -616,10 +616,13 @@ class DropDownEditor extends TextBox {
   // eslint-disable-next-line class-methods-use-this
   _popupInitializedHandler() {}
   _getPopupInitializedHandler() {
-    const onPopupInitialized = this.option('onPopupInitialized');
+    const {
+      onPopupInitialized
+    } = this.option();
     return e => {
       this._popupInitializedHandler();
       if (onPopupInitialized) {
+        // @ts-expect-error
         this._popupInitializedAction({
           popup: e.component
         });
@@ -860,13 +863,11 @@ class DropDownEditor extends TextBox {
       case 'dropDownOptions':
         {
           this._popupOptionChanged(args);
-          const {
-            dropDownOptions
-          } = this.option();
-          // @ts-expect-error ts-error
-          this._options.cache('dropDownOptions', dropDownOptions);
+          this._innerWidgetOptionChanged(this._popup, args);
           break;
         }
+      case '_cached_dropDownOptions':
+        break;
       case 'popupPosition':
         break;
       case 'deferRendering':

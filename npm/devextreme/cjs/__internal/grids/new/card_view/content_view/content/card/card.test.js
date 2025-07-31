@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/new/card_view/content_view/content/card/card.test.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -96,13 +96,24 @@ const props = {
     (0, _globals.expect)(trashButton).toHaveLength(1);
   });
 });
-(0, _globals.describe)('Image', () => {
-  (0, _globals.it)('should render the image correctly', () => {
+(0, _globals.describe)('Cover', () => {
+  (0, _globals.it)('should be rendered', () => {
     const container = document.createElement('div');
     // @ts-expect-error
     (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, props))), container);
     const image = container.querySelector('img');
     (0, _globals.expect)(image).not.toBeNull();
+  });
+  (0, _globals.it)('should be rendered if imageExpr is not defined but template is defined', () => {
+    const container = document.createElement('div');
+    const localProps = _extends({}, props, {
+      cover: {
+        template: () => (0, _inferno.createVNode)(1, "img", 'myTemplate')
+      }
+    });
+    // @ts-expect-error
+    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, localProps))), container);
+    (0, _globals.expect)(container.querySelector('.myTemplate')).toBeTruthy();
   });
 });
 (0, _globals.describe)('Field Template', () => {

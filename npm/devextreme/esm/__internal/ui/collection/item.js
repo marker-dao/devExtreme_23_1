@@ -1,12 +1,11 @@
 /**
 * DevExtreme (esm/__internal/ui/collection/item.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import Class from '../../../core/class';
 import $ from '../../../core/renderer';
 import { each } from '../../../core/utils/iterator';
 import { attachInstanceToElement, getInstanceByElement } from '../../../core/utils/public_component';
@@ -31,8 +30,8 @@ const forcibleWatcher = (watchMethod, fn, callback) => {
     }
   };
 };
-class CollectionItem extends Class.inherit({}) {
-  ctor($element, options, rawData) {
+class CollectionItem {
+  constructor($element, options, rawData) {
     this._$element = $element;
     this._options = options;
     this._rawData = rawData;

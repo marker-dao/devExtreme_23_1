@@ -1,7 +1,7 @@
 import messageLocalization from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
 import { getOuterHeight, getOuterWidth } from '../../../core/utils/size';
-import Overlay from '../../ui/overlay/m_overlay';
+import Overlay from '../../ui/overlay/overlay';
 import { ListBase } from './m_list.base';
 import EditDecorator from './m_list.edit.decorator';
 import { register as registerDecorator } from './m_list.edit.decorator_registry';

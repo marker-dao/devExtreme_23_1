@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/validating/m_validating.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -792,7 +792,6 @@ export const validatingEditingExtender = Base => class ValidateEditingController
       });
     };
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _beforeSaveEditData(change, editIndex) {
     let result = super._beforeSaveEditData.apply(this, arguments);
     const validationData = this._validatingController._getValidationData(change === null || change === void 0 ? void 0 : change.key, true);
@@ -985,7 +984,6 @@ const getWidthOfVisibleCells = function (that, element) {
 const getBoundaryNonFixedColumnsInfo = function (fixedColumns) {
   let firstNonFixedColumnIndex;
   let lastNonFixedColumnIndex;
-  // eslint-disable-next-line array-callback-return
   fixedColumns.some((column, index) => {
     if (column.command === COMMAND_TRANSPARENT) {
       firstNonFixedColumnIndex = index === 0 ? -1 : index;
@@ -1189,7 +1187,6 @@ export const validatingEditorFactoryExtender = Base => class ValidatingEditorFac
     }
   }
   getOverlayBaseZIndex() {
-    // @ts-expect-error
     return Overlay.baseZIndex();
   }
   overlayPositionedHandler(e, isOverlayVisible) {
@@ -1342,7 +1339,6 @@ export const validatingDataControllerExtender = Base => class ValidatingDataCont
     const validationStatus = validationResultIsValid(validationResult) ? validationResult.status : validationResult;
     return validationStatus || VALIDATION_STATUS.valid;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _isCellChanged(oldRow, newRow, visibleRowIndex, columnIndex, isLiveUpdate) {
     var _oldRow$cells, _cell$column$validati;
     const cell = (_oldRow$cells = oldRow.cells) === null || _oldRow$cells === void 0 ? void 0 : _oldRow$cells[columnIndex];

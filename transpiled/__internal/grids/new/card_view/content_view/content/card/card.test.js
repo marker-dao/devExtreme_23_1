@@ -88,13 +88,24 @@ const props = {
     (0, _globals.expect)(trashButton).toHaveLength(1);
   });
 });
-(0, _globals.describe)('Image', () => {
-  (0, _globals.it)('should render the image correctly', () => {
+(0, _globals.describe)('Cover', () => {
+  (0, _globals.it)('should be rendered', () => {
     const container = document.createElement('div');
     // @ts-expect-error
     (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, props))), container);
     const image = container.querySelector('img');
     (0, _globals.expect)(image).not.toBeNull();
+  });
+  (0, _globals.it)('should be rendered if imageExpr is not defined but template is defined', () => {
+    const container = document.createElement('div');
+    const localProps = _extends({}, props, {
+      cover: {
+        template: () => (0, _inferno.createVNode)(1, "img", 'myTemplate')
+      }
+    });
+    // @ts-expect-error
+    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, localProps))), container);
+    (0, _globals.expect)(container.querySelector('.myTemplate')).toBeTruthy();
   });
 });
 (0, _globals.describe)('Field Template', () => {

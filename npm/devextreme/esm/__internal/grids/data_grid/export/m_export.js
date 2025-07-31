@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/data_grid/export/m_export.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,9 +17,9 @@ import { extend } from '../../../../core/utils/extend';
 import { getDefaultAlignment } from '../../../../core/utils/position';
 import { format } from '../../../../core/utils/string';
 import { isDefined, isFunction } from '../../../../core/utils/type';
-import List from '../../../../ui/list_light';
 import errors from '../../../../ui/widget/ui.errors';
 import { prepareItems } from '../../../grids/grid_core/m_export';
+import List from '../../../ui/list/m_list.edit.search';
 import dataGridCore from '../m_core';
 const DATAGRID_EXPORT_MENU_CLASS = 'dx-datagrid-export-menu';
 const DATAGRID_EXPORT_BUTTON_CLASS = 'dx-datagrid-export-button';

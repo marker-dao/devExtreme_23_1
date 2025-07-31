@@ -32,8 +32,6 @@
     "../../esm/__internal/grids/tree_list/module_not_extended/editing_form_based.js",
     "../../esm/ui/validation_summary.js",
     "../../esm/ui/validation_group.js",
-    "../../esm/__internal/ui/form/m_form.layout_manager.js",
-    "../../esm/ui/button.js",
     "../../esm/__internal/grids/tree_list/module_not_extended/editing_cell_based.js",
     "../../esm/__internal/grids/tree_list/m_validating.js",
     "../../esm/__internal/grids/tree_list/m_virtual_scrolling.js",

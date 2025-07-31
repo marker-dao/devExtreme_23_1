@@ -239,7 +239,6 @@ class SelectBox extends _m_drop_down_list.default {
       this._focusListElement(null);
       return;
     }
-    // @ts-expect-error ts-error
     const $listItems = this._list._itemElements();
     const focusedElement = $listItems.not(DISABLED_STATE_SELECTOR).eq(0);
     this._focusListElement(focusedElement);

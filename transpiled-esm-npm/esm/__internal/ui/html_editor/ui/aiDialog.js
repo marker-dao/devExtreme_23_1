@@ -204,7 +204,7 @@ export default class AIDialog extends BaseDialog {
     const $inputContainer = this._resultTextArea.$element().find(`.${TEXTEDITOR_INPUT_CONTAINER_CLASS}`);
     const $indicatorElement = $('<div>').addClass(AI_DIALOG_LOAD_INDICATOR_CLASS).appendTo($inputContainer);
     const options = {
-      _animationType: AnimationType.Sparkle,
+      animationType: AnimationType.Sparkle,
       width: LOADINDICATOR_SIZE,
       height: LOADINDICATOR_SIZE
     };

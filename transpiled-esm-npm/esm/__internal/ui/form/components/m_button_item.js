@@ -2,6 +2,19 @@ import $ from '../../../../core/renderer';
 import { extend } from '../../../../core/utils/extend';
 import { isDefined } from '../../../../core/utils/type';
 const FIELD_BUTTON_ITEM_CLASS = 'dx-field-button-item';
+function convertAlignmentToTextAlign(horizontalAlignment) {
+  return isDefined(horizontalAlignment) ? horizontalAlignment : 'right';
+}
+function convertAlignmentToJustifyContent(verticalAlignment) {
+  switch (verticalAlignment) {
+    case 'center':
+      return 'center';
+    case 'bottom':
+      return 'flex-end';
+    default:
+      return 'flex-start';
+  }
+}
 export function renderButtonItem(_ref) {
   let {
     item,
@@ -16,21 +29,8 @@ export function renderButtonItem(_ref) {
   const $button = $('<div>').appendTo($rootElement);
   return {
     $rootElement,
-    buttonInstance: createComponentCallback($button, 'dxButton', extend({
+    buttonInstance: createComponentCallback($button, extend({
       validationGroup
     }, item.buttonOptions))
   };
-}
-function convertAlignmentToTextAlign(horizontalAlignment) {
-  return isDefined(horizontalAlignment) ? horizontalAlignment : 'right';
-}
-function convertAlignmentToJustifyContent(verticalAlignment) {
-  switch (verticalAlignment) {
-    case 'center':
-      return 'center';
-    case 'bottom':
-      return 'flex-end';
-    default:
-      return 'flex-start';
-  }
 }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/scroll_view/scrollable.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -388,10 +388,8 @@ class Scrollable extends _dom_component.default {
   }
   update() {
     if (!this._strategy) {
-      return;
+      return (0, _deferred.Deferred)().resolve();
     }
-    // @ts-expect-error ts-error
-    // eslint-disable-next-line consistent-return
     return (0, _deferred.when)(this._strategy.update()).done(() => {
       this._updateAllowedDirection();
     });

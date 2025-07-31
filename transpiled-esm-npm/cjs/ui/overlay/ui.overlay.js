@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_overlay = _interopRequireDefault(require("../../__internal/ui/overlay/m_overlay"));
+var _overlay = _interopRequireDefault(require("../../__internal/ui/overlay/overlay"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_overlay.default;
+var _default = exports.default = _overlay.default;
 /**
  * @name dxOverlayOptions.activeStateEnabled
  * @hidden

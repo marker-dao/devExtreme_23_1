@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/popup/m_popup_position_controller.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,7 +32,6 @@ class PopupPositionController extends _m_overlay_position_controller.OverlayPosi
         outsideDragFactor
       } = _ref,
       args = _objectWithoutPropertiesLoose(_ref, _excluded);
-    // @ts-expect-error
     super(args);
     this._props = _extends({}, this._props, {
       fullScreen,

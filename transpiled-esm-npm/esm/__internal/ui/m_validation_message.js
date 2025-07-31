@@ -4,7 +4,7 @@ import $ from '../../core/renderer';
 import { getDefaultAlignment } from '../../core/utils/position';
 import { getOuterWidth } from '../../core/utils/size';
 import { encodeHtml } from '../../core/utils/string';
-import Overlay from '../ui/overlay/m_overlay';
+import Overlay from '../ui/overlay/overlay';
 const INVALID_MESSAGE = 'dx-invalid-message';
 const INVALID_MESSAGE_AUTO = 'dx-invalid-message-auto';
 const INVALID_MESSAGE_ALWAYS = 'dx-invalid-message-always';

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/list/m_list.edit.decorator.context.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 import messageLocalization from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
 import { getOuterHeight, getOuterWidth } from '../../../core/utils/size';
-import Overlay from '../../ui/overlay/m_overlay';
+import Overlay from '../../ui/overlay/overlay';
 import { ListBase } from './m_list.base';
 import EditDecorator from './m_list.edit.decorator';
 import { register as registerDecorator } from './m_list.edit.decorator_registry';

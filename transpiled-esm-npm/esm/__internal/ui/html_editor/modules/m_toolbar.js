@@ -13,7 +13,7 @@ import { isDefined, isEmptyObject, isObject, isString } from '../../../../core/u
 import Toolbar from '../../../../ui/toolbar';
 import errors from '../../../../ui/widget/ui.errors';
 import { capitalize } from '../../../core/utils/capitalize';
-import { DX_MENU_ITEM_CLASS } from '../../../ui/menu/m_menu';
+import { DX_MENU_ITEM_CLASS } from '../../../ui/menu/menu';
 import Quill from 'devextreme-quill';
 import { buildCommandsMap, defaultCommandNames, getDefaultOptionsByCommand, hasInvalidCustomCommand } from '../utils/ai';
 import { getTableFormats, TABLE_OPERATIONS } from '../utils/m_table_helper';

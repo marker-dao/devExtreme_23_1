@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/data_provider/m_appointment_data_provider.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -50,7 +50,6 @@ export class AppointmentDataProvider {
       showAllDayPanel: this.options.showAllDayPanel,
       timeZoneCalculator: this.options.timeZoneCalculator,
       //
-      loadedResources: this.options.getLoadedResources(),
       supportAllDayRow: this.options.getSupportAllDayRow,
       viewType: this.options.getViewType,
       viewDirection: this.options.getViewDirection,
@@ -93,9 +92,6 @@ export class AppointmentDataProvider {
   }
   hasAllDayAppointments(filteredItems, preparedItems) {
     return this.getFilterStrategy().hasAllDayAppointments(filteredItems, preparedItems);
-  }
-  filterLoadedAppointments(filterOption, preparedItems) {
-    return this.getFilterStrategy().filterLoadedAppointments(filterOption, preparedItems);
   }
   // Appointment data source mappings
   cleanState() {

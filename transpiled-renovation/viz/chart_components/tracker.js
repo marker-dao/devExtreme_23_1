@@ -261,11 +261,14 @@ const baseTrackerPrototype = {
       that.clearHover();
     }
   },
+  _processArgumentHoveredPoint: function (argument, argumentIndex) {
+    this._releaseHoveredPoint();
+  },
   _hoverArgument: function (argument, argumentIndex) {
     const that = this;
     const hoverMode = that._getArgumentHoverMode();
     if ((0, _type.isDefined)(argument)) {
-      that._releaseHoveredPoint();
+      this._processArgumentHoveredPoint(argument, argumentIndex);
       that._hoveredArgument = argument;
       that._argumentIndex = argumentIndex;
       that._notifySeries({
@@ -633,6 +636,14 @@ exports.PieTracker = PieTracker;
   },
   _getArgumentHoverMode: function () {
     return correctHoverMode(this._legend);
+  },
+  _processArgumentHoveredPoint: function (argument, argumentIndex) {
+    const points = this._storedSeries.flatMap(series => series.getPointsByKeys(argument, argumentIndex));
+    if (points.length === 1) {
+      this._setHoveredPoint(points[0]);
+    } else {
+      this._releaseHoveredPoint();
+    }
   },
   _hoverArgumentAxis: _common.noop,
   _setStuckSeries: _common.noop,

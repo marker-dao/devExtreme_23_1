@@ -34,8 +34,6 @@
     "../../esm/__internal/grids/data_grid/module_not_extended/editing_form_based.js",
     "../../esm/ui/validation_summary.js",
     "../../esm/ui/validation_group.js",
-    "../../esm/__internal/ui/form/m_form.layout_manager.js",
-    "../../esm/ui/button.js",
     "../../esm/__internal/grids/data_grid/module_not_extended/editing_cell_based.js",
     "../../esm/__internal/grids/data_grid/module_not_extended/validating.js",
     "../../esm/__internal/grids/data_grid/module_not_extended/virtual_scrolling.js",
@@ -58,6 +56,7 @@
     "../../esm/__internal/grids/data_grid/module_not_extended/adaptivity.js",
     "../../esm/__internal/grids/data_grid/module_not_extended/virtual_columns.js",
     "../../esm/__internal/grids/data_grid/export/m_export.js",
+    "../../esm/ui/button.js",
     "../../esm/ui/drop_down_button.js",
     "../../esm/__internal/grids/data_grid/focus/m_focus.js",
     "../../esm/__internal/grids/data_grid/module_not_extended/row_dragging.js"

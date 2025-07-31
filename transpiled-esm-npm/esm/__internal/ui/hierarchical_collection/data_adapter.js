@@ -4,15 +4,14 @@ import { noop } from '../../../core/utils/common';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { isDefined, isFunction } from '../../../core/utils/type';
-import TextBox from '../../../ui/text_box';
 import errors from '../../../ui/widget/ui.errors';
-import uiSearchBoxMixin from '../../../ui/widget/ui.search_box_mixin';
+import SearchBoxController, { getOperationBySearchMode } from '../../ui/collection/m_search_box_mixin';
+import TextBox from '../../ui/text_box/m_text_box';
 import HierarchicalDataConverter from './data_converter';
 const EXPANDED = 'expanded';
 const SELECTED = 'selected';
 const DISABLED = 'disabled';
-// @ts-expect-error ts-error
-uiSearchBoxMixin.setEditorClass(TextBox);
+SearchBoxController.setEditorClass(TextBox);
 class DataAdapter {
   constructor(options) {
     this._initialDataStructure = [];
@@ -402,8 +401,8 @@ class DataAdapter {
   }
   _filterDataStructure(filterValue, dataStructure) {
     const selector = this.options.searchExpr ?? this.options.dataAccessors.getters.display;
-    // @ts-expect-error ts-error
-    const operation = uiSearchBoxMixin.getOperationBySearchMode(this.options.searchMode);
+    const operation = getOperationBySearchMode(this.options.searchMode);
+    // @ts-expect-error
     const criteria = DataAdapter._createCriteria(selector, filterValue, operation);
     const data = dataStructure ?? this._initialDataStructure;
     // @ts-expect-error ts-error

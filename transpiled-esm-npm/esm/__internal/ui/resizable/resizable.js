@@ -167,7 +167,10 @@ class Resizable extends DOMComponent {
     const $handle = $(e.target).closest(`.${RESIZABLE_HANDLE_CLASS}`);
     const handleWidth = getOuterWidth($handle);
     const handleHeight = getOuterHeight($handle);
-    const handleOffset = $handle.offset();
+    const handleOffset = $handle.offset() ?? {
+      left: 0,
+      top: 0
+    };
     const areaOffset = area.offset;
     const scrollOffset = this._getAreaScrollOffset();
     this._leftMaxOffset = handleOffset.left - areaOffset.left - scrollOffset.scrollX;
@@ -179,14 +182,11 @@ class Resizable extends DOMComponent {
     this._bottomMaxOffset = areaOffset.top + area.height - handleOffset.top - handleHeight + scrollOffset.scrollY;
     e.maxBottomOffset = this._bottomMaxOffset;
   }
-  // eslint-disable-next-line class-methods-use-this
   _getBorderWidth($element, direction) {
     if (isWindow($element.get(0))) return 0;
     // @ts-expect-error ts-error
     const borderWidth = $element.css(SIDE_BORDER_WIDTH_STYLES[direction]);
-    // @ts-expect-error ts-error
-    // eslint-disable-next-line radix
-    return parseInt(borderWidth) || 0;
+    return parseInt(borderWidth, 10) || 0;
   }
   _proportionate(direction, value) {
     const size = this._elementSize;
@@ -358,7 +358,6 @@ class Resizable extends DOMComponent {
     });
     triggerResizeEvent(this.$element());
   }
-  // eslint-disable-next-line class-methods-use-this
   _isCornerHandler(sides) {
     // eslint-disable-next-line no-bitwise
     return Object.values(sides).reduce((xor, value) => xor ^ value, 0) === 0;
@@ -435,7 +434,6 @@ class Resizable extends DOMComponent {
       y: roundedOffset.y * (sides.top ? -1 : 1)
     };
   }
-  // eslint-disable-next-line class-methods-use-this
   _getMovingSides(e) {
     const $target = $(e.target);
     const hasCornerTopLeftClass = $target.hasClass(`${RESIZABLE_HANDLE_CORNER_CLASS}-top-left`);
@@ -585,7 +583,6 @@ class Resizable extends DOMComponent {
   _clean() {
     this.$element().find(`.${RESIZABLE_HANDLE_CLASS}`).remove();
   }
-  // eslint-disable-next-line class-methods-use-this
   _useTemplates() {
     return false;
   }

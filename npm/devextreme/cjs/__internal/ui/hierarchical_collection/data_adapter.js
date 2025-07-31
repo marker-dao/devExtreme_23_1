@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/hierarchical_collection/data_adapter.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,16 +18,17 @@ var _common = require("../../../core/utils/common");
 var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _type = require("../../../core/utils/type");
-var _text_box = _interopRequireDefault(require("../../../ui/text_box"));
 var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
-var _ui2 = _interopRequireDefault(require("../../../ui/widget/ui.search_box_mixin"));
+var _m_search_box_mixin = _interopRequireWildcard(require("../../ui/collection/m_search_box_mixin"));
+var _m_text_box = _interopRequireDefault(require("../../ui/text_box/m_text_box"));
 var _data_converter = _interopRequireDefault(require("./data_converter"));
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const EXPANDED = 'expanded';
 const SELECTED = 'selected';
 const DISABLED = 'disabled';
-// @ts-expect-error ts-error
-_ui2.default.setEditorClass(_text_box.default);
+_m_search_box_mixin.default.setEditorClass(_m_text_box.default);
 class DataAdapter {
   constructor(options) {
     this._initialDataStructure = [];
@@ -417,8 +418,8 @@ class DataAdapter {
   }
   _filterDataStructure(filterValue, dataStructure) {
     const selector = this.options.searchExpr ?? this.options.dataAccessors.getters.display;
-    // @ts-expect-error ts-error
-    const operation = _ui2.default.getOperationBySearchMode(this.options.searchMode);
+    const operation = (0, _m_search_box_mixin.getOperationBySearchMode)(this.options.searchMode);
+    // @ts-expect-error
     const criteria = DataAdapter._createCriteria(selector, filterValue, operation);
     const data = dataStructure ?? this._initialDataStructure;
     // @ts-expect-error ts-error

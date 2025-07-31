@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/utils/loader/loader.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -58,8 +58,8 @@ class Loader {
     let forceReload = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     if (this.dataSource && (forceReload || !this.dataSource.isLoaded() && !this.loadingStatePromise)) {
       this.loadingStatePromise = this.loadingStatePromise && !forceReload ? this.loadingStatePromise : (0, _utils.loadResource)(this.dataSource, forceReload);
-      await this.loadingStatePromise;
     }
+    await this.loadingStatePromise;
   }
   onLoadingChanged(isLoading) {
     if (!isLoading && this.isLoaded()) {

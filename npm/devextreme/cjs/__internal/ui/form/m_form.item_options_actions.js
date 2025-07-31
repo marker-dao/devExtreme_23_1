@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/form/m_form.item_options_actions.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,12 +13,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _element_data = require("../../../core/element_data");
-var _extend = require("../../../core/utils/extend");
-var _m_form = _interopRequireDefault(require("./m_form.item_option_action"));
-var _m_form2 = require("./m_form.utils");
+var _m_form = _interopRequireDefault(require("../../ui/form/m_form.item_option_action"));
+var _m_form2 = require("../../ui/form/m_form.utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-/* eslint-disable max-classes-per-file */
-
 class WidgetOptionItemOptionAction extends _m_form.default {
   tryExecute() {
     const {
@@ -41,7 +38,7 @@ class TabOptionItemOptionAction extends _m_form.default {
         item,
         value
       } = this._options;
-      const itemIndex = this._itemsRunTimeInfo.findItemIndexByItem(item);
+      const itemIndex = this._itemsRunTimeInfo.findItemIndexByItem(item) ?? -1;
       if (itemIndex >= 0) {
         tabPanel.option((0, _m_form2.getFullOptionName)(`items[${itemIndex}]`, optionName), value);
         return true;
@@ -51,6 +48,7 @@ class TabOptionItemOptionAction extends _m_form.default {
   }
 }
 class SimpleItemTemplateChangedAction extends _m_form.default {
+  // eslint-disable-next-line class-methods-use-this
   tryExecute() {
     return false;
   }
@@ -87,10 +85,10 @@ class ValidationRulesItemOptionAction extends _m_form.default {
     const instance = this.findInstance();
     const validator = instance && (0, _element_data.data)(instance.$element()[0], 'dxValidator');
     if (validator && item) {
-      const filterRequired = item => item.type === 'required';
+      const filterRequired = validationRule => validationRule.type === 'required';
       const oldContainsRequired = (validator.option('validationRules') || []).some(filterRequired);
-      const newContainsRequired = (item.validationRules || []).some(filterRequired);
-      if (!oldContainsRequired && !newContainsRequired || oldContainsRequired && newContainsRequired) {
+      const newContainsRequired = (item.validationRules ?? []).some(filterRequired);
+      if (oldContainsRequired === newContainsRequired) {
         validator.option('validationRules', item.validationRules);
         return true;
       }
@@ -101,11 +99,11 @@ class ValidationRulesItemOptionAction extends _m_form.default {
 class CssClassItemOptionAction extends _m_form.default {
   tryExecute() {
     const $itemContainer = this.findItemContainer();
-    const {
-      previousValue,
-      value
-    } = this._options;
-    if ($itemContainer) {
+    if ($itemContainer.length) {
+      const {
+        previousValue = '',
+        value = ''
+      } = this._options;
       $itemContainer.removeClass(previousValue).addClass(value);
       return true;
     }
@@ -129,10 +127,11 @@ const tryCreateItemOptionAction = (optionName, itemActionOptions) => {
     case 'icon': // TabbedItem/tabs/#icon
     case 'tabTemplate': // TabbedItem/tabs/#tabTemplate
     case 'title':
-      // TabbedItem/tabs/#title
-      return new TabOptionItemOptionAction((0, _extend.extend)(itemActionOptions, {
-        optionName
-      }));
+      {
+        // TabbedItem/tabs/#title
+        itemActionOptions.optionName = optionName;
+        return new TabOptionItemOptionAction(itemActionOptions);
+      }
     case 'tabs':
       // TabbedItem/tabs
       return new TabsOptionItemOptionAction(itemActionOptions);
@@ -147,9 +146,8 @@ const tryCreateItemOptionAction = (optionName, itemActionOptions) => {
         if (itemType === 'group') {
           return new GroupItemTemplateChangedAction(itemActionOptions);
         }
-        return new TabOptionItemOptionAction((0, _extend.extend)(itemActionOptions, {
-          optionName
-        }));
+        itemActionOptions.optionName = optionName;
+        return new TabOptionItemOptionAction(itemActionOptions);
       }
     default:
       return null;

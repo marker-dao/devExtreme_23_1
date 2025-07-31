@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/html_editor/modules/m_popup.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,9 +17,9 @@ var _index = require("../../../../common/core/events/utils/index");
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _extend = require("../../../../core/utils/extend");
 var _size = require("../../../../core/utils/size");
-var _list_light = _interopRequireDefault(require("../../../../ui/list_light"));
 var _popup = _interopRequireDefault(require("../../../../ui/popup"));
 var _m_window = _interopRequireDefault(require("../../../core/utils/m_window"));
+var _m_listEdit = _interopRequireDefault(require("../../../ui/list/m_list.edit.search"));
 var _devextremeQuill = _interopRequireDefault(require("devextreme-quill"));
 var _m_base = _interopRequireDefault(require("./m_base"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -49,7 +49,7 @@ if (_devextremeQuill.default) {
     }
     renderList($container, options) {
       const $list = (0, _renderer.default)('<div>').addClass(SUGGESTION_LIST_CLASS).appendTo($container);
-      this._list = this.options.editorInstance._createComponent($list, _list_light.default, options);
+      this._list = this.options.editorInstance._createComponent($list, _m_listEdit.default, options);
     }
     renderPopup() {
       const {

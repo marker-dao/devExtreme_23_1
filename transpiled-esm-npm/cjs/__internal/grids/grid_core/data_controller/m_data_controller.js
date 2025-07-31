@@ -1215,6 +1215,10 @@ class DataController extends (0, _m_data_helper_mixin.DataHelperMixin)(_m_module
   getRowIndexByKey(key, byLoaded) {
     return _m_utils.default.getIndexByKey(key, this.items(byLoaded));
   }
+  getRowByKey(key) {
+    var _this$items;
+    return (_this$items = this.items()) === null || _this$items === void 0 ? void 0 : _this$items[this.getRowIndexByKey(key)];
+  }
   keyOf(data) {
     const store = this.store();
     if (store) {

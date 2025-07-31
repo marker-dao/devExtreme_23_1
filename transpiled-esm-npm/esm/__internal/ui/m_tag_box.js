@@ -2,7 +2,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import { name as clickEvent } from '../../common/core/events/click';
 import eventsEngine from '../../common/core/events/core/events_engine';
-import { addNamespace, isCommandKeyPressed, normalizeKeyName } from '../../common/core/events/utils/index';
+import { addNamespace, isCommandKeyPressed, normalizeKeyName } from '../../common/core/events/utils';
 import messageLocalization from '../../common/core/localization/message';
 import { normalizeLoadResult } from '../../common/data/data_source/utils';
 import registerComponent from '../../core/component_registrator';
@@ -579,7 +579,9 @@ class TagBox extends SelectBox {
   }
   _multiTagRequired() {
     const values = this._getValue();
-    const maxDisplayedTags = this.option('maxDisplayedTags');
+    const {
+      maxDisplayedTags
+    } = this.option();
     return isDefined(maxDisplayedTags) && values.length > maxDisplayedTags;
   }
   _renderMultiTag($input) {
@@ -826,8 +828,11 @@ class TagBox extends SelectBox {
     return selectedItems;
   }
   _getSelectedItemsFromList(values) {
-    var _this$_list3;
-    const listSelectedItems = (_this$_list3 = this._list) === null || _this$_list3 === void 0 ? void 0 : _this$_list3.option('selectedItems');
+    const {
+      selectedItems: listSelectedItems
+    } = this._list ? this._list.option() : {
+      selectedItems: []
+    };
     let selectedItems = [];
     if (values.length === (listSelectedItems === null || listSelectedItems === void 0 ? void 0 : listSelectedItems.length)) {
       selectedItems = this._filterSelectedItems(listSelectedItems, values);
@@ -1101,7 +1106,7 @@ class TagBox extends SelectBox {
     }
   }
   _setValue(value) {
-    var _this$_list4;
+    var _this$_list3;
     if (value === null) {
       return;
     }
@@ -1110,15 +1115,20 @@ class TagBox extends SelectBox {
     } = this.option();
     const useButtons = applyValueMode === 'useButtons';
     const valueIndex = this._valueIndex(value);
-    const values = (useButtons ? ((_this$_list4 = this._list) === null || _this$_list4 === void 0 ? void 0 : _this$_list4.option('selectedItemKeys')) || [] : this._getValue()).slice();
+    const {
+      selectedItemKeys
+    } = ((_this$_list3 = this._list) === null || _this$_list3 === void 0 ? void 0 : _this$_list3.option()) || {
+      selectedItemKeys: []
+    };
+    const values = (useButtons ? selectedItemKeys ?? [] : this._getValue()).slice();
     if (valueIndex >= 0) {
       values.splice(valueIndex, 1);
     } else {
       values.push(value);
     }
     if (useButtons) {
-      var _this$_list5;
-      (_this$_list5 = this._list) === null || _this$_list5 === void 0 || _this$_list5.option('selectedItemKeys', values);
+      var _this$_list4;
+      (_this$_list4 = this._list) === null || _this$_list4 === void 0 || _this$_list4.option('selectedItemKeys', values);
     } else {
       this.option('value', values);
     }
@@ -1181,8 +1191,9 @@ class TagBox extends SelectBox {
     }
   }
   _refreshSelected() {
-    var _this$_list6;
-    ((_this$_list6 = this._list) === null || _this$_list6 === void 0 ? void 0 : _this$_list6.getDataSource()) && this._list.option('selectedItems', this._selectedItems);
+    var _this$_list5;
+    // @ts-expect-error ts-error
+    ((_this$_list5 = this._list) === null || _this$_list5 === void 0 ? void 0 : _this$_list5.getDataSource()) && this._list.option('selectedItems', this._selectedItems);
   }
   _resetListDataSourceFilter() {
     const dataController = this._dataController;

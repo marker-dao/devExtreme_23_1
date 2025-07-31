@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/load_indicator.d.ts)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -48,6 +48,9 @@ export type InitializedEvent = InitializedEventInfo<dxLoadIndicator>;
  */
 export type OptionChangedEvent = EventInfo<dxLoadIndicator> & ChangedOptionInfo;
 
+/** @public */
+export type LoadingAnimationType = 'circle' | 'sparkle';
+
 /**
  * @deprecated use Properties instead
  * @namespace DevExpress.ui
@@ -56,7 +59,13 @@ export type OptionChangedEvent = EventInfo<dxLoadIndicator> & ChangedOptionInfo;
 export interface dxLoadIndicatorOptions extends WidgetOptions<dxLoadIndicator> {
     /**
      * @docid
-     * @default ""
+     * @default 'circle'
+     * @public
+     */
+    animationType?: LoadingAnimationType;
+    /**
+     * @docid
+     * @default ''
      * @public
      */
     indicatorSrc?: string;

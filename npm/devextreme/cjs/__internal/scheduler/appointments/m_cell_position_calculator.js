@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointments/m_cell_position_calculator.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -204,26 +204,18 @@ class VirtualStrategy extends BaseStrategy {
     this.isVirtualScrolling = true;
   }
   calculateCellPositions(groupIndices, isAllDayRowAppointment, isRecurrentAppointment) {
-    const appointments = isAllDayRowAppointment ? this.appointments : this.appointments.filter(_ref => {
-      let {
-        source,
-        startDate,
-        endDate
-      } = _ref;
-      return this.viewDataProvider.isGroupIntersectDateInterval(source.groupIndex, startDate, endDate);
-    });
     if (isRecurrentAppointment) {
-      return this.createRecurrentAppointmentInfos(appointments, isAllDayRowAppointment);
+      return this.createRecurrentAppointmentInfos(this.appointments, isAllDayRowAppointment);
     }
     return super.calculateCellPositions(groupIndices, isAllDayRowAppointment, isRecurrentAppointment);
   }
   createRecurrentAppointmentInfos(dateSettings, isAllDayRowAppointment) {
     const result = [];
-    dateSettings.forEach((_ref2, index) => {
+    dateSettings.forEach((_ref, index) => {
       let {
         source,
         startDate
-      } = _ref2;
+      } = _ref;
       const coordinate = this.getCoordinatesByDate(startDate, source.groupIndex, isAllDayRowAppointment);
       if (coordinate) {
         result.push(this._prepareObject(coordinate, index));

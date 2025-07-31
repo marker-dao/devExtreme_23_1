@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/file_manager/ui.file_manager.notification.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -258,7 +258,7 @@ export default class FileManagerNotificationControl extends Widget {
         position: {
           my: 'right top',
           at: 'right top',
-          of: this.option('positionTarget'),
+          of: this._progressDrawer.$element().find(this.option('positionTargetSelector')),
           offset: '-10 -5'
         },
         _wrapperClassExternal: FILE_MANAGER_NOTIFICATION_POPUP_CLASS

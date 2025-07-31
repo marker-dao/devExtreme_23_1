@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _click = require("../../common/core/events/click");
 var _events_engine = _interopRequireDefault(require("../../common/core/events/core/events_engine"));
-var _index = require("../../common/core/events/utils/index");
+var _utils = require("../../common/core/events/utils");
 var _message = _interopRequireDefault(require("../../common/core/localization/message"));
-var _utils = require("../../common/data/data_source/utils");
+var _utils2 = require("../../common/data/data_source/utils");
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
 var _devices = _interopRequireDefault(require("../../core/devices"));
 var _element = require("../../core/element");
@@ -396,7 +396,7 @@ class TagBox extends _m_select_box.default {
   }
   _renderTagRemoveAction() {
     const tagRemoveAction = this._createAction(this._removeTagHandler.bind(this));
-    const eventName = (0, _index.addNamespace)(_click.name, 'dxTagBoxTagRemove');
+    const eventName = (0, _utils.addNamespace)(_click.name, 'dxTagBoxTagRemove');
     _events_engine.default.off(this._$tagsContainer, eventName);
     _events_engine.default.on(this._$tagsContainer, eventName, `.${TAGBOX_TAG_REMOVE_BUTTON_CLASS}`, event => {
       tagRemoveAction({
@@ -406,7 +406,7 @@ class TagBox extends _m_select_box.default {
   }
   _renderSingleLineScroll() {
     // @ts-expect-error ts-error
-    const mouseWheelEvent = (0, _index.addNamespace)('dxmousewheel', this.NAME);
+    const mouseWheelEvent = (0, _utils.addNamespace)('dxmousewheel', this.NAME);
     const $element = this.$element();
     const isMultiline = this.option('multiline');
     _events_engine.default.off($element, mouseWheelEvent);
@@ -424,7 +424,7 @@ class TagBox extends _m_select_box.default {
   _tagContainerMouseWheelHandler(e) {
     const scrollLeft = this._$tagsContainer.scrollLeft();
     const delta = e.delta * TAGBOX_MOUSE_WHEEL_DELTA_MULTIPLIER;
-    if (!(0, _index.isCommandKeyPressed)(e) && (0, _m_utils2.allowScroll)(this._$tagsContainer, delta, true)) {
+    if (!(0, _utils.isCommandKeyPressed)(e) && (0, _m_utils2.allowScroll)(this._$tagsContainer, delta, true)) {
       // @ts-expect-error ts-error
       this._$tagsContainer.scrollLeft(scrollLeft + delta);
       return false;
@@ -435,9 +435,9 @@ class TagBox extends _m_select_box.default {
     super._renderEvents();
     const input = this._input();
     // @ts-expect-error ts-error
-    const namespace = (0, _index.addNamespace)('keydown', this.NAME);
+    const namespace = (0, _utils.addNamespace)('keydown', this.NAME);
     _events_engine.default.on(input, namespace, e => {
-      const keyName = (0, _index.normalizeKeyName)(e);
+      const keyName = (0, _utils.normalizeKeyName)(e);
       // @ts-expect-error ts-error
       if (!this._isControlKey(keyName) && this._isEditable()) {
         this._clearTagFocus();
@@ -452,7 +452,7 @@ class TagBox extends _m_select_box.default {
     this._renderPreventBlurOnInputClick();
   }
   _renderPreventBlurOnInputClick() {
-    const eventName = (0, _index.addNamespace)('mousedown', 'dxTagBox');
+    const eventName = (0, _utils.addNamespace)('mousedown', 'dxTagBox');
     _events_engine.default.off(this._inputWrapper(), eventName);
     _events_engine.default.on(this._inputWrapper(), eventName, e => {
       if (e.target !== this._input()[0] && this._isFocused()) {
@@ -585,7 +585,9 @@ class TagBox extends _m_select_box.default {
   }
   _multiTagRequired() {
     const values = this._getValue();
-    const maxDisplayedTags = this.option('maxDisplayedTags');
+    const {
+      maxDisplayedTags
+    } = this.option();
     return (0, _type.isDefined)(maxDisplayedTags) && values.length > maxDisplayedTags;
   }
   _renderMultiTag($input) {
@@ -667,7 +669,7 @@ class TagBox extends _m_select_box.default {
       }
       const {
         data: items
-      } = (0, _utils.normalizeLoadResult)(data, extra);
+      } = (0, _utils2.normalizeLoadResult)(data, extra);
       const mappedItems = dataController.applyMapFunction(items);
       d.resolve(mappedItems.filter(clientFilterFunction));
     }).fail(d.reject);
@@ -832,8 +834,11 @@ class TagBox extends _m_select_box.default {
     return selectedItems;
   }
   _getSelectedItemsFromList(values) {
-    var _this$_list3;
-    const listSelectedItems = (_this$_list3 = this._list) === null || _this$_list3 === void 0 ? void 0 : _this$_list3.option('selectedItems');
+    const {
+      selectedItems: listSelectedItems
+    } = this._list ? this._list.option() : {
+      selectedItems: []
+    };
     let selectedItems = [];
     if (values.length === (listSelectedItems === null || listSelectedItems === void 0 ? void 0 : listSelectedItems.length)) {
       selectedItems = this._filterSelectedItems(listSelectedItems, values);
@@ -1107,7 +1112,7 @@ class TagBox extends _m_select_box.default {
     }
   }
   _setValue(value) {
-    var _this$_list4;
+    var _this$_list3;
     if (value === null) {
       return;
     }
@@ -1116,15 +1121,20 @@ class TagBox extends _m_select_box.default {
     } = this.option();
     const useButtons = applyValueMode === 'useButtons';
     const valueIndex = this._valueIndex(value);
-    const values = (useButtons ? ((_this$_list4 = this._list) === null || _this$_list4 === void 0 ? void 0 : _this$_list4.option('selectedItemKeys')) || [] : this._getValue()).slice();
+    const {
+      selectedItemKeys
+    } = ((_this$_list3 = this._list) === null || _this$_list3 === void 0 ? void 0 : _this$_list3.option()) || {
+      selectedItemKeys: []
+    };
+    const values = (useButtons ? selectedItemKeys ?? [] : this._getValue()).slice();
     if (valueIndex >= 0) {
       values.splice(valueIndex, 1);
     } else {
       values.push(value);
     }
     if (useButtons) {
-      var _this$_list5;
-      (_this$_list5 = this._list) === null || _this$_list5 === void 0 || _this$_list5.option('selectedItemKeys', values);
+      var _this$_list4;
+      (_this$_list4 = this._list) === null || _this$_list4 === void 0 || _this$_list4.option('selectedItemKeys', values);
     } else {
       this.option('value', values);
     }
@@ -1187,8 +1197,9 @@ class TagBox extends _m_select_box.default {
     }
   }
   _refreshSelected() {
-    var _this$_list6;
-    ((_this$_list6 = this._list) === null || _this$_list6 === void 0 ? void 0 : _this$_list6.getDataSource()) && this._list.option('selectedItems', this._selectedItems);
+    var _this$_list5;
+    // @ts-expect-error ts-error
+    ((_this$_list5 = this._list) === null || _this$_list5 === void 0 ? void 0 : _this$_list5.getDataSource()) && this._list.option('selectedItems', this._selectedItems);
   }
   _resetListDataSourceFilter() {
     const dataController = this._dataController;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/columns_controller/m_columns_controller.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1029,7 +1029,7 @@ class ColumnsController extends _m_modules.default.Controller {
             const {
               isExpanded
             } = sortParameters[i];
-            if (selector === column.dataField || selector === column.name || selector === column.displayField || selector === column.selector || selector === column.calculateCellValue || selector === column.calculateGroupValue || selector === column.calculateDisplayValue) {
+            if (selector === column.dataField || selector === column.name || selector === column.displayField || _m_utils.default.isEqualSelectors(selector, column.selector) || _m_utils.default.isSelectorEqualWithCallback(selector, column.calculateCellValue) || _m_utils.default.isSelectorEqualWithCallback(selector, column.calculateGroupValue) || _m_utils.default.isSelectorEqualWithCallback(selector, column.calculateDisplayValue)) {
               if (fromDataSource) {
                 column.sortOrder = 'sortOrder' in column ? column.sortOrder : sortParameters[i].desc ? 'desc' : 'asc';
               } else {

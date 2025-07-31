@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/editor/editor.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -42,6 +42,9 @@ const VALIDATION_MESSAGE_KEYS_MAP = {
   validationBoundary: 'boundary'
 };
 class Editor extends _widget.default {
+  static isEditor(instance) {
+    return instance instanceof Editor;
+  }
   ctor(element, options) {
     this.showValidationMessageTimeout = undefined;
     this.validationRequest = (0, _callbacks.default)();
@@ -87,6 +90,7 @@ class Editor extends _widget.default {
         v: 0
       },
       validationTooltipOptions: {},
+      _cached_validationTooltipOptions: {},
       _showValidationMessage: true,
       isDirty: false
     });
@@ -376,6 +380,8 @@ class Editor extends _widget.default {
       case 'validationTooltipOptions':
         this._innerWidgetOptionChanged(this._validationMessage, args);
         break;
+      case '_cached_validationTooltipOptions':
+        break;
       case '_showValidationMessage':
       case 'isDirty':
         break;
@@ -405,6 +411,4 @@ class Editor extends _widget.default {
     this.option('isValid', true);
   }
 }
-// @ts-expect-error ts-error
-Editor.isEditor = instance => instance instanceof Editor;
 var _default = exports.default = Editor;

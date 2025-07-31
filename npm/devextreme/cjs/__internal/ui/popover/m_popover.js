@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/popover/m_popover.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -256,10 +256,12 @@ class Popover extends _m_popup.default {
     super._renderTopToolbar();
   }
   _renderPosition() {
+    var _this$_actions, _this$_actions$onPosi;
     let shouldUpdateDimensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
     super._renderPosition();
     this._renderOverlayPosition(shouldUpdateDimensions);
-    this._actions.onPositioned();
+    // @ts-expect-error should provide event
+    (_this$_actions = this._actions) === null || _this$_actions === void 0 || (_this$_actions$onPosi = _this$_actions.onPositioned) === null || _this$_actions$onPosi === void 0 || _this$_actions$onPosi.call(_this$_actions);
   }
   _renderOverlayPosition(shouldUpdateDimensions) {
     this._resetOverlayPosition(shouldUpdateDimensions);

@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
-var _index = require("../../../common/core/events/utils/index");
+var _utils = require("../../../common/core/events/utils");
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
 var _query = _interopRequireDefault(require("../../../common/data/query"));
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
@@ -21,9 +21,9 @@ var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
 var _ui = _interopRequireDefault(require("../../../ui/editor/ui.data_expression"));
-var _list_light = _interopRequireDefault(require("../../../ui/list_light"));
 var _ui2 = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
 var _m_drop_down_editor = _interopRequireDefault(require("../../ui/drop_down_editor/m_drop_down_editor"));
+var _m_listEdit = _interopRequireDefault(require("../../ui/list/m_list.edit.search"));
 var _m_grouped_data_converter_mixin = _interopRequireDefault(require("../../ui/shared/m_grouped_data_converter_mixin"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -182,7 +182,6 @@ class DropDownList extends _m_drop_down_editor.default {
   }
   _saveFocusOnWidget() {
     var _this$_list;
-    // @ts-expect-error ts-error
     if ((_this$_list = this._list) !== null && _this$_list !== void 0 && _this$_list.initialOption('focusStateEnabled')) {
       this._focusInput();
     }
@@ -327,11 +326,11 @@ class DropDownList extends _m_drop_down_editor.default {
   _updateActiveDescendant($target) {
     var _this$_list2;
     const opened = this.option('opened');
-    // @ts-expect-error ts-error
     const listFocusedItemId = (_this$_list2 = this._list) === null || _this$_list2 === void 0 ? void 0 : _this$_list2.getFocusedItemId();
     const isElementOnDom = (0, _renderer.default)(`#${listFocusedItemId}`).length > 0;
     const activedescendant = opened && isElementOnDom && listFocusedItemId;
     this.setAria({
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       activedescendant: activedescendant || null
     }, $target);
   }
@@ -433,13 +432,13 @@ class DropDownList extends _m_drop_down_editor.default {
     // @ts-expect-error ts-error
     .appendTo(this._popup.$content());
     this._$list = $list;
-    this._list = this._createComponent($list, _list_light.default, this._listConfig());
+    this._list = this._createComponent($list, _m_listEdit.default, this._listConfig());
     this._refreshList();
     this._renderPreventBlurOnListClick();
     this._setListFocusedElementOptionChange();
   }
   _renderPreventBlurOnListClick() {
-    const eventName = (0, _index.addNamespace)('mousedown', 'dxDropDownList');
+    const eventName = (0, _utils.addNamespace)('mousedown', 'dxDropDownList');
     _events_engine.default.off(this._$list, eventName);
     _events_engine.default.on(this._$list, eventName, e => e.preventDefault());
   }
@@ -469,28 +468,37 @@ class DropDownList extends _m_drop_down_editor.default {
     return _devices.default.real().deviceType === 'desktop';
   }
   _listConfig() {
+    const {
+      noDataText,
+      grouped,
+      wrapItemText,
+      itemTemplate,
+      groupTemplate,
+      hoverStateEnabled,
+      focusStateEnabled
+    } = this.option();
     const options = {
       selectionMode: 'single',
       _templates: this.option('_templates'),
       templateProvider: this.option('templateProvider'),
-      noDataText: this.option('noDataText'),
+      noDataText,
       encodeNoDataText: this.option('encodeNoDataText'),
-      grouped: this.option('grouped'),
-      wrapItemText: this.option('wrapItemText'),
+      grouped,
+      wrapItemText,
       useItemTextAsTitle: this.option('useItemTextAsTitle'),
       onContentReady: this._listContentReadyHandler.bind(this),
-      itemTemplate: this.option('itemTemplate'),
+      itemTemplate,
       indicateLoading: false,
       // @ts-expect-error ts-error
       keyExpr: this._getCollectionKeyExpr(),
       // @ts-expect-error ts-error
       displayExpr: this._displayGetterExpr(),
-      groupTemplate: this.option('groupTemplate'),
+      groupTemplate,
       onItemClick: this._listItemClickAction.bind(this),
       dataSource: this._getDataSource(),
       _dataController: this._dataController,
-      hoverStateEnabled: this._isDesktopDevice() ? this.option('hoverStateEnabled') : false,
-      focusStateEnabled: this._isDesktopDevice() ? this.option('focusStateEnabled') : false,
+      hoverStateEnabled: this._isDesktopDevice() ? hoverStateEnabled : false,
+      focusStateEnabled: this._isDesktopDevice() ? focusStateEnabled : false,
       _onItemsRendered: () => {
         // @ts-expect-error ts-error
         this._popup.repaint();
@@ -575,16 +583,16 @@ class DropDownList extends _m_drop_down_editor.default {
     return this._input().val() || '';
   }
   _getSearchEvent() {
-    return (0, _index.addNamespace)(SEARCH_EVENT, `${this.NAME}Search`);
+    return (0, _utils.addNamespace)(SEARCH_EVENT, `${this.NAME}Search`);
   }
   _getCompositionStartEvent() {
-    return (0, _index.addNamespace)('compositionstart', `${this.NAME}CompositionStart`);
+    return (0, _utils.addNamespace)('compositionstart', `${this.NAME}CompositionStart`);
   }
   _getCompositionEndEvent() {
-    return (0, _index.addNamespace)('compositionend', `${this.NAME}CompositionEnd`);
+    return (0, _utils.addNamespace)('compositionend', `${this.NAME}CompositionEnd`);
   }
   _getSetFocusPolicyEvent() {
-    return (0, _index.addNamespace)('input', `${this.NAME}FocusPolicy`);
+    return (0, _utils.addNamespace)('input', `${this.NAME}FocusPolicy`);
   }
   _renderEvents() {
     super._renderEvents();

@@ -1,16 +1,19 @@
 /**
 * DevExtreme (cjs/viz/range_selector/common.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-exports.utils = exports.formatValue = exports.consts = exports.HEIGHT_COMPACT_MODE = void 0;
+exports.utils = exports.isFirefoxOnAndroid = exports.formatValue = exports.consts = exports.HEIGHT_COMPACT_MODE = void 0;
 var _smart_formatter = require("../axes/smart_formatter");
 var _type = require("../../core/utils/type");
+var _browser = _interopRequireDefault(require("../../core/utils/browser"));
+var _devices = _interopRequireDefault(require("../../core/devices"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const HEIGHT_COMPACT_MODE = exports.HEIGHT_COMPACT_MODE = 24;
 const POINTER_SIZE = 4;
 const EMPTY_SLIDER_MARKER_TEXT = '. . .';
@@ -43,3 +46,5 @@ const formatValue = function (value, formatOptions, tickIntervalsInfo, valueType
   return String((0, _type.isFunction)(formatOptions.customizeText) ? formatOptions.customizeText.call(formatObject, formatObject) : formatObject.valueText);
 };
 exports.formatValue = formatValue;
+const isFirefoxOnAndroid = () => _browser.default.mozilla && _devices.default.real().android;
+exports.isFirefoxOnAndroid = isFirefoxOnAndroid;

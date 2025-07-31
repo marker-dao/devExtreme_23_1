@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/m_utils_time_zone.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -151,15 +151,9 @@ const getCorrectedDateByDaylightOffsets = (convertedOriginalStartDate, converted
   const diff = daylightOffsetByCommonTimezone - daylightOffsetByAppointmentTimezone;
   return new Date(date.getTime() - diff * toMs('hour'));
 };
-const correctRecurrenceExceptionByTimezone = function (exception, exceptionByStartDate, timeZone, startDateTimeZone) {
-  let isBackConversion = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
-  let timezoneOffset = (exception.getTimezoneOffset() - exceptionByStartDate.getTimezoneOffset()) / MINUTES_IN_HOUR;
-  if (startDateTimeZone) {
-    timezoneOffset = _getDaylightOffsetByTimezone(exceptionByStartDate, exception, startDateTimeZone);
-  } else if (timeZone) {
-    timezoneOffset = _getDaylightOffsetByTimezone(exceptionByStartDate, exception, timeZone);
-  }
-  return new Date(exception.getTime() + (isBackConversion ? -1 : 1) * timezoneOffset * toMs('hour'));
+const correctRecurrenceExceptionByTimezone = (exception, exceptionByStartDate) => {
+  const timezoneOffset = (exception.getTimezoneOffset() - exceptionByStartDate.getTimezoneOffset()) / MINUTES_IN_HOUR;
+  return new Date(exception.getTime() + timezoneOffset * toMs('hour'));
 };
 const isTimezoneChangeInDate = date => {
   const startDayDate = new Date(new Date(date).setHours(0, 0, 0, 0));

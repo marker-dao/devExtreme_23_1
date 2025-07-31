@@ -87,6 +87,7 @@ class FileManagerDetailsItemList extends _uiFile_manager2.default {
       loadPanel: {
         shading: true
       },
+      height: '100%',
       showColumnLines: false,
       showRowLines: false,
       columnHidingEnabled: false,

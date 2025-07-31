@@ -227,13 +227,10 @@ class TileView extends CollectionWidget {
   }
   _refreshActiveDescendant() {}
   _getItemPosition(item) {
-    const config = this._config;
     const {
-      mainPosition
-    } = config;
-    const {
+      mainPosition,
       crossPosition
-    } = config;
+    } = this._config;
     // @ts-expect-error ts-error
     const position = {
       [mainPosition]: -1,

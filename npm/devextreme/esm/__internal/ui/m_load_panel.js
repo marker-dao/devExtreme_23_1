@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/m_load_panel.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,7 @@ import { noop } from '../../core/utils/common';
 import { Deferred } from '../../core/utils/deferred';
 import LoadIndicator from '../../ui/load_indicator';
 import { isFluent, isMaterial } from '../../ui/themes';
-import Overlay from '../ui/overlay/m_overlay';
+import Overlay from '../ui/overlay/overlay';
 // STYLE loadPanel
 const LOADPANEL_CLASS = 'dx-loadpanel';
 const LOADPANEL_WRAPPER_CLASS = 'dx-loadpanel-wrapper';

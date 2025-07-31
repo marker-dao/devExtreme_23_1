@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/core/widget/dom_component.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,7 +24,7 @@ import { hasWindow } from '../../../core/utils/window';
 import license, { peekValidationPerformed } from '../../core/license/license_validation';
 import TemplateManagerModule from '../../core/m_template_manager';
 import { uiLayerInitialized } from '../../core/utils/m_common';
-import { Component } from './component';
+import { Component } from '../../core/widget/component';
 class DOMComponent extends Component {
   // eslint-disable-next-line @stylistic/max-len
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types

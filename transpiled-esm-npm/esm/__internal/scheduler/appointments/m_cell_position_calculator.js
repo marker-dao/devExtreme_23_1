@@ -191,26 +191,18 @@ class VirtualStrategy extends BaseStrategy {
     this.isVirtualScrolling = true;
   }
   calculateCellPositions(groupIndices, isAllDayRowAppointment, isRecurrentAppointment) {
-    const appointments = isAllDayRowAppointment ? this.appointments : this.appointments.filter(_ref => {
-      let {
-        source,
-        startDate,
-        endDate
-      } = _ref;
-      return this.viewDataProvider.isGroupIntersectDateInterval(source.groupIndex, startDate, endDate);
-    });
     if (isRecurrentAppointment) {
-      return this.createRecurrentAppointmentInfos(appointments, isAllDayRowAppointment);
+      return this.createRecurrentAppointmentInfos(this.appointments, isAllDayRowAppointment);
     }
     return super.calculateCellPositions(groupIndices, isAllDayRowAppointment, isRecurrentAppointment);
   }
   createRecurrentAppointmentInfos(dateSettings, isAllDayRowAppointment) {
     const result = [];
-    dateSettings.forEach((_ref2, index) => {
+    dateSettings.forEach((_ref, index) => {
       let {
         source,
         startDate
-      } = _ref2;
+      } = _ref;
       const coordinate = this.getCoordinatesByDate(startDate, source.groupIndex, isAllDayRowAppointment);
       if (coordinate) {
         result.push(this._prepareObject(coordinate, index));

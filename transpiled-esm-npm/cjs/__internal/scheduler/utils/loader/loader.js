@@ -50,8 +50,8 @@ class Loader {
     let forceReload = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     if (this.dataSource && (forceReload || !this.dataSource.isLoaded() && !this.loadingStatePromise)) {
       this.loadingStatePromise = this.loadingStatePromise && !forceReload ? this.loadingStatePromise : (0, _utils.loadResource)(this.dataSource, forceReload);
-      await this.loadingStatePromise;
     }
+    await this.loadingStatePromise;
   }
   onLoadingChanged(isLoading) {
     if (!isLoading && this.isLoaded()) {

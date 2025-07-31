@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/html_editor/ui/aiDialog.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -219,7 +219,7 @@ class AIDialog extends _m_baseDialog.default {
     const $inputContainer = this._resultTextArea.$element().find(`.${_m_text_editor.TEXTEDITOR_INPUT_CONTAINER_CLASS}`);
     const $indicatorElement = (0, _renderer.default)('<div>').addClass(AI_DIALOG_LOAD_INDICATOR_CLASS).appendTo($inputContainer);
     const options = {
-      _animationType: _m_load_indicator.AnimationType.Sparkle,
+      animationType: _m_load_indicator.AnimationType.Sparkle,
       width: LOADINDICATOR_SIZE,
       height: LOADINDICATOR_SIZE
     };

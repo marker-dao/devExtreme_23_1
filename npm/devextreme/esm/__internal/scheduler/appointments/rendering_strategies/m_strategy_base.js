@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/rendering_strategies/m_strategy_base.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -767,8 +767,8 @@ class BaseRenderingStrategy {
     const startDateField = this.dataAccessors.expr.startDateExpr;
     const endDateField = this.dataAccessors.expr.endDateExpr;
     let startDate = this.dataAccessors.get('startDate', appointment);
-    startDate = dateUtilsTs.addOffsets(startDate, [-viewOffset]);
     let endDate = this.dataAccessors.get('endDate', appointment);
+    startDate = dateUtilsTs.addOffsets(startDate, [-viewOffset]);
     endDate = dateUtilsTs.addOffsets(endDate, [-viewOffset]);
     return _extends({}, appointment, {
       [startDateField]: startDate,

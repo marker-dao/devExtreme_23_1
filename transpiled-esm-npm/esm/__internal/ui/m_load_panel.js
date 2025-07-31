@@ -6,7 +6,7 @@ import { noop } from '../../core/utils/common';
 import { Deferred } from '../../core/utils/deferred';
 import LoadIndicator from '../../ui/load_indicator';
 import { isFluent, isMaterial } from '../../ui/themes';
-import Overlay from '../ui/overlay/m_overlay';
+import Overlay from '../ui/overlay/overlay';
 // STYLE loadPanel
 const LOADPANEL_CLASS = 'dx-loadpanel';
 const LOADPANEL_WRAPPER_CLASS = 'dx-loadpanel-wrapper';

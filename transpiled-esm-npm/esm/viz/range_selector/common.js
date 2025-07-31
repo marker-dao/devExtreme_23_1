@@ -1,5 +1,7 @@
 import { smartFormatter as _format } from '../axes/smart_formatter';
 import { isFunction } from '../../core/utils/type';
+import browser from '../../core/utils/browser';
+import devices from '../../core/devices';
 export const HEIGHT_COMPACT_MODE = 24;
 const POINTER_SIZE = 4;
 const EMPTY_SLIDER_MARKER_TEXT = '. . .';
@@ -31,3 +33,4 @@ export const formatValue = function (value, formatOptions, tickIntervalsInfo, va
   };
   return String(isFunction(formatOptions.customizeText) ? formatOptions.customizeText.call(formatObject, formatObject) : formatObject.valueText);
 };
+export const isFirefoxOnAndroid = () => browser.mozilla && devices.real().android;

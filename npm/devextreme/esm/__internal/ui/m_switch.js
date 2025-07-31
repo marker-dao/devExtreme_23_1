@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/m_switch.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,23 +35,29 @@ class Switch extends Editor {
     const {
       rtlEnabled
     } = this.option();
-    const click = function (e) {
+    const click = e => {
+      var _this$_clickAction;
       e.preventDefault();
-      this._clickAction({
+      (_this$_clickAction = this._clickAction) === null || _this$_clickAction === void 0 || _this$_clickAction.call(this, {
         event: e
       });
     };
-    const move = function (value, e) {
+    const move = (value, e) => {
       e.preventDefault();
       e.stopPropagation();
+      // @ts-expect-error ValueChangedEvent should be compatible with KeyboardEvent
       this._saveValueChangeEvent(e);
       this._animateValue(value);
     };
     return _extends({}, super._supportedKeys(), {
       space: click,
       enter: click,
-      leftArrow: move.bind(this, !!rtlEnabled),
-      rightArrow: move.bind(this, !rtlEnabled)
+      leftArrow: e => {
+        move(Boolean(rtlEnabled), e);
+      },
+      rightArrow: e => {
+        move(!rtlEnabled, e);
+      }
     });
   }
   // eslint-disable-next-line class-methods-use-this
@@ -99,10 +105,11 @@ class Switch extends Editor {
     return `${100 * ratio}%`;
   }
   _getHandleOffset(value, offset) {
-    if (this.option('rtlEnabled')) {
-      value = !value;
-    }
-    if (value) {
+    const {
+      rtlEnabled
+    } = this.option();
+    const valueWithRtl = rtlEnabled ? !value : value;
+    if (valueWithRtl) {
       const calcValue = -100 + 100 * -offset;
       return `${calcValue}%`;
     }
@@ -125,10 +132,10 @@ class Switch extends Editor {
     this._createComponent(this.$element(), Swipeable, {
       elastic: false,
       immediate: true,
-      onStart: this._swipeStartHandler.bind(this),
-      onUpdated: this._swipeUpdateHandler.bind(this),
-      onEnd: this._swipeEndHandler.bind(this),
-      itemSizeFunc: this._getItemSizeFunc.bind(this)
+      onStart: e => this._swipeStartHandler(e),
+      onUpdated: e => this._swipeUpdateHandler(e),
+      onEnd: e => this._swipeEndHandler(e),
+      itemSizeFunc: () => this._getItemSizeFunc()
     });
   }
   _getItemSizeFunc() {
@@ -141,7 +148,10 @@ class Switch extends Editor {
     return this._$submitElement;
   }
   _offsetDirection() {
-    return this.option('rtlEnabled') ? -1 : 1;
+    const {
+      rtlEnabled
+    } = this.option();
+    return rtlEnabled ? -1 : 1;
   }
   _renderPosition(state, swipeOffset) {
     const innerOffset = this._getInnerOffset(state, swipeOffset);
@@ -150,35 +160,45 @@ class Switch extends Editor {
     this._$handle.css('transform', ` translateX(${handleOffset})`);
   }
   _validateValue() {
-    const check = this.option('value');
+    const {
+      value: check
+    } = this.option();
     if (typeof check !== 'boolean') {
       this._options.silent('value', !!check);
     }
   }
   _renderClick() {
-    // @ts-expect-error ts-error
-    const eventName = addNamespace(clickEventName, this.NAME);
+    const eventName = addNamespace(clickEventName, this.NAME ?? '');
     const $element = this.$element();
     this._clickAction = this._createAction(this._clickHandler.bind(this));
     eventsEngine.off($element, eventName);
     eventsEngine.on($element, eventName, e => {
-      var _this$_clickAction;
-      (_this$_clickAction = this._clickAction) === null || _this$_clickAction === void 0 || _this$_clickAction.call(this, {
+      var _this$_clickAction2;
+      (_this$_clickAction2 = this._clickAction) === null || _this$_clickAction2 === void 0 || _this$_clickAction2.call(this, {
         event: e
       });
     });
   }
   _clickHandler(args) {
-    const e = args.event;
-    this._saveValueChangeEvent(e);
+    const {
+      event
+    } = args;
+    // @ts-expect-error ValueChangedEvent should be compatible with KeyboardEvent
+    this._saveValueChangeEvent(event);
     if (this._animating || this._swiping) {
       return;
     }
-    this._animateValue(!this.option('value'));
+    const {
+      value
+    } = this.option();
+    this._animateValue(!value);
   }
-  _animateValue(value) {
-    const startValue = this.option('value');
-    const endValue = value;
+  _animateValue(newValue) {
+    const {
+      value
+    } = this.option();
+    const startValue = Boolean(value);
+    const endValue = newValue;
     if (startValue === endValue) {
       return;
     }
@@ -187,40 +207,48 @@ class Switch extends Editor {
     const toInnerOffset = this._getInnerOffset(endValue, 0);
     const fromHandleOffset = this._getHandleOffset(startValue, 0);
     const toHandleOffset = this._getHandleOffset(endValue, 0);
-    const that = this;
-    const fromInnerConfig = {};
-    const toInnerConfig = {};
-    const fromHandleConfig = {};
-    const toHandlerConfig = {};
-    // @ts-expect-error ts-error
-    fromInnerConfig.transform = ` translateX(${fromInnerOffset})`;
-    // @ts-expect-error ts-error
-    toInnerConfig.transform = ` translateX(${toInnerOffset})`;
-    // @ts-expect-error ts-error
-    fromHandleConfig.transform = ` translateX(${fromHandleOffset})`;
-    // @ts-expect-error ts-error
-    toHandlerConfig.transform = ` translateX(${toHandleOffset})`;
+    const fromInnerConfig = {
+      transform: ` translateX(${fromInnerOffset})`
+    };
+    const toInnerConfig = {
+      transform: ` translateX(${toInnerOffset})`
+    };
+    const fromHandleConfig = {
+      transform: ` translateX(${fromHandleOffset})`
+    };
+    const toHandlerConfig = {
+      transform: ` translateX(${toHandleOffset})`
+    };
     this.$element().toggleClass(SWITCH_ON_VALUE_CLASS, endValue);
-    // @ts-expect-error ts-error
-    fx.animate(this._$handle, {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fx.animate(this._$handle.get(0), {
+      // @ts-expect-error AnimationState type should be extended
       from: fromHandleConfig,
+      // @ts-expect-error AnimationState type should be extended
       to: toHandlerConfig,
       duration: SWITCH_ANIMATION_DURATION
     });
-    // @ts-expect-error ts-error
-    fx.animate(this._$switchInner, {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fx.animate(this._$switchInner.get(0), {
+      // @ts-expect-error AnimationState type should be extended
       from: fromInnerConfig,
+      // @ts-expect-error AnimationState type should be extended
       to: toInnerConfig,
       duration: SWITCH_ANIMATION_DURATION,
-      complete() {
-        that._animating = false;
-        that.option('value', endValue);
+      complete: () => {
+        this._animating = false;
+        this.option({
+          value: endValue
+        });
       }
     });
   }
   _swipeStartHandler(e) {
-    const state = this.option('value');
-    const rtlEnabled = this.option('rtlEnabled');
+    const {
+      value: state,
+      rtlEnabled,
+      activeStateEnabled
+    } = this.option();
     const maxOffOffset = rtlEnabled ? 0 : 1;
     const maxOnOffset = rtlEnabled ? 1 : 0;
     e.event.maxLeftOffset = state ? maxOffOffset : maxOnOffset;
@@ -228,70 +256,74 @@ class Switch extends Editor {
     this._swiping = true;
     this._feedbackDeferred = Deferred();
     lock(this._feedbackDeferred);
-    const {
-      activeStateEnabled
-    } = this.option();
-    // @ts-expect-error ts-error
-    this._toggleActiveState(this.$element(), activeStateEnabled);
+    this._toggleActiveState(this.$element(), Boolean(activeStateEnabled));
   }
   _swipeUpdateHandler(e) {
-    this._renderPosition(this.option('value'), e.event.offset);
+    const {
+      value
+    } = this.option();
+    this._renderPosition(Boolean(value), e.event.offset);
   }
   _swipeEndHandler(e) {
-    const that = this;
+    const {
+      value
+    } = this.option();
     const offsetDirection = this._offsetDirection();
-    const toInnerConfig = {};
-    const toHandleConfig = {};
-    const innerOffset = this._getInnerOffset(that.option('value'), e.event.targetOffset);
-    const handleOffset = this._getHandleOffset(that.option('value'), e.event.targetOffset);
-    // @ts-expect-error
-    toInnerConfig.transform = ` translateX(${innerOffset})`;
-    // @ts-expect-error
-    toHandleConfig.transform = ` translateX(${handleOffset})`;
-    // @ts-expect-error ts-error
-    fx.animate(this._$handle, {
+    const innerOffset = this._getInnerOffset(Boolean(value), e.event.targetOffset);
+    const handleOffset = this._getHandleOffset(Boolean(value), e.event.targetOffset);
+    const toInnerConfig = {
+      transform: ` translateX(${innerOffset})`
+    };
+    const toHandleConfig = {
+      transform: ` translateX(${handleOffset})`
+    };
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fx.animate(this._$handle.get(0), {
+      // @ts-expect-error AnimationState type should be extended
       to: toHandleConfig,
       duration: SWITCH_ANIMATION_DURATION
     });
-    // @ts-expect-error ts-error
-    fx.animate(this._$switchInner, {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fx.animate(this._$switchInner.get(0), {
+      // @ts-expect-error AnimationState type should be extended
       to: toInnerConfig,
       duration: SWITCH_ANIMATION_DURATION,
-      complete() {
-        var _that$_feedbackDeferr;
-        that._swiping = false;
-        // @ts-expect-error ts-error
-        const pos = that.option('value') + offsetDirection * e.event.targetOffset;
-        that._saveValueChangeEvent(e.event);
-        that.option('value', Boolean(pos));
-        (_that$_feedbackDeferr = that._feedbackDeferred) === null || _that$_feedbackDeferr === void 0 || _that$_feedbackDeferr.resolve();
-        that._toggleActiveState(that.$element(), false);
+      complete: () => {
+        var _this$_feedbackDeferr;
+        this._swiping = false;
+        const pos = Number(value) + offsetDirection * e.event.targetOffset;
+        // @ts-expect-error ValueChangedEvent should be compatible with KeyboardEvent
+        this._saveValueChangeEvent(e.event);
+        this.option({
+          value: Boolean(pos)
+        });
+        (_this$_feedbackDeferr = this._feedbackDeferred) === null || _this$_feedbackDeferr === void 0 || _this$_feedbackDeferr.resolve();
+        this._toggleActiveState(this.$element(), false);
       }
     });
   }
   _renderValue() {
     this._validateValue();
     const {
-      value
+      value,
+      switchedOnText,
+      switchedOffText
     } = this.option();
-    this._renderPosition(value, 0);
+    this._renderPosition(Boolean(value), 0);
     this.$element().toggleClass(SWITCH_ON_VALUE_CLASS, value);
-    // @ts-expect-error ts-error
-    this._getSubmitElement().val(value);
+    this._getSubmitElement().val(String(value ?? ''));
     this.setAria({
       checked: value,
-      label: value ? this.option('switchedOnText') : this.option('switchedOffText')
+      label: value ? switchedOnText : switchedOffText
     });
   }
   _setLabelsText() {
     var _this$_$labelOn, _this$_$labelOff;
     const {
-      switchedOnText,
-      switchedOffText
+      switchedOnText = '',
+      switchedOffText = ''
     } = this.option();
-    // @ts-expect-error ts-error
     (_this$_$labelOn = this._$labelOn) === null || _this$_$labelOn === void 0 || _this$_$labelOn.text(switchedOnText);
-    // @ts-expect-error ts-error
     (_this$_$labelOff = this._$labelOff) === null || _this$_$labelOff === void 0 || _this$_$labelOff.text(switchedOffText);
   }
   _visibilityChanged(visible) {

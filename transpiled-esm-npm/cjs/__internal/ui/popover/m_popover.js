@@ -248,10 +248,12 @@ class Popover extends _m_popup.default {
     super._renderTopToolbar();
   }
   _renderPosition() {
+    var _this$_actions, _this$_actions$onPosi;
     let shouldUpdateDimensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
     super._renderPosition();
     this._renderOverlayPosition(shouldUpdateDimensions);
-    this._actions.onPositioned();
+    // @ts-expect-error should provide event
+    (_this$_actions = this._actions) === null || _this$_actions === void 0 || (_this$_actions$onPosi = _this$_actions.onPositioned) === null || _this$_actions$onPosi === void 0 || _this$_actions$onPosi.call(_this$_actions);
   }
   _renderOverlayPosition(shouldUpdateDimensions) {
     this._resetOverlayPosition(shouldUpdateDimensions);

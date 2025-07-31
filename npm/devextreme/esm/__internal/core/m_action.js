@@ -1,14 +1,12 @@
 /**
 * DevExtreme (esm/__internal/core/m_action.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-/* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-/* eslint-disable no-restricted-syntax */
 import $ from '../../core/renderer';
 import { each } from '../../core/utils/iterator';
 import { isFunction, isPlainObject } from '../../core/utils/type';
@@ -64,7 +62,6 @@ class Action {
     const {
       executors
     } = Action;
-    // eslint-disable-next-line no-restricted-syntax
     for (const name in executors) {
       if (!excludeValidators[name]) {
         var _executor$validate;

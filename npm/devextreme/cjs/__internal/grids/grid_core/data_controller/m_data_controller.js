@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/data_controller/m_data_controller.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1222,6 +1222,10 @@ class DataController extends (0, _m_data_helper_mixin.DataHelperMixin)(_m_module
   }
   getRowIndexByKey(key, byLoaded) {
     return _m_utils.default.getIndexByKey(key, this.items(byLoaded));
+  }
+  getRowByKey(key) {
+    var _this$items;
+    return (_this$items = this.items()) === null || _this$items === void 0 ? void 0 : _this$items[this.getRowIndexByKey(key)];
   }
   keyOf(data) {
     const store = this.store();

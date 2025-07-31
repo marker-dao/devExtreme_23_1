@@ -1,5 +1,6 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
-import { complexIdResourceMock, getResourceManagerMock, resourceIndexesMock, resourceItemsByIdMock } from '../../../scheduler/__mock__/resourceManager.mock';
+import { complexIdResourceMock, getResourceManagerMock, resourceConfigMock, resourceIndexesMock, resourceItemsByIdMock } from '../../../scheduler/__mock__/resourceManager.mock';
 import { getAppointmentColor, getPaintedResource } from './appointment_color_utils';
 const ownerFirstColor = '#cb2824';
 const ownerSecondColor = '#cb7d7b';
@@ -42,8 +43,9 @@ const customResourceConfig = [{
 describe('appointment color utils', () => {
   describe('getPaintedResources', () => {
     it('should return useColorAsDefault resource', () => {
-      const manager = getResourceManagerMock();
-      manager.resources[1].useColorAsDefault = true;
+      const manager = getResourceManagerMock([_extends({}, resourceConfigMock[0]), _extends({}, resourceConfigMock[1], {
+        useColorAsDefault: true
+      }), _extends({}, resourceConfigMock[2])]);
       expect(getPaintedResource(manager.resources, resourceIndexesMock, resourceIndexesMock)).toEqual(manager.resources[1]);
     });
     it('should return last resource', () => {
@@ -59,8 +61,9 @@ describe('appointment color utils', () => {
       expect(getPaintedResource(manager.resources, [resourceIndexesMock[0], resourceIndexesMock[1]], resourceIndexesMock)).toEqual(manager.resources[1]);
     });
     it('should return last resource filtered by appointment groups that exclude useColorAsDefault resource', () => {
-      const manager = getResourceManagerMock();
-      manager.resources[1].useColorAsDefault = true;
+      const manager = getResourceManagerMock([_extends({}, resourceConfigMock[0]), _extends({}, resourceConfigMock[1], {
+        useColorAsDefault: true
+      }), _extends({}, resourceConfigMock[2])]);
       expect(getPaintedResource(manager.resources, [resourceIndexesMock[0]], resourceIndexesMock)).toEqual(manager.resources[0]);
     });
     it('should return undefined for empty groups', () => {
@@ -91,9 +94,10 @@ describe('appointment color utils', () => {
       })).toEqual(resourceItemsByIdMock.roomId[1].color);
     });
     it('should return color of default resource', async () => {
-      const manager = getResourceManagerMock();
+      const manager = getResourceManagerMock([_extends({}, resourceConfigMock[0]), _extends({}, resourceConfigMock[1], {
+        useColorAsDefault: true
+      }), _extends({}, resourceConfigMock[2])]);
       await manager.loadGroupResources(['roomId', 'nested.priorityId']);
-      manager.resources[1].useColorAsDefault = true;
       expect(await getAppointmentColor(manager.resources, manager.groupsLeafs, manager.groups, {
         itemData: {
           assigneeId: 1,

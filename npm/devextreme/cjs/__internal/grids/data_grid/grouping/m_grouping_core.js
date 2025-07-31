@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/data_grid/grouping/m_grouping_core.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,6 +16,7 @@ exports.createOffsetFilter = createOffsetFilter;
 var _utils = require("../../../../common/data/utils");
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _deferred = require("../../../../core/utils/deferred");
+var _m_utils = _interopRequireDefault(require("../../../grids/grid_core/m_utils"));
 var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function createOffsetFilter(path, storeLoadOptions, lastLevelOnly) {
@@ -241,7 +242,7 @@ class GroupingHelper {
     let groupsCount = Math.min(oldGroups.length, groups.length);
     that._group = storeLoadOptions.group;
     for (let groupIndex = 0; groupIndex < groupsCount; groupIndex++) {
-      if (oldGroups[groupIndex].selector !== groups[groupIndex].selector) {
+      if (!_m_utils.default.isEqualSelectors(oldGroups[groupIndex].selector, groups[groupIndex].selector)) {
         groupsCount = groupIndex;
         break;
       }

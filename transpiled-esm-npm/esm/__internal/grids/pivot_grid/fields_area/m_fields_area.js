@@ -1,6 +1,5 @@
 import '../field_chooser/m_field_chooser_base';
 import $ from '../../../../core/renderer';
-import { noop } from '../../../../core/utils/common';
 import { each } from '../../../../core/utils/iterator';
 import { setHeight, setWidth } from '../../../../core/utils/style';
 import Button from '../../../../ui/button';
@@ -17,20 +16,20 @@ function renderGroupConnector(field, nextField, prevField, $container) {
     $(DIV).addClass('dx-group-connector').addClass('dx-group-connector-next').appendTo($container);
   }
 }
-const FieldsArea = AreaItem.inherit({
-  ctor(component, area) {
-    this.callBase(component);
+class FieldsArea extends AreaItem {
+  constructor(component, area) {
+    super(component);
     this._area = area;
-  },
+  }
   _getAreaName() {
     return 'fields';
-  },
+  }
   _createGroupElement() {
     return $(DIV).addClass('dx-pivotgrid-fields-area').addClass('dx-area-fields').addClass(AREA_DRAG_CLASS).attr('group', this._area);
-  },
+  }
   isVisible() {
     return !!this.option('fieldPanel.visible') && this.option(`fieldPanel.show${capitalize(this._area)}Fields`);
-  },
+  }
   _renderButton(element) {
     const that = this;
     const container = $('<td>').appendTo($('<tr>').appendTo(element));
@@ -46,7 +45,7 @@ const FieldsArea = AreaItem.inherit({
       }
     });
     button.$element().addClass('dx-pivotgrid-fields-area-hamburger');
-  },
+  }
   _getPopupOptions(row, button) {
     return {
       contentTemplate() {
@@ -71,7 +70,7 @@ const FieldsArea = AreaItem.inherit({
       hideOnOutsideClick: true,
       container: button.parent()
     };
-  },
+  }
   _renderPopup(tableElement, row) {
     const that = this;
     const button = tableElement.find('.dx-button');
@@ -86,10 +85,10 @@ const FieldsArea = AreaItem.inherit({
     that._rowPopup.content().parent().attr('group', 'row');
     FieldChooserBase.subscribeToEvents(that._rowPopup.content());
     FieldChooserBase.renderSortable(that._rowPopup.content());
-  },
+  }
   _shouldCreateButton() {
     return false;
-  },
+  }
   _renderTableContent(tableElement, data) {
     const that = this;
     const groupElement = this.groupElement();
@@ -123,19 +122,19 @@ const FieldsArea = AreaItem.inherit({
     } else {
       head.append(row);
     }
-  },
+  }
   setGroupWidth(value) {
     setWidth(this.groupElement(), value);
-  },
+  }
   setGroupHeight(value) {
     setHeight(this.groupElement(), value);
-  },
+  }
   reset() {
-    this.callBase();
+    super.reset();
     this.groupElement().css('marginTop', 0);
-  },
-  _renderVirtualContent: noop
-});
+  }
+  _renderVirtualContent() {}
+}
 export default {
   FieldsArea
 };

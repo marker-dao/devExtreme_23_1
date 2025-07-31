@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = exports.FieldsArea = void 0;
 require("../field_chooser/m_field_chooser_base");
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
-var _common = require("../../../../core/utils/common");
 var _iterator = require("../../../../core/utils/iterator");
 var _style = require("../../../../core/utils/style");
 var _button = _interopRequireDefault(require("../../../../ui/button"));
@@ -24,20 +23,20 @@ function renderGroupConnector(field, nextField, prevField, $container) {
     (0, _renderer.default)(DIV).addClass('dx-group-connector').addClass('dx-group-connector-next').appendTo($container);
   }
 }
-const FieldsArea = exports.FieldsArea = _m_area_item.AreaItem.inherit({
-  ctor(component, area) {
-    this.callBase(component);
+class FieldsArea extends _m_area_item.AreaItem {
+  constructor(component, area) {
+    super(component);
     this._area = area;
-  },
+  }
   _getAreaName() {
     return 'fields';
-  },
+  }
   _createGroupElement() {
     return (0, _renderer.default)(DIV).addClass('dx-pivotgrid-fields-area').addClass('dx-area-fields').addClass(AREA_DRAG_CLASS).attr('group', this._area);
-  },
+  }
   isVisible() {
     return !!this.option('fieldPanel.visible') && this.option(`fieldPanel.show${(0, _capitalize.capitalize)(this._area)}Fields`);
-  },
+  }
   _renderButton(element) {
     const that = this;
     const container = (0, _renderer.default)('<td>').appendTo((0, _renderer.default)('<tr>').appendTo(element));
@@ -53,7 +52,7 @@ const FieldsArea = exports.FieldsArea = _m_area_item.AreaItem.inherit({
       }
     });
     button.$element().addClass('dx-pivotgrid-fields-area-hamburger');
-  },
+  }
   _getPopupOptions(row, button) {
     return {
       contentTemplate() {
@@ -78,7 +77,7 @@ const FieldsArea = exports.FieldsArea = _m_area_item.AreaItem.inherit({
       hideOnOutsideClick: true,
       container: button.parent()
     };
-  },
+  }
   _renderPopup(tableElement, row) {
     const that = this;
     const button = tableElement.find('.dx-button');
@@ -93,10 +92,10 @@ const FieldsArea = exports.FieldsArea = _m_area_item.AreaItem.inherit({
     that._rowPopup.content().parent().attr('group', 'row');
     FieldChooserBase.subscribeToEvents(that._rowPopup.content());
     FieldChooserBase.renderSortable(that._rowPopup.content());
-  },
+  }
   _shouldCreateButton() {
     return false;
-  },
+  }
   _renderTableContent(tableElement, data) {
     const that = this;
     const groupElement = this.groupElement();
@@ -130,19 +129,20 @@ const FieldsArea = exports.FieldsArea = _m_area_item.AreaItem.inherit({
     } else {
       head.append(row);
     }
-  },
+  }
   setGroupWidth(value) {
     (0, _style.setWidth)(this.groupElement(), value);
-  },
+  }
   setGroupHeight(value) {
     (0, _style.setHeight)(this.groupElement(), value);
-  },
+  }
   reset() {
-    this.callBase();
+    super.reset();
     this.groupElement().css('marginTop', 0);
-  },
-  _renderVirtualContent: _common.noop
-});
+  }
+  _renderVirtualContent() {}
+}
+exports.FieldsArea = FieldsArea;
 var _default = exports.default = {
   FieldsArea
 };

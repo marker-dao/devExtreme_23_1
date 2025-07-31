@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/file_manager/ui.file_manager.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -87,7 +87,7 @@ class FileManager extends Widget {
       progressPanelContainer: this.$element(),
       contentTemplate: (container, notificationControl) => this._createWrapper(container, notificationControl),
       onActionProgress: e => this._onActionProgress(e),
-      positionTarget: `.${FILE_MANAGER_CONTAINER_CLASS}`,
+      positionTargetSelector: `.${FILE_MANAGER_CONTAINER_CLASS}`,
       showProgressPanel: this.option('notifications.showPanel'),
       showNotificationPopup: this.option('notifications.showPopup')
     });

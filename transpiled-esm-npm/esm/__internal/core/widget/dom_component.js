@@ -16,7 +16,7 @@ import { hasWindow } from '../../../core/utils/window';
 import license, { peekValidationPerformed } from '../../core/license/license_validation';
 import TemplateManagerModule from '../../core/m_template_manager';
 import { uiLayerInitialized } from '../../core/utils/m_common';
-import { Component } from './component';
+import { Component } from '../../core/widget/component';
 class DOMComponent extends Component {
   // eslint-disable-next-line @stylistic/max-len
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types

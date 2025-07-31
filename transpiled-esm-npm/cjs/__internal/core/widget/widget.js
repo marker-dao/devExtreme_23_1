@@ -101,11 +101,17 @@ class Widget extends _dom_component.default {
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   _innerWidgetOptionChanged(innerWidget, args) {
-    const options = Widget.getOptionsFromContainer(args);
-    // eslint-disable-next-line @stylistic/max-len
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/prefer-optional-chain
-    innerWidget && innerWidget.option(options);
-    this._options.cache(args.name, options);
+    const {
+      fullName,
+      value
+    } = args;
+    if (fullName.indexOf('.') > -1) {
+      const innerWidgetOptionName = fullName.split('.').slice(1).join('.');
+      innerWidget === null || innerWidget === void 0 || innerWidget.option(innerWidgetOptionName, value);
+    } else {
+      innerWidget === null || innerWidget === void 0 || innerWidget.option(value);
+    }
+    this._options.cache(fullName, value);
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   _bindInnerWidgetOptions(innerWidget, optionsContainer) {

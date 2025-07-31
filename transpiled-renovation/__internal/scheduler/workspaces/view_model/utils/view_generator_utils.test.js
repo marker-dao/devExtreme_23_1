@@ -4,6 +4,14 @@ var _globals = require("@jest/globals");
 var _jestEach = _interopRequireDefault(require("jest-each"));
 var _view_generator_utils = require("./view_generator_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+/**
+ * @timezone Etc/GMT-2
+ */
+// NOTE: We use this utils for calculating weeks count in month view
+// The Scheduler cells already converted to "grid time" format
+// That's why we use locale (machine timezone) dependent dates here
+// Plus set specific timezone for test run
+
 (0, _globals.describe)('view generator utils', () => {
   /*
      Calendar for 2023-06 for easier test cases understanding:

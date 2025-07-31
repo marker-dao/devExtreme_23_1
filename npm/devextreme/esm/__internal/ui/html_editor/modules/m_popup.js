@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/html_editor/modules/m_popup.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,9 +11,9 @@ import { addNamespace } from '../../../../common/core/events/utils/index';
 import $ from '../../../../core/renderer';
 import { extend } from '../../../../core/utils/extend';
 import { getHeight } from '../../../../core/utils/size';
-import List from '../../../../ui/list_light';
 import Popup from '../../../../ui/popup';
 import windowUtils from '../../../core/utils/m_window';
+import List from '../../../ui/list/m_list.edit.search';
 import Quill from 'devextreme-quill';
 import BaseModule from './m_base';
 const MODULE_NAMESPACE = 'dxHtmlEditorPopupModule';

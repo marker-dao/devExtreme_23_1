@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import $ from '../../../../core/renderer';
 import supportUtils from '../../../core/utils/m_support';
 import { AreaItem } from '../area_item/m_area_item';
@@ -7,13 +8,13 @@ const PIVOTGRID_AREA_DATA_CLASS = 'dx-pivotgrid-area-data';
 const PIVOTGRID_TOTAL_CLASS = 'dx-total';
 const PIVOTGRID_GRAND_TOTAL_CLASS = 'dx-grandtotal';
 const PIVOTGRID_ROW_TOTAL_CLASS = 'dx-row-total';
-const DataArea = AreaItem.inherit({
+class DataArea extends AreaItem {
   _getAreaName() {
     return 'data';
-  },
+  }
   _createGroupElement() {
     return $('<div>').addClass(PIVOTGRID_AREA_CLASS).addClass(PIVOTGRID_AREA_DATA_CLASS).css('borderTopWidth', 0);
-  },
+  }
   _applyCustomStyles(options) {
     const {
       cell
@@ -33,13 +34,13 @@ const DataArea = AreaItem.inherit({
     if (options.rowIndex === options.rowsCount - 1) {
       options.cssArray.push('border-bottom: 0px');
     }
-    this.callBase(options);
-  },
+    super._applyCustomStyles(options);
+  }
   _moveFakeTable(scrollPos) {
     this._moveFakeTableHorizontally(scrollPos.x);
     this._moveFakeTableTop(scrollPos.y);
-    this.callBase();
-  },
+    super._moveFakeTable();
+  }
   renderScrollable() {
     this._groupElement.dxScrollable({
       useNative: this.getUseNativeValue(),
@@ -48,16 +49,16 @@ const DataArea = AreaItem.inherit({
       bounceEnabled: false,
       updateManually: true
     });
-  },
+  }
   getUseNativeValue() {
     const {
       useNative
     } = this.component.option('scrolling');
     return useNative === 'auto' ? !!supportUtils.nativeScrolling : !!useNative;
-  },
+  }
   getScrollbarWidth() {
     return this.getUseNativeValue() ? calculateScrollbarWidth() : 0;
-  },
+  }
   updateScrollableOptions(_ref) {
     let {
       direction,
@@ -69,7 +70,7 @@ const DataArea = AreaItem.inherit({
       direction,
       rtlEnabled
     });
-  },
+  }
   getScrollableDirection(horizontal, vertical) {
     if (horizontal && !vertical) {
       return 'horizontal';
@@ -78,22 +79,22 @@ const DataArea = AreaItem.inherit({
       return 'vertical';
     }
     return 'both';
-  },
+  }
   reset() {
-    this.callBase();
+    super.reset();
     if (this._virtualContent) {
       this._virtualContent.parent().css('height', 'auto');
     }
-  },
+  }
   setVirtualContentParams(params) {
-    this.callBase(params);
+    super.setVirtualContentParams(params);
     this._virtualContent.parent().css('height', params.height);
     this._setTableCss({
       top: params.top,
       left: params.left
     });
   }
-});
+}
 export default {
   DataArea
 };

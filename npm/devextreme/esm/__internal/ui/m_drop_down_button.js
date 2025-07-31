@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/m_drop_down_button.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,9 +21,9 @@ import { getImageContainer } from '../../core/utils/icon';
 import { isDefined, isObject, isPlainObject } from '../../core/utils/type';
 import DataController from '../../data_controller';
 import ButtonGroup from '../../ui/button_group';
-import List from '../../ui/list_light';
 import Widget from '../core/widget/widget';
 import { getElementWidth, getSizeValue } from '../ui/drop_down_editor/m_utils';
+import List from '../ui/list/m_list.edit.search';
 import Popup from '../ui/popup/m_popup';
 const DROP_DOWN_BUTTON_CLASS = 'dx-dropdownbutton';
 const DROP_DOWN_BUTTON_CONTENT = 'dx-dropdownbutton-content';
@@ -72,7 +72,9 @@ class DropDownButton extends Widget {
       useItemTextAsTitle: true,
       grouped: false,
       groupTemplate: 'group',
-      buttonGroupOptions: {}
+      buttonGroupOptions: {},
+      _cached_buttonGroupOptions: {},
+      _cached_dropDownOptions: {}
     });
   }
   _setOptionsByReference() {
@@ -89,10 +91,12 @@ class DropDownButton extends Widget {
     this._initDataController();
     this._compileKeyGetter();
     this._compileDisplayGetter();
-    // @ts-expect-error ts-error
-    this._options.cache('buttonGroupOptions', this.option('buttonGroupOptions'));
-    // @ts-expect-error ts-error
-    this._options.cache('dropDownOptions', this.option('dropDownOptions'));
+    const {
+      buttonGroupOptions,
+      dropDownOptions
+    } = this.option();
+    this._options.cache('buttonGroupOptions', buttonGroupOptions);
+    this._options.cache('dropDownOptions', dropDownOptions);
   }
   _initDataController() {
     const dataSource = this.option('dataSource');
@@ -371,23 +375,36 @@ class DropDownButton extends Widget {
     });
   }
   _listOptions() {
-    const selectedItemKey = this.option('selectedItemKey');
-    const useSelectMode = this.option('useSelectMode');
+    const {
+      wrapItemText,
+      focusStateEnabled,
+      hoverStateEnabled,
+      grouped,
+      groupTemplate,
+      noDataText,
+      displayExpr,
+      itemTemplate,
+      items,
+      selectedItemKey,
+      useSelectMode
+    } = this.option();
     return {
       selectionMode: useSelectMode ? 'single' : 'none',
-      wrapItemText: this.option('wrapItemText'),
-      focusStateEnabled: this.option('focusStateEnabled'),
-      hoverStateEnabled: this.option('hoverStateEnabled'),
+      wrapItemText,
+      focusStateEnabled,
+      hoverStateEnabled,
       useItemTextAsTitle: this.option('useItemTextAsTitle'),
+      // eslint-disable-next-line
       onContentReady: () => this._fireContentReadyAction(),
       selectedItemKeys: isDefined(selectedItemKey) && useSelectMode ? [selectedItemKey] : [],
-      grouped: this.option('grouped'),
-      groupTemplate: this.option('groupTemplate'),
+      grouped,
+      groupTemplate,
       keyExpr: this._dataController.key(),
-      noDataText: this.option('noDataText'),
-      displayExpr: this.option('displayExpr'),
-      itemTemplate: this.option('itemTemplate'),
-      items: this.option('items'),
+      noDataText,
+      displayExpr,
+      itemTemplate,
+      items,
+      // @ts-expect-error ts-error
       dataSource: this._dataController.getDataSource(),
       onItemClick: e => {
         if (!this.option('useSelectMode')) {
@@ -395,6 +412,7 @@ class DropDownButton extends Widget {
         }
         // @ts-expect-error ts-error
         this.option('selectedItemKey', this._keyGetter(e.itemData));
+        // @ts-expect-error ts-error
         const actionResult = this._fireItemClickAction(e);
         // @ts-expect-error ts-error
         if (actionResult !== false) {
@@ -737,6 +755,9 @@ class DropDownButton extends Widget {
         break;
       case 'template':
         this._renderButtonGroup();
+        break;
+      case '_cached_buttonGroupOptions':
+      case '_cached_dropDownOptions':
         break;
       default:
         super._optionChanged(args);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_manager/ui.file_manager.item_list.details.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -95,6 +95,7 @@ class FileManagerDetailsItemList extends _uiFile_manager2.default {
       loadPanel: {
         shading: true
       },
+      height: '100%',
       showColumnLines: false,
       showRowLines: false,
       columnHidingEnabled: false,

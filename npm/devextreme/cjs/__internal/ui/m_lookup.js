@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/m_lookup.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -440,6 +440,7 @@ class Lookup extends _m_drop_down_list.default {
     // @ts-expect-error ts-error
     const groups = this._list._getItemsContainer().children();
     const items = [];
+    // @ts-expect-error ts-error
     groups.each((_, group) => {
       items.push((0, _renderer.default)(group).find(`.${GROUP_LIST_HEADER_CLASS}`)[0]);
       const groupedItems = (0, _renderer.default)(group).find(`.${LIST_ITEM_CLASS}`);
@@ -484,7 +485,6 @@ class Lookup extends _m_drop_down_list.default {
   }
   _getPopupHeight() {
     var _this$_list8;
-    // @ts-expect-error ts-error
     if ((_this$_list8 = this._list) !== null && _this$_list8 !== void 0 && _this$_list8.itemElements().length) {
       return this._calculateListHeight(this.option('grouped')) + (this._$searchWrapper ? (0, _size.getOuterHeight)(this._$searchWrapper) : 0)
       // @ts-expect-error ts-error
@@ -729,10 +729,8 @@ class Lookup extends _m_drop_down_list.default {
     }
   }
   _filterDataSource() {
-    // @ts-expect-error ts-error
     if (this._list && !this._list._dataSource && this._isMinSearchLengthExceeded()) {
       var _this$_list9;
-      // @ts-expect-error ts-error
       (_this$_list9 = this._list) === null || _this$_list9 === void 0 || _this$_list9._scrollView.startLoading();
     }
     // @ts-expect-error ts-error
@@ -741,7 +739,6 @@ class Lookup extends _m_drop_down_list.default {
   _dataSourceFiltered() {
     var _this$_list10;
     super._dataSourceFiltered(...arguments);
-    // @ts-expect-error ts-error
     (_this$_list10 = this._list) === null || _this$_list10 === void 0 || _this$_list10._scrollView.finishLoading();
   }
   _updateActiveDescendant() {
@@ -761,7 +758,6 @@ class Lookup extends _m_drop_down_list.default {
     delete this._searchBox;
   }
   _selectListItemHandler(e) {
-    // @ts-expect-error ts-error
     const {
       focusedElement
     } = this._list.option();
@@ -989,21 +985,17 @@ class Lookup extends _m_drop_down_list.default {
           case 'dropDownOptions.width':
           case 'dropDownOptions.height':
             {
-              this._popupOptionChanged({
+              const args = {
                 name,
                 fullName,
                 value: value === 'auto' ? this.initialOption('dropDownOptions')[(0, _utils.getFieldName)(fullName)] : value
-              });
-              const {
-                dropDownOptions
-              } = this.option();
-              // @ts-expect-error ts-error
-              this._options.cache('dropDownOptions', dropDownOptions);
+              };
+              this._popupOptionChanged(args);
+              this._innerWidgetOptionChanged(this._popup, args);
               break;
             }
           default:
-            // @ts-expect-error ts-error
-            super._optionChanged(...arguments);
+            super._optionChanged(args);
         }
         break;
       case 'dropDownCentered':

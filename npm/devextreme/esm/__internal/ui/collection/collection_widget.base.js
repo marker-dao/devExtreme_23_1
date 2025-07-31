@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/collection/collection_widget.base.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,7 +35,7 @@ import { getPublicElement } from '../../core/m_element';
 import Widget from '../../core/widget/widget';
 import CollectionWidgetItem from '../../ui/collection/item';
 const COLLECTION_CLASS = 'dx-collection';
-const ITEM_CLASS = 'dx-item';
+export const ITEM_CLASS = 'dx-item';
 const CONTENT_CLASS_POSTFIX = '-content';
 const ITEM_CONTENT_PLACEHOLDER_CLASS = 'dx-item-content-placeholder';
 const ITEM_DATA_KEY = 'dxItemData';
@@ -679,55 +679,79 @@ class CollectionWidget extends Widget {
   }
   _attachClickEvent() {
     const itemSelector = this._itemSelector();
-    const pointerEvent = this._getPointerEvent();
+    const pointerDownEvent = pointerEvents.down;
+    const pointerUpEvent = pointerEvents.up;
     // @ts-expect-error ts-error
     const clickEventNamespace = addNamespace(clickEventName, this.NAME);
     // @ts-expect-error ts-error
-    const pointerEventNamespace = addNamespace(pointerEvent, this.NAME);
-    const pointerAction = new Action(args => {
+    const pointerDownEventNamespace = addNamespace(pointerDownEvent, this.NAME);
+    // @ts-expect-error ts-error
+    const pointerUpEventNamespace = addNamespace(pointerUpEvent, this.NAME);
+    const pointerDownAction = new Action(args => {
       const {
         event
       } = args;
-      this._itemPointerDownHandler(event);
+      this._itemPointerHandler(event);
+    });
+    const pointerUpAction = new Action(args => {
+      const {
+        event
+      } = args;
+      this._itemPointerUpHandler(event);
     });
     const clickEventCallback = e => this._itemClickHandler(e);
-    const pointerEventCallback = e => {
-      pointerAction.execute({
+    const pointerDownEventCallback = e => {
+      pointerDownAction.execute({
+        element: $(e.target),
+        event: e
+      });
+    };
+    const pointerUpEventCallback = e => {
+      pointerUpAction.execute({
         element: $(e.target),
         event: e
       });
     };
     eventsEngine.off(this._itemContainer(), clickEventNamespace, itemSelector);
-    eventsEngine.off(this._itemContainer(), pointerEventNamespace, itemSelector);
+    eventsEngine.off(this._itemContainer(), pointerDownEventNamespace, itemSelector);
+    eventsEngine.off(this._itemContainer(), pointerUpEventNamespace, itemSelector);
     eventsEngine.on(this._itemContainer(), clickEventNamespace, itemSelector, clickEventCallback);
-    eventsEngine.on(this._itemContainer(), pointerEventNamespace, itemSelector, pointerEventCallback);
+    eventsEngine.on(this._itemContainer(), pointerDownEventNamespace, itemSelector, pointerDownEventCallback);
+    eventsEngine.on(this._itemContainer(), pointerUpEventNamespace, itemSelector, pointerUpEventCallback);
   }
   _itemClickHandler(e, args, config) {
     this._itemDXEventHandler(e, 'onItemClick', args, config);
   }
-  _itemPointerDownHandler(e) {
+  _handleItemFocus(e) {
+    if (e.isDefaultPrevented()) {
+      return;
+    }
+    const $target = $(e.target);
+    const $closestItem = $target.closest(this._itemElements());
+    const $closestFocusable = this._closestFocusable($target);
+    if ($closestItem.length && this._isFocusTarget($closestFocusable === null || $closestFocusable === void 0 ? void 0 : $closestFocusable.get(0))) {
+      // NOTE: Selection here is already processed in click handler.
+      this._shouldSkipSelectOnFocus = true;
+      this.option('focusedElement', getPublicElement($closestItem));
+      this._shouldSkipSelectOnFocus = false;
+    }
+  }
+  _itemPointerHandler(e) {
     if (!this.option('focusStateEnabled')) {
       return;
     }
     this._itemFocusHandler = () => {
       clearTimeout(this._itemFocusTimeout);
       this._itemFocusHandler = undefined;
-      if (e.isDefaultPrevented()) {
-        return;
-      }
-      const $target = $(e.target);
-      const $closestItem = $target.closest(this._itemElements());
-      const $closestFocusable = this._closestFocusable($target);
-      if ($closestItem.length && this._isFocusTarget($closestFocusable === null || $closestFocusable === void 0 ? void 0 : $closestFocusable.get(0))) {
-        // NOTE: Selection here is already processed in click handler.
-        this._shouldSkipSelectOnFocus = true;
-        this.option('focusedElement', getPublicElement($closestItem));
-        this._shouldSkipSelectOnFocus = false;
-      }
+      this._handleItemFocus(e);
     };
     // eslint-disable-next-line no-restricted-globals
-    this._itemFocusTimeout = setTimeout(this._forcePointerDownFocus.bind(this));
+    this._itemFocusTimeout = setTimeout(() => {
+      this._forcePointerDownFocus();
+    });
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _itemPointerUpHandler(e) {}
   _closestFocusable($target) {
     // @ts-expect-error ts-error
     if ($target.is(focusable)) {

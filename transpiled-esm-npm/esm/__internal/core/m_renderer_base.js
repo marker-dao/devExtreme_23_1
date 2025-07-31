@@ -1,7 +1,3 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable object-shorthand */
 import domAdapter from '../../core/dom_adapter';
 import { cleanDataRecursive, data as elementData, removeData } from '../../core/element_data';
 import { isTablePart, parseHTML } from '../../core/utils/html_parser';
@@ -130,15 +126,11 @@ initRender.prototype.removeClass = function (className) {
   return this.toggleClass(className, false);
 };
 initRender.prototype.hasClass = function (className) {
-  if (!this[0] || this[0].className === undefined) return false;
   const classNames = className.split(' ');
-  for (let i = 0; i < classNames.length; i++) {
-    if (this[0].classList) {
-      if (this[0].classList.contains(classNames[i])) return true;
-    } else {
-      // IE9
-      const className = isString(this[0].className) ? this[0].className : domAdapter.getAttribute(this[0], 'class');
-      if ((className || '').split(' ').indexOf(classNames[i]) >= 0) return true;
+  for (let i = 0; i < this.length; i++) {
+    if (!this[i] || !this[i].className) continue;
+    for (let j = 0; j < classNames.length; j++) {
+      if (this[i].classList.contains(classNames[j])) return true;
     }
   }
   return false;

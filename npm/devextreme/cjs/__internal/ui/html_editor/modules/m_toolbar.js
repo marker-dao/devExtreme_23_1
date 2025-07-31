@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/html_editor/modules/m_toolbar.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,7 +27,7 @@ var _type = require("../../../../core/utils/type");
 var _toolbar = _interopRequireDefault(require("../../../../ui/toolbar"));
 var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
 var _capitalize = require("../../../core/utils/capitalize");
-var _m_menu = require("../../../ui/menu/m_menu");
+var _menu2 = require("../../../ui/menu/menu");
 var _devextremeQuill = _interopRequireDefault(require("devextreme-quill"));
 var _ai = require("../utils/ai");
 var _m_table_helper = require("../utils/m_table_helper");
@@ -384,7 +384,7 @@ if (_devextremeQuill.default) {
         dataSource,
         disabled: isMenuDisabled,
         onContentReady: e => {
-          const $item = (0, _renderer.default)(e.element).find(`.${_m_menu.DX_MENU_ITEM_CLASS}`).first();
+          const $item = (0, _renderer.default)(e.element).find(`.${_menu2.DX_MENU_ITEM_CLASS}`).first();
           $item.attr('aria-label', _message.default.format('dxHtmlEditor-aiToolbarItemAriaLabel'));
         },
         onItemClick: e => {

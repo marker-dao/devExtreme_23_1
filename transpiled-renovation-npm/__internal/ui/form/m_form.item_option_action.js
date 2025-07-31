@@ -20,6 +20,7 @@ class ItemOptionAction {
   findPreparedItem() {
     return this._itemsRunTimeInfo.findPreparedItemByItem(this._options.item);
   }
+  // eslint-disable-next-line class-methods-use-this
   tryExecute() {
     _class.default.abstract();
   }

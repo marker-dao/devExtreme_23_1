@@ -1,13 +1,13 @@
 /**
 * DevExtreme (esm/viz/range_selector/slider_marker.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { patchFontOptions } from '../core/utils';
-import { consts } from './common';
+import { consts, isFirefoxOnAndroid } from './common';
 const POINTER_SIZE = consts.pointerSize;
 const SLIDER_MARKER_UPDATE_DELAY = 75;
 function SliderMarker(renderer, root, isLeftPointer) {
@@ -137,11 +137,16 @@ SliderMarker.prototype = {
         x: that._isLeftPointer ? points[0] - 1 : points[2],
         height: pointsData.isCut ? rectSize.height : rectSize.height + POINTER_SIZE
       });
-      that._tracker.attr({
+      const trackerAttrs = {
         translateX: offset,
         width: rectSize.width,
         height: rectSize.height + POINTER_SIZE
-      });
+      };
+      if (isFirefoxOnAndroid()) {
+        trackerAttrs.x = offset;
+        trackerAttrs.translateX = undefined;
+      }
+      that._tracker.attr(trackerAttrs);
       that._label.attr({
         translateX: that._paddingLeftRight + offset,
         translateY: rectSize.height / 2 - (size.y + size.height / 2)

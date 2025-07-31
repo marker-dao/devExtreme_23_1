@@ -380,10 +380,8 @@ class Scrollable extends _dom_component.default {
   }
   update() {
     if (!this._strategy) {
-      return;
+      return (0, _deferred.Deferred)().resolve();
     }
-    // @ts-expect-error ts-error
-    // eslint-disable-next-line consistent-return
     return (0, _deferred.when)(this._strategy.update()).done(() => {
       this._updateAllowedDirection();
     });

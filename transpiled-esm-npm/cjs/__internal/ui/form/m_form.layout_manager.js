@@ -8,7 +8,6 @@ require("../../../ui/text_box");
 require("../../../ui/number_box");
 require("../../../ui/check_box");
 require("../../../ui/date_box");
-require("../../../ui/button");
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
 var _remove = require("../../../common/core/events/remove");
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
@@ -23,21 +22,22 @@ var _type = require("../../../core/utils/type");
 var _variable_wrapper = _interopRequireDefault(require("../../../core/utils/variable_wrapper"));
 var _window = require("../../../core/utils/window");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
+var _wrapper = _interopRequireDefault(require("../../ui/button/wrapper"));
+var _m_button_item = require("../../ui/form/components/m_button_item");
+var _m_empty_item = require("../../ui/form/components/m_empty_item");
+var _m_field_item = require("../../ui/form/components/m_field_item");
+var _constants = require("../../ui/form/constants");
+var _m_form = _interopRequireDefault(require("../../ui/form/m_form.items_runtime_info"));
+var _m_formLayout_manager = require("../../ui/form/m_form.layout_manager.utils");
 var _responsive_box = _interopRequireDefault(require("../../ui/responsive_box"));
-var _m_button_item = require("./components/m_button_item");
-var _m_empty_item = require("./components/m_empty_item");
-var _m_field_item = require("./components/m_field_item");
-var _constants = require("./constants");
-var _m_form = _interopRequireDefault(require("./m_form.items_runtime_info"));
-var _m_formLayout_manager = require("./m_form.layout_manager.utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
-// eslint-disable-next-line import/no-named-default
 const FORM_EDITOR_BY_DEFAULT = 'dxTextBox';
 const LAYOUT_MANAGER_FIRST_ROW_CLASS = 'dx-first-row';
 const LAYOUT_MANAGER_LAST_ROW_CLASS = 'dx-last-row';
 const LAYOUT_MANAGER_FIRST_COL_CLASS = 'dx-first-col';
 const LAYOUT_MANAGER_LAST_COL_CLASS = 'dx-last-col';
+const MIN_COLUMN_WIDTH = 200;
 class LayoutManager extends _widget.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -52,7 +52,7 @@ class LayoutManager extends _widget.default {
       // @ts-expect-error ts-error
       customizeItem: null,
       alignItemLabels: true,
-      minColWidth: 200,
+      minColWidth: MIN_COLUMN_WIDTH,
       showRequiredMark: true,
       // @ts-expect-error ts-error
       screenByWidth: null,
@@ -72,7 +72,9 @@ class LayoutManager extends _widget.default {
     });
   }
   _init() {
-    const layoutData = this.option('layoutData');
+    const {
+      layoutData
+    } = this.option();
     super._init();
     this._itemWatchers = [];
     this._itemsRunTimeInfo = new _m_form.default();
@@ -88,16 +90,15 @@ class LayoutManager extends _widget.default {
     this._updateItems(initialData);
   }
   _syncDataWithItems() {
-    const layoutData = this.option('layoutData');
-    const userItems = this.option('items');
-    if ((0, _type.isDefined)(userItems)) {
-      // @ts-expect-error ts-error
-      userItems.forEach(item => {
+    const {
+      layoutData,
+      items
+    } = this.option();
+    if ((0, _type.isDefined)(items)) {
+      items.forEach(item => {
         if (item.dataField && this._getDataByField(item.dataField) === undefined) {
-          let value;
-          if (item.editorOptions) {
-            value = item.editorOptions.value;
-          }
+          var _item$editorOptions;
+          const value = (_item$editorOptions = item.editorOptions) === null || _item$editorOptions === void 0 ? void 0 : _item$editorOptions.value;
           if ((0, _type.isDefined)(value) || item.dataField in layoutData) {
             this._updateFieldValue(item.dataField, value);
           }
@@ -108,27 +109,28 @@ class LayoutManager extends _widget.default {
   _getDataByField(dataField) {
     return dataField ? this.option(`layoutData.${dataField}`) : null;
   }
-  _isCheckboxUndefinedStateEnabled(_ref) {
-    let {
-      allowIndeterminateState,
-      editorType,
-      dataField
-    } = _ref;
-    if (allowIndeterminateState === true && editorType === 'dxCheckBox') {
+  _isCheckboxUndefinedStateEnabled(allowIndeterminateState, editorType, dataField) {
+    if (allowIndeterminateState && editorType === 'dxCheckBox') {
       const nameParts = ['layoutData', ...dataField.split('.')];
       const propertyName = nameParts.pop();
       const layoutData = this.option(nameParts.join('.'));
+      if (!propertyName) return false;
       return layoutData && propertyName in layoutData;
     }
     return false;
   }
   _updateFieldValue(dataField, value) {
-    const layoutData = this.option('layoutData');
+    const {
+      layoutData
+    } = this.option();
     let newValue = value;
+    // @ts-expect-error ts-error
     if (!_variable_wrapper.default.isWrapped(layoutData[dataField]) && (0, _type.isDefined)(dataField)) {
       this.option(`layoutData.${dataField}`, newValue);
+      // @ts-expect-error ts-error
     } else if (_variable_wrapper.default.isWritableWrapped(layoutData[dataField])) {
       newValue = (0, _type.isFunction)(newValue) ? newValue() : newValue;
+      // @ts-expect-error ts-error
       layoutData[dataField](newValue);
     }
     this._triggerOnFieldDataChanged({
@@ -140,8 +142,9 @@ class LayoutManager extends _widget.default {
     this._createActionByOption('onFieldDataChanged')(args);
   }
   _updateItems(layoutData) {
-    const that = this;
-    const userItems = this.option('items');
+    const {
+      items: userItems
+    } = this.option();
     const isUserItemsExist = (0, _type.isDefined)(userItems);
     const {
       customizeItem
@@ -149,18 +152,18 @@ class LayoutManager extends _widget.default {
     const items = isUserItemsExist ? userItems : this._generateItemsByData(layoutData);
     if ((0, _type.isDefined)(items)) {
       const processedItems = [];
-      (0, _iterator.each)(items, (index, item) => {
-        if (that._isAcceptableItem(item)) {
-          item = that._processItem(item);
-          customizeItem && customizeItem(item);
-          // @ts-expect-error
+      (0, _iterator.each)(items, (_index, item) => {
+        if (this._isAcceptableItem(item)) {
+          // eslint-disable-next-line no-param-reassign
+          item = this._processItem(item);
+          customizeItem === null || customizeItem === void 0 || customizeItem(item);
           if ((0, _type.isObject)(item) && _variable_wrapper.default.unwrap(item.visible) !== false) {
             processedItems.push(item);
           }
         }
       });
-      if (!that._itemWatchers.length || !isUserItemsExist) {
-        that._updateItemWatchers(items);
+      if (!this._itemWatchers.length || !isUserItemsExist) {
+        this._updateItemWatchers(items);
       }
       this._setItems(processedItems);
       this._sortItems();
@@ -174,27 +177,28 @@ class LayoutManager extends _widget.default {
     this._itemWatchers = [];
   }
   _updateItemWatchers(items) {
-    const that = this;
-    const watch = that._getWatch();
+    const watch = this._getWatch();
     items.forEach(item => {
-      // @ts-expect-error
       if ((0, _type.isObject)(item) && (0, _type.isDefined)(item.visible) && (0, _type.isFunction)(watch)) {
-        that._itemWatchers.push(watch(
-        // @ts-expect-error
+        this._itemWatchers.push(watch(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         () => _variable_wrapper.default.unwrap(item.visible), () => {
-          that._updateItems(that.option('layoutData'));
-          that.repaint();
+          const {
+            layoutData
+          } = this.option();
+          this._updateItems(layoutData);
+          this.repaint();
         }, {
           skipImmediate: true
         }));
       }
     });
   }
+  // eslint-disable-next-line class-methods-use-this
   _generateItemsByData(layoutData) {
     const result = [];
     if ((0, _type.isDefined)(layoutData)) {
       (0, _iterator.each)(layoutData, dataField => {
-        // @ts-expect-error
         result.push({
           dataField
         });
@@ -203,12 +207,13 @@ class LayoutManager extends _widget.default {
     return result;
   }
   _isAcceptableItem(item) {
-    const itemField = item.dataField || item;
+    const itemField = (0, _type.isString)(item) ? item : item.dataField;
     const itemData = this._getDataByField(itemField);
     return !((0, _type.isFunction)(itemData) && !_variable_wrapper.default.isWrapped(itemData));
   }
   _processItem(item) {
     if (typeof item === 'string') {
+      // eslint-disable-next-line no-param-reassign
       item = {
         dataField: item
       };
@@ -221,10 +226,12 @@ class LayoutManager extends _widget.default {
       item.editorType = (0, _type.isDefined)(value) ? this._getEditorTypeByDataType((0, _type.type)(value)) : FORM_EDITOR_BY_DEFAULT;
     }
     if (item.editorType === 'dxCheckBox') {
+      // @ts-expect-error ts-error
       item.allowIndeterminateState = item.allowIndeterminateState ?? true;
     }
     return item;
   }
+  // eslint-disable-next-line class-methods-use-this
   _getEditorTypeByDataType(dataType) {
     switch (dataType) {
       case 'number':
@@ -242,18 +249,19 @@ class LayoutManager extends _widget.default {
     this._sortIndexes();
   }
   _sortIndexes() {
-    this._items.sort((itemA, itemB) => {
+    var _this$_items;
+    (_this$_items = this._items) === null || _this$_items === void 0 || _this$_items.sort((itemA, itemB) => {
       const indexA = itemA.visibleIndex;
       const indexB = itemB.visibleIndex;
-      let result;
+      // @ts-expect-error ts-error
       if (indexA > indexB) {
-        result = 1;
-      } else if (indexA < indexB) {
-        result = -1;
-      } else {
-        result = 0;
+        return 1;
+        // @ts-expect-error ts-error
       }
-      return result;
+      if (indexA < indexB) {
+        return -1;
+      }
+      return 0;
     });
   }
   _initMarkup() {
@@ -263,100 +271,110 @@ class LayoutManager extends _widget.default {
     this._renderResponsiveBox();
   }
   _renderResponsiveBox() {
-    const that = this;
     const templatesInfo = [];
-    if (that._items && that._items.length) {
-      const colCount = that._getColCount();
-      const $container = (0, _renderer.default)('<div>').appendTo(that.$element());
-      that._prepareItemsWithMerging(colCount);
-      const layoutItems = that._generateLayoutItems();
-      // @ts-expect-error ts-error
-      that._responsiveBox = that._createComponent($container, _responsive_box.default, that._getResponsiveBoxConfig(layoutItems, colCount, templatesInfo));
+    if (this._items && this._items.length) {
+      const colCount = this._getColCount();
+      const $container = (0, _renderer.default)('<div>').appendTo(this.$element());
+      this._prepareItemsWithMerging(colCount);
+      const layoutItems = this._generateLayoutItems();
+      this._responsiveBox = super._createComponent($container, _responsive_box.default, this._getResponsiveBoxConfig(layoutItems, colCount, templatesInfo));
       if (!(0, _window.hasWindow)()) {
-        that._renderTemplates(templatesInfo);
+        this._renderTemplates(templatesInfo);
       }
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _itemStateChangedHandler(e) {
+  _itemStateChangedHandler(args) {
     this._refresh();
   }
   _renderTemplates(templatesInfo) {
-    const that = this;
     let itemsWithLabelTemplateCount = 0;
-    templatesInfo.forEach(_ref2 => {
+    templatesInfo.forEach(_ref => {
       var _item$label;
       let {
         item
-      } = _ref2;
+      } = _ref;
       if (item !== null && item !== void 0 && (_item$label = item.label) !== null && _item$label !== void 0 && _item$label.template) {
-        itemsWithLabelTemplateCount++;
+        itemsWithLabelTemplateCount += 1;
       }
     });
-    (0, _iterator.each)(templatesInfo, (index, info) => {
+    (0, _iterator.each)(templatesInfo, (_index, info) => {
       switch (info.itemType) {
         case 'empty':
           (0, _m_empty_item.renderEmptyItem)(info);
           break;
         case 'button':
-          that._renderButtonItem(info);
+          this._renderButtonItem(info);
           break;
         default:
           {
-            that._renderFieldItem(info, itemsWithLabelTemplateCount);
+            this._renderFieldItem(info, itemsWithLabelTemplateCount);
           }
       }
     });
   }
   _getResponsiveBoxConfig(layoutItems, colCount, templatesInfo) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
-    const colCountByScreen = that.option('colCountByScreen');
-    // @ts-expect-error ts-error
+    const {
+      colCountByScreen,
+      screenByWidth
+    } = this.option();
     const xsColCount = colCountByScreen && colCountByScreen.xs;
     return {
       onItemStateChanged: this._itemStateChangedHandler.bind(this),
-      onLayoutChanged() {
+      onLayoutChanged: () => {
         const {
           onLayoutChanged
-        } = that.option();
-        const isSingleColumnMode = that.isSingleColumnMode();
+        } = this.option();
+        const isSingleColumnMode = this.isSingleColumnMode();
         if (onLayoutChanged) {
-          that.$element().toggleClass(_constants.LAYOUT_MANAGER_ONE_COLUMN, isSingleColumnMode);
+          this.$element().toggleClass(_constants.LAYOUT_MANAGER_ONE_COLUMN, isSingleColumnMode);
           onLayoutChanged(isSingleColumnMode);
         }
       },
-      onContentReady(e) {
+      onContentReady: e => {
         if ((0, _window.hasWindow)()) {
-          that._renderTemplates(templatesInfo);
+          this._renderTemplates(templatesInfo);
         }
-        if (that.option('onLayoutChanged')) {
-          that.$element().toggleClass(_constants.LAYOUT_MANAGER_ONE_COLUMN, that.isSingleColumnMode(e.component));
+        const {
+          onLayoutChanged
+        } = this.option();
+        if (onLayoutChanged) {
+          this.$element().toggleClass(_constants.LAYOUT_MANAGER_ONE_COLUMN, this.isSingleColumnMode(e.component));
         }
       },
-      itemTemplate(e, itemData, itemElement) {
-        if (!e.location) {
+      itemTemplate(itemData, _index, itemElement) {
+        var _that$_items;
+        const {
+          location
+        } = itemData;
+        if (!location) {
           return;
         }
         const $itemElement = (0, _renderer.default)(itemElement);
-        const itemRenderedCountInPreviousRows = e.location.row * colCount;
-        const item = that._items[e.location.col + itemRenderedCountInPreviousRows];
+        const itemRenderedCountInPreviousRows = location.row * colCount;
+        const item = (_that$_items = that._items) === null || _that$_items === void 0 ? void 0 : _that$_items[location.col + itemRenderedCountInPreviousRows];
         if (!item) {
           return;
         }
-        const itemCssClassList = [item.cssClass];
+        const itemCssClassList = [item.cssClass ?? ''];
         $itemElement.toggleClass(_constants.SINGLE_COLUMN_ITEM_CONTENT, that.isSingleColumnMode(this));
-        if (e.location.row === 0) {
+        if (location.row === 0) {
           itemCssClassList.push(LAYOUT_MANAGER_FIRST_ROW_CLASS);
         }
-        if (e.location.col === 0) {
+        if (location.col === 0) {
           itemCssClassList.push(LAYOUT_MANAGER_FIRST_COL_CLASS);
         }
-        if (item.itemType === _constants.SIMPLE_ITEM_TYPE && that.option('isRoot')) {
+        const {
+          isRoot
+        } = that.option();
+        if (item.itemType === _constants.SIMPLE_ITEM_TYPE && isRoot) {
           $itemElement.addClass(_constants.ROOT_SIMPLE_ITEM_CLASS);
         }
-        const isLastColumn = e.location.col === colCount - 1 || e.location.col + e.location.colspan === colCount;
+        const isLastColumn = location.col === colCount - 1 || location.col + location.colspan === colCount;
         const rowsCount = that._getRowsCount();
-        const isLastRow = e.location.row === rowsCount - 1;
+        const isLastRow = location.row === rowsCount - 1;
         if (isLastColumn) {
           itemCssClassList.push(LAYOUT_MANAGER_LAST_COL_CLASS);
         }
@@ -365,7 +383,10 @@ class LayoutManager extends _widget.default {
         }
         if (item.itemType !== 'empty') {
           itemCssClassList.push(_constants.FIELD_ITEM_CLASS);
-          itemCssClassList.push(that.option('cssItemClass'));
+          const {
+            cssItemClass = ''
+          } = that.option();
+          itemCssClassList.push(cssItemClass);
           if ((0, _type.isDefined)(item.col)) {
             itemCssClassList.push(`dx-col-${item.col}`);
           }
@@ -377,10 +398,11 @@ class LayoutManager extends _widget.default {
           rootElementCssClassList: itemCssClassList
         });
       },
-      cols: that._generateRatio(colCount),
-      rows: that._generateRatio(that._getRowsCount(), true),
+      cols: this._generateRatio(colCount),
+      rows: this._generateRatio(this._getRowsCount(), true),
       dataSource: layoutItems,
-      screenByWidth: that.option('screenByWidth'),
+      screenByWidth,
+      // @ts-expect-error ts-error
       singleColumnScreen: xsColCount ? false : 'xs'
     };
   }
@@ -404,7 +426,8 @@ class LayoutManager extends _widget.default {
       if (this._cashedColCount) {
         return this._cashedColCount;
       }
-      this._cashedColCount = colCount = this._getMaxColCount();
+      colCount = this._getMaxColCount();
+      this._cashedColCount = colCount;
     }
     // @ts-expect-error ts-error
     return colCount < 1 ? 1 : colCount;
@@ -413,44 +436,47 @@ class LayoutManager extends _widget.default {
     if (!(0, _window.hasWindow)()) {
       return 1;
     }
-    const minColWidth = this.option('minColWidth');
+    const {
+      minColWidth = MIN_COLUMN_WIDTH
+    } = this.option();
     const width = (0, _size.getWidth)(this.$element());
-    const itemsCount = this._items.length;
     // @ts-expect-error ts-error
+    const itemsCount = this._items.length;
     const maxColCount = Math.floor(width / minColWidth) || 1;
     return itemsCount < maxColCount ? itemsCount : maxColCount;
   }
   isCachedColCountObsolete() {
-    return this._cashedColCount && this._getMaxColCount() !== this._cashedColCount;
+    return !!this._cashedColCount && this._getMaxColCount() !== this._cashedColCount;
   }
   _prepareItemsWithMerging(colCount) {
-    const items = this._items.slice(0);
-    let item;
-    let itemsMergedByCol;
+    const items = (this._items ?? []).slice(0);
     let result = [];
-    let j;
-    let i;
-    for (i = 0; i < items.length; i++) {
-      item = items[i];
-      // @ts-expect-error ts-error
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i = 0; i < items.length; i += 1) {
+      const item = items[i];
       result.push(item);
-      if (this.option('alignItemLabels') || item.alignItemLabels || item.colSpan) {
+      const {
+        alignItemLabels
+      } = this.option();
+      if (alignItemLabels || item.alignItemLabels || item.colSpan) {
         item.col = this._getColByIndex(result.length - 1, colCount);
       }
       if (item.colSpan > 1 && item.col + item.colSpan <= colCount) {
-        itemsMergedByCol = [];
-        for (j = 0; j < item.colSpan - 1; j++) {
+        const itemsMergedByCol = [];
+        for (let j = 0; j < item.colSpan - 1; j += 1) {
           itemsMergedByCol.push({
             merged: true
           });
         }
         result = result.concat(itemsMergedByCol);
       } else {
+        // @ts-expect-error ts-error
         delete item.colSpan;
       }
     }
     this._setItems(result);
   }
+  // eslint-disable-next-line class-methods-use-this
   _getColByIndex(index, colCount) {
     return index % colCount;
   }
@@ -460,21 +486,24 @@ class LayoutManager extends _widget.default {
     this._cashedColCount = null; // T923489
   }
   _generateLayoutItems() {
-    const items = this._items;
+    const items = this._items ?? [];
     const colCount = this._getColCount();
     const result = [];
-    let item;
-    let i;
-    for (i = 0; i < items.length; i++) {
-      item = items[i];
+    for (let i = 0; i < items.length; i += 1) {
+      const item = items[i];
       if (!item.merged) {
+        const location = {
+          row: parseInt(String(i / colCount), 10),
+          col: this._getColByIndex(i, colCount)
+        };
+        if ((0, _type.isDefined)(item.colSpan)) {
+          location.colspan = item.colSpan;
+        }
+        if ((0, _type.isDefined)(item.rowSpan)) {
+          location.rowspan = item.rowSpan;
+        }
         const generatedItem = {
-          location: {
-            // @ts-expect-error
-            // eslint-disable-next-line radix
-            row: parseInt(i / colCount),
-            col: this._getColByIndex(i, colCount)
-          }
+          location
         };
         if ((0, _type.isDefined)(item.disabled)) {
           generatedItem.disabled = item.disabled;
@@ -482,29 +511,20 @@ class LayoutManager extends _widget.default {
         if ((0, _type.isDefined)(item.visible)) {
           generatedItem.visible = item.visible;
         }
-        if ((0, _type.isDefined)(item.colSpan)) {
-          generatedItem.location.colspan = item.colSpan;
-        }
-        if ((0, _type.isDefined)(item.rowSpan)) {
-          generatedItem.location.rowspan = item.rowSpan;
-        }
         result.push(generatedItem);
       }
     }
     return result;
   }
-  _renderEmptyItem($container) {
-    // @ts-expect-error
-    (0, _m_empty_item.renderEmptyItem)({
-      $container
-    });
-  }
-  _renderButtonItem(_ref3) {
-    let {
+  _renderButtonItem(info) {
+    const {
       item,
       $parent,
       rootElementCssClassList
-    } = _ref3;
+    } = info;
+    const {
+      validationGroup
+    } = this.option();
     const {
       $rootElement,
       buttonInstance
@@ -512,8 +532,8 @@ class LayoutManager extends _widget.default {
       item,
       $parent,
       rootElementCssClassList,
-      validationGroup: this.option('validationGroup'),
-      createComponentCallback: this._createComponent.bind(this)
+      validationGroup,
+      createComponentCallback: ($element, options) => super._createComponent($element, _wrapper.default, options)
     });
     // TODO: try to remove '_itemsRunTimeInfo' from 'render' function
     this._itemsRunTimeInfo.add({
@@ -523,13 +543,13 @@ class LayoutManager extends _widget.default {
       $itemContainer: $rootElement
     });
   }
-  _renderFieldItem(_ref4, itemsWithLabelTemplateCount) {
+  _renderFieldItem(info, itemsWithLabelTemplateCount) {
     var _item$label2;
-    let {
+    const {
       item,
       $parent,
       rootElementCssClassList
-    } = _ref4;
+    } = info;
     const editorValue = this._getDataByField(item.dataField);
     let canAssignUndefinedValueToEditor = false;
     if (editorValue === undefined) {
@@ -538,11 +558,7 @@ class LayoutManager extends _widget.default {
         editorType,
         dataField
       } = item;
-      canAssignUndefinedValueToEditor = this._isCheckboxUndefinedStateEnabled({
-        allowIndeterminateState,
-        editorType,
-        dataField
-      });
+      canAssignUndefinedValueToEditor = this._isCheckboxUndefinedStateEnabled(allowIndeterminateState, editorType, dataField);
     }
     const name = item.dataField || item.name;
     const formOrLayoutManager = this._getFormOrThis();
@@ -554,13 +570,15 @@ class LayoutManager extends _widget.default {
       }
     };
     const {
-      form
+      form,
+      labelLocation,
+      requiredMessage,
+      validationGroup,
+      validationBoundary,
+      showColonAfterLabel,
+      labelMode
     } = this.option();
-    const {
-      $fieldEditorContainer,
-      widgetInstance,
-      $rootElement
-    } = (0, _m_field_item.renderFieldItem)((0, _m_formLayout_manager.convertToRenderFieldItemOptions)({
+    const fieldItemOptions = (0, _m_formLayout_manager.convertToRenderFieldItemOptions)({
       $parent,
       rootElementCssClassList,
       item,
@@ -569,27 +587,35 @@ class LayoutManager extends _widget.default {
       canAssignUndefinedValueToEditor,
       formOrLayoutManager: this._getFormOrThis(),
       createComponentCallback: this._createComponent.bind(this),
-      formLabelLocation: this.option('labelLocation'),
-      requiredMessageTemplate: this.option('requiredMessage'),
-      validationGroup: this.option('validationGroup'),
-      editorValidationBoundary: this.option('validationBoundary'),
+      formLabelLocation: labelLocation,
+      // @ts-expect-error ts-error
+      requiredMessageTemplate: requiredMessage,
+      validationGroup,
+      editorValidationBoundary: validationBoundary,
+      // @ts-expect-error ts-error
       editorStylingMode: form === null || form === void 0 ? void 0 : form.option('stylingMode'),
-      showColonAfterLabel: this.option('showColonAfterLabel'),
-      managerLabelLocation: this.option('labelLocation'),
+      showColonAfterLabel: Boolean(showColonAfterLabel),
+      managerLabelLocation: labelLocation,
       template: item.template ? this._getTemplate(item.template) : null,
       labelTemplate: (_item$label2 = item.label) !== null && _item$label2 !== void 0 && _item$label2.template ? this._getTemplate(item.label.template) : null,
+      // @ts-expect-error ts-error
       itemId: form === null || form === void 0 ? void 0 : form.getItemID(name),
       managerMarkOptions: this._getMarkOptions(),
-      labelMode: this.option('labelMode'),
+      labelMode,
       onLabelTemplateRendered
-    }));
+    });
+    const {
+      $fieldEditorContainer,
+      widgetInstance,
+      $rootElement
+    } = (0, _m_field_item.renderFieldItem)(fieldItemOptions);
     const {
       onFieldItemRendered
     } = this.option();
     onFieldItemRendered === null || onFieldItemRendered === void 0 || onFieldItemRendered();
     if (widgetInstance && item.dataField) {
       // TODO: move to renderFieldItem ?
-      this._bindDataField(widgetInstance, item.dataField, item.editorType, $fieldEditorContainer);
+      this._bindDataField(widgetInstance, item.dataField, $fieldEditorContainer);
     }
     this._itemsRunTimeInfo.add({
       item,
@@ -602,14 +628,23 @@ class LayoutManager extends _widget.default {
     this._labelTemplateRenderedCallCount = (this._labelTemplateRenderedCallCount ?? 0) + 1;
   }
   _shouldAlignLabelsOnTemplateRendered(formOrLayoutManager, totalItemsWithLabelTemplate) {
-    return formOrLayoutManager.option('templatesRenderAsynchronously') && this._labelTemplateRenderedCallCount === totalItemsWithLabelTemplate;
+    const {
+      templatesRenderAsynchronously
+    } = formOrLayoutManager.option();
+    return !!templatesRenderAsynchronously && this._labelTemplateRenderedCallCount === totalItemsWithLabelTemplate;
   }
   _getMarkOptions() {
+    const {
+      showRequiredMark,
+      requiredMark,
+      showOptionalMark,
+      optionalMark
+    } = this.option();
     return {
-      showRequiredMark: this.option('showRequiredMark'),
-      requiredMark: this.option('requiredMark'),
-      showOptionalMark: this.option('showOptionalMark'),
-      optionalMark: this.option('optionalMark')
+      showRequiredMark,
+      requiredMark,
+      showOptionalMark,
+      optionalMark
     };
   }
   _getFormOrThis() {
@@ -619,7 +654,7 @@ class LayoutManager extends _widget.default {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     return form || this;
   }
-  _bindDataField(editorInstance, dataField, editorType, $container) {
+  _bindDataField(editorInstance, dataField, $container) {
     const formOrThis = this._getFormOrThis();
     editorInstance.on('enterKey', args => {
       formOrThis._createActionByOption('onEditorEnterKey')((0, _extend.extend)(args, {
@@ -634,20 +669,19 @@ class LayoutManager extends _widget.default {
       if (!Array.isArray(array1) || !Array.isArray(array2) || array1.length !== array2.length) {
         return false;
       }
-      for (let i = 0; i < array1.length; i++) {
+      for (let i = 0; i < array1.length; i += 1) {
         if (array1[i] !== array2[i]) {
           return false;
         }
       }
       return true;
     }
-    const that = this;
-    const watch = that._getWatch();
+    const watch = this._getWatch();
     if (!(0, _type.isFunction)(watch)) {
       return;
     }
-    const dispose = watch(() => that._getDataByField(dataField), () => {
-      const fieldValue = that._getDataByField(dataField);
+    const dispose = watch(() => this._getDataByField(dataField), () => {
+      const fieldValue = this._getDataByField(dataField);
       if (editorInstance.NAME === 'dxTagBox') {
         const editorValue = editorInstance.option('value');
         if (fieldValue !== editorValue && compareArrays(fieldValue, editorValue)) {
@@ -676,15 +710,16 @@ class LayoutManager extends _widget.default {
     return this._watch;
   }
   // @ts-expect-error ts-error
-  _createComponent($editor, type, editorOptions) {
-    const readOnlyState = this.option('readOnly');
+  _createComponent($editor, component, editorOptions) {
+    const {
+      readOnly: readOnlyState
+    } = this.option();
     // @ts-expect-error ts-error
     let hasEditorReadOnly = Object.hasOwn(editorOptions, 'readOnly');
-    const instance = super._createComponent($editor, type, _extends({}, editorOptions, {
+    const instance = super._createComponent($editor, component, _extends({}, editorOptions, {
       readOnly: !hasEditorReadOnly ? readOnlyState : editorOptions.readOnly
     }));
     let isChangeByForm = false;
-    // @ts-expect-error ts-error
     instance.on('optionChanged', args => {
       if (args.name === 'readOnly' && !isChangeByForm) {
         hasEditorReadOnly = true;
@@ -693,19 +728,17 @@ class LayoutManager extends _widget.default {
     this.on('optionChanged', args => {
       if (args.name === 'readOnly' && !hasEditorReadOnly) {
         isChangeByForm = true;
-        // @ts-expect-error ts-error
         instance.option(args.name, args.value);
         isChangeByForm = false;
       }
     });
     return instance;
   }
+  // eslint-disable-next-line class-methods-use-this
   _generateRatio(count, isAutoSize) {
     const result = [];
-    let ratio;
-    let i;
-    for (i = 0; i < count; i++) {
-      ratio = {
+    for (let i = 0; i < count; i += 1) {
+      const ratio = {
         ratio: 1
       };
       if (isAutoSize) {
@@ -716,8 +749,8 @@ class LayoutManager extends _widget.default {
     return result;
   }
   _getRowsCount() {
-    // @ts-expect-error ts-error
-    return Math.ceil(this._items.length / this._getColCount());
+    const items = this._items ?? [];
+    return Math.ceil(items.length / this._getColCount());
   }
   _updateReferencedOptions(newLayoutData) {
     const layoutData = this.option('layoutData');
@@ -750,40 +783,41 @@ class LayoutManager extends _widget.default {
         this._invalidate();
         break;
       case 'layoutData':
-        this._updateReferencedOptions(args.value);
-        if (this.option('items')) {
-          if (!(0, _type.isEmptyObject)(args.value)) {
-            this._itemsRunTimeInfo.each((_, itemRunTimeInfo) => {
-              if ((0, _type.isDefined)(itemRunTimeInfo.item)) {
-                const {
-                  dataField
-                } = itemRunTimeInfo.item;
-                if (dataField && (0, _type.isDefined)(itemRunTimeInfo.widgetInstance)) {
-                  const valueGetter = (0, _data.compileGetter)(dataField);
-                  // @ts-expect-error ts-error
-                  const dataValue = valueGetter(args.value);
+        {
+          this._updateReferencedOptions(args.value);
+          const {
+            items
+          } = this.option();
+          if (items) {
+            if (!(0, _type.isEmptyObject)(args.value)) {
+              this._itemsRunTimeInfo.each((_, itemRunTimeInfo) => {
+                if ((0, _type.isDefined)(itemRunTimeInfo.item)) {
                   const {
-                    allowIndeterminateState,
-                    editorType
-                  } = itemRunTimeInfo.item;
-                  if (dataValue !== undefined || this._isCheckboxUndefinedStateEnabled({
-                    allowIndeterminateState,
-                    editorType,
                     dataField
-                  })) {
-                    itemRunTimeInfo.widgetInstance.option('value', dataValue);
-                  } else {
-                    this._clearWidget(itemRunTimeInfo.widgetInstance);
+                  } = itemRunTimeInfo.item;
+                  if (dataField && (0, _type.isDefined)(itemRunTimeInfo.widgetInstance)) {
+                    const valueGetter = (0, _data.compileGetter)(dataField);
+                    // @ts-expect-error ts-error
+                    const dataValue = valueGetter(args.value);
+                    const {
+                      allowIndeterminateState,
+                      editorType
+                    } = itemRunTimeInfo.item;
+                    if (dataValue !== undefined || this._isCheckboxUndefinedStateEnabled(allowIndeterminateState, editorType, dataField)) {
+                      itemRunTimeInfo.widgetInstance.option('value', dataValue);
+                    } else {
+                      this._clearWidget(itemRunTimeInfo.widgetInstance);
+                    }
                   }
                 }
-              }
-            });
+              });
+            }
+          } else {
+            this._initDataAndItems(args.value);
+            this._invalidate();
           }
-        } else {
-          this._initDataAndItems(args.value);
-          this._invalidate();
+          break;
         }
-        break;
       case 'items':
         this._cleanItemWatchers();
         this._initDataAndItems(args.value);
@@ -860,24 +894,27 @@ class LayoutManager extends _widget.default {
     }
   }
   updateData(data, value) {
-    const that = this;
     if ((0, _type.isObject)(data)) {
       (0, _iterator.each)(data, (dataField, fieldValue) => {
-        that._updateFieldValue(dataField, fieldValue);
+        this._updateFieldValue(dataField, fieldValue);
       });
     } else if (typeof data === 'string') {
-      that._updateFieldValue(data, value);
+      this._updateFieldValue(data, value);
     }
   }
   getEditor(field) {
-    return this._itemsRunTimeInfo.findWidgetInstanceByDataField(field) || this._itemsRunTimeInfo.findWidgetInstanceByName(field);
+    return this._itemsRunTimeInfo.findWidgetInstanceByDataField(field) ?? this._itemsRunTimeInfo.findWidgetInstanceByName(field);
   }
-  // @ts-expect-error ts-error
   isSingleColumnMode(component) {
     const responsiveBox = this._responsiveBox || component;
     if (responsiveBox) {
-      return responsiveBox.option('currentScreenFactor') === responsiveBox.option('singleColumnScreen');
+      const {
+        currentScreenFactor,
+        singleColumnScreen
+      } = responsiveBox.option();
+      return currentScreenFactor === singleColumnScreen;
     }
+    return false;
   }
   getItemsRunTimeInfo() {
     return this._itemsRunTimeInfo;

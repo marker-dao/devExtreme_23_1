@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/utils/resource_manager/appointment_color_utils.test.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,6 +11,7 @@
 var _globals = require("@jest/globals");
 var _resourceManager = require("../../../scheduler/__mock__/resourceManager.mock");
 var _appointment_color_utils = require("./appointment_color_utils");
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const ownerFirstColor = '#cb2824';
 const ownerSecondColor = '#cb7d7b';
 const customResourceConfig = [{
@@ -52,8 +53,9 @@ const customResourceConfig = [{
 (0, _globals.describe)('appointment color utils', () => {
   (0, _globals.describe)('getPaintedResources', () => {
     (0, _globals.it)('should return useColorAsDefault resource', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
-      manager.resources[1].useColorAsDefault = true;
+      const manager = (0, _resourceManager.getResourceManagerMock)([_extends({}, _resourceManager.resourceConfigMock[0]), _extends({}, _resourceManager.resourceConfigMock[1], {
+        useColorAsDefault: true
+      }), _extends({}, _resourceManager.resourceConfigMock[2])]);
       (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, _resourceManager.resourceIndexesMock, _resourceManager.resourceIndexesMock)).toEqual(manager.resources[1]);
     });
     (0, _globals.it)('should return last resource', () => {
@@ -69,8 +71,9 @@ const customResourceConfig = [{
       (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, [_resourceManager.resourceIndexesMock[0], _resourceManager.resourceIndexesMock[1]], _resourceManager.resourceIndexesMock)).toEqual(manager.resources[1]);
     });
     (0, _globals.it)('should return last resource filtered by appointment groups that exclude useColorAsDefault resource', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
-      manager.resources[1].useColorAsDefault = true;
+      const manager = (0, _resourceManager.getResourceManagerMock)([_extends({}, _resourceManager.resourceConfigMock[0]), _extends({}, _resourceManager.resourceConfigMock[1], {
+        useColorAsDefault: true
+      }), _extends({}, _resourceManager.resourceConfigMock[2])]);
       (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, [_resourceManager.resourceIndexesMock[0]], _resourceManager.resourceIndexesMock)).toEqual(manager.resources[0]);
     });
     (0, _globals.it)('should return undefined for empty groups', () => {
@@ -101,9 +104,10 @@ const customResourceConfig = [{
       })).toEqual(_resourceManager.resourceItemsByIdMock.roomId[1].color);
     });
     (0, _globals.it)('should return color of default resource', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resourceManager.getResourceManagerMock)([_extends({}, _resourceManager.resourceConfigMock[0]), _extends({}, _resourceManager.resourceConfigMock[1], {
+        useColorAsDefault: true
+      }), _extends({}, _resourceManager.resourceConfigMock[2])]);
       await manager.loadGroupResources(['roomId', 'nested.priorityId']);
-      manager.resources[1].useColorAsDefault = true;
       (0, _globals.expect)(await (0, _appointment_color_utils.getAppointmentColor)(manager.resources, manager.groupsLeafs, manager.groups, {
         itemData: {
           assigneeId: 1,

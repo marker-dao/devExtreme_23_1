@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/tree_view/m_tree_view.base.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1294,7 +1294,7 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
       this._itemClickHandler(e, (0, _renderer.default)(e.currentTarget));
     });
     _events_engine.default.on($itemContainer, pointerDownEventNamespace, nodeSelector, e => {
-      this._itemPointerDownHandler(e);
+      this._itemPointerHandler(e);
     });
   }
   _detachClickEvent(itemsContainer) {
@@ -1389,7 +1389,7 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
     const $activeItem = this._getActiveItem();
     this.option('focusedElement', (0, _element.getPublicElement)($activeItem.closest(`.${NODE_CLASS}`)));
   }
-  _itemPointerDownHandler(e) {
+  _itemPointerHandler(e) {
     if (!this.option('focusStateEnabled')) {
       return;
     }
@@ -1540,7 +1540,6 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
     const deferred = (0, _deferred.Deferred)();
     const scrollable = this.getScrollable();
     if (scrollable) {
-      // @ts-expect-error ts-error
       scrollable.update().done(() => {
         // @ts-expect-error ts-error
         deferred.resolveWith(this);

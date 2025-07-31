@@ -18,9 +18,9 @@ var _icon = require("../../core/utils/icon");
 var _type = require("../../core/utils/type");
 var _data_controller = _interopRequireDefault(require("../../data_controller"));
 var _button_group = _interopRequireDefault(require("../../ui/button_group"));
-var _list_light = _interopRequireDefault(require("../../ui/list_light"));
 var _widget = _interopRequireDefault(require("../core/widget/widget"));
 var _m_utils = require("../ui/drop_down_editor/m_utils");
+var _m_listEdit = _interopRequireDefault(require("../ui/list/m_list.edit.search"));
 var _m_popup = _interopRequireDefault(require("../ui/popup/m_popup"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -71,7 +71,9 @@ class DropDownButton extends _widget.default {
       useItemTextAsTitle: true,
       grouped: false,
       groupTemplate: 'group',
-      buttonGroupOptions: {}
+      buttonGroupOptions: {},
+      _cached_buttonGroupOptions: {},
+      _cached_dropDownOptions: {}
     });
   }
   _setOptionsByReference() {
@@ -88,10 +90,12 @@ class DropDownButton extends _widget.default {
     this._initDataController();
     this._compileKeyGetter();
     this._compileDisplayGetter();
-    // @ts-expect-error ts-error
-    this._options.cache('buttonGroupOptions', this.option('buttonGroupOptions'));
-    // @ts-expect-error ts-error
-    this._options.cache('dropDownOptions', this.option('dropDownOptions'));
+    const {
+      buttonGroupOptions,
+      dropDownOptions
+    } = this.option();
+    this._options.cache('buttonGroupOptions', buttonGroupOptions);
+    this._options.cache('dropDownOptions', dropDownOptions);
   }
   _initDataController() {
     const dataSource = this.option('dataSource');
@@ -106,7 +110,7 @@ class DropDownButton extends _widget.default {
       content: new _function_template.FunctionTemplate(options => {
         const $popupContent = (0, _renderer.default)(options.container);
         const $listContainer = (0, _renderer.default)('<div>').appendTo($popupContent);
-        this._list = this._createComponent($listContainer, _list_light.default, this._listOptions());
+        this._list = this._createComponent($listContainer, _m_listEdit.default, this._listOptions());
         this._list.registerKeyHandler('escape', this._escHandler.bind(this));
         this._list.registerKeyHandler('tab', this._escHandler.bind(this));
         this._list.registerKeyHandler('leftArrow', this._escHandler.bind(this));
@@ -370,23 +374,36 @@ class DropDownButton extends _widget.default {
     });
   }
   _listOptions() {
-    const selectedItemKey = this.option('selectedItemKey');
-    const useSelectMode = this.option('useSelectMode');
+    const {
+      wrapItemText,
+      focusStateEnabled,
+      hoverStateEnabled,
+      grouped,
+      groupTemplate,
+      noDataText,
+      displayExpr,
+      itemTemplate,
+      items,
+      selectedItemKey,
+      useSelectMode
+    } = this.option();
     return {
       selectionMode: useSelectMode ? 'single' : 'none',
-      wrapItemText: this.option('wrapItemText'),
-      focusStateEnabled: this.option('focusStateEnabled'),
-      hoverStateEnabled: this.option('hoverStateEnabled'),
+      wrapItemText,
+      focusStateEnabled,
+      hoverStateEnabled,
       useItemTextAsTitle: this.option('useItemTextAsTitle'),
+      // eslint-disable-next-line
       onContentReady: () => this._fireContentReadyAction(),
       selectedItemKeys: (0, _type.isDefined)(selectedItemKey) && useSelectMode ? [selectedItemKey] : [],
-      grouped: this.option('grouped'),
-      groupTemplate: this.option('groupTemplate'),
+      grouped,
+      groupTemplate,
       keyExpr: this._dataController.key(),
-      noDataText: this.option('noDataText'),
-      displayExpr: this.option('displayExpr'),
-      itemTemplate: this.option('itemTemplate'),
-      items: this.option('items'),
+      noDataText,
+      displayExpr,
+      itemTemplate,
+      items,
+      // @ts-expect-error ts-error
       dataSource: this._dataController.getDataSource(),
       onItemClick: e => {
         if (!this.option('useSelectMode')) {
@@ -394,6 +411,7 @@ class DropDownButton extends _widget.default {
         }
         // @ts-expect-error ts-error
         this.option('selectedItemKey', this._keyGetter(e.itemData));
+        // @ts-expect-error ts-error
         const actionResult = this._fireItemClickAction(e);
         // @ts-expect-error ts-error
         if (actionResult !== false) {
@@ -736,6 +754,9 @@ class DropDownButton extends _widget.default {
         break;
       case 'template':
         this._renderButtonGroup();
+        break;
+      case '_cached_buttonGroupOptions':
+      case '_cached_dropDownOptions':
         break;
       default:
         super._optionChanged(args);

@@ -595,7 +595,6 @@ class SchedulerAppointments extends _uiCollection_widget.default {
     return (0, _m_core.getAppointmentDateRange)({
       handles: e.handles,
       appointmentSettings: $element.data(_constants.APPOINTMENT_SETTINGS_KEY),
-      isVerticalViewDirection: this.option('isVerticalViewDirection')(),
       isVerticalGroupedWorkSpace: this.option('isVerticalGroupedWorkSpace')(),
       appointmentRect: (0, _position.getBoundingRect)($element[0]),
       parentAppointmentRect: (0, _position.getBoundingRect)($element.parent()[0]),

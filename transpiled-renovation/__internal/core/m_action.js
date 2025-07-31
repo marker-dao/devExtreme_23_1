@@ -9,9 +9,7 @@ var _iterator = require("../../core/utils/iterator");
 var _type = require("../../core/utils/type");
 var _window = require("../../core/utils/window");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-/* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-/* eslint-disable no-restricted-syntax */
 
 class Action {
   constructor(action, config) {
@@ -64,7 +62,6 @@ class Action {
     const {
       executors
     } = Action;
-    // eslint-disable-next-line no-restricted-syntax
     for (const name in executors) {
       if (!excludeValidators[name]) {
         var _executor$validate;

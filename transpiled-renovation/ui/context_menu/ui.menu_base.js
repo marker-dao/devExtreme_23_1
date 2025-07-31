@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_menu_base = _interopRequireDefault(require("../../__internal/ui/context_menu/m_menu_base"));
+var _menu_base = _interopRequireDefault(require("../../__internal/ui/context_menu/menu_base"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_menu_base.default;
+var _default = exports.default = _menu_base.default;
 /**
  * @name dxMenuBaseOptions.onItemHold
  * @hidden

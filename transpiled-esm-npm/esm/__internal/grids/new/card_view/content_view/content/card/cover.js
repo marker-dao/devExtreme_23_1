@@ -20,7 +20,7 @@ export class Cover extends Component {
     const src = imageSrc;
     const containerClasses = combineClasses({
       [CLASSES.cover]: true,
-      [CLASSES.noImage]: !src
+      [CLASSES.noImage]: !src && !Template
     });
     return createVNode(1, "div", containerClasses, Template ? createComponentVNode(2, Template, {
       "card": card

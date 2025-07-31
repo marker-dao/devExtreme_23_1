@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/popup/m_popup.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -33,8 +33,8 @@ var _button = _interopRequireDefault(require("../../../ui/button"));
 var _resizable = _interopRequireDefault(require("../../../ui/resizable"));
 var _themes = require("../../../ui/themes");
 var _m_window = _interopRequireDefault(require("../../core/utils/m_window"));
-var _m_overlay = _interopRequireDefault(require("../../ui/overlay/m_overlay"));
-var zIndexPool = _interopRequireWildcard(require("../../ui/overlay/m_z_index"));
+var _overlay = _interopRequireDefault(require("../../ui/overlay/overlay"));
+var zIndexPool = _interopRequireWildcard(require("../../ui/overlay/z_index"));
 var _constants = require("../../ui/toolbar/constants");
 var _m_popup_drag = _interopRequireDefault(require("./m_popup_drag"));
 var _m_popup_overflow_manager = require("./m_popup_overflow_manager");
@@ -113,7 +113,7 @@ const getButtonPlace = name => {
 };
 const getLocalizationKey = itemType => itemType.toLowerCase() === 'done' ? 'OK' : (0, _inflector.camelize)(itemType, true);
 const getHeightStrategyChangeOffset = (currentHeightStrategyClass, popupVerticalPaddings) => currentHeightStrategyClass === HEIGHT_STRATEGIES.flex ? -popupVerticalPaddings : 0;
-class Popup extends _m_overlay.default {
+class Popup extends _overlay.default {
   _supportedKeys() {
     return _extends({}, super._supportedKeys(), {
       upArrow: e => {
@@ -822,12 +822,14 @@ class Popup extends _m_overlay.default {
     this._resizable = this._createComponent(this._$content, _resizable.default, {
       handles: this.option('resizeEnabled') ? 'all' : 'none',
       onResizeStart: e => {
+        var _this$_actions, _this$_actions$onResi;
         this._observeContentResize(false);
-        this._actions.onResizeStart(e);
+        (_this$_actions = this._actions) === null || _this$_actions === void 0 || (_this$_actions$onResi = _this$_actions.onResizeStart) === null || _this$_actions$onResi === void 0 || _this$_actions$onResi.call(_this$_actions, e);
       },
       onResize: e => {
+        var _this$_actions2, _this$_actions2$onRes;
         this._setContentHeight();
-        this._actions.onResize(e);
+        (_this$_actions2 = this._actions) === null || _this$_actions2 === void 0 || (_this$_actions2$onRes = _this$_actions2.onResize) === null || _this$_actions2$onRes === void 0 || _this$_actions2$onRes.call(_this$_actions2, e);
       },
       onResizeEnd: e => {
         this._resizeEndHandler(e);
@@ -840,6 +842,7 @@ class Popup extends _m_overlay.default {
     });
   }
   _resizeEndHandler(e) {
+    var _this$_actions3, _this$_actions3$onRes;
     const width = this._resizable.option('width');
     const height = this._resizable.option('height');
     if (width) {
@@ -851,7 +854,7 @@ class Popup extends _m_overlay.default {
     this._cacheDimensions();
     this._positionController.resizeHandled();
     this._positionController.detectVisualPositionChange(e.event);
-    this._actions.onResizeEnd(e);
+    (_this$_actions3 = this._actions) === null || _this$_actions3 === void 0 || (_this$_actions3$onRes = _this$_actions3.onResizeEnd) === null || _this$_actions3$onRes === void 0 || _this$_actions3$onRes.call(_this$_actions3, e);
   }
   _setContentHeight() {
     const {
@@ -934,8 +937,7 @@ class Popup extends _m_overlay.default {
     const {
       fullScreen
     } = this.option();
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    return super._isAllWindowCovered() || fullScreen;
+    return super._isAllWindowCovered() || Boolean(fullScreen);
   }
   _renderDimensions() {
     if (this.option('fullScreen')) {

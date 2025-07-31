@@ -1,16 +1,14 @@
 /**
 * DevExtreme (esm/__internal/ui/form/m_form.item_options_actions.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-/* eslint-disable max-classes-per-file */
 import { data } from '../../../core/element_data';
-import { extend } from '../../../core/utils/extend';
-import ItemOptionAction from './m_form.item_option_action';
-import { getFullOptionName } from './m_form.utils';
+import ItemOptionAction from '../../ui/form/m_form.item_option_action';
+import { getFullOptionName } from '../../ui/form/m_form.utils';
 class WidgetOptionItemOptionAction extends ItemOptionAction {
   tryExecute() {
     const {
@@ -33,7 +31,7 @@ class TabOptionItemOptionAction extends ItemOptionAction {
         item,
         value
       } = this._options;
-      const itemIndex = this._itemsRunTimeInfo.findItemIndexByItem(item);
+      const itemIndex = this._itemsRunTimeInfo.findItemIndexByItem(item) ?? -1;
       if (itemIndex >= 0) {
         tabPanel.option(getFullOptionName(`items[${itemIndex}]`, optionName), value);
         return true;
@@ -43,6 +41,7 @@ class TabOptionItemOptionAction extends ItemOptionAction {
   }
 }
 class SimpleItemTemplateChangedAction extends ItemOptionAction {
+  // eslint-disable-next-line class-methods-use-this
   tryExecute() {
     return false;
   }
@@ -79,10 +78,10 @@ class ValidationRulesItemOptionAction extends ItemOptionAction {
     const instance = this.findInstance();
     const validator = instance && data(instance.$element()[0], 'dxValidator');
     if (validator && item) {
-      const filterRequired = item => item.type === 'required';
+      const filterRequired = validationRule => validationRule.type === 'required';
       const oldContainsRequired = (validator.option('validationRules') || []).some(filterRequired);
-      const newContainsRequired = (item.validationRules || []).some(filterRequired);
-      if (!oldContainsRequired && !newContainsRequired || oldContainsRequired && newContainsRequired) {
+      const newContainsRequired = (item.validationRules ?? []).some(filterRequired);
+      if (oldContainsRequired === newContainsRequired) {
         validator.option('validationRules', item.validationRules);
         return true;
       }
@@ -93,11 +92,11 @@ class ValidationRulesItemOptionAction extends ItemOptionAction {
 class CssClassItemOptionAction extends ItemOptionAction {
   tryExecute() {
     const $itemContainer = this.findItemContainer();
-    const {
-      previousValue,
-      value
-    } = this._options;
-    if ($itemContainer) {
+    if ($itemContainer.length) {
+      const {
+        previousValue = '',
+        value = ''
+      } = this._options;
       $itemContainer.removeClass(previousValue).addClass(value);
       return true;
     }
@@ -121,10 +120,11 @@ const tryCreateItemOptionAction = (optionName, itemActionOptions) => {
     case 'icon': // TabbedItem/tabs/#icon
     case 'tabTemplate': // TabbedItem/tabs/#tabTemplate
     case 'title':
-      // TabbedItem/tabs/#title
-      return new TabOptionItemOptionAction(extend(itemActionOptions, {
-        optionName
-      }));
+      {
+        // TabbedItem/tabs/#title
+        itemActionOptions.optionName = optionName;
+        return new TabOptionItemOptionAction(itemActionOptions);
+      }
     case 'tabs':
       // TabbedItem/tabs
       return new TabsOptionItemOptionAction(itemActionOptions);
@@ -139,9 +139,8 @@ const tryCreateItemOptionAction = (optionName, itemActionOptions) => {
         if (itemType === 'group') {
           return new GroupItemTemplateChangedAction(itemActionOptions);
         }
-        return new TabOptionItemOptionAction(extend(itemActionOptions, {
-          optionName
-        }));
+        itemActionOptions.optionName = optionName;
+        return new TabOptionItemOptionAction(itemActionOptions);
       }
     default:
       return null;

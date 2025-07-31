@@ -1,11 +1,12 @@
 /**
 * DevExtreme (esm/__internal/grids/pivot_grid/headers_area/m_headers_area.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+/* eslint-disable max-classes-per-file */
 import domAdapter from '../../../../core/dom_adapter';
 import $ from '../../../../core/renderer';
 import { each } from '../../../../core/utils/iterator';
@@ -38,20 +39,20 @@ function getCellPath(tableElement, cell) {
   }
   return undefined;
 }
-const HorizontalHeadersArea = AreaItem.inherit({
-  ctor(component) {
-    this.callBase(component);
+class HorizontalHeadersArea extends AreaItem {
+  constructor(component) {
+    super(component);
     this._scrollBarWidth = 0;
-  },
+  }
   _getAreaName() {
     return 'column';
-  },
+  }
   _getAreaClassName() {
     return PIVOTGRID_AREA_COLUMN_CLASS;
-  },
+  }
   _createGroupElement() {
     return $('<div>').addClass(this._getAreaClassName()).addClass(PIVOTGRID_AREA_CLASS);
-  },
+  }
   _applyCustomStyles(options) {
     const {
       cssArray
@@ -83,24 +84,24 @@ const HorizontalHeadersArea = AreaItem.inherit({
     if (isDefined(cell.expanded)) {
       classArray.push(cell.expanded ? PIVOTGRID_EXPANDED_CLASS : PIVOTGRID_COLLAPSED_CLASS);
     }
-    this.callBase(options);
-  },
+    super._applyCustomStyles(options);
+  }
   _getMainElementMarkup() {
     const thead = domAdapter.createElement('thead');
     thead.setAttribute('class', this._getAreaClassName());
     return thead;
-  },
+  }
   _getCloseMainElementMarkup() {
     return '</thead>';
-  },
+  }
   setVirtualContentParams(params) {
-    this.callBase(params);
+    super.setVirtualContentParams(params);
     this._setTableCss({
       left: params.left,
       top: 0
     });
     this._virtualContentWidth = params.width;
-  },
+  }
   hasScroll() {
     const tableWidth = this._virtualContent ? this._virtualContentWidth : this._tableWidth;
     const groupWidth = this.getGroupWidth();
@@ -108,7 +109,7 @@ const HorizontalHeadersArea = AreaItem.inherit({
       return tableWidth - groupWidth >= 1;
     }
     return false;
-  },
+  }
   renderScrollable() {
     this._groupElement.dxScrollable({
       useNative: false,
@@ -119,7 +120,7 @@ const HorizontalHeadersArea = AreaItem.inherit({
       rtlEnabled: false,
       updateManually: true
     });
-  },
+  }
   processScrollBarSpacing(scrollBarWidth) {
     const groupAlignment = this.option('rtlEnabled') ? 'right' : 'left';
     const groupWidth = this.getGroupWidth();
@@ -132,7 +133,7 @@ const HorizontalHeadersArea = AreaItem.inherit({
     this._groupElement.toggleClass(PIVOTGRID_VERTICAL_SCROLL_CLASS, scrollBarWidth > 0);
     setWidth(this._groupElement.css('float', groupAlignment), this.getGroupHeight());
     this._scrollBarWidth = scrollBarWidth;
-  },
+  }
   getScrollPath(offset) {
     const tableElement = this.tableElement();
     let cell;
@@ -145,18 +146,18 @@ const HorizontalHeadersArea = AreaItem.inherit({
       return undefined;
     });
     return getCellPath(tableElement, cell);
-  },
+  }
   _moveFakeTable(scrollPos) {
     this._moveFakeTableHorizontally(scrollPos);
-    this.callBase();
+    super._moveFakeTable();
   }
-});
-const VerticalHeadersArea = HorizontalHeadersArea.inherit({
+}
+class VerticalHeadersArea extends HorizontalHeadersArea {
   _getAreaClassName() {
     return PIVOTGRID_AREA_ROW_CLASS;
-  },
+  }
   _applyCustomStyles(options) {
-    this.callBase(options);
+    super._applyCustomStyles(options);
     if (options.cellIndex === options.cellsCount - 1) {
       options.classArray.push(PIVOTGRID_LAST_CELL_CLASS);
     }
@@ -166,18 +167,18 @@ const VerticalHeadersArea = HorizontalHeadersArea.inherit({
     if (options.cell.isWhiteSpace) {
       options.classArray.push('dx-white-space-column');
     }
-  },
+  }
   _getAreaName() {
     return 'row';
-  },
+  }
   setVirtualContentParams(params) {
-    this.callBase(params);
+    super.setVirtualContentParams(params);
     this._setTableCss({
       top: params.top,
       left: 0
     });
     this._virtualContentHeight = params.height;
-  },
+  }
   hasScroll() {
     const tableHeight = this._virtualContent ? this._virtualContentHeight : this._tableHeight;
     const groupHeight = this.getGroupHeight();
@@ -185,7 +186,7 @@ const VerticalHeadersArea = HorizontalHeadersArea.inherit({
       return tableHeight - groupHeight >= 1;
     }
     return false;
-  },
+  }
   renderScrollable() {
     this._groupElement.dxScrollable({
       useNative: false,
@@ -195,7 +196,7 @@ const VerticalHeadersArea = HorizontalHeadersArea.inherit({
       direction: 'vertical',
       updateManually: true
     });
-  },
+  }
   processScrollBarSpacing(scrollBarWidth) {
     const groupHeight = this.getGroupHeight();
     if (groupHeight) {
@@ -211,7 +212,7 @@ const VerticalHeadersArea = HorizontalHeadersArea.inherit({
       this._groupElement.after($div);
     }
     this._scrollBarWidth = scrollBarWidth;
-  },
+  }
   getScrollPath(offset) {
     const tableElement = this.tableElement();
     let cell;
@@ -225,25 +226,26 @@ const VerticalHeadersArea = HorizontalHeadersArea.inherit({
       return undefined;
     });
     return getCellPath(tableElement, cell);
-  },
+  }
   _moveFakeTable(scrollPos) {
     this._moveFakeTableTop(scrollPos);
-    this.callBase();
-  },
+    // @ts-expect-error
+    super._moveFakeTable();
+  }
   _getRowClassNames(rowIndex, cell, rowClassNames) {
     // @ts-expect-error
     if (rowIndex !== 0 & cell.expanded && !rowClassNames.includes(PIVOTGRID_EXPAND_BORDER)) {
       rowClassNames.push(PIVOTGRID_EXPAND_BORDER);
     }
-  },
+  }
   _getMainElementMarkup() {
     const tbody = domAdapter.createElement('tbody');
     tbody.classList.add(this._getAreaClassName());
     return tbody;
-  },
+  }
   _getCloseMainElementMarkup() {
     return '</tbody>';
-  },
+  }
   updateColspans(columnCount) {
     const {
       rows
@@ -272,7 +274,7 @@ const VerticalHeadersArea = HorizontalHeadersArea.inherit({
       }
     }
   }
-});
+}
 export default {
   HorizontalHeadersArea,
   VerticalHeadersArea

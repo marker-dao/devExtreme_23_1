@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_menu = _interopRequireDefault(require("../__internal/ui/menu/m_menu"));
+var _menu = _interopRequireDefault(require("../__internal/ui/menu/menu"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_menu.default; // STYLE menu
+var _default = exports.default = _menu.default; // STYLE menu
 /**
  * @name dxMenuItem
  * @inherits dxMenuBaseItem

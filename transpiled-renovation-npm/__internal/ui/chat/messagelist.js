@@ -16,7 +16,7 @@ var _dom = require("../../../core/utils/dom");
 var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
-var _m_context_menu = _interopRequireDefault(require("../../ui/context_menu/m_context_menu"));
+var _context_menu = _interopRequireDefault(require("../../ui/context_menu/context_menu"));
 var _scroll_view = _interopRequireDefault(require("../../ui/scroll_view/scroll_view"));
 var _get_scroll_top_max = require("../../ui/scroll_view/utils/get_scroll_top_max");
 var _layout = require("../splitter/utils/layout");
@@ -211,7 +211,7 @@ class MessageList extends _widget.default {
   }
   _renderContextMenu() {
     const $contextMenu = (0, _renderer.default)('<div>');
-    this._contextMenu = this._createComponent($contextMenu, _m_context_menu.default, {
+    this._contextMenu = this._createComponent($contextMenu, _context_menu.default, {
       target: CHAT_MESSAGELIST_CONTEXT_MENU_TARGET,
       onShowing: e => {
         this._onContextMenuShowing(e);
@@ -223,6 +223,7 @@ class MessageList extends _widget.default {
       hideOnParentScroll: false,
       overlayContainer: this._scrollView.container(),
       visualContainer: this._scrollView.container(),
+      // @ts-expect-error ts-error
       boundaryOffset: {
         h: 16
       }

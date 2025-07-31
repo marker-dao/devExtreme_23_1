@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/core/license/license_validation.test.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 import { afterEach, beforeEach, describe, expect, it, jest, test } from '@jest/globals';
 import config from '../../../core/config';
 import errors from '../../../core/errors';
-import { base } from '../../ui/overlay/m_z_index';
+import { base } from '../../ui/overlay/z_index';
 import { assertDevExtremeVersion, clearAssertedVersions } from '../../utils/version';
 import { parseLicenseKey, setLicenseCheckSkipCondition, validateLicense } from './license_validation';
 import * as trialPanel from './trial_panel.client';

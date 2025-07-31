@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/form/components/m_button_item.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,6 +10,19 @@ import $ from '../../../../core/renderer';
 import { extend } from '../../../../core/utils/extend';
 import { isDefined } from '../../../../core/utils/type';
 const FIELD_BUTTON_ITEM_CLASS = 'dx-field-button-item';
+function convertAlignmentToTextAlign(horizontalAlignment) {
+  return isDefined(horizontalAlignment) ? horizontalAlignment : 'right';
+}
+function convertAlignmentToJustifyContent(verticalAlignment) {
+  switch (verticalAlignment) {
+    case 'center':
+      return 'center';
+    case 'bottom':
+      return 'flex-end';
+    default:
+      return 'flex-start';
+  }
+}
 export function renderButtonItem(_ref) {
   let {
     item,
@@ -24,21 +37,8 @@ export function renderButtonItem(_ref) {
   const $button = $('<div>').appendTo($rootElement);
   return {
     $rootElement,
-    buttonInstance: createComponentCallback($button, 'dxButton', extend({
+    buttonInstance: createComponentCallback($button, extend({
       validationGroup
     }, item.buttonOptions))
   };
-}
-function convertAlignmentToTextAlign(horizontalAlignment) {
-  return isDefined(horizontalAlignment) ? horizontalAlignment : 'right';
-}
-function convertAlignmentToJustifyContent(verticalAlignment) {
-  switch (verticalAlignment) {
-    case 'center':
-      return 'center';
-    case 'bottom':
-      return 'flex-end';
-    default:
-      return 'flex-start';
-  }
 }

@@ -249,9 +249,9 @@ class Stepper extends _collection_widget.default {
       super._itemClickHandler(e, args, config);
     }
   }
-  _itemPointerDownHandler(e) {
+  _itemPointerHandler(e) {
     if (!this._shouldPreventItemEvent(e.currentTarget)) {
-      super._itemPointerDownHandler(e);
+      super._itemPointerHandler(e);
     }
   }
   _itemSelectHandler(e) {

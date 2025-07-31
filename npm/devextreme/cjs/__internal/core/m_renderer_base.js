@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/core/m_renderer_base.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,11 +20,6 @@ var _style = require("../../core/utils/style");
 var _type = require("../../core/utils/type");
 var _window = require("../../core/utils/window");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable object-shorthand */
-
 const window = (0, _window.getWindow)();
 let renderer;
 const initRender = function (selector, context) {
@@ -146,15 +141,11 @@ initRender.prototype.removeClass = function (className) {
   return this.toggleClass(className, false);
 };
 initRender.prototype.hasClass = function (className) {
-  if (!this[0] || this[0].className === undefined) return false;
   const classNames = className.split(' ');
-  for (let i = 0; i < classNames.length; i++) {
-    if (this[0].classList) {
-      if (this[0].classList.contains(classNames[i])) return true;
-    } else {
-      // IE9
-      const className = (0, _type.isString)(this[0].className) ? this[0].className : _dom_adapter.default.getAttribute(this[0], 'class');
-      if ((className || '').split(' ').indexOf(classNames[i]) >= 0) return true;
+  for (let i = 0; i < this.length; i++) {
+    if (!this[i] || !this[i].className) continue;
+    for (let j = 0; j < classNames.length; j++) {
+      if (this[i].classList.contains(classNames[j])) return true;
     }
   }
   return false;

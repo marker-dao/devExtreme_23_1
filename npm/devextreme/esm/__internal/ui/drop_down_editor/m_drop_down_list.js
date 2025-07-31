@@ -1,14 +1,14 @@
 /**
 * DevExtreme (esm/__internal/ui/drop_down_editor/m_drop_down_list.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
-import { addNamespace } from '../../../common/core/events/utils/index';
+import { addNamespace } from '../../../common/core/events/utils';
 import messageLocalization from '../../../common/core/localization/message';
 import dataQuery from '../../../common/data/query';
 import registerComponent from '../../../core/component_registrator';
@@ -17,7 +17,7 @@ import Guid from '../../../core/guid';
 import $ from '../../../core/renderer';
 import { ChildDefaultTemplate } from '../../../core/templates/child_default_template';
 import { ensureDefined,
-// @ts-expect-error
+// @ts-expect-error ts-error
 grep, noop } from '../../../core/utils/common';
 import { Deferred } from '../../../core/utils/deferred';
 import { extend } from '../../../core/utils/extend';
@@ -26,9 +26,9 @@ import { getOuterHeight } from '../../../core/utils/size';
 import { isDefined, isObject, isWindow } from '../../../core/utils/type';
 import { getWindow } from '../../../core/utils/window';
 import DataExpressionMixin from '../../../ui/editor/ui.data_expression';
-import List from '../../../ui/list_light';
 import errors from '../../../ui/widget/ui.errors';
 import DropDownEditor from '../../ui/drop_down_editor/m_drop_down_editor';
+import List from '../../ui/list/m_list.edit.search';
 import DataConverterMixin from '../../ui/shared/m_grouped_data_converter_mixin';
 const window = getWindow();
 const LIST_ITEM_SELECTOR = '.dx-list-item';
@@ -185,7 +185,6 @@ class DropDownList extends DropDownEditor {
   }
   _saveFocusOnWidget() {
     var _this$_list;
-    // @ts-expect-error ts-error
     if ((_this$_list = this._list) !== null && _this$_list !== void 0 && _this$_list.initialOption('focusStateEnabled')) {
       this._focusInput();
     }
@@ -330,11 +329,11 @@ class DropDownList extends DropDownEditor {
   _updateActiveDescendant($target) {
     var _this$_list2;
     const opened = this.option('opened');
-    // @ts-expect-error ts-error
     const listFocusedItemId = (_this$_list2 = this._list) === null || _this$_list2 === void 0 ? void 0 : _this$_list2.getFocusedItemId();
     const isElementOnDom = $(`#${listFocusedItemId}`).length > 0;
     const activedescendant = opened && isElementOnDom && listFocusedItemId;
     this.setAria({
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       activedescendant: activedescendant || null
     }, $target);
   }
@@ -472,28 +471,37 @@ class DropDownList extends DropDownEditor {
     return devices.real().deviceType === 'desktop';
   }
   _listConfig() {
+    const {
+      noDataText,
+      grouped,
+      wrapItemText,
+      itemTemplate,
+      groupTemplate,
+      hoverStateEnabled,
+      focusStateEnabled
+    } = this.option();
     const options = {
       selectionMode: 'single',
       _templates: this.option('_templates'),
       templateProvider: this.option('templateProvider'),
-      noDataText: this.option('noDataText'),
+      noDataText,
       encodeNoDataText: this.option('encodeNoDataText'),
-      grouped: this.option('grouped'),
-      wrapItemText: this.option('wrapItemText'),
+      grouped,
+      wrapItemText,
       useItemTextAsTitle: this.option('useItemTextAsTitle'),
       onContentReady: this._listContentReadyHandler.bind(this),
-      itemTemplate: this.option('itemTemplate'),
+      itemTemplate,
       indicateLoading: false,
       // @ts-expect-error ts-error
       keyExpr: this._getCollectionKeyExpr(),
       // @ts-expect-error ts-error
       displayExpr: this._displayGetterExpr(),
-      groupTemplate: this.option('groupTemplate'),
+      groupTemplate,
       onItemClick: this._listItemClickAction.bind(this),
       dataSource: this._getDataSource(),
       _dataController: this._dataController,
-      hoverStateEnabled: this._isDesktopDevice() ? this.option('hoverStateEnabled') : false,
-      focusStateEnabled: this._isDesktopDevice() ? this.option('focusStateEnabled') : false,
+      hoverStateEnabled: this._isDesktopDevice() ? hoverStateEnabled : false,
+      focusStateEnabled: this._isDesktopDevice() ? focusStateEnabled : false,
       _onItemsRendered: () => {
         // @ts-expect-error ts-error
         this._popup.repaint();

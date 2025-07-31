@@ -4,11 +4,11 @@ import { getPublicElement } from '../../../../core/element';
 import $ from '../../../../core/renderer';
 import { captionize } from '../../../../core/utils/inflector';
 import { format } from '../../../../core/utils/string';
-import { isMaterialBased } from '../../../../ui/themes';
-import Validator from '../../../../ui/validator';
+import { current, isMaterialBased } from '../../../../ui/themes';
 import errors from '../../../../ui/widget/ui.errors';
-import { FIELD_ITEM_CONTENT_CLASS } from '../constants';
-import { renderLabel } from './m_label';
+import { renderLabel } from '../../../ui/form/components/m_label';
+import { FIELD_ITEM_CONTENT_CLASS } from '../../../ui/form/constants';
+import Validator from '../../../ui/m_validator';
 export const FLEX_LAYOUT_CLASS = 'dx-flex-layout';
 export const FIELD_ITEM_OPTIONAL_CLASS = 'dx-field-item-optional';
 export const FIELD_ITEM_REQUIRED_CLASS = 'dx-field-item-required';
@@ -22,7 +22,46 @@ export const TOGGLE_CONTROLS_PADDING_CLASS = 'dx-toggle-controls-paddings';
 const TEMPLATE_WRAPPER_CLASS = 'dx-template-wrapper';
 const VALIDATION_TARGET_CLASS = 'dx-validation-target';
 const INVALID_CLASS = 'dx-invalid';
-export function renderFieldItem(_ref) {
+function getValidationTarget($fieldEditorContainer) {
+  const $editor = $fieldEditorContainer.children().first();
+  return $editor.hasClass(TEMPLATE_WRAPPER_CLASS) ? $editor.children().first() : $editor;
+}
+function subscribeWrapperInvalidClassToggle(validationTargetInstance) {
+  if (validationTargetInstance && isMaterialBased(current())) {
+    const wrapperClass = `.${FIELD_ITEM_CONTENT_WRAPPER_CLASS}`;
+    const toggleInvalidClass = _ref => {
+      let {
+        element,
+        component
+      } = _ref;
+      const {
+        isValid,
+        validationMessageMode
+      } = component.option();
+      $(element).parents(wrapperClass).toggleClass(INVALID_CLASS, isValid === false && (component._isFocused() || validationMessageMode === 'always'));
+    };
+    validationTargetInstance.on('optionChanged', e => {
+      if (e.name !== 'isValid') return;
+      toggleInvalidClass(e);
+    });
+    validationTargetInstance.on('focusIn', toggleInvalidClass).on('focusOut', toggleInvalidClass).on('enterKey', toggleInvalidClass);
+  }
+}
+function tryGetValidationTargetInstance($validationTarget) {
+  var _$validationTarget$pa;
+  // @ts-expect-error ts-error
+  return ($validationTarget === null || $validationTarget === void 0 ? void 0 : $validationTarget.data(VALIDATION_TARGET_CLASS)) || ($validationTarget === null || $validationTarget === void 0 || (_$validationTarget$pa = $validationTarget.parent) === null || _$validationTarget$pa === void 0 || (_$validationTarget$pa = _$validationTarget$pa.call($validationTarget)) === null || _$validationTarget$pa === void 0 ? void 0 : _$validationTarget$pa.data(VALIDATION_TARGET_CLASS));
+}
+function getTemplateData(item, editorOptions, formOrLayoutManager) {
+  return {
+    dataField: item.dataField,
+    editorType: item.editorType,
+    editorOptions,
+    component: formOrLayoutManager,
+    name: item.name
+  };
+}
+export function renderFieldItem(_ref2) {
   let {
     $parent,
     rootElementCssClassList,
@@ -35,7 +74,7 @@ export function renderFieldItem(_ref) {
     needRenderLabel,
     // TODO: move to 'labelOptions' ?
     formLabelLocation,
-    // TODO: use 'labelOptions.location' insted ?
+    // TODO: use 'labelOptions.location' instead ?
     item,
     // TODO: pass simple values instead of complex object
     editorOptions,
@@ -49,7 +88,7 @@ export function renderFieldItem(_ref) {
     // TODO: move to 'item' ?
     requiredMessageTemplate,
     validationGroup
-  } = _ref;
+  } = _ref2;
   const $rootElement = $('<div>').addClass(rootElementCssClassList.join(' ')).appendTo($parent);
   $rootElement.addClass(isRequired ? FIELD_ITEM_REQUIRED_CLASS : FIELD_ITEM_OPTIONAL_CLASS);
   if (isSimpleItem) {
@@ -69,7 +108,9 @@ export function renderFieldItem(_ref) {
     left: 'right',
     top: 'bottom'
   };
-  $fieldEditorContainer.addClass(FIELD_ITEM_CONTENT_CLASS).addClass(FIELD_ITEM_CONTENT_LOCATION_CLASS + locationClassSuffix[formLabelLocation]);
+  $fieldEditorContainer.addClass(FIELD_ITEM_CONTENT_CLASS)
+  // @ts-expect-error ts-error
+  .addClass(FIELD_ITEM_CONTENT_LOCATION_CLASS + locationClassSuffix[formLabelLocation]);
   //
   // Setup $label:
   //
@@ -78,7 +119,6 @@ export function renderFieldItem(_ref) {
     if (labelOptions.labelTemplate) {
       labelOptions.labelTemplateData = getTemplateData(item, editorOptions, formOrLayoutManager);
     }
-    // @ts-expect-error
     $label = renderLabel(labelOptions);
   }
   if ($label) {
@@ -99,7 +139,7 @@ export function renderFieldItem(_ref) {
     }
     if (editorType === 'dxCheckBox' || editorType === 'dxSwitch') {
       eventsEngine.on($label, clickEventName, () => {
-        // @ts-expect-error
+        // @ts-expect-error ts-error
         eventsEngine.trigger($fieldEditorContainer.children(), clickEventName);
       });
     }
@@ -118,11 +158,13 @@ export function renderFieldItem(_ref) {
   //
   // Append field editor:
   //
+  // eslint-disable-next-line @typescript-eslint/init-declarations
   let widgetInstance;
   if (template) {
     template.render({
       container: getPublicElement($fieldEditorContainer),
       model: getTemplateData(item, editorOptions, formOrLayoutManager),
+      // @ts-expect-error ts-error
       onRendered() {
         const $validationTarget = getValidationTarget($fieldEditorContainer);
         const validationTargetInstance = tryGetValidationTargetInstance($validationTarget);
@@ -137,7 +179,7 @@ export function renderFieldItem(_ref) {
       if (labelID) widgetInstance.setAria('labelledby', labelID);
       widgetInstance.setAria('required', isRequired);
     } catch (e) {
-      // @ts-expect-error
+      // @ts-expect-error ts-error
       errors.log('E1035', e.message);
     }
   }
@@ -150,12 +192,12 @@ export function renderFieldItem(_ref) {
     const isItemHaveCustomLabel = item.label && item.label.text;
     const itemName = isItemHaveCustomLabel ? null : name;
     const fieldName = isItemHaveCustomLabel ? item.label.text : itemName && captionize(itemName);
-    let validationRules;
+    let validationRules = null;
     if (isSimpleItem) {
       if (item.validationRules) {
         validationRules = item.validationRules;
       } else {
-        const requiredMessage = format(requiredMessageTemplate, fieldName || '');
+        const requiredMessage = format(requiredMessageTemplate, fieldName);
         validationRules = item.isRequired ? [{
           type: 'required',
           message: requiredMessage
@@ -163,6 +205,7 @@ export function renderFieldItem(_ref) {
       }
     }
     if (Array.isArray(validationRules) && validationRules.length) {
+      // @ts-expect-error ts-error
       createComponentCallback($validationTarget, Validator, {
         validationRules,
         validationGroup,
@@ -187,44 +230,5 @@ export function renderFieldItem(_ref) {
     $fieldEditorContainer,
     $rootElement,
     widgetInstance
-  };
-}
-function getValidationTarget($fieldEditorContainer) {
-  const $editor = $fieldEditorContainer.children().first();
-  return $editor.hasClass(TEMPLATE_WRAPPER_CLASS) ? $editor.children().first() : $editor;
-}
-function tryGetValidationTargetInstance($validationTarget) {
-  var _$validationTarget$pa;
-  return ($validationTarget === null || $validationTarget === void 0 ? void 0 : $validationTarget.data(VALIDATION_TARGET_CLASS)) || ($validationTarget === null || $validationTarget === void 0 || (_$validationTarget$pa = $validationTarget.parent) === null || _$validationTarget$pa === void 0 || (_$validationTarget$pa = _$validationTarget$pa.call($validationTarget)) === null || _$validationTarget$pa === void 0 ? void 0 : _$validationTarget$pa.data(VALIDATION_TARGET_CLASS));
-}
-function subscribeWrapperInvalidClassToggle(validationTargetInstance) {
-  // @ts-expect-error
-  if (validationTargetInstance && isMaterialBased()) {
-    const wrapperClass = `.${FIELD_ITEM_CONTENT_WRAPPER_CLASS}`;
-    const toggleInvalidClass = _ref2 => {
-      let {
-        element,
-        component
-      } = _ref2;
-      const {
-        isValid,
-        validationMessageMode
-      } = component.option();
-      $(element).parents(wrapperClass).toggleClass(INVALID_CLASS, isValid === false && (component._isFocused() || validationMessageMode === 'always'));
-    };
-    validationTargetInstance.on('optionChanged', e => {
-      if (e.name !== 'isValid') return;
-      toggleInvalidClass(e);
-    });
-    validationTargetInstance.on('focusIn', toggleInvalidClass).on('focusOut', toggleInvalidClass).on('enterKey', toggleInvalidClass);
-  }
-}
-function getTemplateData(item, editorOptions, formOrLayoutManager) {
-  return {
-    dataField: item.dataField,
-    editorType: item.editorType,
-    editorOptions,
-    component: formOrLayoutManager,
-    name: item.name
   };
 }

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, jest, test } from '@jest/globals';
 import config from '../../../core/config';
 import errors from '../../../core/errors';
-import { base } from '../../ui/overlay/m_z_index';
+import { base } from '../../ui/overlay/z_index';
 import { assertDevExtremeVersion, clearAssertedVersions } from '../../utils/version';
 import { parseLicenseKey, setLicenseCheckSkipCondition, validateLicense } from './license_validation';
 import * as trialPanel from './trial_panel.client';

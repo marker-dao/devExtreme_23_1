@@ -4,7 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _guid = _interopRequireDefault(require("../../../core/guid"));
+var _guid2 = _interopRequireDefault(require("../../../core/guid"));
+var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _type = require("../../../core/utils/type");
@@ -14,9 +15,9 @@ class FormItemsRunTimeInfo {
     this._map = {};
   }
   _findWidgetInstance(condition) {
+    // eslint-disable-next-line @typescript-eslint/init-declarations
     let result;
-    // @ts-expect-error
-    (0, _iterator.each)(this._map, (guid, _ref) => {
+    (0, _iterator.each)(this._map, (_guid, _ref) => {
       let {
         widgetInstance,
         item
@@ -25,17 +26,19 @@ class FormItemsRunTimeInfo {
         result = widgetInstance;
         return false;
       }
+      return true;
     });
     return result;
   }
   _findFieldByCondition(callback, valueExpr) {
+    // eslint-disable-next-line @typescript-eslint/init-declarations
     let result;
-    // @ts-expect-error
     (0, _iterator.each)(this._map, (key, value) => {
       if (callback(value)) {
         result = valueExpr === 'guid' ? key : value[valueExpr];
         return false;
       }
+      return true;
     });
     return result;
   }
@@ -50,7 +53,7 @@ class FormItemsRunTimeInfo {
     delete this._map[key];
   }
   add(options) {
-    const key = options.guid || new _guid.default();
+    const key = options.guid ?? new _guid2.default().toString();
     this._map[key] = options;
     return key;
   }
@@ -105,10 +108,10 @@ class FormItemsRunTimeInfo {
     // eslint-disable-next-line no-restricted-syntax
     for (const key in this._map) {
       if (this._map[key].item === item) {
-        return this._map[key].$itemContainer;
+        return this._map[key].$itemContainer ?? (0, _renderer.default)();
       }
     }
-    return null;
+    return (0, _renderer.default)();
   }
   findItemIndexByItem(targetItem) {
     return this._findFieldByCondition(_ref4 => {
@@ -138,7 +141,8 @@ class FormItemsRunTimeInfo {
     const keys = Object.keys(this._map);
     const filteredKeys = keys.filter(key => {
       if (this._map[key].path) {
-        return this._map[key].path.indexOf(path, 0) > -1;
+        var _this$_map$key$path;
+        return (_this$_map$key$path = this._map[key].path) === null || _this$_map$key$path === void 0 ? void 0 : _this$_map$key$path.includes(path, 0);
       }
       return false;
     });

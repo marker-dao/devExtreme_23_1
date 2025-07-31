@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/range_selector/sliders_controller.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -182,11 +182,28 @@ SlidersController.prototype = {
     sliders[1].setOverlapped(areOverlapped);
     this._applyAreaTrackersPosition();
     this._applySelectedRangePosition(isAnimated);
+    if ((0, _common2.isFirefoxOnAndroid)()) {
+      this._areaTracker.attr({
+        transform: null
+      });
+      this._selectedAreaTracker.attr({
+        transform: null
+      });
+      this._sliders.forEach(slider => {
+        slider._tracker.attr({
+          transform: null
+        });
+      });
+    }
   },
   _applyAreaTrackersPosition: function () {
     const that = this;
-    const position1 = that._sliders[0].getPosition();
-    const position2 = that._sliders[1].getPosition();
+    let position1 = that._sliders[0].getPosition();
+    let position2 = that._sliders[1].getPosition();
+    if ((0, _common2.isFirefoxOnAndroid)()) {
+      position1 += that._sliders[0]._tracker._originalWidth / 2;
+      position2 -= that._sliders[1]._tracker._originalWidth / 2;
+    }
     that._selectedAreaTracker.attr({
       points: buildRectPoints(position1, that._verticalRange[0], position2, that._verticalRange[1])
     }).css({

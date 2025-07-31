@@ -34,6 +34,9 @@ const VALIDATION_MESSAGE_KEYS_MAP = {
   validationBoundary: 'boundary'
 };
 class Editor extends _widget.default {
+  static isEditor(instance) {
+    return instance instanceof Editor;
+  }
   ctor(element, options) {
     this.showValidationMessageTimeout = undefined;
     this.validationRequest = (0, _callbacks.default)();
@@ -79,6 +82,7 @@ class Editor extends _widget.default {
         v: 0
       },
       validationTooltipOptions: {},
+      _cached_validationTooltipOptions: {},
       _showValidationMessage: true,
       isDirty: false
     });
@@ -368,6 +372,8 @@ class Editor extends _widget.default {
       case 'validationTooltipOptions':
         this._innerWidgetOptionChanged(this._validationMessage, args);
         break;
+      case '_cached_validationTooltipOptions':
+        break;
       case '_showValidationMessage':
       case 'isDirty':
         break;
@@ -397,6 +403,4 @@ class Editor extends _widget.default {
     this.option('isValid', true);
   }
 }
-// @ts-expect-error ts-error
-Editor.isEditor = instance => instance instanceof Editor;
 var _default = exports.default = Editor;

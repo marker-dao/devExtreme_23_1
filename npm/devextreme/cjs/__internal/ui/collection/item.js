@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/collection/item.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _class = _interopRequireDefault(require("../../../core/class"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _iterator = require("../../../core/utils/iterator");
 var _public_component = require("../../../core/utils/public_component");
@@ -38,8 +37,8 @@ const forcibleWatcher = (watchMethod, fn, callback) => {
     }
   };
 };
-class CollectionItem extends _class.default.inherit({}) {
-  ctor($element, options, rawData) {
+class CollectionItem {
+  constructor($element, options, rawData) {
     this._$element = $element;
     this._options = options;
     this._rawData = rawData;

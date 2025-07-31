@@ -3,7 +3,7 @@
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _size = require("../../../core/utils/size");
-var _m_overlay = _interopRequireDefault(require("../../ui/overlay/m_overlay"));
+var _overlay = _interopRequireDefault(require("../../ui/overlay/overlay"));
 var _m_list = require("./m_list.base");
 var _m_listEdit = _interopRequireDefault(require("./m_list.edit.decorator"));
 var _m_listEdit2 = require("./m_list.edit.decorator_registry");
@@ -17,7 +17,7 @@ class EditDecoratorContext extends _m_listEdit.default {
     this._menu = this._renderOverlay($menu);
   }
   _renderOverlay($element) {
-    return this._list._createComponent($element, _m_overlay.default, {
+    return this._list._createComponent($element, _overlay.default, {
       shading: false,
       deferRendering: true,
       hideOnParentScroll: true,

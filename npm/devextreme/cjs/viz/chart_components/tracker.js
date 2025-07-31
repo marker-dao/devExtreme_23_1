@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/viz/chart_components/tracker.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -269,11 +269,14 @@ const baseTrackerPrototype = {
       that.clearHover();
     }
   },
+  _processArgumentHoveredPoint: function (argument, argumentIndex) {
+    this._releaseHoveredPoint();
+  },
   _hoverArgument: function (argument, argumentIndex) {
     const that = this;
     const hoverMode = that._getArgumentHoverMode();
     if ((0, _type.isDefined)(argument)) {
-      that._releaseHoveredPoint();
+      this._processArgumentHoveredPoint(argument, argumentIndex);
       that._hoveredArgument = argument;
       that._argumentIndex = argumentIndex;
       that._notifySeries({
@@ -637,6 +640,14 @@ exports.PieTracker = PieTracker;
   },
   _getArgumentHoverMode: function () {
     return correctHoverMode(this._legend);
+  },
+  _processArgumentHoveredPoint: function (argument, argumentIndex) {
+    const points = this._storedSeries.flatMap(series => series.getPointsByKeys(argument, argumentIndex));
+    if (points.length === 1) {
+      this._setHoveredPoint(points[0]);
+    } else {
+      this._releaseHoveredPoint();
+    }
   },
   _hoverArgumentAxis: _common.noop,
   _setStuckSeries: _common.noop,

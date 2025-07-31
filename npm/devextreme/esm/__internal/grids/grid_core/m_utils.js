@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/m_utils.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,6 +27,7 @@ import { getWindow } from '../../../core/utils/window';
 import formatHelper from '../../../format_helper';
 import LoadPanel from '../../../ui/load_panel';
 import sharedFiltering from '../../../ui/shared/filtering';
+import { isEqualSelectors, isSelectorEqualWithCallback } from './utils/index';
 const DATAGRID_SELECTION_DISABLED_CLASS = 'dx-selection-disabled';
 const DATAGRID_GROUP_OPENED_CLASS = 'dx-datagrid-group-opened';
 const DATAGRID_GROUP_CLOSED_CLASS = 'dx-datagrid-group-closed';
@@ -74,14 +75,6 @@ const getIntervalSelector = function () {
     const groupInterval = arguments[0];
     return Math.floor(Number(value) / groupInterval) * groupInterval;
   }
-};
-const equalSelectors = function (selector1, selector2) {
-  if (isFunction(selector1) && isFunction(selector2)) {
-    if (selector1.originalCallback && selector2.originalCallback) {
-      return selector1.originalCallback === selector2.originalCallback && selector1.columnIndex === selector2.columnIndex;
-    }
-  }
-  return selector1 === selector2;
 };
 function isDateType(dataType) {
   return dataType === 'date' || dataType === 'datetime';
@@ -325,7 +318,6 @@ export default {
   getSummaryText,
   normalizeSortingInfo,
   getFormatByDataType(dataType) {
-    // eslint-disable-next-line default-case
     switch (dataType) {
       case 'date':
         return 'shortDate';
@@ -379,7 +371,7 @@ export default {
         return false;
       }
       for (let i = 0; i < sortParameters1.length; i++) {
-        if (!equalSelectors(sortParameters1[i].selector, sortParameters2[i].selector) || sortParameters1[i].desc !== sortParameters2[i].desc || sortParameters1[i].groupInterval !== sortParameters2[i].groupInterval || !ignoreIsExpanded && Boolean(sortParameters1[i].isExpanded) !== Boolean(sortParameters2[i].isExpanded)) {
+        if (!isEqualSelectors(sortParameters1[i].selector, sortParameters2[i].selector) || sortParameters1[i].desc !== sortParameters2[i].desc || sortParameters1[i].groupInterval !== sortParameters2[i].groupInterval || !ignoreIsExpanded && Boolean(sortParameters1[i].isExpanded) !== Boolean(sortParameters2[i].isExpanded)) {
           return false;
         }
       }
@@ -673,5 +665,8 @@ export default {
   isCustomCommandColumn(columns, commandColumn) {
     const customCommandColumns = columns.filter(column => column.type === commandColumn.type);
     return !!customCommandColumns.length;
-  }
+  },
+  // New utils
+  isEqualSelectors,
+  isSelectorEqualWithCallback
 };

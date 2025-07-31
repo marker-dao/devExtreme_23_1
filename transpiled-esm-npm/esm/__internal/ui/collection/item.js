@@ -1,4 +1,3 @@
-import Class from '../../../core/class';
 import $ from '../../../core/renderer';
 import { each } from '../../../core/utils/iterator';
 import { attachInstanceToElement, getInstanceByElement } from '../../../core/utils/public_component';
@@ -23,8 +22,8 @@ const forcibleWatcher = (watchMethod, fn, callback) => {
     }
   };
 };
-class CollectionItem extends Class.inherit({}) {
-  ctor($element, options, rawData) {
+class CollectionItem {
+  constructor($element, options, rawData) {
     this._$element = $element;
     this._options = options;
     this._rawData = rawData;

@@ -132,11 +132,16 @@ SliderMarker.prototype = {
         x: that._isLeftPointer ? points[0] - 1 : points[2],
         height: pointsData.isCut ? rectSize.height : rectSize.height + POINTER_SIZE
       });
-      that._tracker.attr({
+      const trackerAttrs = {
         translateX: offset,
         width: rectSize.width,
         height: rectSize.height + POINTER_SIZE
-      });
+      };
+      if ((0, _common.isFirefoxOnAndroid)()) {
+        trackerAttrs.x = offset;
+        trackerAttrs.translateX = undefined;
+      }
+      that._tracker.attr(trackerAttrs);
       that._label.attr({
         translateX: that._paddingLeftRight + offset,
         translateY: rectSize.height / 2 - (size.y + size.height / 2)

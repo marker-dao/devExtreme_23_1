@@ -1,12 +1,12 @@
 /**
 * DevExtreme (esm/viz/range_selector/slider.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import { utils, formatValue } from './common';
+import { utils, formatValue, isFirefoxOnAndroid } from './common';
 const animationSettings = utils.animationSettings;
 import SliderMarker from './slider_marker';
 import supportUtils from '../../__internal/core/utils/m_support';
@@ -41,16 +41,24 @@ Slider.prototype = {
     const that = this;
     const slider = that._sliderGroup;
     const tracker = that._tracker;
-    const attrs = {
+    const sliderAttrs = {
       translateX: that._position
     };
+    let trackerAttrs = {
+      translateX: that._position
+    };
+    if (isFirefoxOnAndroid()) {
+      trackerAttrs = {
+        x: that._position - tracker._originalWidth / 2
+      };
+    }
     that._marker.setPosition(that._position);
     if (isAnimated) {
-      slider.animate(attrs, animationSettings);
-      tracker.animate(attrs, animationSettings);
+      slider.animate(sliderAttrs, animationSettings);
+      tracker.animate(trackerAttrs, animationSettings);
     } else {
-      slider.attr(attrs);
-      tracker.attr(attrs);
+      slider.attr(sliderAttrs);
+      tracker.attr(trackerAttrs);
     }
   },
   _setValid: function (isValid) {
@@ -81,13 +89,14 @@ Slider.prototype = {
       points: [0, 0, 0, verticalRange[1] - verticalRange[0]]
     });
     const trackerWidth = getSliderTrackerWidth(sliderHandleOptions.width);
-    that._tracker.attr({
+    const trackerAttrs = {
       x: -trackerWidth / 2,
-      y: 0,
       width: trackerWidth,
       height: verticalRange[1] - verticalRange[0],
-      translateY: verticalRange[0]
-    });
+      y: isFirefoxOnAndroid() ? verticalRange[0] : 0,
+      translateY: isFirefoxOnAndroid() ? undefined : verticalRange[0]
+    };
+    that._tracker.attr(trackerAttrs);
   },
   toForeground: function () {
     this._sliderGroup.toForeground();

@@ -24,7 +24,6 @@ class PopupPositionController extends _m_overlay_position_controller.OverlayPosi
         outsideDragFactor
       } = _ref,
       args = _objectWithoutPropertiesLoose(_ref, _excluded);
-    // @ts-expect-error
     super(args);
     this._props = _extends({}, this._props, {
       fullScreen,

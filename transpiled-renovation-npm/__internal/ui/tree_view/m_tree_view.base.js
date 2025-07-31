@@ -1286,7 +1286,7 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
       this._itemClickHandler(e, (0, _renderer.default)(e.currentTarget));
     });
     _events_engine.default.on($itemContainer, pointerDownEventNamespace, nodeSelector, e => {
-      this._itemPointerDownHandler(e);
+      this._itemPointerHandler(e);
     });
   }
   _detachClickEvent(itemsContainer) {
@@ -1381,7 +1381,7 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
     const $activeItem = this._getActiveItem();
     this.option('focusedElement', (0, _element.getPublicElement)($activeItem.closest(`.${NODE_CLASS}`)));
   }
-  _itemPointerDownHandler(e) {
+  _itemPointerHandler(e) {
     if (!this.option('focusStateEnabled')) {
       return;
     }
@@ -1532,7 +1532,6 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
     const deferred = (0, _deferred.Deferred)();
     const scrollable = this.getScrollable();
     if (scrollable) {
-      // @ts-expect-error ts-error
       scrollable.update().done(() => {
         // @ts-expect-error ts-error
         deferred.resolveWith(this);

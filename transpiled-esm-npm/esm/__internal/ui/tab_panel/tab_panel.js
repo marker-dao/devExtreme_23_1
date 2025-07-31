@@ -9,10 +9,10 @@ import { getImageContainer } from '../../../core/utils/icon';
 import { isDefined, isPlainObject } from '../../../core/utils/type';
 import { current as currentTheme, isFluent, isMaterialBased } from '../../../ui/themes';
 import supportUtils from '../../core/utils/m_support';
-import MultiView from '../../ui/m_multi_view';
+import MultiView from '../../ui/multi_view/m_multi_view';
 import Tabs, { TABS_ITEM_TEXT_CLASS, TABS_ITEM_TEXT_SPAN_CLASS, TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS } from '../../ui/tabs/tabs';
-// eslint-disable-next-line import/no-named-default
-import { default as TabPanelItem } from './item';
+import TabPanelItem from './item';
+// STYLE tabPanel
 export const TABPANEL_CLASS = 'dx-tabpanel';
 const TABPANEL_TABS_CLASS = 'dx-tabpanel-tabs';
 export const TABPANEL_TABS_ITEM_CLASS = 'dx-tabpanel-tab';
@@ -247,7 +247,6 @@ class TabPanel extends MultiView {
       onSelectionChanging: e => {
         const newTabsSelectedItemData = e.addedItems[0];
         const newTabsSelectedIndex = this._getIndexByItemData(newTabsSelectedItemData);
-        // @ts-expect-error ts-error
         const selectingResult = this.selectItem(newTabsSelectedIndex);
         // @ts-expect-error ts-error
         const promiseState = selectingResult.state();

@@ -223,7 +223,9 @@ class RowsView extends _m_columns_view.ColumnsView {
         setWatcher({
           element: $row.get(0),
           watch: rowOptions.watch,
-          getter: () => this._isAltRow(row),
+          getter: () => this._isAltRow(
+          // The row needs to be obtained again because the current row is out of date.
+          this._dataController.getRowByKey(row.key)),
           callBack: value => {
             $row.toggleClass(ROW_ALTERNATION_CLASS, value);
           }

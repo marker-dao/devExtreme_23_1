@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/chat/messagelist.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,7 +19,7 @@ import { isElementInDom } from '../../../core/utils/dom';
 import { getHeight } from '../../../core/utils/size';
 import { isDate, isDefined } from '../../../core/utils/type';
 import Widget from '../../core/widget/widget';
-import ContextMenu from '../../ui/context_menu/m_context_menu';
+import ContextMenu from '../../ui/context_menu/context_menu';
 import ScrollView from '../../ui/scroll_view/scroll_view';
 import { getScrollTopMax } from '../../ui/scroll_view/utils/get_scroll_top_max';
 import { isElementVisible } from '../splitter/utils/layout';
@@ -222,6 +222,7 @@ class MessageList extends Widget {
       hideOnParentScroll: false,
       overlayContainer: this._scrollView.container(),
       visualContainer: this._scrollView.container(),
+      // @ts-expect-error ts-error
       boundaryOffset: {
         h: 16
       }

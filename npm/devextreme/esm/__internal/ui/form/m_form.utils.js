@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/form/m_form.utils.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,6 +13,7 @@ export const concatPaths = (path1, path2) => {
   if (isDefined(path1) && isDefined(path2)) {
     return `${path1}.${path2}`;
   }
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   return path1 || path2;
 };
 export const getTextWithoutSpaces = text => text ? text.replace(/\s/g, '') : undefined;
@@ -27,10 +28,11 @@ export const getOptionNameFromFullName = fullName => {
   const parts = fullName.split('.');
   return parts[parts.length - 1].replace(/\[\d+]/, '');
 };
+export const isFullPathContainsTabs = fullPath => fullPath.includes('tabs');
 export const tryGetTabPath = fullPath => {
   const pathParts = fullPath.split('.');
   const resultPathParts = [...pathParts];
-  for (let i = pathParts.length - 1; i >= 0; i--) {
+  for (let i = pathParts.length - 1; i >= 0; i -= 1) {
     if (isFullPathContainsTabs(pathParts[i])) {
       return resultPathParts.join('.');
     }
@@ -38,22 +40,25 @@ export const tryGetTabPath = fullPath => {
   }
   return '';
 };
-export const isFullPathContainsTabs = fullPath => fullPath.indexOf('tabs') > -1;
 export const getItemPath = (items, item, isTabs) => {
+  if (!item) {
+    return '';
+  }
   const index = items.indexOf(item);
   if (index > -1) {
     return createItemPathByIndex(index, isTabs);
   }
-  for (let i = 0; i < items.length; i++) {
+  for (let i = 0; i < items.length; i += 1) {
     const targetItem = items[i];
-    const tabOrGroupItems = targetItem.tabs || targetItem.items;
+    const tabOrGroupItems = targetItem.tabs ?? targetItem.items;
     if (tabOrGroupItems) {
-      const itemPath = getItemPath(tabOrGroupItems, item, targetItem.tabs);
+      const itemPath = getItemPath(tabOrGroupItems, item, !!targetItem.tabs);
       if (itemPath) {
-        return concatPaths(createItemPathByIndex(i, isTabs), itemPath);
+        return concatPaths(createItemPathByIndex(i, isTabs), itemPath) ?? '';
       }
     }
   }
+  return '';
 };
 export function convertToLayoutManagerOptions(_ref) {
   let {
@@ -73,6 +78,7 @@ export function convertToLayoutManagerOptions(_ref) {
     items,
     $formElement,
     validationGroup,
+    // @ts-expect-error ts-error
     onFieldDataChanged,
     onContentReady,
     onDisposing,

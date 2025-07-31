@@ -9,7 +9,7 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _common = require("../../../core/utils/common");
 var _inflector = require("../../../core/utils/inflector");
 var _size = require("../../../core/utils/size");
-var _m_overlay = _interopRequireDefault(require("../../ui/overlay/m_overlay"));
+var _overlay = _interopRequireDefault(require("../../ui/overlay/overlay"));
 var _drawer = require("./drawer.animation");
 var _drawerRendering = _interopRequireDefault(require("./drawer.rendering.strategy"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -20,9 +20,10 @@ class OverlapStrategy extends _drawerRendering.default {
     const {
       opened,
       minSize,
-      template: contentTemplate
+      template: contentTemplate,
+      templatesRenderAsynchronously
     } = drawer.option();
-    drawer._overlay = drawer._createComponent((0, _renderer.default)(drawer.content()), _m_overlay.default, {
+    drawer._overlay = drawer._createComponent((0, _renderer.default)(drawer.content()), _overlay.default, {
       shading: false,
       container: drawer.content(),
       // @ts-expect-error ts-error
@@ -30,7 +31,7 @@ class OverlapStrategy extends _drawerRendering.default {
       position: this._getOverlayPosition(),
       width: opened ? 'auto' : minSize ?? 0,
       height: '100%',
-      templatesRenderAsynchronously: drawer.option('templatesRenderAsynchronously'),
+      templatesRenderAsynchronously,
       animation: {
         show: {
           duration: 0

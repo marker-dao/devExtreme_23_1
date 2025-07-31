@@ -759,8 +759,8 @@ class BaseRenderingStrategy {
     const startDateField = this.dataAccessors.expr.startDateExpr;
     const endDateField = this.dataAccessors.expr.endDateExpr;
     let startDate = this.dataAccessors.get('startDate', appointment);
-    startDate = dateUtilsTs.addOffsets(startDate, [-viewOffset]);
     let endDate = this.dataAccessors.get('endDate', appointment);
+    startDate = dateUtilsTs.addOffsets(startDate, [-viewOffset]);
     endDate = dateUtilsTs.addOffsets(endDate, [-viewOffset]);
     return _extends({}, appointment, {
       [startDateField]: startDate,

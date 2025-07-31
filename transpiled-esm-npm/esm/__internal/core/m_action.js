@@ -1,6 +1,4 @@
-/* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-/* eslint-disable no-restricted-syntax */
 import $ from '../../core/renderer';
 import { each } from '../../core/utils/iterator';
 import { isFunction, isPlainObject } from '../../core/utils/type';
@@ -56,7 +54,6 @@ class Action {
     const {
       executors
     } = Action;
-    // eslint-disable-next-line no-restricted-syntax
     for (const name in executors) {
       if (!excludeValidators[name]) {
         var _executor$validate;

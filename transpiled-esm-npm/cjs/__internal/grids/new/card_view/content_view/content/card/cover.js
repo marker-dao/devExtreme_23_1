@@ -26,7 +26,7 @@ class Cover extends _inferno.Component {
     const src = imageSrc;
     const containerClasses = (0, _combine_classes.combineClasses)({
       [CLASSES.cover]: true,
-      [CLASSES.noImage]: !src
+      [CLASSES.noImage]: !src && !Template
     });
     return (0, _inferno.createVNode)(1, "div", containerClasses, Template ? (0, _inferno.createComponentVNode)(2, Template, {
       "card": card

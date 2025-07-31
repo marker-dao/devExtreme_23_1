@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_context_menu = _interopRequireDefault(require("../__internal/ui/context_menu/m_context_menu"));
+var _context_menu = _interopRequireDefault(require("../__internal/ui/context_menu/context_menu"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_context_menu.default; // STYLE contextMenu
+var _default = exports.default = _context_menu.default; // STYLE contextMenu
 /**
  * @name dxContextMenuItem
  * @inherits dxMenuBaseItem

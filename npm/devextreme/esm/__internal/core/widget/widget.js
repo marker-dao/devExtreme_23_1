@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/core/widget/widget.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -102,11 +102,17 @@ class Widget extends DOMComponent {
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   _innerWidgetOptionChanged(innerWidget, args) {
-    const options = Widget.getOptionsFromContainer(args);
-    // eslint-disable-next-line @stylistic/max-len
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/prefer-optional-chain
-    innerWidget && innerWidget.option(options);
-    this._options.cache(args.name, options);
+    const {
+      fullName,
+      value
+    } = args;
+    if (fullName.indexOf('.') > -1) {
+      const innerWidgetOptionName = fullName.split('.').slice(1).join('.');
+      innerWidget === null || innerWidget === void 0 || innerWidget.option(innerWidgetOptionName, value);
+    } else {
+      innerWidget === null || innerWidget === void 0 || innerWidget.option(value);
+    }
+    this._options.cache(fullName, value);
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   _bindInnerWidgetOptions(innerWidget, optionsContainer) {

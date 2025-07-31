@@ -240,9 +240,9 @@ class Stepper extends CollectionWidgetAsync {
       super._itemClickHandler(e, args, config);
     }
   }
-  _itemPointerDownHandler(e) {
+  _itemPointerHandler(e) {
     if (!this._shouldPreventItemEvent(e.currentTarget)) {
-      super._itemPointerDownHandler(e);
+      super._itemPointerHandler(e);
     }
   }
   _itemSelectHandler(e) {

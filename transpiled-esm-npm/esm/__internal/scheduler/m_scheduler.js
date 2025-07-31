@@ -592,14 +592,12 @@ class Scheduler extends SchedulerOptionsBaseWidget {
       timeZoneCalculator: this.timeZoneCalculator,
       dateSerializationFormat: this.option('dateSerializationFormat'),
       resources: this.option('resources'),
-      startDayHour: this.getViewOption('startDayHour'),
-      endDayHour: this.getViewOption('endDayHour'),
-      viewOffset: this.getViewOffsetMs(),
-      appointmentDuration: this.getViewOption('cellDuration'),
-      allDayPanelMode: this.getViewOption('allDayPanelMode'),
-      showAllDayPanel: this.option('showAllDayPanel'),
+      startDayHour: () => this.getViewOption('startDayHour'),
+      endDayHour: () => this.getViewOption('endDayHour'),
+      viewOffset: () => this.getViewOffsetMs(),
+      allDayPanelMode: () => this.getViewOption('allDayPanelMode'),
+      showAllDayPanel: () => this.option('showAllDayPanel'),
       getResourceManager: () => this.resourceManager,
-      getLoadedResources: () => this.option('loadedResources'),
       getIsVirtualScrolling: () => this.isVirtualScrolling(),
       getSupportAllDayRow: () => this._workSpace.supportAllDayRow(),
       getViewType: () => this._workSpace.type,
@@ -999,7 +997,6 @@ class Scheduler extends SchedulerOptionsBaseWidget {
         var _this$_workSpace2;
         return (_this$_workSpace2 = this._workSpace) === null || _this$_workSpace2 === void 0 ? void 0 : _this$_workSpace2.viewDataProvider;
       },
-      isVerticalViewDirection: () => this.getRenderingStrategyInstance().getDirection() === 'vertical',
       isVerticalGroupedWorkSpace: () => this._workSpace._isVerticalGroupedWorkSpace(),
       isDateAndTimeView: () => isDateAndTimeView(this._workSpace.type),
       onContentReady: () => {

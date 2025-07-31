@@ -16,9 +16,8 @@ const _translator = exports._translator = {
 };
 const animation = exports.animation = {
   moveTo($element, position, duration, completeAction) {
-    // @ts-expect-error
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    _animation.fx.animate($element, {
+    _animation.fx.animate($element.get(0), {
       type: 'slide',
       to: {
         left: position
@@ -28,7 +27,6 @@ const animation = exports.animation = {
     });
   },
   complete($element) {
-    // @ts-expect-error
-    _animation.fx.stop($element, true);
+    _animation.fx.stop($element.get(0), true);
   }
 };

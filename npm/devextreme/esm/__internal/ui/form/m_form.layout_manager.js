@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/form/m_form.layout_manager.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,6 @@ import '../../../ui/text_box';
 import '../../../ui/number_box';
 import '../../../ui/check_box';
 import '../../../ui/date_box';
-import '../../../ui/button';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { removeEvent } from '../../../common/core/events/remove';
 import messageLocalization from '../../../common/core/localization/message';
@@ -22,24 +21,25 @@ import { compileGetter } from '../../../core/utils/data';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { getWidth } from '../../../core/utils/size';
-import { isDefined, isEmptyObject, isFunction, isObject, type } from '../../../core/utils/type';
+import { isDefined, isEmptyObject, isFunction, isObject, isString, type } from '../../../core/utils/type';
 import variableWrapper from '../../../core/utils/variable_wrapper';
 // @ts-expect-error ts-error
 import { getCurrentScreenFactor, hasWindow } from '../../../core/utils/window';
 import Widget from '../../core/widget/widget';
+import Button from '../../ui/button/wrapper';
+import { renderButtonItem } from '../../ui/form/components/m_button_item';
+import { renderEmptyItem } from '../../ui/form/components/m_empty_item';
+import { renderFieldItem } from '../../ui/form/components/m_field_item';
+import { FIELD_ITEM_CLASS, FORM_LAYOUT_MANAGER_CLASS, LAYOUT_MANAGER_ONE_COLUMN, ROOT_SIMPLE_ITEM_CLASS, SIMPLE_ITEM_TYPE, SINGLE_COLUMN_ITEM_CONTENT } from '../../ui/form/constants';
+import FormItemsRunTimeInfo from '../../ui/form/m_form.items_runtime_info';
+import { convertToRenderFieldItemOptions } from '../../ui/form/m_form.layout_manager.utils';
 import ResponsiveBox from '../../ui/responsive_box';
-import { renderButtonItem } from './components/m_button_item';
-import { renderEmptyItem } from './components/m_empty_item';
-import { renderFieldItem } from './components/m_field_item';
-import { FIELD_ITEM_CLASS, FORM_LAYOUT_MANAGER_CLASS, LAYOUT_MANAGER_ONE_COLUMN, ROOT_SIMPLE_ITEM_CLASS, SIMPLE_ITEM_TYPE, SINGLE_COLUMN_ITEM_CONTENT } from './constants';
-// eslint-disable-next-line import/no-named-default
-import { default as FormItemsRunTimeInfo } from './m_form.items_runtime_info';
-import { convertToRenderFieldItemOptions } from './m_form.layout_manager.utils';
 const FORM_EDITOR_BY_DEFAULT = 'dxTextBox';
 const LAYOUT_MANAGER_FIRST_ROW_CLASS = 'dx-first-row';
 const LAYOUT_MANAGER_LAST_ROW_CLASS = 'dx-last-row';
 const LAYOUT_MANAGER_FIRST_COL_CLASS = 'dx-first-col';
 const LAYOUT_MANAGER_LAST_COL_CLASS = 'dx-last-col';
+const MIN_COLUMN_WIDTH = 200;
 class LayoutManager extends Widget {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -54,7 +54,7 @@ class LayoutManager extends Widget {
       // @ts-expect-error ts-error
       customizeItem: null,
       alignItemLabels: true,
-      minColWidth: 200,
+      minColWidth: MIN_COLUMN_WIDTH,
       showRequiredMark: true,
       // @ts-expect-error ts-error
       screenByWidth: null,
@@ -74,7 +74,9 @@ class LayoutManager extends Widget {
     });
   }
   _init() {
-    const layoutData = this.option('layoutData');
+    const {
+      layoutData
+    } = this.option();
     super._init();
     this._itemWatchers = [];
     this._itemsRunTimeInfo = new FormItemsRunTimeInfo();
@@ -90,16 +92,15 @@ class LayoutManager extends Widget {
     this._updateItems(initialData);
   }
   _syncDataWithItems() {
-    const layoutData = this.option('layoutData');
-    const userItems = this.option('items');
-    if (isDefined(userItems)) {
-      // @ts-expect-error ts-error
-      userItems.forEach(item => {
+    const {
+      layoutData,
+      items
+    } = this.option();
+    if (isDefined(items)) {
+      items.forEach(item => {
         if (item.dataField && this._getDataByField(item.dataField) === undefined) {
-          let value;
-          if (item.editorOptions) {
-            value = item.editorOptions.value;
-          }
+          var _item$editorOptions;
+          const value = (_item$editorOptions = item.editorOptions) === null || _item$editorOptions === void 0 ? void 0 : _item$editorOptions.value;
           if (isDefined(value) || item.dataField in layoutData) {
             this._updateFieldValue(item.dataField, value);
           }
@@ -110,27 +111,28 @@ class LayoutManager extends Widget {
   _getDataByField(dataField) {
     return dataField ? this.option(`layoutData.${dataField}`) : null;
   }
-  _isCheckboxUndefinedStateEnabled(_ref) {
-    let {
-      allowIndeterminateState,
-      editorType,
-      dataField
-    } = _ref;
-    if (allowIndeterminateState === true && editorType === 'dxCheckBox') {
+  _isCheckboxUndefinedStateEnabled(allowIndeterminateState, editorType, dataField) {
+    if (allowIndeterminateState && editorType === 'dxCheckBox') {
       const nameParts = ['layoutData', ...dataField.split('.')];
       const propertyName = nameParts.pop();
       const layoutData = this.option(nameParts.join('.'));
+      if (!propertyName) return false;
       return layoutData && propertyName in layoutData;
     }
     return false;
   }
   _updateFieldValue(dataField, value) {
-    const layoutData = this.option('layoutData');
+    const {
+      layoutData
+    } = this.option();
     let newValue = value;
+    // @ts-expect-error ts-error
     if (!variableWrapper.isWrapped(layoutData[dataField]) && isDefined(dataField)) {
       this.option(`layoutData.${dataField}`, newValue);
+      // @ts-expect-error ts-error
     } else if (variableWrapper.isWritableWrapped(layoutData[dataField])) {
       newValue = isFunction(newValue) ? newValue() : newValue;
+      // @ts-expect-error ts-error
       layoutData[dataField](newValue);
     }
     this._triggerOnFieldDataChanged({
@@ -142,8 +144,9 @@ class LayoutManager extends Widget {
     this._createActionByOption('onFieldDataChanged')(args);
   }
   _updateItems(layoutData) {
-    const that = this;
-    const userItems = this.option('items');
+    const {
+      items: userItems
+    } = this.option();
     const isUserItemsExist = isDefined(userItems);
     const {
       customizeItem
@@ -151,18 +154,18 @@ class LayoutManager extends Widget {
     const items = isUserItemsExist ? userItems : this._generateItemsByData(layoutData);
     if (isDefined(items)) {
       const processedItems = [];
-      each(items, (index, item) => {
-        if (that._isAcceptableItem(item)) {
-          item = that._processItem(item);
-          customizeItem && customizeItem(item);
-          // @ts-expect-error
+      each(items, (_index, item) => {
+        if (this._isAcceptableItem(item)) {
+          // eslint-disable-next-line no-param-reassign
+          item = this._processItem(item);
+          customizeItem === null || customizeItem === void 0 || customizeItem(item);
           if (isObject(item) && variableWrapper.unwrap(item.visible) !== false) {
             processedItems.push(item);
           }
         }
       });
-      if (!that._itemWatchers.length || !isUserItemsExist) {
-        that._updateItemWatchers(items);
+      if (!this._itemWatchers.length || !isUserItemsExist) {
+        this._updateItemWatchers(items);
       }
       this._setItems(processedItems);
       this._sortItems();
@@ -176,27 +179,28 @@ class LayoutManager extends Widget {
     this._itemWatchers = [];
   }
   _updateItemWatchers(items) {
-    const that = this;
-    const watch = that._getWatch();
+    const watch = this._getWatch();
     items.forEach(item => {
-      // @ts-expect-error
       if (isObject(item) && isDefined(item.visible) && isFunction(watch)) {
-        that._itemWatchers.push(watch(
-        // @ts-expect-error
+        this._itemWatchers.push(watch(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         () => variableWrapper.unwrap(item.visible), () => {
-          that._updateItems(that.option('layoutData'));
-          that.repaint();
+          const {
+            layoutData
+          } = this.option();
+          this._updateItems(layoutData);
+          this.repaint();
         }, {
           skipImmediate: true
         }));
       }
     });
   }
+  // eslint-disable-next-line class-methods-use-this
   _generateItemsByData(layoutData) {
     const result = [];
     if (isDefined(layoutData)) {
       each(layoutData, dataField => {
-        // @ts-expect-error
         result.push({
           dataField
         });
@@ -205,12 +209,13 @@ class LayoutManager extends Widget {
     return result;
   }
   _isAcceptableItem(item) {
-    const itemField = item.dataField || item;
+    const itemField = isString(item) ? item : item.dataField;
     const itemData = this._getDataByField(itemField);
     return !(isFunction(itemData) && !variableWrapper.isWrapped(itemData));
   }
   _processItem(item) {
     if (typeof item === 'string') {
+      // eslint-disable-next-line no-param-reassign
       item = {
         dataField: item
       };
@@ -223,10 +228,12 @@ class LayoutManager extends Widget {
       item.editorType = isDefined(value) ? this._getEditorTypeByDataType(type(value)) : FORM_EDITOR_BY_DEFAULT;
     }
     if (item.editorType === 'dxCheckBox') {
+      // @ts-expect-error ts-error
       item.allowIndeterminateState = item.allowIndeterminateState ?? true;
     }
     return item;
   }
+  // eslint-disable-next-line class-methods-use-this
   _getEditorTypeByDataType(dataType) {
     switch (dataType) {
       case 'number':
@@ -244,18 +251,19 @@ class LayoutManager extends Widget {
     this._sortIndexes();
   }
   _sortIndexes() {
-    this._items.sort((itemA, itemB) => {
+    var _this$_items;
+    (_this$_items = this._items) === null || _this$_items === void 0 || _this$_items.sort((itemA, itemB) => {
       const indexA = itemA.visibleIndex;
       const indexB = itemB.visibleIndex;
-      let result;
+      // @ts-expect-error ts-error
       if (indexA > indexB) {
-        result = 1;
-      } else if (indexA < indexB) {
-        result = -1;
-      } else {
-        result = 0;
+        return 1;
+        // @ts-expect-error ts-error
       }
-      return result;
+      if (indexA < indexB) {
+        return -1;
+      }
+      return 0;
     });
   }
   _initMarkup() {
@@ -265,100 +273,110 @@ class LayoutManager extends Widget {
     this._renderResponsiveBox();
   }
   _renderResponsiveBox() {
-    const that = this;
     const templatesInfo = [];
-    if (that._items && that._items.length) {
-      const colCount = that._getColCount();
-      const $container = $('<div>').appendTo(that.$element());
-      that._prepareItemsWithMerging(colCount);
-      const layoutItems = that._generateLayoutItems();
-      // @ts-expect-error ts-error
-      that._responsiveBox = that._createComponent($container, ResponsiveBox, that._getResponsiveBoxConfig(layoutItems, colCount, templatesInfo));
+    if (this._items && this._items.length) {
+      const colCount = this._getColCount();
+      const $container = $('<div>').appendTo(this.$element());
+      this._prepareItemsWithMerging(colCount);
+      const layoutItems = this._generateLayoutItems();
+      this._responsiveBox = super._createComponent($container, ResponsiveBox, this._getResponsiveBoxConfig(layoutItems, colCount, templatesInfo));
       if (!hasWindow()) {
-        that._renderTemplates(templatesInfo);
+        this._renderTemplates(templatesInfo);
       }
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _itemStateChangedHandler(e) {
+  _itemStateChangedHandler(args) {
     this._refresh();
   }
   _renderTemplates(templatesInfo) {
-    const that = this;
     let itemsWithLabelTemplateCount = 0;
-    templatesInfo.forEach(_ref2 => {
+    templatesInfo.forEach(_ref => {
       var _item$label;
       let {
         item
-      } = _ref2;
+      } = _ref;
       if (item !== null && item !== void 0 && (_item$label = item.label) !== null && _item$label !== void 0 && _item$label.template) {
-        itemsWithLabelTemplateCount++;
+        itemsWithLabelTemplateCount += 1;
       }
     });
-    each(templatesInfo, (index, info) => {
+    each(templatesInfo, (_index, info) => {
       switch (info.itemType) {
         case 'empty':
           renderEmptyItem(info);
           break;
         case 'button':
-          that._renderButtonItem(info);
+          this._renderButtonItem(info);
           break;
         default:
           {
-            that._renderFieldItem(info, itemsWithLabelTemplateCount);
+            this._renderFieldItem(info, itemsWithLabelTemplateCount);
           }
       }
     });
   }
   _getResponsiveBoxConfig(layoutItems, colCount, templatesInfo) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
-    const colCountByScreen = that.option('colCountByScreen');
-    // @ts-expect-error ts-error
+    const {
+      colCountByScreen,
+      screenByWidth
+    } = this.option();
     const xsColCount = colCountByScreen && colCountByScreen.xs;
     return {
       onItemStateChanged: this._itemStateChangedHandler.bind(this),
-      onLayoutChanged() {
+      onLayoutChanged: () => {
         const {
           onLayoutChanged
-        } = that.option();
-        const isSingleColumnMode = that.isSingleColumnMode();
+        } = this.option();
+        const isSingleColumnMode = this.isSingleColumnMode();
         if (onLayoutChanged) {
-          that.$element().toggleClass(LAYOUT_MANAGER_ONE_COLUMN, isSingleColumnMode);
+          this.$element().toggleClass(LAYOUT_MANAGER_ONE_COLUMN, isSingleColumnMode);
           onLayoutChanged(isSingleColumnMode);
         }
       },
-      onContentReady(e) {
+      onContentReady: e => {
         if (hasWindow()) {
-          that._renderTemplates(templatesInfo);
+          this._renderTemplates(templatesInfo);
         }
-        if (that.option('onLayoutChanged')) {
-          that.$element().toggleClass(LAYOUT_MANAGER_ONE_COLUMN, that.isSingleColumnMode(e.component));
+        const {
+          onLayoutChanged
+        } = this.option();
+        if (onLayoutChanged) {
+          this.$element().toggleClass(LAYOUT_MANAGER_ONE_COLUMN, this.isSingleColumnMode(e.component));
         }
       },
-      itemTemplate(e, itemData, itemElement) {
-        if (!e.location) {
+      itemTemplate(itemData, _index, itemElement) {
+        var _that$_items;
+        const {
+          location
+        } = itemData;
+        if (!location) {
           return;
         }
         const $itemElement = $(itemElement);
-        const itemRenderedCountInPreviousRows = e.location.row * colCount;
-        const item = that._items[e.location.col + itemRenderedCountInPreviousRows];
+        const itemRenderedCountInPreviousRows = location.row * colCount;
+        const item = (_that$_items = that._items) === null || _that$_items === void 0 ? void 0 : _that$_items[location.col + itemRenderedCountInPreviousRows];
         if (!item) {
           return;
         }
-        const itemCssClassList = [item.cssClass];
+        const itemCssClassList = [item.cssClass ?? ''];
         $itemElement.toggleClass(SINGLE_COLUMN_ITEM_CONTENT, that.isSingleColumnMode(this));
-        if (e.location.row === 0) {
+        if (location.row === 0) {
           itemCssClassList.push(LAYOUT_MANAGER_FIRST_ROW_CLASS);
         }
-        if (e.location.col === 0) {
+        if (location.col === 0) {
           itemCssClassList.push(LAYOUT_MANAGER_FIRST_COL_CLASS);
         }
-        if (item.itemType === SIMPLE_ITEM_TYPE && that.option('isRoot')) {
+        const {
+          isRoot
+        } = that.option();
+        if (item.itemType === SIMPLE_ITEM_TYPE && isRoot) {
           $itemElement.addClass(ROOT_SIMPLE_ITEM_CLASS);
         }
-        const isLastColumn = e.location.col === colCount - 1 || e.location.col + e.location.colspan === colCount;
+        const isLastColumn = location.col === colCount - 1 || location.col + location.colspan === colCount;
         const rowsCount = that._getRowsCount();
-        const isLastRow = e.location.row === rowsCount - 1;
+        const isLastRow = location.row === rowsCount - 1;
         if (isLastColumn) {
           itemCssClassList.push(LAYOUT_MANAGER_LAST_COL_CLASS);
         }
@@ -367,7 +385,10 @@ class LayoutManager extends Widget {
         }
         if (item.itemType !== 'empty') {
           itemCssClassList.push(FIELD_ITEM_CLASS);
-          itemCssClassList.push(that.option('cssItemClass'));
+          const {
+            cssItemClass = ''
+          } = that.option();
+          itemCssClassList.push(cssItemClass);
           if (isDefined(item.col)) {
             itemCssClassList.push(`dx-col-${item.col}`);
           }
@@ -379,10 +400,11 @@ class LayoutManager extends Widget {
           rootElementCssClassList: itemCssClassList
         });
       },
-      cols: that._generateRatio(colCount),
-      rows: that._generateRatio(that._getRowsCount(), true),
+      cols: this._generateRatio(colCount),
+      rows: this._generateRatio(this._getRowsCount(), true),
       dataSource: layoutItems,
-      screenByWidth: that.option('screenByWidth'),
+      screenByWidth,
+      // @ts-expect-error ts-error
       singleColumnScreen: xsColCount ? false : 'xs'
     };
   }
@@ -406,7 +428,8 @@ class LayoutManager extends Widget {
       if (this._cashedColCount) {
         return this._cashedColCount;
       }
-      this._cashedColCount = colCount = this._getMaxColCount();
+      colCount = this._getMaxColCount();
+      this._cashedColCount = colCount;
     }
     // @ts-expect-error ts-error
     return colCount < 1 ? 1 : colCount;
@@ -415,44 +438,47 @@ class LayoutManager extends Widget {
     if (!hasWindow()) {
       return 1;
     }
-    const minColWidth = this.option('minColWidth');
+    const {
+      minColWidth = MIN_COLUMN_WIDTH
+    } = this.option();
     const width = getWidth(this.$element());
-    const itemsCount = this._items.length;
     // @ts-expect-error ts-error
+    const itemsCount = this._items.length;
     const maxColCount = Math.floor(width / minColWidth) || 1;
     return itemsCount < maxColCount ? itemsCount : maxColCount;
   }
   isCachedColCountObsolete() {
-    return this._cashedColCount && this._getMaxColCount() !== this._cashedColCount;
+    return !!this._cashedColCount && this._getMaxColCount() !== this._cashedColCount;
   }
   _prepareItemsWithMerging(colCount) {
-    const items = this._items.slice(0);
-    let item;
-    let itemsMergedByCol;
+    const items = (this._items ?? []).slice(0);
     let result = [];
-    let j;
-    let i;
-    for (i = 0; i < items.length; i++) {
-      item = items[i];
-      // @ts-expect-error ts-error
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i = 0; i < items.length; i += 1) {
+      const item = items[i];
       result.push(item);
-      if (this.option('alignItemLabels') || item.alignItemLabels || item.colSpan) {
+      const {
+        alignItemLabels
+      } = this.option();
+      if (alignItemLabels || item.alignItemLabels || item.colSpan) {
         item.col = this._getColByIndex(result.length - 1, colCount);
       }
       if (item.colSpan > 1 && item.col + item.colSpan <= colCount) {
-        itemsMergedByCol = [];
-        for (j = 0; j < item.colSpan - 1; j++) {
+        const itemsMergedByCol = [];
+        for (let j = 0; j < item.colSpan - 1; j += 1) {
           itemsMergedByCol.push({
             merged: true
           });
         }
         result = result.concat(itemsMergedByCol);
       } else {
+        // @ts-expect-error ts-error
         delete item.colSpan;
       }
     }
     this._setItems(result);
   }
+  // eslint-disable-next-line class-methods-use-this
   _getColByIndex(index, colCount) {
     return index % colCount;
   }
@@ -462,21 +488,24 @@ class LayoutManager extends Widget {
     this._cashedColCount = null; // T923489
   }
   _generateLayoutItems() {
-    const items = this._items;
+    const items = this._items ?? [];
     const colCount = this._getColCount();
     const result = [];
-    let item;
-    let i;
-    for (i = 0; i < items.length; i++) {
-      item = items[i];
+    for (let i = 0; i < items.length; i += 1) {
+      const item = items[i];
       if (!item.merged) {
+        const location = {
+          row: parseInt(String(i / colCount), 10),
+          col: this._getColByIndex(i, colCount)
+        };
+        if (isDefined(item.colSpan)) {
+          location.colspan = item.colSpan;
+        }
+        if (isDefined(item.rowSpan)) {
+          location.rowspan = item.rowSpan;
+        }
         const generatedItem = {
-          location: {
-            // @ts-expect-error
-            // eslint-disable-next-line radix
-            row: parseInt(i / colCount),
-            col: this._getColByIndex(i, colCount)
-          }
+          location
         };
         if (isDefined(item.disabled)) {
           generatedItem.disabled = item.disabled;
@@ -484,29 +513,20 @@ class LayoutManager extends Widget {
         if (isDefined(item.visible)) {
           generatedItem.visible = item.visible;
         }
-        if (isDefined(item.colSpan)) {
-          generatedItem.location.colspan = item.colSpan;
-        }
-        if (isDefined(item.rowSpan)) {
-          generatedItem.location.rowspan = item.rowSpan;
-        }
         result.push(generatedItem);
       }
     }
     return result;
   }
-  _renderEmptyItem($container) {
-    // @ts-expect-error
-    renderEmptyItem({
-      $container
-    });
-  }
-  _renderButtonItem(_ref3) {
-    let {
+  _renderButtonItem(info) {
+    const {
       item,
       $parent,
       rootElementCssClassList
-    } = _ref3;
+    } = info;
+    const {
+      validationGroup
+    } = this.option();
     const {
       $rootElement,
       buttonInstance
@@ -514,8 +534,8 @@ class LayoutManager extends Widget {
       item,
       $parent,
       rootElementCssClassList,
-      validationGroup: this.option('validationGroup'),
-      createComponentCallback: this._createComponent.bind(this)
+      validationGroup,
+      createComponentCallback: ($element, options) => super._createComponent($element, Button, options)
     });
     // TODO: try to remove '_itemsRunTimeInfo' from 'render' function
     this._itemsRunTimeInfo.add({
@@ -525,13 +545,13 @@ class LayoutManager extends Widget {
       $itemContainer: $rootElement
     });
   }
-  _renderFieldItem(_ref4, itemsWithLabelTemplateCount) {
+  _renderFieldItem(info, itemsWithLabelTemplateCount) {
     var _item$label2;
-    let {
+    const {
       item,
       $parent,
       rootElementCssClassList
-    } = _ref4;
+    } = info;
     const editorValue = this._getDataByField(item.dataField);
     let canAssignUndefinedValueToEditor = false;
     if (editorValue === undefined) {
@@ -540,11 +560,7 @@ class LayoutManager extends Widget {
         editorType,
         dataField
       } = item;
-      canAssignUndefinedValueToEditor = this._isCheckboxUndefinedStateEnabled({
-        allowIndeterminateState,
-        editorType,
-        dataField
-      });
+      canAssignUndefinedValueToEditor = this._isCheckboxUndefinedStateEnabled(allowIndeterminateState, editorType, dataField);
     }
     const name = item.dataField || item.name;
     const formOrLayoutManager = this._getFormOrThis();
@@ -556,13 +572,15 @@ class LayoutManager extends Widget {
       }
     };
     const {
-      form
+      form,
+      labelLocation,
+      requiredMessage,
+      validationGroup,
+      validationBoundary,
+      showColonAfterLabel,
+      labelMode
     } = this.option();
-    const {
-      $fieldEditorContainer,
-      widgetInstance,
-      $rootElement
-    } = renderFieldItem(convertToRenderFieldItemOptions({
+    const fieldItemOptions = convertToRenderFieldItemOptions({
       $parent,
       rootElementCssClassList,
       item,
@@ -571,27 +589,35 @@ class LayoutManager extends Widget {
       canAssignUndefinedValueToEditor,
       formOrLayoutManager: this._getFormOrThis(),
       createComponentCallback: this._createComponent.bind(this),
-      formLabelLocation: this.option('labelLocation'),
-      requiredMessageTemplate: this.option('requiredMessage'),
-      validationGroup: this.option('validationGroup'),
-      editorValidationBoundary: this.option('validationBoundary'),
+      formLabelLocation: labelLocation,
+      // @ts-expect-error ts-error
+      requiredMessageTemplate: requiredMessage,
+      validationGroup,
+      editorValidationBoundary: validationBoundary,
+      // @ts-expect-error ts-error
       editorStylingMode: form === null || form === void 0 ? void 0 : form.option('stylingMode'),
-      showColonAfterLabel: this.option('showColonAfterLabel'),
-      managerLabelLocation: this.option('labelLocation'),
+      showColonAfterLabel: Boolean(showColonAfterLabel),
+      managerLabelLocation: labelLocation,
       template: item.template ? this._getTemplate(item.template) : null,
       labelTemplate: (_item$label2 = item.label) !== null && _item$label2 !== void 0 && _item$label2.template ? this._getTemplate(item.label.template) : null,
+      // @ts-expect-error ts-error
       itemId: form === null || form === void 0 ? void 0 : form.getItemID(name),
       managerMarkOptions: this._getMarkOptions(),
-      labelMode: this.option('labelMode'),
+      labelMode,
       onLabelTemplateRendered
-    }));
+    });
+    const {
+      $fieldEditorContainer,
+      widgetInstance,
+      $rootElement
+    } = renderFieldItem(fieldItemOptions);
     const {
       onFieldItemRendered
     } = this.option();
     onFieldItemRendered === null || onFieldItemRendered === void 0 || onFieldItemRendered();
     if (widgetInstance && item.dataField) {
       // TODO: move to renderFieldItem ?
-      this._bindDataField(widgetInstance, item.dataField, item.editorType, $fieldEditorContainer);
+      this._bindDataField(widgetInstance, item.dataField, $fieldEditorContainer);
     }
     this._itemsRunTimeInfo.add({
       item,
@@ -604,14 +630,23 @@ class LayoutManager extends Widget {
     this._labelTemplateRenderedCallCount = (this._labelTemplateRenderedCallCount ?? 0) + 1;
   }
   _shouldAlignLabelsOnTemplateRendered(formOrLayoutManager, totalItemsWithLabelTemplate) {
-    return formOrLayoutManager.option('templatesRenderAsynchronously') && this._labelTemplateRenderedCallCount === totalItemsWithLabelTemplate;
+    const {
+      templatesRenderAsynchronously
+    } = formOrLayoutManager.option();
+    return !!templatesRenderAsynchronously && this._labelTemplateRenderedCallCount === totalItemsWithLabelTemplate;
   }
   _getMarkOptions() {
+    const {
+      showRequiredMark,
+      requiredMark,
+      showOptionalMark,
+      optionalMark
+    } = this.option();
     return {
-      showRequiredMark: this.option('showRequiredMark'),
-      requiredMark: this.option('requiredMark'),
-      showOptionalMark: this.option('showOptionalMark'),
-      optionalMark: this.option('optionalMark')
+      showRequiredMark,
+      requiredMark,
+      showOptionalMark,
+      optionalMark
     };
   }
   _getFormOrThis() {
@@ -621,7 +656,7 @@ class LayoutManager extends Widget {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     return form || this;
   }
-  _bindDataField(editorInstance, dataField, editorType, $container) {
+  _bindDataField(editorInstance, dataField, $container) {
     const formOrThis = this._getFormOrThis();
     editorInstance.on('enterKey', args => {
       formOrThis._createActionByOption('onEditorEnterKey')(extend(args, {
@@ -636,20 +671,19 @@ class LayoutManager extends Widget {
       if (!Array.isArray(array1) || !Array.isArray(array2) || array1.length !== array2.length) {
         return false;
       }
-      for (let i = 0; i < array1.length; i++) {
+      for (let i = 0; i < array1.length; i += 1) {
         if (array1[i] !== array2[i]) {
           return false;
         }
       }
       return true;
     }
-    const that = this;
-    const watch = that._getWatch();
+    const watch = this._getWatch();
     if (!isFunction(watch)) {
       return;
     }
-    const dispose = watch(() => that._getDataByField(dataField), () => {
-      const fieldValue = that._getDataByField(dataField);
+    const dispose = watch(() => this._getDataByField(dataField), () => {
+      const fieldValue = this._getDataByField(dataField);
       if (editorInstance.NAME === 'dxTagBox') {
         const editorValue = editorInstance.option('value');
         if (fieldValue !== editorValue && compareArrays(fieldValue, editorValue)) {
@@ -678,15 +712,16 @@ class LayoutManager extends Widget {
     return this._watch;
   }
   // @ts-expect-error ts-error
-  _createComponent($editor, type, editorOptions) {
-    const readOnlyState = this.option('readOnly');
+  _createComponent($editor, component, editorOptions) {
+    const {
+      readOnly: readOnlyState
+    } = this.option();
     // @ts-expect-error ts-error
     let hasEditorReadOnly = Object.hasOwn(editorOptions, 'readOnly');
-    const instance = super._createComponent($editor, type, _extends({}, editorOptions, {
+    const instance = super._createComponent($editor, component, _extends({}, editorOptions, {
       readOnly: !hasEditorReadOnly ? readOnlyState : editorOptions.readOnly
     }));
     let isChangeByForm = false;
-    // @ts-expect-error ts-error
     instance.on('optionChanged', args => {
       if (args.name === 'readOnly' && !isChangeByForm) {
         hasEditorReadOnly = true;
@@ -695,19 +730,17 @@ class LayoutManager extends Widget {
     this.on('optionChanged', args => {
       if (args.name === 'readOnly' && !hasEditorReadOnly) {
         isChangeByForm = true;
-        // @ts-expect-error ts-error
         instance.option(args.name, args.value);
         isChangeByForm = false;
       }
     });
     return instance;
   }
+  // eslint-disable-next-line class-methods-use-this
   _generateRatio(count, isAutoSize) {
     const result = [];
-    let ratio;
-    let i;
-    for (i = 0; i < count; i++) {
-      ratio = {
+    for (let i = 0; i < count; i += 1) {
+      const ratio = {
         ratio: 1
       };
       if (isAutoSize) {
@@ -718,8 +751,8 @@ class LayoutManager extends Widget {
     return result;
   }
   _getRowsCount() {
-    // @ts-expect-error ts-error
-    return Math.ceil(this._items.length / this._getColCount());
+    const items = this._items ?? [];
+    return Math.ceil(items.length / this._getColCount());
   }
   _updateReferencedOptions(newLayoutData) {
     const layoutData = this.option('layoutData');
@@ -752,40 +785,41 @@ class LayoutManager extends Widget {
         this._invalidate();
         break;
       case 'layoutData':
-        this._updateReferencedOptions(args.value);
-        if (this.option('items')) {
-          if (!isEmptyObject(args.value)) {
-            this._itemsRunTimeInfo.each((_, itemRunTimeInfo) => {
-              if (isDefined(itemRunTimeInfo.item)) {
-                const {
-                  dataField
-                } = itemRunTimeInfo.item;
-                if (dataField && isDefined(itemRunTimeInfo.widgetInstance)) {
-                  const valueGetter = compileGetter(dataField);
-                  // @ts-expect-error ts-error
-                  const dataValue = valueGetter(args.value);
+        {
+          this._updateReferencedOptions(args.value);
+          const {
+            items
+          } = this.option();
+          if (items) {
+            if (!isEmptyObject(args.value)) {
+              this._itemsRunTimeInfo.each((_, itemRunTimeInfo) => {
+                if (isDefined(itemRunTimeInfo.item)) {
                   const {
-                    allowIndeterminateState,
-                    editorType
-                  } = itemRunTimeInfo.item;
-                  if (dataValue !== undefined || this._isCheckboxUndefinedStateEnabled({
-                    allowIndeterminateState,
-                    editorType,
                     dataField
-                  })) {
-                    itemRunTimeInfo.widgetInstance.option('value', dataValue);
-                  } else {
-                    this._clearWidget(itemRunTimeInfo.widgetInstance);
+                  } = itemRunTimeInfo.item;
+                  if (dataField && isDefined(itemRunTimeInfo.widgetInstance)) {
+                    const valueGetter = compileGetter(dataField);
+                    // @ts-expect-error ts-error
+                    const dataValue = valueGetter(args.value);
+                    const {
+                      allowIndeterminateState,
+                      editorType
+                    } = itemRunTimeInfo.item;
+                    if (dataValue !== undefined || this._isCheckboxUndefinedStateEnabled(allowIndeterminateState, editorType, dataField)) {
+                      itemRunTimeInfo.widgetInstance.option('value', dataValue);
+                    } else {
+                      this._clearWidget(itemRunTimeInfo.widgetInstance);
+                    }
                   }
                 }
-              }
-            });
+              });
+            }
+          } else {
+            this._initDataAndItems(args.value);
+            this._invalidate();
           }
-        } else {
-          this._initDataAndItems(args.value);
-          this._invalidate();
+          break;
         }
-        break;
       case 'items':
         this._cleanItemWatchers();
         this._initDataAndItems(args.value);
@@ -862,24 +896,27 @@ class LayoutManager extends Widget {
     }
   }
   updateData(data, value) {
-    const that = this;
     if (isObject(data)) {
       each(data, (dataField, fieldValue) => {
-        that._updateFieldValue(dataField, fieldValue);
+        this._updateFieldValue(dataField, fieldValue);
       });
     } else if (typeof data === 'string') {
-      that._updateFieldValue(data, value);
+      this._updateFieldValue(data, value);
     }
   }
   getEditor(field) {
-    return this._itemsRunTimeInfo.findWidgetInstanceByDataField(field) || this._itemsRunTimeInfo.findWidgetInstanceByName(field);
+    return this._itemsRunTimeInfo.findWidgetInstanceByDataField(field) ?? this._itemsRunTimeInfo.findWidgetInstanceByName(field);
   }
-  // @ts-expect-error ts-error
   isSingleColumnMode(component) {
     const responsiveBox = this._responsiveBox || component;
     if (responsiveBox) {
-      return responsiveBox.option('currentScreenFactor') === responsiveBox.option('singleColumnScreen');
+      const {
+        currentScreenFactor,
+        singleColumnScreen
+      } = responsiveBox.option();
+      return currentScreenFactor === singleColumnScreen;
     }
+    return false;
   }
   getItemsRunTimeInfo() {
     return this._itemsRunTimeInfo;

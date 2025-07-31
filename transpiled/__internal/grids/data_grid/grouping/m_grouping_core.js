@@ -8,6 +8,7 @@ exports.createOffsetFilter = createOffsetFilter;
 var _utils = require("../../../../common/data/utils");
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _deferred = require("../../../../core/utils/deferred");
+var _m_utils = _interopRequireDefault(require("../../../grids/grid_core/m_utils"));
 var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function createOffsetFilter(path, storeLoadOptions, lastLevelOnly) {
@@ -233,7 +234,7 @@ class GroupingHelper {
     let groupsCount = Math.min(oldGroups.length, groups.length);
     that._group = storeLoadOptions.group;
     for (let groupIndex = 0; groupIndex < groupsCount; groupIndex++) {
-      if (oldGroups[groupIndex].selector !== groups[groupIndex].selector) {
+      if (!_m_utils.default.isEqualSelectors(oldGroups[groupIndex].selector, groups[groupIndex].selector)) {
         groupsCount = groupIndex;
         break;
       }

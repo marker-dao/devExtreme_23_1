@@ -1,11 +1,18 @@
 /**
 * DevExtreme (esm/__internal/scheduler/workspaces/view_model/utils/view_generator_utils.test.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+/**
+ * @timezone Etc/GMT-2
+ */
+// NOTE: We use this utils for calculating weeks count in month view
+// The Scheduler cells already converted to "grid time" format
+// That's why we use locale (machine timezone) dependent dates here
+// Plus set specific timezone for test run
 import { describe, expect } from '@jest/globals';
 import each from 'jest-each';
 import { alignToFirstDayOfWeek, alignToLastDayOfWeek, calculateAlignedWeeksBetweenDates, calculateDaysBetweenDates } from './view_generator_utils';

@@ -27,7 +27,7 @@ class LoadIndicator extends Widget {
     return _extends({}, super._getDefaultOptions(), {
       _animatingSegmentCount: 1,
       _animatingSegmentInner: false,
-      _animationType: AnimationType.Circle,
+      animationType: AnimationType.Circle,
       activeStateEnabled: false,
       hoverStateEnabled: false,
       indicatorSrc: ''
@@ -78,9 +78,9 @@ class LoadIndicator extends Widget {
   }
   _getAnimationTypeContentClass() {
     const {
-      _animationType: animationType
+      animationType
     } = this.option();
-    return ANIMATION_TYPE_CLASSES[animationType];
+    return animationType && ANIMATION_TYPE_CLASSES[animationType];
   }
   _renderIndicatorContent() {
     const animationClass = this._getAnimationTypeContentClass() ?? '';
@@ -101,7 +101,7 @@ class LoadIndicator extends Widget {
   }
   _getSegmentParams() {
     const {
-      _animationType: animationType,
+      animationType,
       _animatingSegmentCount: animatingSegmentCount,
       _animatingSegmentInner: animatingSegmentInner
     } = this.option();
@@ -155,15 +155,14 @@ class LoadIndicator extends Widget {
     if (!this._$indicator) {
       return;
     }
-    let {
+    const {
       width,
       height
     } = this.option();
     if (width || height) {
-      width = getWidth(this.$element());
-      height = getHeight(this.$element());
-      // @ts-expect-error ts-error
-      const minDimension = Math.min(height, width);
+      const elementWidth = getWidth(this.$element());
+      const elementHeight = getHeight(this.$element());
+      const minDimension = Math.min(elementHeight, elementWidth);
       this._$wrapper.css({
         height: minDimension,
         width: minDimension,
@@ -181,7 +180,7 @@ class LoadIndicator extends Widget {
       return;
     }
     this._$indicator.remove();
-    delete this._$indicator;
+    this._$indicator = undefined;
   }
   _removeMarkupForImage() {
     this._$wrapper.css('backgroundImage', 'none');
@@ -190,7 +189,7 @@ class LoadIndicator extends Widget {
     switch (args.name) {
       case '_animatingSegmentCount':
       case '_animatingSegmentInner':
-      case '_animationType':
+      case 'animationType':
       case 'indicatorSrc':
         this._invalidate();
         break;

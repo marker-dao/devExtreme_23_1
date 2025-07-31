@@ -8,7 +8,6 @@ var _option_manager = require("../../../core/options/option_manager");
 var _utils = require("../../../core/options/utils");
 var _common = require("../../../core/utils/common");
 var _data = require("../../../core/utils/data");
-var _extend = require("../../../core/utils/extend");
 var _type = require("../../../core/utils/type");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class Options {
@@ -23,7 +22,6 @@ class Options {
     this._initDeprecatedNames();
     this._optionManager = new _option_manager.OptionManager(options, optionsByReference);
     this._optionManager.onRelevantNamesPrepared((options, name, value, silent) => this._setRelevantNames(options, name, value, silent));
-    this._cachedOptions = {};
     this._rules = [];
   }
   set _initial(value) {
@@ -170,12 +168,13 @@ class Options {
   isDeprecated(name) {
     return Object.prototype.hasOwnProperty.call(this._deprecated, name);
   }
-  cache(name, options) {
+  cache(name, value) {
     const isGetter = arguments.length < 2;
+    const optionName = `_cached_${name}`;
     if (isGetter) {
-      return this._cachedOptions[name];
+      return this.option(optionName);
     }
-    this._cachedOptions[name] = (0, _extend.extend)(this._cachedOptions[name], options);
+    this.option(optionName, value);
   }
 }
 exports.Options = Options;

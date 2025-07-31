@@ -3,7 +3,7 @@
 var _globals = require("@jest/globals");
 var _config = _interopRequireDefault(require("../../../core/config"));
 var _errors = _interopRequireDefault(require("../../../core/errors"));
-var _m_z_index = require("../../ui/overlay/m_z_index");
+var _z_index = require("../../ui/overlay/z_index");
 var _version = require("../../utils/version");
 var _license_validation = require("./license_validation");
 var trialPanel = _interopRequireWildcard(require("./trial_panel.client"));
@@ -419,7 +419,7 @@ _globals.jest.mock('./key', () => ({
     (0, _globals.expect)(_errors.default.log).toHaveBeenCalledTimes(1);
   });
   (0, _globals.test)('Base z-index should match the corresponding setting in DevExtreme', () => {
-    (0, _globals.expect)(trialPanel.BASE_Z_INDEX).toEqual((0, _m_z_index.base)());
+    (0, _globals.expect)(trialPanel.BASE_Z_INDEX).toEqual((0, _z_index.base)());
   });
   (0, _globals.test)('No messages should be logged if setLicenseCheckSkipCondition() used', () => {
     (0, _license_validation.setLicenseCheckSkipCondition)();

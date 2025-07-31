@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/new/grid_core/selection/controller.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -137,6 +137,9 @@ class SelectionController {
   }
   getSelectionConfig(dataSource, selectionOption) {
     const selectedCardKeys = this.selectedCardKeys.peek();
+    const {
+      dataController
+    } = this;
     return {
       selectedKeys: selectedCardKeys,
       mode: selectionOption.mode,
@@ -158,8 +161,7 @@ class SelectionController {
         return dataSource.items();
       },
       filter() {
-        // TODO Salimov: Need to take combined filter
-        return dataSource.filter();
+        return dataController.getCombinedFilter();
       },
       totalCount: () => dataSource.totalCount(),
       onSelectionChanging: this.selectionChanging.bind(this),

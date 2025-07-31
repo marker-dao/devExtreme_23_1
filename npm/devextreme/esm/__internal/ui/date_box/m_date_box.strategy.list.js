@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/date_box/m_date_box.strategy.list.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,8 +14,8 @@ import dateSerialization from '../../../core/utils/date_serialization';
 import { getHeight, getOuterHeight } from '../../../core/utils/size';
 import { isDate } from '../../../core/utils/type';
 import { getWindow } from '../../../core/utils/window';
-import List from '../../../ui/list_light';
 import { getSizeValue } from '../../ui/drop_down_editor/m_utils';
+import List from '../../ui/list/m_list.edit.search';
 import DateBoxStrategy from './m_date_box.strategy';
 import dateUtils from './m_date_utils';
 const window = getWindow();

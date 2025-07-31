@@ -158,26 +158,28 @@ class OverlayPositionController {
     }
   }
   styleWrapperPosition() {
+    var _this$_$wrapper;
     const useFixed = (0, _type.isWindow)(this.$visualContainer.get(0)) || this._props._fixWrapperPosition;
     const positionStyle = useFixed ? 'fixed' : 'absolute';
-    this._$wrapper.css('position', positionStyle);
+    (_this$_$wrapper = this._$wrapper) === null || _this$_$wrapper === void 0 || _this$_$wrapper.css('position', positionStyle);
   }
   _updateVisualPositionValue() {
     this._previousVisualPosition = this._visualPosition;
     this._visualPosition = (0, _translator.locate)(this._$content);
   }
   _renderContentInitialPosition() {
+    var _this$_$wrapper2, _this$_$wrapper3;
     this._renderBoundaryOffset();
     (0, _translator.resetPosition)(this._$content);
     // @ts-expect-error ts-error
     const wrapperOverflow = this._$wrapper.css('overflow');
-    this._$wrapper.css('overflow', 'hidden');
+    (_this$_$wrapper2 = this._$wrapper) === null || _this$_$wrapper2 === void 0 || _this$_$wrapper2.css('overflow', 'hidden');
     if (!this._props._skipContentPositioning) {
       const resultPosition = _position.default.setup(this._$content, this._position);
       this._initialPosition = resultPosition;
     }
     // @ts-expect-error ts-error
-    this._$wrapper.css('overflow', wrapperOverflow);
+    (_this$_$wrapper3 = this._$wrapper) === null || _this$_$wrapper3 === void 0 || _this$_$wrapper3.css('overflow', wrapperOverflow);
     this.detectVisualPositionChange();
   }
   _raisePositionedEvents(event) {
@@ -196,10 +198,11 @@ class OverlayPositionController {
     });
   }
   _renderBoundaryOffset() {
+    var _this$_$content;
     const boundaryOffset = this._position ?? {
       boundaryOffset: OVERLAY_DEFAULT_BOUNDARY_OFFSET
     };
-    this._$content.css('margin', `${boundaryOffset.v}px ${boundaryOffset.h}px`);
+    (_this$_$content = this._$content) === null || _this$_$content === void 0 || _this$_$content.css('margin', `${boundaryOffset.v}px ${boundaryOffset.h}px`);
   }
   _getVisualContainer() {
     var _this$_props$position, _this$_props$position2;

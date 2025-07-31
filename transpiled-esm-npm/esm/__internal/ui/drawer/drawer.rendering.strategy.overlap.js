@@ -3,7 +3,7 @@ import $ from '../../../core/renderer';
 import { ensureDefined } from '../../../core/utils/common';
 import { camelize } from '../../../core/utils/inflector';
 import { getWidth } from '../../../core/utils/size';
-import Overlay from '../../ui/overlay/m_overlay';
+import Overlay from '../../ui/overlay/overlay';
 import { animation } from './drawer.animation';
 import DrawerStrategy from './drawer.rendering.strategy';
 class OverlapStrategy extends DrawerStrategy {
@@ -13,7 +13,8 @@ class OverlapStrategy extends DrawerStrategy {
     const {
       opened,
       minSize,
-      template: contentTemplate
+      template: contentTemplate,
+      templatesRenderAsynchronously
     } = drawer.option();
     drawer._overlay = drawer._createComponent($(drawer.content()), Overlay, {
       shading: false,
@@ -23,7 +24,7 @@ class OverlapStrategy extends DrawerStrategy {
       position: this._getOverlayPosition(),
       width: opened ? 'auto' : minSize ?? 0,
       height: '100%',
-      templatesRenderAsynchronously: drawer.option('templatesRenderAsynchronously'),
+      templatesRenderAsynchronously,
       animation: {
         show: {
           duration: 0

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/m_utils.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,6 +31,7 @@ var _window = require("../../../core/utils/window");
 var _format_helper = _interopRequireDefault(require("../../../format_helper"));
 var _load_panel = _interopRequireDefault(require("../../../ui/load_panel"));
 var _filtering = _interopRequireDefault(require("../../../ui/shared/filtering"));
+var _index = require("./utils/index");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-check
 const DATAGRID_SELECTION_DISABLED_CLASS = 'dx-selection-disabled';
@@ -80,14 +81,6 @@ const getIntervalSelector = function () {
     const groupInterval = arguments[0];
     return Math.floor(Number(value) / groupInterval) * groupInterval;
   }
-};
-const equalSelectors = function (selector1, selector2) {
-  if ((0, _type.isFunction)(selector1) && (0, _type.isFunction)(selector2)) {
-    if (selector1.originalCallback && selector2.originalCallback) {
-      return selector1.originalCallback === selector2.originalCallback && selector1.columnIndex === selector2.columnIndex;
-    }
-  }
-  return selector1 === selector2;
 };
 function isDateType(dataType) {
   return dataType === 'date' || dataType === 'datetime';
@@ -331,7 +324,6 @@ var _default = exports.default = {
   getSummaryText,
   normalizeSortingInfo,
   getFormatByDataType(dataType) {
-    // eslint-disable-next-line default-case
     switch (dataType) {
       case 'date':
         return 'shortDate';
@@ -385,7 +377,7 @@ var _default = exports.default = {
         return false;
       }
       for (let i = 0; i < sortParameters1.length; i++) {
-        if (!equalSelectors(sortParameters1[i].selector, sortParameters2[i].selector) || sortParameters1[i].desc !== sortParameters2[i].desc || sortParameters1[i].groupInterval !== sortParameters2[i].groupInterval || !ignoreIsExpanded && Boolean(sortParameters1[i].isExpanded) !== Boolean(sortParameters2[i].isExpanded)) {
+        if (!(0, _index.isEqualSelectors)(sortParameters1[i].selector, sortParameters2[i].selector) || sortParameters1[i].desc !== sortParameters2[i].desc || sortParameters1[i].groupInterval !== sortParameters2[i].groupInterval || !ignoreIsExpanded && Boolean(sortParameters1[i].isExpanded) !== Boolean(sortParameters2[i].isExpanded)) {
           return false;
         }
       }
@@ -679,5 +671,8 @@ var _default = exports.default = {
   isCustomCommandColumn(columns, commandColumn) {
     const customCommandColumns = columns.filter(column => column.type === commandColumn.type);
     return !!customCommandColumns.length;
-  }
+  },
+  // New utils
+  isEqualSelectors: _index.isEqualSelectors,
+  isSelectorEqualWithCallback: _index.isSelectorEqualWithCallback
 };

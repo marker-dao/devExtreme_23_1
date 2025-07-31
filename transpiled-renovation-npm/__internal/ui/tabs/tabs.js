@@ -384,6 +384,12 @@ class Tabs extends _uiCollection_widget.default {
     const $item = this._editStrategy.getItemElement(item);
     this._scrollable.scrollToElement($item);
   }
+  _itemPointerHandler(e) {
+    this._handleItemFocus(e);
+  }
+  _itemPointerUpHandler(e) {
+    super._itemPointerHandler(e);
+  }
   _renderNavButtons() {
     const {
       showNavButtons,

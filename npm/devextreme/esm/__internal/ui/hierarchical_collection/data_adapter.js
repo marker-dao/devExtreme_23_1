@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/hierarchical_collection/data_adapter.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,15 +12,14 @@ import { noop } from '../../../core/utils/common';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { isDefined, isFunction } from '../../../core/utils/type';
-import TextBox from '../../../ui/text_box';
 import errors from '../../../ui/widget/ui.errors';
-import uiSearchBoxMixin from '../../../ui/widget/ui.search_box_mixin';
+import SearchBoxController, { getOperationBySearchMode } from '../../ui/collection/m_search_box_mixin';
+import TextBox from '../../ui/text_box/m_text_box';
 import HierarchicalDataConverter from './data_converter';
 const EXPANDED = 'expanded';
 const SELECTED = 'selected';
 const DISABLED = 'disabled';
-// @ts-expect-error ts-error
-uiSearchBoxMixin.setEditorClass(TextBox);
+SearchBoxController.setEditorClass(TextBox);
 class DataAdapter {
   constructor(options) {
     this._initialDataStructure = [];
@@ -410,8 +409,8 @@ class DataAdapter {
   }
   _filterDataStructure(filterValue, dataStructure) {
     const selector = this.options.searchExpr ?? this.options.dataAccessors.getters.display;
-    // @ts-expect-error ts-error
-    const operation = uiSearchBoxMixin.getOperationBySearchMode(this.options.searchMode);
+    const operation = getOperationBySearchMode(this.options.searchMode);
+    // @ts-expect-error
     const criteria = DataAdapter._createCriteria(selector, filterValue, operation);
     const data = dataStructure ?? this._initialDataStructure;
     // @ts-expect-error ts-error

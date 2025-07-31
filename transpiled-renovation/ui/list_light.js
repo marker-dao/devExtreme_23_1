@@ -2,11 +2,7 @@
 
 exports.default = void 0;
 var _m_listEdit = _interopRequireDefault(require("../__internal/ui/list/m_list.edit.search"));
-var _component_registrator = _interopRequireDefault(require("../core/component_registrator"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-// STYLE list
-
-(0, _component_registrator.default)('dxList', _m_listEdit.default);
 var _default = exports.default = _m_listEdit.default;
 /**
  * @name dxListOptions.selectedIndex

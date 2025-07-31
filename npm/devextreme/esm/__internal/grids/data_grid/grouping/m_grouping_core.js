@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/data_grid/grouping/m_grouping_core.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,6 +9,7 @@
 import { normalizeSortingInfo } from '../../../../common/data/utils';
 import $ from '../../../../core/renderer';
 import { when } from '../../../../core/utils/deferred';
+import gridCoreUtils from '../../../grids/grid_core/m_utils';
 import gridCore from '../m_core';
 export function createOffsetFilter(path, storeLoadOptions, lastLevelOnly) {
   const groups = normalizeSortingInfo(storeLoadOptions.group);
@@ -233,7 +234,7 @@ export class GroupingHelper {
     let groupsCount = Math.min(oldGroups.length, groups.length);
     that._group = storeLoadOptions.group;
     for (let groupIndex = 0; groupIndex < groupsCount; groupIndex++) {
-      if (oldGroups[groupIndex].selector !== groups[groupIndex].selector) {
+      if (!gridCoreUtils.isEqualSelectors(oldGroups[groupIndex].selector, groups[groupIndex].selector)) {
         groupsCount = groupIndex;
         break;
       }

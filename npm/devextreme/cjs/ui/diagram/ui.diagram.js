@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/diagram/ui.diagram.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,7 +25,7 @@ var _events_engine = _interopRequireDefault(require("../../common/core/events/co
 var _index = require("../../common/core/events/utils/index");
 var _message = _interopRequireDefault(require("../../common/core/localization/message"));
 var _number = _interopRequireDefault(require("../../common/core/localization/number"));
-var zIndexPool = _interopRequireWildcard(require("../../__internal/ui/overlay/m_z_index"));
+var zIndexPool = _interopRequireWildcard(require("../../__internal/ui/overlay/z_index"));
 var _ui2 = _interopRequireDefault(require("../overlay/ui.overlay"));
 var _uiDiagram = _interopRequireDefault(require("./ui.diagram.toolbar"));
 var _uiDiagram2 = _interopRequireDefault(require("./ui.diagram.main_toolbar"));

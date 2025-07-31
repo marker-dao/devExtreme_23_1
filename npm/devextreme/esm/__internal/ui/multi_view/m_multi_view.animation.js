@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/multi_view/m_multi_view.animation.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,9 +18,8 @@ export const _translator = {
 };
 export const animation = {
   moveTo($element, position, duration, completeAction) {
-    // @ts-expect-error
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    fx.animate($element, {
+    fx.animate($element.get(0), {
       type: 'slide',
       to: {
         left: position
@@ -30,7 +29,6 @@ export const animation = {
     });
   },
   complete($element) {
-    // @ts-expect-error
-    fx.stop($element, true);
+    fx.stop($element.get(0), true);
   }
 };

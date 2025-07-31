@@ -378,6 +378,12 @@ class Tabs extends CollectionWidget {
     const $item = this._editStrategy.getItemElement(item);
     this._scrollable.scrollToElement($item);
   }
+  _itemPointerHandler(e) {
+    this._handleItemFocus(e);
+  }
+  _itemPointerUpHandler(e) {
+    super._itemPointerHandler(e);
+  }
   _renderNavButtons() {
     const {
       showNavButtons,

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.nb.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -44,7 +44,7 @@
             "validation-range": "Verdien er utenfor intervall",
             "validation-range-formatted": "{0} er utenfor intervall",
             "validation-stringLength": "Tekstverdiens lengde er ikke korrekt",
-            "validation-stringLength-formatted": "Tekstlengden på {0}  er ikke korrekt",
+            "validation-stringLength-formatted": "Tekstlengden på {0} er ikke korrekt",
             "validation-custom": "Verdien er ugyldig",
             "validation-custom-formatted": "{0} er ugyldig",
             "validation-async": "Verdien er ugyldig",
@@ -56,7 +56,7 @@
             "validation-email": "E-post er ikke gyldig",
             "validation-email-formatted": "{0} er ugyldig",
             "validation-mask": "Verdien er ugyldig",
-            "dxLookup-searchPlaceholder": "Minste antall tegn: {0} ",
+            "dxLookup-searchPlaceholder": "Minste antall tegn: {0}",
             "dxList-pullingDownText": "Trekk ned for å oppdatere...",
             "dxList-pulledDownText": "Slipp for å oppdatere...",
             "dxList-refreshingText": "Oppdaterer...",
@@ -112,7 +112,7 @@
             "dxDataGrid-emptyHeaderWithGroupPanelText": "Drag a column from the group panel here",
             "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "Use {0} or drag a column from the group panel",
             "dxDataGrid-emptyHeaderColumnChooserText": "column chooser",
-            "dxDataGrid-columnChooserTitle": "Kollonnevelger",
+            "dxDataGrid-columnChooserTitle": "Kolonnevelger",
             "dxDataGrid-columnChooserEmptyText": "Dra kolonnen hit for å skjule den",
             "dxDataGrid-groupContinuesMessage": "Fortsetter på neste side",
             "dxDataGrid-groupContinuedMessage": "Fortsettelse fra forrige side",
@@ -135,7 +135,7 @@
             "dxDataGrid-filterRowOperationNotEquals": "Er ikke lik",
             "dxDataGrid-filterRowOperationLess": "Mindre enn",
             "dxDataGrid-filterRowOperationLessOrEquals": "Mindre enn eller lik",
-            "dxDataGrid-filterRowOperationGreater": "Større enn ",
+            "dxDataGrid-filterRowOperationGreater": "Større enn",
             "dxDataGrid-filterRowOperationGreaterOrEquals": "Større enn eller lik",
             "dxDataGrid-filterRowOperationStartsWith": "Begynner med",
             "dxDataGrid-filterRowOperationContains": "Inneholder",
@@ -158,7 +158,7 @@
             "dxDataGrid-editingSaveAllChanges": "Lagre endringer",
             "dxDataGrid-editingCancelAllChanges": "Forkast endringer",
             "dxDataGrid-editingAddRow": "Legg til rad",
-            "dxDataGrid-summaryMin": "Min: {0} ",
+            "dxDataGrid-summaryMin": "Min: {0}",
             "dxDataGrid-summaryMinOtherColumn": "Min av {1} er {0}",
             "dxDataGrid-summaryMax": "Maks: {0}",
             "dxDataGrid-summaryMaxOtherColumn": "Maks av {1} er {0}",
@@ -248,7 +248,7 @@
             "dxPivotGrid-removeAllSorting": "Fjern all sortering",
             "dxPivotGrid-dataNotAvailable": "N/A",
             "dxPivotGrid-rowFields": "Radfelter",
-            "dxPivotGrid-columnFields": "Kollonnerfelter",
+            "dxPivotGrid-columnFields": "Kolonnefelter",
             "dxPivotGrid-dataFields": "Datafelter",
             "dxPivotGrid-filterFields": "Filterfelter",
             "dxPivotGrid-allFields": "Alle felter",

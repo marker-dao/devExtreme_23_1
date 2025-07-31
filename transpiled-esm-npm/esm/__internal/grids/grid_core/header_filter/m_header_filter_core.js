@@ -5,15 +5,16 @@ import messageLocalization from '../../../../common/core/localization/message';
 import $ from '../../../../core/renderer';
 import { extend } from '../../../../core/utils/extend';
 import { each } from '../../../../core/utils/iterator';
-import { isDeferred, isDefined, isFunction } from '../../../../core/utils/type';
-import List from '../../../../ui/list_light';
+import { isDefined, isFunction } from '../../../../core/utils/type';
 import Popup from '../../../../ui/popup/ui.popup';
-import TreeView from '../../../../ui/tree_view';
 import Modules from '../../../grids/grid_core/m_modules';
+import List from '../../../ui/list/m_list.edit.search';
+import TreeView from '../../../ui/tree_view/m_tree_view.search';
 import gridCoreUtils from '../m_utils';
 const HEADER_FILTER_CLASS = 'dx-header-filter';
 const HEADER_FILTER_MENU_CLASS = 'dx-header-filter-menu';
 const DEFAULT_SEARCH_EXPRESSION = 'text';
+const HANDLER_DECORATED_KEY = Symbol('HANDLER_DECORATED_KEY');
 function resetChildrenItemSelection(items) {
   items = items || [];
   for (let i = 0; i < items.length; i++) {
@@ -25,34 +26,51 @@ function getSelectAllCheckBox(listComponent) {
   const selector = listComponent.NAME === 'dxTreeView' ? '.dx-treeview-select-all-item' : '.dx-list-select-all-checkbox';
   return listComponent.$element().find(selector).dxCheckBox('instance');
 }
-function updateListSelectAllState(
-// NOTE: In runtime dxList's "unselectAll" returns Deferred.
-// But in d.ts dxList has a void return type.
-listComponent, filterValues) {
+function getListSelectAllValueChangedHandler(selectAllCheckBox, listComponent) {
+  const originalHandler = selectAllCheckBox.option('onValueChanged');
+  if (originalHandler !== null && originalHandler !== void 0 && originalHandler[HANDLER_DECORATED_KEY]) {
+    return originalHandler;
+  }
+  const handler = originalEvent => {
+    const {
+      event,
+      value
+    } = originalEvent;
+    const isEventFromUI = !!event;
+    event === null || event === void 0 || event.stopPropagation();
+    switch (true) {
+      case isEventFromUI && value === true:
+        listComponent.selectAll();
+        return;
+      case isEventFromUI && value === false:
+        listComponent.unselectAll();
+        return;
+      default:
+        originalHandler === null || originalHandler === void 0 || originalHandler(originalEvent);
+    }
+  };
+  handler[HANDLER_DECORATED_KEY] = true;
+  return handler;
+}
+// NOTE: T1284200 fix + after T1293295 regression fix
+// We take control of list's select all checkbox on our side
+// It's temporary solution, in future we should implement this functionality in list
+// or change our HeaderFilter UX behavior
+function decorateListSelectAllValueChanged(listComponent) {
+  const selectAllCheckBox = getSelectAllCheckBox(listComponent);
+  if (!selectAllCheckBox) {
+    return;
+  }
+  const handler = getListSelectAllValueChangedHandler(selectAllCheckBox, listComponent);
+  selectAllCheckBox.option('onValueChanged', handler);
+}
+function updateListSelectAllState(listComponent, filterValues) {
   if (listComponent.option('searchValue')) {
     return;
   }
   const selectAllCheckBox = getSelectAllCheckBox(listComponent);
   if (selectAllCheckBox && filterValues !== null && filterValues !== void 0 && filterValues.length) {
     selectAllCheckBox.option('value', undefined);
-    // NOTE: T1284200 fix
-    // We manually set checkbox state (value) above
-    // So, list do nothing because inner list component's "select all" state
-    // doesn't react to our manual update.
-    // Therefore -> we should handle first "select all" checkbox click manually.
-    // And after it return original "onValueChanged" handler back.
-    const originalValueChanged = selectAllCheckBox.option('onValueChanged');
-    selectAllCheckBox.option('onValueChanged', event => {
-      selectAllCheckBox.option('onValueChanged', originalValueChanged);
-      const deferred = listComponent.unselectAll();
-      if (isDeferred(deferred)) {
-        deferred.always(() => {
-          originalValueChanged === null || originalValueChanged === void 0 || originalValueChanged(event);
-        });
-      } else {
-        originalValueChanged === null || originalValueChanged === void 0 || originalValueChanged(event);
-      }
-    });
   }
 }
 export function updateHeaderFilterItemSelectionState(item, filterValuesMatch, isExcludeFilter) {
@@ -295,7 +313,7 @@ export class HeaderFilterView extends Modules.View {
           // NOTE: the TreeView render is async
           // So we should focus the searchEditor only after render will be completed
           Promise.resolve().then(() => {
-            event.component._searchEditor.focus();
+            event.component.getSearchBoxController().focus();
           }).catch(() => {});
           break;
         default:
@@ -369,6 +387,7 @@ export class HeaderFilterView extends Modules.View {
           listComponent._selectedItemsUpdating = true;
           listComponent.option('selectedItems', selectedItems);
           listComponent._selectedItemsUpdating = false;
+          decorateListSelectAllValueChanged(listComponent);
           updateListSelectAllState(listComponent, options.filterValues);
         }
       }));

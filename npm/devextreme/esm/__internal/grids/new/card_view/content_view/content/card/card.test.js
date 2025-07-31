@@ -1,13 +1,13 @@
 /**
 * DevExtreme (esm/__internal/grids/new/card_view/content_view/content/card/card.test.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
-import { createComponentVNode, normalizeProps } from "inferno";
+import { createVNode, createComponentVNode, normalizeProps } from "inferno";
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { compileGetter } from '../../../../../../../common/data';
 import { Guid } from '../../../../../../core/m_guid';
@@ -95,13 +95,24 @@ describe('Card Header', () => {
     expect(trashButton).toHaveLength(1);
   });
 });
-describe('Image', () => {
-  it('should render the image correctly', () => {
+describe('Cover', () => {
+  it('should be rendered', () => {
     const container = document.createElement('div');
     // @ts-expect-error
     render(normalizeProps(createComponentVNode(2, Card, _extends({}, props))), container);
     const image = container.querySelector('img');
     expect(image).not.toBeNull();
+  });
+  it('should be rendered if imageExpr is not defined but template is defined', () => {
+    const container = document.createElement('div');
+    const localProps = _extends({}, props, {
+      cover: {
+        template: () => createVNode(1, "img", 'myTemplate')
+      }
+    });
+    // @ts-expect-error
+    render(normalizeProps(createComponentVNode(2, Card, _extends({}, localProps))), container);
+    expect(container.querySelector('.myTemplate')).toBeTruthy();
   });
 });
 describe('Field Template', () => {

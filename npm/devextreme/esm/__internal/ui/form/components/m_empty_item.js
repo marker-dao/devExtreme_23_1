@@ -1,17 +1,17 @@
 /**
 * DevExtreme (esm/__internal/ui/form/components/m_empty_item.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import $ from '../../../../core/renderer';
 export const FIELD_EMPTY_ITEM_CLASS = 'dx-field-empty-item';
-export function renderEmptyItem(_ref) {
-  let {
+export function renderEmptyItem(info) {
+  const {
     $parent,
     rootElementCssClassList
-  } = _ref;
+  } = info;
   return $('<div>').addClass(FIELD_EMPTY_ITEM_CLASS).html('&nbsp;').addClass(rootElementCssClassList.join(' ')).appendTo($parent);
 }

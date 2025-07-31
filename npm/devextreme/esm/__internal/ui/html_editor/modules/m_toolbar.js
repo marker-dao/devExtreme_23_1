@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/html_editor/modules/m_toolbar.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,7 +21,7 @@ import { isDefined, isEmptyObject, isObject, isString } from '../../../../core/u
 import Toolbar from '../../../../ui/toolbar';
 import errors from '../../../../ui/widget/ui.errors';
 import { capitalize } from '../../../core/utils/capitalize';
-import { DX_MENU_ITEM_CLASS } from '../../../ui/menu/m_menu';
+import { DX_MENU_ITEM_CLASS } from '../../../ui/menu/menu';
 import Quill from 'devextreme-quill';
 import { buildCommandsMap, defaultCommandNames, getDefaultOptionsByCommand, hasInvalidCustomCommand } from '../utils/ai';
 import { getTableFormats, TABLE_OPERATIONS } from '../utils/m_table_helper';

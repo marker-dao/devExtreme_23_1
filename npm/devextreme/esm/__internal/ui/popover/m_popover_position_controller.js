@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/popover/m_popover_position_controller.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -59,7 +59,6 @@ class PopoverPositionController extends OverlayPositionController {
         $arrow
       } = _ref,
       args = _objectWithoutPropertiesLoose(_ref, _excluded);
-    // @ts-expect-error
     super(args);
     this._props = _extends({}, this._props, {
       shading,
@@ -71,7 +70,8 @@ class PopoverPositionController extends OverlayPositionController {
   }
   positionWrapper() {
     if (this._props.shading) {
-      this._$wrapper.css({
+      var _this$_$wrapper;
+      (_this$_$wrapper = this._$wrapper) === null || _this$_$wrapper === void 0 || _this$_$wrapper.css({
         top: 0,
         left: 0
       });
@@ -103,7 +103,8 @@ class PopoverPositionController extends OverlayPositionController {
     });
   }
   _getContentBorderWidth(side) {
-    const borderWidth = this._$content.css(borderWidthStyles[side]);
+    var _this$_$content;
+    const borderWidth = (_this$_$content = this._$content) === null || _this$_$content === void 0 ? void 0 : _this$_$content.css(borderWidthStyles[side]);
     // @ts-expect-error
     // eslint-disable-next-line radix
     return parseInt(borderWidth) || 0;

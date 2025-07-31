@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/views/m_rows_view.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -231,7 +231,9 @@ class RowsView extends _m_columns_view.ColumnsView {
         setWatcher({
           element: $row.get(0),
           watch: rowOptions.watch,
-          getter: () => this._isAltRow(row),
+          getter: () => this._isAltRow(
+          // The row needs to be obtained again because the current row is out of date.
+          this._dataController.getRowByKey(row.key)),
           callBack: value => {
             $row.toggleClass(ROW_ALTERNATION_CLASS, value);
           }

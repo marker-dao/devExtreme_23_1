@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/export/m_export.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,7 +13,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = exports.PivotGridExport = exports.ExportController = exports.DataProvider = void 0;
 var _number = _interopRequireDefault(require("../../../../common/core/localization/number"));
-var _class = _interopRequireDefault(require("../../../../core/class"));
 var _deferred = require("../../../../core/utils/deferred");
 var _extend = require("../../../../core/utils/extend");
 var _iterator = require("../../../../core/utils/iterator");
@@ -112,10 +111,10 @@ const ExportController = exports.ExportController = {
     return new DataProvider(this);
   }
 };
-const DataProvider = exports.DataProvider = _class.default.inherit({
-  ctor(exportController) {
+class DataProvider {
+  constructor(exportController) {
     this._exportController = exportController;
-  },
+  }
   ready() {
     this._initOptions();
     const options = this._options;
@@ -128,7 +127,7 @@ const DataProvider = exports.DataProvider = _class.default.inherit({
       options.columns = columns;
       options.items = items;
     });
-  },
+  }
   _initOptions() {
     const exportController = this._exportController;
     const dataController = exportController._dataController;
@@ -149,10 +148,10 @@ const DataProvider = exports.DataProvider = _class.default.inherit({
       rowsArea: exportController._rowsArea,
       columnsArea: exportController._columnsArea
     };
-  },
+  }
   getColumns() {
     return this._options.columns;
-  },
+  }
   getColumnsWidths() {
     const colsArea = this._options.columnsArea;
     const {
@@ -163,13 +162,13 @@ const DataProvider = exports.DataProvider = _class.default.inherit({
     } = this._options;
     const useDefaultWidth = !(0, _window.hasWindow)() || colsArea.option('scrolling.mode') === 'virtual' || colsArea.element().is(':hidden');
     return useDefaultWidth ? columns.map(() => DEFAUL_COLUMN_WIDTH) : rowsArea.getColumnsWidth().concat(colsArea.getColumnsWidth());
-  },
+  }
   getRowsCount() {
     return this._options.items.length;
-  },
+  }
   getGroupLevel() {
     return 0;
-  },
+  }
   getCellMerging(rowIndex, cellIndex) {
     const {
       items
@@ -182,17 +181,17 @@ const DataProvider = exports.DataProvider = _class.default.inherit({
       colspan: 0,
       rowspan: 0
     };
-  },
+  }
   getFrozenArea() {
     return {
       x: this.getRowAreaColCount(),
       y: this.getColumnAreaRowCount()
     };
-  },
+  }
   getCellType(rowIndex, cellIndex) {
     const style = this.getStyles()[this.getStyleId(rowIndex, cellIndex)];
     return style && style.dataType || 'string';
-  },
+  }
   getCellData(rowIndex, cellIndex, isExcelJS) {
     const result = {};
     const {
@@ -217,7 +216,7 @@ const DataProvider = exports.DataProvider = _class.default.inherit({
       result.value = '';
     }
     return result;
-  },
+  }
   _tryGetAreaName(item, rowIndex, cellIndex) {
     if (this.isColumnAreaCell(rowIndex, cellIndex)) {
       return 'column';
@@ -229,19 +228,19 @@ const DataProvider = exports.DataProvider = _class.default.inherit({
       return 'data';
     }
     return undefined;
-  },
+  }
   isRowAreaCell(rowIndex, cellIndex) {
     return rowIndex >= this.getColumnAreaRowCount() && cellIndex < this.getRowAreaColCount();
-  },
+  }
   isColumnAreaCell(rowIndex, cellIndex) {
     return cellIndex >= this.getRowAreaColCount() && rowIndex < this.getColumnAreaRowCount();
-  },
+  }
   getColumnAreaRowCount() {
     return this._options.items[0][0].rowspan;
-  },
+  }
   getRowAreaColCount() {
     return this._options.items[0][0].colspan;
-  },
+  }
   getHeaderStyles() {
     return [{
       alignment: 'center',
@@ -250,7 +249,7 @@ const DataProvider = exports.DataProvider = _class.default.inherit({
       alignment: (0, _position.getDefaultAlignment)(this._options.rtlEnabled),
       dataType: 'string'
     }];
-  },
+  }
   getDataFieldStyles() {
     const {
       dataFields
@@ -269,14 +268,14 @@ const DataProvider = exports.DataProvider = _class.default.inherit({
       return dataFieldStyles;
     }
     return [dataItemStyle];
-  },
+  }
   getStyles() {
     if (this._styles) {
       return this._styles;
     }
     this._styles = [...this.getHeaderStyles(), ...this.getDataFieldStyles()];
     return this._styles;
-  },
+  }
   getCellDataType(field) {
     if (field && field.customizeText) {
       return 'string';
@@ -293,7 +292,7 @@ const DataProvider = exports.DataProvider = _class.default.inherit({
       }
     }
     return DEFAULT_DATA_TYPE;
-  },
+  }
   getStyleId(rowIndex, cellIndex) {
     const {
       items
@@ -307,7 +306,8 @@ const DataProvider = exports.DataProvider = _class.default.inherit({
     }
     return this.getHeaderStyles().length + (item.dataIndex || 0);
   }
-});
+}
+exports.DataProvider = DataProvider;
 const PivotGridExport = exports.PivotGridExport = {
   DEFAUL_COLUMN_WIDTH
 };

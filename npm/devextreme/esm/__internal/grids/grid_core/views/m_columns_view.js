@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/views/m_columns_view.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -64,6 +64,11 @@ const subscribeToRowEvents = function (that, $table) {
     }, timeout);
   }
   eventsEngine.on($table, 'touchstart touchend', '.dx-row', e => {
+    var _e$event;
+    // NOTE: checking for target only for mocks in qunits
+    if (e !== null && e !== void 0 && (_e$event = e.event) !== null && _e$event !== void 0 && _e$event.target && !gridCoreUtils.isElementInCurrentGrid(that, $(e.event.target))) {
+      return;
+    }
     clearTimeout(timeoutId);
     if (e.type === 'touchstart') {
       touchTarget = e.target;
@@ -74,9 +79,14 @@ const subscribeToRowEvents = function (that, $table) {
     }
   });
   eventsEngine.on($table, [clickEventName, dblclickEvent, pointerEvents.down].join(' '), '.dx-row', that.createAction(e => {
+    var _e$event2;
     const {
       event
     } = e;
+    // NOTE: checking for target only for mocks in qunits
+    if (e !== null && e !== void 0 && (_e$event2 = e.event) !== null && _e$event2 !== void 0 && _e$event2.target && !gridCoreUtils.isElementInCurrentGrid(that, $(event.target))) {
+      return;
+    }
     if (touchTarget) {
       event.target = touchTarget;
       event.currentTarget = touchCurrentTarget;
@@ -314,7 +324,6 @@ export class ColumnsView extends ColumnStateMixin(modules.View) {
         const visibleColumns = this._columnsController.getVisibleColumns();
         const rowOptions = $row.data('options');
         const columnIndex = $cell.index();
-        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
         const cellOptions = rowOptions && rowOptions.cells && rowOptions.cells[columnIndex];
         const column = cellOptions ? cellOptions.column : visibleColumns[columnIndex];
         const isHeaderRow = $row.hasClass('dx-header-row');
@@ -896,7 +905,6 @@ export class ColumnsView extends ColumnStateMixin(modules.View) {
     return $scrollContainer;
   }
   needWaitAsyncTemplates() {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
     return this.option('templatesRenderAsynchronously') && this.option('renderAsync') === false;
   }
   waitAsyncTemplates() {
@@ -936,10 +944,8 @@ export class ColumnsView extends ColumnStateMixin(modules.View) {
     }
     const result = [];
     const cellElements = $cellElements.toArray();
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     cellElements.forEach(cell => {
       let width = cell.offsetWidth;
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       if (cell.getBoundingClientRect) {
         const rect = getBoundingRect(cell);
         if (rect.width > cell.offsetWidth - 1) {

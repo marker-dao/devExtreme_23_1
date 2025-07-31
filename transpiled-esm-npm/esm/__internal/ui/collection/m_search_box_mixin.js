@@ -1,151 +1,99 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
 import { Deferred } from '../../../core/utils/deferred';
-import { extend } from '../../../core/utils/extend';
-import { stubComponent } from '../../../core/utils/stubs';
-import errors from '../../../ui/widget/ui.errors';
-let EditorClass = stubComponent('TextBox');
-export default {
-  _getDefaultOptions() {
-    return extend(this.callBase(), {
-      searchMode: '',
-      searchExpr: null,
-      searchValue: '',
-      searchEnabled: false,
-      searchEditorOptions: {}
-    });
-  },
-  _initMarkup() {
-    this._renderSearch();
-    this.callBase();
-  },
-  _renderSearch() {
-    const $element = this.$element();
-    const searchEnabled = this.option('searchEnabled');
-    const searchBoxClassName = this._addWidgetPrefix('search');
-    const rootElementClassName = this._addWidgetPrefix('with-search');
+import { stubComponent } from '../../core/utils/m_stubs';
+export const getOperationBySearchMode = searchMode => searchMode === 'equals' ? '=' : searchMode;
+class SearchBoxController {
+  static setEditorClass(value) {
+    SearchBoxController.EditorClass = value;
+  }
+  render(widgetPrefix, $container, options, createEditorCallback) {
+    const rootElementClassName = `${widgetPrefix}-with-search`;
+    const searchBoxClassName = `${widgetPrefix}-search`;
+    const {
+      searchEnabled,
+      onValueChanged
+    } = options;
+    this._onSearchBoxValueChanged = onValueChanged;
     if (!searchEnabled) {
-      $element.removeClass(rootElementClassName);
-      this._removeSearchBox();
+      $container.removeClass(rootElementClassName);
+      this.remove();
       return;
     }
-    const editorOptions = this._getSearchEditorOptions();
-    if (this._searchEditor) {
-      this._searchEditor.option(editorOptions);
+    if (this._editor) {
+      this.updateEditorOptions(options);
     } else {
-      $element.addClass(rootElementClassName);
-      this._$searchEditorElement = $('<div>').addClass(searchBoxClassName).prependTo($element);
-      this._searchEditor = this._createComponent(this._$searchEditorElement, EditorClass, editorOptions);
+      const editorOptions = this._getEditorOptions(options);
+      $container.addClass(rootElementClassName);
+      const $editor = $('<div>').addClass(searchBoxClassName).prependTo($container);
+      this._editor = createEditorCallback($editor, SearchBoxController.EditorClass, editorOptions);
     }
-  },
-  _removeSearchBox() {
-    this._$searchEditorElement && this._$searchEditorElement.remove();
-    delete this._$searchEditorElement;
-    delete this._searchEditor;
-  },
-  _getSearchEditorOptions() {
-    const that = this;
-    const userEditorOptions = that.option('searchEditorOptions');
-    const searchText = messageLocalization.format('Search');
-    return extend({
+  }
+  updateEditorOptions(options) {
+    var _this$_editor;
+    const editorOptions = this._getEditorOptions(options);
+    (_this$_editor = this._editor) === null || _this$_editor === void 0 || _this$_editor.option(editorOptions);
+  }
+  _getEditorOptions(options) {
+    const {
+      tabIndex,
+      searchValue,
+      searchEditorOptions,
+      searchTimeout
+    } = options;
+    const placeholder = messageLocalization.format('Search');
+    return _extends({
       mode: 'search',
-      placeholder: searchText,
-      tabIndex: that.option('tabIndex'),
-      value: that.option('searchValue'),
+      placeholder,
+      tabIndex,
+      value: searchValue,
       valueChangeEvent: 'input',
       inputAttr: {
-        'aria-label': searchText
+        'aria-label': placeholder
       },
-      onValueChanged(e) {
-        const searchTimeout = that.option('searchTimeout');
-        that._valueChangeDeferred = Deferred();
-        clearTimeout(that._valueChangeTimeout);
-        that._valueChangeDeferred.done(function () {
-          this.option('searchValue', e.value);
-        }.bind(that));
-        if (e.event && e.event.type === 'input' && searchTimeout) {
-          that._valueChangeTimeout = setTimeout(() => {
-            that._valueChangeDeferred.resolve();
-          }, searchTimeout);
-        } else {
-          that._valueChangeDeferred.resolve();
-        }
+      // @ts-expect-error ts-error
+      onValueChanged: e => {
+        this._onValueChanged(e, searchTimeout);
       }
-    }, userEditorOptions);
-  },
-  _getAriaTarget() {
-    if (this.option('searchEnabled')) {
-      return this._itemContainer(true);
-    }
-    return this.callBase();
-  },
-  _focusTarget() {
-    if (this.option('searchEnabled')) {
-      return this._itemContainer(true);
-    }
-    return this.callBase();
-  },
-  _updateFocusState(e, isFocused) {
-    if (this.option('searchEnabled')) {
-      this._toggleFocusClass(isFocused, this.$element());
-    }
-    this.callBase(e, isFocused);
-  },
-  getOperationBySearchMode(searchMode) {
-    return searchMode === 'equals' ? '=' : searchMode;
-  },
-  _optionChanged(args) {
-    switch (args.name) {
-      case 'searchEnabled':
-      case 'searchEditorOptions':
-        this._invalidate();
-        break;
-      case 'searchExpr':
-      case 'searchMode':
-      case 'searchValue':
-        if (!this._dataSource) {
-          errors.log('W1009');
-          return;
-        }
-        if (args.name === 'searchMode') {
-          this._dataSource.searchOperation(this.getOperationBySearchMode(args.value));
-        } else {
-          this._dataSource[args.name](args.value);
-        }
-        this._dataSource.load();
-        break;
-      case 'searchTimeout':
-        break;
-      default:
-        this.callBase(args);
-    }
-  },
-  focus() {
-    if (!this.option('focusedElement') && this.option('searchEnabled')) {
-      this._searchEditor && this._searchEditor.focus();
-      return;
-    }
-    this.callBase();
-  },
-  _cleanAria() {
-    const $element = this.$element();
-    this.setAria({
-      role: null,
-      activedescendant: null
-    }, $element);
-    $element.attr('tabIndex', null);
-  },
-  _clean() {
-    this.callBase();
-    this._cleanAria();
-  },
-  _refresh() {
-    if (this._valueChangeDeferred) {
-      this._valueChangeDeferred.resolve();
-    }
-    this.callBase();
-  },
-  setEditorClass(value) {
-    EditorClass = value;
+    }, searchEditorOptions);
   }
-};
+  _onValueChanged(e) {
+    var _e$event;
+    let searchTimeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    this._valueChangeDeferred = Deferred();
+    clearTimeout(this._valueChangeTimeout);
+    this._valueChangeDeferred.done(() => {
+      var _this$_onSearchBoxVal;
+      (_this$_onSearchBoxVal = this._onSearchBoxValueChanged) === null || _this$_onSearchBoxVal === void 0 || _this$_onSearchBoxVal.call(this, e.value);
+    });
+    if (((_e$event = e.event) === null || _e$event === void 0 ? void 0 : _e$event.type) === 'input' && searchTimeout) {
+      // eslint-disable-next-line no-restricted-globals
+      this._valueChangeTimeout = setTimeout(() => {
+        var _this$_valueChangeDef;
+        (_this$_valueChangeDef = this._valueChangeDeferred) === null || _this$_valueChangeDef === void 0 || _this$_valueChangeDef.resolve();
+      }, searchTimeout);
+    } else {
+      var _this$_valueChangeDef2;
+      (_this$_valueChangeDef2 = this._valueChangeDeferred) === null || _this$_valueChangeDef2 === void 0 || _this$_valueChangeDef2.resolve();
+    }
+  }
+  resolveValueChange() {
+    var _this$_valueChangeDef3;
+    (_this$_valueChangeDef3 = this._valueChangeDeferred) === null || _this$_valueChangeDef3 === void 0 || _this$_valueChangeDef3.resolve();
+  }
+  remove() {
+    var _this$_editor2;
+    (_this$_editor2 = this._editor) === null || _this$_editor2 === void 0 || _this$_editor2.$element().remove();
+    this._editor = null;
+  }
+  focus() {
+    var _this$_editor3;
+    (_this$_editor3 = this._editor) === null || _this$_editor3 === void 0 || _this$_editor3.focus();
+  }
+  dispose() {
+    this.remove();
+  }
+}
+SearchBoxController.EditorClass = stubComponent('TextBox');
+export default SearchBoxController;

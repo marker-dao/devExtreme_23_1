@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/resizable/resizable.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -181,7 +181,10 @@ class Resizable extends _dom_component.default {
     const $handle = (0, _renderer.default)(e.target).closest(`.${RESIZABLE_HANDLE_CLASS}`);
     const handleWidth = (0, _size.getOuterWidth)($handle);
     const handleHeight = (0, _size.getOuterHeight)($handle);
-    const handleOffset = $handle.offset();
+    const handleOffset = $handle.offset() ?? {
+      left: 0,
+      top: 0
+    };
     const areaOffset = area.offset;
     const scrollOffset = this._getAreaScrollOffset();
     this._leftMaxOffset = handleOffset.left - areaOffset.left - scrollOffset.scrollX;
@@ -193,14 +196,11 @@ class Resizable extends _dom_component.default {
     this._bottomMaxOffset = areaOffset.top + area.height - handleOffset.top - handleHeight + scrollOffset.scrollY;
     e.maxBottomOffset = this._bottomMaxOffset;
   }
-  // eslint-disable-next-line class-methods-use-this
   _getBorderWidth($element, direction) {
     if ((0, _type.isWindow)($element.get(0))) return 0;
     // @ts-expect-error ts-error
     const borderWidth = $element.css(SIDE_BORDER_WIDTH_STYLES[direction]);
-    // @ts-expect-error ts-error
-    // eslint-disable-next-line radix
-    return parseInt(borderWidth) || 0;
+    return parseInt(borderWidth, 10) || 0;
   }
   _proportionate(direction, value) {
     const size = this._elementSize;
@@ -372,7 +372,6 @@ class Resizable extends _dom_component.default {
     });
     (0, _visibility_change.triggerResizeEvent)(this.$element());
   }
-  // eslint-disable-next-line class-methods-use-this
   _isCornerHandler(sides) {
     // eslint-disable-next-line no-bitwise
     return Object.values(sides).reduce((xor, value) => xor ^ value, 0) === 0;
@@ -449,7 +448,6 @@ class Resizable extends _dom_component.default {
       y: roundedOffset.y * (sides.top ? -1 : 1)
     };
   }
-  // eslint-disable-next-line class-methods-use-this
   _getMovingSides(e) {
     const $target = (0, _renderer.default)(e.target);
     const hasCornerTopLeftClass = $target.hasClass(`${RESIZABLE_HANDLE_CORNER_CLASS}-top-left`);
@@ -599,7 +597,6 @@ class Resizable extends _dom_component.default {
   _clean() {
     this.$element().find(`.${RESIZABLE_HANDLE_CLASS}`).remove();
   }
-  // eslint-disable-next-line class-methods-use-this
   _useTemplates() {
     return false;
   }

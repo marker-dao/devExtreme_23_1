@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -3187,9 +3187,7 @@ var _iterator = __webpack_require__(21274);
 var _type = __webpack_require__(11528);
 var _window = __webpack_require__(3104);
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-/* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-/* eslint-disable no-restricted-syntax */
 
 class Action {
   constructor(action, config) {
@@ -3242,7 +3240,6 @@ class Action {
     const {
       executors
     } = Action;
-    // eslint-disable-next-line no-restricted-syntax
     for (const name in executors) {
       if (!excludeValidators[name]) {
         var _executor$validate;
@@ -4666,11 +4663,6 @@ var _style = __webpack_require__(58515);
 var _type = __webpack_require__(11528);
 var _window = __webpack_require__(3104);
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable object-shorthand */
-
 const window = (0, _window.getWindow)();
 let renderer;
 const initRender = function (selector, context) {
@@ -4792,15 +4784,11 @@ initRender.prototype.removeClass = function (className) {
   return this.toggleClass(className, false);
 };
 initRender.prototype.hasClass = function (className) {
-  if (!this[0] || this[0].className === undefined) return false;
   const classNames = className.split(' ');
-  for (let i = 0; i < classNames.length; i++) {
-    if (this[0].classList) {
-      if (this[0].classList.contains(classNames[i])) return true;
-    } else {
-      // IE9
-      const className = (0, _type.isString)(this[0].className) ? this[0].className : _dom_adapter.default.getAttribute(this[0], 'class');
-      if ((className || '').split(' ').indexOf(classNames[i]) >= 0) return true;
+  for (let i = 0; i < this.length; i++) {
+    if (!this[i] || !this[i].className) continue;
+    for (let j = 0; j < classNames.length; j++) {
+      if (this[i].classList.contains(classNames[j])) return true;
     }
   }
   return false;
@@ -5589,7 +5577,6 @@ var _option_manager = __webpack_require__(1896);
 var _utils = __webpack_require__(53904);
 var _common = __webpack_require__(17781);
 var _data = __webpack_require__(31000);
-var _extend = __webpack_require__(52576);
 var _type = __webpack_require__(11528);
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class Options {
@@ -5604,7 +5591,6 @@ class Options {
     this._initDeprecatedNames();
     this._optionManager = new _option_manager.OptionManager(options, optionsByReference);
     this._optionManager.onRelevantNamesPrepared((options, name, value, silent) => this._setRelevantNames(options, name, value, silent));
-    this._cachedOptions = {};
     this._rules = [];
   }
   set _initial(value) {
@@ -5751,12 +5737,13 @@ class Options {
   isDeprecated(name) {
     return Object.prototype.hasOwnProperty.call(this._deprecated, name);
   }
-  cache(name, options) {
+  cache(name, value) {
     const isGetter = arguments.length < 2;
+    const optionName = `_cached_${name}`;
     if (isGetter) {
-      return this._cachedOptions[name];
+      return this.option(optionName);
     }
-    this._cachedOptions[name] = (0, _extend.extend)(this._cachedOptions[name], options);
+    this.option(optionName, value);
   }
 }
 exports.Options = Options;
@@ -9445,7 +9432,7 @@ const intervalsOverlap = function (options) {
 };
 const dateTimeFromDecimal = function (number) {
   const hours = Math.floor(number);
-  const minutes = number % 1 * 60;
+  const minutes = Math.round(number % 1 * 60);
   return {
     hours,
     minutes
@@ -13409,11 +13396,17 @@ class Widget extends _dom_component.default {
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   _innerWidgetOptionChanged(innerWidget, args) {
-    const options = Widget.getOptionsFromContainer(args);
-    // eslint-disable-next-line @stylistic/max-len
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/prefer-optional-chain
-    innerWidget && innerWidget.option(options);
-    this._options.cache(args.name, options);
+    const {
+      fullName,
+      value
+    } = args;
+    if (fullName.indexOf('.') > -1) {
+      const innerWidgetOptionName = fullName.split('.').slice(1).join('.');
+      innerWidget === null || innerWidget === void 0 || innerWidget.option(innerWidgetOptionName, value);
+    } else {
+      innerWidget === null || innerWidget === void 0 || innerWidget.option(value);
+    }
+    this._options.cache(fullName, value);
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   _bindInnerWidgetOptions(innerWidget, optionsContainer) {
@@ -25901,6 +25894,7 @@ var _window = __webpack_require__(3104);
 var _format_helper = _interopRequireDefault(__webpack_require__(2082));
 var _load_panel = _interopRequireDefault(__webpack_require__(31876));
 var _filtering = _interopRequireDefault(__webpack_require__(56417));
+var _index = __webpack_require__(76097);
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-check
 const DATAGRID_SELECTION_DISABLED_CLASS = 'dx-selection-disabled';
@@ -25950,14 +25944,6 @@ const getIntervalSelector = function () {
     const groupInterval = arguments[0];
     return Math.floor(Number(value) / groupInterval) * groupInterval;
   }
-};
-const equalSelectors = function (selector1, selector2) {
-  if ((0, _type.isFunction)(selector1) && (0, _type.isFunction)(selector2)) {
-    if (selector1.originalCallback && selector2.originalCallback) {
-      return selector1.originalCallback === selector2.originalCallback && selector1.columnIndex === selector2.columnIndex;
-    }
-  }
-  return selector1 === selector2;
 };
 function isDateType(dataType) {
   return dataType === 'date' || dataType === 'datetime';
@@ -26201,7 +26187,6 @@ var _default = exports["default"] = {
   getSummaryText,
   normalizeSortingInfo,
   getFormatByDataType(dataType) {
-    // eslint-disable-next-line default-case
     switch (dataType) {
       case 'date':
         return 'shortDate';
@@ -26255,7 +26240,7 @@ var _default = exports["default"] = {
         return false;
       }
       for (let i = 0; i < sortParameters1.length; i++) {
-        if (!equalSelectors(sortParameters1[i].selector, sortParameters2[i].selector) || sortParameters1[i].desc !== sortParameters2[i].desc || sortParameters1[i].groupInterval !== sortParameters2[i].groupInterval || !ignoreIsExpanded && Boolean(sortParameters1[i].isExpanded) !== Boolean(sortParameters2[i].isExpanded)) {
+        if (!(0, _index.isEqualSelectors)(sortParameters1[i].selector, sortParameters2[i].selector) || sortParameters1[i].desc !== sortParameters2[i].desc || sortParameters1[i].groupInterval !== sortParameters2[i].groupInterval || !ignoreIsExpanded && Boolean(sortParameters1[i].isExpanded) !== Boolean(sortParameters2[i].isExpanded)) {
           return false;
         }
       }
@@ -26549,8 +26534,79 @@ var _default = exports["default"] = {
   isCustomCommandColumn(columns, commandColumn) {
     const customCommandColumns = columns.filter(column => column.type === commandColumn.type);
     return !!customCommandColumns.length;
-  }
+  },
+  // New utils
+  isEqualSelectors: _index.isEqualSelectors,
+  isSelectorEqualWithCallback: _index.isSelectorEqualWithCallback
 };
+
+/***/ }),
+
+/***/ 76097:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+Object.defineProperty(exports, "isEqualSelectors", ({
+  enumerable: true,
+  get: function () {
+    return _selector_comparison.isEqualSelectors;
+  }
+}));
+Object.defineProperty(exports, "isSelectorEqualWithCallback", ({
+  enumerable: true,
+  get: function () {
+    return _selector_comparison.isSelectorEqualWithCallback;
+  }
+}));
+var _selector_comparison = __webpack_require__(45050);
+
+/***/ }),
+
+/***/ 45050:
+/***/ (function(__unused_webpack_module, exports) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.isSelectorEqualWithCallback = exports.isEqualSelectors = exports.getNormalizedColumnIdx = exports.getNormalizedCallback = exports.compareCallbacks = void 0;
+const getNormalizedCallback = callback => 'originalCallback' in callback ? callback.originalCallback : callback;
+exports.getNormalizedCallback = getNormalizedCallback;
+const getNormalizedColumnIdx = callback => 'columnIndex' in callback ? callback.columnIndex ?? null : undefined;
+exports.getNormalizedColumnIdx = getNormalizedColumnIdx;
+const compareCallbacks = (callback, callbackToCompare) => {
+  const normalizedCallback = getNormalizedCallback(callback);
+  const normalizedCallbackToCompare = getNormalizedCallback(callbackToCompare);
+  const normalizedColumnIdx = getNormalizedColumnIdx(callback);
+  const normalizedColumnIdxToCompare = getNormalizedColumnIdx(callbackToCompare);
+  const originalCallbacksEqual = normalizedCallback === normalizedCallbackToCompare;
+  const shouldCompareColumnIdx = normalizedColumnIdx !== undefined;
+  const columnIdxEqual = normalizedColumnIdx === normalizedColumnIdxToCompare;
+  return originalCallbacksEqual && (!shouldCompareColumnIdx || columnIdxEqual);
+};
+exports.compareCallbacks = compareCallbacks;
+const isEqualSelectors = (selector, selectorToCompare) => {
+  if (typeof selector === 'string' && typeof selectorToCompare === 'string') {
+    return selector === selectorToCompare;
+  }
+  if (typeof selector === 'function' && typeof selectorToCompare === 'function') {
+    return compareCallbacks(selector, selectorToCompare);
+  }
+  return false;
+};
+exports.isEqualSelectors = isEqualSelectors;
+const isSelectorEqualWithCallback = (selector, callback) => {
+  if (typeof selector === 'function' && typeof callback === 'function') {
+    return compareCallbacks(selector, callback);
+  }
+  return false;
+};
+exports.isSelectorEqualWithCallback = isSelectorEqualWithCallback;
 
 /***/ }),
 
@@ -27731,15 +27787,9 @@ const getCorrectedDateByDaylightOffsets = (convertedOriginalStartDate, converted
   const diff = daylightOffsetByCommonTimezone - daylightOffsetByAppointmentTimezone;
   return new Date(date.getTime() - diff * toMs('hour'));
 };
-const correctRecurrenceExceptionByTimezone = function (exception, exceptionByStartDate, timeZone, startDateTimeZone) {
-  let isBackConversion = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
-  let timezoneOffset = (exception.getTimezoneOffset() - exceptionByStartDate.getTimezoneOffset()) / MINUTES_IN_HOUR;
-  if (startDateTimeZone) {
-    timezoneOffset = _getDaylightOffsetByTimezone(exceptionByStartDate, exception, startDateTimeZone);
-  } else if (timeZone) {
-    timezoneOffset = _getDaylightOffsetByTimezone(exceptionByStartDate, exception, timeZone);
-  }
-  return new Date(exception.getTime() + (isBackConversion ? -1 : 1) * timezoneOffset * toMs('hour'));
+const correctRecurrenceExceptionByTimezone = (exception, exceptionByStartDate) => {
+  const timezoneOffset = (exception.getTimezoneOffset() - exceptionByStartDate.getTimezoneOffset()) / MINUTES_IN_HOUR;
+  return new Date(exception.getTime() + timezoneOffset * toMs('hour'));
 };
 const isTimezoneChangeInDate = date => {
   const startDayDate = new Date(new Date(date).setHours(0, 0, 0, 0));
@@ -28388,6 +28438,9 @@ const VALIDATION_MESSAGE_KEYS_MAP = {
   validationBoundary: 'boundary'
 };
 class Editor extends _widget.default {
+  static isEditor(instance) {
+    return instance instanceof Editor;
+  }
   ctor(element, options) {
     this.showValidationMessageTimeout = undefined;
     this.validationRequest = (0, _callbacks.default)();
@@ -28433,6 +28486,7 @@ class Editor extends _widget.default {
         v: 0
       },
       validationTooltipOptions: {},
+      _cached_validationTooltipOptions: {},
       _showValidationMessage: true,
       isDirty: false
     });
@@ -28722,6 +28776,8 @@ class Editor extends _widget.default {
       case 'validationTooltipOptions':
         this._innerWidgetOptionChanged(this._validationMessage, args);
         break;
+      case '_cached_validationTooltipOptions':
+        break;
       case '_showValidationMessage':
       case 'isDirty':
         break;
@@ -28751,8 +28807,6 @@ class Editor extends _widget.default {
     this.option('isValid', true);
   }
 }
-// @ts-expect-error ts-error
-Editor.isEditor = instance => instance instanceof Editor;
 var _default = exports["default"] = Editor;
 
 /***/ }),
@@ -28796,7 +28850,7 @@ class LoadIndicator extends _widget.default {
     return _extends({}, super._getDefaultOptions(), {
       _animatingSegmentCount: 1,
       _animatingSegmentInner: false,
-      _animationType: AnimationType.Circle,
+      animationType: AnimationType.Circle,
       activeStateEnabled: false,
       hoverStateEnabled: false,
       indicatorSrc: ''
@@ -28847,9 +28901,9 @@ class LoadIndicator extends _widget.default {
   }
   _getAnimationTypeContentClass() {
     const {
-      _animationType: animationType
+      animationType
     } = this.option();
-    return ANIMATION_TYPE_CLASSES[animationType];
+    return animationType && ANIMATION_TYPE_CLASSES[animationType];
   }
   _renderIndicatorContent() {
     const animationClass = this._getAnimationTypeContentClass() ?? '';
@@ -28870,7 +28924,7 @@ class LoadIndicator extends _widget.default {
   }
   _getSegmentParams() {
     const {
-      _animationType: animationType,
+      animationType,
       _animatingSegmentCount: animatingSegmentCount,
       _animatingSegmentInner: animatingSegmentInner
     } = this.option();
@@ -28924,15 +28978,14 @@ class LoadIndicator extends _widget.default {
     if (!this._$indicator) {
       return;
     }
-    let {
+    const {
       width,
       height
     } = this.option();
     if (width || height) {
-      width = (0, _size.getWidth)(this.$element());
-      height = (0, _size.getHeight)(this.$element());
-      // @ts-expect-error ts-error
-      const minDimension = Math.min(height, width);
+      const elementWidth = (0, _size.getWidth)(this.$element());
+      const elementHeight = (0, _size.getHeight)(this.$element());
+      const minDimension = Math.min(elementHeight, elementWidth);
       this._$wrapper.css({
         height: minDimension,
         width: minDimension,
@@ -28950,7 +29003,7 @@ class LoadIndicator extends _widget.default {
       return;
     }
     this._$indicator.remove();
-    delete this._$indicator;
+    this._$indicator = undefined;
   }
   _removeMarkupForImage() {
     this._$wrapper.css('backgroundImage', 'none');
@@ -28959,7 +29012,7 @@ class LoadIndicator extends _widget.default {
     switch (args.name) {
       case '_animatingSegmentCount':
       case '_animatingSegmentInner':
-      case '_animationType':
+      case 'animationType':
       case 'indicatorSrc':
         this._invalidate();
         break;
@@ -28989,7 +29042,7 @@ var _common = __webpack_require__(17781);
 var _deferred = __webpack_require__(87739);
 var _load_indicator = _interopRequireDefault(__webpack_require__(11979));
 var _themes = __webpack_require__(52071);
-var _m_overlay = _interopRequireDefault(__webpack_require__(68632));
+var _overlay = _interopRequireDefault(__webpack_require__(79384));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE loadPanel
@@ -29000,7 +29053,7 @@ const LOADPANEL_MESSAGE_CLASS = 'dx-loadpanel-message';
 const LOADPANEL_CONTENT_CLASS = 'dx-loadpanel-content';
 const LOADPANEL_CONTENT_WRAPPER_CLASS = 'dx-loadpanel-content-wrapper';
 const LOADPANEL_PANE_HIDDEN_CLASS = 'dx-loadpanel-pane-hidden';
-class LoadPanel extends _m_overlay.default {
+class LoadPanel extends _overlay.default {
   _supportedKeys() {
     return _extends({}, super._supportedKeys(), {
       escape: _common.noop
@@ -30053,7 +30106,7 @@ var _renderer = _interopRequireDefault(__webpack_require__(64553));
 var _position = __webpack_require__(41639);
 var _size = __webpack_require__(57653);
 var _string = __webpack_require__(54497);
-var _m_overlay = _interopRequireDefault(__webpack_require__(68632));
+var _overlay = _interopRequireDefault(__webpack_require__(79384));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const INVALID_MESSAGE = 'dx-invalid-message';
@@ -30061,7 +30114,7 @@ const INVALID_MESSAGE_AUTO = 'dx-invalid-message-auto';
 const INVALID_MESSAGE_ALWAYS = 'dx-invalid-message-always';
 const INVALID_MESSAGE_CONTENT = 'dx-invalid-message-content';
 const VALIDATION_MESSAGE_MIN_WIDTH = 100;
-class ValidationMessage extends _m_overlay.default {
+class ValidationMessage extends _overlay.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       integrationOptions: {},
@@ -30243,1194 +30296,6 @@ var _default = exports["default"] = ValidationMessage;
 
 /***/ }),
 
-/***/ 68632:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = exports.OVERLAY_CONTENT_CLASS = void 0;
-var _animation = __webpack_require__(16826);
-var _hide_callback = __webpack_require__(83916);
-var _events_engine = _interopRequireDefault(__webpack_require__(92774));
-var _drag = __webpack_require__(59144);
-var _pointer = _interopRequireDefault(__webpack_require__(89797));
-var _short = __webpack_require__(42222);
-var _index = __webpack_require__(98834);
-var _visibility_change = __webpack_require__(18029);
-var _component_registrator = _interopRequireDefault(__webpack_require__(92848));
-var _devices = _interopRequireDefault(__webpack_require__(65951));
-var _dom_adapter = _interopRequireDefault(__webpack_require__(64960));
-var _element = __webpack_require__(61404);
-var _errors = _interopRequireDefault(__webpack_require__(87129));
-var _renderer = _interopRequireDefault(__webpack_require__(64553));
-var _empty_template = __webpack_require__(48650);
-var _browser = _interopRequireDefault(__webpack_require__(48314));
-var _common = __webpack_require__(17781);
-var _deferred = __webpack_require__(87739);
-var _extend = __webpack_require__(52576);
-var _iterator = __webpack_require__(21274);
-var _ready_callbacks = _interopRequireDefault(__webpack_require__(3122));
-var _size = __webpack_require__(57653);
-var _type = __webpack_require__(11528);
-var _view_port = __webpack_require__(55355);
-var _selectors = __webpack_require__(35944);
-var _ui = _interopRequireDefault(__webpack_require__(35185));
-var _m_dom = _interopRequireDefault(__webpack_require__(76400));
-var _widget = _interopRequireDefault(__webpack_require__(89275));
-var _m_window = _interopRequireDefault(__webpack_require__(14470));
-var _m_overlay_position_controller = __webpack_require__(4983);
-var zIndexPool = _interopRequireWildcard(__webpack_require__(84893));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const ready = _ready_callbacks.default.add;
-const window = _m_window.default.getWindow();
-const viewPortChanged = _view_port.changeCallback;
-const OVERLAY_CLASS = 'dx-overlay';
-const OVERLAY_WRAPPER_CLASS = 'dx-overlay-wrapper';
-const OVERLAY_CONTENT_CLASS = exports.OVERLAY_CONTENT_CLASS = 'dx-overlay-content';
-const OVERLAY_SHADER_CLASS = 'dx-overlay-shader';
-const INNER_OVERLAY_CLASS = 'dx-inner-overlay';
-const INVISIBLE_STATE_CLASS = 'dx-state-invisible';
-const ANONYMOUS_TEMPLATE_NAME = 'content';
-const RTL_DIRECTION_CLASS = 'dx-rtl';
-const OVERLAY_STACK = [];
-const PREVENT_SAFARI_SCROLLING_CLASS = 'dx-prevent-safari-scrolling';
-const TAB_KEY = 'tab';
-ready(() => {
-  // @ts-expect-error
-  _events_engine.default.subscribeGlobal(_dom_adapter.default.getDocument(), _pointer.default.down, e => {
-    for (let i = OVERLAY_STACK.length - 1; i >= 0; i--) {
-      // @ts-expect-error
-      if (!OVERLAY_STACK[i]._proxiedDocumentDownHandler(e)) {
-        return;
-      }
-    }
-  });
-});
-class Overlay extends _widget.default {
-  _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
-      escape() {
-        this.hide();
-      }
-    });
-  }
-  _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
-      activeStateEnabled: false,
-      visible: false,
-      deferRendering: true,
-      shading: true,
-      shadingColor: '',
-      wrapperAttr: {},
-      position: (0, _extend.extend)({}, _m_overlay_position_controller.OVERLAY_POSITION_ALIASES.center),
-      width: '80vw',
-      minWidth: null,
-      maxWidth: null,
-      height: '80vh',
-      minHeight: null,
-      maxHeight: null,
-      animation: {
-        show: {
-          type: 'pop',
-          duration: 300,
-          from: {
-            scale: 0.55
-          }
-        },
-        hide: {
-          type: 'pop',
-          duration: 300,
-          from: {
-            opacity: 1,
-            scale: 1
-          },
-          to: {
-            opacity: 0,
-            scale: 0.55
-          }
-        }
-      },
-      hideOnOutsideClick: false,
-      _ignorePreventScrollEventsDeprecation: false,
-      onShowing: null,
-      onShown: null,
-      onHiding: null,
-      onHidden: null,
-      contentTemplate: 'content',
-      innerOverlay: false,
-      restorePosition: true,
-      // NOTE: private options
-      hideTopOverlayHandler: () => {
-        this.hide();
-      },
-      hideOnParentScroll: false,
-      preventScrollEvents: true,
-      onPositioned: null,
-      propagateOutsideClick: false,
-      ignoreChildEvents: true,
-      _checkParentVisibility: true,
-      _fixWrapperPosition: false,
-      _loopFocus: false
-    });
-  }
-  _defaultOptionsRules() {
-    return super._defaultOptionsRules().concat([{
-      device() {
-        return !_m_window.default.hasWindow();
-      },
-      // @ts-expect-error ts-error
-      options: {
-        width: null,
-        height: null,
-        animation: null,
-        _checkParentVisibility: false
-      }
-    }]);
-  }
-  _setOptionsByReference() {
-    super._setOptionsByReference();
-    (0, _extend.extend)(this._optionsByReference, {
-      animation: true
-    });
-  }
-  $wrapper() {
-    return this._$wrapper;
-  }
-  _eventBindingTarget() {
-    return this._$content;
-  }
-  ctor(element, options) {
-    super.ctor(element, options);
-    if (options) {
-      if ('preventScrollEvents' in options && !options._ignorePreventScrollEventsDeprecation) {
-        this._logDeprecatedPreventScrollEventsInfo();
-      }
-    }
-  }
-  _logDeprecatedPreventScrollEventsInfo() {
-    this._logDeprecatedOptionWarning('preventScrollEvents', {
-      since: '23.1',
-      message: 'If you enable this option, end-users may experience scrolling issues.'
-    });
-  }
-  _init() {
-    super._init();
-    this._initActions();
-    this._initHideOnOutsideClickHandler();
-    this._initTabTerminatorHandler();
-    this._customWrapperClass = null;
-    this._$wrapper = (0, _renderer.default)('<div>').addClass(OVERLAY_WRAPPER_CLASS);
-    this._$content = (0, _renderer.default)('<div>').addClass(OVERLAY_CONTENT_CLASS);
-    this._initInnerOverlayClass();
-    const $element = this.$element();
-    $element.addClass(OVERLAY_CLASS);
-    this._$wrapper.attr('data-bind', 'dxControlsDescendantBindings: true');
-    this._toggleViewPortSubscription(true);
-    const {
-      hideTopOverlayHandler
-    } = this.option();
-    // @ts-expect-error ts-error
-    this._initHideTopOverlayHandler(hideTopOverlayHandler);
-    this._parentsScrollSubscriptionInfo = {
-      handler: e => {
-        this._hideOnParentsScrollHandler(e);
-      }
-    };
-    this.warnPositionAsFunction();
-  }
-  warnPositionAsFunction() {
-    if ((0, _type.isFunction)(this.option('position'))) {
-      // position as function deprecated in 21.2
-      _errors.default.log('W0018');
-    }
-  }
-  _initInnerOverlayClass() {
-    const {
-      innerOverlay
-    } = this.option();
-    this._$content.toggleClass(INNER_OVERLAY_CLASS, innerOverlay);
-  }
-  _initHideTopOverlayHandler(handler) {
-    this._hideTopOverlayHandler = handler;
-  }
-  // eslint-disable-next-line class-methods-use-this
-  _getActionsList() {
-    return ['onShowing', 'onShown', 'onHiding', 'onHidden', 'onPositioned', 'onVisualPositionChanged'];
-  }
-  _initActions() {
-    this._actions = {};
-    const actions = this._getActionsList();
-    (0, _iterator.each)(actions, (_, action) => {
-      this._actions[action] = this._createActionByOption(action, {
-        excludeValidators: ['disabled', 'readOnly']
-      }) || _common.noop;
-    });
-  }
-  _initHideOnOutsideClickHandler() {
-    var _this = this;
-    // @ts-expect-error ts-error
-    this._proxiedDocumentDownHandler = function () {
-      return _this._documentDownHandler(...arguments);
-    };
-  }
-  _initMarkup() {
-    super._initMarkup();
-    this._renderWrapperAttributes();
-    this._initPositionController();
-  }
-  _documentDownHandler(e) {
-    if (this._showAnimationProcessing) {
-      this._stopAnimation();
-    }
-    const isAttachedTarget = (0, _renderer.default)(window.document).is(e.target) || _m_dom.default.contains(window.document, e.target);
-    const isInnerOverlay = (0, _renderer.default)(e.target).closest(`.${INNER_OVERLAY_CLASS}`).length;
-    const outsideClick = isAttachedTarget && !isInnerOverlay && !(this._$content.is(e.target) || _m_dom.default.contains(this._$content.get(0), e.target));
-    if (outsideClick && this._shouldHideOnOutsideClick(e)) {
-      this._outsideClickHandler(e);
-    }
-    const {
-      propagateOutsideClick
-    } = this.option();
-    return propagateOutsideClick;
-  }
-  _shouldHideOnOutsideClick(e) {
-    const {
-      hideOnOutsideClick
-    } = this.option();
-    if ((0, _type.isFunction)(hideOnOutsideClick)) {
-      return hideOnOutsideClick(e);
-    }
-    return hideOnOutsideClick;
-  }
-  _outsideClickHandler(e) {
-    if (this.option('shading')) {
-      e.preventDefault();
-    }
-    this.hide();
-  }
-  _getAnonymousTemplateName() {
-    return ANONYMOUS_TEMPLATE_NAME;
-  }
-  _initTemplates() {
-    this._templateManager.addDefaultTemplates({
-      content: new _empty_template.EmptyTemplate()
-    });
-    super._initTemplates();
-  }
-  _isTopOverlay() {
-    const overlayStack = this._overlayStack();
-    for (let i = overlayStack.length - 1; i >= 0; i--) {
-      const tabbableElements = overlayStack[i]._findTabbableBounds();
-      if (tabbableElements.first || tabbableElements.last) {
-        // @ts-ignore
-        return overlayStack[i] === this;
-      }
-    }
-    return false;
-  }
-  // eslint-disable-next-line class-methods-use-this
-  _overlayStack() {
-    return OVERLAY_STACK;
-  }
-  // eslint-disable-next-line class-methods-use-this
-  _zIndexInitValue() {
-    // @ts-expect-error ts-error
-    return Overlay.baseZIndex();
-  }
-  _toggleViewPortSubscription(toggle) {
-    var _this2 = this;
-    viewPortChanged.remove(this._viewPortChangeHandle);
-    if (toggle) {
-      this._viewPortChangeHandle = function () {
-        // @ts-expect-error ts-error
-        _this2._viewPortChangeHandler(...arguments);
-      };
-      viewPortChanged.add(this._viewPortChangeHandle);
-    }
-  }
-  _viewPortChangeHandler() {
-    this._positionController.updateContainer(this.option('container'));
-    this._refresh();
-  }
-  _renderWrapperAttributes() {
-    const {
-      wrapperAttr
-    } = this.option();
-    const attributes = (0, _extend.extend)({}, wrapperAttr);
-    const classNames = attributes.class;
-    delete attributes.class;
-    // @ts-expect-error ts-error
-    this.$wrapper().attr(attributes)
-    // @ts-expect-error ts-error
-    .removeClass(this._customWrapperClass).addClass(classNames);
-    this._customWrapperClass = classNames;
-  }
-  _renderVisibilityAnimate(visible) {
-    this._stopAnimation();
-    return visible ? this._show() : this._hide();
-  }
-  _getAnimationConfig() {
-    return this._getOptionValue('animation', this);
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
-  _toggleBodyScroll(enabled) {}
-  _animateShowing() {
-    var _this3 = this;
-    const animation = this._getAnimationConfig() ?? {};
-    const showAnimation = this._normalizeAnimation(animation.show, 'to');
-    const startShowAnimation = (showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.start) ?? _common.noop;
-    const completeShowAnimation = (showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.complete) ?? _common.noop;
-    this._animate(showAnimation, function () {
-      if (_this3._isAnimationPaused) {
-        return;
-      }
-      if (_this3.option('focusStateEnabled')) {
-        // @ts-expect-error
-        _events_engine.default.trigger(_this3._focusTarget(), 'focus');
-      }
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-      completeShowAnimation.call(_this3, ...args);
-      _this3._showAnimationProcessing = false;
-      _this3._isHidden = false;
-      _this3._actions.onShown();
-      _this3._toggleSafariScrolling();
-      _this3._showingDeferred.resolve();
-    }, function () {
-      if (_this3._isAnimationPaused) {
-        return;
-      }
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
-      }
-      startShowAnimation.call(_this3, ...args);
-      _this3._showAnimationProcessing = true;
-    });
-  }
-  _processShowingHidingCancel(cancelArg, applyFunction, cancelFunction) {
-    if ((0, _type.isPromise)(cancelArg)) {
-      cancelArg.then(shouldCancel => {
-        if (shouldCancel) {
-          cancelFunction();
-        } else {
-          applyFunction();
-        }
-      }).catch(() => applyFunction());
-    } else {
-      cancelArg ? cancelFunction() : applyFunction();
-    }
-  }
-  _show() {
-    this._showingDeferred = (0, _deferred.Deferred)();
-    this._parentHidden = this._isParentHidden();
-    this._showingDeferred.done(() => {
-      delete this._parentHidden;
-    });
-    if (this._parentHidden) {
-      this._isHidden = true;
-      return this._showingDeferred.resolve();
-    }
-    if (this._currentVisible) {
-      return (0, _deferred.Deferred)().resolve().promise();
-    }
-    this._currentVisible = true;
-    if (this._isHidingActionCanceled) {
-      delete this._isHidingActionCanceled;
-      this._showingDeferred.reject();
-    } else {
-      const show = () => {
-        this._stopAnimation();
-        const {
-          enableBodyScroll
-        } = this.option();
-        this._toggleBodyScroll(enableBodyScroll);
-        this._toggleVisibility(true);
-        this._$content.css('visibility', 'hidden');
-        this._$content.toggleClass(INVISIBLE_STATE_CLASS, false);
-        this._updateZIndexStackPosition(true);
-        this._positionController.openingHandled();
-        this._renderContent();
-        const showingArgs = {
-          cancel: false
-        };
-        this._actions.onShowing(showingArgs);
-        const cancelShow = () => {
-          this._toggleVisibility(false);
-          this._$content.css('visibility', '');
-          this._$content.toggleClass(INVISIBLE_STATE_CLASS, true);
-          this._isShowingActionCanceled = true;
-          this._moveFromContainer();
-          this._toggleBodyScroll(true);
-          this.option('visible', false);
-          this._showingDeferred.resolve();
-        };
-        const applyShow = () => {
-          this._$content.css('visibility', '');
-          this._renderVisibility(true);
-          this._animateShowing();
-        };
-        this._processShowingHidingCancel(showingArgs.cancel, applyShow, cancelShow);
-      };
-      show();
-    }
-    return this._showingDeferred.promise();
-  }
-  _normalizeAnimation(showHideConfig, direction) {
-    if (showHideConfig) {
-      showHideConfig = (0, _extend.extend)({
-        type: 'slide',
-        skipElementInitialStyles: true // NOTE: for fadeIn animation
-      }, showHideConfig);
-      if ((0, _type.isObject)(showHideConfig[direction])) {
-        (0, _extend.extend)(showHideConfig[direction], {
-          position: this._positionController.position
-        });
-      }
-    }
-    return showHideConfig;
-  }
-  _animateHiding() {
-    var _this4 = this;
-    const animation = this._getAnimationConfig() ?? {};
-    const hideAnimation = this._normalizeAnimation(animation.hide, 'from');
-    const startHideAnimation = (hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.start) ?? _common.noop;
-    const completeHideAnimation = (hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.complete) ?? _common.noop;
-    this._animate(hideAnimation, function () {
-      var _this4$_actions;
-      _this4._$content.css('pointerEvents', '');
-      _this4._renderVisibility(false);
-      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
-      }
-      completeHideAnimation.call(_this4, ...args);
-      _this4._hideAnimationProcessing = false;
-      (_this4$_actions = _this4._actions) === null || _this4$_actions === void 0 || _this4$_actions.onHidden();
-      _this4._hidingDeferred.resolve();
-    }, function () {
-      _this4._$content.css('pointerEvents', 'none');
-      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
-      }
-      startHideAnimation.call(_this4, ...args);
-      _this4._hideAnimationProcessing = true;
-    });
-  }
-  _hide() {
-    if (!this._currentVisible) {
-      return (0, _deferred.Deferred)().resolve().promise();
-    }
-    this._currentVisible = false;
-    this._hidingDeferred = (0, _deferred.Deferred)();
-    const hidingArgs = {
-      cancel: false
-    };
-    if (this._isShowingActionCanceled) {
-      delete this._isShowingActionCanceled;
-      this._hidingDeferred.reject();
-    } else {
-      this._actions.onHiding(hidingArgs);
-      this._toggleSafariScrolling();
-      this._toggleBodyScroll(true);
-      const cancelHide = () => {
-        this._isHidingActionCanceled = true;
-        const {
-          enableBodyScroll
-        } = this.option();
-        this._toggleBodyScroll(enableBodyScroll);
-        this.option('visible', true);
-        this._hidingDeferred.resolve();
-      };
-      const applyHide = () => {
-        this._forceFocusLost();
-        this._toggleShading(false);
-        this._toggleSubscriptions(false);
-        this._animateHiding();
-      };
-      this._processShowingHidingCancel(hidingArgs.cancel, applyHide, cancelHide);
-    }
-    return this._hidingDeferred.promise();
-  }
-  _forceFocusLost() {
-    const activeElement = _dom_adapter.default.getActiveElement();
-    const shouldResetActiveElement = !!this._$content.find(activeElement).length;
-    if (shouldResetActiveElement) {
-      _m_dom.default.resetActiveElement();
-    }
-  }
-  _animate(animation, completeCallback, startCallback) {
-    if (animation) {
-      startCallback = startCallback || animation.start || _common.noop;
-      // @ts-expect-error ts-error
-      _animation.fx.animate(this._$content, (0, _extend.extend)({}, animation, {
-        start: startCallback,
-        complete: completeCallback
-      }));
-    } else {
-      completeCallback();
-    }
-  }
-  _stopAnimation() {
-    // @ts-expect-error ts-error
-    _animation.fx.stop(this._$content, true);
-  }
-  _renderVisibility(visible) {
-    if (visible && this._isParentHidden()) {
-      return;
-    }
-    this._currentVisible = visible;
-    this._stopAnimation();
-    if (!visible) {
-      (0, _visibility_change.triggerHidingEvent)(this._$content);
-    }
-    if (visible) {
-      this._checkContainerExists();
-      this._moveToContainer();
-      this._renderGeometry();
-      (0, _visibility_change.triggerShownEvent)(this._$content);
-      (0, _visibility_change.triggerResizeEvent)(this._$content);
-    } else {
-      this._toggleVisibility(visible);
-      this._$content.toggleClass(INVISIBLE_STATE_CLASS, !visible);
-      this._updateZIndexStackPosition(visible);
-      this._moveFromContainer();
-    }
-    this._toggleShading(visible);
-    this._toggleSubscriptions(visible);
-  }
-  _updateZIndexStackPosition(pushToStack) {
-    const overlayStack = this._overlayStack();
-    // @ts-expect-error ts-error
-    const index = overlayStack.indexOf(this);
-    if (pushToStack) {
-      if (index === -1) {
-        this._zIndex = zIndexPool.create(this._zIndexInitValue());
-        // @ts-expect-error ts-error
-        overlayStack.push(this);
-      }
-      this._$wrapper.css('zIndex', this._zIndex);
-      this._$content.css('zIndex', this._zIndex);
-    } else if (index !== -1) {
-      overlayStack.splice(index, 1);
-      zIndexPool.remove(this._zIndex);
-    }
-  }
-  _toggleShading(visible) {
-    const {
-      shading,
-      shadingColor
-    } = this.option();
-    this._$wrapper.toggleClass(OVERLAY_SHADER_CLASS, visible && shading);
-    // @ts-expect-error ts-error
-    this._$wrapper.css('backgroundColor', shading ? shadingColor : '');
-    // @ts-expect-error ts-error
-    this._toggleTabTerminator(visible && shading);
-  }
-  _initTabTerminatorHandler() {
-    var _this5 = this;
-    this._proxiedTabTerminatorHandler = function () {
-      // @ts-expect-error ts-error
-      _this5._tabKeyHandler(...arguments);
-    };
-  }
-  _toggleTabTerminator(enabled) {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const {
-      _loopFocus
-    } = this.option();
-    // @ts-expect-error ts-error
-    const eventName = (0, _index.addNamespace)('keydown', this.NAME);
-    if (_loopFocus || enabled) {
-      _events_engine.default.on(_dom_adapter.default.getDocument(), eventName, this._proxiedTabTerminatorHandler);
-    } else {
-      this._destroyTabTerminator();
-    }
-  }
-  _destroyTabTerminator() {
-    // @ts-expect-error ts-error
-    const eventName = (0, _index.addNamespace)('keydown', this.NAME);
-    _events_engine.default.off(_dom_adapter.default.getDocument(), eventName, this._proxiedTabTerminatorHandler);
-  }
-  _findTabbableBounds() {
-    const $elements = this._$wrapper.find('*');
-    const elementsCount = $elements.length - 1;
-    let first = null;
-    let last = null;
-    for (let i = 0; i <= elementsCount; i += 1) {
-      // @ts-expect-error ts-error
-      if (!first && $elements.eq(i).is(_selectors.tabbable)) {
-        // @ts-expect-error ts-error
-        first = $elements.eq(i);
-      }
-      // @ts-expect-error ts-error
-      if (!last && $elements.eq(elementsCount - i).is(_selectors.tabbable)) {
-        // @ts-expect-error ts-error
-        last = $elements.eq(elementsCount - i);
-      }
-      if (first && last) {
-        break;
-      }
-    }
-    return {
-      first,
-      last
-    };
-  }
-  _tabKeyHandler(e) {
-    if ((0, _index.normalizeKeyName)(e) !== TAB_KEY || !this._isTopOverlay()) {
-      return;
-    }
-    const wrapper = this._$wrapper.get(0);
-    const activeElement = _dom_adapter.default.getActiveElement(wrapper);
-    const {
-      first: $firstTabbable,
-      last: $lastTabbable
-    } = this._findTabbableBounds();
-    const isTabOnLast = !e.shiftKey && activeElement === ($lastTabbable === null || $lastTabbable === void 0 ? void 0 : $lastTabbable.get(0));
-    const isShiftTabOnFirst = e.shiftKey && activeElement === ($firstTabbable === null || $firstTabbable === void 0 ? void 0 : $firstTabbable.get(0));
-    const isOutsideTarget = !_m_dom.default.contains(wrapper, activeElement);
-    const shouldPreventDefault = isTabOnLast || isShiftTabOnFirst || isOutsideTarget;
-    if (shouldPreventDefault) {
-      e.preventDefault();
-      const $focusElement = e.shiftKey ? $lastTabbable : $firstTabbable;
-      // @ts-expect-error ts-error
-      _events_engine.default.trigger($focusElement, 'focusin');
-      // @ts-expect-error ts-error
-      _events_engine.default.trigger($focusElement, 'focus');
-    }
-  }
-  _toggleSubscriptions(enabled) {
-    if (_m_window.default.hasWindow()) {
-      this._toggleHideTopOverlayCallback(enabled);
-      this._toggleHideOnParentsScrollSubscription(enabled);
-    }
-  }
-  _toggleHideTopOverlayCallback(subscribe) {
-    if (!this._hideTopOverlayHandler) {
-      return;
-    }
-    if (subscribe) {
-      _hide_callback.hideCallback.add(this._hideTopOverlayHandler);
-    } else {
-      _hide_callback.hideCallback.remove(this._hideTopOverlayHandler);
-    }
-  }
-  _toggleHideOnParentsScrollSubscription(needSubscribe) {
-    // @ts-expect-error ts-error
-    const scrollEvent = (0, _index.addNamespace)('scroll', this.NAME);
-    const {
-      prevTargets,
-      handler
-    } = this._parentsScrollSubscriptionInfo ?? {};
-    _events_engine.default.off(prevTargets, scrollEvent, handler);
-    const hideOnScroll = this.option('hideOnParentScroll');
-    if (needSubscribe && hideOnScroll) {
-      let $parents = this._getHideOnParentScrollTarget().parents();
-      if (_devices.default.real().deviceType === 'desktop') {
-        $parents = $parents.add(window);
-      }
-      _events_engine.default.on($parents, scrollEvent, handler);
-      this._parentsScrollSubscriptionInfo.prevTargets = $parents;
-    }
-  }
-  _hideOnParentsScrollHandler(e) {
-    let hideHandled = false;
-    const hideOnScroll = this.option('hideOnParentScroll');
-    if ((0, _type.isFunction)(hideOnScroll)) {
-      hideHandled = hideOnScroll(e);
-    }
-    if (!hideHandled && !this._showAnimationProcessing) {
-      this.hide();
-    }
-  }
-  _getHideOnParentScrollTarget() {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const {
-      _hideOnParentScrollTarget
-    } = this.option();
-    // @ts-expect-error ts-error
-    const $hideOnParentScrollTarget = (0, _renderer.default)(_hideOnParentScrollTarget);
-    if ($hideOnParentScrollTarget.length) {
-      return $hideOnParentScrollTarget;
-    }
-    return this._$wrapper;
-  }
-  _render() {
-    super._render();
-    this._appendContentToElement();
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    this._renderVisibilityAnimate(Boolean(this.option('visible')));
-  }
-  _appendContentToElement() {
-    if (!this._$content.parent().is(this.$element())) {
-      this._$content.appendTo(this.$element());
-    }
-  }
-  _renderContent() {
-    const shouldDeferRendering = !this._currentVisible && this.option('deferRendering');
-    const isParentHidden = this.option('visible') && this._isParentHidden();
-    if (isParentHidden) {
-      this._isHidden = true;
-      return;
-    }
-    if (this._contentAlreadyRendered || shouldDeferRendering) {
-      return;
-    }
-    this._contentAlreadyRendered = true;
-    this._appendContentToElement();
-    super._renderContent();
-  }
-  _isParentHidden() {
-    if (!this.option('_checkParentVisibility')) {
-      return false;
-    }
-    if (this._parentHidden !== undefined) {
-      return this._parentHidden;
-    }
-    const $parent = this.$element().parent();
-    if ($parent.is(':visible')) {
-      return false;
-    }
-    let isHidden = false;
-    // @ts-expect-error ts-error
-    $parent.add($parent.parents()).each((index, element) => {
-      const $element = (0, _renderer.default)(element);
-      // @ts-expect-error ts-error
-      if ($element.css('display') === 'none') {
-        isHidden = true;
-        return false;
-      }
-    });
-    return isHidden || !_dom_adapter.default.getBody().contains($parent.get(0));
-  }
-  _renderContentImpl() {
-    const whenContentRendered = (0, _deferred.Deferred)();
-    const contentTemplateOption = this.option('contentTemplate');
-    const contentTemplate = this._getTemplate(contentTemplateOption);
-    const transclude = this._templateManager.anonymousTemplateName === contentTemplateOption;
-    contentTemplate === null || contentTemplate === void 0 || contentTemplate.render({
-      container: (0, _element.getPublicElement)(this.$content()),
-      noModel: true,
-      transclude,
-      onRendered: () => {
-        whenContentRendered.resolve();
-        // NOTE: T1114344
-        if (this.option('templatesRenderAsynchronously')) {
-          this._dimensionChanged();
-        }
-      }
-    });
-    const {
-      preventScrollEvents
-    } = this.option();
-    this._toggleWrapperScrollEventsSubscription(preventScrollEvents);
-    whenContentRendered.done(() => {
-      this._processContentRendering();
-    });
-    // @ts-expect-error ts-error
-    return whenContentRendered.promise();
-  }
-  _processContentRendering() {
-    if (this.option('visible')) {
-      this._moveToContainer();
-    }
-  }
-  _getPositionControllerConfig() {
-    const {
-      container,
-      visualContainer,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      _fixWrapperPosition,
-      restorePosition,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      _skipContentPositioning
-    } = this.option();
-    // NOTE: position is passed to controller in renderGeometry to prevent window field using in server side mode
-    return {
-      container,
-      visualContainer,
-      $root: this.$element(),
-      $content: this._$content,
-      $wrapper: this._$wrapper,
-      onPositioned: this._actions.onPositioned,
-      onVisualPositionChanged: this._actions.onVisualPositionChanged,
-      restorePosition,
-      _fixWrapperPosition,
-      _skipContentPositioning
-    };
-  }
-  _initPositionController() {
-    this._positionController = new _m_overlay_position_controller.OverlayPositionController(
-    // @ts-expect-error ts-error
-    this._getPositionControllerConfig());
-  }
-  _toggleWrapperScrollEventsSubscription(enabled) {
-    // @ts-expect-error ts-error
-    const eventName = (0, _index.addNamespace)(_drag.move, this.NAME);
-    _events_engine.default.off(this._$wrapper, eventName);
-    if (enabled) {
-      _events_engine.default.on(this._$wrapper, eventName, {
-        validate() {
-          return true;
-        },
-        getDirection() {
-          return 'both';
-        },
-        _toggleGestureCover(toggle) {
-          if (!toggle) {
-            this._toggleGestureCoverImpl(toggle);
-          }
-        },
-        _clearSelection: _common.noop,
-        isNative: true
-      }, e => {
-        const {
-          originalEvent
-        } = e.originalEvent;
-        const {
-          type
-        } = originalEvent || {};
-        const isWheel = type === 'wheel';
-        const isMouseMove = type === 'mousemove';
-        const isScrollByWheel = isWheel && !(0, _index.isCommandKeyPressed)(e);
-        e._cancelPreventDefault = true;
-        if (originalEvent && e.cancelable !== false && (!isMouseMove && !isWheel || isScrollByWheel)) {
-          e.preventDefault();
-        }
-      });
-    }
-  }
-  _moveFromContainer() {
-    this._$content.appendTo(this.$element());
-    this._$wrapper.detach();
-  }
-  _checkContainerExists() {
-    const $wrapperContainer = this._positionController.$container;
-    // NOTE: The container is undefined when DOM is not ready yet. See T1143527
-    if ($wrapperContainer === undefined) {
-      return;
-    }
-    const containerExists = $wrapperContainer.length > 0;
-    if (!containerExists) {
-      _ui.default.log('W1021', this.NAME);
-    }
-  }
-  _moveToContainer() {
-    const $wrapperContainer = this._positionController.$container;
-    this._$wrapper.appendTo($wrapperContainer);
-    this._$content.appendTo(this._$wrapper);
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _renderGeometry(options) {
-    const {
-      visible
-    } = this.option();
-    if (visible && _m_window.default.hasWindow()) {
-      this._stopAnimation();
-      this._renderGeometryImpl();
-    }
-  }
-  _renderGeometryImpl() {
-    // NOTE: position can be specified as a function which needs to be called strict on render start
-    this._positionController.updatePosition(this._getOptionValue('position'));
-    this._renderWrapper();
-    this._renderDimensions();
-    this._renderPosition();
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _renderPosition(state) {
-    this._positionController.positionContent();
-  }
-  _isAllWindowCovered() {
-    const {
-      shading
-    } = this.option();
-    return (0, _type.isWindow)(this._positionController.$visualContainer.get(0)) && shading;
-  }
-  _toggleSafariScrolling() {
-    const visible = this.option('visible');
-    const $body = (0, _renderer.default)(_dom_adapter.default.getBody());
-    const isIosSafari = _devices.default.real().platform === 'ios' && _browser.default.safari;
-    const isAllWindowCovered = this._isAllWindowCovered();
-    const isScrollingPrevented = $body.hasClass(PREVENT_SAFARI_SCROLLING_CLASS);
-    const shouldPreventScrolling = !isScrollingPrevented && visible && isAllWindowCovered;
-    const shouldEnableScrolling = isScrollingPrevented && (!visible || !isAllWindowCovered || this._disposed);
-    if (isIosSafari) {
-      if (shouldEnableScrolling) {
-        $body.removeClass(PREVENT_SAFARI_SCROLLING_CLASS);
-        window.scrollTo(0, this._cachedBodyScrollTop);
-        this._cachedBodyScrollTop = undefined;
-      } else if (shouldPreventScrolling) {
-        this._cachedBodyScrollTop = window.pageYOffset;
-        $body.addClass(PREVENT_SAFARI_SCROLLING_CLASS);
-      }
-    }
-  }
-  _renderWrapper() {
-    this._positionController.styleWrapperPosition();
-    this._renderWrapperDimensions();
-    this._positionController.positionWrapper();
-  }
-  _renderWrapperDimensions() {
-    const {
-      $visualContainer
-    } = this._positionController;
-    const documentElement = _dom_adapter.default.getDocumentElement();
-    const isVisualContainerWindow = (0, _type.isWindow)($visualContainer.get(0));
-    const wrapperWidth = isVisualContainerWindow ? documentElement.clientWidth : (0, _size.getOuterWidth)($visualContainer);
-    const wrapperHeight = isVisualContainerWindow ? window.innerHeight : (0, _size.getOuterHeight)($visualContainer);
-    this._$wrapper.css({
-      width: wrapperWidth,
-      height: wrapperHeight
-    });
-  }
-  _renderDimensions() {
-    const content = this._$content.get(0);
-    this._$content.css({
-      minWidth: this._getOptionValue('minWidth', content),
-      maxWidth: this._getOptionValue('maxWidth', content),
-      minHeight: this._getOptionValue('minHeight', content),
-      maxHeight: this._getOptionValue('maxHeight', content),
-      width: this._getOptionValue('width', content),
-      height: this._getOptionValue('height', content)
-    });
-  }
-  _focusTarget() {
-    return this._$content;
-  }
-  _attachKeyboardEvents() {
-    this._keyboardListenerId = _short.keyboard.on(this._$content, null, options => this._keyboardHandler(options));
-  }
-  // @ts-expect-error ts-error
-  _keyboardHandler(options) {
-    const e = options.originalEvent;
-    const $target = (0, _renderer.default)(e.target);
-    if ($target.is(this._$content) || !this.option('ignoreChildEvents')) {
-      // @ts-expect-error ts-error
-      super._keyboardHandler(...arguments);
-    }
-  }
-  _isVisible() {
-    const {
-      visible
-    } = this.option();
-    // @ts-expect-error ts-error
-    return visible;
-  }
-  _visibilityChanged(visible) {
-    if (visible) {
-      if (this.option('visible')) {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        this._renderVisibilityAnimate(visible);
-      }
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      this._renderVisibilityAnimate(visible);
-    }
-  }
-  _dimensionChanged() {
-    this._renderGeometry();
-  }
-  _clean() {
-    if (!this._contentAlreadyRendered) {
-      this.$content().empty();
-    }
-    this._renderVisibility(false);
-    this._cleanFocusState();
-  }
-  _dispose() {
-    // @ts-expect-error
-    _animation.fx.stop(this._$content, false);
-    this._toggleViewPortSubscription(false);
-    this._toggleSubscriptions(false);
-    this._updateZIndexStackPosition(false);
-    this._actions = null;
-    this._parentsScrollSubscriptionInfo = null;
-    super._dispose();
-    this._toggleSafariScrolling();
-    this.option('visible') && zIndexPool.remove(this._zIndex);
-    this._$wrapper.remove();
-    this._$content.remove();
-    this._destroyTabTerminator();
-  }
-  _toggleRTLDirection(rtl) {
-    this._$content.toggleClass(RTL_DIRECTION_CLASS, rtl);
-  }
-  _optionChanged(args) {
-    const {
-      value,
-      name
-    } = args;
-    if (this._getActionsList().includes(name)) {
-      this._initActions();
-      return;
-    }
-    switch (name) {
-      case 'animation':
-        break;
-      case '_loopFocus':
-      case 'shading':
-        {
-          const {
-            visible
-          } = this.option();
-          this._toggleShading(visible);
-          this._toggleSafariScrolling();
-          break;
-        }
-      case 'shadingColor':
-        {
-          const {
-            visible
-          } = this.option();
-          this._toggleShading(visible);
-          break;
-        }
-      case 'width':
-      case 'height':
-        this._renderGeometry();
-        break;
-      case 'minWidth':
-      case 'maxWidth':
-      case 'minHeight':
-      case 'maxHeight':
-        this._renderGeometry();
-        break;
-      case 'position':
-        this._positionController.updatePosition(this.option('position'));
-        this._positionController.restorePositionOnNextRender(true);
-        this._renderGeometry();
-        this._toggleSafariScrolling();
-        break;
-      case 'visible':
-        this._renderVisibilityAnimate(Boolean(value))
-        // @ts-expect-error ts-error
-        .done(() => {
-          var _this$_animateDeferre;
-          return (_this$_animateDeferre = this._animateDeferred) === null || _this$_animateDeferre === void 0 ? void 0 : _this$_animateDeferre.resolveWith(this);
-        }).fail(() => {
-          var _this$_animateDeferre2;
-          return (_this$_animateDeferre2 = this._animateDeferred) === null || _this$_animateDeferre2 === void 0 ? void 0 : _this$_animateDeferre2.reject();
-        });
-        break;
-      case 'container':
-        this._positionController.updateContainer(value);
-        this._invalidate();
-        this._toggleSafariScrolling();
-        break;
-      case 'visualContainer':
-        this._positionController.updateVisualContainer(value);
-        this._renderWrapper();
-        this._toggleSafariScrolling();
-        break;
-      case 'innerOverlay':
-        this._initInnerOverlayClass();
-        break;
-      case 'deferRendering':
-      case 'contentTemplate':
-        this._contentAlreadyRendered = false;
-        this._clean();
-        this._invalidate();
-        break;
-      case 'hideTopOverlayHandler':
-        this._toggleHideTopOverlayCallback(false);
-        // @ts-expect-error ts-error
-        this._initHideTopOverlayHandler(value);
-        this._toggleHideTopOverlayCallback(this.option('visible'));
-        break;
-      case 'hideOnParentScroll':
-      case '_hideOnParentScrollTarget':
-        {
-          const {
-            visible
-          } = this.option();
-          this._toggleHideOnParentsScrollSubscription(visible);
-          break;
-        }
-      case 'hideOnOutsideClick':
-      case 'propagateOutsideClick':
-        break;
-      case 'rtlEnabled':
-        this._contentAlreadyRendered = false;
-        super._optionChanged(args);
-        break;
-      case '_fixWrapperPosition':
-        this._positionController.fixWrapperPosition = value;
-        break;
-      case 'wrapperAttr':
-        this._renderWrapperAttributes();
-        break;
-      case 'restorePosition':
-        this._positionController.restorePosition = value;
-        break;
-      case 'preventScrollEvents':
-        this._logDeprecatedPreventScrollEventsInfo();
-        // @ts-expect-error ts-error
-        this._toggleWrapperScrollEventsSubscription(value);
-        break;
-      default:
-        super._optionChanged(args);
-    }
-  }
-  toggle(showing) {
-    showing = showing === undefined ? !this.option('visible') : showing;
-    const result = (0, _deferred.Deferred)();
-    if (showing === this.option('visible')) {
-      // @ts-expect-error ts-error
-      return result.resolveWith(this, [showing]).promise();
-    }
-    const animateDeferred = (0, _deferred.Deferred)();
-    this._animateDeferred = animateDeferred;
-    this.option('visible', showing);
-    animateDeferred.promise()
-    // @ts-expect-error ts-error
-    .done(() => {
-      delete this._animateDeferred;
-      // @ts-expect-error ts-error
-      result.resolveWith(this, [this.option('visible')]);
-    }).fail(() => {
-      delete this._animateDeferred;
-      result.reject();
-    });
-    return result.promise();
-  }
-  $content() {
-    return this._$content;
-  }
-  show() {
-    return this.toggle(true);
-  }
-  hide() {
-    return this.toggle(false);
-  }
-  content() {
-    return (0, _element.getPublicElement)(this._$content);
-  }
-  repaint() {
-    if (this._contentAlreadyRendered) {
-      this._positionController.restorePositionOnNextRender(true);
-      this._renderGeometry({
-        forceStopAnimation: true
-      });
-      (0, _visibility_change.triggerResizeEvent)(this._$content);
-    } else {
-      super.repaint();
-    }
-  }
-}
-// @ts-expect-error
-Overlay.baseZIndex = zIndex => zIndexPool.base(zIndex);
-(0, _component_registrator.default)('dxOverlay', Overlay);
-var _default = exports["default"] = Overlay;
-
-/***/ }),
-
 /***/ 4983:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -31594,26 +30459,28 @@ class OverlayPositionController {
     }
   }
   styleWrapperPosition() {
+    var _this$_$wrapper;
     const useFixed = (0, _type.isWindow)(this.$visualContainer.get(0)) || this._props._fixWrapperPosition;
     const positionStyle = useFixed ? 'fixed' : 'absolute';
-    this._$wrapper.css('position', positionStyle);
+    (_this$_$wrapper = this._$wrapper) === null || _this$_$wrapper === void 0 || _this$_$wrapper.css('position', positionStyle);
   }
   _updateVisualPositionValue() {
     this._previousVisualPosition = this._visualPosition;
     this._visualPosition = (0, _translator.locate)(this._$content);
   }
   _renderContentInitialPosition() {
+    var _this$_$wrapper2, _this$_$wrapper3;
     this._renderBoundaryOffset();
     (0, _translator.resetPosition)(this._$content);
     // @ts-expect-error ts-error
     const wrapperOverflow = this._$wrapper.css('overflow');
-    this._$wrapper.css('overflow', 'hidden');
+    (_this$_$wrapper2 = this._$wrapper) === null || _this$_$wrapper2 === void 0 || _this$_$wrapper2.css('overflow', 'hidden');
     if (!this._props._skipContentPositioning) {
       const resultPosition = _position.default.setup(this._$content, this._position);
       this._initialPosition = resultPosition;
     }
     // @ts-expect-error ts-error
-    this._$wrapper.css('overflow', wrapperOverflow);
+    (_this$_$wrapper3 = this._$wrapper) === null || _this$_$wrapper3 === void 0 || _this$_$wrapper3.css('overflow', wrapperOverflow);
     this.detectVisualPositionChange();
   }
   _raisePositionedEvents(event) {
@@ -31632,10 +30499,11 @@ class OverlayPositionController {
     });
   }
   _renderBoundaryOffset() {
+    var _this$_$content;
     const boundaryOffset = this._position ?? {
       boundaryOffset: OVERLAY_DEFAULT_BOUNDARY_OFFSET
     };
-    this._$content.css('margin', `${boundaryOffset.v}px ${boundaryOffset.h}px`);
+    (_this$_$content = this._$content) === null || _this$_$content === void 0 || _this$_$content.css('margin', `${boundaryOffset.v}px ${boundaryOffset.h}px`);
   }
   _getVisualContainer() {
     var _this$_props$position, _this$_props$position2;
@@ -31673,7 +30541,1238 @@ exports.OverlayPositionController = OverlayPositionController;
 
 /***/ }),
 
-/***/ 84893:
+/***/ 79384:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = exports.OVERLAY_CONTENT_CLASS = void 0;
+var _animation = __webpack_require__(16826);
+var _hide_callback = __webpack_require__(83916);
+var _events_engine = _interopRequireDefault(__webpack_require__(92774));
+var _drag = __webpack_require__(59144);
+var _pointer = _interopRequireDefault(__webpack_require__(89797));
+var _short = __webpack_require__(42222);
+var _index = __webpack_require__(98834);
+var _visibility_change = __webpack_require__(18029);
+var _component_registrator = _interopRequireDefault(__webpack_require__(92848));
+var _devices = _interopRequireDefault(__webpack_require__(65951));
+var _dom_adapter = _interopRequireDefault(__webpack_require__(64960));
+var _element = __webpack_require__(61404);
+var _errors = _interopRequireDefault(__webpack_require__(87129));
+var _renderer = _interopRequireDefault(__webpack_require__(64553));
+var _empty_template = __webpack_require__(48650);
+var _browser = _interopRequireDefault(__webpack_require__(48314));
+var _common = __webpack_require__(17781);
+var _deferred = __webpack_require__(87739);
+var _extend = __webpack_require__(52576);
+var _iterator = __webpack_require__(21274);
+var _ready_callbacks = _interopRequireDefault(__webpack_require__(3122));
+var _size = __webpack_require__(57653);
+var _type = __webpack_require__(11528);
+var _view_port = __webpack_require__(55355);
+var _selectors = __webpack_require__(35944);
+var _ui = _interopRequireDefault(__webpack_require__(35185));
+var _m_dom = _interopRequireDefault(__webpack_require__(76400));
+var _widget = _interopRequireDefault(__webpack_require__(89275));
+var _m_window = _interopRequireDefault(__webpack_require__(14470));
+var _m_overlay_position_controller = __webpack_require__(4983);
+var zIndexPool = _interopRequireWildcard(__webpack_require__(27869));
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const ready = _ready_callbacks.default.add;
+const window = _m_window.default.getWindow();
+const viewPortChanged = _view_port.changeCallback;
+const OVERLAY_STACK = [];
+const ANONYMOUS_TEMPLATE_NAME = 'content';
+const TAB_KEY = 'tab';
+const OVERLAY_CLASS = 'dx-overlay';
+const OVERLAY_WRAPPER_CLASS = 'dx-overlay-wrapper';
+const OVERLAY_CONTENT_CLASS = exports.OVERLAY_CONTENT_CLASS = 'dx-overlay-content';
+const OVERLAY_SHADER_CLASS = 'dx-overlay-shader';
+const INNER_OVERLAY_CLASS = 'dx-inner-overlay';
+const INVISIBLE_STATE_CLASS = 'dx-state-invisible';
+const RTL_DIRECTION_CLASS = 'dx-rtl';
+const PREVENT_SAFARI_SCROLLING_CLASS = 'dx-prevent-safari-scrolling';
+ready(() => {
+  const callback = e => {
+    for (let i = OVERLAY_STACK.length - 1; i >= 0; i -= 1) {
+      var _OVERLAY_STACK$i$_pro, _OVERLAY_STACK$i;
+      if (!((_OVERLAY_STACK$i$_pro = (_OVERLAY_STACK$i = OVERLAY_STACK[i])._proxiedDocumentDownHandler) !== null && _OVERLAY_STACK$i$_pro !== void 0 && _OVERLAY_STACK$i$_pro.call(_OVERLAY_STACK$i, e))) {
+        return;
+      }
+    }
+  };
+  // @ts-expect-error subscribeGlobal should be described in .d.ts
+  _events_engine.default.subscribeGlobal(_dom_adapter.default.getDocument(), _pointer.default.down, callback);
+});
+class Overlay extends _widget.default {
+  _supportedKeys() {
+    return _extends({}, super._supportedKeys(), {
+      escape() {
+        this.hide();
+      }
+    });
+  }
+  _getDefaultOptions() {
+    return _extends({}, super._getDefaultOptions(), {
+      activeStateEnabled: false,
+      visible: false,
+      deferRendering: true,
+      shading: true,
+      shadingColor: '',
+      wrapperAttr: {},
+      position: _extends({}, _m_overlay_position_controller.OVERLAY_POSITION_ALIASES.center),
+      width: '80vw',
+      minWidth: null,
+      maxWidth: null,
+      height: '80vh',
+      minHeight: null,
+      maxHeight: null,
+      animation: {
+        show: {
+          type: 'pop',
+          duration: 300,
+          from: {
+            scale: 0.55
+          }
+        },
+        hide: {
+          type: 'pop',
+          duration: 300,
+          from: {
+            opacity: 1,
+            scale: 1
+          },
+          to: {
+            opacity: 0,
+            scale: 0.55
+          }
+        }
+      },
+      hideOnOutsideClick: false,
+      onShowing: null,
+      onShown: null,
+      onHiding: null,
+      onHidden: null,
+      contentTemplate: 'content',
+      innerOverlay: false,
+      restorePosition: true,
+      hideOnParentScroll: false,
+      preventScrollEvents: true,
+      onPositioned: null,
+      propagateOutsideClick: false,
+      ignoreChildEvents: true,
+      _checkParentVisibility: true,
+      _fixWrapperPosition: false,
+      _loopFocus: false,
+      _ignorePreventScrollEventsDeprecation: false,
+      // NOTE: private option
+      hideTopOverlayHandler: () => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        this.hide();
+      }
+    });
+  }
+  _defaultOptionsRules() {
+    return super._defaultOptionsRules().concat([{
+      device() {
+        return !_m_window.default.hasWindow();
+      },
+      // @ts-expect-error overload
+      options: {
+        width: null,
+        height: null,
+        animation: null,
+        _checkParentVisibility: false
+      }
+    }]);
+  }
+  _setOptionsByReference() {
+    super._setOptionsByReference();
+    this._optionsByReference = _extends({}, this._optionsByReference, {
+      animation: true
+    });
+  }
+  $wrapper() {
+    return this._$wrapper;
+  }
+  _eventBindingTarget() {
+    return this._$content;
+  }
+  ctor(element, options) {
+    super.ctor(element, options);
+    if (options) {
+      if ('preventScrollEvents' in options && !options._ignorePreventScrollEventsDeprecation) {
+        this._logDeprecatedPreventScrollEventsInfo();
+      }
+    }
+  }
+  _logDeprecatedPreventScrollEventsInfo() {
+    this._logDeprecatedOptionWarning('preventScrollEvents', {
+      since: '23.1',
+      message: 'If you enable this option, end-users may experience scrolling issues.'
+    });
+  }
+  _init() {
+    super._init();
+    this._initActions();
+    this._initHideOnOutsideClickHandler();
+    this._initTabTerminatorHandler();
+    this._customWrapperClass = null;
+    this._$wrapper = (0, _renderer.default)('<div>').addClass(OVERLAY_WRAPPER_CLASS);
+    this._$content = (0, _renderer.default)('<div>').addClass(OVERLAY_CONTENT_CLASS);
+    this._initInnerOverlayClass();
+    const $element = this.$element();
+    $element.addClass(OVERLAY_CLASS);
+    this._$wrapper.attr('data-bind', 'dxControlsDescendantBindings: true');
+    this._toggleViewPortSubscription(true);
+    const {
+      hideTopOverlayHandler
+    } = this.option();
+    this._initHideTopOverlayHandler(hideTopOverlayHandler);
+    this._parentsScrollSubscriptionInfo = {
+      handler: e => {
+        this._hideOnParentsScrollHandler(e);
+      }
+    };
+    this.warnPositionAsFunction();
+  }
+  warnPositionAsFunction() {
+    const {
+      position
+    } = this.option();
+    if ((0, _type.isFunction)(position)) {
+      // position as function deprecated in 21.2
+      _errors.default.log('W0018');
+    }
+  }
+  _initInnerOverlayClass() {
+    const {
+      innerOverlay
+    } = this.option();
+    this._$content.toggleClass(INNER_OVERLAY_CLASS, innerOverlay);
+  }
+  _initHideTopOverlayHandler(handler) {
+    if (handler) {
+      this._hideTopOverlayHandler = handler;
+    }
+  }
+  _getActionsList() {
+    return ['onShowing', 'onShown', 'onHiding', 'onHidden', 'onPositioned', 'onVisualPositionChanged'];
+  }
+  _initActions() {
+    this._actions = {};
+    const actions = this._getActionsList();
+    (0, _iterator.each)(actions, (_, action) => {
+      if (this._actions) {
+        this._actions[action] = this._createActionByOption(action, {
+          excludeValidators: ['disabled', 'readOnly']
+        }) || _common.noop;
+      }
+    });
+  }
+  _initHideOnOutsideClickHandler() {
+    this._proxiedDocumentDownHandler = e => this._documentDownHandler(e);
+  }
+  _initMarkup() {
+    super._initMarkup();
+    this._renderWrapperAttributes();
+    this._initPositionController();
+  }
+  _documentDownHandler(e) {
+    if (this._showAnimationProcessing) {
+      this._stopAnimation();
+    }
+    const {
+      target
+    } = e;
+    const $target = (0, _renderer.default)(target);
+    const isTargetDocument = _m_dom.default.contains(window.document, target);
+    const isAttachedTarget = (0, _renderer.default)(window.document).is($target) || isTargetDocument;
+    const isInnerOverlay = (0, _renderer.default)($target).closest(`.${INNER_OVERLAY_CLASS}`).length;
+    const isTargetContent = this._$content.is($target);
+    const isTargetInContent = _m_dom.default.contains(this._$content.get(0), target);
+    const isOutsideClick = isAttachedTarget && !isInnerOverlay && !(isTargetContent || isTargetInContent);
+    if (isOutsideClick && this._shouldHideOnOutsideClick(e)) {
+      this._outsideClickHandler(e);
+    }
+    const {
+      propagateOutsideClick
+    } = this.option();
+    return Boolean(propagateOutsideClick);
+  }
+  _shouldHideOnOutsideClick(e) {
+    const {
+      hideOnOutsideClick
+    } = this.option();
+    if ((0, _type.isFunction)(hideOnOutsideClick)) {
+      return hideOnOutsideClick(e);
+    }
+    return Boolean(hideOnOutsideClick);
+  }
+  _outsideClickHandler(e) {
+    const {
+      shading
+    } = this.option();
+    if (shading) {
+      e.preventDefault();
+    }
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    this.hide();
+  }
+  _getAnonymousTemplateName() {
+    return ANONYMOUS_TEMPLATE_NAME;
+  }
+  _initTemplates() {
+    this._templateManager.addDefaultTemplates({
+      content: new _empty_template.EmptyTemplate()
+    });
+    super._initTemplates();
+  }
+  _isTopOverlay() {
+    const overlayStack = this._overlayStack();
+    for (let i = overlayStack.length - 1; i >= 0; i -= 1) {
+      const tabbableElements = overlayStack[i]._findTabbableBounds();
+      if (tabbableElements.$first || tabbableElements.$last) {
+        // @ts-ignore expected: types Overlay<OverlayProperties> and this have no overlap
+        return overlayStack[i] === this;
+      }
+    }
+    return false;
+  }
+  _overlayStack() {
+    return OVERLAY_STACK;
+  }
+  _zIndexInitValue() {
+    return Overlay.baseZIndex();
+  }
+  _toggleViewPortSubscription(toggle) {
+    if (this._viewPortChangeHandle) {
+      viewPortChanged.remove(this._viewPortChangeHandle);
+    }
+    if (toggle) {
+      this._viewPortChangeHandle = () => {
+        this._viewPortChangeHandler();
+      };
+      viewPortChanged.add(this._viewPortChangeHandle);
+    }
+  }
+  _viewPortChangeHandler() {
+    const {
+      container
+    } = this.option();
+    this._positionController.updateContainer(container);
+    this._refresh();
+  }
+  _renderWrapperAttributes() {
+    const {
+      wrapperAttr
+    } = this.option();
+    const attributes = _extends({}, wrapperAttr);
+    const classNames = attributes.class;
+    delete attributes.class;
+    const $wrapper = this.$wrapper();
+    $wrapper.attr(attributes);
+    if (this._customWrapperClass) {
+      $wrapper.removeClass(this._customWrapperClass);
+    }
+    $wrapper.addClass(classNames);
+    this._customWrapperClass = classNames;
+  }
+  _renderVisibilityAnimate(visible) {
+    this._stopAnimation();
+    return visible ? this._show() : this._hide();
+  }
+  _getAnimationConfig() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this._getOptionValue('animation', this) ?? {};
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _toggleBodyScroll(enabled) {}
+  _animateShowing() {
+    const animation = this._getAnimationConfig();
+    const showAnimation = this._normalizeAnimation(animation.show, 'to');
+    const startShowAnimation = (showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.start) ?? _common.noop;
+    const completeShowAnimation = (showAnimation === null || showAnimation === void 0 ? void 0 : showAnimation.complete) ?? _common.noop;
+    const completeCallback = (element, config) => {
+      var _this$_actions, _this$_actions$onShow;
+      if (this._isAnimationPaused) {
+        return;
+      }
+      const {
+        focusStateEnabled
+      } = this.option();
+      if (focusStateEnabled) {
+        // @ts-expect-error trigger should be typed on type 'EventsEngineType'
+        _events_engine.default.trigger(this._focusTarget(), 'focus');
+      }
+      completeShowAnimation.call(this, element, config);
+      this._showAnimationProcessing = false;
+      this._isHidden = false;
+      // @ts-expect-error onShown should provide event
+      (_this$_actions = this._actions) === null || _this$_actions === void 0 || (_this$_actions$onShow = _this$_actions.onShown) === null || _this$_actions$onShow === void 0 || _this$_actions$onShow.call(_this$_actions);
+      this._toggleSafariScrolling();
+      this._showingDeferred.resolve();
+    };
+    const startCallback = (element, config) => {
+      if (this._isAnimationPaused) {
+        return;
+      }
+      startShowAnimation.call(this, element, config);
+      this._showAnimationProcessing = true;
+    };
+    this._animate(showAnimation, completeCallback, startCallback);
+  }
+  _processShowingHidingCancel(cancelArg, applyFunction, cancelFunction) {
+    if ((0, _type.isPromise)(cancelArg)) {
+      cancelArg.then(shouldCancel => {
+        if (shouldCancel) {
+          cancelFunction();
+        } else {
+          applyFunction();
+        }
+      }).catch(() => applyFunction());
+    } else if (cancelArg) {
+      cancelFunction();
+    } else {
+      applyFunction();
+    }
+  }
+  _show() {
+    this._showingDeferred = (0, _deferred.Deferred)();
+    this._parentHidden = this._isParentHidden();
+    this._showingDeferred.done(() => {
+      delete this._parentHidden;
+    });
+    if (this._parentHidden) {
+      this._isHidden = true;
+      return this._showingDeferred.resolve();
+    }
+    if (this._currentVisible) {
+      return (0, _deferred.Deferred)().resolve().promise();
+    }
+    this._currentVisible = true;
+    if (this._isHidingActionCanceled) {
+      delete this._isHidingActionCanceled;
+      this._showingDeferred.reject();
+    } else {
+      const show = () => {
+        var _this$_actions2, _this$_actions2$onSho;
+        this._stopAnimation();
+        const {
+          enableBodyScroll
+        } = this.option();
+        this._toggleBodyScroll(enableBodyScroll);
+        this._toggleVisibility(true);
+        this._$content.css('visibility', 'hidden');
+        this._$content.toggleClass(INVISIBLE_STATE_CLASS, false);
+        this._updateZIndexStackPosition(true);
+        this._positionController.openingHandled();
+        this._renderContent();
+        const showingArgs = {
+          cancel: false
+        };
+        // @ts-expect-error onShowing should provide event
+        (_this$_actions2 = this._actions) === null || _this$_actions2 === void 0 || (_this$_actions2$onSho = _this$_actions2.onShowing) === null || _this$_actions2$onSho === void 0 || _this$_actions2$onSho.call(_this$_actions2, showingArgs);
+        const cancelShow = () => {
+          this._toggleVisibility(false);
+          this._$content.css('visibility', '');
+          this._$content.toggleClass(INVISIBLE_STATE_CLASS, true);
+          this._isShowingActionCanceled = true;
+          this._moveFromContainer();
+          this._toggleBodyScroll(true);
+          this.option('visible', false);
+          this._showingDeferred.resolve();
+        };
+        const applyShow = () => {
+          this._$content.css('visibility', '');
+          this._renderVisibility(true);
+          this._animateShowing();
+        };
+        this._processShowingHidingCancel(showingArgs.cancel, applyShow, cancelShow);
+      };
+      show();
+    }
+    return this._showingDeferred.promise();
+  }
+  _normalizeAnimation(showHideConfig, direction) {
+    if (!showHideConfig) {
+      return undefined;
+    }
+    const configuration = _extends({
+      type: 'slide',
+      // @ts-expect-error skipElementInitialStyles should be typed in AnimationConfig
+      skipElementInitialStyles: true
+    }, showHideConfig);
+    if ((0, _type.isObject)(configuration[direction])) {
+      (0, _extend.extend)(configuration[direction], {
+        position: this._positionController.position
+      });
+    }
+    return configuration;
+  }
+  _animateHiding() {
+    const animation = this._getAnimationConfig();
+    const hideAnimation = this._normalizeAnimation(animation.hide, 'from');
+    const startHideAnimation = (hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.start) ?? _common.noop;
+    const completeHideAnimation = (hideAnimation === null || hideAnimation === void 0 ? void 0 : hideAnimation.complete) ?? _common.noop;
+    const completeCallback = (element, config) => {
+      var _this$_actions3, _this$_actions3$onHid;
+      this._$content.css('pointerEvents', '');
+      this._renderVisibility(false);
+      completeHideAnimation.call(this, element, config);
+      this._hideAnimationProcessing = false;
+      // @ts-expect-error onHidden should provide event
+      (_this$_actions3 = this._actions) === null || _this$_actions3 === void 0 || (_this$_actions3$onHid = _this$_actions3.onHidden) === null || _this$_actions3$onHid === void 0 || _this$_actions3$onHid.call(_this$_actions3);
+      this._hidingDeferred.resolve();
+    };
+    const startCallback = (element, config) => {
+      this._$content.css('pointerEvents', 'none');
+      startHideAnimation.call(this, element, config);
+      this._hideAnimationProcessing = true;
+    };
+    this._animate(hideAnimation, completeCallback, startCallback);
+  }
+  _hide() {
+    if (!this._currentVisible) {
+      return (0, _deferred.Deferred)().resolve().promise();
+    }
+    this._currentVisible = false;
+    this._hidingDeferred = (0, _deferred.Deferred)();
+    const hidingArgs = {
+      cancel: false
+    };
+    if (this._isShowingActionCanceled) {
+      delete this._isShowingActionCanceled;
+      this._hidingDeferred.reject();
+    } else {
+      var _this$_actions4, _this$_actions4$onHid;
+      // @ts-expect-error onHiding should provide event
+      (_this$_actions4 = this._actions) === null || _this$_actions4 === void 0 || (_this$_actions4$onHid = _this$_actions4.onHiding) === null || _this$_actions4$onHid === void 0 || _this$_actions4$onHid.call(_this$_actions4, hidingArgs);
+      this._toggleSafariScrolling();
+      this._toggleBodyScroll(true);
+      const cancelHide = () => {
+        this._isHidingActionCanceled = true;
+        const {
+          enableBodyScroll
+        } = this.option();
+        this._toggleBodyScroll(enableBodyScroll);
+        this.option('visible', true);
+        this._hidingDeferred.resolve();
+      };
+      const applyHide = () => {
+        this._forceFocusLost();
+        this._toggleShading(false);
+        this._toggleSubscriptions(false);
+        this._animateHiding();
+      };
+      this._processShowingHidingCancel(hidingArgs.cancel, applyHide, cancelHide);
+    }
+    return this._hidingDeferred.promise();
+  }
+  _forceFocusLost() {
+    const activeElement = _dom_adapter.default.getActiveElement();
+    const shouldResetActiveElement = !!this._$content.find(activeElement).length;
+    if (shouldResetActiveElement) {
+      _m_dom.default.resetActiveElement();
+    }
+  }
+  _animate(animation, completeCallback, startCallback) {
+    if (animation) {
+      const actualStartCallback = startCallback ?? animation.start ?? _common.noop;
+      const configuration = _extends({}, animation, {
+        start: actualStartCallback,
+        complete: completeCallback
+      });
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      _animation.fx.animate(this._$content.get(0), configuration);
+    } else {
+      // @ts-expect-error complate in AnimationConfig contains required params
+      completeCallback();
+    }
+  }
+  _stopAnimation() {
+    _animation.fx.stop(this._$content.get(0), true);
+  }
+  _renderVisibility(visible) {
+    if (visible && this._isParentHidden()) {
+      return;
+    }
+    this._currentVisible = visible;
+    this._stopAnimation();
+    if (!visible) {
+      (0, _visibility_change.triggerHidingEvent)(this._$content);
+    }
+    if (visible) {
+      this._checkContainerExists();
+      this._moveToContainer();
+      this._renderGeometry();
+      (0, _visibility_change.triggerShownEvent)(this._$content);
+      (0, _visibility_change.triggerResizeEvent)(this._$content);
+    } else {
+      this._toggleVisibility(visible);
+      this._$content.toggleClass(INVISIBLE_STATE_CLASS, !visible);
+      this._updateZIndexStackPosition(visible);
+      this._moveFromContainer();
+    }
+    this._toggleShading(visible);
+    this._toggleSubscriptions(visible);
+  }
+  _updateZIndexStackPosition(pushToStack) {
+    const overlayStack = this._overlayStack();
+    // @ts-expect-error this and Overlay have no overlap
+    const index = overlayStack.indexOf(this);
+    if (pushToStack) {
+      if (index === -1) {
+        this._zIndex = zIndexPool.create(this._zIndexInitValue());
+        // @ts-expect-error this and Overlay have no overlap
+        overlayStack.push(this);
+      }
+      this._$wrapper.css('zIndex', this._zIndex);
+      this._$content.css('zIndex', this._zIndex);
+    } else if (index !== -1) {
+      overlayStack.splice(index, 1);
+      zIndexPool.remove(this._zIndex);
+    }
+  }
+  _toggleShading(visible) {
+    const {
+      shading,
+      shadingColor
+    } = this.option();
+    this._$wrapper.toggleClass(OVERLAY_SHADER_CLASS, visible && shading);
+    this._$wrapper.css('backgroundColor', shading ? shadingColor ?? '' : '');
+    this._toggleTabTerminator(Boolean(visible && shading));
+  }
+  _initTabTerminatorHandler() {
+    this._proxiedTabTerminatorHandler = e => {
+      this._tabKeyHandler(e);
+    };
+  }
+  _toggleTabTerminator(enabled) {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const {
+      _loopFocus
+    } = this.option();
+    // @ts-expect-error NAME has string | undefined type
+    const eventName = (0, _index.addNamespace)('keydown', this.NAME);
+    if (_loopFocus || enabled) {
+      _events_engine.default.on(_dom_adapter.default.getDocument(), eventName, this._proxiedTabTerminatorHandler);
+    } else {
+      this._destroyTabTerminator();
+    }
+  }
+  _destroyTabTerminator() {
+    // @ts-expect-error NAME has string | undefined type
+    const eventName = (0, _index.addNamespace)('keydown', this.NAME);
+    _events_engine.default.off(_dom_adapter.default.getDocument(), eventName, this._proxiedTabTerminatorHandler);
+  }
+  _findTabbableBounds() {
+    const $elements = this._$wrapper.find('*');
+    const elementsCount = $elements.length - 1;
+    let $first = null;
+    let $last = null;
+    for (let i = 0; i <= elementsCount; i += 1) {
+      const $currentElement = $elements.eq(i);
+      const $reverseElement = $elements.eq(elementsCount - i);
+      // @ts-expect-error is should can get function as callback
+      if (!$first && $currentElement.is(_selectors.tabbable)) {
+        $first = $currentElement;
+      }
+      // @ts-expect-error is should can get function as callback
+      if (!$last && $reverseElement.is(_selectors.tabbable)) {
+        $last = $reverseElement;
+      }
+      if ($first && $last) {
+        break;
+      }
+    }
+    return {
+      $first,
+      $last
+    };
+  }
+  _tabKeyHandler(e) {
+    if ((0, _index.normalizeKeyName)(e) !== TAB_KEY || !this._isTopOverlay()) {
+      return;
+    }
+    const wrapper = this._$wrapper.get(0);
+    const activeElement = _dom_adapter.default.getActiveElement(wrapper);
+    const {
+      $first: $firstTabbable,
+      $last: $lastTabbable
+    } = this._findTabbableBounds();
+    const isTabOnLast = !e.shiftKey && activeElement === ($lastTabbable === null || $lastTabbable === void 0 ? void 0 : $lastTabbable.get(0));
+    const isShiftTabOnFirst = e.shiftKey && activeElement === ($firstTabbable === null || $firstTabbable === void 0 ? void 0 : $firstTabbable.get(0));
+    const isOutsideTarget = !_m_dom.default.contains(wrapper, activeElement);
+    const shouldPreventDefault = isTabOnLast || isShiftTabOnFirst || isOutsideTarget;
+    if (shouldPreventDefault) {
+      e.preventDefault();
+      const $focusElement = e.shiftKey ? $lastTabbable : $firstTabbable;
+      // @ts-expect-error trigger should be typed on type 'EventsEngineType'
+      _events_engine.default.trigger($focusElement, 'focusin');
+      // @ts-expect-error trigger should be typed on type 'EventsEngineType'
+      _events_engine.default.trigger($focusElement, 'focus');
+    }
+  }
+  _toggleSubscriptions(enabled) {
+    if (_m_window.default.hasWindow()) {
+      this._toggleHideTopOverlayCallback(enabled);
+      this._toggleHideOnParentsScrollSubscription(enabled);
+    }
+  }
+  _toggleHideTopOverlayCallback(subscribe) {
+    if (!this._hideTopOverlayHandler) {
+      return;
+    }
+    if (subscribe) {
+      _hide_callback.hideCallback.add(this._hideTopOverlayHandler);
+    } else {
+      _hide_callback.hideCallback.remove(this._hideTopOverlayHandler);
+    }
+  }
+  _toggleHideOnParentsScrollSubscription(needSubscribe) {
+    // @ts-expect-error NAME has string | undefined type
+    const scrollEvent = (0, _index.addNamespace)('scroll', this.NAME);
+    const info = this._parentsScrollSubscriptionInfo ?? {};
+    const {
+      prevTargets,
+      handler
+    } = info;
+    _events_engine.default.off(prevTargets, scrollEvent, handler);
+    const {
+      hideOnParentScroll
+    } = this.option();
+    if (needSubscribe && hideOnParentScroll) {
+      let $parents = this._getHideOnParentScrollTarget().parents();
+      if (_devices.default.real().deviceType === 'desktop') {
+        $parents = $parents.add(window);
+      }
+      _events_engine.default.on($parents, scrollEvent, handler);
+      this._parentsScrollSubscriptionInfo = _extends({}, info, {
+        prevTargets: $parents
+      });
+    }
+  }
+  _hideOnParentsScrollHandler(e) {
+    let hideHandled = false;
+    const {
+      hideOnParentScroll
+    } = this.option();
+    if ((0, _type.isFunction)(hideOnParentScroll)) {
+      // @ts-expect-error hideOnParentScroll is typed as boolean
+      hideHandled = hideOnParentScroll(e);
+    }
+    if (!hideHandled && !this._showAnimationProcessing) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      this.hide();
+    }
+  }
+  _getHideOnParentScrollTarget() {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const {
+      _hideOnParentScrollTarget
+    } = this.option();
+    const $hideOnParentScrollTarget = (0, _renderer.default)(_hideOnParentScrollTarget);
+    if ($hideOnParentScrollTarget.length) {
+      return $hideOnParentScrollTarget;
+    }
+    return this._$wrapper;
+  }
+  _render() {
+    super._render();
+    this._appendContentToElement();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    this._renderVisibilityAnimate(this._isVisible());
+  }
+  _appendContentToElement() {
+    if (!this._$content.parent().is(this.$element())) {
+      this._$content.appendTo(this.$element());
+    }
+  }
+  _renderContent() {
+    const {
+      deferRendering
+    } = this.option();
+    const shouldDeferRendering = !this._currentVisible && deferRendering;
+    const isParentHidden = this._isVisible() && this._isParentHidden();
+    if (isParentHidden) {
+      this._isHidden = true;
+      return;
+    }
+    if (this._contentAlreadyRendered || shouldDeferRendering) {
+      return;
+    }
+    this._contentAlreadyRendered = true;
+    this._appendContentToElement();
+    super._renderContent();
+  }
+  _isParentHidden() {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const {
+      _checkParentVisibility
+    } = this.option();
+    if (!_checkParentVisibility) {
+      return false;
+    }
+    if (this._parentHidden !== undefined) {
+      return this._parentHidden;
+    }
+    const $parent = this.$element().parent();
+    if ($parent.is(':visible')) {
+      return false;
+    }
+    let isHidden = false;
+    // @ts-expect-error add should can get dxElementWrapper
+    $parent.add($parent.parents()).each((index, element) => {
+      const $element = (0, _renderer.default)(element);
+      // @ts-expect-error css should can get 1 argument
+      if ($element.css('display') === 'none') {
+        isHidden = true;
+        return false;
+      }
+      return undefined;
+    });
+    return isHidden || !_dom_adapter.default.getBody().contains($parent.get(0));
+  }
+  _renderContentImpl() {
+    const {
+      contentTemplate: contentTemplateOption
+    } = this.option();
+    const whenContentRendered = (0, _deferred.Deferred)();
+    const contentTemplate = this._getTemplate(contentTemplateOption);
+    const transclude = this._templateManager.anonymousTemplateName === contentTemplateOption;
+    contentTemplate === null || contentTemplate === void 0 || contentTemplate.render({
+      container: (0, _element.getPublicElement)(this.$content()),
+      noModel: true,
+      transclude,
+      onRendered: () => {
+        whenContentRendered.resolve();
+        const {
+          templatesRenderAsynchronously
+        } = this.option();
+        // NOTE: T1114344
+        if (templatesRenderAsynchronously) {
+          this._dimensionChanged();
+        }
+      }
+    });
+    const {
+      preventScrollEvents
+    } = this.option();
+    this._toggleWrapperScrollEventsSubscription(preventScrollEvents);
+    whenContentRendered.done(() => {
+      this._processContentRendering();
+    });
+    // @ts-expect-error Promise should be typed as Promise<T>
+    return whenContentRendered.promise();
+  }
+  _processContentRendering() {
+    if (this._isVisible()) {
+      this._moveToContainer();
+    }
+  }
+  _getPositionControllerConfig() {
+    var _this$_actions5, _this$_actions6;
+    const {
+      container,
+      visualContainer,
+      restorePosition,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      _fixWrapperPosition,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      _skipContentPositioning
+    } = this.option();
+    // NOTE: position is passed to controller in renderGeometry
+    // to prevent window field using in server side mode
+    return {
+      container,
+      visualContainer,
+      restorePosition,
+      $root: this.$element(),
+      $content: this._$content,
+      $wrapper: this._$wrapper,
+      onPositioned: (_this$_actions5 = this._actions) === null || _this$_actions5 === void 0 ? void 0 : _this$_actions5.onPositioned,
+      onVisualPositionChanged: (_this$_actions6 = this._actions) === null || _this$_actions6 === void 0 ? void 0 : _this$_actions6.onVisualPositionChanged,
+      _fixWrapperPosition,
+      _skipContentPositioning
+    };
+  }
+  _initPositionController() {
+    this._positionController = new _m_overlay_position_controller.OverlayPositionController(this._getPositionControllerConfig());
+  }
+  _toggleWrapperScrollEventsSubscription(enabled) {
+    // @ts-expect-error NAME has string | undefined type
+    const eventName = (0, _index.addNamespace)(_drag.move, this.NAME);
+    _events_engine.default.off(this._$wrapper, eventName);
+    if (enabled) {
+      const callback = e => {
+        const {
+          originalEvent
+        } = e.originalEvent;
+        const {
+          type
+        } = originalEvent ?? {};
+        const isWheel = type === 'wheel';
+        const isMouseMove = type === 'mousemove';
+        const isScrollByWheel = isWheel && (0, _index.isCommandKeyPressed)(e);
+        e._cancelPreventDefault = true;
+        if (originalEvent
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
+        && e.cancelable !== false // T1082501
+        && !(isMouseMove || isScrollByWheel)) {
+          e.preventDefault();
+        }
+      };
+      const options = {
+        validate() {
+          return true;
+        },
+        getDirection() {
+          return 'both';
+        },
+        _toggleGestureCover(toggle) {
+          if (!toggle) {
+            this._toggleGestureCoverImpl(toggle);
+          }
+        },
+        _clearSelection: _common.noop,
+        isNative: true
+      };
+      _events_engine.default.on(this._$wrapper, eventName, options, callback);
+    }
+  }
+  _moveFromContainer() {
+    this._$content.appendTo(this.$element());
+    this._$wrapper.detach();
+  }
+  _checkContainerExists() {
+    const $wrapperContainer = this._positionController.$container;
+    // NOTE: The container is undefined when DOM is not ready yet. See T1143527
+    if ($wrapperContainer === undefined) {
+      return;
+    }
+    const containerExists = $wrapperContainer.length > 0;
+    if (!containerExists) {
+      _ui.default.log('W1021', this.NAME);
+    }
+  }
+  _moveToContainer() {
+    const $wrapperContainer = this._positionController.$container;
+    this._$wrapper.appendTo($wrapperContainer);
+    this._$content.appendTo(this._$wrapper);
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _renderGeometry() {
+    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    if (this._isVisible() && _m_window.default.hasWindow()) {
+      this._stopAnimation();
+      this._renderGeometryImpl();
+    }
+  }
+  _renderGeometryImpl() {
+    // NOTE: position can be specified as a function which needs to be called strict on render start
+    this._positionController.updatePosition(this._getOptionValue('position'));
+    this._renderWrapper();
+    this._renderDimensions();
+    this._renderPosition();
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _renderPosition(state) {
+    this._positionController.positionContent();
+  }
+  _isAllWindowCovered() {
+    const {
+      shading
+    } = this.option();
+    const element = this._positionController.$visualContainer.get(0);
+    return (0, _type.isWindow)(element) && Boolean(shading);
+  }
+  _toggleSafariScrolling() {
+    const visible = this._isVisible();
+    const $body = (0, _renderer.default)(_dom_adapter.default.getBody());
+    const isIosSafari = _devices.default.real().platform === 'ios' && _browser.default.safari;
+    const isAllWindowCovered = this._isAllWindowCovered();
+    const isScrollingPrevented = $body.hasClass(PREVENT_SAFARI_SCROLLING_CLASS);
+    const shouldPreventScrolling = !isScrollingPrevented && visible && isAllWindowCovered;
+    const shouldEnableScrolling = isScrollingPrevented && (!visible || !isAllWindowCovered || this._disposed);
+    if (isIosSafari) {
+      if (shouldEnableScrolling) {
+        $body.removeClass(PREVENT_SAFARI_SCROLLING_CLASS);
+        window.scrollTo(0, this._cachedBodyScrollTop);
+        this._cachedBodyScrollTop = undefined;
+      } else if (shouldPreventScrolling) {
+        this._cachedBodyScrollTop = window.pageYOffset;
+        $body.addClass(PREVENT_SAFARI_SCROLLING_CLASS);
+      }
+    }
+  }
+  _renderWrapper() {
+    this._positionController.styleWrapperPosition();
+    this._renderWrapperDimensions();
+    this._positionController.positionWrapper();
+  }
+  _renderWrapperDimensions() {
+    const {
+      $visualContainer
+    } = this._positionController;
+    const documentElement = _dom_adapter.default.getDocumentElement();
+    const isVisualContainerWindow = (0, _type.isWindow)($visualContainer.get(0));
+    const wrapperWidth = isVisualContainerWindow ? documentElement.clientWidth : (0, _size.getOuterWidth)($visualContainer);
+    const wrapperHeight = isVisualContainerWindow ? window.innerHeight : (0, _size.getOuterHeight)($visualContainer);
+    this._$wrapper.css({
+      width: wrapperWidth,
+      height: wrapperHeight
+    });
+  }
+  _renderDimensions() {
+    const content = this._$content.get(0);
+    this._$content.css({
+      minWidth: this._getOptionValue('minWidth', content),
+      maxWidth: this._getOptionValue('maxWidth', content),
+      minHeight: this._getOptionValue('minHeight', content),
+      maxHeight: this._getOptionValue('maxHeight', content),
+      width: this._getOptionValue('width', content),
+      height: this._getOptionValue('height', content)
+    });
+  }
+  _focusTarget() {
+    return this._$content;
+  }
+  _attachKeyboardEvents() {
+    this._keyboardListenerId = _short.keyboard.on(this._$content, null, options => this._keyboardHandler(options));
+  }
+  // @ts-expect-error return type in base class is not void
+  _keyboardHandler(options, onlyChildProcessing) {
+    const e = options.originalEvent;
+    const $target = (0, _renderer.default)(e.target);
+    const {
+      ignoreChildEvents
+    } = this.option();
+    if ($target.is(this._$content) || !ignoreChildEvents) {
+      super._keyboardHandler(options, onlyChildProcessing);
+    }
+  }
+  _isVisible() {
+    const {
+      visible
+    } = this.option();
+    return Boolean(visible);
+  }
+  _visibilityChanged(visible) {
+    if (visible) {
+      if (this._isVisible()) {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        this._renderVisibilityAnimate(visible);
+      }
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      this._renderVisibilityAnimate(visible);
+    }
+  }
+  _dimensionChanged() {
+    this._renderGeometry();
+  }
+  _clean() {
+    if (!this._contentAlreadyRendered) {
+      this.$content().empty();
+    }
+    this._renderVisibility(false);
+    this._cleanFocusState();
+  }
+  _dispose() {
+    _animation.fx.stop(this._$content.get(0), false);
+    this._toggleViewPortSubscription(false);
+    this._toggleSubscriptions(false);
+    this._updateZIndexStackPosition(false);
+    this._actions = {};
+    this._parentsScrollSubscriptionInfo = undefined;
+    super._dispose();
+    this._toggleSafariScrolling();
+    if (this._isVisible()) {
+      zIndexPool.remove(this._zIndex);
+    }
+    this._$wrapper.remove();
+    this._$content.remove();
+    this._destroyTabTerminator();
+  }
+  _toggleRTLDirection(rtl) {
+    this._$content.toggleClass(RTL_DIRECTION_CLASS, rtl);
+  }
+  _optionChanged(args) {
+    const {
+      value,
+      name
+    } = args;
+    if (this._getActionsList().includes(name)) {
+      this._initActions();
+      return;
+    }
+    switch (name) {
+      case 'animation':
+        break;
+      case '_loopFocus':
+      case 'shading':
+        {
+          this._toggleShading(this._isVisible());
+          this._toggleSafariScrolling();
+          break;
+        }
+      case 'shadingColor':
+        {
+          this._toggleShading(this._isVisible());
+          break;
+        }
+      case 'width':
+      case 'height':
+        this._renderGeometry();
+        break;
+      case 'minWidth':
+      case 'maxWidth':
+      case 'minHeight':
+      case 'maxHeight':
+        this._renderGeometry();
+        break;
+      case 'position':
+        {
+          const {
+            position
+          } = this.option();
+          this._positionController.updatePosition(position);
+          this._positionController.restorePositionOnNextRender(true);
+          this._renderGeometry();
+          this._toggleSafariScrolling();
+          break;
+        }
+      case 'visible':
+        this._renderVisibilityAnimate(Boolean(value))
+        // @ts-expect-error done should be typed
+        .done(() => {
+          var _this$_animateDeferre;
+          return (_this$_animateDeferre = this._animateDeferred) === null || _this$_animateDeferre === void 0 ? void 0 : _this$_animateDeferre.resolveWith(this);
+        }).fail(() => {
+          var _this$_animateDeferre2;
+          return (_this$_animateDeferre2 = this._animateDeferred) === null || _this$_animateDeferre2 === void 0 ? void 0 : _this$_animateDeferre2.reject();
+        });
+        break;
+      case 'container':
+        this._positionController.updateContainer(value);
+        this._invalidate();
+        this._toggleSafariScrolling();
+        break;
+      case 'visualContainer':
+        this._positionController.updateVisualContainer(value);
+        this._renderWrapper();
+        this._toggleSafariScrolling();
+        break;
+      case 'innerOverlay':
+        this._initInnerOverlayClass();
+        break;
+      case 'deferRendering':
+      case 'contentTemplate':
+        this._contentAlreadyRendered = false;
+        this._clean();
+        this._invalidate();
+        break;
+      case 'hideTopOverlayHandler':
+        this._toggleHideTopOverlayCallback(false);
+        // @ts-expect-error ts-error
+        this._initHideTopOverlayHandler(value);
+        this._toggleHideTopOverlayCallback(this._isVisible());
+        break;
+      case 'hideOnParentScroll':
+      case '_hideOnParentScrollTarget':
+        {
+          this._toggleHideOnParentsScrollSubscription(this._isVisible());
+          break;
+        }
+      case 'hideOnOutsideClick':
+      case 'propagateOutsideClick':
+        break;
+      case 'rtlEnabled':
+        this._contentAlreadyRendered = false;
+        super._optionChanged(args);
+        break;
+      case '_fixWrapperPosition':
+        this._positionController.fixWrapperPosition = value;
+        break;
+      case 'wrapperAttr':
+        this._renderWrapperAttributes();
+        break;
+      case 'restorePosition':
+        this._positionController.restorePosition = value;
+        break;
+      case 'preventScrollEvents':
+        this._logDeprecatedPreventScrollEventsInfo();
+        // @ts-expect-error ts-error
+        this._toggleWrapperScrollEventsSubscription(value);
+        break;
+      default:
+        super._optionChanged(args);
+    }
+  }
+  toggle(showing) {
+    const visible = this._isVisible();
+    const isShowing = showing ?? !visible;
+    const result = (0, _deferred.Deferred)();
+    if (isShowing === visible) {
+      // @ts-expect-error this
+      return result.resolveWith(this, [isShowing]).promise();
+    }
+    const animateDeferred = (0, _deferred.Deferred)();
+    this._animateDeferred = animateDeferred;
+    this.option('visible', isShowing);
+    animateDeferred.promise()
+    // @ts-expect-error done should be typed
+    .done(() => {
+      delete this._animateDeferred;
+      // @ts-expect-error this
+      result.resolveWith(this, [this._isVisible()]);
+    }).fail(() => {
+      delete this._animateDeferred;
+      result.reject();
+    });
+    return result.promise();
+  }
+  $content() {
+    return this._$content;
+  }
+  show() {
+    return this.toggle(true);
+  }
+  hide() {
+    return this.toggle(false);
+  }
+  content() {
+    return (0, _element.getPublicElement)(this._$content);
+  }
+  repaint() {
+    if (this._contentAlreadyRendered) {
+      this._positionController.restorePositionOnNextRender(true);
+      this._renderGeometry({
+        forceStopAnimation: true
+      });
+      (0, _visibility_change.triggerResizeEvent)(this._$content);
+    } else {
+      super.repaint();
+    }
+  }
+  static baseZIndex(zIndex) {
+    return zIndexPool.base(zIndex);
+  }
+}
+(0, _component_registrator.default)('dxOverlay', Overlay);
+var _default = exports["default"] = Overlay;
+
+/***/ }),
+
+/***/ 27869:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -31685,8 +31784,8 @@ exports.remove = exports.isLastZIndexInStack = exports.create = exports.clearSta
 var _common = __webpack_require__(17781);
 let baseZIndex = 1500;
 let zIndexStack = [];
-const base = ZIndex => {
-  baseZIndex = (0, _common.ensureDefined)(ZIndex, baseZIndex);
+const base = zIndex => {
+  baseZIndex = (0, _common.ensureDefined)(zIndex, baseZIndex);
   return baseZIndex;
 };
 exports.base = base;
@@ -31707,7 +31806,12 @@ const remove = zIndex => {
   }
 };
 exports.remove = remove;
-const isLastZIndexInStack = zIndex => zIndexStack.length && zIndexStack[zIndexStack.length - 1] === zIndex;
+const isLastZIndexInStack = zIndex => {
+  if (zIndexStack.length) {
+    return zIndexStack[zIndexStack.length - 1] === zIndex;
+  }
+  return false;
+};
 exports.isLastZIndexInStack = isLastZIndexInStack;
 const clearStack = () => {
   zIndexStack = [];
@@ -33324,10 +33428,8 @@ class Scrollable extends _dom_component.default {
   }
   update() {
     if (!this._strategy) {
-      return;
+      return (0, _deferred.Deferred)().resolve();
     }
-    // @ts-expect-error ts-error
-    // eslint-disable-next-line consistent-return
     return (0, _deferred.when)(this._strategy.update()).done(() => {
       this._updateAllowedDirection();
     });
@@ -75452,11 +75554,14 @@ const baseTrackerPrototype = {
       that.clearHover();
     }
   },
+  _processArgumentHoveredPoint: function (argument, argumentIndex) {
+    this._releaseHoveredPoint();
+  },
   _hoverArgument: function (argument, argumentIndex) {
     const that = this;
     const hoverMode = that._getArgumentHoverMode();
     if ((0, _type.isDefined)(argument)) {
-      that._releaseHoveredPoint();
+      this._processArgumentHoveredPoint(argument, argumentIndex);
       that._hoveredArgument = argument;
       that._argumentIndex = argumentIndex;
       that._notifySeries({
@@ -75820,6 +75925,14 @@ exports.PieTracker = PieTracker;
   },
   _getArgumentHoverMode: function () {
     return correctHoverMode(this._legend);
+  },
+  _processArgumentHoveredPoint: function (argument, argumentIndex) {
+    const points = this._storedSeries.flatMap(series => series.getPointsByKeys(argument, argumentIndex));
+    if (points.length === 1) {
+      this._setHoveredPoint(points[0]);
+    } else {
+      this._releaseHoveredPoint();
+    }
   },
   _hoverArgumentAxis: _common.noop,
   _setStuckSeries: _common.noop,
@@ -91318,9 +91431,12 @@ module.exports["default"] = exports.default;
 
 
 
-exports.utils = exports.formatValue = exports.consts = exports.HEIGHT_COMPACT_MODE = void 0;
+exports.utils = exports.isFirefoxOnAndroid = exports.formatValue = exports.consts = exports.HEIGHT_COMPACT_MODE = void 0;
 var _smart_formatter = __webpack_require__(38528);
 var _type = __webpack_require__(11528);
+var _browser = _interopRequireDefault(__webpack_require__(48314));
+var _devices = _interopRequireDefault(__webpack_require__(65951));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const HEIGHT_COMPACT_MODE = exports.HEIGHT_COMPACT_MODE = 24;
 const POINTER_SIZE = 4;
 const EMPTY_SLIDER_MARKER_TEXT = '. . .';
@@ -91353,6 +91469,8 @@ const formatValue = function (value, formatOptions, tickIntervalsInfo, valueType
   return String((0, _type.isFunction)(formatOptions.customizeText) ? formatOptions.customizeText.call(formatObject, formatObject) : formatObject.valueText);
 };
 exports.formatValue = formatValue;
+const isFirefoxOnAndroid = () => _browser.default.mozilla && _devices.default.real().android;
+exports.isFirefoxOnAndroid = isFirefoxOnAndroid;
 
 /***/ }),
 
@@ -92711,16 +92829,24 @@ Slider.prototype = {
     const that = this;
     const slider = that._sliderGroup;
     const tracker = that._tracker;
-    const attrs = {
+    const sliderAttrs = {
       translateX: that._position
     };
+    let trackerAttrs = {
+      translateX: that._position
+    };
+    if ((0, _common.isFirefoxOnAndroid)()) {
+      trackerAttrs = {
+        x: that._position - tracker._originalWidth / 2
+      };
+    }
     that._marker.setPosition(that._position);
     if (isAnimated) {
-      slider.animate(attrs, animationSettings);
-      tracker.animate(attrs, animationSettings);
+      slider.animate(sliderAttrs, animationSettings);
+      tracker.animate(trackerAttrs, animationSettings);
     } else {
-      slider.attr(attrs);
-      tracker.attr(attrs);
+      slider.attr(sliderAttrs);
+      tracker.attr(trackerAttrs);
     }
   },
   _setValid: function (isValid) {
@@ -92751,13 +92877,14 @@ Slider.prototype = {
       points: [0, 0, 0, verticalRange[1] - verticalRange[0]]
     });
     const trackerWidth = getSliderTrackerWidth(sliderHandleOptions.width);
-    that._tracker.attr({
+    const trackerAttrs = {
       x: -trackerWidth / 2,
-      y: 0,
       width: trackerWidth,
       height: verticalRange[1] - verticalRange[0],
-      translateY: verticalRange[0]
-    });
+      y: (0, _common.isFirefoxOnAndroid)() ? verticalRange[0] : 0,
+      translateY: (0, _common.isFirefoxOnAndroid)() ? undefined : verticalRange[0]
+    };
+    that._tracker.attr(trackerAttrs);
   },
   toForeground: function () {
     this._sliderGroup.toForeground();
@@ -92932,11 +93059,16 @@ SliderMarker.prototype = {
         x: that._isLeftPointer ? points[0] - 1 : points[2],
         height: pointsData.isCut ? rectSize.height : rectSize.height + POINTER_SIZE
       });
-      that._tracker.attr({
+      const trackerAttrs = {
         translateX: offset,
         width: rectSize.width,
         height: rectSize.height + POINTER_SIZE
-      });
+      };
+      if ((0, _common.isFirefoxOnAndroid)()) {
+        trackerAttrs.x = offset;
+        trackerAttrs.translateX = undefined;
+      }
+      that._tracker.attr(trackerAttrs);
       that._label.attr({
         translateX: that._paddingLeftRight + offset,
         translateY: rectSize.height / 2 - (size.y + size.height / 2)
@@ -93183,11 +93315,28 @@ SlidersController.prototype = {
     sliders[1].setOverlapped(areOverlapped);
     this._applyAreaTrackersPosition();
     this._applySelectedRangePosition(isAnimated);
+    if ((0, _common2.isFirefoxOnAndroid)()) {
+      this._areaTracker.attr({
+        transform: null
+      });
+      this._selectedAreaTracker.attr({
+        transform: null
+      });
+      this._sliders.forEach(slider => {
+        slider._tracker.attr({
+          transform: null
+        });
+      });
+    }
   },
   _applyAreaTrackersPosition: function () {
     const that = this;
-    const position1 = that._sliders[0].getPosition();
-    const position2 = that._sliders[1].getPosition();
+    let position1 = that._sliders[0].getPosition();
+    let position2 = that._sliders[1].getPosition();
+    if ((0, _common2.isFirefoxOnAndroid)()) {
+      position1 += that._sliders[0]._tracker._originalWidth / 2;
+      position2 -= that._sliders[1]._tracker._originalWidth / 2;
+    }
     that._selectedAreaTracker.attr({
       points: buildRectPoints(position1, that._verticalRange[0], position2, that._verticalRange[1])
     }).css({

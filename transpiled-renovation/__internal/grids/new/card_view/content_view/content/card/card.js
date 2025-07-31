@@ -98,7 +98,7 @@ class Card extends _inferno.Component {
       [CLASSES.cardHover]: !!hoverStateEnabled,
       [CLASSES.selectCard]: !!card.isSelected
     });
-    const hasCover = !!(cover !== null && cover !== void 0 && cover.imageExpr);
+    const hasCover = !!(cover !== null && cover !== void 0 && cover.imageExpr) || !!(cover !== null && cover !== void 0 && cover.template);
     const imageSrc = cover === null || cover === void 0 || (_cover$imageExpr = cover.imageExpr) === null || _cover$imageExpr === void 0 ? void 0 : _cover$imageExpr.call(cover, this.props.card.data);
     const alt = cover === null || cover === void 0 || (_cover$altExpr = cover.altExpr) === null || _cover$altExpr === void 0 ? void 0 : _cover$altExpr.call(cover, this.props.card.data);
     const cardRole = Template ? 'presentation' : 'application';

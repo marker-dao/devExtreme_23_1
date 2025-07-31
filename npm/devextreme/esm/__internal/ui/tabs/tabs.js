@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/tabs/tabs.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -385,6 +385,12 @@ class Tabs extends CollectionWidget {
     if (!this._scrollable) return;
     const $item = this._editStrategy.getItemElement(item);
     this._scrollable.scrollToElement($item);
+  }
+  _itemPointerHandler(e) {
+    this._handleItemFocus(e);
+  }
+  _itemPointerUpHandler(e) {
+    super._itemPointerHandler(e);
   }
   _renderNavButtons() {
     const {

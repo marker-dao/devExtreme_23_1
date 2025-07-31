@@ -1,12 +1,13 @@
 /**
 * DevExtreme (esm/__internal/ui/form/m_form.items_runtime_info.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import Guid from '../../../core/guid';
+import $ from '../../../core/renderer';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { isString } from '../../../core/utils/type';
@@ -15,9 +16,9 @@ export default class FormItemsRunTimeInfo {
     this._map = {};
   }
   _findWidgetInstance(condition) {
+    // eslint-disable-next-line @typescript-eslint/init-declarations
     let result;
-    // @ts-expect-error
-    each(this._map, (guid, _ref) => {
+    each(this._map, (_guid, _ref) => {
       let {
         widgetInstance,
         item
@@ -26,17 +27,19 @@ export default class FormItemsRunTimeInfo {
         result = widgetInstance;
         return false;
       }
+      return true;
     });
     return result;
   }
   _findFieldByCondition(callback, valueExpr) {
+    // eslint-disable-next-line @typescript-eslint/init-declarations
     let result;
-    // @ts-expect-error
     each(this._map, (key, value) => {
       if (callback(value)) {
         result = valueExpr === 'guid' ? key : value[valueExpr];
         return false;
       }
+      return true;
     });
     return result;
   }
@@ -51,7 +54,7 @@ export default class FormItemsRunTimeInfo {
     delete this._map[key];
   }
   add(options) {
-    const key = options.guid || new Guid();
+    const key = options.guid ?? new Guid().toString();
     this._map[key] = options;
     return key;
   }
@@ -106,10 +109,10 @@ export default class FormItemsRunTimeInfo {
     // eslint-disable-next-line no-restricted-syntax
     for (const key in this._map) {
       if (this._map[key].item === item) {
-        return this._map[key].$itemContainer;
+        return this._map[key].$itemContainer ?? $();
       }
     }
-    return null;
+    return $();
   }
   findItemIndexByItem(targetItem) {
     return this._findFieldByCondition(_ref4 => {
@@ -139,7 +142,8 @@ export default class FormItemsRunTimeInfo {
     const keys = Object.keys(this._map);
     const filteredKeys = keys.filter(key => {
       if (this._map[key].path) {
-        return this._map[key].path.indexOf(path, 0) > -1;
+        var _this$_map$key$path;
+        return (_this$_map$key$path = this._map[key].path) === null || _this$_map$key$path === void 0 ? void 0 : _this$_map$key$path.includes(path, 0);
       }
       return false;
     });

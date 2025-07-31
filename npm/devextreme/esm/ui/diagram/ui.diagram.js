@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/diagram/ui.diagram.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,7 +22,7 @@ import eventsEngine from '../../common/core/events/core/events_engine';
 import { addNamespace } from '../../common/core/events/utils/index';
 import messageLocalization from '../../common/core/localization/message';
 import numberLocalization from '../../common/core/localization/number';
-import * as zIndexPool from '../../__internal/ui/overlay/m_z_index';
+import * as zIndexPool from '../../__internal/ui/overlay/z_index';
 import Overlay from '../overlay/ui.overlay';
 import DiagramToolbar from './ui.diagram.toolbar';
 import DiagramMainToolbar from './ui.diagram.main_toolbar';

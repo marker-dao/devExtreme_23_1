@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/scroll_view/scrollable.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,7 @@ import { getPublicElement } from '../../../core/element';
 import $ from '../../../core/renderer';
 import browser from '../../../core/utils/browser';
 import { ensureDefined, noop } from '../../../core/utils/common';
-import { when } from '../../../core/utils/deferred';
+import { Deferred, when } from '../../../core/utils/deferred';
 import { getHeight, getOuterHeight, getOuterWidth, getWidth } from '../../../core/utils/size';
 import { isDefined, isPlainObject } from '../../../core/utils/type';
 import { hasWindow } from '../../../core/utils/window';
@@ -381,10 +381,8 @@ class Scrollable extends DOMComponent {
   }
   update() {
     if (!this._strategy) {
-      return;
+      return Deferred().resolve();
     }
-    // @ts-expect-error ts-error
-    // eslint-disable-next-line consistent-return
     return when(this._strategy.update()).done(() => {
       this._updateAllowedDirection();
     });

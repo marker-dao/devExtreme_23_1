@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/core/options/m_index.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,6 @@ import { OptionManager } from '../../../core/options/option_manager';
 import { convertRulesToOptions, getFieldName, getNestedOptionValue, getParentName } from '../../../core/options/utils';
 import { equalByValue, noop } from '../../../core/utils/common';
 import { getPathParts } from '../../../core/utils/data';
-import { extend } from '../../../core/utils/extend';
 import { isFunction, isObject, type } from '../../../core/utils/type';
 export class Options {
   constructor(options, defaultOptions, optionsByReference, deprecatedOptions) {
@@ -25,7 +24,6 @@ export class Options {
     this._initDeprecatedNames();
     this._optionManager = new OptionManager(options, optionsByReference);
     this._optionManager.onRelevantNamesPrepared((options, name, value, silent) => this._setRelevantNames(options, name, value, silent));
-    this._cachedOptions = {};
     this._rules = [];
   }
   set _initial(value) {
@@ -172,11 +170,12 @@ export class Options {
   isDeprecated(name) {
     return Object.prototype.hasOwnProperty.call(this._deprecated, name);
   }
-  cache(name, options) {
+  cache(name, value) {
     const isGetter = arguments.length < 2;
+    const optionName = `_cached_${name}`;
     if (isGetter) {
-      return this._cachedOptions[name];
+      return this.option(optionName);
     }
-    this._cachedOptions[name] = extend(this._cachedOptions[name], options);
+    this.option(optionName, value);
   }
 }

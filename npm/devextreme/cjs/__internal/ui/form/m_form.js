@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/form/m_form.js)
 * Version: 25.2.0
-* Build date: Fri Jul 18 2025
+* Build date: Thu Jul 31 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,7 +14,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 require("../../../ui/validation_summary");
 require("../../../ui/validation_group");
-require("../../ui/form/m_form.layout_manager");
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
 var _visibility_change = require("../../../common/core/events/visibility_change");
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
@@ -30,34 +29,33 @@ var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
-var _editor = _interopRequireDefault(require("../../../ui/editor/editor"));
-var _tab_panel = _interopRequireDefault(require("../../../ui/tab_panel"));
 var _themes = require("../../../ui/themes");
-var _validation_engine = _interopRequireDefault(require("../../../ui/validation_engine"));
 var _widget = _interopRequireWildcard(require("../../core/widget/widget"));
 var _m_drop_down_editor = require("../../ui/drop_down_editor/m_drop_down_editor");
+var _editor = _interopRequireDefault(require("../../ui/editor/editor"));
 var _m_label = require("../../ui/form/components/m_label");
 var _constants = require("../../ui/form/constants");
-var _m_form2 = _interopRequireDefault(require("../../ui/form/m_form.item_options_actions"));
-var _m_form3 = _interopRequireDefault(require("../../ui/form/m_form.items_runtime_info"));
-var _m_formLayout_manager = require("../../ui/form/m_form.layout_manager.utils");
+var _m_form = _interopRequireDefault(require("../../ui/form/m_form.item_options_actions"));
+var _m_form2 = _interopRequireDefault(require("../../ui/form/m_form.items_runtime_info"));
+var _m_form3 = _interopRequireDefault(require("../../ui/form/m_form.layout_manager"));
 var _m_form4 = require("../../ui/form/m_form.utils");
+var _m_validation_engine = _interopRequireDefault(require("../../ui/m_validation_engine"));
+var _m_validation_summary = _interopRequireDefault(require("../../ui/m_validation_summary"));
 var _scrollable = _interopRequireDefault(require("../../ui/scroll_view/scrollable"));
+var _tab_panel = _interopRequireDefault(require("../../ui/tab_panel/tab_panel"));
 var _m_text_editor = require("../../ui/text_box/m_text_editor.base");
 var _constants2 = require("../../ui/toolbar/constants");
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
-// eslint-disable-next-line import/no-named-default
-// TODO: remove reference to 'ui.form.layout_manager.utils.js'
 const ITEM_OPTIONS_FOR_VALIDATION_UPDATING = ['items', 'isRequired', 'validationRules', 'visible'];
 class Form extends _widget.default {
   _init() {
     super._init();
     this._dirtyFields = new Set();
     this._cachedColCountOptions = [];
-    this._itemsRunTimeInfo = new _m_form3.default();
+    this._itemsRunTimeInfo = new _m_form2.default();
     this._groupsColCount = [];
     this._attachSyncSubscriptions();
   }
@@ -96,16 +94,14 @@ class Form extends _widget.default {
   _defaultOptionsRules() {
     return super._defaultOptionsRules().concat([{
       device() {
-        // @ts-expect-error ts-error
-        return (0, _themes.isMaterialBased)();
+        return (0, _themes.isMaterialBased)((0, _themes.current)());
       },
       options: {
         labelLocation: 'top'
       }
     }, {
       device() {
-        // @ts-expect-error ts-error
-        return (0, _themes.isMaterial)();
+        return (0, _themes.isMaterial)((0, _themes.current)());
       },
       options: {
         showColonAfterLabel: false
@@ -119,77 +115,70 @@ class Form extends _widget.default {
       validationGroup: true
     });
   }
+  // eslint-disable-next-line class-methods-use-this
   _getGroupColCount($element) {
-    // eslint-disable-next-line radix
-    return parseInt($element.attr(_constants.GROUP_COL_COUNT_ATTR));
+    return parseInt($element.attr(_constants.GROUP_COL_COUNT_ATTR) ?? '1', 10);
   }
-  // eslint-disable-next-line @typescript-eslint/default-param-last
+  // eslint-disable-next-line class-methods-use-this
   _applyLabelsWidthByCol($container, index) {
     let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    let labelMarkOptions = arguments.length > 3 ? arguments[3] : undefined;
-    // @ts-expect-error
-    const fieldItemClass = options.inOneColumn ? _constants.FIELD_ITEM_CLASS : _constants.FORM_FIELD_ITEM_COL_CLASS + index;
-    // @ts-expect-error
-    const cssExcludeTabbedSelector = options.excludeTabbed ? `:not(.${_constants.FIELD_ITEM_TAB_CLASS})` : '';
-    (0, _m_label.setLabelWidthByMaxLabelWidth)($container, `.${fieldItemClass}${cssExcludeTabbedSelector}`, labelMarkOptions);
+    const fieldItemClass = options !== null && options !== void 0 && options.inOneColumn ? _constants.FIELD_ITEM_CLASS : _constants.FORM_FIELD_ITEM_COL_CLASS + index;
+    const cssExcludeTabbedSelector = options !== null && options !== void 0 && options.excludeTabbed ? `:not(.${_constants.FIELD_ITEM_TAB_CLASS})` : '';
+    (0, _m_label.setLabelWidthByMaxLabelWidth)($container, `.${fieldItemClass}${cssExcludeTabbedSelector}`);
   }
-  _applyLabelsWidth($container, excludeTabbed, inOneColumn, colCount, labelMarkOptions) {
-    colCount = inOneColumn ? 1 : colCount || this._getGroupColCount($container);
+  _applyLabelsWidth($container, excludeTabbed, inOneColumn, colCount) {
     const applyLabelsOptions = {
       excludeTabbed,
       inOneColumn
     };
-    let i;
-    for (i = 0; i < colCount; i++) {
-      this._applyLabelsWidthByCol($container, i, applyLabelsOptions, labelMarkOptions);
+    const columnsCount = inOneColumn ? 1 : colCount ?? this._getGroupColCount($container);
+    for (let i = 0; i < columnsCount; i += 1) {
+      this._applyLabelsWidthByCol($container, i, applyLabelsOptions);
     }
   }
+  // eslint-disable-next-line class-methods-use-this
   _getGroupElementsInColumn($container, columnIndex, colCount) {
     const cssColCountSelector = (0, _type.isDefined)(colCount) ? `.${_constants.GROUP_COL_COUNT_CLASS}${colCount}` : '';
     const groupSelector = `.${_constants.FORM_FIELD_ITEM_COL_CLASS}${columnIndex} > .${_constants.FIELD_ITEM_CONTENT_CLASS} > .${_constants.FORM_GROUP_CLASS}${cssColCountSelector}`;
     return $container.find(groupSelector);
   }
-  _applyLabelsWidthWithGroups($container, colCount, excludeTabbed, labelMarkOptions) {
+  _applyLabelsWidthWithGroups($container, colCount, excludeTabbed) {
     const {
       alignRootItemLabels
     } = this.option();
     if (alignRootItemLabels === true) {
       // TODO: private option
       const $rootSimpleItems = $container.find(`.${_constants.ROOT_SIMPLE_ITEM_CLASS}`);
-      for (let colIndex = 0; colIndex < colCount; colIndex++) {
+      for (let colIndex = 0; colIndex < colCount; colIndex += 1) {
         // TODO: root items are aligned with root items only
         // this code doesn't align root items with grouped items in the same column
         // (see T942517)
-        this._applyLabelsWidthByCol($rootSimpleItems, colIndex, excludeTabbed, labelMarkOptions);
+        this._applyLabelsWidthByCol($rootSimpleItems, colIndex);
       }
     }
     const alignItemLabelsInAllGroups = this.option('alignItemLabelsInAllGroups');
     if (alignItemLabelsInAllGroups) {
-      this._applyLabelsWidthWithNestedGroups($container, colCount, excludeTabbed, labelMarkOptions);
+      this._applyLabelsWidthWithNestedGroups($container, colCount, excludeTabbed);
     } else {
       const $groups = this.$element().find(`.${_constants.FORM_GROUP_CLASS}`);
-      let i;
-      for (i = 0; i < $groups.length; i++) {
-        this._applyLabelsWidth($groups.eq(i), excludeTabbed, undefined, undefined, labelMarkOptions);
+      for (let i = 0; i < $groups.length; i += 1) {
+        this._applyLabelsWidth($groups.eq(i), excludeTabbed, false, undefined);
       }
     }
   }
-  _applyLabelsWidthWithNestedGroups($container, colCount, excludeTabbed, labelMarkOptions) {
+  _applyLabelsWidthWithNestedGroups($container, colCount, excludeTabbed) {
     const applyLabelsOptions = {
       excludeTabbed
     };
-    let colIndex;
-    let groupsColIndex;
-    let groupColIndex;
-    let $groupsByCol;
-    for (colIndex = 0; colIndex < colCount; colIndex++) {
-      $groupsByCol = this._getGroupElementsInColumn($container, colIndex);
-      this._applyLabelsWidthByCol($groupsByCol, 0, applyLabelsOptions, labelMarkOptions);
-      for (groupsColIndex = 0; groupsColIndex < this._groupsColCount.length; groupsColIndex++) {
-        $groupsByCol = this._getGroupElementsInColumn($container, colIndex, this._groupsColCount[groupsColIndex]);
+    for (let colIndex = 0; colIndex < colCount; colIndex += 1) {
+      const $baseGroups = this._getGroupElementsInColumn($container, colIndex);
+      this._applyLabelsWidthByCol($baseGroups, 0, applyLabelsOptions);
+      // eslint-disable-next-line @typescript-eslint/prefer-for-of
+      for (let groupsColIndex = 0; groupsColIndex < this._groupsColCount.length; groupsColIndex += 1) {
+        const $groupsByCol = this._getGroupElementsInColumn($container, colIndex, this._groupsColCount[groupsColIndex]);
         const groupColCount = this._getGroupColCount($groupsByCol);
-        for (groupColIndex = 1; groupColIndex < groupColCount; groupColIndex++) {
-          this._applyLabelsWidthByCol($groupsByCol, groupColIndex, applyLabelsOptions, labelMarkOptions);
+        for (let groupColIndex = 1; groupColIndex < groupColCount; groupColIndex += 1) {
+          this._applyLabelsWidthByCol($groupsByCol, groupColIndex, applyLabelsOptions);
         }
       }
     }
@@ -200,26 +189,25 @@ class Form extends _widget.default {
     } = this.option();
     return labelLocation;
   }
-  _alignLabelsInColumn(_ref) {
-    let {
+  _alignLabelsInColumn(options) {
+    const {
       layoutManager,
       inOneColumn,
       $container,
       excludeTabbed,
       items
-    } = _ref;
+    } = options;
     if (!(0, _window.hasWindow)() || this._labelLocation() === 'top') {
       // TODO: label location can be changed to 'left/right' for some labels
       // but this condition disables alignment for such items
       return;
     }
-    const labelMarkOptions = (0, _m_formLayout_manager.convertToLabelMarkOptions)(layoutManager._getMarkOptions());
     if (inOneColumn) {
-      this._applyLabelsWidth($container, excludeTabbed, true, undefined, labelMarkOptions);
+      this._applyLabelsWidth($container, excludeTabbed, true, undefined);
     } else if (this._checkGrouping(items)) {
-      this._applyLabelsWidthWithGroups($container, layoutManager._getColCount(), excludeTabbed, labelMarkOptions);
+      this._applyLabelsWidthWithGroups($container, layoutManager._getColCount(), excludeTabbed);
     } else {
-      this._applyLabelsWidth($container, excludeTabbed, false, layoutManager._getColCount(), labelMarkOptions);
+      this._applyLabelsWidth($container, excludeTabbed, false, layoutManager._getColCount());
     }
   }
   _prepareFormData() {
@@ -236,15 +224,17 @@ class Form extends _widget.default {
     }
   }
   _initMarkup() {
-    // @ts-expect-error ts-error
-    _validation_engine.default.addGroup(this._getValidationGroup(), false);
+    _m_validation_engine.default.addGroup(this._getValidationGroup(), false);
     this._clearCachedInstances();
     this._prepareFormData();
     this.$element().addClass(_constants.FORM_CLASS);
     this._setStylingModeClass();
     super._initMarkup();
     this.setAria('role', 'form', this.$element());
-    if (this.option('scrollingEnabled')) {
+    const {
+      scrollingEnabled
+    } = this.option();
+    if (scrollingEnabled) {
       this._renderScrollable();
     }
     this._renderLayout();
@@ -265,24 +255,36 @@ class Form extends _widget.default {
   _resizeHandler() {
     if (this._cachedLayoutManagers.length) {
       (0, _iterator.each)(this._cachedLayoutManagers, (_, layoutManager) => {
-        var _layoutManager$option;
-        (_layoutManager$option = layoutManager.option('onLayoutChanged')) === null || _layoutManager$option === void 0 || _layoutManager$option(layoutManager.isSingleColumnMode());
+        const {
+          onLayoutChanged
+        } = layoutManager.option();
+        onLayoutChanged === null || onLayoutChanged === void 0 || onLayoutChanged(layoutManager.isSingleColumnMode());
       });
     }
   }
   _getCurrentScreenFactor() {
-    return (0, _window.hasWindow)() ? (0, _window.getCurrentScreenFactor)(this.option('screenByWidth')) : 'lg';
+    const {
+      screenByWidth
+    } = this.option();
+    if ((0, _window.hasWindow)()) {
+      const currentScreenFactor = (0, _window.getCurrentScreenFactor)(screenByWidth);
+      return currentScreenFactor;
+    }
+    return 'lg';
   }
   _clearCachedInstances() {
     this._itemsRunTimeInfo.clear();
     this._cachedLayoutManagers = [];
   }
   _alignLabels(layoutManager, inOneColumn) {
+    const {
+      items
+    } = this.option();
     this._alignLabelsInColumn({
       $container: this.$element(),
       layoutManager,
       excludeTabbed: true,
-      items: this.option('items'),
+      items,
       inOneColumn
     });
     (0, _visibility_change.triggerResizeEvent)(this.$element().find(`.${_constants2.TOOLBAR_CLASS}`));
@@ -292,6 +294,7 @@ class Form extends _widget.default {
     super._clean();
     this._groupsColCount = [];
     this._cachedColCountOptions = [];
+    // @ts-expect-error ts-error
     this._lastMarkupScreenFactor = undefined;
     _resize_observer.default.unobserve(this.$element().get(0));
   }
@@ -308,7 +311,10 @@ class Form extends _widget.default {
   }
   _getContent() {
     var _this$_scrollable;
-    return this.option('scrollingEnabled') ? (0, _renderer.default)((_this$_scrollable = this._scrollable) === null || _this$_scrollable === void 0 ? void 0 : _this$_scrollable.content()) : this.$element();
+    const {
+      scrollingEnabled
+    } = this.option();
+    return scrollingEnabled ? (0, _renderer.default)((_this$_scrollable = this._scrollable) === null || _this$_scrollable === void 0 ? void 0 : _this$_scrollable.content()) : this.$element();
   }
   _clearValidationSummary() {
     var _this$_$validationSum;
@@ -318,18 +324,20 @@ class Form extends _widget.default {
   }
   _renderValidationSummary() {
     this._clearValidationSummary();
-    if (this.option('showValidationSummary')) {
+    const {
+      showValidationSummary
+    } = this.option();
+    if (showValidationSummary) {
       this._$validationSummary = (0, _renderer.default)('<div>').addClass(_constants.FORM_VALIDATION_SUMMARY).appendTo(this._getContent());
-      // @ts-expect-error ts-error
-      this._validationSummary = this._$validationSummary.dxValidationSummary({
+      this._validationSummary = super._createComponent(this._$validationSummary, _m_validation_summary.default, {
         validationGroup: this._getValidationGroup()
-      }).dxValidationSummary('instance');
+      });
     }
   }
   _prepareItems(items, parentIsTabbedItem, currentPath, isTabs) {
     if (items) {
       const result = [];
-      for (let i = 0; i < items.length; i++) {
+      for (let i = 0; i < items.length; i += 1) {
         let item = items[i];
         const path = (0, _m_form4.concatPaths)(currentPath, (0, _m_form4.createItemPathByIndex)(i, isTabs));
         const itemRunTimeInfo = {
@@ -345,7 +353,6 @@ class Form extends _widget.default {
         }
         if ((0, _type.isObject)(item)) {
           const preparedItem = _extends({}, item);
-          // @ts-expect-error ts-error
           itemRunTimeInfo.preparedItem = preparedItem;
           preparedItem.guid = guid;
           this._tryPrepareGroupItemCaption(preparedItem);
@@ -365,9 +372,14 @@ class Form extends _widget.default {
       }
       return result;
     }
+    return items;
+  }
+  // eslint-disable-next-line class-methods-use-this
+  _isGroupItem(item) {
+    return item.itemType === 'group';
   }
   _tryPrepareGroupItemCaption(item) {
-    if (item.itemType === 'group') {
+    if (this._isGroupItem(item)) {
       item._prepareGroupCaptionTemplate = captionTemplate => {
         if (item.captionTemplate) {
           item.groupCaptionTemplate = this._getTemplate(captionTemplate);
@@ -378,7 +390,7 @@ class Form extends _widget.default {
     }
   }
   _tryPrepareGroupItem(item) {
-    if (item.itemType === 'group') {
+    if (this._isGroupItem(item)) {
       item.alignItemLabels = (0, _common.ensureDefined)(item.alignItemLabels, true);
       item._prepareGroupItemTemplate = itemTemplate => {
         if (item.template) {
@@ -389,8 +401,12 @@ class Form extends _widget.default {
       item._prepareGroupItemTemplate(item.template);
     }
   }
+  // eslint-disable-next-line class-methods-use-this
+  _isTabbedItem(item) {
+    return item.itemType === 'tabbed';
+  }
   _tryPrepareTabbedItem(item, path) {
-    if (item.itemType === 'tabbed') {
+    if (this._isTabbedItem(item)) {
       item.template = this._itemTabbedTemplate.bind(this, item);
       item.tabs = this._prepareItems(item.tabs, true, path, true);
     }
@@ -400,114 +416,132 @@ class Form extends _widget.default {
       item.template = this._getTemplate(item.template);
     }
   }
-  // @ts-expect-error
+  // eslint-disable-next-line class-methods-use-this
   _checkGrouping(items) {
     if (items) {
-      for (let i = 0; i < items.length; i++) {
+      // eslint-disable-next-line @typescript-eslint/prefer-for-of
+      for (let i = 0; i < items.length; i += 1) {
         const item = items[i];
         if (item.itemType === 'group') {
           return true;
         }
       }
     }
+    return false;
   }
   _renderLayout() {
-    const that = this;
-    let items = that.option('items');
-    const $content = that._getContent();
+    const {
+      items
+    } = this.option();
+    const $content = this._getContent();
     // TODO: Introduce this.preparedItems and use it for partial rerender???
     // Compare new preparedItems with old preparedItems to detect what should be rerendered?
-    items = that._prepareItems(items);
-    that._rootLayoutManager = that._renderLayoutManager($content, this._createLayoutManagerOptions(items, {
+    const preparedItems = this._prepareItems(items);
+    const {
+      colCount,
+      alignItemLabels,
+      screenByWidth,
+      colCountByScreen
+    } = this.option();
+    this._rootLayoutManager = this._renderLayoutManager($content, this._createLayoutManagerOptions(preparedItems, {
       isRoot: true,
-      colCount: that.option('colCount'),
-      alignItemLabels: that.option('alignItemLabels'),
-      screenByWidth: this.option('screenByWidth'),
-      colCountByScreen: this.option('colCountByScreen'),
-      onLayoutChanged(inOneColumn) {
-        that._alignLabels.bind(that)(that._rootLayoutManager, inOneColumn);
+      colCount,
+      alignItemLabels,
+      screenByWidth,
+      colCountByScreen,
+      onLayoutChanged: inOneColumn => {
+        this._alignLabels.bind(this)(this._rootLayoutManager, inOneColumn);
       },
-      onContentReady(e) {
-        that._alignLabels(e.component, e.component.isSingleColumnMode());
+      onContentReady: e => {
+        this._alignLabels(e.component, e.component.isSingleColumnMode());
       }
     }));
   }
+  // eslint-disable-next-line class-methods-use-this
   _tryGetItemsForTemplate(item) {
-    return item.items || [];
+    return item.items ?? [];
   }
-  _itemTabbedTemplate(item, e, $container) {
-    const $tabPanel = (0, _renderer.default)('<div>').appendTo($container);
-    const tabPanelOptions = (0, _extend.extend)({}, item.tabPanelOptions, {
-      dataSource: item.tabs,
+  _itemTabbedTemplate(tabbedItem, data, $itemContainer) {
+    const $tabPanel = (0, _renderer.default)('<div>').appendTo($itemContainer);
+    const tabPanelOptions = _extends({}, tabbedItem.tabPanelOptions, {
+      dataSource: tabbedItem.tabs,
       onItemRendered: args => {
-        var _item$tabPanelOptions, _item$tabPanelOptions2;
-        (_item$tabPanelOptions = item.tabPanelOptions) === null || _item$tabPanelOptions === void 0 || (_item$tabPanelOptions2 = _item$tabPanelOptions.onItemRendered) === null || _item$tabPanelOptions2 === void 0 || _item$tabPanelOptions2.call(_item$tabPanelOptions, args);
+        var _tabbedItem$tabPanelO, _tabbedItem$tabPanelO2;
+        (_tabbedItem$tabPanelO = tabbedItem.tabPanelOptions) === null || _tabbedItem$tabPanelO === void 0 || (_tabbedItem$tabPanelO2 = _tabbedItem$tabPanelO.onItemRendered) === null || _tabbedItem$tabPanelO2 === void 0 || _tabbedItem$tabPanelO2.call(_tabbedItem$tabPanelO, args);
         (0, _visibility_change.triggerShownEvent)(args.itemElement);
       },
       itemTemplate: (itemData, e, container) => {
+        const {
+          screenByWidth
+        } = this.option();
         const $container = (0, _renderer.default)(container);
         const alignItemLabels = (0, _common.ensureDefined)(itemData.alignItemLabels, true);
         const layoutManager = this._renderLayoutManager($container, this._createLayoutManagerOptions(this._tryGetItemsForTemplate(itemData), {
           colCount: itemData.colCount,
           alignItemLabels,
-          screenByWidth: this.option('screenByWidth'),
+          screenByWidth,
           colCountByScreen: itemData.colCountByScreen,
           cssItemClass: itemData.cssItemClass,
           onLayoutChanged: inOneColumn => {
-            // @ts-expect-error ts-error
             this._alignLabelsInColumn({
-              $container,
+              $container: (0, _renderer.default)(container),
               layoutManager,
               items: itemData.items,
-              inOneColumn
+              inOneColumn,
+              excludeTabbed: false
             });
           }
         }));
         if (this._itemsRunTimeInfo) {
-          this._itemsRunTimeInfo.extendRunTimeItemInfoByKey(itemData.guid, {
+          this._itemsRunTimeInfo.extendRunTimeItemInfoByKey(itemData.guid ?? '', {
             layoutManager
           });
         }
         if (alignItemLabels) {
-          // @ts-expect-error ts-error
           this._alignLabelsInColumn({
             $container,
             layoutManager,
             items: itemData.items,
-            inOneColumn: layoutManager.isSingleColumnMode()
+            inOneColumn: layoutManager.isSingleColumnMode(),
+            excludeTabbed: false
           });
         }
       }
     });
     const tryUpdateTabPanelInstance = (items, instance) => {
       if (Array.isArray(items)) {
-        items.forEach(item => this._itemsRunTimeInfo.extendRunTimeItemInfoByKey(item.guid, {
+        items.forEach(item => this._itemsRunTimeInfo.extendRunTimeItemInfoByKey(item.guid ?? '', {
           widgetInstance: instance
         }));
       }
     };
     const tabPanel = this._createComponent($tabPanel, _tab_panel.default, tabPanelOptions);
-    (0, _renderer.default)($container).parent().addClass(_constants.FIELD_ITEM_CONTENT_HAS_TABS_CLASS);
-    // @ts-expect-error ts-error
-    tabPanel.on('optionChanged', e => {
-      if (e.fullName === 'dataSource') {
-        tryUpdateTabPanelInstance(e.value, e.component);
+    (0, _renderer.default)($itemContainer).parent().addClass(_constants.FIELD_ITEM_CONTENT_HAS_TABS_CLASS);
+    tabPanel.on('optionChanged', eventArgs => {
+      const {
+        fullName,
+        value,
+        component
+      } = eventArgs;
+      if (fullName === 'dataSource') {
+        tryUpdateTabPanelInstance(value, component);
       }
     });
     tryUpdateTabPanelInstance([{
-      guid: item.guid
-    }, ...(item.tabs ?? [])], tabPanel);
+      guid: tabbedItem.guid
+    }, ...(tabbedItem.tabs ?? [])], tabPanel);
   }
   _itemGroupCaptionTemplate(item, $group, id) {
     if (item.groupCaptionTemplate) {
       const $captionTemplate = (0, _renderer.default)('<div>').addClass(_constants.FORM_GROUP_CUSTOM_CAPTION_CLASS).attr('id', id).appendTo($group);
       item._renderGroupCaptionTemplate = () => {
+        var _item$groupCaptionTem;
         const data = {
           component: this,
           caption: item.caption,
           name: item.name
         };
-        item.groupCaptionTemplate.render({
+        (_item$groupCaptionTem = item.groupCaptionTemplate) === null || _item$groupCaptionTem === void 0 || _item$groupCaptionTem.render({
           model: data,
           container: (0, _element.getPublicElement)($captionTemplate)
         });
@@ -523,12 +557,13 @@ class Form extends _widget.default {
     const $groupContent = (0, _renderer.default)('<div>').addClass(_constants.FORM_GROUP_CONTENT_CLASS).appendTo($group);
     if (item.groupContentTemplate) {
       item._renderGroupContentTemplate = () => {
+        var _item$groupContentTem;
         $groupContent.empty();
         const data = {
           formData: this.option('formData'),
           component: this
         };
-        item.groupContentTemplate.render({
+        (_item$groupContentTem = item.groupContentTemplate) === null || _item$groupContentTem === void 0 || _item$groupContentTem.render({
           model: data,
           container: (0, _element.getPublicElement)($groupContent)
         });
@@ -542,7 +577,7 @@ class Form extends _widget.default {
         alignItemLabels: item.alignItemLabels,
         cssItemClass: item.cssItemClass
       }));
-      (_this$_itemsRunTimeIn = this._itemsRunTimeInfo) === null || _this$_itemsRunTimeIn === void 0 || _this$_itemsRunTimeIn.extendRunTimeItemInfoByKey(item.guid, {
+      (_this$_itemsRunTimeIn = this._itemsRunTimeInfo) === null || _this$_itemsRunTimeIn === void 0 || _this$_itemsRunTimeIn.extendRunTimeItemInfoByKey(item.guid ?? '', {
         layoutManager
       });
       const colCount = layoutManager._getColCount();
@@ -554,10 +589,11 @@ class Form extends _widget.default {
     }
   }
   _itemGroupTemplate(item, options, $container) {
+    var _item$caption;
     const {
       id
     } = options.editorOptions.inputAttr;
-    const $group = (0, _renderer.default)('<div>').toggleClass(_constants.FORM_GROUP_WITH_CAPTION_CLASS, (0, _type.isDefined)(item.caption) && item.caption.length).addClass(_constants.FORM_GROUP_CLASS).appendTo($container);
+    const $group = (0, _renderer.default)('<div>').toggleClass(_constants.FORM_GROUP_WITH_CAPTION_CLASS, !!((_item$caption = item.caption) !== null && _item$caption !== void 0 && _item$caption.length)).addClass(_constants.FORM_GROUP_CLASS).appendTo($container);
     const groupAria = {
       role: 'group',
       // eslint-disable-next-line spellcheck/spell-checker
@@ -586,10 +622,10 @@ class Form extends _widget.default {
         this._itemsRunTimeInfo.addItemsOrExtendFrom(args.component._itemsRunTimeInfo);
         (_extendedLayoutManage = extendedLayoutManagerOptions.onContentReady) === null || _extendedLayoutManage === void 0 || _extendedLayoutManage.call(extendedLayoutManagerOptions, args);
       },
-      onDisposing: _ref2 => {
-        let {
+      onDisposing: e => {
+        const {
           component
-        } = _ref2;
+        } = e;
         const nestedItemsRunTimeInfo = component.getItemsRunTimeInfo();
         this._itemsRunTimeInfo.removeItemsByItems(nestedItemsRunTimeInfo);
       },
@@ -611,56 +647,66 @@ class Form extends _widget.default {
     });
     const $element = (0, _renderer.default)('<div>');
     $element.appendTo($parent);
-    const instance = this._createComponent($element, 'dxLayoutManager', layoutManagerOptions);
-    // @ts-expect-error ts-error
+    const instance = this._createComponent($element, _m_form3.default, layoutManagerOptions);
     instance.on('autoColCountChanged', () => {
       this._clearAutoColCountChangedTimeout();
+      // eslint-disable-next-line no-restricted-globals
       this.autoColCountChangedTimeoutId = setTimeout(() => !this._disposed && this._refresh(), 0);
     });
-    // @ts-expect-error ts-error
     this._cachedLayoutManagers.push(instance);
-    // @ts-expect-error ts-error
     return instance;
   }
   _getValidationGroup() {
-    return this.option('validationGroup') || this;
+    const {
+      validationGroup
+    } = this.option();
+    // @ts-expect-error ts-error
+    return validationGroup ?? this;
   }
-  // @ts-expect-error ts-error
-  _createComponent($element, type, config) {
-    const that = this;
-    config = config || {};
-    that._extendConfig(config, {
-      readOnly: that.option('readOnly')
+  _createComponent(element, component,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  componentConfiguration) {
+    const {
+      readOnly
+    } = this.option();
+    this._extendConfig(componentConfiguration, {
+      readOnly
     });
-    return super._createComponent($element, type, config);
+    return super._createComponent(element, component, componentConfiguration);
   }
   _attachSyncSubscriptions() {
-    const that = this;
-    that.on('optionChanged', args => {
-      const optionFullName = args.fullName;
-      if (optionFullName === 'formData') {
+    this.on('optionChanged', args => {
+      const {
+        fullName,
+        name
+      } = args;
+      if (fullName === 'formData') {
         if (!(0, _type.isDefined)(args.value)) {
-          that._options.silent('formData', args.value = {});
+          this._options.silent('formData', args.value = {});
         }
-        that._triggerOnFieldDataChangedByDataSet(args.value);
+        this._triggerOnFieldDataChangedByDataSet(args.value);
       }
-      if (that._cachedLayoutManagers.length) {
-        (0, _iterator.each)(that._cachedLayoutManagers, (index, layoutManager) => {
-          if (optionFullName === 'formData') {
-            that._isDataUpdating = true;
+      if (this._cachedLayoutManagers.length) {
+        (0, _iterator.each)(this._cachedLayoutManagers, (_index, layoutManager) => {
+          if (fullName === 'formData') {
+            this._isDataUpdating = true;
             layoutManager.option('layoutData', args.value);
-            that._isDataUpdating = false;
+            this._isDataUpdating = false;
           }
-          if (args.name === 'readOnly' || args.name === 'disabled') {
-            layoutManager.option(optionFullName, args.value);
+          if (name === 'readOnly' || name === 'disabled') {
+            layoutManager.option(fullName, args.value);
           }
         });
       }
     });
   }
   _optionChanged(args) {
-    const splitFullName = args.fullName.split('.');
-    // search() is used because the string can be ['items', ' items ', ' items .', 'items[0]', 'items[ 10 ] .', ...]
+    const {
+      fullName
+    } = args;
+    const splitFullName = fullName.split('.');
+    // search() is used because the string can be
+    // ['items', ' items ', ' items .', 'items[0]', 'items[ 10 ] .', ...]
     if (splitFullName.length > 1 && splitFullName[0].search('items') !== -1 && this._itemsOptionChangedHandler(args)) {
       return;
     }
@@ -724,9 +770,8 @@ class Form extends _widget.default {
         this._alignLabels(this._rootLayoutManager, this._rootLayoutManager.isSingleColumnMode());
         break;
       case 'validationGroup':
-        // @ts-expect-error ts-error
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        _validation_engine.default.removeGroup(args.previousValue || this);
+        _m_validation_engine.default.removeGroup(args.previousValue || this);
         this._invalidate();
         break;
       default:
@@ -734,20 +779,24 @@ class Form extends _widget.default {
     }
   }
   _itemsOptionChangedHandler(args) {
-    const nameParts = args.fullName.split('.');
     const {
-      value
+      value,
+      fullName
     } = args;
+    const nameParts = fullName.split('.');
     const itemPath = this._getItemPath(nameParts);
     const item = this.option(itemPath);
-    const optionNameWithoutPath = args.fullName.replace(`${itemPath}.`, '');
+    const optionNameWithoutPath = fullName.replace(`${itemPath}.`, '');
     const simpleOptionName = optionNameWithoutPath.split('.')[0].replace(/\[\d+]/, '');
     const itemAction = this._tryCreateItemOptionAction(simpleOptionName, item, item[simpleOptionName], args.previousValue, itemPath);
-    let result = this._tryExecuteItemOptionAction(itemAction) || this._tryChangeLayoutManagerItemOption(args.fullName, value);
+    let result = this._tryExecuteItemOptionAction(itemAction) ?? this._tryChangeLayoutManagerItemOption(fullName, value);
     if (!result && item) {
       this._changeItemOption(item, optionNameWithoutPath, value);
-      const items = this._generateItemsFromData(this.option('items'));
-      this.option('items', items);
+      const {
+        items
+      } = this.option();
+      const generatedItems = this._generateItemsFromData(items);
+      this.option('items', generatedItems);
       result = true;
     }
     return result;
@@ -770,25 +819,27 @@ class Form extends _widget.default {
     return true;
   }
   _tryCreateItemOptionAction(optionName, item, value, previousValue, itemPath) {
+    let currentValue = value;
     if (optionName === 'tabs') {
       this._itemsRunTimeInfo.removeItemsByPathStartWith(`${itemPath}.tabs`);
-      value = this._prepareItems(value, true, itemPath, true); // preprocess user value as in _tryPrepareTabbedItem
+      // preprocess user value as in _tryPrepareTabbedItem
+      currentValue = this._prepareItems(currentValue, true, itemPath, true);
     }
-    return (0, _m_form2.default)(optionName, {
+    return (0, _m_form.default)(optionName, {
       item,
-      value,
+      value: currentValue,
       previousValue,
       itemsRunTimeInfo: this._itemsRunTimeInfo
     });
   }
+  // eslint-disable-next-line class-methods-use-this
   _tryExecuteItemOptionAction(action) {
     return action === null || action === void 0 ? void 0 : action.tryExecute();
   }
   _updateValidationGroupAndSummaryIfNeeded(fullName) {
     const optionName = (0, _m_form4.getOptionNameFromFullName)(fullName);
     if (ITEM_OPTIONS_FOR_VALIDATION_UPDATING.includes(optionName)) {
-      // @ts-expect-error
-      _validation_engine.default.addGroup(this._getValidationGroup(), false);
+      _m_validation_engine.default.addGroup(this._getValidationGroup(), false);
       if (this.option('showValidationSummary')) {
         var _this$_validationSumm2;
         (_this$_validationSumm2 = this._validationSummary) === null || _this$_validationSumm2 === void 0 || _this$_validationSumm2.refreshValidationGroup();
@@ -797,11 +848,15 @@ class Form extends _widget.default {
   }
   _setLayoutManagerItemOption(layoutManager, optionName, value, path) {
     if (this._updateLockCount > 0) {
-      !layoutManager._updateLockCount && layoutManager.beginUpdate();
+      if (!layoutManager._updateLockCount) {
+        layoutManager.beginUpdate();
+      }
       const key = this._itemsRunTimeInfo.findKeyByPath(path);
       // @ts-expect-error ts-error
       this.postponedOperations.add(key, () => {
-        !layoutManager._disposed && layoutManager.endUpdate();
+        if (!layoutManager._disposed) {
+          layoutManager.endUpdate();
+        }
         return (0, _deferred.Deferred)().resolve();
       });
     }
@@ -811,12 +866,15 @@ class Form extends _widget.default {
         const tabPath = (0, _m_form4.tryGetTabPath)(path);
         const tabLayoutManager = this._itemsRunTimeInfo.findGroupOrTabLayoutManagerByPath(tabPath);
         if (tabLayoutManager) {
-          // @ts-expect-error ts-error
+          const {
+            items
+          } = tabLayoutManager.option();
           this._alignLabelsInColumn({
-            items: tabLayoutManager.option('items'),
+            items,
             layoutManager: tabLayoutManager,
             $container: tabLayoutManager.$element(),
-            inOneColumn: tabLayoutManager.isSingleColumnMode()
+            inOneColumn: tabLayoutManager.isSingleColumnMode(),
+            excludeTabbed: false
           });
         }
       } else {
@@ -854,11 +912,12 @@ class Form extends _widget.default {
         if (optionName === 'visible') {
           // T874843
           const formItems = this.option((0, _m_form4.getFullOptionName)(itemPath, 'items'));
-          // @ts-expect-error ts-error
           if (formItems !== null && formItems !== void 0 && formItems.length) {
-            const layoutManagerItems = layoutManager.option('items');
-            // @ts-expect-error ts-error
+            const {
+              items: layoutManagerItems
+            } = layoutManager.option();
             formItems.forEach((item, index) => {
+              // @ts-expect-error ts-error
               const layoutItem = layoutManagerItems[index];
               layoutItem.visibleIndex = item.visibleIndex;
             });
@@ -871,22 +930,22 @@ class Form extends _widget.default {
     return false;
   }
   _tryChangeLayoutManagerItemOptions(itemPath, options) {
-    let result;
+    let result = false;
     this.beginUpdate();
-    // @ts-expect-error
     (0, _iterator.each)(options, (optionName, optionValue) => {
       result = this._tryChangeLayoutManagerItemOption((0, _m_form4.getFullOptionName)(itemPath, optionName), optionValue);
       if (!result) {
         return false;
       }
+      return true;
     });
     this.endUpdate();
     return result;
   }
+  // eslint-disable-next-line class-methods-use-this
   _getItemPath(nameParts) {
     let itemPath = nameParts[0];
-    let i;
-    for (i = 1; i < nameParts.length; i++) {
+    for (let i = 1; i < nameParts.length; i += 1) {
       if (nameParts[i].search(/items\[\d+]|tabs\[\d+]/) !== -1) {
         itemPath += `.${nameParts[i]}`;
       } else {
@@ -896,7 +955,7 @@ class Form extends _widget.default {
     return itemPath;
   }
   _triggerOnFieldDataChanged(args) {
-    this._updateIsDirty(args.dataField);
+    this._updateIsDirty(args.dataField ?? '');
     this._createActionByOption('onFieldDataChanged')(args);
   }
   _triggerOnFieldDataChangedByDataSet(data) {
@@ -910,7 +969,10 @@ class Form extends _widget.default {
     }
   }
   _updateFieldValue(dataField, value) {
-    if ((0, _type.isDefined)(this.option('formData'))) {
+    const {
+      formData
+    } = this.option();
+    if ((0, _type.isDefined)(formData)) {
       const editor = this.getEditor(dataField);
       this.option(`formData.${dataField}`, value);
       if (editor) {
@@ -922,23 +984,22 @@ class Form extends _widget.default {
     }
   }
   _generateItemsFromData(items) {
-    const formData = this.option('formData');
+    const {
+      formData
+    } = this.option();
     const result = [];
     if (!items && (0, _type.isDefined)(formData)) {
       (0, _iterator.each)(formData, dataField => {
-        // @ts-expect-error
         result.push({
           dataField
         });
       });
     }
     if (items) {
-      (0, _iterator.each)(items, (index, item) => {
+      (0, _iterator.each)(items, (_index, item) => {
         if ((0, _type.isObject)(item)) {
-          // @ts-expect-error
           result.push(item);
         } else {
-          // @ts-expect-error
           result.push({
             dataField: item
           });
@@ -948,28 +1009,30 @@ class Form extends _widget.default {
     return result;
   }
   _getItemByField(field, items) {
-    const that = this;
-    const fieldParts = (0, _type.isObject)(field) ? field : that._getFieldParts(field);
+    const fieldParts = (0, _type.isObject)(field) ? field : this._getFieldParts(field);
     const {
       fieldName
     } = fieldParts;
     const {
       fieldPath
     } = fieldParts;
-    let resultItem;
+    let resultItem = false;
     if (items.length) {
-      // @ts-expect-error ts-error
-      (0, _iterator.each)(items, (index, item) => {
+      (0, _iterator.each)(items, (_index, item) => {
         const {
           itemType
         } = item;
         if (fieldPath.length) {
           const path = fieldPath.slice();
-          item = that._getItemByFieldPath(path, fieldName, item);
-        } else if (itemType === 'group' && !(item.caption || item.name) || itemType === 'tabbed' && !item.name) {
-          const subItemsField = that._getSubItemField(itemType);
-          item.items = that._generateItemsFromData(item.items);
-          item = that._getItemByField({
+          // @ts-expect-error ts-error
+          // eslint-disable-next-line no-param-reassign
+          item = this._getItemByFieldPath(path, fieldName, item);
+        } else if (this._isGroupItem(item) && !(item.caption || item.name) || itemType === 'tabbed' && !item.name) {
+          const subItemsField = this._getSubItemField(itemType);
+          item.items = this._generateItemsFromData(item.items);
+          // @ts-expect-error ts-error
+          // eslint-disable-next-line no-param-reassign
+          item = this._getItemByField({
             fieldName,
             fieldPath
           }, item[subItemsField]);
@@ -978,10 +1041,12 @@ class Form extends _widget.default {
           resultItem = item;
           return false;
         }
+        return true;
       });
     }
     return resultItem;
   }
+  // eslint-disable-next-line class-methods-use-this
   _getFieldParts(field) {
     const fieldSeparator = '.';
     let fieldName = field;
@@ -999,32 +1064,32 @@ class Form extends _widget.default {
     };
   }
   _getItemByFieldPath(path, fieldName, item) {
-    const that = this;
     const {
       itemType
     } = item;
-    const subItemsField = that._getSubItemField(itemType);
+    const subItemsField = this._getSubItemField(itemType);
     const isItemWithSubItems = itemType === 'group' || itemType === 'tabbed' || item.title;
-    let result;
+    let result = false;
     do {
       if (isItemWithSubItems) {
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         const name = item.name || item.caption || item.title;
         const isGroupWithName = (0, _type.isDefined)(name);
         const nameWithoutSpaces = (0, _m_form4.getTextWithoutSpaces)(name);
-        let pathNode;
-        item[subItemsField] = that._generateItemsFromData(item[subItemsField]);
+        let pathNode = '';
+        item[subItemsField] = this._generateItemsFromData(item[subItemsField]);
         if (isGroupWithName) {
           pathNode = path.pop();
         }
         if (!path.length) {
-          result = that._getItemByField(fieldName, item[subItemsField]);
+          result = this._getItemByField(fieldName, item[subItemsField]);
           if (result) {
             break;
           }
         }
         if (!isGroupWithName || isGroupWithName && nameWithoutSpaces === pathNode) {
           if (path.length) {
-            result = that._searchItemInEverySubItem(path, fieldName, item[subItemsField]);
+            result = this._searchItemInEverySubItem(path, fieldName, item[subItemsField]);
           }
         }
       } else {
@@ -1033,24 +1098,25 @@ class Form extends _widget.default {
     } while (path.length && !(0, _type.isDefined)(result));
     return result;
   }
+  // eslint-disable-next-line class-methods-use-this
   _getSubItemField(itemType) {
     return itemType === 'tabbed' ? 'tabs' : 'items';
   }
   _searchItemInEverySubItem(path, fieldName, items) {
-    const that = this;
-    let result;
-    // @ts-expect-error
-    (0, _iterator.each)(items, (index, groupItem) => {
-      result = that._getItemByFieldPath(path.slice(), fieldName, groupItem);
+    let result = false;
+    (0, _iterator.each)(items, (_index, groupItem) => {
+      result = this._getItemByFieldPath(path.slice(), fieldName, groupItem);
       if (result) {
         return false;
       }
+      return true;
     });
     if (!result) {
-      result = false;
+      return false;
     }
     return result;
   }
+  // eslint-disable-next-line class-methods-use-this
   _changeItemOption(item, option, value) {
     if ((0, _type.isObject)(item)) {
       item[option] = value;
@@ -1069,18 +1135,18 @@ class Form extends _widget.default {
   }
   _isColCountChanged(oldScreenSize, newScreenSize) {
     let isChanged = false;
-    // @ts-expect-error
-    (0, _iterator.each)(this._cachedColCountOptions, (index, item) => {
+    (0, _iterator.each)(this._cachedColCountOptions, (_index, item) => {
       if (item.colCountByScreen[oldScreenSize] !== item.colCountByScreen[newScreenSize]) {
         isChanged = true;
         return false;
       }
+      return true;
     });
     return isChanged;
   }
   _refresh() {
     const editorSelector = `.${_m_text_editor.TEXTEDITOR_CLASS}.${_widget.FOCUSED_STATE_CLASS}:not(.${_m_drop_down_editor.DROP_DOWN_EDITOR_CLASS}) .${_m_text_editor.TEXTEDITOR_INPUT_CLASS}`;
-    // @ts-expect-error
+    // @ts-expect-error ts-error
     _events_engine.default.trigger(this.$element().find(editorSelector), 'change');
     super._refresh();
   }
@@ -1099,7 +1165,6 @@ class Form extends _widget.default {
       const {
         widgetInstance
       } = itemRunTimeInfo;
-      // @ts-expect-error
       if ((0, _type.isDefined)(widgetInstance) && _editor.default.isEditor(widgetInstance)) {
         editorAction(widgetInstance);
       }
@@ -1110,18 +1175,17 @@ class Form extends _widget.default {
       editor.clear();
       editor.option('isValid', true);
     });
-    _validation_engine.default.resetGroup(this._getValidationGroup());
+    _m_validation_engine.default.resetGroup(this._getValidationGroup());
   }
   _updateData(data, value, isComplexData) {
-    const that = this;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const _data = isComplexData ? value : data;
     if ((0, _type.isObject)(_data)) {
       (0, _iterator.each)(_data, (dataField, fieldValue) => {
-        that._updateData(isComplexData ? `${data}.${dataField}` : dataField, fieldValue, (0, _type.isObject)(fieldValue));
+        this._updateData(isComplexData ? `${data}.${dataField}` : dataField, fieldValue, (0, _type.isObject)(fieldValue));
       });
     } else if ((0, _type.isString)(data)) {
-      that._updateFieldValue(data, value);
+      this._updateFieldValue(data, value);
     }
   }
   registerKeyHandler(key, handler) {
@@ -1146,19 +1210,21 @@ class Form extends _widget.default {
   }
   _dispose() {
     this._clearAutoColCountChangedTimeout();
-    // @ts-expect-error
-    _validation_engine.default.removeGroup(this._getValidationGroup());
+    _m_validation_engine.default.removeGroup(this._getValidationGroup());
     super._dispose();
   }
   clear() {
     this._clear();
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   reset(editorsData) {
     this.updateRunTimeInfoForEachEditor(editor => {
-      const editorName = editor.option('name');
-      if (editorsData && editorName in editorsData) {
-        editor.reset(editorsData[editorName]);
-        this._updateIsDirty(editorName);
+      const {
+        name = ''
+      } = editor.option();
+      if (editorsData && name in editorsData) {
+        editor.reset(editorsData[name]);
+        this._updateIsDirty(name);
       } else {
         editor.reset();
       }
@@ -1169,43 +1235,45 @@ class Form extends _widget.default {
     this._updateData(data, value);
   }
   getEditor(dataField) {
-    return this._itemsRunTimeInfo.findWidgetInstanceByDataField(dataField) || this._itemsRunTimeInfo.findWidgetInstanceByName(dataField);
+    return this._itemsRunTimeInfo.findWidgetInstanceByDataField(dataField) ?? this._itemsRunTimeInfo.findWidgetInstanceByName(dataField);
   }
   getButton(name) {
     return this._itemsRunTimeInfo.findWidgetInstanceByName(name);
   }
   updateDimensions() {
-    const that = this;
     const deferred = (0, _deferred.Deferred)();
-    if (that._scrollable) {
-      // @ts-expect-error ts-error
-      that._scrollable.update().done(() => {
+    if (this._scrollable) {
+      this._scrollable.update().done(() => {
         // @ts-expect-error ts-error
-        deferred.resolveWith(that);
+        deferred.resolveWith(this);
       });
     } else {
       // @ts-expect-error ts-error
-      deferred.resolveWith(that);
+      deferred.resolveWith(this);
     }
     return deferred.promise();
   }
   itemOption(id, option, value) {
-    const items = this._generateItemsFromData(this.option('items'));
-    const item = this._getItemByField(id, items);
-    const path = (0, _m_form4.getItemPath)(items, item);
+    const {
+      items
+    } = this.option();
+    const generatedItems = this._generateItemsFromData(items);
+    const item = this._getItemByField(id, generatedItems);
+    const path = (0, _m_form4.getItemPath)(generatedItems, item);
     if (!item) {
-      return;
+      return undefined;
+    }
+    if (arguments.length === 1) {
+      return item;
     }
     switch (arguments.length) {
-      case 1:
-        return item;
       case 3:
         {
-          const itemAction = this._tryCreateItemOptionAction(option, item, value, item[option], path);
-          this._changeItemOption(item, option, value);
+          const itemAction = this._tryCreateItemOptionAction(option, item, value, item[option ?? ''], path);
+          this._changeItemOption(item, option ?? '', value);
           const fullName = (0, _m_form4.getFullOptionName)(path, option);
           if (!this._tryExecuteItemOptionAction(itemAction) && !this._tryChangeLayoutManagerItemOption(fullName, value)) {
-            this.option('items', items);
+            this.option('items', generatedItems);
           }
           break;
         }
@@ -1213,7 +1281,7 @@ class Form extends _widget.default {
         {
           if ((0, _type.isObject)(option)) {
             if (!this._tryChangeLayoutManagerItemOptions(path, option)) {
-              let allowUpdateItems;
+              let allowUpdateItems = false;
               (0, _iterator.each)(option, (optionName, optionValue) => {
                 const itemAction = this._tryCreateItemOptionAction(optionName, item, optionValue, item[optionName], path);
                 this._changeItemOption(item, optionName, optionValue);
@@ -1221,15 +1289,18 @@ class Form extends _widget.default {
                   allowUpdateItems = true;
                 }
               });
-              allowUpdateItems && this.option('items', items);
+              if (allowUpdateItems) {
+                this.option('items', generatedItems);
+              }
             }
           }
           break;
         }
     }
+    return undefined;
   }
   validate() {
-    return _validation_engine.default.validateGroup(this._getValidationGroup());
+    return _m_validation_engine.default.validateGroup(this._getValidationGroup());
   }
   getItemID(name) {
     const {
