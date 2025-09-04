@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ja.js)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,6 +106,9 @@
             "dxSwitch-switchedOffText": "オフ",
             "dxForm-optionalMark": "任意",
             "dxForm-requiredMessage": "{0} は必須フィールドです",
+            "dxForm-smartPasteButtonText": "Smart Paste",
+            "dxForm-resetButtonText": "リセット",
+            "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "数値を指定してください。",
             "dxNumberBox-noDataText": "データがありません",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "{0} を使用して列を表示してください",

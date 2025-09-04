@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.sl.js)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,6 +106,9 @@
             "dxSwitch-switchedOffText": "Izklopljeno",
             "dxForm-optionalMark": "opcijsko",
             "dxForm-requiredMessage": "Podatek {0} je obvezen",
+            "dxForm-smartPasteButtonText": "Smart Paste",
+            "dxForm-resetButtonText": "Ponastavi",
+            "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Vrednost mora biti število",
             "dxNumberBox-noDataText": "Ni podatkov",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",

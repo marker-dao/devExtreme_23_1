@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.ai-integration.js)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -225,6 +225,12 @@ Object.defineProperty(exports, "ShortenCommand", ({
     return _shorten.ShortenCommand;
   }
 }));
+Object.defineProperty(exports, "SmartPasteCommand", ({
+  enumerable: true,
+  get: function () {
+    return _smartPaste.SmartPasteCommand;
+  }
+}));
 Object.defineProperty(exports, "SummarizeCommand", ({
   enumerable: true,
   get: function () {
@@ -244,6 +250,7 @@ var _execute = __webpack_require__(15436);
 var _expand = __webpack_require__(37887);
 var _proofread = __webpack_require__(11121);
 var _shorten = __webpack_require__(36050);
+var _smartPaste = __webpack_require__(32067);
 var _summarize = __webpack_require__(15162);
 var _translate = __webpack_require__(37025);
 
@@ -304,6 +311,58 @@ class ShortenCommand extends _base.BaseCommand {
   }
 }
 exports.ShortenCommand = ShortenCommand;
+
+/***/ }),
+
+/***/ 32067:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.SmartPasteCommand = void 0;
+var _base = __webpack_require__(55390);
+class SmartPasteCommand extends _base.BaseCommand {
+  getTemplateName() {
+    return 'smartPaste';
+  }
+  buildPromptData(params) {
+    const fieldsInstructions = this.generateFieldsInstructions(params.fields);
+    return {
+      user: {
+        text: params.text,
+        fields: fieldsInstructions
+      }
+    };
+  }
+  parseResult(response) {
+    const result = [];
+    response.split(';;;').forEach(data => {
+      if (!data) {
+        return;
+      }
+      const [name, ...values] = data.split(':::');
+      const value = values.length <= 1 ? values[0] : values;
+      if (value) {
+        result.push({
+          name,
+          value
+        });
+      }
+    });
+    return result;
+  }
+  generateFieldsInstructions(fields) {
+    const fieldData = fields.map(field => {
+      const instruction = field.instruction ?? '';
+      return `fieldName: ${field.name}, format: ${field.format}${instruction ? `, instruction: ${instruction}` : ''}`;
+    });
+    return fieldData.join(';;;');
+  }
+}
+exports.SmartPasteCommand = SmartPasteCommand;
 
 /***/ }),
 
@@ -390,6 +449,7 @@ var CommandNames;
   CommandNames["Shorten"] = "shorten";
   CommandNames["Summarize"] = "summarize";
   CommandNames["Translate"] = "translate";
+  CommandNames["SmartPaste"] = "smartPaste";
 })(CommandNames || (exports.CommandNames = CommandNames = {}));
 const COMMANDS = exports.COMMANDS = {
   [CommandNames.ChangeStyle]: _index.ChangeStyleCommand,
@@ -399,7 +459,8 @@ const COMMANDS = exports.COMMANDS = {
   [CommandNames.Proofread]: _index.ProofreadCommand,
   [CommandNames.Shorten]: _index.ShortenCommand,
   [CommandNames.Summarize]: _index.SummarizeCommand,
-  [CommandNames.Translate]: _index.TranslateCommand
+  [CommandNames.Translate]: _index.TranslateCommand,
+  [CommandNames.SmartPaste]: _index.SmartPasteCommand
 };
 class AIIntegration {
   constructor(provider) {
@@ -439,6 +500,9 @@ class AIIntegration {
   }
   translate(params, callbacks) {
     return this.executeCommand(CommandNames.Translate, params, callbacks);
+  }
+  smartPaste(params, callbacks) {
+    return this.executeCommand(CommandNames.SmartPaste, params, callbacks);
   }
 }
 exports.AIIntegration = AIIntegration;
@@ -594,6 +658,10 @@ const templates = exports.templates = {
   },
   translate: {
     system: 'Translate the text provided into {{lang}}. Ensure the translation retains the original meaning and tone. Provide only the translated text in your response, without any additional formatting or commentary.'
+  },
+  smartPaste: {
+    system: 'You are a helpful assistant that helps to fill fields based on the text provided. You will get a text and a list of fields that should be filled using info from the text. It can include the name of field, suitable format, optionally some additional instruction about what it should include. You need to return data for all the fields in the following format without any preamble, introduction, or explanatory text: {fieldName}:::{fieldValue};;;{fieldName}:::{fieldValue} and so on, where {fieldName} - is a variable for a field name and {fieldValue} - is a variable for a string to fill. If there is no info to fill, field value should be empty (like Name:::;;;)- do not use placeholders like (empty), N/A, null, or similar.',
+    user: 'Text: {{text}}. Fields: {{fields}}.'
   }
 };
 

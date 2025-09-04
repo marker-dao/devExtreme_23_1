@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.vi.js)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,6 +106,9 @@
             "dxSwitch-switchedOffText": "OFF",
             "dxForm-optionalMark": "tùy chọn",
             "dxForm-requiredMessage": "{0} là bắt buộc",
+            "dxForm-smartPasteButtonText": "Smart Paste",
+            "dxForm-resetButtonText": "Làm lại",
+            "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Giá trị phải là một số",
             "dxNumberBox-noDataText": "Không có dữ liệu",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",

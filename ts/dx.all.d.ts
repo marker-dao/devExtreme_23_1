@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.all.d.ts)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -722,10 +722,6 @@ declare module DevExpress {
       DevExpress.DOMComponent.OptionChangedEventInfo<TComponent>
     > {
     /**
-     * [descr:DOMComponentOptions.bindingOptions]
-     */
-    bindingOptions?: { [key: string]: any };
-    /**
      * [descr:DOMComponentOptions.elementAttr]
      */
     elementAttr?: { [key: string]: any };
@@ -870,6 +866,13 @@ declare module DevExpress {
      */
     static validateModel(model: any): any;
   }
+  /**
+   * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
+   */
+  export type VersionAssertion = {
+    packageName: string;
+    version: string;
+  };
 }
 declare module DevExpress.aiIntegration {
   /**
@@ -912,6 +915,10 @@ declare module DevExpress.aiIntegration {
     translate(
       params: TranslateCommandParams,
       callbacks: RequestCallbacks<TranslateCommandResult>
+    ): () => void;
+    smartPaste(
+      params: SmartPasteCommandParams,
+      callbacks: RequestCallbacks<SmartPasteCommandResult>
     ): () => void;
   }
   /**
@@ -965,6 +972,14 @@ declare module DevExpress.aiIntegration {
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
   export type ExpandCommandResult = string;
+  /**
+   * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
+   */
+  export type FieldInfo = {
+    name: string;
+    format: string;
+    instruction?: string;
+  };
   /**
    * [descr:Prompt]
    */
@@ -1028,6 +1043,20 @@ declare module DevExpress.aiIntegration {
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
   export type ShortenCommandResult = string;
+  /**
+   * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
+   */
+  export type SmartPasteCommandParams = {
+    text: string;
+    fields: FieldInfo[];
+  };
+  /**
+   * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
+   */
+  export type SmartPasteCommandResult = Array<{
+    name: string;
+    value: string | string[];
+  }>;
   /**
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
@@ -1272,6 +1301,7 @@ declare module DevExpress.common {
    * [descr:GlobalConfig]
    */
   export type GlobalConfig = {
+    versionAssertions?: VersionAssertion[];
     /**
      * [descr:GlobalConfig.decimalSeparator]
      * @deprecated [depNote:GlobalConfig.decimalSeparator]
@@ -1337,10 +1367,6 @@ declare module DevExpress.common {
      * @deprecated Attention! This field is not documented and should only be specified in a limited number of use cases. For more information, please submit a ticket to our Support Center.
      */
     pointerEventStrategy?: 'mouse-and-touch' | 'mouse' | 'touch';
-    /**
-     * @deprecated Attention! This field is not documented and should only be specified in a limited number of use cases. For more information, please submit a ticket to our Support Center.
-     */
-    timezones?: unknown[];
     /**
      * [descr:GlobalConfig.rtlEnabled]
      */
@@ -6714,7 +6740,7 @@ declare module DevExpress.core {
   /**
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
-  interface Coordinates {
+  export interface Coordinates {
     left: number;
     top: number;
   }
@@ -6812,6 +6838,7 @@ declare module DevExpress.core {
 
     css(propertyName: string, value: string | number): this;
     css(properties: Record<string, any>): this;
+    css(propertyName: string): string | undefined;
 
     data(key: string, value?: any): this;
 
@@ -6898,7 +6925,7 @@ declare module DevExpress.core {
 
     toArray(): Element[];
 
-    toggle(value: string | undefined): this;
+    toggle(value?: boolean | string): this;
 
     toggleClass(className: string, value?: boolean): this;
 
@@ -7339,11 +7366,9 @@ declare module DevExpress.data {
     /**
      * [descr:PivotGridDataSource.on(events)]
      */
-    on(
-      events: {
-        [key in DevExpress.data.PivotGridDataSource.EventName]?: Function;
-      }
-    ): this;
+    on(events: {
+      [key in DevExpress.data.PivotGridDataSource.EventName]?: Function;
+    }): this;
     /**
      * [descr:PivotGridDataSource.reload()]
      */
@@ -7793,8 +7818,13 @@ declare module DevExpress.events {
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
   export type DxEvent<TNativeEvent = Event> = {} extends EventType
-    ? EventObject & TNativeEvent
-    : EventType;
+    ? EventObject<TNativeEvent> & TNativeEvent
+    : Omit<EventType, 'originalEvent'> & {
+        /**
+         * [descr:DxEvent.originalEvent]
+         */
+        originalEvent: TNativeEvent;
+      };
   /**
    * [descr:event]
    * @deprecated [depNote:event]
@@ -7804,7 +7834,7 @@ declare module DevExpress.events {
   /**
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
-  export type EventObject = {
+  export type EventObject<TNativeEvent = Event> = {
     /**
      * [descr:EventObject.currentTarget]
      */
@@ -7819,6 +7849,11 @@ declare module DevExpress.events {
      * [descr:EventObject.delegateTarget]
      */
     delegateTarget: Element;
+
+    /**
+     * [descr:EventObject.originalEvent]
+     */
+    originalEvent: TNativeEvent;
 
     /**
      * [descr:EventObject.target]
@@ -8686,7 +8721,7 @@ declare module DevExpress.ui {
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
   export interface DateBoxBaseOptions<TComponent>
-    extends dxDropDownEditorOptions<TComponent> {
+    extends Omit<dxDropDownEditorOptions<TComponent>, 'fieldAddons'> {
     /**
      * [descr:DateBoxBaseOptions.applyButtonText]
      */
@@ -9805,7 +9840,7 @@ declare module DevExpress.ui {
     export type CalendarSelectionMode = 'single' | 'multiple' | 'range';
     export type CalendarZoomLevel = 'century' | 'decade' | 'month' | 'year';
     export type CellTemplateData = {
-      readonly date: Date;
+      readonly date?: Date;
       readonly view: string;
       readonly text?: string;
     };
@@ -10944,6 +10979,13 @@ declare module DevExpress.ui {
      */
     export type DisposingEvent =
       DevExpress.common.core.events.EventInfo<dxChat>;
+    export type EmptyViewTemplateData = {
+      readonly component: dxChat;
+      readonly texts: {
+        readonly message: string;
+        readonly prompt: string;
+      };
+    };
     export type ExplicitTypes = {
       Properties: Properties;
       DisposingEvent: DisposingEvent;
@@ -11122,6 +11164,16 @@ declare module DevExpress.ui {
             message?: DevExpress.ui.dxChat.Message;
           }) => boolean);
     };
+    /**
+     * [descr:dxChatOptions.emptyViewTemplate]
+     */
+    emptyViewTemplate?:
+      | template
+      | null
+      | ((
+          data: DevExpress.ui.dxChat.EmptyViewTemplateData,
+          itemElement: DevExpress.core.DxElement
+        ) => string | DevExpress.core.UserDefinedElement);
     /**
      * [descr:dxChatOptions.dataSource]
      */
@@ -11460,6 +11512,7 @@ declare module DevExpress.ui {
     editAlphaChannel?: boolean;
     /**
      * [descr:dxColorBoxOptions.fieldTemplate]
+     * @deprecated [depNote:dxColorBoxOptions.fieldTemplate]
      */
     fieldTemplate?:
       | template
@@ -11483,11 +11536,10 @@ declare module DevExpress.ui {
   /**
    * [descr:dxContextMenu]
    */
-  export class dxContextMenu<TKey = any> extends dxMenuBase<
-    dxContextMenuOptions<TKey>,
-    dxContextMenuItem,
-    TKey
-  > {
+  export class dxContextMenu<
+    TItem extends DevExpress.ui.dxContextMenu.ItemLike = any,
+    TKey = any
+  > extends dxMenuBase<dxContextMenuOptions<TItem, TKey>, TItem, TKey> {
     /**
      * [descr:dxContextMenu.hide()]
      */
@@ -11505,107 +11557,142 @@ declare module DevExpress.ui {
     /**
      * [descr:_ui_context_menu_ContentReadyEvent]
      */
-    export type ContentReadyEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxContextMenu<TKey>>;
+    export type ContentReadyEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxContextMenu<TItem, TKey>>;
     export type ContextSubmenuDirection = 'auto' | 'left' | 'right';
     /**
      * [descr:_ui_context_menu_DisposingEvent]
      */
-    export type DisposingEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxContextMenu<TKey>>;
-    export type ExplicitTypes<TKey = any> = {
-      Properties: Properties<TKey>;
-      ContentReadyEvent: ContentReadyEvent<TKey>;
-      DisposingEvent: DisposingEvent<TKey>;
-      HiddenEvent: HiddenEvent<TKey>;
-      HidingEvent: HidingEvent<TKey>;
-      InitializedEvent: InitializedEvent<TKey>;
-      ItemClickEvent: ItemClickEvent<TKey>;
-      ItemContextMenuEvent: ItemContextMenuEvent<TKey>;
-      ItemRenderedEvent: ItemRenderedEvent<TKey>;
-      OptionChangedEvent: OptionChangedEvent<TKey>;
-      PositioningEvent: PositioningEvent<TKey>;
-      SelectionChangedEvent: SelectionChangedEvent<TKey>;
-      ShowingEvent: ShowingEvent<TKey>;
-      ShownEvent: ShownEvent<TKey>;
+    export type DisposingEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxContextMenu<TItem, TKey>>;
+    export type ExplicitTypes<TItem extends ItemLike = any, TKey = any> = {
+      Properties: Properties<TItem, TKey>;
+      ContentReadyEvent: ContentReadyEvent<TItem, TKey>;
+      DisposingEvent: DisposingEvent<TItem, TKey>;
+      HiddenEvent: HiddenEvent<TItem, TKey>;
+      HidingEvent: HidingEvent<TItem, TKey>;
+      InitializedEvent: InitializedEvent<TItem, TKey>;
+      ItemClickEvent: ItemClickEvent<TItem, TKey>;
+      ItemContextMenuEvent: ItemContextMenuEvent<TItem, TKey>;
+      ItemRenderedEvent: ItemRenderedEvent<TItem, TKey>;
+      OptionChangedEvent: OptionChangedEvent<TItem, TKey>;
+      PositioningEvent: PositioningEvent<TItem, TKey>;
+      SelectionChangedEvent: SelectionChangedEvent<TItem, TKey>;
+      ShowingEvent: ShowingEvent<TItem, TKey>;
+      ShownEvent: ShownEvent<TItem, TKey>;
     };
     /**
      * [descr:_ui_context_menu_HiddenEvent]
      */
-    export type HiddenEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxContextMenu<TKey>>;
+    export type HiddenEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxContextMenu<TItem, TKey>>;
     /**
      * [descr:_ui_context_menu_HidingEvent]
      */
-    export type HidingEvent<TKey = any> =
-      DevExpress.common.core.events.Cancelable &
-        DevExpress.common.core.events.EventInfo<dxContextMenu<TKey>>;
+    export type HidingEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.Cancelable &
+      DevExpress.common.core.events.EventInfo<dxContextMenu<TItem, TKey>>;
     /**
      * [descr:_ui_context_menu_InitializedEvent]
      */
-    export type InitializedEvent<TKey = any> =
-      DevExpress.common.core.events.InitializedEventInfo<dxContextMenu<TKey>>;
+    export type InitializedEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.InitializedEventInfo<
+      dxContextMenu<TItem, TKey>
+    >;
     /**
      * [descr:_ui_context_menu_ItemClickEvent]
      */
-    export type ItemClickEvent<TKey = any> =
-      DevExpress.common.core.events.NativeEventInfo<
-        dxContextMenu<TKey>,
-        KeyboardEvent | MouseEvent | PointerEvent
-      > &
-        DevExpress.common.core.events.ItemInfo<Item>;
+    export type ItemClickEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.NativeEventInfo<
+      dxContextMenu<TItem, TKey>,
+      KeyboardEvent | MouseEvent | PointerEvent
+    > &
+      DevExpress.common.core.events.ItemInfo<TItem>;
     /**
      * [descr:_ui_context_menu_ItemContextMenuEvent]
      */
-    export type ItemContextMenuEvent<TKey = any> =
-      DevExpress.common.core.events.NativeEventInfo<
-        dxContextMenu<TKey>,
-        MouseEvent | PointerEvent | TouchEvent
-      > &
-        DevExpress.common.core.events.ItemInfo<Item>;
+    export type ItemContextMenuEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.NativeEventInfo<
+      dxContextMenu<TItem, TKey>,
+      MouseEvent | PointerEvent | TouchEvent
+    > &
+      DevExpress.common.core.events.ItemInfo<TItem>;
+    /**
+     * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
+     */
+    type ItemLike = Item | any;
     /**
      * [descr:_ui_context_menu_ItemRenderedEvent]
      */
-    export type ItemRenderedEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxContextMenu<TKey>> &
-        DevExpress.common.core.events.ItemInfo<Item>;
+    export type ItemRenderedEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxContextMenu<TItem, TKey>> &
+      DevExpress.common.core.events.ItemInfo<TItem>;
     /**
      * [descr:_ui_context_menu_OptionChangedEvent]
      */
-    export type OptionChangedEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxContextMenu<TKey>> &
-        DevExpress.common.core.events.ChangedOptionInfo;
+    export type OptionChangedEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxContextMenu<TItem, TKey>> &
+      DevExpress.common.core.events.ChangedOptionInfo;
     /**
      * [descr:_ui_context_menu_PositioningEvent]
      */
-    export type PositioningEvent<TKey = any> =
-      DevExpress.common.core.events.NativeEventInfo<
-        dxContextMenu<TKey>,
-        MouseEvent | PointerEvent | TouchEvent
-      > & {
-        /**
-         * [descr:_ui_context_menu_PositioningEvent.position]
-         */
-        readonly position: DevExpress.common.core.animation.PositionConfig;
-      };
-    export type Properties<TKey = any> = dxContextMenuOptions<TKey>;
+    export type PositioningEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.NativeEventInfo<
+      dxContextMenu<TItem, TKey>,
+      MouseEvent | PointerEvent | TouchEvent
+    > & {
+      /**
+       * [descr:_ui_context_menu_PositioningEvent.position]
+       */
+      readonly position: DevExpress.common.core.animation.PositionConfig;
+    };
+    export type Properties<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = dxContextMenuOptions<TItem, TKey>;
     /**
      * [descr:_ui_context_menu_SelectionChangedEvent]
      */
-    export type SelectionChangedEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxContextMenu<TKey>> &
-        DevExpress.ui.CollectionWidget.SelectionChangeInfo<Item>;
+    export type SelectionChangedEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxContextMenu<TItem, TKey>> &
+      DevExpress.ui.CollectionWidget.SelectionChangeInfo<TItem>;
     /**
      * [descr:_ui_context_menu_ShowingEvent]
      */
-    export type ShowingEvent<TKey = any> =
-      DevExpress.common.core.events.Cancelable &
-        DevExpress.common.core.events.EventInfo<dxContextMenu<TKey>>;
+    export type ShowingEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.Cancelable &
+      DevExpress.common.core.events.EventInfo<dxContextMenu<TItem, TKey>>;
     /**
      * [descr:_ui_context_menu_ShownEvent]
      */
-    export type ShownEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxContextMenu<TKey>>;
+    export type ShownEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxContextMenu<TItem, TKey>>;
   }
   /**
    * @deprecated Use DevExpress.ui.dxContextMenu.Item instead
@@ -11621,15 +11708,14 @@ declare module DevExpress.ui {
    * [descr:dxContextMenuOptions]
    * @deprecated [depNote:dxContextMenuOptions]
    */
-  export interface dxContextMenuOptions<TKey = any>
-    extends dxMenuBaseOptions<dxContextMenu<TKey>, dxContextMenuItem, TKey> {
+  export interface dxContextMenuOptions<
+    TItem extends DevExpress.ui.dxContextMenu.ItemLike = any,
+    TKey = any
+  > extends dxMenuBaseOptions<dxContextMenu<TItem, TKey>, TItem, TKey> {
     /**
      * [descr:dxContextMenuOptions.dataSource]
      */
-    dataSource?: DevExpress.data.DataSourceLike<
-      DevExpress.ui.dxContextMenu.Item,
-      TKey
-    > | null;
+    dataSource?: DevExpress.data.DataSourceLike<TItem, TKey> | null;
     /**
      * [descr:dxContextMenuOptions.hideOnOutsideClick]
      */
@@ -11643,29 +11729,35 @@ declare module DevExpress.ui {
     /**
      * [descr:dxContextMenuOptions.items]
      */
-    items?: Array<DevExpress.ui.dxContextMenu.Item>;
+    items?: Array<TItem>;
     /**
      * [descr:dxContextMenuOptions.onHidden]
      */
-    onHidden?: (e: DevExpress.ui.dxContextMenu.HiddenEvent<TKey>) => void;
+    onHidden?: (
+      e: DevExpress.ui.dxContextMenu.HiddenEvent<TItem, TKey>
+    ) => void;
     /**
      * [descr:dxContextMenuOptions.onHiding]
      */
-    onHiding?: (e: DevExpress.ui.dxContextMenu.HidingEvent<TKey>) => void;
+    onHiding?: (
+      e: DevExpress.ui.dxContextMenu.HidingEvent<TItem, TKey>
+    ) => void;
     /**
      * [descr:dxContextMenuOptions.onPositioning]
      */
     onPositioning?: (
-      e: DevExpress.ui.dxContextMenu.PositioningEvent<TKey>
+      e: DevExpress.ui.dxContextMenu.PositioningEvent<TItem, TKey>
     ) => void;
     /**
      * [descr:dxContextMenuOptions.onShowing]
      */
-    onShowing?: (e: DevExpress.ui.dxContextMenu.ShowingEvent<TKey>) => void;
+    onShowing?: (
+      e: DevExpress.ui.dxContextMenu.ShowingEvent<TItem, TKey>
+    ) => void;
     /**
      * [descr:dxContextMenuOptions.onShown]
      */
-    onShown?: (e: DevExpress.ui.dxContextMenu.ShownEvent<TKey>) => void;
+    onShown?: (e: DevExpress.ui.dxContextMenu.ShownEvent<TItem, TKey>) => void;
     /**
      * [descr:dxContextMenuOptions.position]
      */
@@ -16228,6 +16320,7 @@ declare module DevExpress.ui {
     displayValueFormatter?: (value: string | Array<any>) => string;
     /**
      * [descr:dxDropDownBoxOptions.fieldTemplate]
+     * @deprecated [depNote:dxDropDownBoxOptions.fieldTemplate]
      */
     fieldTemplate?:
       | template
@@ -16573,6 +16666,10 @@ declare module DevExpress.ui {
           contentElement: DevExpress.core.DxElement
         ) => string | DevExpress.core.UserDefinedElement);
     /**
+     * [descr:dxDropDownEditorOptions.fieldAddons]
+     */
+    fieldAddons?: FieldAddons;
+    /**
      * [descr:dxDropDownEditorOptions.onClosed]
      */
     onClosed?: (e: DevExpress.common.core.events.EventInfo<TComponent>) => void;
@@ -16630,7 +16727,7 @@ declare module DevExpress.ui {
    */
   export interface dxDropDownListOptions<TComponent>
     extends DataExpressionMixinOptions<TComponent>,
-      dxDropDownEditorOptions<TComponent> {
+      Omit<dxDropDownEditorOptions<TComponent>, 'fieldAddons'> {
     /**
      * [descr:dxDropDownListOptions.displayValue]
      */
@@ -18492,6 +18589,10 @@ declare module DevExpress.ui {
      */
     reset(editorsData?: Record<string, any>): void;
     /**
+     * [descr:dxForm.smartPaste(text)]
+     */
+    smartPaste(text?: string): void;
+    /**
      * [descr:dxForm.updateData(data)]
      */
     updateData(data: any): void;
@@ -18509,6 +18610,7 @@ declare module DevExpress.ui {
     validate(): DevExpress.ui.dxValidationGroup.ValidationResult;
   }
   module dxForm {
+    export type AIResult = Record<string, string | string[]>;
     /**
      * [descr:_ui_form_ContentReadyEvent]
      */
@@ -18569,6 +18671,7 @@ declare module DevExpress.ui {
       | 'tabbed'
       | 'button';
     export type FormLabelMode = 'static' | 'floating' | 'hidden' | 'outside';
+    export type FormPredefinedButtonItem = 'reset' | 'submit' | 'smartPaste';
     export type GroupCaptionTemplateData = {
       readonly caption?: string;
       readonly component: dxForm;
@@ -18601,6 +18704,28 @@ declare module DevExpress.ui {
       readonly editorType?: string;
       readonly name?: string;
     };
+    /**
+     * [descr:_ui_form_SmartPastedEvent]
+     */
+    export type SmartPastedEvent =
+      DevExpress.common.core.events.EventInfo<dxForm> & SmartPasteInfo;
+    /**
+     * [descr:SmartPasteInfo]
+     * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
+     */
+    export type SmartPasteInfo = {
+      /**
+       * [descr:SmartPasteInfo.aiResult]
+       */
+      readonly aiResult: AIResult;
+    };
+    /**
+     * [descr:_ui_form_SmartPastingEvent]
+     */
+    export type SmartPastingEvent =
+      DevExpress.common.core.events.EventInfo<dxForm> &
+        DevExpress.common.core.events.AsyncCancelable &
+        SmartPasteInfo;
   }
   /**
    * @deprecated Use ButtonItem instead
@@ -18630,7 +18755,7 @@ declare module DevExpress.ui {
     /**
      * [descr:dxFormButtonItem.name]
      */
-    name?: string | undefined;
+    name?: DevExpress.ui.dxForm.FormPredefinedButtonItem | string | undefined;
     /**
      * [descr:dxFormButtonItem.verticalAlignment]
      */
@@ -18749,6 +18874,10 @@ declare module DevExpress.ui {
    */
   export interface dxFormOptions extends WidgetOptions<dxForm> {
     /**
+     * [descr:dxFormOptions.aiIntegration]
+     */
+    aiIntegration?: DevExpress.aiIntegration.AIIntegration | undefined;
+    /**
      * [descr:dxFormOptions.alignItemLabels]
      */
     alignItemLabels?: boolean;
@@ -18798,6 +18927,14 @@ declare module DevExpress.ui {
     onFieldDataChanged?: (
       e: DevExpress.ui.dxForm.FieldDataChangedEvent
     ) => void;
+    /**
+     * [descr:dxFormOptions.onSmartPasting]
+     */
+    onSmartPasting?: (e: DevExpress.ui.dxForm.SmartPastingEvent) => void;
+    /**
+     * [descr:dxFormOptions.onSmartPasted]
+     */
+    onSmartPasted?: (e: DevExpress.ui.dxForm.SmartPastedEvent) => void;
     /**
      * [descr:dxFormOptions.optionalMark]
      */
@@ -18852,6 +18989,19 @@ declare module DevExpress.ui {
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
   export interface dxFormSimpleItem {
+    /**
+     * [descr:dxFormSimpleItem.aiOptions]
+     */
+    aiOptions?: {
+      /**
+       * [descr:dxFormSimpleItem.aiOptions.instruction]
+       */
+      instruction?: string | undefined;
+      /**
+       * [descr:dxFormSimpleItem.aiOptions.disabled]
+       */
+      disabled?: boolean;
+    };
     /**
      * [descr:dxFormSimpleItem.colSpan]
      */
@@ -22671,66 +22821,81 @@ declare module DevExpress.ui {
   /**
    * [descr:dxMenu]
    */
-  export class dxMenu<TKey = any> extends dxMenuBase<
-    dxMenuOptions<TKey>,
-    dxMenuItem,
-    TKey
-  > {}
+  export class dxMenu<
+    TItem extends DevExpress.ui.dxMenu.ItemLike = any,
+    TKey = any
+  > extends dxMenuBase<dxMenuOptions<TItem, TKey>, TItem, TKey> {}
   module dxMenu {
     /**
      * [descr:_ui_menu_ContentReadyEvent]
      */
-    export type ContentReadyEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxMenu<TKey>>;
+    export type ContentReadyEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxMenu<TItem, TKey>>;
     /**
      * [descr:_ui_menu_DisposingEvent]
      */
-    export type DisposingEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxMenu<TKey>>;
-    export type ExplicitTypes<TKey = any> = {
-      Properties: Properties<TKey>;
-      ContentReadyEvent: ContentReadyEvent<TKey>;
-      DisposingEvent: DisposingEvent<TKey>;
-      InitializedEvent: InitializedEvent<TKey>;
-      ItemClickEvent: ItemClickEvent<TKey>;
-      ItemContextMenuEvent: ItemContextMenuEvent<TKey>;
-      ItemRenderedEvent: ItemRenderedEvent<TKey>;
-      OptionChangedEvent: OptionChangedEvent<TKey>;
-      SelectionChangedEvent: SelectionChangedEvent<TKey>;
-      SubmenuHiddenEvent: SubmenuHiddenEvent<TKey>;
-      SubmenuHidingEvent: SubmenuHidingEvent<TKey>;
-      SubmenuShowingEvent: SubmenuShowingEvent<TKey>;
-      SubmenuShownEvent: SubmenuShownEvent<TKey>;
+    export type DisposingEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxMenu<TItem, TKey>>;
+    export type ExplicitTypes<TItem extends ItemLike = any, TKey = any> = {
+      Properties: Properties<TItem, TKey>;
+      ContentReadyEvent: ContentReadyEvent<TItem, TKey>;
+      DisposingEvent: DisposingEvent<TItem, TKey>;
+      InitializedEvent: InitializedEvent<TItem, TKey>;
+      ItemClickEvent: ItemClickEvent<TItem, TKey>;
+      ItemContextMenuEvent: ItemContextMenuEvent<TItem, TKey>;
+      ItemRenderedEvent: ItemRenderedEvent<TItem, TKey>;
+      OptionChangedEvent: OptionChangedEvent<TItem, TKey>;
+      SelectionChangedEvent: SelectionChangedEvent<TItem, TKey>;
+      SubmenuHiddenEvent: SubmenuHiddenEvent<TItem, TKey>;
+      SubmenuHidingEvent: SubmenuHidingEvent<TItem, TKey>;
+      SubmenuShowingEvent: SubmenuShowingEvent<TItem, TKey>;
+      SubmenuShownEvent: SubmenuShownEvent<TItem, TKey>;
     };
     /**
      * [descr:_ui_menu_InitializedEvent]
      */
-    export type InitializedEvent<TKey = any> =
-      DevExpress.common.core.events.InitializedEventInfo<dxMenu<TKey>>;
+    export type InitializedEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.InitializedEventInfo<dxMenu<TItem, TKey>>;
     /**
      * [descr:_ui_menu_ItemClickEvent]
      */
-    export type ItemClickEvent<TKey = any> =
-      DevExpress.common.core.events.NativeEventInfo<
-        dxMenu<TKey>,
-        KeyboardEvent | MouseEvent | PointerEvent
-      > &
-        DevExpress.common.core.events.ItemInfo<Item>;
+    export type ItemClickEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.NativeEventInfo<
+      dxMenu<TItem, TKey>,
+      KeyboardEvent | MouseEvent | PointerEvent
+    > &
+      DevExpress.common.core.events.ItemInfo<TItem>;
     /**
      * [descr:_ui_menu_ItemContextMenuEvent]
      */
-    export type ItemContextMenuEvent<TKey = any> =
-      DevExpress.common.core.events.NativeEventInfo<
-        dxMenu<TKey>,
-        MouseEvent | PointerEvent | TouchEvent
-      > &
-        DevExpress.common.core.events.ItemInfo<Item>;
+    export type ItemContextMenuEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.NativeEventInfo<
+      dxMenu<TItem, TKey>,
+      MouseEvent | PointerEvent | TouchEvent
+    > &
+      DevExpress.common.core.events.ItemInfo<TItem>;
+    /**
+     * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
+     */
+    type ItemLike = Item | any;
     /**
      * [descr:_ui_menu_ItemRenderedEvent]
      */
-    export type ItemRenderedEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxMenu<TKey>> &
-        DevExpress.common.core.events.ItemInfo<Item>;
+    export type ItemRenderedEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxMenu<TItem, TKey>> &
+      DevExpress.common.core.events.ItemInfo<TItem>;
     /**
      * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
      */
@@ -22767,96 +22932,109 @@ declare module DevExpress.ui {
        * [descr:dxMenuBaseItem.visible]
        */
       visible?: boolean;
-
-      [key: string]: any;
     }
     /**
      * [descr:_ui_menu_OptionChangedEvent]
      */
-    export type OptionChangedEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxMenu<TKey>> &
-        DevExpress.common.core.events.ChangedOptionInfo;
-    export type Properties<TKey = any> = dxMenuOptions<TKey>;
+    export type OptionChangedEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxMenu<TItem, TKey>> &
+      DevExpress.common.core.events.ChangedOptionInfo;
+    export type Properties<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = dxMenuOptions<TItem, TKey>;
     /**
      * [descr:_ui_menu_SelectionChangedEvent]
      */
-    export type SelectionChangedEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxMenu<TKey>> &
-        DevExpress.ui.CollectionWidget.SelectionChangeInfo<Item>;
+    export type SelectionChangedEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxMenu<TItem, TKey>> &
+      DevExpress.ui.CollectionWidget.SelectionChangeInfo<TItem>;
     export type SubmenuDirection = 'auto' | 'leftOrTop' | 'rightOrBottom';
     /**
      * [descr:_ui_menu_SubmenuHiddenEvent]
      */
-    export type SubmenuHiddenEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxMenu<TKey>> & {
-        /**
-         * [descr:_ui_menu_SubmenuHiddenEvent.itemData]
-         */
-        readonly itemData?: Item;
-        /**
-         * [descr:_ui_menu_SubmenuHiddenEvent.rootItem]
-         */
-        readonly rootItem?: DevExpress.core.DxElement;
-        /**
-         * [descr:_ui_menu_SubmenuHiddenEvent.submenuContainer]
-         */
-        readonly submenuContainer?: DevExpress.core.DxElement;
-      };
+    export type SubmenuHiddenEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxMenu<TItem, TKey>> & {
+      /**
+       * [descr:_ui_menu_SubmenuHiddenEvent.itemData]
+       */
+      readonly itemData?: TItem;
+      /**
+       * [descr:_ui_menu_SubmenuHiddenEvent.rootItem]
+       */
+      readonly rootItem?: DevExpress.core.DxElement;
+      /**
+       * [descr:_ui_menu_SubmenuHiddenEvent.submenuContainer]
+       */
+      readonly submenuContainer?: DevExpress.core.DxElement;
+    };
     /**
      * [descr:_ui_menu_SubmenuHidingEvent]
      */
-    export type SubmenuHidingEvent<TKey = any> =
-      DevExpress.common.core.events.Cancelable &
-        DevExpress.common.core.events.EventInfo<dxMenu<TKey>> & {
-          /**
-           * [descr:_ui_menu_SubmenuHidingEvent.itemData]
-           */
-          readonly itemData?: Item;
-          /**
-           * [descr:_ui_menu_SubmenuHidingEvent.rootItem]
-           */
-          readonly rootItem?: DevExpress.core.DxElement;
-          /**
-           * [descr:_ui_menu_SubmenuHidingEvent.submenuContainer]
-           */
-          readonly submenuContainer?: DevExpress.core.DxElement;
-        };
+    export type SubmenuHidingEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.Cancelable &
+      DevExpress.common.core.events.EventInfo<dxMenu<TItem, TKey>> & {
+        /**
+         * [descr:_ui_menu_SubmenuHidingEvent.itemData]
+         */
+        readonly itemData?: TItem;
+        /**
+         * [descr:_ui_menu_SubmenuHidingEvent.rootItem]
+         */
+        readonly rootItem?: DevExpress.core.DxElement;
+        /**
+         * [descr:_ui_menu_SubmenuHidingEvent.submenuContainer]
+         */
+        readonly submenuContainer?: DevExpress.core.DxElement;
+      };
     /**
      * [descr:_ui_menu_SubmenuShowingEvent]
      */
-    export type SubmenuShowingEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxMenu<TKey>> & {
-        /**
-         * [descr:_ui_menu_SubmenuShowingEvent.itemData]
-         */
-        readonly itemData?: Item;
-        /**
-         * [descr:_ui_menu_SubmenuShowingEvent.rootItem]
-         */
-        readonly rootItem?: DevExpress.core.DxElement;
-        /**
-         * [descr:_ui_menu_SubmenuShowingEvent.submenuContainer]
-         */
-        readonly submenuContainer?: DevExpress.core.DxElement;
-      };
+    export type SubmenuShowingEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxMenu<TItem, TKey>> & {
+      /**
+       * [descr:_ui_menu_SubmenuShowingEvent.itemData]
+       */
+      readonly itemData?: TItem;
+      /**
+       * [descr:_ui_menu_SubmenuShowingEvent.rootItem]
+       */
+      readonly rootItem?: DevExpress.core.DxElement;
+      /**
+       * [descr:_ui_menu_SubmenuShowingEvent.submenuContainer]
+       */
+      readonly submenuContainer?: DevExpress.core.DxElement;
+    };
     /**
      * [descr:_ui_menu_SubmenuShownEvent]
      */
-    export type SubmenuShownEvent<TKey = any> =
-      DevExpress.common.core.events.EventInfo<dxMenu<TKey>> & {
-        /**
-         * [descr:_ui_menu_SubmenuShownEvent.itemData]
-         */
-        readonly itemData?: Item;
-        /**
-         * [descr:_ui_menu_SubmenuShownEvent.rootItem]
-         */
-        readonly rootItem?: DevExpress.core.DxElement;
-        /**
-         * [descr:_ui_menu_SubmenuShownEvent.submenuContainer]
-         */
-        readonly submenuContainer?: DevExpress.core.DxElement;
-      };
+    export type SubmenuShownEvent<
+      TItem extends ItemLike = any,
+      TKey = any
+    > = DevExpress.common.core.events.EventInfo<dxMenu<TItem, TKey>> & {
+      /**
+       * [descr:_ui_menu_SubmenuShownEvent.itemData]
+       */
+      readonly itemData?: TItem;
+      /**
+       * [descr:_ui_menu_SubmenuShownEvent.rootItem]
+       */
+      readonly rootItem?: DevExpress.core.DxElement;
+      /**
+       * [descr:_ui_menu_SubmenuShownEvent.submenuContainer]
+       */
+      readonly submenuContainer?: DevExpress.core.DxElement;
+    };
   }
   /**
    * [descr:dxMenuBase]
@@ -22864,7 +23042,7 @@ declare module DevExpress.ui {
    */
   export class dxMenuBase<
     TProperties extends dxMenuBaseOptions<any, TItem, TKey>,
-    TItem extends dxMenuBaseItem = dxMenuBaseItem,
+    TItem extends DevExpress.ui.dxMenuBase.ItemLike = any,
     TKey = any
   > extends HierarchicalCollectionWidget<TProperties, TItem, TKey> {
     /**
@@ -22875,6 +23053,12 @@ declare module DevExpress.ui {
      * [descr:dxMenuBase.unselectItem(itemElement)]
      */
     unselectItem(itemElement: Element): void;
+  }
+  module dxMenuBase {
+    /**
+     * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
+     */
+    type ItemLike = dxMenuBaseItem | any;
   }
   /**
    * [descr:dxMenuBaseItem]
@@ -22893,7 +23077,7 @@ declare module DevExpress.ui {
    */
   export interface dxMenuBaseOptions<
     TComponent extends dxMenuBase<any, TItem, TKey>,
-    TItem extends dxMenuBaseItem = dxMenuBaseItem,
+    TItem extends DevExpress.ui.dxMenuBase.ItemLike = any,
     TKey = any
   > extends Omit<
       HierarchicalCollectionWidgetOptions<TComponent, TItem, TKey>,
@@ -22985,8 +23169,10 @@ declare module DevExpress.ui {
    * [descr:dxMenuOptions]
    * @deprecated [depNote:dxMenuOptions]
    */
-  export interface dxMenuOptions<TKey = any>
-    extends dxMenuBaseOptions<dxMenu<TKey>, dxMenuItem, TKey> {
+  export interface dxMenuOptions<
+    TItem extends DevExpress.ui.dxMenu.ItemLike = any,
+    TKey = any
+  > extends dxMenuBaseOptions<dxMenu<TItem, TKey>, TItem, TKey> {
     /**
      * [descr:dxMenuOptions.adaptivityEnabled]
      */
@@ -22994,10 +23180,7 @@ declare module DevExpress.ui {
     /**
      * [descr:dxMenuOptions.dataSource]
      */
-    dataSource?: DevExpress.data.DataSourceLike<
-      DevExpress.ui.dxMenu.Item,
-      TKey
-    > | null;
+    dataSource?: DevExpress.data.DataSourceLike<TItem, TKey> | null;
     /**
      * [descr:dxMenuOptions.hideSubmenuOnMouseLeave]
      */
@@ -23005,29 +23188,31 @@ declare module DevExpress.ui {
     /**
      * [descr:dxMenuOptions.items]
      */
-    items?: Array<DevExpress.ui.dxMenu.Item>;
+    items?: Array<TItem>;
     /**
      * [descr:dxMenuOptions.onSubmenuHidden]
      */
     onSubmenuHidden?: (
-      e: DevExpress.ui.dxMenu.SubmenuHiddenEvent<TKey>
+      e: DevExpress.ui.dxMenu.SubmenuHiddenEvent<TItem, TKey>
     ) => void;
     /**
      * [descr:dxMenuOptions.onSubmenuHiding]
      */
     onSubmenuHiding?: (
-      e: DevExpress.ui.dxMenu.SubmenuHidingEvent<TKey>
+      e: DevExpress.ui.dxMenu.SubmenuHidingEvent<TItem, TKey>
     ) => void;
     /**
      * [descr:dxMenuOptions.onSubmenuShowing]
      */
     onSubmenuShowing?: (
-      e: DevExpress.ui.dxMenu.SubmenuShowingEvent<TKey>
+      e: DevExpress.ui.dxMenu.SubmenuShowingEvent<TItem, TKey>
     ) => void;
     /**
      * [descr:dxMenuOptions.onSubmenuShown]
      */
-    onSubmenuShown?: (e: DevExpress.ui.dxMenu.SubmenuShownEvent<TKey>) => void;
+    onSubmenuShown?: (
+      e: DevExpress.ui.dxMenu.SubmenuShownEvent<TItem, TKey>
+    ) => void;
     /**
      * [descr:dxMenuOptions.orientation]
      */
@@ -23185,7 +23370,7 @@ declare module DevExpress.ui {
     TComponent extends dxMultiView<TItem, TKey> = dxMultiView<any, any>,
     TItem extends DevExpress.ui.dxMultiView.ItemLike = any,
     TKey = any
-  > extends CollectionWidgetOptions<TComponent, TItem, TKey> {
+  > extends Omit<CollectionWidgetOptions<TComponent, TItem, TKey>, 'keyExpr'> {
     /**
      * [descr:dxMultiViewOptions.animationEnabled]
      */
@@ -26961,6 +27146,7 @@ declare module DevExpress.ui {
     acceptCustomValue?: boolean;
     /**
      * [descr:dxSelectBoxOptions.fieldTemplate]
+     * @deprecated [depNote:dxSelectBoxOptions.fieldTemplate]
      */
     fieldTemplate?:
       | template
@@ -26968,6 +27154,10 @@ declare module DevExpress.ui {
           selectedItem: any,
           fieldElement: DevExpress.core.DxElement
         ) => string | DevExpress.core.UserDefinedElement);
+    /**
+     * [descr:dxSelectBoxOptions.fieldAddons]
+     */
+    fieldAddons?: FieldAddons;
     /**
      * [descr:dxSelectBoxOptions.onCustomItemCreating]
      */
@@ -28350,6 +28540,10 @@ declare module DevExpress.ui {
      * [descr:dxTabPanelOptions.items]
      */
     items?: Array<TItem>;
+    /**
+     * [descr:dxTabPanelOptions.keyExpr]
+     */
+    keyExpr?: string | Function;
     /**
      * [descr:dxTabPanelOptions.onTitleClick]
      */
@@ -31789,7 +31983,7 @@ declare module DevExpress.ui {
     /**
      * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
      */
-    type ItemLike = string | Item | any;
+    type ItemLike = Item | any;
     /**
      * [descr:_ui_tree_view_ItemRenderedEvent]
      */
@@ -32553,6 +32747,30 @@ declare module DevExpress.ui {
    * [descr:dxFilterBuilderField]
    */
   export type Field = dxFilterBuilderField;
+  /**
+   * [descr:FieldAddons]
+   * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
+   */
+  export type FieldAddons = {
+    /**
+     * [descr:FieldAddons.beforeTemplate]
+     */
+    beforeTemplate?:
+      | template
+      | ((
+          data: any,
+          element: DevExpress.core.DxElement
+        ) => string | DevExpress.core.UserDefinedElement);
+    /**
+     * [descr:FieldAddons.afterTemplate]
+     */
+    afterTemplate?:
+      | template
+      | ((
+          data: any,
+          element: DevExpress.core.DxElement
+        ) => string | DevExpress.core.UserDefinedElement);
+  };
   /**
    * [descr:ui.hideToasts()]
    */
@@ -34002,21 +34220,25 @@ declare module DevExpress.viz {
      * [descr:PointInteractionInfo]
      * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
      */
-    export interface PointInteractionInfo {
+    export interface PointInteractionInfo<
+      TPoint extends basePointObject = basePointObject
+    > {
       /**
        * [descr:PointInteractionInfo.target]
        */
-      readonly target: basePointObject;
+      readonly target: TPoint;
     }
     /**
      * [descr:_viz_chart_components_base_chart_TooltipInfo]
      * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
      */
-    export interface TooltipInfo {
+    export interface TooltipInfo<
+      TPoint extends basePointObject = basePointObject
+    > {
       /**
        * [descr:_viz_chart_components_base_chart_TooltipInfo.target]
        */
-      target?: basePointObject | dxChartAnnotationConfig | any;
+      target?: TPoint | dxChartAnnotationConfig | any;
     }
   }
   /**
@@ -34082,8 +34304,10 @@ declare module DevExpress.viz {
    * [descr:BaseChartOptions]
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
-  export interface BaseChartOptions<TComponent>
-    extends BaseWidgetOptions<TComponent> {
+  export interface BaseChartOptions<
+    TComponent,
+    TPoint extends basePointObject = basePointObject
+  > extends BaseWidgetOptions<TComponent> {
     /**
      * [descr:BaseChartOptions.adaptiveLayout]
      */
@@ -34140,7 +34364,7 @@ declare module DevExpress.viz {
             TComponent,
             MouseEvent | PointerEvent
           > &
-            DevExpress.viz.BaseChart.PointInteractionInfo
+            DevExpress.viz.BaseChart.PointInteractionInfo<TPoint>
         ) => void)
       | string;
     /**
@@ -34148,28 +34372,28 @@ declare module DevExpress.viz {
      */
     onPointHoverChanged?: (
       e: DevExpress.common.core.events.EventInfo<TComponent> &
-        DevExpress.viz.BaseChart.PointInteractionInfo
+        DevExpress.viz.BaseChart.PointInteractionInfo<TPoint>
     ) => void;
     /**
      * [descr:BaseChartOptions.onPointSelectionChanged]
      */
     onPointSelectionChanged?: (
       e: DevExpress.common.core.events.EventInfo<TComponent> &
-        DevExpress.viz.BaseChart.PointInteractionInfo
+        DevExpress.viz.BaseChart.PointInteractionInfo<TPoint>
     ) => void;
     /**
      * [descr:BaseChartOptions.onTooltipHidden]
      */
     onTooltipHidden?: (
       e: DevExpress.common.core.events.EventInfo<TComponent> &
-        DevExpress.viz.BaseChart.TooltipInfo
+        DevExpress.viz.BaseChart.TooltipInfo<TPoint>
     ) => void;
     /**
      * [descr:BaseChartOptions.onTooltipShown]
      */
     onTooltipShown?: (
       e: DevExpress.common.core.events.EventInfo<TComponent> &
-        DevExpress.viz.BaseChart.TooltipInfo
+        DevExpress.viz.BaseChart.TooltipInfo<TPoint>
     ) => void;
     /**
      * [descr:BaseChartOptions.palette]
@@ -37024,19 +37248,19 @@ declare module DevExpress.viz {
         dxChart,
         MouseEvent | PointerEvent
       > &
-      DevExpress.viz.BaseChart.PointInteractionInfo;
+      DevExpress.viz.BaseChart.PointInteractionInfo<chartPointObject>;
     /**
      * [descr:_viz_chart_PointHoverChangedEvent]
      */
     export type PointHoverChangedEvent =
       DevExpress.common.core.events.EventInfo<dxChart> &
-        DevExpress.viz.BaseChart.PointInteractionInfo;
+        DevExpress.viz.BaseChart.PointInteractionInfo<chartPointObject>;
     /**
      * [descr:_viz_chart_PointSelectionChangedEvent]
      */
     export type PointSelectionChangedEvent =
       DevExpress.common.core.events.EventInfo<dxChart> &
-        DevExpress.viz.BaseChart.PointInteractionInfo;
+        DevExpress.viz.BaseChart.PointInteractionInfo<chartPointObject>;
     export type Properties = dxChartOptions;
     /**
      * [descr:_viz_chart_SeriesClickEvent]
@@ -37086,13 +37310,13 @@ declare module DevExpress.viz {
      */
     export type TooltipHiddenEvent =
       DevExpress.common.core.events.EventInfo<dxChart> &
-        DevExpress.viz.BaseChart.TooltipInfo;
+        DevExpress.viz.BaseChart.TooltipInfo<chartPointObject>;
     /**
      * [descr:_viz_chart_TooltipShownEvent]
      */
     export type TooltipShownEvent =
       DevExpress.common.core.events.EventInfo<dxChart> &
-        DevExpress.viz.BaseChart.TooltipInfo;
+        DevExpress.viz.BaseChart.TooltipInfo<chartPointObject>;
     /**
      * [descr:dxChartValueAxis]
      */
@@ -37464,7 +37688,8 @@ declare module DevExpress.viz {
    * @deprecated [depNote:dxChartOptions]
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
-  export interface dxChartOptions extends BaseChartOptions<dxChart> {
+  export interface dxChartOptions
+    extends BaseChartOptions<dxChart, chartPointObject> {
     /**
      * [descr:dxChartOptions.adjustOnZoom]
      */
@@ -40559,19 +40784,19 @@ declare module DevExpress.viz {
       dxPieChart,
       MouseEvent | PointerEvent
     > &
-      DevExpress.viz.BaseChart.PointInteractionInfo;
+      DevExpress.viz.BaseChart.PointInteractionInfo<piePointObject>;
     /**
      * [descr:_viz_pie_chart_PointHoverChangedEvent]
      */
     export type PointHoverChangedEvent =
       DevExpress.common.core.events.EventInfo<dxPieChart> &
-        DevExpress.viz.BaseChart.PointInteractionInfo;
+        DevExpress.viz.BaseChart.PointInteractionInfo<piePointObject>;
     /**
      * [descr:_viz_pie_chart_PointSelectionChangedEvent]
      */
     export type PointSelectionChangedEvent =
       DevExpress.common.core.events.EventInfo<dxPieChart> &
-        DevExpress.viz.BaseChart.PointInteractionInfo;
+        DevExpress.viz.BaseChart.PointInteractionInfo<piePointObject>;
     export type Properties = dxPieChartOptions;
     export type SmallValuesGroupingMode =
       | 'none'
@@ -40582,13 +40807,13 @@ declare module DevExpress.viz {
      */
     export type TooltipHiddenEvent =
       DevExpress.common.core.events.EventInfo<dxPieChart> &
-        DevExpress.viz.BaseChart.TooltipInfo;
+        DevExpress.viz.BaseChart.TooltipInfo<piePointObject>;
     /**
      * [descr:_viz_pie_chart_TooltipShownEvent]
      */
     export type TooltipShownEvent =
       DevExpress.common.core.events.EventInfo<dxPieChart> &
-        DevExpress.viz.BaseChart.TooltipInfo;
+        DevExpress.viz.BaseChart.TooltipInfo<piePointObject>;
   }
   /**
    * [descr:dxPieChartAnnotationConfig]
@@ -40651,7 +40876,8 @@ declare module DevExpress.viz {
    * @deprecated [depNote:dxPieChartOptions]
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
-  export interface dxPieChartOptions extends BaseChartOptions<dxPieChart> {
+  export interface dxPieChartOptions
+    extends BaseChartOptions<dxPieChart, piePointObject> {
     /**
      * [descr:dxPieChartOptions.adaptiveLayout]
      */
@@ -41622,19 +41848,19 @@ declare module DevExpress.viz {
         dxPolarChart,
         MouseEvent | PointerEvent
       > &
-      DevExpress.viz.BaseChart.PointInteractionInfo;
+      DevExpress.viz.BaseChart.PointInteractionInfo<polarPointObject>;
     /**
      * [descr:_viz_polar_chart_PointHoverChangedEvent]
      */
     export type PointHoverChangedEvent =
       DevExpress.common.core.events.EventInfo<dxPolarChart> &
-        DevExpress.viz.BaseChart.PointInteractionInfo;
+        DevExpress.viz.BaseChart.PointInteractionInfo<polarPointObject>;
     /**
      * [descr:_viz_polar_chart_PointSelectionChangedEvent]
      */
     export type PointSelectionChangedEvent =
       DevExpress.common.core.events.EventInfo<dxPolarChart> &
-        DevExpress.viz.BaseChart.PointInteractionInfo;
+        DevExpress.viz.BaseChart.PointInteractionInfo<polarPointObject>;
     export type PolarChartSeriesType =
       | 'area'
       | 'bar'
@@ -41691,13 +41917,13 @@ declare module DevExpress.viz {
      */
     export type TooltipHiddenEvent =
       DevExpress.common.core.events.EventInfo<dxPolarChart> &
-        DevExpress.viz.BaseChart.TooltipInfo;
+        DevExpress.viz.BaseChart.TooltipInfo<polarPointObject>;
     /**
      * [descr:_viz_polar_chart_TooltipShownEvent]
      */
     export type TooltipShownEvent =
       DevExpress.common.core.events.EventInfo<dxPolarChart> &
-        DevExpress.viz.BaseChart.TooltipInfo;
+        DevExpress.viz.BaseChart.TooltipInfo<polarPointObject>;
     /**
      * [descr:dxPolarChartValueAxis]
      */
@@ -42001,7 +42227,8 @@ declare module DevExpress.viz {
    * @deprecated [depNote:dxPolarChartOptions]
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
-  export interface dxPolarChartOptions extends BaseChartOptions<dxPolarChart> {
+  export interface dxPolarChartOptions
+    extends BaseChartOptions<dxPolarChart, polarPointObject> {
     /**
      * [descr:dxPolarChartOptions.adaptiveLayout]
      */

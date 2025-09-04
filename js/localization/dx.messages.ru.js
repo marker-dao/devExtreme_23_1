@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ru.js)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,6 +106,9 @@
             "dxSwitch-switchedOffText": "ВЫКЛ",
             "dxForm-optionalMark": "необязательный",
             "dxForm-requiredMessage": " Поле {0} должно быть заполнено",
+            "dxForm-smartPasteButtonText": "Smart Paste",
+            "dxForm-resetButtonText": "Сбросить",
+            "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Значение должно быть числом",
             "dxNumberBox-noDataText": "Нет данных",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Используйте {0} чтобы отобразить столбцы",

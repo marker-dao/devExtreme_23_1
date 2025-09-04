@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ca.js)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,6 +106,9 @@
             "dxSwitch-switchedOffText": "Apagada",
             "dxForm-optionalMark": "opcional",
             "dxForm-requiredMessage": "{0} és obligatori",
+            "dxForm-smartPasteButtonText": "Smart Paste",
+            "dxForm-resetButtonText": "Restablir",
+            "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "El valor ha de ser un número",
             "dxNumberBox-noDataText": "No hi ha dades",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",

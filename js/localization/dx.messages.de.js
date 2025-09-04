@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.de.js)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,6 +106,9 @@
             "dxSwitch-switchedOffText": "AUS",
             "dxForm-optionalMark": "optional",
             "dxForm-requiredMessage": "{0} ist ein Pflichtfeld",
+            "dxForm-smartPasteButtonText": "Smart Paste",
+            "dxForm-resetButtonText": "Zurücksetzen",
+            "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Der Wert muss eine Zahl sein",
             "dxNumberBox-noDataText": "Keine Daten",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Verwenden Sie die {0}, um Spalten anzuzeigen",
@@ -360,10 +363,10 @@
             "dxCardView-emptyHeaderPanelColumnChooserText": "column chooser",
             "dxAvatar-defaultImageAlt": "Avatar",
             "dxChat-elementAriaLabel": "Chat",
-            "dxChat-cancelEditingButtonAriaLabel": "Abbrechen",
-            "dxChat-editingMessageCaption": "Nachricht bearbeiten",
             "dxChat-textareaPlaceholder": "Geben Sie eine Nachricht ein",
             "dxChat-sendButtonAriaLabel": "Senden",
+            "dxChat-cancelEditingButtonAriaLabel": "Abbrechen",
+            "dxChat-editingMessageCaption": "Nachricht bearbeiten",
             "dxChat-defaultUserName": "Unbekannter Benutzer",
             "dxChat-messageListAriaLabel": "Nachrichtenliste",
             "dxChat-alertListAriaLabel": "Fehlerliste",

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.zh.js)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,6 +106,9 @@
             "dxSwitch-switchedOffText": "关",
             "dxForm-optionalMark": "可选",
             "dxForm-requiredMessage": "{0} 是必须的",
+            "dxForm-smartPasteButtonText": "Smart Paste",
+            "dxForm-resetButtonText": "重置",
+            "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "值必须是一个数字",
             "dxNumberBox-noDataText": "无数据",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",

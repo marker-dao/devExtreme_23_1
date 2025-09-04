@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.uk.js)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,6 +106,9 @@
             "dxSwitch-switchedOffText": "ВИМК.",
             "dxForm-optionalMark": "необов'язково",
             "dxForm-requiredMessage": "{0} — обов'язкове поле",
+            "dxForm-smartPasteButtonText": "Smart Paste",
+            "dxForm-resetButtonText": "Скинути",
+            "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Значення має бути числом",
             "dxNumberBox-noDataText": "Немає даних",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Використовуйте {0}, щоб відобразити стовпці",

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.el.js)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,6 +106,9 @@
             "dxSwitch-switchedOffText": "OFF",
             "dxForm-optionalMark": "Προαιρετικό",
             "dxForm-requiredMessage": "Το πεδίο {0} είναι απαιτούμενο",
+            "dxForm-smartPasteButtonText": "Smart Paste",
+            "dxForm-resetButtonText": "Επαναφορά",
+            "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Η τιμή πρέπει να είναι αριθμητική",
             "dxNumberBox-noDataText": "Δεν υπάρχουν δεδομένα",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",

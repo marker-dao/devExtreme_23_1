@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.da.js)
 * Version: 25.2.0
-* Build date: Thu Jul 31 2025
+* Build date: Thu Sep 04 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,6 +106,9 @@
             "dxSwitch-switchedOffText": "SLUKKET",
             "dxForm-optionalMark": "valgfri",
             "dxForm-requiredMessage": "{0} er påkrævet",
+            "dxForm-smartPasteButtonText": "Smart Paste",
+            "dxForm-resetButtonText": "Nulstil",
+            "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Værdien skal være et tal",
             "dxNumberBox-noDataText": "Ingen data",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Brug {0} til at vise kolonner",
