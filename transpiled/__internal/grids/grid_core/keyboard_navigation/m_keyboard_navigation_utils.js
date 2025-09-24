@@ -3,11 +3,14 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getInteractiveElement = getInteractiveElement;
+exports.getInteractiveElements = getInteractiveElements;
 exports.isAdaptiveItem = isAdaptiveItem;
 exports.isCellInHeaderRow = isCellInHeaderRow;
 exports.isDataRow = isDataRow;
 exports.isDetailRow = isDetailRow;
 exports.isEditForm = isEditForm;
+exports.isEditRow = isEditRow;
 exports.isEditorCell = isEditorCell;
 exports.isElementDefined = isElementDefined;
 exports.isFixedColumnIndexOffsetRequired = isFixedColumnIndexOffsetRequired;
@@ -33,6 +36,9 @@ function isDetailRow($row) {
 }
 function isAdaptiveItem($element) {
   return $element && $element.hasClass(_const2.ADAPTIVE_ITEM_TEXT_CLASS);
+}
+function isEditRow($row) {
+  return $row === null || $row === void 0 ? void 0 : $row.hasClass(_const.EDIT_ROW);
 }
 function isEditForm($row) {
   return $row && $row.hasClass(_const2.MASTER_DETAIL_ROW_CLASS) && $row.hasClass(_const2.EDIT_FORM_CLASS);
@@ -65,4 +71,11 @@ function isFixedColumnIndexOffsetRequired(that, column) {
 function shouldPreventScroll(that) {
   const keyboardController = that.getController('keyboardNavigation');
   return keyboardController._isVirtualScrolling() ? that.option('focusedRowIndex') === keyboardController.getRowIndex() : false;
+}
+function getInteractiveElements($cell) {
+  return $cell.find(_const2.INTERACTIVE_ELEMENTS_SELECTOR).filter(':visible');
+}
+function getInteractiveElement($cell, isLast) {
+  const $focusedElement = getInteractiveElements($cell);
+  return isLast ? $focusedElement.last() : $focusedElement.first();
 }

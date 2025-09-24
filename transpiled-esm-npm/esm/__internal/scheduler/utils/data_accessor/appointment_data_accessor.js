@@ -1,6 +1,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { compileGetter, compileSetter } from '../../../../core/utils/data';
 import dateSerialization from '../../../../core/utils/date_serialization';
+import { validateRRule } from '../../recurrence/validate_rule';
 import { DataAccessor } from './data_accessor';
 const isDateField = field => field === 'startDate' || field === 'endDate';
 const isBooleanField = field => field === 'allDay' || field === 'disabled';
@@ -85,5 +86,10 @@ export class AppointmentDataAccessor extends DataAccessor {
     this.getter[name] = getter;
     this.setter[name] = setter;
     this.expr[field] = expr;
+  }
+  isRecurrent(appointment) {
+    const recurrenceRule = this.get('recurrenceRule', appointment);
+    const isRecurrent = validateRRule(recurrenceRule);
+    return isRecurrent;
   }
 }

@@ -1,45 +1,9 @@
 "use strict";
 
-exports.TooltipViewer = TooltipViewer;
-const TOOLTIP_OFFSET = 12;
-
-// TODO: Somehow it should be merged with the core.Tooltip
-function TooltipViewer(params) {
-  this._subscribeToTracker(params.tracker, params.tooltip, params.layerCollection);
-}
-TooltipViewer.prototype = {
-  constructor: TooltipViewer,
-  dispose: function () {
-    this._offTracker();
-    this._offTracker = null;
-  },
-  _subscribeToTracker: function (tracker, tooltip, layerCollection) {
-    this._offTracker = tracker.on({
-      'focus-on': function (arg) {
-        let layer;
-        let proxy;
-        if (tooltip.isEnabled()) {
-          layer = layerCollection.byName(arg.data.name);
-          proxy = layer && layer.getProxy(arg.data.index);
-          const callback = result => {
-            result && arg.done(result);
-          };
-          proxy && callback(tooltip.show(proxy, {
-            x: arg.x,
-            y: arg.y,
-            offset: TOOLTIP_OFFSET
-          }, {
-            target: proxy
-          }, undefined, callback));
-        }
-      },
-      // There are no checks for `tooltip.isEnabled()` in the following two handlers because they are called only if the previous one has finished with `true`
-      'focus-move': function (arg) {
-        tooltip.move(arg.x, arg.y, TOOLTIP_OFFSET);
-      },
-      'focus-off': function () {
-        tooltip.hide();
-      }
-    });
-  }
-};
+exports.default = void 0;
+var TooltipViewer = _interopRequireWildcard(require("../../__internal/viz/vector_map/tooltip_viewer"));
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+var _default = exports.default = TooltipViewer;
+module.exports = exports.default;
+module.exports.default = exports.default;

@@ -2,11 +2,7 @@
 
 var _globals = require("@jest/globals");
 var _index = require("./index");
-/* eslint-disable @typescript-eslint/no-extraneous-class */
-/* eslint-disable prefer-const */
-/* eslint-disable @typescript-eslint/init-declarations */
 /* eslint-disable max-classes-per-file */
-/* eslint-disable class-methods-use-this */
 
 (0, _globals.describe)('basic', () => {
   (0, _globals.describe)('register', () => {
@@ -154,5 +150,105 @@ var _index = require("./index");
   (0, _globals.it)('should throw', () => {
     (0, _globals.expect)(() => ctx.get(MyClass1)).toThrow();
     (0, _globals.expect)(() => ctx.get(MyClass2)).toThrow();
+  });
+});
+(0, _globals.describe)('decorators', () => {
+  class MyClass {
+    constructor() {
+      this.value = 1;
+      this.tag = '';
+    }
+  }
+  MyClass.dependencies = [];
+  class AnotherClass {
+    constructor() {
+      this.counter = 0;
+    }
+  }
+  AnotherClass.dependencies = [];
+  (0, _globals.it)('should apply global decorators to created instances', () => {
+    const ctx = new _index.DIContext();
+    ctx.register(MyClass);
+    ctx.registerDecorator(instance => {
+      if (instance instanceof MyClass) {
+        instance.value = 2;
+      }
+      return instance;
+    });
+    (0, _globals.expect)(ctx.get(MyClass).value).toBe(2);
+  });
+  (0, _globals.it)('should apply global decorators to registered instances', () => {
+    const ctx = new _index.DIContext();
+    const instance = new MyClass();
+    ctx.registerDecorator(obj => {
+      if (obj instanceof MyClass) {
+        obj.value = 3;
+      }
+      return obj;
+    });
+    ctx.registerInstance(MyClass, instance);
+    (0, _globals.expect)(ctx.get(MyClass).value).toBe(3);
+    (0, _globals.expect)(instance.value).toBe(3);
+  });
+  (0, _globals.it)('should apply multiple global decorators in the correct order', () => {
+    const ctx = new _index.DIContext();
+    ctx.register(MyClass);
+    ctx.registerDecorator(instance => {
+      if (instance instanceof MyClass) {
+        instance.value += 1;
+        instance.tag += 'A';
+      }
+      return instance;
+    });
+    ctx.registerDecorator(instance => {
+      if (instance instanceof MyClass) {
+        instance.value += 2;
+        instance.tag += 'B';
+      }
+      return instance;
+    });
+    const result = ctx.get(MyClass);
+    (0, _globals.expect)(result.value).toBe(4);
+    (0, _globals.expect)(result.tag).toBe('AB');
+  });
+  (0, _globals.it)('should apply global decorators to instances created from fabrics', () => {
+    const ctx = new _index.DIContext();
+    class BaseClass {
+      constructor() {
+        this.value = 1;
+      }
+    }
+    BaseClass.dependencies = [];
+    class ExtendedClass extends BaseClass {
+      constructor() {
+        super(...arguments);
+        this.extraValue = 10;
+      }
+    }
+    ExtendedClass.dependencies = [];
+    ctx.register(BaseClass, ExtendedClass);
+    ctx.registerDecorator(instance => {
+      if (instance instanceof ExtendedClass) {
+        instance.extraValue = 20;
+      }
+      return instance;
+    });
+    const result = ctx.get(BaseClass);
+    (0, _globals.expect)(result).toBeInstanceOf(ExtendedClass);
+    (0, _globals.expect)(result.extraValue).toBe(20);
+  });
+  (0, _globals.it)('should prevent adding decorators after instance creation', () => {
+    const ctx = new _index.DIContext();
+    ctx.register(MyClass);
+    ctx.register(AnotherClass);
+    const myClassInstance = ctx.get(MyClass);
+    (0, _globals.expect)(() => ctx.registerDecorator(obj => {
+      if (obj instanceof MyClass) {
+        obj.value = 42;
+        obj.tag = 'decorated';
+      }
+    })).toThrowError();
+    (0, _globals.expect)(myClassInstance.value).toBe(1);
+    (0, _globals.expect)(myClassInstance.tag).toBe('');
   });
 });

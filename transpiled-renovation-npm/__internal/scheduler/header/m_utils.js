@@ -3,11 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.nextWeek = exports.isOneView = exports.getViewName = exports.getStep = exports.getNextIntervalDate = exports.getCaptionInterval = exports.getCaption = void 0;
+exports.nextWeek = exports.getViewText = exports.getViewName = exports.getStep = exports.getNextIntervalDate = exports.getCaptionInterval = exports.getCaption = exports.formatViews = void 0;
 var _date = _interopRequireDefault(require("../../../common/core/localization/date"));
 var _date2 = _interopRequireDefault(require("../../../core/utils/date"));
 var _type = require("../../../core/utils/type");
+var _message = _interopRequireDefault(require("../../../localization/message"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DAY_FORMAT = 'd';
 const DAYS_IN_WORK_WEEK = 5;
 const {
@@ -150,7 +152,7 @@ const getNextIntervalDate = (options, direction) => {
   // eslint-disable-next-line default-case
   switch (step) {
     case 'day':
-      dayDuration = 1 * intervalCount;
+      dayDuration = Number(intervalCount);
       break;
     case 'week':
     case 'workWeek':
@@ -274,9 +276,25 @@ const STEP_MAP = {
   timelineMonth: 'month',
   agenda: 'agenda'
 };
+const getViewName = view => {
+  if ((0, _type.isObject)(view)) {
+    return view.name ?? view.type;
+  }
+  return view;
+};
+exports.getViewName = getViewName;
+const getViewText = view => {
+  const viewName = getViewName(view);
+  const viewText = _message.default.format(`dxScheduler-switcher${viewName}`);
+  if (!viewText) {
+    return viewName ?? '';
+  }
+  return viewText;
+};
+exports.getViewText = getViewText;
+const formatViews = views => views.map(view => _extends({}, view, {
+  text: getViewText(view)
+}));
+exports.formatViews = formatViews;
 const getStep = type => STEP_MAP[type];
 exports.getStep = getStep;
-const getViewName = view => view.name ?? view.type;
-exports.getViewName = getViewName;
-const isOneView = (views, selectedView) => views.length === 1 && getViewName(views[0]) === selectedView;
-exports.isOneView = isOneView;

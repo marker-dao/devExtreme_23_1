@@ -11,7 +11,7 @@ var _callbacks = _interopRequireDefault(require("../../../core/utils/callbacks")
 var _deferred = require("../../../core/utils/deferred");
 var _size = require("../../../core/utils/size");
 var _load_indicator = _interopRequireDefault(require("../../../ui/load_indicator"));
-var _scrollable = _interopRequireDefault(require("./scrollable.native"));
+var _scrollable = _interopRequireDefault(require("../../ui/scroll_view/scrollable.native"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const SCROLLVIEW_PULLDOWN_DOWN_LOADING_CLASS = 'dx-scrollview-pull-down-loading';
 const SCROLLVIEW_PULLDOWN_INDICATOR_CLASS = 'dx-scrollview-pull-down-indicator';
@@ -179,7 +179,6 @@ class SwipeDownNativeScrollViewStrategy extends _scrollable.default {
     });
   }
   pullDownEnable(enabled) {
-    // @ts-expect-error ts-error
     this._$topPocket.toggle(enabled);
     this._pullDownEnabled = enabled;
   }

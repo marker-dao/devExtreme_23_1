@@ -25,7 +25,7 @@ import * as zIndexPool from '../../ui/overlay/z_index';
 import { TOOLBAR_CLASS } from '../../ui/toolbar/constants';
 import PopupDrag from './m_popup_drag';
 import { createBodyOverflowManager } from './m_popup_overflow_manager';
-import { PopupPositionController } from './m_popup_position_controller';
+import { PopupPositionController } from './popup_position_controller';
 // STYLE popup
 const window = windowUtils.getWindow();
 export const POPUP_CLASS = 'dx-popup';
@@ -412,7 +412,8 @@ class Popup extends Overlay {
       (_this$_$topToolbar = this._$topToolbar) === null || _this$_$topToolbar === void 0 || _this$_$topToolbar.toggleClass(POPUP_HAS_CLOSE_BUTTON_CLASS, this._hasCloseButton());
     } else {
       var _this$_$topToolbar2;
-      (_this$_$topToolbar2 = this._$topToolbar) === null || _this$_$topToolbar2 === void 0 || _this$_$topToolbar2.detach();
+      (_this$_$topToolbar2 = this._$topToolbar) === null || _this$_$topToolbar2 === void 0 || _this$_$topToolbar2.remove();
+      this._$topToolbar = undefined;
     }
     this._toggleAriaLabel();
   }
@@ -434,7 +435,8 @@ class Popup extends Overlay {
     const items = this._getToolbarItems('bottom');
     if (!items.length) {
       var _this$_$bottomToolbar;
-      (_this$_$bottomToolbar = this._$bottomToolbar) === null || _this$_$bottomToolbar === void 0 || _this$_$bottomToolbar.detach();
+      (_this$_$bottomToolbar = this._$bottomToolbar) === null || _this$_$bottomToolbar === void 0 || _this$_$bottomToolbar.remove();
+      this._$bottomToolbar = undefined;
       return;
     }
     if (this._$bottomToolbar) {
@@ -574,6 +576,7 @@ class Popup extends Overlay {
         icon: 'close',
         onClick: this._createToolbarItemAction(undefined),
         stylingMode: 'text',
+        // @ts-expect-error ts-error
         integrationOptions: {}
       });
       $(container).append($button);
@@ -699,6 +702,7 @@ class Popup extends Overlay {
     this.$content().toggleClass(POPUP_CONTENT_SCROLLABLE_CLASS, isNativeScrollingEnabled);
   }
   _getPositionControllerConfig() {
+    const superConfiguration = super._getPositionControllerConfig();
     const {
       fullScreen,
       forceApplyBindings,
@@ -706,13 +710,19 @@ class Popup extends Overlay {
       dragAndResizeArea,
       outsideDragFactor
     } = this.option();
-    return _extends({}, super._getPositionControllerConfig(), {
+    const properties = _extends({}, superConfiguration.properties, {
       fullScreen,
       forceApplyBindings,
       dragOutsideBoundary,
       dragAndResizeArea,
       outsideDragFactor
     });
+    const elements = _extends({}, superConfiguration.elements);
+    const configuration = {
+      properties,
+      elements
+    };
+    return configuration;
   }
   _initPositionController() {
     if (this._positionController) {
@@ -1028,7 +1038,7 @@ class Popup extends Overlay {
         super._optionChanged(args);
         if (this.option('resizeEnabled')) {
           var _this$_resizable;
-          // @ts-expect-error ts-error
+          // @ts-expect-error resizable area option type compatibility
           (_this$_resizable = this._resizable) === null || _this$_resizable === void 0 || _this$_resizable.option('area', this._positionController.$dragResizeContainer);
         }
         break;
@@ -1055,21 +1065,24 @@ class Popup extends Overlay {
         this._renderDrag();
         break;
       case 'dragAndResizeArea':
+        // @ts-expect-error property type compatibility
         this._positionController.dragAndResizeArea = value;
         if (this.option('resizeEnabled')) {
-          // @ts-expect-error ts-error
+          // @ts-expect-error resizable area option type compatibility
           this._resizable.option('area', this._positionController.$dragResizeContainer);
         }
         this._positionController.positionContent();
         break;
       case 'dragOutsideBoundary':
+        // @ts-expect-error property type compatibility
         this._positionController.dragOutsideBoundary = value;
         if (this.option('resizeEnabled')) {
-          // @ts-expect-error ts-error
+          // @ts-expect-error resizable area option type compatibility
           this._resizable.option('area', this._positionController.$dragResizeContainer);
         }
         break;
       case 'outsideDragFactor':
+        // @ts-expect-error property type compatibility
         this._positionController.outsideDragFactor = value;
         break;
       case 'resizeEnabled':
@@ -1081,6 +1094,7 @@ class Popup extends Overlay {
         triggerResizeEvent(this.$overlayContent());
         break;
       case 'fullScreen':
+        // @ts-expect-error property type compatibility
         this._positionController.fullScreen = value;
         this._toggleFullScreenClass(Boolean(value));
         this._toggleSafariScrolling();

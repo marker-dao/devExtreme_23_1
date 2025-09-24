@@ -2,8 +2,8 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["config"];
 import { createVNode, normalizeProps } from "inferno";
-import { hideWave, initConfig, showWave } from '../../../ui/widget/utils.ink_ripple';
 import { BaseInfernoComponent } from '../../core/r1/runtime/inferno/index';
+import { hideWave, initConfig, showWave } from '../../core/utils/m_ink_ripple';
 export const defaultInkRippleProps = {
   config: {}
 };

@@ -51,6 +51,7 @@ const DIAGRAM_FLOATING_TOOLBAR_CONTAINER_CLASS = DIAGRAM_CLASS + '-floating-tool
 const DIAGRAM_PROPERTIES_PANEL_TOOLBAR_CONTAINER_CLASS = DIAGRAM_CLASS + '-properties-panel-toolbar-container';
 const DIAGRAM_LOADING_INDICATOR_CLASS = DIAGRAM_CLASS + '-loading-indicator';
 const DIAGRAM_FLOATING_PANEL_OFFSET = 12;
+const DIAGRAM_PROPERTIES_PANEL_NS_OFFSET = 16;
 const DIAGRAM_DEFAULT_UNIT = 'in';
 const DIAGRAM_DEFAULT_ZOOMLEVEL = 1;
 const DIAGRAM_DEFAULT_AUTOZOOM_MODE = 'disabled';
@@ -431,18 +432,20 @@ class Diagram extends _ui.default {
   }
   _updatePropertiesToolbarPosition($container, $parent, isServerSide) {
     if (isServerSide) return;
+    const offset = this.option('useNativeScrolling') ? DIAGRAM_PROPERTIES_PANEL_NS_OFFSET : DIAGRAM_FLOATING_PANEL_OFFSET;
     _position.default.setup($container, {
       my: 'right bottom',
       at: 'right bottom',
       of: $parent,
-      offset: '-' + DIAGRAM_FLOATING_PANEL_OFFSET + ' -' + DIAGRAM_FLOATING_PANEL_OFFSET
+      offset: `-${offset}px -${offset}px`
     });
   }
   _renderPropertiesPanel($parent) {
     const isServerSide = !(0, _window.hasWindow)();
     const $propertiesPanel = (0, _renderer.default)('<div>').appendTo($parent);
-    const offsetX = DIAGRAM_FLOATING_PANEL_OFFSET;
-    const offsetY = 2 * DIAGRAM_FLOATING_PANEL_OFFSET + (!isServerSide ? (0, _size.getOuterHeight)(this._propertiesToolbar.$element()) : 0);
+    const offset = this.option('useNativeScrolling') ? DIAGRAM_PROPERTIES_PANEL_NS_OFFSET : DIAGRAM_FLOATING_PANEL_OFFSET;
+    const offsetX = offset;
+    const offsetY = 2 * offset + (!isServerSide ? (0, _size.getOuterHeight)(this._propertiesToolbar.$element()) : 0);
     this._propertiesPanel = this._createComponent($propertiesPanel, _uiDiagram11.default, {
       isMobileView: this.isMobileScreenSize(),
       isVisible: this._isPropertiesPanelVisible(),

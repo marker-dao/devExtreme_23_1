@@ -2,7 +2,7 @@
 
 var _inferno = require("inferno");
 var _globals = require("@jest/globals");
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../../core/state_manager/index");
 var _view = require("./view");
 /* eslint-disable
   spellcheck/spell-checker,
@@ -67,7 +67,7 @@ _globals.jest.mock('@ts/grids/grid_core/header_filter/m_header_filter_core', () 
     });
     (0, _globals.it)('should init old popup module on creation', () => {
       new _view.HeaderFilterPopupView({}, {
-        popupState: (0, _signalsCore.signal)(null)
+        popupState: (0, _index.signal)(null)
       });
       (0, _globals.expect)(oldHeaderFilterMock.init).toHaveBeenCalledTimes(1);
     });
@@ -80,7 +80,7 @@ _globals.jest.mock('@ts/grids/grid_core/header_filter/m_header_filter_core', () 
         optA: 'A',
         optB: 'B'
       };
-      const popupState = (0, _signalsCore.signal)(null);
+      const popupState = (0, _index.signal)(null);
       new _view.HeaderFilterPopupView({}, {
         popupState
       });
@@ -92,7 +92,7 @@ _globals.jest.mock('@ts/grids/grid_core/header_filter/m_header_filter_core', () 
       (0, _globals.expect)(oldHeaderFilterMock.showHeaderFilterMenu).toHaveBeenCalledWith(expectedElement, expectedOptions);
     });
     (0, _globals.it)('should do nothing if popupState update is empty', () => {
-      const popupState = (0, _signalsCore.signal)(null);
+      const popupState = (0, _index.signal)(null);
       new _view.HeaderFilterPopupView({}, {
         popupState
       });

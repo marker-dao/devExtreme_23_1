@@ -43,10 +43,10 @@ export class TimeZoneCalculator {
       appointment,
       common
     } = this.getOffsets(date, timezone);
-    if (!!timezone && isUTCDate) {
+    if (Boolean(timezone) && isUTCDate) {
       return appointment - client;
     }
-    if (!!timezone && !isUTCDate) {
+    if (Boolean(timezone) && !isUTCDate) {
       return appointment - common;
     }
     if (!timezone && isUTCDate) {
@@ -68,6 +68,6 @@ export class TimeZoneCalculator {
     const offsets = this.getOffsets(newDate, appointmentTimezone);
     const targetOffsetName = appointmentTimezone ? 'appointment' : 'common';
     const direction = isBack ? -1 : 1;
-    return dateUtilsTs.addOffsets(newDate, [direction * toMs('hour') * offsets[targetOffsetName], -direction * toMs('hour') * offsets.client]);
+    return dateUtilsTs.addOffsets(newDate, direction * toMs('hour') * offsets[targetOffsetName], -direction * toMs('hour') * offsets.client);
   }
 }

@@ -192,8 +192,8 @@ export class VirtualScrollingDispatcher {
     }
   }
   createVirtualScrolling() {
-    const isVerticalVirtualScrollingCreated = !!this.verticalVirtualScrolling;
-    const isHorizontalVirtualScrollingCreated = !!this.horizontalVirtualScrolling;
+    const isVerticalVirtualScrollingCreated = Boolean(this.verticalVirtualScrolling);
+    const isHorizontalVirtualScrollingCreated = Boolean(this.horizontalVirtualScrolling);
     if (this.verticalScrollingAllowed !== isVerticalVirtualScrollingCreated || this.horizontalScrollingAllowed !== isHorizontalVirtualScrollingCreated) {
       this._rowHeight = this.getCellHeight();
       this._cellWidth = this.getCellWidth();

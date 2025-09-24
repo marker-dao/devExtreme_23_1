@@ -1,4 +1,4 @@
-import { ChangeStyleCommand, ChangeToneCommand, ExecuteCommand, ExpandCommand, ProofreadCommand, ShortenCommand, SummarizeCommand, TranslateCommand } from '../../../core/ai_integration/commands/index';
+import { ChangeStyleCommand, ChangeToneCommand, ExecuteCommand, ExpandCommand, ProofreadCommand, ShortenCommand, SmartPasteCommand, SummarizeCommand, TranslateCommand } from '../../../core/ai_integration/commands/index';
 import { PromptManager } from '../../../core/ai_integration/core/prompt_manager';
 import { RequestManager } from '../../../core/ai_integration/core/request_manager';
 export var CommandNames;
@@ -11,6 +11,7 @@ export var CommandNames;
   CommandNames["Shorten"] = "shorten";
   CommandNames["Summarize"] = "summarize";
   CommandNames["Translate"] = "translate";
+  CommandNames["SmartPaste"] = "smartPaste";
 })(CommandNames || (CommandNames = {}));
 export const COMMANDS = {
   [CommandNames.ChangeStyle]: ChangeStyleCommand,
@@ -20,7 +21,8 @@ export const COMMANDS = {
   [CommandNames.Proofread]: ProofreadCommand,
   [CommandNames.Shorten]: ShortenCommand,
   [CommandNames.Summarize]: SummarizeCommand,
-  [CommandNames.Translate]: TranslateCommand
+  [CommandNames.Translate]: TranslateCommand,
+  [CommandNames.SmartPaste]: SmartPasteCommand
 };
 export class AIIntegration {
   constructor(provider) {
@@ -60,5 +62,8 @@ export class AIIntegration {
   }
   translate(params, callbacks) {
     return this.executeCommand(CommandNames.Translate, params, callbacks);
+  }
+  smartPaste(params, callbacks) {
+    return this.executeCommand(CommandNames.SmartPaste, params, callbacks);
   }
 }

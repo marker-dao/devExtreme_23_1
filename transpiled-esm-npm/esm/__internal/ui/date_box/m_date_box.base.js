@@ -649,14 +649,16 @@ class DateBox extends DropDownEditor {
     }
   }
   _getSerializationFormat() {
-    const value = this.option('value');
+    const {
+      value
+    } = this.option();
     if (this.option('dateSerializationFormat') && config().forceIsoDateParsing) {
       return this.option('dateSerializationFormat');
     }
     if (isNumeric(value)) {
       return 'number';
     }
-    if (!isString(value)) {
+    if (!isString(value) || value === '') {
       return;
     }
     return dateSerialization.getDateSerializationFormat(value);

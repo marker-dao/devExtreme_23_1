@@ -16,7 +16,8 @@ var _button_group = _interopRequireDefault(require("../../ui/button_group"));
 var _editor = _interopRequireDefault(require("../../ui/editor/editor"));
 var _form = _interopRequireDefault(require("../../ui/form"));
 var _themes = require("../../ui/themes");
-var _m_recurrence = require("./m_recurrence");
+var _base = require("./recurrence/base");
+var _days_from_by_day_rule = require("./recurrence/days_from_by_day_rule");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable max-classes-per-file, spellcheck/spell-checker */
 
@@ -77,12 +78,10 @@ const days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 const getStylingModeFunc = () => (0, _themes.isFluent)((0, _themes.current)()) ? 'filled' : undefined;
 class RecurrenceRule {
   constructor(rule) {
-    this._recurrenceProcessor = (0, _m_recurrence.getRecurrenceProcessor)();
-    this._recurrenceProcessor = (0, _m_recurrence.getRecurrenceProcessor)();
-    this._recurrenceRule = this._recurrenceProcessor.evalRecurrenceRule(rule).rule;
+    this._recurrenceRule = (0, _base.parseRecurrenceRule)(rule);
   }
   makeRules(string) {
-    this._recurrenceRule = this._recurrenceProcessor.evalRecurrenceRule(string).rule;
+    this._recurrenceRule = (0, _base.parseRecurrenceRule)(string);
   }
   makeRule(field, value) {
     if (!value || Array.isArray(value) && !value.length) {
@@ -111,13 +110,13 @@ class RecurrenceRule {
     return 'never';
   }
   getRecurrenceString() {
-    return this._recurrenceProcessor.getRecurrenceString(this._recurrenceRule);
+    return (0, _base.getRecurrenceString)(this._recurrenceRule);
   }
   getRules() {
     return this._recurrenceRule;
   }
   getDaysFromByDayRule() {
-    return this._recurrenceProcessor.daysFromByDayRule(this._recurrenceRule);
+    return (0, _days_from_by_day_rule.daysFromByDayRule)(this._recurrenceRule);
   }
 }
 class RecurrenceEditor extends _editor.default {
@@ -415,8 +414,7 @@ class RecurrenceEditor extends _editor.default {
     this._changeEditorValue();
   }
   _changeEditorValue() {
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    this.option('value', this._recurrenceRule.getRecurrenceString() || '');
+    this.option('value', this._recurrenceRule.getRecurrenceString() ?? '');
   }
   _daysOfWeekByRules() {
     let daysByRule = this._recurrenceRule.getDaysFromByDayRule();

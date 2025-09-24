@@ -527,13 +527,11 @@ const columnHeadersView = Base => class ColumnHeadersViewFilterRowExtender exten
       },
       onItemClick(properties) {
         var _properties$itemData;
-        // @ts-expect-error
         const selectedFilterOperation = properties.itemData.name;
         const columnSelectedFilterOperation = getColumnSelectedFilterOperation(that, column);
         let notFocusEditor = false;
         const isOnClickMode = isOnClickApplyFilterMode(that);
         const options = {};
-        // @ts-expect-error
         if (properties.itemData.items || selectedFilterOperation && selectedFilterOperation === columnSelectedFilterOperation) {
           return;
         }

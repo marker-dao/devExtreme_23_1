@@ -14,7 +14,7 @@ var _icon = require("../../../core/utils/icon");
 var _type = require("../../../core/utils/type");
 var _themes = require("../../../ui/themes");
 var _m_support = _interopRequireDefault(require("../../core/utils/m_support"));
-var _m_multi_view = _interopRequireDefault(require("../../ui/multi_view/m_multi_view"));
+var _multi_view = _interopRequireDefault(require("../../ui/multi_view/multi_view"));
 var _tabs = _interopRequireWildcard(require("../../ui/tabs/tabs"));
 var _item = _interopRequireDefault(require("./item"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
@@ -59,7 +59,7 @@ const STYLING_MODE = {
   primary: 'primary',
   secondary: 'secondary'
 };
-class TabPanel extends _m_multi_view.default {
+class TabPanel extends _multi_view.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       itemTitleTemplate: 'title',
@@ -465,7 +465,6 @@ class TabPanel extends _m_multi_view.default {
         break;
       case 'focusedElement':
         {
-          // @ts-expect-error ts-error
           const id = value ? (0, _renderer.default)(value).index() : value;
           // @ts-expect-error ts-error
           const newItem = value && this._tabs ? this._tabs._itemElements().eq(id) : value;

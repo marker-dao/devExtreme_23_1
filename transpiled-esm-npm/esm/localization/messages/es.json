@@ -96,6 +96,9 @@
 
         "dxForm-optionalMark": "opcional",
         "dxForm-requiredMessage": "{0} es obligatorio",
+        "dxForm-smartPasteButtonText": "Smart Paste",
+        "dxForm-resetButtonText": "Reestablecer",
+        "dxForm-submitButtonText": "Submit",
 
         "dxNumberBox-invalidValueMessage": "Valor debe ser un número",
         "dxNumberBox-noDataText": "Sin datos",
@@ -848,6 +851,9 @@
         "dxSplitter-resizeHandleAriaLabel": "Split bar",
         "dxSplitter-resizeHandleAriaRoleDescription": "Separator",
 
-        "dxStepper-optionalMark": "(Optional)"
+        "dxStepper-optionalMark": "(Optional)",
+
+        "dxSpeechToText-ariaLabelStart": "Press to start voice transcription",
+        "dxSpeechToText-ariaLabelStop": "Press to stop voice transcription"
     }
 }

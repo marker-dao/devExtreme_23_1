@@ -91,7 +91,7 @@ class ButtonCollection extends _uiCollection_widget.default {
     this.setAria('pressed', value, $target);
   }
   _renderItemContentByNode(args, $node) {
-    args.container = (0, _renderer.default)(args.container.children().first());
+    args.container = (0, _renderer.default)(args.container).children().first();
     return super._renderItemContentByNode(args, $node);
   }
   _focusTarget() {

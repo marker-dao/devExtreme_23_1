@@ -20,8 +20,8 @@ var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
 var _load_indicator = _interopRequireDefault(require("../../../ui/load_indicator"));
 var _themes = require("../../../ui/themes");
-var _selectors = require("../../../ui/widget/selectors");
 var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
+var _m_selectors = require("../../core/utils/m_selectors");
 var _editor = _interopRequireDefault(require("../../ui/editor/editor"));
 var _m_text_editor = _interopRequireDefault(require("./m_text_editor.clear"));
 var _m_text_editor2 = require("./m_text_editor.label");
@@ -133,7 +133,7 @@ class TextEditorBase extends _editor.default {
     return this.$element().find(TEXTEDITOR_INPUT_SELECTOR).first();
   }
   _isFocused() {
-    return (0, _selectors.focused)(this._input()) || super._isFocused();
+    return (0, _m_selectors.focused)(this._input()) || super._isFocused();
   }
   _inputWrapper() {
     return this.$element();
@@ -183,7 +183,7 @@ class TextEditorBase extends _editor.default {
     this.$element().addClass(TEXTEDITOR_VALIDATION_PENDING_CLASS);
     const $inputContainer = this._getInputContainer();
     const $indicatorElement = (0, _renderer.default)('<div>').addClass(TEXTEDITOR_PENDING_INDICATOR_CLASS).appendTo($inputContainer);
-    this._pendingIndicator = this._createComponent($indicatorElement, _load_indicator.default);
+    this._pendingIndicator = this._createComponent($indicatorElement, _load_indicator.default, {});
   }
   _disposePendingIndicator() {
     if (!this._pendingIndicator) {
@@ -518,7 +518,9 @@ class TextEditorBase extends _editor.default {
   _renderEvents() {
     const $input = this._input();
     (0, _iterator.each)(EVENTS_LIST, (_, event) => {
+      // @ts-expect-error
       if (this.hasActionSubscription(`on${event}`)) {
+        // @ts-expect-error
         const action = this._createActionByOption(`on${event}`, {
           excludeValidators: ['readOnly']
         });

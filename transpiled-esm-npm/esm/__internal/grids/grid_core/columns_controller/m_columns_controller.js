@@ -22,7 +22,7 @@ import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
 import { StickyPosition } from '../sticky_columns/const';
 import { COLUMN_CHOOSER_LOCATION, COLUMN_OPTION_REGEXP, COMMAND_EXPAND_CLASS, DATATYPE_OPERATIONS, DETAIL_COMMAND_COLUMN_NAME, GROUP_COMMAND_COLUMN_NAME, GROUP_LOCATION, MAX_SAFE_INTEGER, USER_STATE_FIELD_NAMES } from './const';
-import { addExpandColumn, applyUserState, assignColumns, columnOptionCore, convertOwnerBandToColumnReference, createColumn, createColumnsFromDataSource, createColumnsFromOptions, defaultSetCellValue, digitsCount, findColumn, fireColumnsChanged, getAlignmentByDataType, getChildrenByBandColumn, getColumnByIndexes, getColumnIndexByVisibleIndex, getCustomizeTextByDataType, getDataColumns, getFixedPosition, getParentBandColumns, getRowCount, getSerializationFormat, getValueDataType, isColumnFixed, isFirstOrLastColumn, isSortOrderValid, mergeColumns, moveColumnToGroup, numberToString, processBandColumns, processExpandColumns, resetBandColumnsCache, resetColumnsCache, setFilterOperationsAsDefaultValues, sortColumns, strictParseNumber, updateColumnChanges, updateColumnGroupIndexes, updateIndexes, updateSerializers } from './m_columns_controller_utils';
+import { addExpandColumn, applyUserState, assignColumns, columnOptionCore, convertOwnerBandToColumnReference, createColumn, createColumnsFromDataSource, createColumnsFromOptions, defaultSetCellValue, digitsCount, findColumn, fireColumnsChanged, getAlignmentByDataType, getChildrenByBandColumn, getColumnByIndexes, getColumnIndexByVisibleIndex, getCustomizeTextByDataType, getDataColumns, getFixedPosition, getParentBandColumns, getRowCount, getSerializationFormat, getValueDataType, isColumnFixed, isColumnNameRequired, isFirstOrLastColumn, isSortOrderValid, mergeColumns, moveColumnToGroup, numberToString, processBandColumns, processExpandColumns, resetBandColumnsCache, resetColumnsCache, setFilterOperationsAsDefaultValues, sortColumns, strictParseNumber, updateColumnChanges, updateColumnGroupIndexes, updateIndexes, updateSerializers } from './m_columns_controller_utils';
 export class ColumnsController extends modules.Controller {
   init(isApplyingUserState) {
     this._dataController = this.getController('data');
@@ -436,7 +436,9 @@ export class ColumnsController extends modules.Controller {
     if (expandColumns.length) {
       expandColumn = this.columnOption('command:expand');
     }
-    expandColumns = map(expandColumns, column => extend({}, column, {
+    expandColumns = map(expandColumns, column => extend({}, _extends({}, column, {
+      ownerBand: undefined
+    }), {
       visibleWidth: null,
       minWidth: null,
       cellTemplate: !isDefined(column.groupIndex) ? column.cellTemplate : null,
@@ -1213,7 +1215,9 @@ export class ColumnsController extends modules.Controller {
     return result;
   }
   setName(column) {
-    column.name = column.name || column.dataField || column.type;
+    if (!isColumnNameRequired(column)) {
+      column.name = column.name || column.dataField || column.type;
+    }
   }
   setUserState(state) {
     const that = this;
@@ -1244,8 +1248,9 @@ export class ColumnsController extends modules.Controller {
   }
   _checkColumns() {
     const usedNames = {};
-    let hasEditableColumnWithoutName = false;
     const duplicatedNames = [];
+    let hasEditableColumnWithoutName = false;
+    let hasColumnsWithoutRequiredNames = false;
     this._columns.forEach(column => {
       var _column$columns;
       const {
@@ -1258,12 +1263,17 @@ export class ColumnsController extends modules.Controller {
           duplicatedNames.push(`"${name}"`);
         }
         usedNames[name] = true;
+      } else if (isColumnNameRequired(column)) {
+        hasColumnsWithoutRequiredNames = true;
       } else if (isEditable) {
         hasEditableColumnWithoutName = true;
       }
     });
     if (duplicatedNames.length) {
       errors.log('E1059', duplicatedNames.join(', '));
+    }
+    if (hasColumnsWithoutRequiredNames) {
+      errors.log('E1066');
     }
     if (hasEditableColumnWithoutName) {
       errors.log('E1060');

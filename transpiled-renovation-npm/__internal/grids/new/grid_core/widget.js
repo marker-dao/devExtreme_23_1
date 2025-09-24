@@ -6,12 +6,12 @@ Object.defineProperty(exports, "__esModule", {
 exports.GridCoreNewBase = exports.GridCoreNew = void 0;
 var _extend = require("../../../../core/utils/extend");
 var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.widget"));
-var _signalsCore = require("@preact/signals-core");
 var _index = require("../../../core/di/index");
 var _m_inferno_renderer = require("../../../core/m_inferno_renderer");
+var _index2 = require("../../../core/state_manager/index");
 var _view = require("../../../grids/new/grid_core/search/view");
 var _inferno = require("inferno");
-var _index2 = require("./accessibility/index");
+var _index3 = require("./accessibility/index");
 var ColumnChooserModule = _interopRequireWildcard(require("./column_chooser/index"));
 var _compatibility = require("./columns_controller/compatibility");
 var ColumnsControllerModule = _interopRequireWildcard(require("./columns_controller/index"));
@@ -20,8 +20,8 @@ var di = _interopRequireWildcard(require("./di"));
 var EditingModule = _interopRequireWildcard(require("./editing/index"));
 var _view2 = require("./editing/popup/view");
 var _error_controller = require("./error_controller/error_controller");
-var _index7 = require("./filtering/filter_sync/index");
-var _index8 = require("./filtering/header_filter/index");
+var _index8 = require("./filtering/filter_sync/index");
+var _index9 = require("./filtering/header_filter/index");
 var _view_controller = require("./filtering/header_filter/view_controller");
 var FilterControllerModule = _interopRequireWildcard(require("./filtering/index"));
 var _items_controller = require("./items_controller/items_controller");
@@ -45,7 +45,7 @@ class GridCoreNewBase extends _ui.default {
     di.register(this.diContext);
   }
   _initWidgetMock() {
-    this.diContext.registerInstance(_widget_mock.WidgetMock, new _widget_mock.WidgetMock(this, this.diContext.get(DataControllerModule.CompatibilityDataController), this.diContext.get(_compatibility.CompatibilityColumnsController), this.diContext.get(_index8.CompatibilityHeaderFilterController), this.diContext.get(_index7.CompatibilityFilterSyncController)));
+    this.diContext.registerInstance(_widget_mock.WidgetMock, new _widget_mock.WidgetMock(this, this.diContext.get(DataControllerModule.CompatibilityDataController), this.diContext.get(_compatibility.CompatibilityColumnsController), this.diContext.get(_index9.CompatibilityHeaderFilterController), this.diContext.get(_index8.CompatibilityFilterSyncController)));
   }
   _initDIContext() {
     this.dataController = this.diContext.get(DataControllerModule.DataController);
@@ -63,11 +63,11 @@ class GridCoreNewBase extends _ui.default {
     this.columnChooserView = this.diContext.get(ColumnChooserModule.ColumnChooserView);
     this.errorController = this.diContext.get(_error_controller.ErrorController);
     this.filterController = this.diContext.get(FilterControllerModule.FilterController);
-    this.headerFilterController = this.diContext.get(_index8.HeaderFilterController);
+    this.headerFilterController = this.diContext.get(_index9.HeaderFilterController);
     this.filterPanelView = this.diContext.get(FilterControllerModule.FilterPanelView);
     this.headerFilterViewController = this.diContext.get(_view_controller.HeaderFilterViewController);
-    this.accessibilityController = this.diContext.get(_index2.AccessibilityController);
-    this.filterSyncController = this.diContext.get(_index7.FilterSyncController);
+    this.accessibilityController = this.diContext.get(_index3.AccessibilityController);
+    this.filterSyncController = this.diContext.get(_index8.FilterSyncController);
     this.searchView = this.diContext.get(_view.SearchView);
   }
   _initLifeCycleController() {
@@ -80,7 +80,7 @@ class GridCoreNewBase extends _ui.default {
   _init() {
     // @ts-expect-error
     super._init();
-    this.initialized = (0, _signalsCore.signal)(false);
+    this.initialized = (0, _index2.signal)(false);
     this._registerDIContext();
     this._initWidgetMock();
     this._initDIContext();

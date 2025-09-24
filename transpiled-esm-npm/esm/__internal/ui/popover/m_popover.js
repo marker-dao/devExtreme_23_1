@@ -16,7 +16,7 @@ import { hasWindow } from '../../../core/utils/window';
 import { isMaterial, isMaterialBased } from '../../../ui/themes';
 import errors from '../../../ui/widget/ui.errors';
 import Popup from '../../ui/popup/m_popup';
-import { POPOVER_POSITION_ALIASES, PopoverPositionController } from './m_popover_position_controller';
+import { POPOVER_POSITION_ALIASES, PopoverPositionController } from './popover_position_controller';
 // STYLE popover
 const POPOVER_CLASS = 'dx-popover';
 const POPOVER_WRAPPER_CLASS = 'dx-popover-wrapper';
@@ -295,12 +295,25 @@ class Popover extends Popup {
     return this._positionController._getContainerPosition();
   }
   _getHideOnParentScrollTarget() {
-    return $(this._positionController._position.of || super._getHideOnParentScrollTarget());
+    var _this$_positionContro;
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    return $(((_this$_positionContro = this._positionController._position) === null || _this$_positionContro === void 0 ? void 0 : _this$_positionContro.of) || super._getHideOnParentScrollTarget());
   }
   _getSideByLocation(location) {
     const isFlippedByVertical = location.v.flip;
     const isFlippedByHorizontal = location.h.flip;
-    return this._isVerticalSide() && isFlippedByVertical || this._isHorizontalSide() && isFlippedByHorizontal || this._isPopoverInside() ? POSITION_FLIP_MAP[this._positionController._positionSide] : this._positionController._positionSide;
+    const isVertical = this._isVerticalSide() && isFlippedByVertical;
+    const isHorizontal = this._isHorizontalSide() && isFlippedByHorizontal;
+    const isInside = this._isPopoverInside();
+    const condition = isVertical || isHorizontal || isInside;
+    const positionSide = this._positionController._positionSide;
+    if (condition && positionSide) {
+      return POSITION_FLIP_MAP[positionSide];
+    }
+    if (positionSide) {
+      return positionSide;
+    }
+    return undefined;
   }
   _togglePositionClass(positionClass) {
     this.$wrapper().removeClass('dx-position-left dx-position-right dx-position-top dx-position-bottom').addClass(positionClass);
@@ -309,12 +322,13 @@ class Popover extends Popup {
     this.$wrapper().toggleClass('dx-popover-flipped-horizontal', isFlippedHorizontal).toggleClass('dx-popover-flipped-vertical', isFlippedVertical);
   }
   _renderArrowPosition(side) {
+    var _this$_positionContro2;
     const arrowRect = getBoundingRect(this._$arrow.get(0));
     const arrowFlip = -(this._isVerticalSide(side) ? arrowRect.height : arrowRect.width);
     this._$arrow.css(POSITION_FLIP_MAP[side], arrowFlip);
     const axis = this._isVerticalSide(side) ? 'left' : 'top';
     const sizeProperty = this._isVerticalSide(side) ? 'width' : 'height';
-    const $target = $(this._positionController._position.of);
+    const $target = $((_this$_positionContro2 = this._positionController._position) === null || _this$_positionContro2 === void 0 ? void 0 : _this$_positionContro2.of);
     const targetOffset = positionUtils.offset($target) ?? {
       top: 0,
       left: 0
@@ -355,16 +369,25 @@ class Popover extends Popup {
       super._setContentHeight();
     }
   }
+  // @ts-expect-error Override parent method with more specific type
   _getPositionControllerConfig() {
+    const superConfiguration = super._getPositionControllerConfig();
     const {
       shading,
       target
     } = this.option();
-    return extend({}, super._getPositionControllerConfig(), {
+    const properties = _extends({}, superConfiguration.properties, {
       target,
-      shading,
+      shading
+    });
+    const elements = _extends({}, superConfiguration.elements, {
       $arrow: this._$arrow
     });
+    const configuration = {
+      properties,
+      elements
+    };
+    return configuration;
   }
   _initPositionController() {
     this._positionController = new PopoverPositionController(this._getPositionControllerConfig());

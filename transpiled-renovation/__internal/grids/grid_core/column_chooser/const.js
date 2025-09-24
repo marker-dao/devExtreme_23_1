@@ -24,8 +24,12 @@ const defaultOptions = exports.defaultOptions = {
     mode: 'dragAndDrop',
     width: 250,
     height: 260,
-    title: _message.default.format('dxDataGrid-columnChooserTitle'),
-    emptyPanelText: _message.default.format('dxDataGrid-columnChooserEmptyText'),
+    get title() {
+      return _message.default.format('dxDataGrid-columnChooserTitle');
+    },
+    get emptyPanelText() {
+      return _message.default.format('dxDataGrid-columnChooserEmptyText');
+    },
     container: undefined
   }
 };

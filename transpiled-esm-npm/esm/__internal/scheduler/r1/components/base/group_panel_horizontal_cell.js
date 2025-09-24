@@ -27,7 +27,7 @@ export class GroupPanelHorizontalCell extends BaseInfernoComponent {
       'dx-scheduler-group-header': true,
       'dx-scheduler-first-group-cell': isFirstGroupCell,
       'dx-scheduler-last-group-cell': isLastGroupCell,
-      [className ?? '']: !!className
+      [className ?? '']: Boolean(className)
     });
     return createVNode(1, "th", classes, createVNode(1, "div", "dx-scheduler-group-header-content", cellTemplate ? createComponentVNode(2, PublicTemplate, {
       "template": cellTemplate,

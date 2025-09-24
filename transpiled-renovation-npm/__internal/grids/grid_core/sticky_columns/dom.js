@@ -75,14 +75,12 @@ const getNonFixedAndStickyCells = ($cells, addWidgetPrefix) => $cells
 // @ts-expect-error
 .filter((_, cell) => (0, _renderer.default)(cell).hasClass(addWidgetPrefix(_const.CLASSES.stickyColumn)) || !isFixedCell((0, _renderer.default)(cell), addWidgetPrefix));
 const getLastLeftFixedCell = ($cells, $container, addWidgetPrefix) => {
-  // @ts-expect-error
   const rtlEnabled = $container.css('direction') === 'rtl';
   const processedCells = rtlEnabled ? $cells.toArray() : $cells.toArray().reverse();
   const lastLeftFixedCell = processedCells.find(cell => isStickyCellPinnedToLeft((0, _renderer.default)(cell), $container, addWidgetPrefix) || isLastLeftFixedCell((0, _renderer.default)(cell), addWidgetPrefix));
   return (0, _renderer.default)(lastLeftFixedCell ?? '');
 };
 const getFirstRightFixedCell = ($cells, $container, addWidgetPrefix) => {
-  // @ts-expect-error
   const rtlEnabled = $container.css('direction') === 'rtl';
   const processedCells = rtlEnabled ? $cells.toArray().reverse() : $cells.toArray();
   const firstRightFixedCell = processedCells.find(cell => isStickyCellPinnedToRight((0, _renderer.default)(cell), $container, addWidgetPrefix) || isFirstRightFixedCell((0, _renderer.default)(cell), addWidgetPrefix));

@@ -15,8 +15,8 @@ import { getWidth } from '../../../core/utils/size';
 import { isDefined } from '../../../core/utils/type';
 import LoadIndicator from '../../../ui/load_indicator';
 import { current, isFluent, isMaterial } from '../../../ui/themes';
-import { focused } from '../../../ui/widget/selectors';
 import errors from '../../../ui/widget/ui.errors';
+import { focused } from '../../core/utils/m_selectors';
 import Editor from '../../ui/editor/editor';
 import ClearButton from './m_text_editor.clear';
 import { TextEditorLabel } from './m_text_editor.label';
@@ -176,7 +176,7 @@ class TextEditorBase extends Editor {
     this.$element().addClass(TEXTEDITOR_VALIDATION_PENDING_CLASS);
     const $inputContainer = this._getInputContainer();
     const $indicatorElement = $('<div>').addClass(TEXTEDITOR_PENDING_INDICATOR_CLASS).appendTo($inputContainer);
-    this._pendingIndicator = this._createComponent($indicatorElement, LoadIndicator);
+    this._pendingIndicator = this._createComponent($indicatorElement, LoadIndicator, {});
   }
   _disposePendingIndicator() {
     if (!this._pendingIndicator) {
@@ -511,7 +511,9 @@ class TextEditorBase extends Editor {
   _renderEvents() {
     const $input = this._input();
     each(EVENTS_LIST, (_, event) => {
+      // @ts-expect-error
       if (this.hasActionSubscription(`on${event}`)) {
+        // @ts-expect-error
         const action = this._createActionByOption(`on${event}`, {
           excludeValidators: ['readOnly']
         });

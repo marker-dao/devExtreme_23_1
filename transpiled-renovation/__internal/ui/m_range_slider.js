@@ -70,7 +70,6 @@ class RangeSlider extends _m_slider.default {
       },
       home(e) {
         this._processKeyboardEvent(e);
-        // @ts-expect-error ts-error
         const isStart = (0, _renderer.default)(e.target).hasClass(RANGE_SLIDER_START_HANDLE_CLASS);
         const valueOption = isStart ? 'start' : 'end';
         const startOption = isStart ? 'min' : 'start';
@@ -79,7 +78,6 @@ class RangeSlider extends _m_slider.default {
       },
       end(e) {
         this._processKeyboardEvent(e);
-        // @ts-expect-error ts-error
         const isStart = (0, _renderer.default)(e.target).hasClass(RANGE_SLIDER_START_HANDLE_CLASS);
         const valueOption = isStart ? 'start' : 'end';
         const endOption = isStart ? 'end' : 'max';

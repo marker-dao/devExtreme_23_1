@@ -1,19 +1,19 @@
 "use strict";
 
 exports.default = void 0;
-var _m_multi_view = _interopRequireDefault(require("../__internal/ui/multi_view/m_multi_view"));
+var _multi_view = _interopRequireDefault(require("../__internal/ui/multi_view/multi_view"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_multi_view.default;
+var _default = exports.default = _multi_view.default;
+/**
+ * @name dxMultiViewOptions.keyExpr
+ * @hidden
+ */
 /**
  * @name dxMultiViewOptions.selectedItems
  * @hidden
  */
 /**
  * @name dxMultiViewOptions.selectedItemKeys
- * @hidden
- */
-/**
- * @name dxMultiViewOptions.keyExpr
  * @hidden
  */
 /**

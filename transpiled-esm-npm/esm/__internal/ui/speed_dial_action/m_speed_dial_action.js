@@ -2,7 +2,7 @@ import registerComponent from '../../../core/component_registrator';
 import Guid from '../../../core/guid';
 import { extend } from '../../../core/utils/extend';
 import readyCallbacks from '../../../core/utils/ready_callbacks';
-import swatchContainer from '../../../ui/widget/swatch_container';
+import swatchContainer from '../../core/utils/swatch_container';
 import Widget from '../../core/widget/widget';
 import { disposeAction, initAction } from './m_speed_dial_main_item';
 const {

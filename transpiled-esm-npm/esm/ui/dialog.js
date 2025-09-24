@@ -1,4 +1,4 @@
-export { confirm, alert, custom } from '../__internal/ui/m_dialog';
+export { confirm, alert, custom } from '../__internal/ui/dialog';
 
 /**
  * @name ui.dialog

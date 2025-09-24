@@ -4,12 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.dateUtilsTs = void 0;
-// TODO Vinogradov: Refactor offsets: number[] -> ...offsets: number[]
-const addOffsets = (date, offsets) => {
+const addOffsets = function (date) {
+  for (var _len = arguments.length, offsets = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    offsets[_key - 1] = arguments[_key];
+  }
   const newDateMs = offsets.reduce((result, offset) => result + offset, date.getTime());
   return new Date(newDateMs);
 };
-// eslint-disable-next-line @stylistic/max-len
 const isValidDate = date => Boolean(date && !isNaN(new Date(date).valueOf()));
 const dateUtilsTs = exports.dateUtilsTs = {
   addOffsets,

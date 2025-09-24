@@ -9,13 +9,13 @@ var _drag = require("../../../../common/core/events/drag");
 var _index = require("../../../../common/core/events/utils/index");
 var _component_registrator = _interopRequireDefault(require("../../../../core/component_registrator"));
 var _dom_adapter = _interopRequireDefault(require("../../../../core/dom_adapter"));
-var _dom_component = _interopRequireDefault(require("../../../../core/dom_component"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _extend = require("../../../../core/utils/extend");
 var _iterator = require("../../../../core/utils/iterator");
 var _size = require("../../../../core/utils/size");
 var _type = require("../../../../core/utils/type");
-var _swatch_container = _interopRequireDefault(require("../../../../ui/widget/swatch_container"));
+var _swatch_container = _interopRequireDefault(require("../../../core/utils/swatch_container"));
+var _dom_component = _interopRequireDefault(require("../../../core/widget/dom_component"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const {
   getSwatchContainer
@@ -129,9 +129,9 @@ function getScrollWrapper(scrollable) {
     }
   };
 }
-const Sortable = exports.Sortable = _dom_component.default.inherit({
+class Sortable extends _dom_component.default {
   _getDefaultOptions() {
-    return (0, _extend.extend)(this.callBase(), {
+    return (0, _extend.extend)(super._getDefaultOptions(), {
       onChanged: null,
       onDragging: null,
       itemRender: null,
@@ -146,11 +146,12 @@ const Sortable = exports.Sortable = _dom_component.default.inherit({
       groupFilter: null,
       useIndicator: false
     });
-  },
+  }
   _renderItem($sourceItem, target) {
     const itemRender = this.option('itemRender');
     let $item;
     if (itemRender) {
+      // @ts-expect-error ts-error
       $item = itemRender($sourceItem, target);
     } else {
       $item = $sourceItem.clone();
@@ -160,7 +161,7 @@ const Sortable = exports.Sortable = _dom_component.default.inherit({
       });
     }
     return $item;
-  },
+  }
   _renderIndicator($item, isVertical, $targetGroup, isLast) {
     const height = (0, _size.getOuterHeight)($item, true);
     const width = (0, _size.getOuterWidth)($item, true);
@@ -178,18 +179,18 @@ const Sortable = exports.Sortable = _dom_component.default.inherit({
     } else {
       (0, _size.setHeight)(this._indicator, height);
     }
-  },
+  }
   _renderDraggable($sourceItem) {
     this._$draggable && this._$draggable.remove();
     this._$draggable = this._renderItem($sourceItem, 'drag').addClass(this.option('dragClass')).appendTo(getSwatchContainer($sourceItem)).css({
       zIndex: 1000000,
       position: 'absolute'
     });
-  },
+  }
   _detachEventHandlers() {
     const dragEventsString = [_drag.move, _drag.start, _drag.end, _drag.enter, _drag.leave, _drag.drop].join(' ');
     _events_engine.default.off(this._getEventListener(), (0, _index.addNamespace)(dragEventsString, SORTABLE_NAMESPACE), undefined);
-  },
+  }
   _getItemOffset(isVertical, itemsOffset, e) {
     for (let i = 0; i < itemsOffset.length; i += 1) {
       let shouldInsert;
@@ -207,12 +208,13 @@ const Sortable = exports.Sortable = _dom_component.default.inherit({
       }
     }
     return undefined;
-  },
+  }
   _getEventListener() {
     const groupSelector = this.option('groupSelector');
     const element = this.$element();
+    // @ts-expect-error ts-error
     return groupSelector ? element.find(groupSelector) : element;
-  },
+  }
   _attachEventHandlers() {
     const that = this;
     const itemSelector = that.option('itemSelector');
@@ -239,11 +241,16 @@ const Sortable = exports.Sortable = _dom_component.default.inherit({
       });
     };
     const createGroups = function () {
+      // @ts-expect-error ts-error
       const root = _dom_adapter.default.getRootNode(that.$element().get(0));
       if (!groupSelector) {
         return element;
       }
-      return groupFilter ? (0, _renderer.default)(root).find(groupSelector).filter(groupFilter) : element.find(groupSelector);
+      return groupFilter
+      // @ts-expect-error ts-error
+      ? (0, _renderer.default)(root).find(groupSelector).filter(groupFilter)
+      // @ts-expect-error ts-error
+      : element.find(groupSelector);
     };
     const disposeScrollWrapper = function () {
       var _scrollWrapper;
@@ -258,6 +265,7 @@ const Sortable = exports.Sortable = _dom_component.default.inherit({
         targetGroup: $targetGroup.attr('group'),
         targetIndex: $targetGroup.find(itemSelector).index($targetItem)
       };
+      // @ts-expect-error ts-error
       onDragging && onDragging(draggingArgs);
       if (draggingArgs.cancel) {
         $targetGroup = undefined;
@@ -374,6 +382,7 @@ const Sortable = exports.Sortable = _dom_component.default.inherit({
           $targetGroup.removeClass(targetClass);
           changedArgs.targetGroup = $targetGroup.attr('group');
           if (sourceGroup !== changedArgs.targetGroup || targetIndex > -1) {
+            // @ts-expect-error ts-error
             onChanged && onChanged(changedArgs);
             changedArgs.removeSourceElement && $sourceItem.remove();
           }
@@ -388,21 +397,21 @@ const Sortable = exports.Sortable = _dom_component.default.inherit({
         $targetItem = null;
       });
     }
-  },
+  }
   _init() {
-    this.callBase();
+    super._init();
     this._attachEventHandlers();
-  },
+  }
   _render() {
-    this.callBase();
+    super._render();
     this.$element().addClass(SORTABLE_CLASS);
-  },
+  }
   _dispose() {
     const that = this;
-    that.callBase.apply(that, arguments);
+    super._dispose();
     that._$draggable && that._$draggable.detach();
     that._indicator && that._indicator.detach();
-  },
+  }
   _optionChanged(args) {
     const that = this;
     switch (args.name) {
@@ -423,14 +432,16 @@ const Sortable = exports.Sortable = _dom_component.default.inherit({
       case 'direction':
         break;
       default:
-        that.callBase(args);
+        super._optionChanged(args);
     }
-  },
+  }
   _useTemplates() {
     return false;
   }
-});
+}
 /// #DEBUG
+// @ts-expect-error ts-error
+exports.Sortable = Sortable;
 Sortable.prototype.__SCROLL_STEP = SCROLL_STEP;
 /// #ENDDEBUG
 // TODO remove dxSortableOld component

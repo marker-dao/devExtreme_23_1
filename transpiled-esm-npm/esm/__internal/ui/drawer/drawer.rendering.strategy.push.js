@@ -1,7 +1,7 @@
 import { move } from '../../../common/core/animation/translator';
 import $ from '../../../core/renderer';
-import { animation } from './drawer.animation';
-import DrawerStrategy from './drawer.rendering.strategy';
+import { animation } from '../../ui/drawer/drawer.animation';
+import DrawerStrategy from '../../ui/drawer/drawer.rendering.strategy';
 class PushStrategy extends DrawerStrategy {
   _internalRenderPosition(changePositionUsingFxAnimation, whenAnimationCompleted) {
     const drawer = this.getDrawerInstance();

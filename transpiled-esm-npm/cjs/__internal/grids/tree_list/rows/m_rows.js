@@ -10,16 +10,20 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 const TREELIST_TEXT_CONTENT = 'dx-treelist-text-content';
 const TREELIST_EXPAND_ICON_CONTAINER_CLASS = 'dx-treelist-icon-container';
 const TREELIST_CELL_EXPANDABLE_CLASS = 'dx-treelist-cell-expandable';
-const TREELIST_EMPTY_SPACE = 'dx-treelist-empty-space';
+const TREELIST_EMPTY_SPACE_CLASS = 'dx-treelist-empty-space';
+const TREELIST_EMPTY_SPACE_LAST_CLASS = 'dx-treelist-empty-space--last';
 const TREELIST_EXPANDED_CLASS = 'dx-treelist-expanded';
 const TREELIST_COLLAPSED_CLASS = 'dx-treelist-collapsed';
 const createCellContent = function ($container) {
   return (0, _renderer.default)('<div>').addClass(TREELIST_TEXT_CONTENT).appendTo($container);
 };
-const createIcon = function (hasIcon, isExpanded) {
-  const $iconElement = (0, _renderer.default)('<div>').addClass(TREELIST_EMPTY_SPACE);
+const createIcon = (isLast, hasIcon, isExpanded) => {
+  const $iconElement = (0, _renderer.default)('<div>').addClass(TREELIST_EMPTY_SPACE_CLASS);
+  if (isLast) {
+    $iconElement.addClass(TREELIST_EMPTY_SPACE_LAST_CLASS);
+  }
   if (hasIcon) {
-    $iconElement.toggleClass(TREELIST_EXPANDED_CLASS, isExpanded).toggleClass(TREELIST_COLLAPSED_CLASS, !isExpanded).append((0, _renderer.default)('<span>'));
+    $iconElement.addClass(isExpanded ? TREELIST_EXPANDED_CLASS : TREELIST_COLLAPSED_CLASS);
   }
   return $iconElement;
 };
@@ -36,15 +40,19 @@ class TreeListRowsView extends _m_rows_view.RowsView {
     $container.addClass(TREELIST_CELL_EXPANDABLE_CLASS);
     return this._renderIcons($iconContainer, options);
   }
-  _renderIcons($iconContainer, options) {
+  _renderIcons($container, options) {
+    const $iconContainer = super._renderIcons($container, options);
     const {
       row
     } = options;
     const {
       level
     } = row;
-    for (let i = 0; i <= level; i++) {
-      $iconContainer.append(createIcon(i === level && row.node.hasChildren, row.isExpanded));
+    for (let idx = 0; idx <= level; idx += 1) {
+      const isLast = idx === level;
+      const hasIcon = isLast && row.node.hasChildren;
+      const $icon = createIcon(isLast, hasIcon, row.isExpanded);
+      $icon.appendTo($iconContainer);
     }
     return $iconContainer;
   }

@@ -3,7 +3,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable spellcheck/spell-checker */
 import { applyChanges } from '../../../../../common/data';
 import { isDefined } from '../../../../../core/utils/type';
-import { computed } from '@preact/signals-core';
+import { computed } from '../../../../core/state_manager/index';
 import { generateNewRowTempKey } from '../../../../grids/grid_core/editing/m_editing_utils';
 import { OptionsValidationController } from '../../../../grids/new/grid_core/options_validation/index';
 import { ColumnsController } from '../columns_controller/columns_controller';
@@ -54,7 +54,7 @@ export class EditingController {
       }
       const insertChange = changes.find(change => change.key === editCardKey && change.type === 'insert');
       const oldData = (insertChange === null || insertChange === void 0 ? void 0 : insertChange.data) ?? oldItem.data;
-      const newData = applyChanges([oldData], changes, {
+      const newData = insertChange ? _extends({}, oldData, changes) : applyChanges([oldData], changes, {
         keyExpr: this.dataController.dataSource.peek().key(),
         immutable: true
       })[0];
@@ -95,7 +95,7 @@ export class EditingController {
     this.changes.value = [...this.changes.peek(), {
       type: 'insert',
       key: newItemKey,
-      data: {}
+      data: eventArgs.data
     }];
     this.editCardKey.value = newItemKey;
   }

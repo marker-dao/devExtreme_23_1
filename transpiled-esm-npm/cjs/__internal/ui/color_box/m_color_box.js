@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.DX_ICON_COLOR_DISMISS = exports.DX_ICON_CLASS = void 0;
 var _color = _interopRequireDefault(require("../../../color"));
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
@@ -22,6 +22,8 @@ const COLOR_BOX_BUTTON_CELL_CLASS = 'dx-colorview-button-cell';
 const COLOR_BOX_BUTTONS_CONTAINER_CLASS = 'dx-colorview-buttons-container';
 const COLOR_BOX_APPLY_BUTTON_CLASS = 'dx-colorview-apply-button';
 const COLOR_BOX_CANCEL_BUTTON_CLASS = 'dx-colorview-cancel-button';
+const DX_ICON_CLASS = exports.DX_ICON_CLASS = 'dx-icon';
+const DX_ICON_COLOR_DISMISS = exports.DX_ICON_COLOR_DISMISS = 'dx-icon-colordismiss';
 const colorEditorPrototype = _m_color_view.default.prototype;
 const colorUtils = {
   makeTransparentBackground: colorEditorPrototype._makeTransparentBackground.bind(colorEditorPrototype),
@@ -110,9 +112,7 @@ class ColorBox extends _m_drop_down_editor.default {
   }
   _applyNewColor(value) {
     this.option('value', value);
-    if (value) {
-      colorUtils.makeTransparentBackground(this._$colorResultPreview, value);
-    }
+    this._updateNoColorIndicator();
     if (this._colorViewEnterKeyPressed) {
       this.close();
       this._colorViewEnterKeyPressed = false;
@@ -221,15 +221,30 @@ class ColorBox extends _m_drop_down_editor.default {
     this._input().addClass(COLOR_BOX_INPUT_CLASS);
     this._renderColorPreview();
   }
+  _renderNoColorIcon() {
+    if (!this._$noColorIcon || !this._$noColorIcon.length) {
+      this._$noColorIcon = (0, _renderer.default)('<i>').addClass(`${DX_ICON_CLASS} ${DX_ICON_COLOR_DISMISS}`).appendTo(this._$colorResultPreview);
+    }
+  }
+  _updateNoColorIndicator() {
+    const {
+      value
+    } = this.option();
+    const hasValue = Boolean(value);
+    this._$colorBoxInputContainer.toggleClass(COLOR_BOX_COLOR_IS_NOT_DEFINED, !hasValue);
+    if (hasValue) {
+      this._cleanNoColorIcon();
+      colorUtils.makeTransparentBackground(this._$colorResultPreview, value);
+    } else {
+      this._$colorResultPreview.removeAttr('style');
+      this._renderNoColorIcon();
+    }
+  }
   _renderColorPreview() {
     this.$element().wrapInner((0, _renderer.default)('<div>').addClass(COLOR_BOX_INPUT_CONTAINER_CLASS));
     this._$colorBoxInputContainer = this.$element().children().eq(0);
     this._$colorResultPreview = (0, _renderer.default)('<div>').addClass(COLOR_BOX_COLOR_RESULT_PREVIEW_CLASS).appendTo(this._$textEditorInputContainer);
-    if (!this.option('value')) {
-      this._$colorBoxInputContainer.addClass(COLOR_BOX_COLOR_IS_NOT_DEFINED);
-    } else {
-      colorUtils.makeTransparentBackground(this._$colorResultPreview, this.option('value'));
-    }
+    this._updateNoColorIndicator();
   }
   _renderValue() {
     const {
@@ -278,9 +293,30 @@ class ColorBox extends _m_drop_down_editor.default {
     }
     return value;
   }
+  // eslint-disable-next-line class-methods-use-this
+  _shouldLogFieldTemplateDeprecationWarning() {
+    return true;
+  }
+  _cleanNoColorIcon() {
+    var _this$_$noColorIcon;
+    (_this$_$noColorIcon = this._$noColorIcon) === null || _this$_$noColorIcon === void 0 || _this$_$noColorIcon.remove();
+    this._$noColorIcon = undefined;
+  }
   _clean() {
     super._clean();
     delete this._shouldSaveEmptyValue;
+    this._cleanNoColorIcon();
+  }
+  _valueOptionChangeHandler() {
+    const {
+      value
+    } = this.option();
+    if (value === null) {
+      this._shouldSaveEmptyValue = true;
+    }
+    this._updateNoColorIndicator();
+    this._updateColorViewValue(value);
+    this._shouldSaveEmptyValue = false;
   }
   _optionChanged(args) {
     const {
@@ -289,17 +325,7 @@ class ColorBox extends _m_drop_down_editor.default {
     } = args;
     switch (name) {
       case 'value':
-        this._$colorBoxInputContainer.toggleClass(COLOR_BOX_COLOR_IS_NOT_DEFINED, !value);
-        if (value) {
-          colorUtils.makeTransparentBackground(this._$colorResultPreview, value);
-        } else {
-          this._$colorResultPreview.removeAttr('style');
-        }
-        if (value === null) {
-          this._shouldSaveEmptyValue = true;
-        }
-        this._updateColorViewValue(value);
-        this._shouldSaveEmptyValue = false;
+        this._valueOptionChangeHandler();
         super._optionChanged(args);
         break;
       case 'applyButtonText':

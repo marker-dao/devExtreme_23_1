@@ -1,7 +1,7 @@
 import $ from '../../../../core/renderer';
 import { each } from '../../../../core/utils/iterator';
-import { ListBase } from '../../../ui/list/m_list.base';
-const TOOLBAR_MENU_ACTION_CLASS = 'dx-toolbar-menu-action';
+import { ListBase } from '../../../ui/list/list.base';
+export const TOOLBAR_MENU_ACTION_CLASS = 'dx-toolbar-menu-action';
 const TOOLBAR_HIDDEN_BUTTON_CLASS = 'dx-toolbar-hidden-button';
 const TOOLBAR_HIDDEN_BUTTON_GROUP_CLASS = 'dx-toolbar-hidden-button-group';
 const TOOLBAR_MENU_SECTION_CLASS = 'dx-toolbar-menu-section';
@@ -9,9 +9,8 @@ const TOOLBAR_MENU_CUSTOM_CLASS = 'dx-toolbar-menu-custom';
 const TOOLBAR_MENU_LAST_SECTION_CLASS = 'dx-toolbar-menu-last-section';
 const SCROLLVIEW_CONTENT_CLASS = 'dx-scrollview-content';
 export default class ToolbarMenuList extends ListBase {
-  _init() {
-    super._init();
-    this._activeStateUnit = `.${TOOLBAR_MENU_ACTION_CLASS}:not(.${TOOLBAR_HIDDEN_BUTTON_GROUP_CLASS})`;
+  _activeStateUnit() {
+    return `.${TOOLBAR_MENU_ACTION_CLASS}:not(.${TOOLBAR_HIDDEN_BUTTON_GROUP_CLASS})`;
   }
   _initMarkup() {
     this._renderSections();

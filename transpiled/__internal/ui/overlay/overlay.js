@@ -10,7 +10,7 @@ var _events_engine = _interopRequireDefault(require("../../../common/core/events
 var _drag = require("../../../common/core/events/drag");
 var _pointer = _interopRequireDefault(require("../../../common/core/events/pointer"));
 var _short = require("../../../common/core/events/short");
-var _index = require("../../../common/core/events/utils/index");
+var _utils = require("../../../common/core/events/utils");
 var _visibility_change = require("../../../common/core/events/visibility_change");
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _devices = _interopRequireDefault(require("../../../core/devices"));
@@ -28,13 +28,13 @@ var _ready_callbacks = _interopRequireDefault(require("../../../core/utils/ready
 var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
 var _view_port = require("../../../core/utils/view_port");
-var _selectors = require("../../../ui/widget/selectors");
 var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
 var _m_dom = _interopRequireDefault(require("../../core/utils/m_dom"));
-var _widget = _interopRequireDefault(require("../../core/widget/widget"));
+var _m_selectors = _interopRequireDefault(require("../../core/utils/m_selectors"));
 var _m_window = _interopRequireDefault(require("../../core/utils/m_window"));
-var _m_overlay_position_controller = require("./m_overlay_position_controller");
-var zIndexPool = _interopRequireWildcard(require("./z_index"));
+var _widget = _interopRequireDefault(require("../../core/widget/widget"));
+var _overlay_position_controller = require("../../ui/overlay/overlay_position_controller");
+var zIndexPool = _interopRequireWildcard(require("../../ui/overlay/z_index"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -81,7 +81,7 @@ class Overlay extends _widget.default {
       shading: true,
       shadingColor: '',
       wrapperAttr: {},
-      position: _extends({}, _m_overlay_position_controller.OVERLAY_POSITION_ALIASES.center),
+      position: _extends({}, _overlay_position_controller.OVERLAY_POSITION_ALIASES.center),
       width: '80vw',
       minWidth: null,
       maxWidth: null,
@@ -134,18 +134,18 @@ class Overlay extends _widget.default {
     });
   }
   _defaultOptionsRules() {
-    return super._defaultOptionsRules().concat([{
+    const rules = [...super._defaultOptionsRules(), {
       device() {
         return !_m_window.default.hasWindow();
       },
-      // @ts-expect-error overload
       options: {
         width: null,
         height: null,
         animation: null,
         _checkParentVisibility: false
       }
-    }]);
+    }];
+    return rules;
   }
   _setOptionsByReference() {
     super._setOptionsByReference();
@@ -615,7 +615,7 @@ class Overlay extends _widget.default {
       _loopFocus
     } = this.option();
     // @ts-expect-error NAME has string | undefined type
-    const eventName = (0, _index.addNamespace)('keydown', this.NAME);
+    const eventName = (0, _utils.addNamespace)('keydown', this.NAME);
     if (_loopFocus || enabled) {
       _events_engine.default.on(_dom_adapter.default.getDocument(), eventName, this._proxiedTabTerminatorHandler);
     } else {
@@ -624,7 +624,7 @@ class Overlay extends _widget.default {
   }
   _destroyTabTerminator() {
     // @ts-expect-error NAME has string | undefined type
-    const eventName = (0, _index.addNamespace)('keydown', this.NAME);
+    const eventName = (0, _utils.addNamespace)('keydown', this.NAME);
     _events_engine.default.off(_dom_adapter.default.getDocument(), eventName, this._proxiedTabTerminatorHandler);
   }
   _findTabbableBounds() {
@@ -636,11 +636,11 @@ class Overlay extends _widget.default {
       const $currentElement = $elements.eq(i);
       const $reverseElement = $elements.eq(elementsCount - i);
       // @ts-expect-error is should can get function as callback
-      if (!$first && $currentElement.is(_selectors.tabbable)) {
+      if (!$first && $currentElement.is(_m_selectors.default.tabbable)) {
         $first = $currentElement;
       }
       // @ts-expect-error is should can get function as callback
-      if (!$last && $reverseElement.is(_selectors.tabbable)) {
+      if (!$last && $reverseElement.is(_m_selectors.default.tabbable)) {
         $last = $reverseElement;
       }
       if ($first && $last) {
@@ -653,7 +653,7 @@ class Overlay extends _widget.default {
     };
   }
   _tabKeyHandler(e) {
-    if ((0, _index.normalizeKeyName)(e) !== TAB_KEY || !this._isTopOverlay()) {
+    if ((0, _utils.normalizeKeyName)(e) !== TAB_KEY || !this._isTopOverlay()) {
       return;
     }
     const wrapper = this._$wrapper.get(0);
@@ -693,7 +693,7 @@ class Overlay extends _widget.default {
   }
   _toggleHideOnParentsScrollSubscription(needSubscribe) {
     // @ts-expect-error NAME has string | undefined type
-    const scrollEvent = (0, _index.addNamespace)('scroll', this.NAME);
+    const scrollEvent = (0, _utils.addNamespace)('scroll', this.NAME);
     const info = this._parentsScrollSubscriptionInfo ?? {};
     const {
       prevTargets,
@@ -786,7 +786,6 @@ class Overlay extends _widget.default {
     // @ts-expect-error add should can get dxElementWrapper
     $parent.add($parent.parents()).each((index, element) => {
       const $element = (0, _renderer.default)(element);
-      // @ts-expect-error css should can get 1 argument
       if ($element.css('display') === 'none') {
         isHidden = true;
         return false;
@@ -845,25 +844,32 @@ class Overlay extends _widget.default {
     } = this.option();
     // NOTE: position is passed to controller in renderGeometry
     // to prevent window field using in server side mode
-    return {
+    const properties = {
       container,
       visualContainer,
       restorePosition,
+      _fixWrapperPosition,
+      _skipContentPositioning,
+      onPositioned: (_this$_actions5 = this._actions) === null || _this$_actions5 === void 0 ? void 0 : _this$_actions5.onPositioned,
+      onVisualPositionChanged: (_this$_actions6 = this._actions) === null || _this$_actions6 === void 0 ? void 0 : _this$_actions6.onVisualPositionChanged
+    };
+    const elements = {
       $root: this.$element(),
       $content: this._$content,
-      $wrapper: this._$wrapper,
-      onPositioned: (_this$_actions5 = this._actions) === null || _this$_actions5 === void 0 ? void 0 : _this$_actions5.onPositioned,
-      onVisualPositionChanged: (_this$_actions6 = this._actions) === null || _this$_actions6 === void 0 ? void 0 : _this$_actions6.onVisualPositionChanged,
-      _fixWrapperPosition,
-      _skipContentPositioning
+      $wrapper: this._$wrapper
     };
+    const positionControllerConfiguration = {
+      properties,
+      elements
+    };
+    return positionControllerConfiguration;
   }
   _initPositionController() {
-    this._positionController = new _m_overlay_position_controller.OverlayPositionController(this._getPositionControllerConfig());
+    this._positionController = new _overlay_position_controller.OverlayPositionController(this._getPositionControllerConfig());
   }
   _toggleWrapperScrollEventsSubscription(enabled) {
     // @ts-expect-error NAME has string | undefined type
-    const eventName = (0, _index.addNamespace)(_drag.move, this.NAME);
+    const eventName = (0, _utils.addNamespace)(_drag.move, this.NAME);
     _events_engine.default.off(this._$wrapper, eventName);
     if (enabled) {
       const callback = e => {
@@ -875,7 +881,7 @@ class Overlay extends _widget.default {
         } = originalEvent ?? {};
         const isWheel = type === 'wheel';
         const isMouseMove = type === 'mousemove';
-        const isScrollByWheel = isWheel && (0, _index.isCommandKeyPressed)(e);
+        const isScrollByWheel = isWheel && (0, _utils.isCommandKeyPressed)(e);
         e._cancelPreventDefault = true;
         if (originalEvent
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
@@ -919,7 +925,9 @@ class Overlay extends _widget.default {
   }
   _moveToContainer() {
     const $wrapperContainer = this._positionController.$container;
-    this._$wrapper.appendTo($wrapperContainer);
+    if ($wrapperContainer !== undefined) {
+      this._$wrapper.appendTo($wrapperContainer);
+    }
     this._$content.appendTo(this._$wrapper);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -942,10 +950,11 @@ class Overlay extends _widget.default {
     this._positionController.positionContent();
   }
   _isAllWindowCovered() {
+    var _this$_positionContro;
     const {
       shading
     } = this.option();
-    const element = this._positionController.$visualContainer.get(0);
+    const element = (_this$_positionContro = this._positionController.$visualContainer) === null || _this$_positionContro === void 0 ? void 0 : _this$_positionContro.get(0);
     return (0, _type.isWindow)(element) && Boolean(shading);
   }
   _toggleSafariScrolling() {
@@ -977,7 +986,7 @@ class Overlay extends _widget.default {
       $visualContainer
     } = this._positionController;
     const documentElement = _dom_adapter.default.getDocumentElement();
-    const isVisualContainerWindow = (0, _type.isWindow)($visualContainer.get(0));
+    const isVisualContainerWindow = (0, _type.isWindow)($visualContainer === null || $visualContainer === void 0 ? void 0 : $visualContainer.get(0));
     const wrapperWidth = isVisualContainerWindow ? documentElement.clientWidth : (0, _size.getOuterWidth)($visualContainer);
     const wrapperHeight = isVisualContainerWindow ? window.innerHeight : (0, _size.getOuterHeight)($visualContainer);
     this._$wrapper.css({
@@ -1014,9 +1023,7 @@ class Overlay extends _widget.default {
     }
   }
   _isVisible() {
-    const {
-      visible
-    } = this.option();
+    const visible = this.option('visible');
     return Boolean(visible);
   }
   _visibilityChanged(visible) {

@@ -1,5 +1,5 @@
 /* eslint-disable spellcheck/spell-checker */
-import { computed } from '@preact/signals-core';
+import { computed } from '../../../../core/state_manager/index';
 import { ColumnsController } from '../../../../grids/new/grid_core/columns_controller/columns_controller';
 import { View } from '../../../../grids/new/grid_core/core/view';
 import { KeyboardNavigationController, NavigationStrategyHorizontalList } from '../../../../grids/new/grid_core/keyboard_navigation/index';

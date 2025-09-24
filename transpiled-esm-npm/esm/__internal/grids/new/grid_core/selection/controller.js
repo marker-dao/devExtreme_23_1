@@ -2,11 +2,11 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import messageLocalization from '../../../../../localization/message';
-import { computed, effect, signal } from '@preact/signals-core';
+import { computed, effect, signal } from '../../../../core/state_manager/index';
 import { DataController } from '../../../../grids/new/grid_core/data_controller/index';
 import { OptionsValidationController } from '../../../../grids/new/grid_core/options_validation/index';
 import { ShowCheckBoxesMode } from '../../../../grids/new/grid_core/selection/const';
-import Selection from '../../../../ui/selection/m_selection';
+import Selection from '../../../../ui/selection/selection';
 import { ItemsController } from '../items_controller/items_controller';
 import { OptionsController } from '../options_controller/options_controller';
 import { ToolbarController } from '../toolbar/controller';
@@ -287,8 +287,9 @@ export class SelectionController {
     return selectionHelper === null || selectionHelper === void 0 ? void 0 : selectionHelper.clearSelection();
   }
   getSelectedCardsData() {
-    const selectedCardKey = this.getSelectedCardKeys();
-    return selectedCardKey.map(key => this.itemsController.getCardByKey(key)).filter(item => !!item).map(item => item.data);
+    var _this$selectionHelper4;
+    // @ts-expect-error undefined is not assignable to DataObject[]
+    return (_this$selectionHelper4 = this.selectionHelper) === null || _this$selectionHelper4 === void 0 || (_this$selectionHelper4 = _this$selectionHelper4.peek()) === null || _this$selectionHelper4 === void 0 ? void 0 : _this$selectionHelper4.getSelectedItems();
   }
   getSelectedCardKeys() {
     return this.normalizedSelectedCardKeys.peek();

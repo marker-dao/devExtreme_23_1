@@ -1,7 +1,7 @@
 "use strict";
 
 var _globals = require("@jest/globals");
-var _resourceManager = require("../../../scheduler/__mock__/resourceManager.mock");
+var _resource_manager = require("../../../scheduler/__mock__/resource_manager.mock");
 var _group_utils = require("./group_utils");
 const groupsLeafs = [{
   groupIndex: 0,
@@ -267,7 +267,7 @@ const resourceById = {
       (0, _globals.expect)((0, _group_utils.getGroupTexts)(['assigneeId', 'roomId'], [], {}, 3)).toEqual([]);
     });
     (0, _globals.it)('should return groups in order of groups declared', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       await manager.loadGroupResources(['assigneeId', 'nested.priorityId', 'roomId']);
       (0, _globals.expect)((0, _group_utils.getGroupTexts)(manager.groups, manager.groupsLeafs, manager.resourceById, 3)).toEqual(['Samantha Bright', 'High Priority', 'Room 1']);
     });

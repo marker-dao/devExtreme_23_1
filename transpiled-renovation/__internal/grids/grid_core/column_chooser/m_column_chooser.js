@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.columnChooserModule = exports.ColumnChooserView = exports.ColumnChooserController = void 0;
 var _message = _interopRequireDefault(require("../../../../common/core/localization/message"));
-var _devices = _interopRequireDefault(require("../../../../core/devices"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _common = require("../../../../core/utils/common");
 var _extend = require("../../../../core/utils/extend");
@@ -23,7 +22,6 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 
 const COLUMN_CHOOSER_CLASS = 'column-chooser';
 const COLUMN_CHOOSER_BUTTON_CLASS = 'column-chooser-button';
-const NOTOUCH_ACTION_CLASS = 'notouch-action';
 const COLUMN_CHOOSER_LIST_CLASS = 'column-chooser-list';
 const COLUMN_CHOOSER_PLAIN_CLASS = 'column-chooser-plain';
 const COLUMN_CHOOSER_DRAG_CLASS = 'column-chooser-mode-drag';
@@ -115,10 +113,6 @@ class ColumnChooserView extends _m_columns_view.ColumnsView {
     return ['showColumnChooser', 'hideColumnChooser'];
   }
   _resizeCore() {}
-  _isWinDevice() {
-    // @ts-expect-error
-    return !!_devices.default.real().win;
-  }
   _initializePopupContainer() {
     const that = this;
     const columnChooserClass = that.addWidgetPrefix(COLUMN_CHOOSER_CLASS);
@@ -143,11 +137,6 @@ class ColumnChooserView extends _m_columns_view.ColumnsView {
       width: columnChooserOptions.width,
       height: columnChooserOptions.height,
       rtlEnabled: that.option('rtlEnabled'),
-      onHidden() {
-        if (that._isWinDevice()) {
-          (0, _renderer.default)('body').removeClass(that.addWidgetPrefix(NOTOUCH_ACTION_CLASS));
-        }
-      },
       container: columnChooserOptions.container,
       _loopFocus: true
     };
@@ -206,9 +195,6 @@ class ColumnChooserView extends _m_columns_view.ColumnsView {
       searchTimeout,
       searchEditorOptions: (_columnChooser$search3 = columnChooser.search) === null || _columnChooser$search3 === void 0 ? void 0 : _columnChooser$search3.editorOptions
     };
-    if (this._isWinDevice()) {
-      treeViewConfig.useNativeScrolling = false;
-    }
     (0, _extend.extend)(treeViewConfig, isSelectMode ? this._prepareSelectModeConfig() : this._prepareDragModeConfig());
     if (this._columnChooserList) {
       if (!treeViewConfig.searchEnabled) {
@@ -317,23 +303,31 @@ class ColumnChooserView extends _m_columns_view.ColumnsView {
     });
     this._columnChooserList.endUpdate();
   }
-  _columnOptionChanged(e) {
-    super._columnOptionChanged(e);
+  _columnOptionChanged(changes) {
+    super._columnOptionChanged(changes);
+    const {
+      optionNames
+    } = changes;
     const isSelectMode = this.isSelectMode();
-    if (isSelectMode && this._columnChooserList && !this._isUpdatingColumnVisibility) {
-      const {
-        optionNames
-      } = e;
-      const onlyVisibleChanged = optionNames.visible && optionNames.length === 1;
-      const columnIndices = (0, _type.isDefined)(e.columnIndex) ? [e.columnIndex] : e.columnIndices;
-      const needUpdate = COLUMN_OPTIONS_USED_IN_ITEMS.some(optionName => optionNames[optionName]) || e.changeTypes.columns && optionNames.all;
-      if (needUpdate) {
-        this._updateItemsSelection(columnIndices);
-        if (!onlyVisibleChanged) {
-          this._updateItems();
-        }
-      }
+    const onlyVisibleChanged = this.isColumnVisibilityOnlyUpdated(optionNames);
+    const isOnlyColumnVisibilityUpdated = this._isUpdatingColumnVisibility && onlyVisibleChanged;
+    if (!isSelectMode || !this._columnChooserList || isOnlyColumnVisibilityUpdated) {
+      return;
     }
+    const columnIndices = (0, _type.isDefined)(changes.columnIndex) ? [changes.columnIndex] : changes.columnIndices;
+    const hasItemsOptionNames = COLUMN_OPTIONS_USED_IN_ITEMS.some(optionName => optionNames[optionName]);
+    const needUpdate = hasItemsOptionNames || changes.changeTypes.columns && optionNames.all;
+    if (!needUpdate) {
+      return;
+    }
+    this._updateItemsSelection(columnIndices);
+    if (!onlyVisibleChanged) {
+      this._updateItems();
+    }
+  }
+  isColumnVisibilityOnlyUpdated(optionNames) {
+    const optionKeys = Object.keys(optionNames ?? {}).filter(key => key !== 'length');
+    return optionKeys.length === 1 && optionKeys[0] === 'visible';
   }
   getColumnElements() {
     var _this$_popupContainer;
@@ -390,9 +384,6 @@ class ColumnChooserView extends _m_columns_view.ColumnsView {
       this.render();
     }
     this._popupContainer.show();
-    if (this._isWinDevice()) {
-      (0, _renderer.default)('body').addClass(this.addWidgetPrefix(NOTOUCH_ACTION_CLASS));
-    }
   }
   hideColumnChooser() {
     if (this._popupContainer) {

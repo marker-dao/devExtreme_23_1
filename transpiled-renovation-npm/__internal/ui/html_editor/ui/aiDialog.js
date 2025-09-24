@@ -17,7 +17,7 @@ var _themes = require("../../../../ui/themes");
 var _m_baseDialog = _interopRequireDefault(require("../../../ui/html_editor/ui/m_baseDialog"));
 var _ai = require("../../../ui/html_editor/utils/ai");
 var _small_screen = require("../../../ui/html_editor/utils/small_screen");
-var _m_load_indicator = require("../../../ui/m_load_indicator");
+var _load_indicator2 = require("../../../ui/load_indicator");
 var _m_text_editor = require("../../../ui/text_box/m_text_editor.base");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -211,7 +211,7 @@ class AIDialog extends _m_baseDialog.default {
     const $inputContainer = this._resultTextArea.$element().find(`.${_m_text_editor.TEXTEDITOR_INPUT_CONTAINER_CLASS}`);
     const $indicatorElement = (0, _renderer.default)('<div>').addClass(AI_DIALOG_LOAD_INDICATOR_CLASS).appendTo($inputContainer);
     const options = {
-      animationType: _m_load_indicator.AnimationType.Sparkle,
+      animationType: _load_indicator2.AnimationType.Sparkle,
       width: LOADINDICATOR_SIZE,
       height: LOADINDICATOR_SIZE
     };

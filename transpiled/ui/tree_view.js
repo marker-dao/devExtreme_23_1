@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_tree_view = _interopRequireDefault(require("../__internal/ui/tree_view/m_tree_view.search"));
+var _tree_view = _interopRequireDefault(require("../__internal/ui/tree_view/tree_view.search"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_tree_view.default; // STYLE treeView
+var _default = exports.default = _tree_view.default; // STYLE treeView
 /**
  * @name dxTreeViewItem
  * @inherits CollectionWidgetItem

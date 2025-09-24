@@ -1,5 +1,5 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import '../../ui/list/modules/m_selection';
+import '../../ui/list/modules/selection';
 import dateLocalization from '../../../common/core/localization/date';
 import { ensureDefined, noop } from '../../../core/utils/common';
 import dateSerialization from '../../../core/utils/date_serialization';
@@ -7,7 +7,7 @@ import { getHeight, getOuterHeight } from '../../../core/utils/size';
 import { isDate } from '../../../core/utils/type';
 import { getWindow } from '../../../core/utils/window';
 import { getSizeValue } from '../../ui/drop_down_editor/m_utils';
-import List from '../../ui/list/m_list.edit.search';
+import List from '../../ui/list/list.edit.search';
 import DateBoxStrategy from './m_date_box.strategy';
 import dateUtils from './m_date_utils';
 const window = getWindow();

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/method-signature-style */
 import ArrayStore from '../../../../common/data/array_store';
 import { CustomStore } from '../../../../common/data/custom_store';
 import $ from '../../../../core/renderer';
@@ -377,7 +376,6 @@ export class DataController extends DataHelperMixin(modules.Controller) {
   _handleDataPushed(changes) {
     this.pushed.fire(changes);
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   fireError() {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
@@ -1287,9 +1285,8 @@ export class DataController extends DataHelperMixin(modules.Controller) {
       };
     } else if (!options) {
       options = {
-        lookup: true,
-        selection: true,
-        reload: true
+        reload: true,
+        lookup: true
       };
     }
     const that = this;
@@ -1375,7 +1372,6 @@ export class DataController extends DataHelperMixin(modules.Controller) {
   /**
    * @extended: editing, virtual_scrolling
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   reload(reload, changesOnly) {
     var _this$_dataSource2;
     return (_this$_dataSource2 = this._dataSource) === null || _this$_dataSource2 === void 0 ? void 0 : _this$_dataSource2.reload(reload, changesOnly);

@@ -9,12 +9,12 @@ var _common = require("../../core/utils/common");
 var _extend2 = require("../../core/utils/extend");
 var _iterator = require("../../core/utils/iterator");
 var _type = require("../../core/utils/type");
-var _consts = _interopRequireDefault(require("../../viz/components/consts"));
-var _annotations = require("../../viz/core/annotations");
-var _center_template = require("../../viz/core/center_template");
-var _utils = require("../../viz/core/utils");
-var _range = require("../../viz/translators/range");
-var _translator1d = require("../../viz/translators/translator1d");
+var _consts = _interopRequireDefault(require("../viz/components/consts"));
+var _annotations = require("../viz/core/annotations");
+var _center_template = require("../viz/core/center_template");
+var _utils = require("../viz/core/utils");
+var _range = require("../viz/translators/range");
+var _translator1d = require("../viz/translators/translator1d");
 var _m_base_chart = require("./chart_components/m_base_chart");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const {

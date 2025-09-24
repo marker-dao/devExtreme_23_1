@@ -36,6 +36,9 @@ const DIALOG_LINK_FIELD_TARGET = 'dxHtmlEditor-dialogLinkTargetField';
 const DIALOG_LINK_FIELD_TARGET_CLASS = 'dx-formdialog-field-target';
 const DIALOG_TABLE_FIELD_COLUMNS = 'dxHtmlEditor-dialogInsertTableRowsField';
 const DIALOG_TABLE_FIELD_ROWS = 'dxHtmlEditor-dialogInsertTableColumnsField';
+const DEFAULT_TEXT_ALIGNMENT = 'left';
+const DEFAULT_TH_TEXT_ALIGNMENT = 'center';
+const DEFAULT_VERTICAL_ALIGN = 'middle';
 const ICON_MAP = exports.ICON_MAP = {
   insertHeaderRow: 'header',
   clear: 'clearformat'
@@ -464,178 +467,177 @@ function prepareInsertTableHandler(module) {
 }
 function getTablePropertiesFormConfig(module, _ref10) {
   let {
-    $element,
+    $element: $table,
     formats,
     tableBlot
   } = _ref10;
-  const window = (0, _window.getWindow)();
   let alignmentEditorInstance;
   let borderColorEditorInstance;
   let backgroundColorEditorInstance;
-  const $table = $element;
   const {
     editorInstance
   } = module;
-  // eslint-disable-next-line radix
-  const startTableWidth = parseInt(formats.tableWidth) || (0, _size.getOuterWidth)($table);
-  const tableStyles = window.getComputedStyle($table.get(0));
-  const startTextAlign = tableStyles.textAlign === 'start' ? 'left' : tableStyles.textAlign;
-  const formOptions = {
-    colCount: 2,
-    formData: {
-      width: startTableWidth,
-      // eslint-disable-next-line radix
-      height: (0, _type.isDefined)(formats.tableHeight) ? parseInt(formats.tableHeight) : (0, _size.getOuterHeight)($table),
-      backgroundColor: formats.tableBackgroundColor || tableStyles.backgroundColor,
-      borderStyle: formats.tableBorderStyle || tableStyles.borderTopStyle,
-      borderColor: formats.tableBorderColor || tableStyles.borderTopColor,
-      // eslint-disable-next-line radix
-      borderWidth: parseInt((0, _type.isDefined)(formats.tableBorderWidth) ? formats.tableBorderWidth : tableStyles.borderTopWidth),
-      alignment: formats.tableAlign || startTextAlign
+  const rawTableWidth = parseFloat(formats.tableWidth);
+  const tableWidth = isNaN(rawTableWidth) ? null : rawTableWidth;
+  const alignment = formats.tableAlign || DEFAULT_TEXT_ALIGNMENT;
+  const formData = {
+    width: tableWidth,
+    height: (0, _type.isDefined)(formats.tableHeight) ? parseFloat(formats.tableHeight) : null,
+    backgroundColor: formats.tableBackgroundColor || null,
+    borderStyle: formats.tableBorderStyle || null,
+    borderColor: formats.tableBorderColor || null,
+    borderWidth: (0, _type.isDefined)(formats.tableBorderWidth) ? parseFloat(formats.tableBorderWidth) : null,
+    alignment
+  };
+  const items = [{
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-border'),
+    colCountByScreen: {
+      xs: 2
     },
+    colCount: 2,
     items: [{
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-border'),
-      colCountByScreen: {
-        xs: 2
+      dataField: 'borderStyle',
+      label: {
+        text: _message.default.format('dxHtmlEditor-style')
       },
-      colCount: 2,
-      items: [{
-        dataField: 'borderStyle',
-        label: {
-          text: _message.default.format('dxHtmlEditor-style')
-        },
-        editorType: 'dxSelectBox',
-        editorOptions: {
-          items: getBorderStylesTranslated(),
-          valueExpr: 'id',
-          displayExpr: 'value',
-          placeholder: 'Select style'
-        }
-      }, {
-        dataField: 'borderWidth',
-        label: {
-          text: _message.default.format('dxHtmlEditor-borderWidth')
-        },
-        editorOptions: {
-          placeholder: _message.default.format('dxHtmlEditor-pixels')
-        }
-      }, {
-        itemType: 'simple',
-        dataField: 'borderColor',
-        label: {
-          text: _message.default.format('dxHtmlEditor-borderColor')
-        },
-        colSpan: 2,
-        template: e => {
-          const $content = (0, _renderer.default)('<div>');
-          editorInstance._createComponent($content, _color_box.default, {
-            editAlphaChannel: true,
-            value: e.component.option('formData').borderColor,
-            onInitialized: e => {
-              borderColorEditorInstance = e.component;
-            }
-          });
-          return $content;
-        }
-      }]
+      editorType: 'dxSelectBox',
+      editorOptions: {
+        items: getBorderStylesTranslated(),
+        valueExpr: 'id',
+        displayExpr: 'value',
+        placeholder: 'Select style'
+      }
     }, {
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-dimensions'),
-      colCountByScreen: {
-        xs: 2
+      dataField: 'borderWidth',
+      label: {
+        text: _message.default.format('dxHtmlEditor-borderWidth')
       },
-      colCount: 2,
-      items: [{
-        dataField: 'width',
-        label: {
-          text: _message.default.format('dxHtmlEditor-width')
-        },
-        editorOptions: {
-          min: 0,
-          placeholder: _message.default.format('dxHtmlEditor-pixels')
-        }
-      }, {
-        dataField: 'height',
-        label: {
-          text: _message.default.format('dxHtmlEditor-height')
-        },
-        editorOptions: {
-          min: 0,
-          placeholder: _message.default.format('dxHtmlEditor-pixels')
-        }
-      }]
+      editorOptions: {
+        placeholder: _message.default.format('dxHtmlEditor-pixels')
+      }
     }, {
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-tableBackground'),
-      items: [{
-        itemType: 'simple',
-        dataField: 'backgroundColor',
-        label: {
-          text: _message.default.format('dxHtmlEditor-borderColor')
-        },
-        template: e => {
-          const $content = (0, _renderer.default)('<div>');
-          editorInstance._createComponent($content, _color_box.default, {
-            editAlphaChannel: true,
-            value: e.component.option('formData').backgroundColor,
-            onInitialized: e => {
-              backgroundColorEditorInstance = e.component;
-            }
-          });
-          return $content;
-        }
-      }]
+      itemType: 'simple',
+      dataField: 'borderColor',
+      label: {
+        text: _message.default.format('dxHtmlEditor-borderColor')
+      },
+      colSpan: 2,
+      template: e => {
+        const $content = (0, _renderer.default)('<div>');
+        editorInstance._createComponent($content, _color_box.default, {
+          editAlphaChannel: true,
+          value: e.component.option('formData').borderColor,
+          onInitialized: event => {
+            borderColorEditorInstance = event.component;
+          }
+        });
+        return $content;
+      }
+    }]
+  }, {
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-dimensions'),
+    colCountByScreen: {
+      xs: 2
+    },
+    colCount: 2,
+    items: [{
+      dataField: 'width',
+      label: {
+        text: _message.default.format('dxHtmlEditor-width')
+      },
+      editorOptions: {
+        min: 0,
+        placeholder: _message.default.format('dxHtmlEditor-pixels')
+      }
     }, {
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-alignment'),
-      items: [{
-        itemType: 'simple',
-        label: {
-          text: _message.default.format('dxHtmlEditor-horizontal')
-        },
-        template: () => {
-          const $content = (0, _renderer.default)('<div>');
-          editorInstance._createComponent($content, _button_group.default, {
-            items: [{
-              value: 'left',
-              icon: 'alignleft'
-            }, {
-              value: 'center',
-              icon: 'aligncenter'
-            }, {
-              value: 'right',
-              icon: 'alignright'
-            }, {
-              value: 'justify',
-              icon: 'alignjustify'
-            }],
-            keyExpr: 'value',
-            selectedItemKeys: [startTextAlign],
-            onInitialized: e => {
-              alignmentEditorInstance = e.component;
-            }
-          });
-          return $content;
-        }
-      }]
-    }],
+      dataField: 'height',
+      label: {
+        text: _message.default.format('dxHtmlEditor-height')
+      },
+      editorOptions: {
+        min: 0,
+        placeholder: _message.default.format('dxHtmlEditor-pixels')
+      }
+    }]
+  }, {
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-tableBackground'),
+    items: [{
+      itemType: 'simple',
+      dataField: 'backgroundColor',
+      label: {
+        text: _message.default.format('dxHtmlEditor-borderColor')
+      },
+      template: e => {
+        const $content = (0, _renderer.default)('<div>');
+        editorInstance._createComponent($content, _color_box.default, {
+          editAlphaChannel: true,
+          value: e.component.option('formData').backgroundColor,
+          onInitialized: event => {
+            backgroundColorEditorInstance = event.component;
+          }
+        });
+        return $content;
+      }
+    }]
+  }, {
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-alignment'),
+    items: [{
+      itemType: 'simple',
+      label: {
+        text: _message.default.format('dxHtmlEditor-horizontal')
+      },
+      template: () => {
+        const $content = (0, _renderer.default)('<div>');
+        editorInstance._createComponent($content, _button_group.default, {
+          items: [{
+            value: 'left',
+            icon: 'alignleft'
+          }, {
+            value: 'center',
+            icon: 'aligncenter'
+          }, {
+            value: 'right',
+            icon: 'alignright'
+          }, {
+            value: 'justify',
+            icon: 'alignjustify'
+          }],
+          keyExpr: 'value',
+          selectedItemKeys: [alignment === 'start' ? 'left' : alignment],
+          onInitialized: event => {
+            alignmentEditorInstance = event.component;
+          }
+        });
+        return $content;
+      }
+    }]
+  }];
+  const formOptions = {
+    formData,
+    items,
+    colCount: 2,
     showColonAfterLabel: true,
     labelLocation: 'top',
     minColWidth: 400
   };
   const applyHandler = formInstance => {
-    const formData = formInstance.option('formData');
-    const newWidth = formData.width === startTableWidth ? undefined : formData.width;
-    const newHeight = formData.height;
+    const {
+      formData: data
+    } = formInstance.option();
+    const newWidth = data.width === tableWidth ? null : data.width;
+    const newHeight = data.height;
     applyTableDimensionChanges(module, {
       $table,
       newHeight,
       newWidth,
       tableBlot
     });
-    module.editorInstance.format('tableBorderStyle', formData.borderStyle);
-    module.editorInstance.format('tableBorderWidth', `${formData.borderWidth}px`);
+    module.editorInstance.format('tableBorderStyle', data.borderStyle);
+    module.editorInstance.format('tableBorderWidth', `${data.borderWidth}px`);
     module.editorInstance.format('tableBorderColor', borderColorEditorInstance.option('value'));
     module.editorInstance.format('tableBackgroundColor', backgroundColorEditorInstance.option('value'));
     module.editorInstance.format('tableTextAlign', alignmentEditorInstance.option('selectedItemKeys')[0]);
@@ -646,221 +648,221 @@ function getTablePropertiesFormConfig(module, _ref10) {
   };
 }
 function getCellPropertiesFormConfig(module, _ref11) {
+  var _formats$cellPadding, _formats$cellPadding2;
   let {
-    $element,
+    $element: $cell,
     formats,
     tableBlot,
     rowBlot
   } = _ref11;
-  const window = (0, _window.getWindow)();
   let alignmentEditorInstance;
   let verticalAlignmentEditorInstance;
   let borderColorEditorInstance;
   let backgroundColorEditorInstance;
-  const $cell = $element;
-  // eslint-disable-next-line radix
-  const startCellWidth = (0, _type.isDefined)(formats.cellWidth) ? parseInt(formats.cellWidth) : (0, _size.getOuterWidth)($cell);
   const {
     editorInstance
   } = module;
-  const cellStyles = window.getComputedStyle($cell.get(0));
-  const startTextAlign = cellStyles.textAlign === 'start' ? 'left' : cellStyles.textAlign;
-  const formOptions = {
+  const cellWidth = (0, _type.isDefined)(formats.cellWidth) ? parseFloat(formats.cellWidth) : null;
+  const defaultAlignment = rowBlot.childFormatName === 'tableHeaderCell' ? DEFAULT_TH_TEXT_ALIGNMENT : DEFAULT_TEXT_ALIGNMENT;
+  const alignment = formats.cellTextAlign || defaultAlignment;
+  const verticalAlignment = formats.cellVerticalAlign || DEFAULT_VERTICAL_ALIGN;
+  const rawVerticalPadding = formats.cellPaddingTop ?? ((_formats$cellPadding = formats.cellPadding) === null || _formats$cellPadding === void 0 ? void 0 : _formats$cellPadding.split(' ')[0]);
+  const rawHorizontalPadding = formats.cellPaddingLeft ?? ((_formats$cellPadding2 = formats.cellPadding) === null || _formats$cellPadding2 === void 0 ? void 0 : _formats$cellPadding2.split(' ')[1]);
+  const formData = {
+    width: cellWidth,
+    height: (0, _type.isDefined)(formats.cellHeight) ? parseFloat(formats.cellHeight) : null,
+    backgroundColor: getColorFromFormat(formats.cellBackgroundColor) || null,
+    borderStyle: formats.cellBorderStyle || null,
+    borderColor: getColorFromFormat(formats.cellBorderColor) || null,
+    borderWidth: (0, _type.isDefined)(formats.cellBorderWidth) ? parseFloat(formats.cellBorderWidth) : null,
+    alignment,
+    verticalAlignment,
+    verticalPadding: (0, _type.isDefined)(rawVerticalPadding) ? parseFloat(rawVerticalPadding) : null,
+    horizontalPadding: (0, _type.isDefined)(rawHorizontalPadding) ? parseFloat(rawHorizontalPadding) : null
+  };
+  const items = [{
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-border'),
+    colCountByScreen: {
+      xs: 2
+    },
     colCount: 2,
-    formData: {
-      width: startCellWidth,
-      // eslint-disable-next-line radix
-      height: (0, _type.isDefined)(formats.cellHeight) ? parseInt(formats.cellHeight) : (0, _size.getOuterHeight)($cell),
-      backgroundColor: getColorFromFormat(formats.cellBackgroundColor) || cellStyles.backgroundColor,
-      borderStyle: formats.cellBorderStyle || cellStyles.borderTopStyle,
-      borderColor: getColorFromFormat(formats.cellBorderColor) || cellStyles.borderTopColor,
-      // eslint-disable-next-line radix
-      borderWidth: parseInt((0, _type.isDefined)(formats.cellBorderWidth) ? formats.cellBorderWidth : cellStyles.borderTopWidth),
-      alignment: formats.cellTextAlign || startTextAlign,
-      verticalAlignment: formats.cellVerticalAlign || cellStyles.verticalAlign,
-      // eslint-disable-next-line radix
-      verticalPadding: parseInt((0, _type.isDefined)(formats.cellPaddingTop) ? formats.cellPaddingTop : cellStyles.paddingTop),
-      // eslint-disable-next-line radix
-      horizontalPadding: parseInt((0, _type.isDefined)(formats.cellPaddingLeft) ? formats.cellPaddingLeft : cellStyles.paddingLeft)
+    items: [{
+      dataField: 'borderStyle',
+      label: {
+        text: _message.default.format('dxHtmlEditor-style')
+      },
+      editorType: 'dxSelectBox',
+      editorOptions: {
+        items: getBorderStylesTranslated(),
+        valueExpr: 'id',
+        displayExpr: 'value'
+      }
+    }, {
+      dataField: 'borderWidth',
+      label: {
+        text: _message.default.format('dxHtmlEditor-borderWidth')
+      },
+      editorOptions: {
+        placeholder: _message.default.format('dxHtmlEditor-pixels')
+      }
+    }, {
+      itemType: 'simple',
+      dataField: 'borderColor',
+      colSpan: 2,
+      label: {
+        text: _message.default.format('dxHtmlEditor-borderColor')
+      },
+      template: e => {
+        const $content = (0, _renderer.default)('<div>');
+        editorInstance._createComponent($content, _color_box.default, {
+          editAlphaChannel: true,
+          value: e.component.option('formData').borderColor,
+          onInitialized: event => {
+            borderColorEditorInstance = event.component;
+          }
+        });
+        return $content;
+      }
+    }]
+  }, {
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-dimensions'),
+    colCount: 2,
+    colCountByScreen: {
+      xs: 2
     },
     items: [{
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-border'),
-      colCountByScreen: {
-        xs: 2
+      dataField: 'width',
+      label: {
+        text: _message.default.format('dxHtmlEditor-width')
       },
-      colCount: 2,
-      items: [{
-        dataField: 'borderStyle',
-        label: {
-          text: _message.default.format('dxHtmlEditor-style')
-        },
-        editorType: 'dxSelectBox',
-        editorOptions: {
-          items: getBorderStylesTranslated(),
-          valueExpr: 'id',
-          displayExpr: 'value'
-        }
-      }, {
-        dataField: 'borderWidth',
-        label: {
-          text: _message.default.format('dxHtmlEditor-borderWidth')
-        },
-        editorOptions: {
-          placeholder: _message.default.format('dxHtmlEditor-pixels')
-        }
-      }, {
-        itemType: 'simple',
-        dataField: 'borderColor',
-        colSpan: 2,
-        label: {
-          text: _message.default.format('dxHtmlEditor-borderColor')
-        },
-        template: e => {
-          const $content = (0, _renderer.default)('<div>');
-          editorInstance._createComponent($content, _color_box.default, {
-            editAlphaChannel: true,
-            value: e.component.option('formData').borderColor,
-            onInitialized: e => {
-              borderColorEditorInstance = e.component;
-            }
-          });
-          return $content;
-        }
-      }]
+      editorOptions: {
+        min: 0,
+        placeholder: _message.default.format('dxHtmlEditor-pixels')
+      }
     }, {
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-dimensions'),
-      colCount: 2,
-      colCountByScreen: {
-        xs: 2
+      dataField: 'height',
+      label: {
+        text: _message.default.format('dxHtmlEditor-height')
       },
-      items: [{
-        dataField: 'width',
-        label: {
-          text: _message.default.format('dxHtmlEditor-width')
-        },
-        editorOptions: {
-          min: 0,
-          placeholder: _message.default.format('dxHtmlEditor-pixels')
-        }
-      }, {
-        dataField: 'height',
-        label: {
-          text: _message.default.format('dxHtmlEditor-height')
-        },
-        editorOptions: {
-          min: 0,
-          placeholder: _message.default.format('dxHtmlEditor-pixels')
-        }
-      }, {
-        dataField: 'verticalPadding',
-        label: {
-          text: _message.default.format('dxHtmlEditor-paddingVertical')
-        },
-        editorOptions: {
-          placeholder: _message.default.format('dxHtmlEditor-pixels')
-        }
-      }, {
-        label: {
-          text: _message.default.format('dxHtmlEditor-paddingHorizontal')
-        },
-        dataField: 'horizontalPadding',
-        editorOptions: {
-          placeholder: _message.default.format('dxHtmlEditor-pixels')
-        }
-      }]
+      editorOptions: {
+        min: 0,
+        placeholder: _message.default.format('dxHtmlEditor-pixels')
+      }
     }, {
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-tableBackground'),
-      items: [{
-        itemType: 'simple',
-        dataField: 'backgroundColor',
-        label: {
-          text: _message.default.format('dxHtmlEditor-borderColor')
-        },
-        template: e => {
-          const $content = (0, _renderer.default)('<div>');
-          editorInstance._createComponent($content, _color_box.default, {
-            editAlphaChannel: true,
-            value: e.component.option('formData').backgroundColor,
-            onInitialized: e => {
-              backgroundColorEditorInstance = e.component;
-            }
-          });
-          return $content;
-        }
-      }]
+      dataField: 'verticalPadding',
+      label: {
+        text: _message.default.format('dxHtmlEditor-paddingVertical')
+      },
+      editorOptions: {
+        placeholder: _message.default.format('dxHtmlEditor-pixels')
+      }
     }, {
-      itemType: 'group',
-      caption: _message.default.format('dxHtmlEditor-alignment'),
-      colCount: 2,
-      items: [{
-        itemType: 'simple',
-        label: {
-          text: _message.default.format('dxHtmlEditor-horizontal')
-        },
-        template: () => {
-          const $content = (0, _renderer.default)('<div>');
-          editorInstance._createComponent($content, _button_group.default, {
-            items: [{
-              value: 'left',
-              icon: 'alignleft'
-            }, {
-              value: 'center',
-              icon: 'aligncenter'
-            }, {
-              value: 'right',
-              icon: 'alignright'
-            }, {
-              value: 'justify',
-              icon: 'alignjustify'
-            }],
-            keyExpr: 'value',
-            selectedItemKeys: [startTextAlign],
-            onInitialized: e => {
-              alignmentEditorInstance = e.component;
-            }
-          });
-          return $content;
-        }
-      }, {
-        itemType: 'simple',
-        label: {
-          text: _message.default.format('dxHtmlEditor-vertical')
-        },
-        template: () => {
-          const $content = (0, _renderer.default)('<div>');
-          editorInstance._createComponent($content, _button_group.default, {
-            items: [{
-              value: 'top',
-              icon: 'verticalaligntop'
-            }, {
-              value: 'middle',
-              icon: 'verticalaligncenter'
-            }, {
-              value: 'bottom',
-              icon: 'verticalalignbottom'
-            }],
-            keyExpr: 'value',
-            selectedItemKeys: [cellStyles.verticalAlign],
-            onInitialized: e => {
-              verticalAlignmentEditorInstance = e.component;
-            }
-          });
-          return $content;
-        }
-      }]
-    }],
+      label: {
+        text: _message.default.format('dxHtmlEditor-paddingHorizontal')
+      },
+      dataField: 'horizontalPadding',
+      editorOptions: {
+        placeholder: _message.default.format('dxHtmlEditor-pixels')
+      }
+    }]
+  }, {
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-tableBackground'),
+    items: [{
+      itemType: 'simple',
+      dataField: 'backgroundColor',
+      label: {
+        text: _message.default.format('dxHtmlEditor-borderColor')
+      },
+      template: e => {
+        const $content = (0, _renderer.default)('<div>');
+        editorInstance._createComponent($content, _color_box.default, {
+          editAlphaChannel: true,
+          value: e.component.option('formData').backgroundColor,
+          onInitialized: event => {
+            backgroundColorEditorInstance = event.component;
+          }
+        });
+        return $content;
+      }
+    }]
+  }, {
+    itemType: 'group',
+    caption: _message.default.format('dxHtmlEditor-alignment'),
+    colCount: 2,
+    items: [{
+      itemType: 'simple',
+      label: {
+        text: _message.default.format('dxHtmlEditor-horizontal')
+      },
+      template: () => {
+        const $content = (0, _renderer.default)('<div>');
+        editorInstance._createComponent($content, _button_group.default, {
+          items: [{
+            value: 'left',
+            icon: 'alignleft'
+          }, {
+            value: 'center',
+            icon: 'aligncenter'
+          }, {
+            value: 'right',
+            icon: 'alignright'
+          }, {
+            value: 'justify',
+            icon: 'alignjustify'
+          }],
+          keyExpr: 'value',
+          selectedItemKeys: [alignment === 'start' ? 'left' : alignment],
+          onInitialized: event => {
+            alignmentEditorInstance = event.component;
+          }
+        });
+        return $content;
+      }
+    }, {
+      itemType: 'simple',
+      label: {
+        text: _message.default.format('dxHtmlEditor-vertical')
+      },
+      template: () => {
+        const $content = (0, _renderer.default)('<div>');
+        editorInstance._createComponent($content, _button_group.default, {
+          items: [{
+            value: 'top',
+            icon: 'verticalaligntop'
+          }, {
+            value: 'middle',
+            icon: 'verticalaligncenter'
+          }, {
+            value: 'bottom',
+            icon: 'verticalalignbottom'
+          }],
+          keyExpr: 'value',
+          selectedItemKeys: [verticalAlignment],
+          onInitialized: event => {
+            verticalAlignmentEditorInstance = event.component;
+          }
+        });
+        return $content;
+      }
+    }]
+  }];
+  const formOptions = {
+    formData,
+    items,
+    colCount: 2,
     showColonAfterLabel: true,
     labelLocation: 'top',
     minColWidth: 400
   };
   const applyHandler = formInstance => {
-    const formData = formInstance.option('formData');
-    // eslint-disable-next-line radix
-    const newWidth = formData.width === parseInt(startCellWidth) ? undefined : formData.width;
-    const newHeight = formData.height;
+    const {
+      formData: data
+    } = formInstance.option();
+    const newWidth = data.width === cellWidth ? null : data.width;
+    const newHeight = data.height;
     applyCellDimensionChanges(module, {
       $cell,
       newHeight,
@@ -868,16 +870,16 @@ function getCellPropertiesFormConfig(module, _ref11) {
       tableBlot,
       rowBlot
     });
-    module.editorInstance.format('cellBorderWidth', `${formData.borderWidth}px`);
+    module.editorInstance.format('cellBorderWidth', data.borderWidth && `${data.borderWidth}px`);
     module.editorInstance.format('cellBorderColor', borderColorEditorInstance.option('value'));
-    module.editorInstance.format('cellBorderStyle', formData.borderStyle);
+    module.editorInstance.format('cellBorderStyle', data.borderStyle);
     module.editorInstance.format('cellBackgroundColor', backgroundColorEditorInstance.option('value'));
     module.editorInstance.format('cellTextAlign', alignmentEditorInstance.option('selectedItemKeys')[0]);
     module.editorInstance.format('cellVerticalAlign', verticalAlignmentEditorInstance.option('selectedItemKeys')[0]);
-    module.editorInstance.format('cellPaddingLeft', `${formData.horizontalPadding}px`);
-    module.editorInstance.format('cellPaddingRight', `${formData.horizontalPadding}px`);
-    module.editorInstance.format('cellPaddingTop', `${formData.verticalPadding}px`);
-    module.editorInstance.format('cellPaddingBottom', `${formData.verticalPadding}px`);
+    module.editorInstance.format('cellPaddingLeft', data.horizontalPadding && `${data.horizontalPadding}px`);
+    module.editorInstance.format('cellPaddingRight', data.horizontalPadding && `${data.horizontalPadding}px`);
+    module.editorInstance.format('cellPaddingTop', data.verticalPadding && `${data.verticalPadding}px`);
+    module.editorInstance.format('cellPaddingBottom', data.verticalPadding && `${data.verticalPadding}px`);
   };
   return {
     formOptions,

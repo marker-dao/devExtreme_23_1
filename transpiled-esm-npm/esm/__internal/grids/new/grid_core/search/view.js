@@ -1,4 +1,4 @@
-import { effect, signal } from '@preact/signals-core';
+import { effect, signal } from '../../../../core/state_manager/index';
 import { ToolbarController } from '../../../../grids/new/grid_core/toolbar/controller';
 import { OptionsController } from '../options_controller/options_controller';
 import { SearchController } from './controller';

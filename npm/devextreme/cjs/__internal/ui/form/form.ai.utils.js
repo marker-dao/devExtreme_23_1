@@ -1,0 +1,113 @@
+/**
+* DevExtreme (cjs/__internal/ui/form/form.ai.utils.js)
+* Version: 25.2.0
+* Build date: Wed Sep 24 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.parseResultForEditorType = exports.getItemFormatInfo = void 0;
+var _color = _interopRequireDefault(require("../../../color"));
+var _type = require("../../../core/utils/type");
+var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
+var _date = require("../../core/utils/date");
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const getEditorTypeInfo = editorType => {
+  switch (editorType) {
+    case 'dxDateBox':
+    case 'dxCalendar':
+      return 'date in ISO format';
+    case 'dxDateRangeBox':
+      return 'date range in ISO format, use pattern {start}:::{end}';
+    case 'dxColorBox':
+      return 'color in hex format';
+    case 'dxCheckBox':
+    case 'dxSwitch':
+      return 'boolean value, true or false';
+    case 'dxNumberBox':
+    case 'dxSlider':
+      return 'numeric value';
+    case 'dxRangeSlider':
+      return 'numeric range, use pattern {start}:::{end}';
+    default:
+      return 'text';
+  }
+};
+const parseResultForEditorType = (dataField, editorType, value) => {
+  const errorValue = JSON.stringify(value);
+  switch (editorType) {
+    case 'dxDateBox':
+    case 'dxCalendar':
+      if (!_date.dateUtilsTs.isValidDate(value)) {
+        throw _ui.default.Error('E1064', dataField, errorValue, 'date');
+      }
+      return value;
+    case 'dxDateRangeBox':
+      if (!Array.isArray(value) || value.length > 2 || value.some(item => !_date.dateUtilsTs.isValidDate(item))) {
+        throw _ui.default.Error('E1064', dataField, errorValue, 'date range');
+      }
+      return value;
+    case 'dxColorBox':
+      if (new _color.default(value).colorIsInvalid) {
+        throw _ui.default.Error('E1064', dataField, errorValue, 'color');
+      }
+      return value;
+    case 'dxCheckBox':
+    case 'dxSwitch':
+      if (value === 'false') {
+        return false;
+      }
+      if (value === 'true') {
+        return true;
+      }
+      throw _ui.default.Error('E1064', dataField, errorValue, 'boolean');
+    case 'dxNumberBox':
+    case 'dxSlider':
+      if (Array.isArray(value) || isNaN(parseFloat(value))) {
+        throw _ui.default.Error('E1064', dataField, errorValue, 'number');
+      }
+      return value;
+    case 'dxRangeSlider':
+      if (!Array.isArray(value) || value.length > 2 || value.some(item => isNaN(parseFloat(item)))) {
+        throw _ui.default.Error('E1064', dataField, errorValue, 'number range');
+      }
+      return value;
+    case 'dxHtmlEditor':
+      if (Array.isArray(value)) {
+        throw _ui.default.Error('E1064', dataField, errorValue, 'string');
+      }
+      return value;
+    default:
+      return value;
+  }
+};
+exports.parseResultForEditorType = parseResultForEditorType;
+const getItemsAcceptedValuesInfo = editorOptions => {
+  if (!(editorOptions !== null && editorOptions !== void 0 && editorOptions.items)) {
+    return '';
+  }
+  const items = editorOptions.items.map(item => {
+    if ((0, _type.isObject)(item)) {
+      return item.text;
+    }
+    return item;
+  });
+  const acceptedValues = `, accepted values: ${items.join(', ')}, split values with :::`;
+  const customItemsAllowed = editorOptions !== null && editorOptions !== void 0 && editorOptions.acceptCustomValue ? ' (custom values are allowed)' : '';
+  return `${acceptedValues}${customItemsAllowed}`;
+};
+const getItemFormatInfo = _ref => {
+  let {
+    editorType,
+    editorOptions
+  } = _ref;
+  const dataType = getEditorTypeInfo(editorType);
+  const acceptedValues = getItemsAcceptedValuesInfo(editorOptions);
+  return `${dataType}${acceptedValues}`;
+};
+exports.getItemFormatInfo = getItemFormatInfo;

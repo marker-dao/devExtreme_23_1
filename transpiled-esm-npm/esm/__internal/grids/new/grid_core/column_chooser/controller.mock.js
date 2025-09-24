@@ -1,5 +1,5 @@
 import dxTreeView from '../../../../../ui/tree_view';
-import { effect } from '@preact/signals-core';
+import { effect } from '../../../../core/state_manager/index';
 import { ColumnChooserController } from './controller';
 export class ColumnChooserControllerMock extends ColumnChooserController {
   constructor(columnsController, options) {

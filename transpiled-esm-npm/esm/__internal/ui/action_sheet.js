@@ -7,7 +7,7 @@ import { noop } from '../../core/utils/common';
 import { Deferred } from '../../core/utils/deferred';
 import { extend } from '../../core/utils/extend';
 import { getWindow } from '../../core/utils/window';
-import Button from '../../ui/button';
+import Button from '../ui/button/wrapper';
 import CollectionWidget from '../ui/collection/collection_widget.edit';
 import Popover from '../ui/popover/m_popover';
 import Popup from '../ui/popup/m_popup';
@@ -242,6 +242,7 @@ class ActionSheet extends CollectionWidget {
             this.hide();
           }
         },
+        // @ts-expect-error
         integrationOptions: {}
       });
     }

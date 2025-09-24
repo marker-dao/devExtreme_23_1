@@ -7,7 +7,7 @@ exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _deferred = require("../../../core/utils/deferred");
 var _size = require("../../../core/utils/size");
-var _drawer = require("./drawer.animation");
+var _drawer = require("../../ui/drawer/drawer.animation");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class DrawerStrategy {
   constructor(drawer) {

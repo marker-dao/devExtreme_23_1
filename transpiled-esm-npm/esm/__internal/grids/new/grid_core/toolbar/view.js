@@ -1,4 +1,4 @@
-import { computed } from '@preact/signals-core';
+import { computed } from '../../../../core/state_manager/index';
 import { BaseContextMenuController } from '../context_menu/controller';
 import { View } from '../core/view';
 import { OptionsController } from '../options_controller/options_controller';

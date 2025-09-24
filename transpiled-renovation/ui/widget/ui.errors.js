@@ -205,6 +205,22 @@ var _default = exports.default = (0, _error.default)(_errors.default.ERROR_MESSA
    */
   E1062: 'The "cellDuration" must be a positive integer, evenly dividing the ("endDayHour" - "startDayHour") interval into minutes.',
   /**
+   * @name ErrorsUIWidgets.E1063
+   */
+  E1063: 'The \'smartPaste(text)\' method was called, but \'aiIntegration\' is not configured.',
+  /**
+   * @name ErrorsUIWidgets.E1064
+   */
+  E1064: 'AI returned {1} for the {0} field, but this field only accepts {2} values. Update the \'instruction\' for this field.',
+  /**
+   * @name ErrorsUIWidgets.E1065
+   */
+  E1065: 'The browser does not support Web Speech API (SpeechRecognition)',
+  /**
+  * @name ErrorsUIWidgets.E1066
+  */
+  E1066: 'All AI columns must have names.',
+  /**
   * @name ErrorsUIWidgets.W1001
   */
   W1001: 'The "key" option cannot be modified after initialization',
@@ -300,7 +316,11 @@ var _default = exports.default = (0, _error.default)(_errors.default.ERROR_MESSA
   /**
    * @name ErrorsUIWidgets.W1027
    */
-  W1027: 'A prompt should be specified for a custom command.'
+  W1027: 'A prompt should be specified for a custom command.',
+  /**
+   * @name ErrorsUIWidgets.W1028
+   */
+  W1028: 'Nested/banded columns do not support the following properties: {0}.'
 });
 module.exports = exports.default;
 module.exports.default = exports.default;

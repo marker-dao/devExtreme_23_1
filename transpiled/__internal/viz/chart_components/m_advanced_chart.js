@@ -8,12 +8,12 @@ var _common = require("../../../core/utils/common");
 var _extend2 = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _type = require("../../../core/utils/type");
-var _base_axis = require("../../../viz/axes/base_axis");
-var _series_family = require("../../../viz/core/series_family");
-var _utils = require("../../../viz/core/utils");
-var _range_data_calculator = _interopRequireDefault(require("../../../viz/series/helpers/range_data_calculator"));
-var _range = require("../../../viz/translators/range");
-var _utils2 = require("../../../viz/utils");
+var _utils = require("../../../viz/utils");
+var _base_axis = require("../../viz/axes/base_axis");
+var _series_family = require("../../viz/core/series_family");
+var _utils2 = require("../../viz/core/utils");
+var _range_data_calculator = _interopRequireDefault(require("../../viz/series/helpers/range_data_calculator"));
+var _range = require("../../viz/translators/range");
 var _m_base_chart = require("./m_base_chart");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error
@@ -150,10 +150,10 @@ const AdvancedChart = exports.AdvancedChart = _m_base_chart.BaseChart.inherit({
   },
   _updateSize(forceUpdateCanvas) {
     this.callBase();
-    if (forceUpdateCanvas && (0, _utils2.areCanvasesDifferent)(this.__currentCanvas, this._canvas)) {
-      this.__currentCanvas = (0, _utils2.floorCanvasDimensions)(this._canvas);
+    if (forceUpdateCanvas && (0, _utils.areCanvasesDifferent)(this.__currentCanvas, this._canvas)) {
+      this.__currentCanvas = (0, _utils.floorCanvasDimensions)(this._canvas);
     }
-    (0, _utils.setCanvasValues)(this._canvas);
+    (0, _utils2.setCanvasValues)(this._canvas);
   },
   _reinitAxes() {
     this.panes = this._createPanes();
@@ -184,7 +184,7 @@ const AdvancedChart = exports.AdvancedChart = _m_base_chart.BaseChart.inherit({
     } else {
       paneWithNonVirtualAxis = argumentAxesOptions.position === 'top' ? panes[0].name : panes[panes.length - 1].name;
     }
-    argumentAxesPopulatedOptions = (0, _utils.map)(panes, pane => {
+    argumentAxesPopulatedOptions = (0, _utils2.map)(panes, pane => {
       const virtual = pane.name !== paneWithNonVirtualAxis;
       return this._populateAxesOptions('argumentAxis', argumentAxesOptions, {
         pane: pane.name,
@@ -212,7 +212,7 @@ const AdvancedChart = exports.AdvancedChart = _m_base_chart.BaseChart.inherit({
       if ((_axisOptions$panes = axisOptions.panes) !== null && _axisOptions$panes !== void 0 && _axisOptions$panes.length) {
         axisPanes = axisPanes.concat(axisOptions.panes.slice(0));
       }
-      axisPanes = (0, _utils.unique)(axisPanes);
+      axisPanes = (0, _utils2.unique)(axisPanes);
       if (!axisPanes.length) {
         axisPanes.push(undefined);
       }
@@ -404,8 +404,8 @@ const AdvancedChart = exports.AdvancedChart = _m_base_chart.BaseChart.inherit({
       groupSeries.forEach(series => {
         if (series.isVisible()) {
           const seriesMarginOptions = processBubbleMargin(series.getMarginOptions(), bubbleSize);
-          marginOptions = (0, _utils.mergeMarginOptions)(marginOptions, seriesMarginOptions);
-          argumentMarginOptions = (0, _utils.mergeMarginOptions)(argumentMarginOptions, seriesMarginOptions);
+          marginOptions = (0, _utils2.mergeMarginOptions)(marginOptions, seriesMarginOptions);
+          argumentMarginOptions = (0, _utils2.mergeMarginOptions)(argumentMarginOptions, seriesMarginOptions);
         }
       });
       valueAxis.setMarginOptions(marginOptions);
@@ -649,8 +649,8 @@ const AdvancedChart = exports.AdvancedChart = _m_base_chart.BaseChart.inherit({
       const axisPath = axis.getOptions().optionPath;
       if (axisPath) {
         const path = `${axisPath}.visualRange`;
-        const visualRange = (0, _utils.convertVisualRangeObject)(axis.visualRange(), !isArray(this.option(path)));
-        if (!axis.skipEventRising || !(0, _utils.rangesAreEqual)(visualRange, this.option(path))) {
+        const visualRange = (0, _utils2.convertVisualRangeObject)(axis.visualRange(), !isArray(this.option(path)));
+        if (!axis.skipEventRising || !(0, _utils2.rangesAreEqual)(visualRange, this.option(path))) {
           if (!this.option(axisPath) && axisPath !== 'valueAxis') {
             this.option(axisPath, {
               name: axis.name,

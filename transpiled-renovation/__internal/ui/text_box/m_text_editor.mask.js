@@ -13,7 +13,7 @@ var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _string = require("../../../core/utils/string");
 var _type = require("../../../core/utils/type");
-var _selectors = require("../../../ui/widget/selectors");
+var _m_selectors = require("../../core/utils/m_selectors");
 var _m_text_editor = _interopRequireDefault(require("./m_text_editor.base"));
 var _m_text_editorMask = require("./m_text_editor.mask.rule");
 var _m_text_editorMask2 = _interopRequireDefault(require("./m_text_editor.mask.strategy"));
@@ -108,7 +108,7 @@ class TextEditorMask extends _m_text_editor.default {
       const {
         event
       } = e;
-      if ((0, _selectors.focused)(input) && !(0, _index.isCommandKeyPressed)(event)) {
+      if ((0, _m_selectors.focused)(input) && !(0, _index.isCommandKeyPressed)(event)) {
         this._onMouseWheel(event);
         event.preventDefault();
         event.stopPropagation();
@@ -261,7 +261,7 @@ class TextEditorMask extends _m_text_editor.default {
       showMaskMode
     } = this.option();
     if (showMaskMode === 'onFocus') {
-      return (0, _selectors.focused)(this._input()) || !this._isValueEmpty();
+      return (0, _m_selectors.focused)(this._input()) || !this._isValueEmpty();
     }
     return true;
   }

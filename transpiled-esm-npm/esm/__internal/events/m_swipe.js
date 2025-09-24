@@ -1,6 +1,6 @@
 import registerEmitter from '../../common/core/events/core/emitter_registrator';
 import GestureEmitter from '../../common/core/events/gesture/emitter.gesture';
-import { eventData } from '../../common/core/events/utils/index';
+import { eventData } from '../../common/core/events/utils';
 import { getHeight, getWidth } from '../../core/utils/size';
 const SWIPE_START_EVENT = 'dxswipestart';
 const SWIPE_EVENT = 'dxswipe';

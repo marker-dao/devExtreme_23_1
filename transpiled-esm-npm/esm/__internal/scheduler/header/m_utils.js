@@ -1,6 +1,8 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import dateLocalization from '../../../common/core/localization/date';
 import dateUtils from '../../../core/utils/date';
-import { isFunction } from '../../../core/utils/type';
+import { isFunction, isObject } from '../../../core/utils/type';
+import messageLocalization from '../../../localization/message';
 const DAY_FORMAT = 'd';
 const DAYS_IN_WORK_WEEK = 5;
 const {
@@ -141,7 +143,7 @@ export const getNextIntervalDate = (options, direction) => {
   // eslint-disable-next-line default-case
   switch (step) {
     case 'day':
-      dayDuration = 1 * intervalCount;
+      dayDuration = Number(intervalCount);
       break;
     case 'week':
     case 'workWeek':
@@ -263,6 +265,21 @@ const STEP_MAP = {
   timelineMonth: 'month',
   agenda: 'agenda'
 };
+export const getViewName = view => {
+  if (isObject(view)) {
+    return view.name ?? view.type;
+  }
+  return view;
+};
+export const getViewText = view => {
+  const viewName = getViewName(view);
+  const viewText = messageLocalization.format(`dxScheduler-switcher${viewName}`);
+  if (!viewText) {
+    return viewName ?? '';
+  }
+  return viewText;
+};
+export const formatViews = views => views.map(view => _extends({}, view, {
+  text: getViewText(view)
+}));
 export const getStep = type => STEP_MAP[type];
-export const getViewName = view => view.name ?? view.type;
-export const isOneView = (views, selectedView) => views.length === 1 && getViewName(views[0]) === selectedView;

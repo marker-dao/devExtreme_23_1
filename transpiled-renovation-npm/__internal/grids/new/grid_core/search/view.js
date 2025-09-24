@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.SearchView = void 0;
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _controller = require("../../../../grids/new/grid_core/toolbar/controller");
 var _options_controller = require("../options_controller/options_controller");
 var _controller2 = require("./controller");
@@ -16,7 +16,7 @@ class SearchView {
     this.toolbarController = toolbarController;
     this.searchUIController = searchUIController;
     this.searchController = searchController;
-    this.searchTextBox = (0, _signalsCore.signal)(null);
+    this.searchTextBox = (0, _index.signal)(null);
     const toolbarItem = (0, _utils.addSearchTextBox)({
       placeholder: this.searchController.searchPlaceholder.value,
       value: this.searchController.searchTextOption.value,
@@ -27,8 +27,8 @@ class SearchView {
     }, component => {
       this.searchTextBox.value = component;
     });
-    this.toolbarController.addDefaultItem((0, _signalsCore.signal)(toolbarItem), this.options.oneWay('searchPanel.visible'));
-    (0, _signalsCore.effect)(() => {
+    this.toolbarController.addDefaultItem((0, _index.signal)(toolbarItem), this.options.oneWay('searchPanel.visible'));
+    (0, _index.effect)(() => {
       var _this$searchTextBox$v, _this$searchTextBox$v2, _this$searchTextBox$v3;
       (_this$searchTextBox$v = this.searchTextBox.value) === null || _this$searchTextBox$v === void 0 || _this$searchTextBox$v.option('value', this.searchController.searchTextOption.value);
       (_this$searchTextBox$v2 = this.searchTextBox.value) === null || _this$searchTextBox$v2 === void 0 || _this$searchTextBox$v2.option('placeholder', this.searchController.searchPlaceholder.value);

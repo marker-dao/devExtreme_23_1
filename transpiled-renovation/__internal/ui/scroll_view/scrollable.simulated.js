@@ -19,7 +19,7 @@ var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
 var _animator = _interopRequireDefault(require("../../ui/scroll_view/animator"));
-var _scrollbar = _interopRequireDefault(require("./scrollbar"));
+var _scrollbar = _interopRequireDefault(require("../../ui/scroll_view/scrollbar"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const SCROLLABLE_SIMULATED = 'dxSimulatedScrollable';
 const SCROLLABLE_STRATEGY = 'dxScrollableStrategy';
@@ -418,7 +418,6 @@ class Scroller {
     return this._getRealDimension(this._$container.get(0), this._dimension);
   }
   _contentSize() {
-    // @ts-expect-error CSS method access
     const isOverflowHidden = this._$content.css(`overflow${this._axis.toUpperCase()}`) === 'hidden';
     let contentSize = this._getRealDimension(this._$content.get(0), this._dimension);
     if (!isOverflowHidden) {
@@ -481,7 +480,10 @@ class SimulatedStrategy {
   render() {
     this._$element.addClass(SCROLLABLE_SIMULATED_CLASS);
     this._createScrollers();
-    if (this.option('useKeyboard')) {
+    const {
+      useKeyboard
+    } = this.option();
+    if (useKeyboard) {
       this._$container.prop('tabIndex', 0);
     }
     this._attachKeyboardHandler();

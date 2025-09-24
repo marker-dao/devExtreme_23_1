@@ -10,9 +10,9 @@ var _index = require("../../../common/core/events/utils/index");
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _icon = require("../../../core/utils/icon");
 var _type = require("../../../core/utils/type");
-var _ui = _interopRequireDefault(require("../../../ui/overlay/ui.overlay"));
 var _themes = require("../../../ui/themes");
-var _utils = require("../../../ui/widget/utils.ink_ripple");
+var _m_ink_ripple = require("../../core/utils/m_ink_ripple");
+var _overlay = _interopRequireDefault(require("../../ui/overlay/overlay"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const FAB_CLASS = 'dx-fa-button';
@@ -21,7 +21,7 @@ const FAB_LABEL_CLASS = 'dx-fa-button-label';
 const FAB_LABEL_WRAPPER_CLASS = 'dx-fa-button-label-wrapper';
 const FAB_CONTENT_REVERSE_CLASS = 'dx-fa-button-content-reverse';
 const OVERLAY_CONTENT_SELECTOR = '.dx-overlay-content';
-class SpeedDialItem extends _ui.default {
+class SpeedDialItem extends _overlay.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       shading: false,
@@ -146,6 +146,7 @@ class SpeedDialItem extends _ui.default {
       this._clickAction(clickActionArgs);
     });
   }
+  // @ts-expect-error
   _defaultActionArgs() {
     return {
       component: this._getActionComponent()
@@ -156,14 +157,12 @@ class SpeedDialItem extends _ui.default {
     this._setClickAction();
   }
   _renderInkRipple() {
-    this._inkRipple = (0, _utils.render)();
+    this._inkRipple = (0, _m_ink_ripple.render)();
   }
   _getInkRippleContainer() {
     return this._$icon;
   }
-  _toggleActiveState($element, value,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  event) {
+  _toggleActiveState($element, value, event) {
     super._toggleActiveState($element, value, event);
     if (!this._inkRipple) {
       return;

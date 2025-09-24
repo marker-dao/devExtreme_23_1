@@ -4,7 +4,7 @@ import { name as contextMenuEventName } from '../../../common/core/events/contex
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import holdEvent from '../../../common/core/events/hold';
 import pointerEvents from '../../../common/core/events/pointer';
-import { addNamespace, isCommandKeyPressed } from '../../../common/core/events/utils/index';
+import { addNamespace, isCommandKeyPressed } from '../../../common/core/events/utils';
 import messageLocalization from '../../../common/core/localization/message';
 import Action from '../../../core/action';
 import domAdapter from '../../../core/dom_adapter';
@@ -21,10 +21,10 @@ import { each } from '../../../core/utils/iterator';
 import { getOuterHeight, getOuterWidth } from '../../../core/utils/size';
 import { findTemplates } from '../../../core/utils/template_manager';
 import { isDefined, isFunction, isPlainObject } from '../../../core/utils/type';
-import DataHelperMixin from '../../../data_helper';
-import { focusable } from '../../../ui/widget/selectors';
 import { getPublicElement } from '../../core/m_element';
+import { focusable } from '../../core/utils/m_selectors';
 import Widget from '../../core/widget/widget';
+import DataHelperMixin from '../../data/m_data_helper';
 import CollectionWidgetItem from '../../ui/collection/item';
 const COLLECTION_CLASS = 'dx-collection';
 export const ITEM_CLASS = 'dx-item';
@@ -48,6 +48,9 @@ const FOCUS_PAGE_DOWN = 'pagedown';
 const FOCUS_LAST = 'last';
 const FOCUS_FIRST = 'first';
 class CollectionWidget extends Widget {
+  _activeStateUnit() {
+    return `.${ITEM_CLASS}`;
+  }
   _supportedKeys() {
     const space = e => {
       e.preventDefault();
@@ -90,12 +93,11 @@ class CollectionWidget extends Widget {
       return;
     }
     const itemData = this._getItemData($itemElement);
-    // @ts-expect-error ts-error
-    if (itemData !== null && itemData !== void 0 && itemData.onClick) {
-      // @ts-expect-error ts-error
-      this._itemEventHandlerByHandler($itemElement, itemData.onClick, {
+    if (CollectionWidgetItem.isClickableItem(itemData)) {
+      const actionArgs = {
         event: e
-      });
+      };
+      this._itemEventHandlerByHandler($itemElement, itemData.onClick, actionArgs);
     }
     // @ts-expect-error ts-error
     this._itemClickHandler(this._getHandlerExtendedParams(e, $itemElement));
@@ -137,16 +139,15 @@ class CollectionWidget extends Widget {
     // @ts-expect-error ts-error
     this._initDataController();
     super._init();
-    this._activeStateUnit = `.${ITEM_CLASS}`;
     this._cleanRenderedItems();
     // @ts-expect-error ts-error
     this._refreshDataSource();
   }
   _compileDisplayGetter() {
-    // @ts-expect-error ts-error
     const {
       displayExpr
     } = this.option();
+    // @ts-expect-error ts-error
     this._displayGetter = displayExpr ? compileGetter(displayExpr) : undefined;
   }
   _initTemplates() {
@@ -198,8 +199,10 @@ class CollectionWidget extends Widget {
   }
   _initItemsFromMarkup() {
     const rawItems = findTemplates(this.$element(), ITEMS_OPTIONS_NAME);
-    // @ts-expect-error ts-error
-    if (!rawItems.length || this.option('items').length) {
+    const {
+      items: userItems = []
+    } = this.option();
+    if (!rawItems.length || userItems.length) {
       return;
     }
     const items = rawItems.map(_ref => {
@@ -241,8 +244,10 @@ class CollectionWidget extends Widget {
     if (!this._isFocusTarget(e.target)) {
       return;
     }
-    // @ts-expect-error ts-error
-    const $focusedElement = $(this.option('focusedElement'));
+    const {
+      focusedElement
+    } = this.option();
+    const $focusedElement = $(focusedElement);
     if ($focusedElement.length) {
       // NOTE: If focusedElement is set, selection was already processed on its focusing.
       this._shouldSkipSelectOnFocus = true;
@@ -264,7 +269,7 @@ class CollectionWidget extends Widget {
     this._updateFocusedItemState($target, false);
   }
   _findActiveTarget($element) {
-    return $element.find(this._activeStateUnit);
+    return $element.find(this._activeStateUnit());
   }
   _getActiveItem(last) {
     const {
@@ -304,11 +309,21 @@ class CollectionWidget extends Widget {
         $newTarget = this._nextItem($items);
         break;
       case FOCUS_RIGHT:
-        $newTarget = this.option('rtlEnabled') ? this._prevItem($items) : this._nextItem($items);
-        break;
+        {
+          const {
+            rtlEnabled
+          } = this.option();
+          $newTarget = rtlEnabled ? this._prevItem($items) : this._nextItem($items);
+          break;
+        }
       case FOCUS_LEFT:
-        $newTarget = this.option('rtlEnabled') ? this._nextItem($items) : this._prevItem($items);
-        break;
+        {
+          const {
+            rtlEnabled
+          } = this.option();
+          $newTarget = rtlEnabled ? this._nextItem($items) : this._prevItem($items);
+          break;
+        }
       case FOCUS_FIRST:
         $newTarget = $items.first();
         break;
@@ -334,8 +349,10 @@ class CollectionWidget extends Widget {
     const targetIndex = $items.index($target);
     const $last = $items.last();
     let $item = $($items[targetIndex - 1]);
-    const loop = this.option('loopItemFocus');
-    if ($item.length === 0 && loop) {
+    const {
+      loopItemFocus
+    } = this.option();
+    if ($item.length === 0 && loopItemFocus) {
       $item = $last;
     }
     return $item;
@@ -345,8 +362,10 @@ class CollectionWidget extends Widget {
     const targetIndex = $items.index($target);
     const $first = $items.first();
     let $item = $($items[targetIndex + 1]);
-    const loop = this.option('loopItemFocus');
-    if ($item.length === 0 && loop) {
+    const {
+      loopItemFocus
+    } = this.option();
+    if ($item.length === 0 && loopItemFocus) {
       $item = $first;
     }
     return $item;
@@ -360,7 +379,12 @@ class CollectionWidget extends Widget {
     if ($target.length) {
       this._refreshActiveDescendant();
       this._refreshItemId($target, needCleanItemId);
-      this._toggleFocusClass(isFocused, $target);
+      const {
+        focusStateEnabled
+      } = this.option();
+      if (focusStateEnabled) {
+        this._toggleFocusClass(isFocused, $target);
+      }
     }
     this._updateParentActiveDescendant();
   }
@@ -402,8 +426,7 @@ class CollectionWidget extends Widget {
     return $element && $($element).attr('aria-disabled') === 'true';
   }
   _setFocusedItem($target) {
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-    if (!$target || !$target.length) {
+    if (!($target !== null && $target !== void 0 && $target.length)) {
       return;
     }
     this._updateFocusedItemState($target, true);
@@ -420,7 +443,7 @@ class CollectionWidget extends Widget {
   _findItemElementByItem(item) {
     let result = $();
     const itemDataKey = this._itemDataKey();
-    this.itemElements().each((index, itemElement) => {
+    this.itemElements().each((_index, itemElement) => {
       const $item = $(itemElement);
       if ($item.data(itemDataKey) === item) {
         result = $item;
@@ -454,8 +477,11 @@ class CollectionWidget extends Widget {
     }
   }
   _resetItemFocus($item) {
+    const {
+      focusedElement
+    } = this.option();
     // @ts-expect-error ts-error
-    if ($item.is(this.option('focusedElement'))) {
+    if ($item.is(focusedElement)) {
       this._resetFocusedElement();
     }
   }
@@ -570,9 +596,10 @@ class CollectionWidget extends Widget {
   _dataSourceChangedHandler(newItems,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   e) {
-    const items = this.option('items');
+    const {
+      items
+    } = this.option();
     if (this._initialized && items && this._shouldAppendItems()) {
-      // @ts-expect-error ts-error
       this._renderedItemsCount = items.length;
       // @ts-expect-error ts-error
       if (!this._isLastPage() || this._startIndexForAppendedItems !== -1) {
@@ -591,7 +618,10 @@ class CollectionWidget extends Widget {
   }
   _dataSourceLoadErrorHandler() {
     this._forgetNextPageLoading();
-    this.option('items', this.option('items'));
+    const {
+      items
+    } = this.option();
+    this.option('items', items);
   }
   _shouldAppendItems() {
     return this._startIndexForAppendedItems != null && this._allowDynamicItemsAppend();
@@ -618,9 +648,11 @@ class CollectionWidget extends Widget {
     this._cleanRenderedItems();
     super._refresh();
   }
-  // eslint-disable-next-line @stylistic/max-len
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-module-boundary-types
-  _itemContainer(searchEnabled, previousSelectAllEnabled) {
+  _itemContainer(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  searchEnabled,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  previousSelectAllEnabled) {
     return this.$element();
   }
   _itemClass() {
@@ -729,7 +761,10 @@ class CollectionWidget extends Widget {
     }
   }
   _itemPointerHandler(e) {
-    if (!this.option('focusStateEnabled')) {
+    const {
+      focusStateEnabled
+    } = this.option();
+    if (!focusStateEnabled) {
       return;
     }
     this._itemFocusHandler = () => {
@@ -837,14 +872,17 @@ class CollectionWidget extends Widget {
     return this._itemContainer();
   }
   _setAttributes($element) {
-    const attributes = _extends({}, this.option('_itemAttributes'));
-    // @ts-expect-error ts-error
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const {
+      _itemAttributes
+    } = this.option();
+    const attributes = _extends({}, _itemAttributes);
     const {
       class: customClassValue
     } = attributes;
     if (customClassValue) {
       const currentClassValue = $element.get(0).className;
-      // @ts-expect-error ts-error
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string
       attributes.class = [currentClassValue, customClassValue].join(' ');
     }
     // @ts-expect-error ts-error
@@ -887,15 +925,14 @@ class CollectionWidget extends Widget {
     return $itemContent;
   }
   _attachItemClickEvent(itemData, $itemElement) {
-    // @ts-expect-error ts-error
-    if (!itemData || !itemData.onClick) {
+    if (!itemData || !CollectionWidgetItem.isClickableItem(itemData)) {
       return;
     }
     eventsEngine.on($itemElement, clickEventName, e => {
-      // @ts-expect-error ts-error
-      this._itemEventHandlerByHandler($itemElement, itemData.onClick, {
+      const actionArgs = {
         event: e
-      });
+      };
+      this._itemEventHandlerByHandler($itemElement, itemData.onClick, actionArgs);
     });
   }
   _renderItemContent(args) {
@@ -933,9 +970,12 @@ class CollectionWidget extends Widget {
     } else {
       this._appendItemToContainer.call(this, $container, $itemFrame, index);
     }
-    if (this.option('useItemTextAsTitle')) {
-      // @ts-expect-error ts-error
+    const {
+      useItemTextAsTitle
+    } = this.option();
+    if (useItemTextAsTitle) {
       const displayValue = this._displayGetter ? this._displayGetter(itemData) : itemData;
+      // @ts-expect-error
       $itemFrame.attr('title', displayValue);
     }
     return $itemFrame;
@@ -978,15 +1018,14 @@ class CollectionWidget extends Widget {
   }
   _getItemTemplateName(args) {
     const data = args.itemData;
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    const templateProperty = args.templateProperty || this.option('itemTemplateProperty');
-    // @ts-expect-error ts-error
-    const template = data && data[templateProperty];
+    const {
+      itemTemplateProperty
+    } = this.option();
+    const templateProperty = args.templateProperty ?? itemTemplateProperty;
+    const template = data && templateProperty ? data[templateProperty] : undefined;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return template || args.defaultTemplateName;
   }
-  // eslint-disable-next-line @stylistic/max-len
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
   _createItemByTemplate(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   itemTemplate, renderArgs) {
@@ -1014,10 +1053,13 @@ class CollectionWidget extends Widget {
     return this._itemContainer();
   }
   _renderEmptyMessage(rootNodes) {
-    const items = rootNodes ?? this.option('items');
-    const noDataText = this.option('noDataText');
+    const {
+      items: userItems = [],
+      noDataText
+    } = this.option();
+    const items = rootNodes ?? userItems;
     // @ts-expect-error ts-error
-    const hideNoData = !noDataText || items && items.length || this._dataController.isLoading();
+    const hideNoData = !noDataText || (items === null || items === void 0 ? void 0 : items.length) || this._dataController.isLoading();
     if (hideNoData && this._$noData) {
       this._$noData.remove();
       // @ts-expect-error ts-error
@@ -1027,11 +1069,12 @@ class CollectionWidget extends Widget {
     if (!hideNoData) {
       this._$noData = this._$noData ?? $('<div>').addClass('dx-empty-message');
       this._$noData.appendTo(this._emptyMessageContainer());
-      if (this.option('encodeNoDataText')) {
-        // @ts-expect-error ts-error
+      const {
+        encodeNoDataText
+      } = this.option();
+      if (encodeNoDataText) {
         this._$noData.text(noDataText);
       } else {
-        // @ts-expect-error ts-error
         this._$noData.html(noDataText);
       }
     }
@@ -1043,7 +1086,7 @@ class CollectionWidget extends Widget {
     }), actionConfig);
   }
   _itemEventHandler(initiator, handlerOptionName, actionArgs, actionConfig) {
-    const action = this._createActionByOption(handlerOptionName, extend({
+    const action = this._createActionByOption(handlerOptionName, _extends({
       validatingTargetName: 'itemElement'
     }, actionConfig));
     return this._itemEventHandlerImpl(initiator, action, actionArgs);
@@ -1075,7 +1118,7 @@ class CollectionWidget extends Widget {
   _getSummaryItemsSize(dimension, items, includeMargin) {
     let result = 0;
     if (items) {
-      each(items, (_, item) => {
+      each(items, (_index, item) => {
         if (dimension === 'width') {
           result += getOuterWidth(item, includeMargin ?? false);
         } else if (dimension === 'height') {
@@ -1098,8 +1141,8 @@ class CollectionWidget extends Widget {
     return this._itemContainer();
   }
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-CollectionWidget.include(DataHelperMixin);
 // @ts-expect-error ts-error
 CollectionWidget.ItemClass = CollectionWidgetItem;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+CollectionWidget.include(DataHelperMixin);
 export default CollectionWidget;

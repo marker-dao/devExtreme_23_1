@@ -1,5 +1,5 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import { batch, computed } from '@preact/signals-core';
+import { batch, computed } from '../../../../core/state_manager/index';
 import { ColumnsController } from '../columns_controller/index';
 import { getColumnIndexByName } from '../columns_controller/utils';
 import { OptionsController } from '../options_controller/options_controller';

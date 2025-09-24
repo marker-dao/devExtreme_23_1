@@ -27,8 +27,8 @@ export class GroupPanelHorizontalRow extends BaseInfernoComponent {
         "index": index,
         "color": color,
         "colSpan": colSpan ?? GroupPanelHorizontalCellDefaultProps.colSpan,
-        "isFirstGroupCell": !!isFirstGroupCell,
-        "isLastGroupCell": !!isLastGroupCell,
+        "isFirstGroupCell": Boolean(isFirstGroupCell),
+        "isLastGroupCell": Boolean(isLastGroupCell),
         "cellTemplate": cellTemplate
       }, key);
     }), 0);

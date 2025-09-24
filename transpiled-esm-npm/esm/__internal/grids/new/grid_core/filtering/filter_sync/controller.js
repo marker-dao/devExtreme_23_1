@@ -1,8 +1,8 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-// import type { ReadonlySignal } from '@preact/signals-core';
-// import { computed } from '@preact/signals-core';
+// import type { ReadonlySignal } from '../../../../../core/state_manager/index';
+// import { computed } from '../../../../../core/state_manager/index';
 import { equalByValue } from '../../../../../../core/utils/common';
-import { batch, effect } from '@preact/signals-core';
+import { batch, effect } from '../../../../../core/state_manager/index';
 import { getMatchedConditions } from '../../../../../filter_builder/m_utils';
 import { SearchController } from '../../../../../grids/new/grid_core/search/index';
 import { ColumnsController } from '../../columns_controller/index';

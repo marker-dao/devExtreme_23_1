@@ -4,7 +4,7 @@ const _excluded = ["skip", "take"];
 import ArrayStore from '../../../../../common/data/array_store';
 import { Deferred } from '../../../../../core/utils/deferred';
 import { isDefined, isPlainObject } from '../../../../../core/utils/type';
-import { computed, effect, signal } from '@preact/signals-core';
+import { computed, effect, signal } from '../../../../core/state_manager/index';
 import { equalByValue } from '../../../../core/utils/m_common';
 import { createPromise } from '../../../../core/utils/promise';
 import gridCoreUtils from '../../../grid_core/m_utils';

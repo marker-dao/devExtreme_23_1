@@ -12,7 +12,7 @@ var _events_engine = _interopRequireDefault(require("../../common/core/events/co
 var _bindable_template = require("../../core/templates/bindable_template");
 var _scroll_view = _interopRequireDefault(require("../scroll_view"));
 var _uiCollection_widget = _interopRequireDefault(require("../collection/ui.collection_widget.edit"));
-var _m_selection = _interopRequireDefault(require("../../__internal/ui/selection/m_selection"));
+var _selection = _interopRequireDefault(require("../../__internal/ui/selection/selection"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const FILE_MANAGER_THUMBNAILS_VIEW_PORT_CLASS = 'dx-filemanager-thumbnails-view-port';
 const FILE_MANAGER_THUMBNAILS_ITEM_LIST_CONTAINER_CLASS = 'dx-filemanager-thumbnails-container';
@@ -228,7 +228,7 @@ class FileManagerThumbnailListBox extends _uiCollection_widget.default {
         this._updateSelectedItems(args);
       }
     });
-    this._selection = new _m_selection.default(options);
+    this._selection = new _selection.default(options);
   }
   _updateSelectedItems(args) {
     const addedItemKeys = args.addedItemKeys;

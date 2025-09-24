@@ -10,7 +10,6 @@ import { calculateStartViewDate as workWeekCalculateStartViewDate } from './work
 export { calculateCellIndex, calculateDayDuration, calculateIsGroupedAllDayPanel, calculateViewStartDate, extendGroupItemsForGroupingByDate, getAppointmentKey, getCalculatedFirstDayOfWeek, getCellDuration, getDatesWithoutTime, getDisplayedCellCount, getDisplayedRowCount, getGroupPanelData, getHeaderCellText, getHorizontalGroupCount, getIsGroupedAllDayPanel, getKeyByGroup, getOverflowIndicatorColor, getSkippedHoursInRange, getStartViewDateTimeOffset, getStartViewDateWithoutDST, getToday, getTotalCellCountByCompleteData, getTotalRowCountByCompleteData, getValidCellDateForLocalTimeFormat, getVerticalGroupCountClass, getViewStartByOptions, getWeekendsCount, isAppointmentTakesAllDay, isDataOnWeekend, isDateAndTimeView, isDateInRange, isFirstCellInMonthWithIntervalCount, isGroupingByDate, isHorizontalGroupingApplied, isHorizontalView, isTimelineView, isVerticalGroupingApplied, setOptionHour, splitNumber } from './base';
 export { excludeFromRecurrence } from './exclude_from_recurrence';
 export { formatWeekday, formatWeekdayAndDay } from './format_weekday';
-export { getAppointmentDataItems } from './get_appointment_data_items';
 export const agendaUtils = {
   calculateStartViewDate
 };

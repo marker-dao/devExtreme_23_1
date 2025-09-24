@@ -112,11 +112,9 @@ class ProgressBar extends _m_track_bar.default {
   _toggleIndeterminateState(value) {
     if (value) {
       this._renderIndeterminateState();
-      // @ts-expect-error ts-error
       this._$bar.toggle(false);
     } else {
       var _this$_$segmentContai;
-      // @ts-expect-error ts-error
       this._$bar.toggle(true);
       (_this$_$segmentContai = this._$segmentContainer) === null || _this$_$segmentContai === void 0 || _this$_$segmentContai.remove();
       delete this._$segmentContainer;

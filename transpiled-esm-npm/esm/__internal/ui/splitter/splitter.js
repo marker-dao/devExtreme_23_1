@@ -407,9 +407,8 @@ class Splitter extends CollectionWidgetLiveUpdate {
     } = args;
     if (itemData.splitter) {
       this._onItemTemplateRendered(itemTemplate, args)();
-      return itemTemplate.source ? itemTemplate.source()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      : $();
+      // @ts-expect-error
+      return itemTemplate.source ? itemTemplate.source() : $();
     }
     return super._createItemByTemplate(itemTemplate, args);
   }
@@ -628,9 +627,10 @@ class Splitter extends CollectionWidgetLiveUpdate {
   }
   _fireCollapsedStateChanged(isExpanded, $item, e) {
     const eventName = isExpanded ? ITEM_EXPANDED_EVENT : ITEM_COLLAPSED_EVENT;
-    this._itemEventHandler($item, eventName, {
+    const actionArgs = {
       event: e
-    });
+    };
+    this._itemEventHandler($item, eventName, actionArgs);
   }
   _getDefaultLayoutBasedOnSize() {
     this._updateItemsRestrictions();

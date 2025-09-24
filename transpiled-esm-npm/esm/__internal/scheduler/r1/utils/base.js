@@ -87,7 +87,7 @@ export const getValidCellDateForLocalTimeFormat = (date, _ref) => {
     cellIndexShift,
     viewOffset
   } = _ref;
-  const originDate = dateUtilsTs.addOffsets(date, [-viewOffset]);
+  const originDate = dateUtilsTs.addOffsets(date, -viewOffset);
   const localTimeZoneChangedInOriginDate = timeZoneUtils.isTimezoneChangeInDate(originDate);
   if (!localTimeZoneChangedInOriginDate) {
     return date;
@@ -98,7 +98,7 @@ export const getValidCellDateForLocalTimeFormat = (date, _ref) => {
   // +2 days from DST date not affected by DST.
   const startViewDateWithoutDST = new Date(new Date(startViewDate).setDate(startViewDate.getDate() + 2));
   const startViewDateOffset = getStartViewDateTimeOffset(startViewDate, startDayHour);
-  return dateUtilsTs.addOffsets(startViewDateWithoutDST, [viewOffset, cellIndexShift, -startViewDateOffset]);
+  return dateUtilsTs.addOffsets(startViewDateWithoutDST, viewOffset, cellIndexShift, -startViewDateOffset);
 };
 export const getTotalCellCountByCompleteData = completeData => completeData[completeData.length - 1].length;
 export const getDisplayedCellCount = (displayedCellCount, completeData) => displayedCellCount ?? getTotalCellCountByCompleteData(completeData);
@@ -106,7 +106,7 @@ export const getHeaderCellText = (headerIndex, date, headerCellTextFormat, getDa
   const validDate = getDateForHeaderText(headerIndex, date, additionalOptions);
   return dateLocalization.format(validDate, headerCellTextFormat);
 };
-export const isVerticalGroupingApplied = (groups, groupOrientation) => groupOrientation === VERTICAL_GROUP_ORIENTATION && !!groups.length;
+export const isVerticalGroupingApplied = (groups, groupOrientation) => groupOrientation === VERTICAL_GROUP_ORIENTATION && Boolean(groups.length);
 // TODO(9): Get rid of it as soon as you can. More parameters then needed
 export const getHorizontalGroupCount = (groupLeafs, groupOrientation) => {
   const isVerticalGrouping = isVerticalGroupingApplied(groupLeafs, groupOrientation);
@@ -164,7 +164,7 @@ export const getStartViewDateWithoutDST = (startViewDate, startDayHour) => {
 };
 export const getIsGroupedAllDayPanel = (hasAllDayRow, isVerticalGrouping) => hasAllDayRow && isVerticalGrouping;
 export const getKeyByGroup = (groupIndex, isVerticalGrouping) => {
-  if (isVerticalGrouping && !!groupIndex) {
+  if (isVerticalGrouping && groupIndex !== undefined) {
     return groupIndex.toString();
   }
   return '0';
@@ -174,7 +174,7 @@ export const getToday = (indicatorTime, timeZoneCalculator) => {
   return (timeZoneCalculator === null || timeZoneCalculator === void 0 ? void 0 : timeZoneCalculator.createDate(todayDate, 'toGrid')) || todayDate;
 };
 export const getCalculatedFirstDayOfWeek = firstDayOfWeekOption => isDefined(firstDayOfWeekOption) ? firstDayOfWeekOption : dateLocalization.firstDayOfWeekIndex();
-export const isHorizontalGroupingApplied = (groups, groupOrientation) => groupOrientation === HORIZONTAL_GROUP_ORIENTATION && !!groups.length;
+export const isHorizontalGroupingApplied = (groups, groupOrientation) => groupOrientation === HORIZONTAL_GROUP_ORIENTATION && Boolean(groups.length);
 export const isGroupingByDate = (groups, groupOrientation, groupByDate) => {
   const isHorizontalGrouping = isHorizontalGroupingApplied(groups, groupOrientation);
   return groupByDate && isHorizontalGrouping;
@@ -201,21 +201,33 @@ export const getSkippedHoursInRange = (startDate, endDate, allDay, viewDataProvi
   const startDateHours = startDate.getHours();
   const endDateHours = endDate.getHours() + endDate.getTime() % HOUR_IN_MS / HOUR_IN_MS;
   if (viewDataProvider.isSkippedDate(startDate)) {
-    if (isAllDay) {
-      result += DAY_HOURS;
-    } else if (startDateHours < startDayHour) {
-      result += dayHours;
-    } else if (startDateHours < endDayHour) {
-      result += endDayHour - startDateHours;
+    switch (true) {
+      case isAllDay:
+        result += DAY_HOURS;
+        break;
+      case startDateHours < startDayHour:
+        result += dayHours;
+        break;
+      case startDateHours < endDayHour:
+        result += endDayHour - startDateHours;
+        break;
+      default:
+        break;
     }
   }
   if (viewDataProvider.isSkippedDate(endDate)) {
-    if (isAllDay) {
-      result += DAY_HOURS;
-    } else if (endDateHours > endDayHour) {
-      result += dayHours;
-    } else if (endDateHours > startDayHour) {
-      result += endDateHours - startDayHour;
+    switch (true) {
+      case isAllDay:
+        result += DAY_HOURS;
+        break;
+      case endDateHours > endDayHour:
+        result += dayHours;
+        break;
+      case endDateHours > startDayHour:
+        result += endDateHours - startDayHour;
+        break;
+      default:
+        break;
     }
   }
   return result;

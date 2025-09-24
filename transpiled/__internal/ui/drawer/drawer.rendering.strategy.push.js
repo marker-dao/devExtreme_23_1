@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _translator = require("../../../common/core/animation/translator");
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
-var _drawer = require("./drawer.animation");
-var _drawerRendering = _interopRequireDefault(require("./drawer.rendering.strategy"));
+var _drawer = require("../../ui/drawer/drawer.animation");
+var _drawerRendering = _interopRequireDefault(require("../../ui/drawer/drawer.rendering.strategy"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class PushStrategy extends _drawerRendering.default {
   _internalRenderPosition(changePositionUsingFxAnimation, whenAnimationCompleted) {

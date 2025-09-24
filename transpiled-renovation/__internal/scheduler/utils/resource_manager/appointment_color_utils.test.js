@@ -1,7 +1,7 @@
 "use strict";
 
 var _globals = require("@jest/globals");
-var _resourceManager = require("../../../scheduler/__mock__/resourceManager.mock");
+var _resource_manager = require("../../../scheduler/__mock__/resource_manager.mock");
 var _appointment_color_utils = require("./appointment_color_utils");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const ownerFirstColor = '#cb2824';
@@ -45,45 +45,45 @@ const customResourceConfig = [{
 (0, _globals.describe)('appointment color utils', () => {
   (0, _globals.describe)('getPaintedResources', () => {
     (0, _globals.it)('should return useColorAsDefault resource', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)([_extends({}, _resourceManager.resourceConfigMock[0]), _extends({}, _resourceManager.resourceConfigMock[1], {
+      const manager = (0, _resource_manager.getResourceManagerMock)([_extends({}, _resource_manager.resourceConfigMock[0]), _extends({}, _resource_manager.resourceConfigMock[1], {
         useColorAsDefault: true
-      }), _extends({}, _resourceManager.resourceConfigMock[2])]);
-      (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, _resourceManager.resourceIndexesMock, _resourceManager.resourceIndexesMock)).toEqual(manager.resources[1]);
+      }), _extends({}, _resource_manager.resourceConfigMock[2])]);
+      (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, _resource_manager.resourceIndexesMock, _resource_manager.resourceIndexesMock)).toEqual(manager.resources[1]);
     });
     (0, _globals.it)('should return last resource', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
-      (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, _resourceManager.resourceIndexesMock, _resourceManager.resourceIndexesMock)).toEqual(manager.resources[2]);
+      const manager = (0, _resource_manager.getResourceManagerMock)();
+      (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, _resource_manager.resourceIndexesMock, _resource_manager.resourceIndexesMock)).toEqual(manager.resources[2]);
     });
     (0, _globals.it)('should return last resource filtered by groups', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
-      (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, _resourceManager.resourceIndexesMock, [_resourceManager.resourceIndexesMock[0], _resourceManager.resourceIndexesMock[1]])).toEqual(manager.resources[1]);
+      const manager = (0, _resource_manager.getResourceManagerMock)();
+      (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, _resource_manager.resourceIndexesMock, [_resource_manager.resourceIndexesMock[0], _resource_manager.resourceIndexesMock[1]])).toEqual(manager.resources[1]);
     });
     (0, _globals.it)('should return last resource filtered by appointment groups', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
-      (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, [_resourceManager.resourceIndexesMock[0], _resourceManager.resourceIndexesMock[1]], _resourceManager.resourceIndexesMock)).toEqual(manager.resources[1]);
+      const manager = (0, _resource_manager.getResourceManagerMock)();
+      (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, [_resource_manager.resourceIndexesMock[0], _resource_manager.resourceIndexesMock[1]], _resource_manager.resourceIndexesMock)).toEqual(manager.resources[1]);
     });
     (0, _globals.it)('should return last resource filtered by appointment groups that exclude useColorAsDefault resource', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)([_extends({}, _resourceManager.resourceConfigMock[0]), _extends({}, _resourceManager.resourceConfigMock[1], {
+      const manager = (0, _resource_manager.getResourceManagerMock)([_extends({}, _resource_manager.resourceConfigMock[0]), _extends({}, _resource_manager.resourceConfigMock[1], {
         useColorAsDefault: true
-      }), _extends({}, _resourceManager.resourceConfigMock[2])]);
-      (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, [_resourceManager.resourceIndexesMock[0]], _resourceManager.resourceIndexesMock)).toEqual(manager.resources[0]);
+      }), _extends({}, _resource_manager.resourceConfigMock[2])]);
+      (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, [_resource_manager.resourceIndexesMock[0]], _resource_manager.resourceIndexesMock)).toEqual(manager.resources[0]);
     });
     (0, _globals.it)('should return undefined for empty groups', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, [], [])).toEqual(undefined);
     });
     (0, _globals.it)('should return undefined for resource out of groups', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, ['unknown'], [])).toEqual(undefined);
     });
     (0, _globals.it)('should return ungrouped resource with complex id', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)(_resourceManager.complexIdResourceMock);
+      const manager = (0, _resource_manager.getResourceManagerMock)(_resource_manager.complexIdResourceMock);
       (0, _globals.expect)((0, _appointment_color_utils.getPaintedResource)(manager.resources, ['ownerId'], [])).toEqual(manager.resources[0]);
     });
   });
   (0, _globals.describe)('getAppointmentColor', () => {
     (0, _globals.it)('should return color of resource by groupIndex', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       await manager.loadGroupResources(['nested.priorityId', 'roomId']);
       (0, _globals.expect)(await (0, _appointment_color_utils.getAppointmentColor)(manager.resources, manager.groupsLeafs, manager.groups, {
         itemData: {
@@ -93,12 +93,12 @@ const customResourceConfig = [{
           }
         },
         groupIndex: 1
-      })).toEqual(_resourceManager.resourceItemsByIdMock.roomId[1].color);
+      })).toEqual(_resource_manager.resourceItemsByIdMock.roomId[1].color);
     });
     (0, _globals.it)('should return color of default resource', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)([_extends({}, _resourceManager.resourceConfigMock[0]), _extends({}, _resourceManager.resourceConfigMock[1], {
+      const manager = (0, _resource_manager.getResourceManagerMock)([_extends({}, _resource_manager.resourceConfigMock[0]), _extends({}, _resource_manager.resourceConfigMock[1], {
         useColorAsDefault: true
-      }), _extends({}, _resourceManager.resourceConfigMock[2])]);
+      }), _extends({}, _resource_manager.resourceConfigMock[2])]);
       await manager.loadGroupResources(['roomId', 'nested.priorityId']);
       (0, _globals.expect)(await (0, _appointment_color_utils.getAppointmentColor)(manager.resources, manager.groupsLeafs, manager.groups, {
         itemData: {
@@ -109,10 +109,10 @@ const customResourceConfig = [{
           }
         },
         groupIndex: 0
-      })).toEqual(_resourceManager.resourceItemsByIdMock.assigneeId[0].mainColor);
+      })).toEqual(_resource_manager.resourceItemsByIdMock.assigneeId[0].mainColor);
     });
     (0, _globals.it)('should load unloaded resource and return color', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       await manager.loadGroupResources(['roomId', 'nested.priorityId']);
       (0, _globals.expect)(await (0, _appointment_color_utils.getAppointmentColor)(manager.resources, manager.groupsLeafs, manager.groups, {
         itemData: {
@@ -122,7 +122,7 @@ const customResourceConfig = [{
       })).toEqual('#727bd2');
     });
     (0, _globals.it)('should return undefined for not available resources', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       await manager.loadGroupResources(['roomId', 'nested.priorityId']);
       (0, _globals.expect)(await (0, _appointment_color_utils.getAppointmentColor)(manager.resources, manager.groupsLeafs, manager.groups, {
         itemData: {
@@ -132,7 +132,7 @@ const customResourceConfig = [{
       })).toEqual(undefined);
     });
     (0, _globals.it)('should return color of the last grouped resource (multiple)', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)(customResourceConfig);
+      const manager = (0, _resource_manager.getResourceManagerMock)(customResourceConfig);
       await manager.loadGroupResources(['roomId', 'ownerId']);
       (0, _globals.expect)(await (0, _appointment_color_utils.getAppointmentColor)(manager.resources, manager.groupsLeafs, manager.groups, {
         itemData: {
@@ -144,7 +144,7 @@ const customResourceConfig = [{
       })).toEqual(ownerFirstColor);
     });
     (0, _globals.it)('should return color of the last grouped resource (single)', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)(customResourceConfig);
+      const manager = (0, _resource_manager.getResourceManagerMock)(customResourceConfig);
       await manager.loadGroupResources(['roomId', 'ownerId']);
       (0, _globals.expect)(await (0, _appointment_color_utils.getAppointmentColor)(manager.resources, manager.groupsLeafs, manager.groups, {
         itemData: {
@@ -156,7 +156,7 @@ const customResourceConfig = [{
       })).toEqual(ownerSecondColor);
     });
     (0, _globals.it)('should return color of the last grouped resource (multiple, wrong groupIndex)', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)(customResourceConfig);
+      const manager = (0, _resource_manager.getResourceManagerMock)(customResourceConfig);
       await manager.loadGroupResources(['roomId', 'ownerId']);
       (0, _globals.expect)(await (0, _appointment_color_utils.getAppointmentColor)(manager.resources, manager.groupsLeafs, manager.groups, {
         itemData: {
@@ -168,7 +168,7 @@ const customResourceConfig = [{
       })).toEqual(ownerFirstColor);
     });
     (0, _globals.it)('should return color of the last grouped resource (single, wrong groupIndex)', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)(customResourceConfig);
+      const manager = (0, _resource_manager.getResourceManagerMock)(customResourceConfig);
       await manager.loadGroupResources(['roomId', 'ownerId']);
       (0, _globals.expect)(await (0, _appointment_color_utils.getAppointmentColor)(manager.resources, manager.groupsLeafs, manager.groups, {
         itemData: {
@@ -180,10 +180,10 @@ const customResourceConfig = [{
       })).toEqual(ownerSecondColor);
     });
     (0, _globals.it)('should return color of ungrouped resource with complex id', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)(_resourceManager.complexIdResourceMock);
+      const manager = (0, _resource_manager.getResourceManagerMock)(_resource_manager.complexIdResourceMock);
       const {
         dataSource
-      } = _resourceManager.complexIdResourceMock[0];
+      } = _resource_manager.complexIdResourceMock[0];
       (0, _globals.expect)(await (0, _appointment_color_utils.getAppointmentColor)(manager.resources, manager.groupsLeafs, manager.groups, {
         itemData: {
           ownerId: {

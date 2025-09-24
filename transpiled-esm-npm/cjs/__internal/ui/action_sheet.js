@@ -12,7 +12,7 @@ var _common = require("../../core/utils/common");
 var _deferred = require("../../core/utils/deferred");
 var _extend = require("../../core/utils/extend");
 var _window = require("../../core/utils/window");
-var _button = _interopRequireDefault(require("../../ui/button"));
+var _wrapper = _interopRequireDefault(require("../ui/button/wrapper"));
 var _collection_widget = _interopRequireDefault(require("../ui/collection/collection_widget.edit"));
 var _m_popover = _interopRequireDefault(require("../ui/popover/m_popover"));
 var _m_popup = _interopRequireDefault(require("../ui/popup/m_popup"));
@@ -63,7 +63,7 @@ class ActionSheet extends _collection_widget.default {
     this._templateManager.addDefaultTemplates({
       item: new _bindable_template.BindableTemplate(($container, data) => {
         // @ts-expect-error ts-error
-        const button = new _button.default((0, _renderer.default)('<div>'), (0, _extend.extend)({
+        const button = new _wrapper.default((0, _renderer.default)('<div>'), (0, _extend.extend)({
           onClick: data === null || data === void 0 ? void 0 : data.click,
           stylingMode: (data === null || data === void 0 ? void 0 : data.stylingMode) || ACTION_SHEET_BUTTON_DEFAULT_STYLING_MODE
         }, data));
@@ -235,7 +235,7 @@ class ActionSheet extends _collection_widget.default {
       var _this$_popup3;
       const cancelClickAction = this._createActionByOption('onCancelClick') || _common.noop;
       this._$cancelButton = (0, _renderer.default)('<div>').addClass(ACTION_SHEET_CANCEL_BUTTON_CLASS).appendTo((_this$_popup3 = this._popup) === null || _this$_popup3 === void 0 ? void 0 : _this$_popup3.$content());
-      this._createComponent(this._$cancelButton, _button.default, {
+      this._createComponent(this._$cancelButton, _wrapper.default, {
         disabled: false,
         stylingMode: ACTION_SHEET_BUTTON_DEFAULT_STYLING_MODE,
         text: cancelText,
@@ -249,6 +249,7 @@ class ActionSheet extends _collection_widget.default {
             this.hide();
           }
         },
+        // @ts-expect-error
         integrationOptions: {}
       });
     }

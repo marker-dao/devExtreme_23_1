@@ -18,8 +18,6 @@ var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _m_data_helper_mixin = require("./m_data_helper_mixin");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-/* eslint-disable @typescript-eslint/method-signature-style */
-
 const changePaging = function (that, optionName, value) {
   const dataSource = that._dataSource;
   if (dataSource) {
@@ -385,7 +383,6 @@ class DataController extends (0, _m_data_helper_mixin.DataHelperMixin)(_m_module
   _handleDataPushed(changes) {
     this.pushed.fire(changes);
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   fireError() {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
@@ -1295,9 +1292,8 @@ class DataController extends (0, _m_data_helper_mixin.DataHelperMixin)(_m_module
       };
     } else if (!options) {
       options = {
-        lookup: true,
-        selection: true,
-        reload: true
+        reload: true,
+        lookup: true
       };
     }
     const that = this;
@@ -1383,7 +1379,6 @@ class DataController extends (0, _m_data_helper_mixin.DataHelperMixin)(_m_module
   /**
    * @extended: editing, virtual_scrolling
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   reload(reload, changesOnly) {
     var _this$_dataSource2;
     return (_this$_dataSource2 = this._dataSource) === null || _this$_dataSource2 === void 0 ? void 0 : _this$_dataSource2.reload(reload, changesOnly);

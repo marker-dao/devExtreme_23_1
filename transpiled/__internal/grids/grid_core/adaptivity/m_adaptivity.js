@@ -22,8 +22,8 @@ var _form = _interopRequireDefault(require("../../../../ui/form"));
 var _themes = require("../../../../ui/themes");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
+var _utils = require("./utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-/* eslint-disable @typescript-eslint/method-signature-style */
 /* eslint-disable max-classes-per-file */
 
 const COLUMN_HEADERS_VIEW = 'columnHeadersView';
@@ -647,7 +647,7 @@ class AdaptiveColumnsController extends _m_modules.default.ViewController {
   }
   updateHidingQueue(columns) {
     const that = this;
-    const hideableColumns = columns.filter(column => column.visible && !column.type && !column.fixed && !((0, _type.isDefined)(column.groupIndex) && column.groupIndex >= 0));
+    const hideableColumns = (0, _utils.getHideableColumns)(columns);
     let columnsHasHidingPriority;
     let i;
     that._hidingColumnsQueue = [];
@@ -655,9 +655,10 @@ class AdaptiveColumnsController extends _m_modules.default.ViewController {
       return that._hidingColumnsQueue;
     }
     for (i = 0; i < hideableColumns.length; i++) {
-      if ((0, _type.isDefined)(hideableColumns[i].hidingPriority) && hideableColumns[i].hidingPriority >= 0) {
+      const column = hideableColumns[i];
+      if ((0, _type.isDefined)(column.hidingPriority) && column.hidingPriority >= 0) {
         columnsHasHidingPriority = true;
-        that._hidingColumnsQueue[hideableColumns[i].hidingPriority] = hideableColumns[i];
+        that._hidingColumnsQueue[column.hidingPriority] = column;
       }
     }
     if (columnsHasHidingPriority) {
@@ -700,7 +701,6 @@ class AdaptiveColumnsController extends _m_modules.default.ViewController {
     if (rowIndex === -1) {
       return;
     }
-    // @ts-expect-errors
     const $row = (0, _renderer.default)(this.component.getRowElement(rowIndex));
     this.setCommandAdaptiveAriaLabel($row, label);
   }

@@ -20,10 +20,19 @@ const RADIO_GROUP_VERTICAL_CLASS = 'dx-radiogroup-vertical';
 const RADIO_GROUP_CLASS = 'dx-radiogroup';
 const RADIO_FEEDBACK_HIDE_TIMEOUT = 100;
 class RadioGroup extends _editor.default {
+  // eslint-disable-next-line class-methods-use-this
   _dataSourceOptions() {
     return {
       paginate: false
     };
+  }
+  // eslint-disable-next-line class-methods-use-this
+  _activeStateUnit() {
+    return `.${RADIO_BUTTON_CLASS}`;
+  }
+  // eslint-disable-next-line class-methods-use-this
+  _feedbackHideTimeout() {
+    return RADIO_FEEDBACK_HIDE_TIMEOUT;
   }
   _defaultOptionsRules() {
     const defaultOptionsRules = super._defaultOptionsRules();
@@ -69,8 +78,6 @@ class RadioGroup extends _editor.default {
   }
   _init() {
     super._init();
-    this._activeStateUnit = `.${RADIO_BUTTON_CLASS}`;
-    this._feedbackHideTimeout = RADIO_FEEDBACK_HIDE_TIMEOUT;
     // @ts-expect-error
     this._initDataExpressions();
   }

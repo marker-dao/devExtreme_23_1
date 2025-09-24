@@ -14,6 +14,7 @@ var _date2 = _interopRequireDefault(require("../../../core/utils/date"));
 var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _size = require("../../../core/utils/size");
+var _widget = require("../../core/widget/widget");
 var _m_classes = require("../m_classes");
 var _m_table_creator = _interopRequireDefault(require("../m_table_creator"));
 var _index = require("../r1/utils/index");
@@ -34,21 +35,21 @@ const LAST_ROW_CLASS = 'dx-scheduler-date-table-last-row';
 const INNER_CELL_MARGIN = 5;
 const OUTER_CELL_MARGIN = 20;
 class SchedulerAgenda extends _m_work_space.default {
+  // eslint-disable-next-line class-methods-use-this
+  _activeStateUnit() {
+    return _widget.EMPTY_ACTIVE_STATE_UNIT;
+  }
   get type() {
     return _constants_view.VIEWS.AGENDA;
   }
   get renderingStrategy() {
     return this.invoke('getLayoutManager').getRenderingStrategyInstance();
   }
-  get appointmentDataProvider() {
-    return this.option('getAppointmentDataProvider')();
-  }
   getStartViewDate() {
     return this._startViewDate;
   }
   _init() {
     super._init();
-    this._activeStateUnit = undefined;
   }
   _getDefaultOptions() {
     return (0, _extend.extend)(super._getDefaultOptions(), {

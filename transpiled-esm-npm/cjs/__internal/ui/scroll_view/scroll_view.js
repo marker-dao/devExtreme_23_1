@@ -12,11 +12,11 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _window = require("../../../core/utils/window");
 var _load_indicator = _interopRequireDefault(require("../../../ui/load_indicator"));
 var _themes = require("../../../ui/themes");
-var _m_load_panel = _interopRequireDefault(require("../../ui/m_load_panel"));
-var _scroll_viewNative = _interopRequireDefault(require("./scroll_view.native.pull_down"));
-var _scroll_viewNative2 = _interopRequireDefault(require("./scroll_view.native.swipe_down"));
-var _scroll_view = _interopRequireDefault(require("./scroll_view.simulated"));
-var _scrollable = _interopRequireDefault(require("./scrollable"));
+var _load_panel = _interopRequireDefault(require("../../ui/load_panel"));
+var _scroll_viewNative = _interopRequireDefault(require("../../ui/scroll_view/scroll_view.native.pull_down"));
+var _scroll_viewNative2 = _interopRequireDefault(require("../../ui/scroll_view/scroll_view.native.swipe_down"));
+var _scroll_view = _interopRequireDefault(require("../../ui/scroll_view/scroll_view.simulated"));
+var _scrollable = _interopRequireDefault(require("../../ui/scroll_view/scrollable"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
 // STYLE scrollView
@@ -53,7 +53,6 @@ class ScrollViewServerSide extends _scrollable.default {
     const {
       name
     } = args;
-    // @ts-expect-error ts-error
     if (name !== 'onUpdated') {
       return super._optionChanged(args);
     }
@@ -85,8 +84,7 @@ class ScrollView extends _scrollable.default {
       }
     }, {
       device() {
-        // @ts-expect-error ts-error
-        return (0, _themes.isMaterialBased)();
+        return (0, _themes.isMaterialBased)((0, _themes.current)());
       },
       options: {
         pullingDownText: '',
@@ -135,7 +133,7 @@ class ScrollView extends _scrollable.default {
     const {
       refreshingText
     } = this.option();
-    this._loadPanel = this._createComponent($loadPanelElement, _m_load_panel.default, {
+    this._loadPanel = this._createComponent($loadPanelElement, _load_panel.default, {
       shading: false,
       delay: 400,
       message: refreshingText,
@@ -158,10 +156,8 @@ class ScrollView extends _scrollable.default {
       refreshStrategy
     } = this.option();
     const strategyName = useNative ? refreshStrategy : 'simulated';
-    const strategyClass = refreshStrategies[strategyName];
-    // @ts-expect-error ts-error
-    // eslint-disable-next-line new-cap
-    this._strategy = new strategyClass(this);
+    const StrategyClass = refreshStrategies[strategyName ?? 'pullDown'];
+    this._strategy = new StrategyClass(this);
     this._strategy.pullDownCallbacks.add(this._pullDownHandler.bind(this));
     this._strategy.releaseCallbacks.add(this._releaseHandler.bind(this));
     this._strategy.reachBottomCallbacks.add(this._reachBottomHandler.bind(this));
@@ -193,7 +189,6 @@ class ScrollView extends _scrollable.default {
       return this._pullDownEnabled;
     }
     if (this._$pullDown && this._strategy) {
-      // @ts-expect-error ts-error
       this._$pullDown.toggle(enabled);
       this._strategy.pullDownEnable(enabled);
       this._pullDownEnabled = enabled;
@@ -205,7 +200,6 @@ class ScrollView extends _scrollable.default {
       return this._reachBottomEnabled;
     }
     if (this._$reachBottom && this._strategy) {
-      // @ts-expect-error ts-error
       this._$reachBottom.toggle(enabled);
       this._strategy.reachBottomEnable(enabled);
       this._reachBottomEnabled = enabled;

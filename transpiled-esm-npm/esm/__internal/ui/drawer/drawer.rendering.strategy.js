@@ -1,7 +1,7 @@
 import $ from '../../../core/renderer';
 import { Deferred, when } from '../../../core/utils/deferred';
 import { setHeight, setWidth } from '../../../core/utils/size';
-import { animation } from './drawer.animation';
+import { animation } from '../../ui/drawer/drawer.animation';
 class DrawerStrategy {
   constructor(drawer) {
     this._drawer = drawer;

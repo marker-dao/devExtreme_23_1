@@ -34,16 +34,13 @@ const data = Base => class FocusDataControllerExtender extends focusModule.exten
     }
     return true;
   }
-  _getGroupPath(groupItem, groupCount) {
+  _getGroupPath(groupItems, groupCount) {
     const groupPath = [];
-    let items = [groupItem];
-    while (items && items[0] && groupCount) {
-      const item = items[0];
-      if (item.key !== undefined) {
-        groupPath.push(item.key);
-      }
-      items = item.items;
-      groupCount--;
+    let groupItem = groupItems[0];
+    while (groupItem && groupPath.length < groupCount) {
+      var _groupItem$items;
+      groupPath.push(groupItem.key);
+      groupItem = (_groupItem$items = groupItem.items) === null || _groupItem$items === void 0 ? void 0 : _groupItem$items[0];
     }
     return groupPath;
   }
@@ -79,10 +76,11 @@ const data = Base => class FocusDataControllerExtender extends focusModule.exten
       filter: that._concatWithCombinedFilter(filter),
       group
     }).done(data => {
-      if (!data || data.length === 0 || !isDefined(data[0].key) || data[0].key === -1) {
+      const hasData = isDefined(data) && data.length > 0;
+      if (!hasData) {
         return deferred.resolve(-1).promise();
       }
-      const groupPath = that._getGroupPath(data[0], group.length);
+      const groupPath = that._getGroupPath(data, group.length);
       that._expandGroupByPath(that, groupPath, 0).done(() => {
         that._calculateExpandedRowGlobalIndex(deferred, key, groupPath, group);
       }).fail(deferred.reject);

@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_load_indicator = _interopRequireDefault(require("../__internal/ui/m_load_indicator"));
+var _load_indicator = _interopRequireDefault(require("../__internal/ui/load_indicator"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_load_indicator.default; // STYLE loadIndicator
+var _default = exports.default = _load_indicator.default; // STYLE loadIndicator
 /**
  * @name dxLoadIndicatorOptions.disabled
  * @hidden

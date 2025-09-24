@@ -11,11 +11,7 @@ var _constants = require("./constants");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const utils = exports.utils = {
   dataAccessors: {
-    getAppointmentSettings: element => (0, _renderer.default)(element).data(_constants.APPOINTMENT_SETTINGS_KEY),
-    getAppointmentInfo: element => {
-      const settings = utils.dataAccessors.getAppointmentSettings(element);
-      return settings === null || settings === void 0 ? void 0 : settings.info;
-    }
+    getAppointmentSettings: element => (0, _renderer.default)(element).data(_constants.APPOINTMENT_SETTINGS_KEY)
   },
   DOM: {
     getHeaderHeight: header => header ? header._$element && parseInt((0, _size.getOuterHeight)(header._$element), 10) : 0

@@ -35,6 +35,7 @@ class CustomButton extends _m_button.default {
     const $element = (0, _renderer.default)('<div>');
     this._addToContainer($element);
     const instance = editor._createComponent($element, _button.default, _extends({}, this.options, {
+      // @ts-expect-error
       ignoreParentReadOnly: true,
       disabled: this._isDisabled(),
       integrationOptions: this._prepareIntegrationOptions(editor)

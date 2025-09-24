@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.applyUserState = exports.addExpandColumn = void 0;
 exports.assignColumns = assignColumns;
-exports.isFirstOrLastColumn = exports.isColumnFixed = exports.getValueDataType = exports.getSerializationFormat = exports.getRowCount = exports.getParentBandColumns = exports.getFixedPosition = exports.getDataColumns = exports.getCustomizeTextByDataType = exports.getColumnIndexByVisibleIndex = exports.getColumnFullPath = exports.getColumnByIndexes = exports.getChildrenByBandColumn = exports.getAlignmentByDataType = exports.fireOptionChanged = exports.fireColumnsChanged = exports.findColumn = exports.digitsCount = exports.defaultSetCellValue = exports.customizeTextForBooleanDataType = exports.createColumnsFromOptions = exports.createColumnsFromDataSource = exports.createColumn = exports.convertOwnerBandToColumnReference = exports.columnOptionCore = exports.calculateColspan = void 0;
+exports.isFirstOrLastColumn = exports.isColumnNameRequired = exports.isColumnFixed = exports.getValueDataType = exports.getSerializationFormat = exports.getRowCount = exports.getParentBandColumns = exports.getFixedPosition = exports.getDataColumns = exports.getCustomizeTextByDataType = exports.getColumnIndexByVisibleIndex = exports.getColumnFullPath = exports.getColumnByIndexes = exports.getChildrenByBandColumn = exports.getAlignmentByDataType = exports.fireOptionChanged = exports.fireColumnsChanged = exports.findColumn = exports.digitsCount = exports.defaultSetCellValue = exports.customizeTextForBooleanDataType = exports.createColumnsFromOptions = exports.createColumnsFromDataSource = exports.createColumn = exports.convertOwnerBandToColumnReference = exports.columnOptionCore = exports.calculateColspan = void 0;
 exports.isSortOrderValid = isSortOrderValid;
 exports.updateSortOrderWhenGrouping = exports.updateSerializers = exports.updateIndexes = exports.updateColumnVisibleIndexes = exports.updateColumnSortIndexes = exports.updateColumnIndexes = exports.updateColumnGroupIndexes = exports.updateColumnChanges = exports.strictParseNumber = exports.sortColumns = exports.setFilterOperationsAsDefaultValues = exports.resetColumnsCache = exports.resetBandColumnsCache = exports.processExpandColumns = exports.processBandColumns = exports.numberToString = exports.moveColumnToGroup = exports.mergeColumns = void 0;
 var _number = _interopRequireDefault(require("../../../../common/core/localization/number"));
@@ -19,6 +19,7 @@ var _object = require("../../../../core/utils/object");
 var _position = require("../../../../core/utils/position");
 var _type = require("../../../../core/utils/type");
 var _variable_wrapper = _interopRequireDefault(require("../../../../core/utils/variable_wrapper"));
+var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
 var _const = require("../adaptivity/const");
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _const2 = require("../sticky_columns/const");
@@ -27,6 +28,25 @@ var _const3 = require("./const");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable prefer-destructuring */
 
+const warnFixedInChildColumnsOnce = (controller, childColumns) => {
+  if (controller !== null && controller !== void 0 && controller._isWarnedAboutUnsupportedProperties) return;
+  if (!childColumns || !Array.isArray(childColumns) || (childColumns === null || childColumns === void 0 ? void 0 : childColumns.length) === 0) return;
+  let unsupportedProperty = null;
+  for (const column of childColumns) {
+    if (unsupportedProperty) break;
+    if (!column || typeof column !== 'object' || column === null) continue;
+    for (const property of _const3.UNSUPPORTED_PROPERTIES_FOR_CHILD_COLUMNS) {
+      if (property in column) {
+        unsupportedProperty = property;
+        break;
+      }
+    }
+  }
+  if (unsupportedProperty) {
+    controller && (controller._isWarnedAboutUnsupportedProperties = true);
+    _ui.default.log('W1028', unsupportedProperty);
+  }
+};
 const setFilterOperationsAsDefaultValues = function (column) {
   column.filterOperations = column.defaultFilterOperations;
 };
@@ -85,6 +105,7 @@ const createColumnsFromOptions = function (that, columnsOptions, bandColumn, cre
         }
         result.push(column);
         if (column.columns) {
+          warnFixedInChildColumnsOnce(that, column.columns);
           result = result.concat(createColumnsFromOptions(that, column.columns, column, result.length));
           delete column.columns;
           column.hasColumns = true;
@@ -904,10 +925,17 @@ const isFirstOrLastColumn = function (that, targetColumn, rowIndex) {
   let fixedPosition = arguments.length > 5 ? arguments[5] : undefined;
   const targetColumnIndex = targetColumn.index;
   const bandColumnsCache = that.getBandColumnsCache();
-  const parentBandColumns = getParentBandColumns(targetColumnIndex, bandColumnsCache.columnParentByIndex);
+  const parentBandColumns = !(0, _type.isDefined)(targetColumn.type) && getParentBandColumns(targetColumnIndex, bandColumnsCache.columnParentByIndex);
   if (parentBandColumns !== null && parentBandColumns !== void 0 && parentBandColumns.length) {
     return isFirstOrLastBandColumn(that, parentBandColumns.concat([targetColumn]), onlyWithinBandColumn, isLast, fixedPosition);
   }
   return onlyWithinBandColumn || isFirstOrLastColumnCore(that, targetColumn, rowIndex, onlyWithinBandColumn, isLast, fixedPosition);
 };
 exports.isFirstOrLastColumn = isFirstOrLastColumn;
+const isColumnNameRequired = function (_ref) {
+  let {
+    type = ''
+  } = _ref;
+  return _const3.COMMAND_COLUMNS_WITH_REQUIRED_NAMES.includes(type);
+};
+exports.isColumnNameRequired = isColumnNameRequired;

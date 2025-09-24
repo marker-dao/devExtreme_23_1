@@ -7,10 +7,11 @@ exports.default = void 0;
 var _number = _interopRequireDefault(require("../../../common/core/localization/number"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _m_tooltip = _interopRequireDefault(require("../../ui/m_tooltip"));
-var _m_slider_tooltip_position_controller = require("./m_slider_tooltip_position_controller");
+var _slider_tooltip_position_controller = require("../../ui/slider/slider_tooltip_position_controller");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-// NOTE: Visibility is contolled by the 'visible' option and 'dx-slider-tooltip-visible-on-hover' class.
+// NOTE: Visibility is contolled by the 'visible' option
+// and 'dx-slider-tooltip-visible-on-hover' class
 const SLIDER_TOOLTIP_VISIBILITY_CLASS = 'dx-slider-tooltip-visible-on-hover';
 class SliderTooltip extends _m_tooltip.default {
   _getDefaultOptions() {
@@ -65,7 +66,7 @@ class SliderTooltip extends _m_tooltip.default {
     $sliderHandle.toggleClass(SLIDER_TOOLTIP_VISIBILITY_CLASS, isHoverMode);
   }
   _initPositionController() {
-    this._positionController = new _m_slider_tooltip_position_controller.SliderTooltipPositionController(this._getPositionControllerConfig());
+    this._positionController = new _slider_tooltip_position_controller.SliderTooltipPositionController(this._getPositionControllerConfig());
   }
   _attachToMarkup(enabled) {
     const {

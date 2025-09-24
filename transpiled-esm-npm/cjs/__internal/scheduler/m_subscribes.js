@@ -10,27 +10,28 @@ var _extend = require("../../core/utils/extend");
 var _iterator = require("../../core/utils/iterator");
 var _type = require("../../core/utils/type");
 var _m_text_utils = require("./appointments/m_text_utils");
+var _get_delta_time = require("./appointments/resizing/get_delta_time");
+var _constants = require("./constants");
 var _m_classes = require("./m_classes");
 var _m_utils = require("./m_utils");
+var _base = require("./r1/utils/base");
 var _appointment_adapter = require("./utils/appointment_adapter/appointment_adapter");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const toMs = _date.default.dateToMilliseconds;
+const isAllDay = (scheduler, appointmentData) => {
+  const adapter = new _appointment_adapter.AppointmentAdapter(appointmentData, scheduler._dataAccessors);
+  if (_constants.VERTICAL_VIEW_TYPES.includes(scheduler.currentView.type)) {
+    return (0, _base.isAppointmentTakesAllDay)(adapter, scheduler.option('allDayPanelMode'));
+  }
+  return adapter.allDay;
+};
 const subscribes = {
   isCurrentViewAgenda() {
     return this.currentView.type === 'agenda';
   },
-  currentViewUpdated(currentView) {
-    this.option('currentView', currentView);
-  },
-  currentDateUpdated(date) {
-    this.option('currentDate', date);
-  },
   getOption(name) {
     return this.option(name);
-  },
-  getWorkspaceOption(name) {
-    return this.getWorkSpace().option(name);
   },
   isVirtualScrolling() {
     return this.isVirtualScrolling();
@@ -50,11 +51,13 @@ const subscribes = {
     this.showAppointmentPopup(options.data, false, targetedData);
   },
   updateAppointmentAfterResize(options) {
-    const info = _m_utils.utils.dataAccessors.getAppointmentInfo(options.$appointment);
     const {
-      exceptionDate
+      info
+    } = _m_utils.utils.dataAccessors.getAppointmentSettings(options.$appointment);
+    const {
+      startDate
     } = info.sourceAppointment;
-    this._checkRecurringAppointment(options.target, options.data, exceptionDate, () => {
+    this._checkRecurringAppointment(options.target, options.data, startDate, () => {
       this._updateAppointment(options.target, options.data, function () {
         this._appointments.moveAppointmentBack();
       });
@@ -71,7 +74,9 @@ const subscribes = {
       isDropToTheSameCell,
       isDropToSelfScheduler
     } = _ref;
-    const info = _m_utils.utils.dataAccessors.getAppointmentInfo(element);
+    const {
+      info
+    } = _m_utils.utils.dataAccessors.getAppointmentSettings(element);
     // NOTE: enrich target appointment with additional data from the source
     // in case of one appointment of series will change
     const targetedRawAppointment = (0, _extend.extend)({}, rawAppointment, this._getUpdatedData(rawAppointment));
@@ -99,15 +104,13 @@ const subscribes = {
     this.checkAndDeleteAppointment(options.data, targetedData);
     this.hideAppointmentTooltip();
   },
-  getTextAndFormatDate(appointmentRaw, targetedAppointmentRaw, format) {
-    const targetedAppointment = _extends({}, appointmentRaw, targetedAppointmentRaw);
-    // pull out time zone converting from appointment adapter for knockout(T947938)
+  createFormattedDateText(appointment, targetedAppointmentRaw, format) {
+    const targetedAppointment = _extends({}, appointment, targetedAppointmentRaw);
     const adapter = new _appointment_adapter.AppointmentAdapter(targetedAppointment, this._dataAccessors);
-    const {
-      startDate,
-      endDate
-    } = adapter.getCalculatedDates(this.timeZoneCalculator, 'toGrid');
-    const formatType = format || (0, _m_text_utils.getFormatType)(startDate, endDate, adapter.allDay, this.currentView.type !== 'month');
+    // pull out time zone converting from appointment adapter for knockout (T947938)
+    const startDate = targetedAppointment.displayStartDate || this.timeZoneCalculator.createDate(adapter.startDate, 'toGrid');
+    const endDate = targetedAppointment.displayEndDate || this.timeZoneCalculator.createDate(adapter.endDate, 'toGrid');
+    const formatType = format ?? (0, _m_text_utils.getFormatType)(startDate, endDate, adapter.allDay, this.currentView.type !== 'month');
     return {
       text: adapter.text,
       formatDate: (0, _m_text_utils.formatDates)(startDate, endDate, formatType)
@@ -125,7 +128,7 @@ const subscribes = {
     } = options;
     const groups = this.getViewOption('groups');
     if (groups !== null && groups !== void 0 && groups.length) {
-      if (allDay || this.getLayoutManager().getRenderingStrategyInstance()._needHorizontalGroupBounds()) {
+      if (allDay || !_constants.VERTICAL_VIEW_TYPES.includes(this.currentView.type)) {
         const horizontalGroupBounds = this._workSpace.getGroupBounds(options.coordinates);
         return {
           left: horizontalGroupBounds.left,
@@ -134,7 +137,7 @@ const subscribes = {
           bottom: 0
         };
       }
-      if (this.getLayoutManager().getRenderingStrategyInstance()._needVerticalGroupBounds(allDay) && this._workSpace._isVerticalGroupedWorkSpace()) {
+      if (!allDay && _constants.VERTICAL_VIEW_TYPES.includes(this.currentView.type) && this._workSpace._isVerticalGroupedWorkSpace()) {
         const verticalGroupBounds = this._workSpace.getGroupBounds(options.coordinates);
         return {
           left: 0,
@@ -149,20 +152,20 @@ const subscribes = {
   needRecalculateResizableArea() {
     return this.getWorkSpace().needRecalculateResizableArea();
   },
-  getAppointmentGeometry(settings) {
-    return this.getLayoutManager().getRenderingStrategyInstance().getAppointmentGeometry(settings);
-  },
   isAllDay(appointmentData) {
-    return this.getLayoutManager().getRenderingStrategyInstance().isAllDay(appointmentData);
+    return isAllDay(this, appointmentData);
   },
   getDeltaTime(e, initialSize, itemData) {
-    return this.getLayoutManager().getRenderingStrategyInstance().getDeltaTime(e, initialSize, itemData);
-  },
-  getDropDownAppointmentWidth(isAllDay) {
-    return this.getLayoutManager().getRenderingStrategyInstance().getDropDownAppointmentWidth(this.currentView.intervalCount, isAllDay);
-  },
-  getDropDownAppointmentHeight() {
-    return this.getLayoutManager().getRenderingStrategyInstance().getDropDownAppointmentHeight();
+    return (0, _get_delta_time.getDeltaTime)(e, initialSize, {
+      viewType: this.currentView.type,
+      cellSize: {
+        width: this.getWorkSpace().getCellWidth(),
+        height: this.getWorkSpace().getCellHeight()
+      },
+      cellDurationInMinutes: this.getWorkSpace().option('cellDuration'),
+      resizableStep: this.getWorkSpace().positionHelper.getResizableStep(),
+      isAllDay: isAllDay(this, itemData)
+    });
   },
   getCellWidth() {
     return this.getWorkSpace().getCellWidth();
@@ -170,14 +173,11 @@ const subscribes = {
   getCellHeight() {
     return this.getWorkSpace().getCellHeight();
   },
-  getMaxAppointmentCountPerCellByType(isAllDay) {
-    return this.getRenderingStrategyInstance()._getMaxAppointmentCountPerCellByType(isAllDay);
-  },
   needCorrectAppointmentDates() {
-    return this.getRenderingStrategyInstance().needCorrectAppointmentDates();
+    return !['month', 'timelineMonth'].includes(this.currentView.type);
   },
   getRenderingStrategyDirection() {
-    return this.getRenderingStrategyInstance().getDirection();
+    return _constants.VERTICAL_VIEW_TYPES.includes(this.currentView.type) ? 'vertical' : 'horizontal';
   },
   updateAppointmentEndDate(options) {
     const {
@@ -195,13 +195,10 @@ const subscribes = {
     return updatedEndDate;
   },
   renderCompactAppointments(options) {
-    this._compactAppointmentsHelper.render(options);
+    return this._compactAppointmentsHelper.render(options);
   },
   clearCompactAppointments() {
     this._compactAppointmentsHelper.clear();
-  },
-  supportCompactDropDownAppointments() {
-    return this.getLayoutManager().getRenderingStrategyInstance().supportCompactDropDownAppointments();
   },
   getGroupCount() {
     return this._workSpace._getGroupCount();

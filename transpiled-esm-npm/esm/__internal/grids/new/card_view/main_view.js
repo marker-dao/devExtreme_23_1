@@ -1,6 +1,6 @@
 import { createVNode, createFragment, createComponentVNode } from "inferno";
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { computed } from '@preact/signals-core';
+import { computed } from '../../../core/state_manager/index';
 import { ColumnChooserView } from '../../../grids/new/grid_core/column_chooser/index';
 import { View } from '../../../grids/new/grid_core/core/view';
 import { FilterPanelView } from '../../../grids/new/grid_core/filtering/filter_panel/view';
@@ -9,6 +9,7 @@ import { KeyboardNavigationController } from '../../../grids/new/grid_core/keybo
 import { PagerView } from '../../../grids/new/grid_core/pager/view';
 import { ToolbarView } from '../../../grids/new/grid_core/toolbar/view';
 import { A11yStatusContainer, AccessibilityController } from '../grid_core/accessibility/index';
+import { CommonPropsContext } from '../grid_core/core/common_props_context';
 import { ConfigContext } from '../grid_core/core/config_context';
 import { EditPopupView } from '../grid_core/editing/popup/view';
 import { RootElementUpdater } from '../grid_core/inferno_wrappers/root_element_updater';
@@ -31,22 +32,25 @@ function MainViewComponent(_ref) {
     ContextMenu,
     EditPopup,
     config,
-    rootElementRef,
+    commonProps,
     accessibilityDescription,
     accessibilityStatus,
     onKeyDown
   } = _ref;
   return createFragment([createComponentVNode(2, ConfigContext.Provider, {
     "value": config,
-    children: createComponentVNode(2, RootElementUpdater, {
-      "rootElementRef": rootElementRef,
-      "className": CLASSES.cardView,
-      children: createVNode(1, "div", "dx-cardview-root-container", [createComponentVNode(2, A11yStatusContainer, {
-        "statusText": accessibilityStatus
-      }), createVNode(1, "div", "dx-cardview-header-container", [createComponentVNode(2, Toolbar), createComponentVNode(2, HeaderPanel)], 4), createComponentVNode(2, Content), createComponentVNode(2, FilterPanel), createVNode(1, "div", null, createComponentVNode(2, Pager), 0), createComponentVNode(2, HeaderFilterPopup), createComponentVNode(2, EditPopup), createComponentVNode(2, ColumnChooser), createComponentVNode(2, ContextMenu)], 4, {
-        "role": 'group',
-        "aria-label": accessibilityDescription,
-        "onKeyDown": onKeyDown
+    children: createComponentVNode(2, CommonPropsContext.Provider, {
+      "value": commonProps,
+      children: createComponentVNode(2, RootElementUpdater, {
+        "rootElementRef": commonProps.rootElementRef,
+        "className": CLASSES.cardView,
+        children: createVNode(1, "div", "dx-cardview-root-container", [createComponentVNode(2, A11yStatusContainer, {
+          "statusText": accessibilityStatus
+        }), createVNode(1, "div", "dx-cardview-header-container", [createComponentVNode(2, Toolbar), createComponentVNode(2, HeaderPanel)], 4), createComponentVNode(2, Content), createComponentVNode(2, FilterPanel), createVNode(1, "div", null, createComponentVNode(2, Pager), 0), createComponentVNode(2, HeaderFilterPopup), createComponentVNode(2, EditPopup), createComponentVNode(2, ColumnChooser), createComponentVNode(2, ContextMenu)], 4, {
+          "role": 'group',
+          "aria-label": accessibilityDescription,
+          "onKeyDown": onKeyDown
+        })
       })
     })
   })], 4);
@@ -72,10 +76,16 @@ export class MainView extends View {
       disabled: this.options.oneWay('disabled').value,
       templatesRenderAsynchronously: this.options.oneWay('templatesRenderAsynchronously').value
     }));
+    this.commonProps = {
+      rootElementRef: {
+        current: this.root
+      }
+    };
   }
   // eslint-disable-next-line @stylistic/max-len
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/explicit-function-return-type
   getProps() {
+    this.commonProps.rootElementRef.current = this.root;
     return computed(() => ({
       Toolbar: this.toolbar.asInferno(),
       Content: this.content.asInferno(),
@@ -87,9 +97,7 @@ export class MainView extends View {
       EditPopup: this.editPopup.asInferno(),
       ContextMenu: this.contextMenu.asInferno(),
       config: this.config.value,
-      rootElementRef: {
-        current: this.root
-      },
+      commonProps: this.commonProps,
       onKeyDown: event => {
         this.keyboardNavigation.onKeyDown(event);
       },

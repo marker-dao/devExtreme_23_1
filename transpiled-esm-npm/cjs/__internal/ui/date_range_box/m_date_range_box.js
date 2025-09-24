@@ -114,7 +114,7 @@ class DateRangeBox extends _editor.default {
       value: [null, null],
       valueChangeEvent: 'change',
       _internalValidationErrors: [],
-      _currentSelection: 'startDate'
+      currentSelection: 'startDate'
     });
   }
   _defaultOptionsRules() {
@@ -935,7 +935,7 @@ class DateRangeBox extends _editor.default {
           }
           break;
         }
-      case '_currentSelection':
+      case 'currentSelection':
         break;
       default:
         // @ts-expect-error

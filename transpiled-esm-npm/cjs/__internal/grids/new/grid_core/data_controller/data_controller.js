@@ -7,7 +7,7 @@ exports.DataController = void 0;
 var _array_store = _interopRequireDefault(require("../../../../../common/data/array_store"));
 var _deferred = require("../../../../../core/utils/deferred");
 var _type = require("../../../../../core/utils/type");
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _m_common = require("../../../../core/utils/m_common");
 var _promise = require("../../../../core/utils/promise");
 var _m_utils = _interopRequireDefault(require("../../../grid_core/m_utils"));
@@ -17,8 +17,8 @@ var _filter_controller = require("../filtering/filter_controller");
 var _utils = require("../filtering/utils");
 var _controller = require("../lifecycle/controller");
 var _options_controller = require("../options_controller/options_controller");
-var _index = require("../sorting_controller/index");
-var _index2 = require("./store_load_adapter/index");
+var _index2 = require("../sorting_controller/index");
+var _index3 = require("./store_load_adapter/index");
 var _utils2 = require("./utils");
 const _excluded = ["skip", "take"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -36,7 +36,7 @@ class DataController {
     this.pendingLocalOperations = {};
     this.dataSourceConfiguration = this.options.oneWay('dataSource');
     this.keyExpr = this.options.oneWay('keyExpr');
-    this.dataSource = (0, _signalsCore.computed)(() => (0, _utils2.normalizeDataSource)(this.dataSourceConfiguration.value, this.keyExpr.value));
+    this.dataSource = (0, _index.computed)(() => (0, _utils2.normalizeDataSource)(this.dataSourceConfiguration.value, this.keyExpr.value));
     this.previousDisplayFilter = undefined;
     // TODO
     this.cacheEnabled = this.options.oneWay('cacheEnabled');
@@ -45,26 +45,26 @@ class DataController {
     this.pageSize = this.options.twoWay('paging.pageSize');
     this.remoteOperations = this.options.oneWay('remoteOperations');
     this.onDataErrorOccurred = this.options.action('onDataErrorOccurred');
-    this._items = (0, _signalsCore.signal)([]);
+    this._items = (0, _index.signal)([]);
     this.items = this._items;
-    this._totalCount = (0, _signalsCore.signal)(0);
+    this._totalCount = (0, _index.signal)(0);
     this.totalCount = this._totalCount;
-    this.isLoading = (0, _signalsCore.signal)(false);
-    this.pageCount = (0, _signalsCore.computed)(() => Math.ceil(this.totalCount.value / this.pageSize.value));
-    this.isLoaded = (0, _signalsCore.signal)(false);
-    this.isReloading = (0, _signalsCore.signal)(false);
-    this.normalizedRemoteOptions = (0, _signalsCore.computed)(() => {
+    this.isLoading = (0, _index.signal)(false);
+    this.pageCount = (0, _index.computed)(() => Math.ceil(this.totalCount.value / this.pageSize.value));
+    this.isLoaded = (0, _index.signal)(false);
+    this.isReloading = (0, _index.signal)(false);
+    this.normalizedRemoteOptions = (0, _index.computed)(() => {
       const store = this.dataSource.value.store();
       return (0, _utils2.normalizeRemoteOptions)(this.remoteOperations.value, (0, _utils2.isLocalStore)(store), (0, _utils2.isCustomStore)(store));
     });
-    this.normalizedLocalOperations = (0, _signalsCore.computed)(() => (0, _utils2.normalizeLocalOptions)(this.normalizedRemoteOptions.value));
-    this.normalizedDisplayFilter = (0, _signalsCore.computed)(() => (0, _utils.normalizeFilterWithSelectors)(this.filterController.displayFilter.value, this.columnsController.columns.value, !!this.normalizedRemoteOptions.value.filtering));
-    (0, _signalsCore.effect)(() => {
+    this.normalizedLocalOperations = (0, _index.computed)(() => (0, _utils2.normalizeLocalOptions)(this.normalizedRemoteOptions.value));
+    this.normalizedDisplayFilter = (0, _index.computed)(() => (0, _utils.normalizeFilterWithSelectors)(this.filterController.displayFilter.value, this.columnsController.columns.value, !!this.normalizedRemoteOptions.value.filtering));
+    (0, _index.effect)(() => {
       if (this.dataSource.value) {
         this.columnsController.resetColumnOptionsFromDataItem();
       }
     });
-    (0, _signalsCore.effect)(() => {
+    (0, _index.effect)(() => {
       const dataSource = this.dataSource.value;
       const changedCallback = e => {
         this.isLoaded.value = true;
@@ -147,7 +147,7 @@ class DataController {
         dataSource.off('customizeLoadResult', dataLoadedCallback);
       };
     });
-    (0, _signalsCore.effect)(() => {
+    (0, _index.effect)(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       this.normalizedRemoteOptions.value;
       if (this.dataSource.peek().isLoaded()) {
@@ -155,7 +155,7 @@ class DataController {
         this.dataSource.peek().load();
       }
     });
-    (0, _signalsCore.effect)(() => {
+    (0, _index.effect)(() => {
       const initialized = this.options.initialized.value;
       const dataSource = this.dataSource.value;
       const pageIndex = this.pageIndex.value;
@@ -264,7 +264,7 @@ class DataController {
     return this.loadedPromise.promise;
   }
   getStoreLoadAdapter() {
-    return new _index2.StoreLoadAdapter(this.dataSource, this.normalizedLocalOperations,
+    return new _index3.StoreLoadAdapter(this.dataSource, this.normalizedLocalOperations,
     // NOTE: Badly typed ArrayStore
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     data => new _array_store.default(data));
@@ -302,4 +302,4 @@ class DataController {
   }
 }
 exports.DataController = DataController;
-DataController.dependencies = [_columns_controller.ColumnsController, _options_controller.OptionsController, _index.SortingController, _filter_controller.FilterController, _error_controller.ErrorController, _controller.LifeCycleController];
+DataController.dependencies = [_columns_controller.ColumnsController, _options_controller.OptionsController, _index2.SortingController, _filter_controller.FilterController, _error_controller.ErrorController, _controller.LifeCycleController];

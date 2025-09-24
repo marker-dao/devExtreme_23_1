@@ -5,9 +5,9 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 // eslint-disable-next-line max-classes-per-file
 import { extend } from '../../../../core/utils/extend';
 import Widget from '../../../../ui/widget/ui.widget';
-import { signal } from '@preact/signals-core';
 import { DIContext } from '../../../core/di/index';
 import { infernoRenderer } from '../../../core/m_inferno_renderer';
+import { signal } from '../../../core/state_manager/index';
 import { SearchView } from '../../../grids/new/grid_core/search/view';
 import { rerender } from 'inferno';
 import { AccessibilityController } from './accessibility/index';

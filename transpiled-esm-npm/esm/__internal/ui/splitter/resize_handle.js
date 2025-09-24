@@ -3,7 +3,7 @@ import { name as CLICK_EVENT } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { name as DOUBLE_CLICK_EVENT } from '../../../common/core/events/double_click';
 import { end as dragEventEnd, move as dragEventMove, start as dragEventStart } from '../../../common/core/events/drag';
-import { addNamespace, isCommandKeyPressed } from '../../../common/core/events/utils/index';
+import { addNamespace, isCommandKeyPressed } from '../../../common/core/events/utils';
 import messageLocalization from '../../../common/core/localization/message';
 import Guid from '../../../core/guid';
 import $ from '../../../core/renderer';

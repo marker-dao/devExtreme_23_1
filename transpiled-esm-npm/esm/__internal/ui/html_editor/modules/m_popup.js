@@ -1,11 +1,11 @@
 import eventsEngine from '../../../../common/core/events/core/events_engine';
-import { addNamespace } from '../../../../common/core/events/utils/index';
+import { addNamespace } from '../../../../common/core/events/utils';
 import $ from '../../../../core/renderer';
 import { extend } from '../../../../core/utils/extend';
 import { getHeight } from '../../../../core/utils/size';
 import Popup from '../../../../ui/popup';
 import windowUtils from '../../../core/utils/m_window';
-import List from '../../../ui/list/m_list.edit.search';
+import List from '../../../ui/list/list.edit.search';
 import Quill from 'devextreme-quill';
 import BaseModule from './m_base';
 const MODULE_NAMESPACE = 'dxHtmlEditorPopupModule';

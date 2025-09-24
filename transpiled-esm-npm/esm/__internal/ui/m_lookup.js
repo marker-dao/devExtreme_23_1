@@ -260,8 +260,11 @@ class Lookup extends DropDownList {
     return this._$fieldWrapper;
   }
   _renderField() {
-    const fieldTemplate = this._getTemplateByOption('fieldTemplate');
-    if (fieldTemplate && this.option('fieldTemplate')) {
+    const {
+      fieldTemplate: fieldTemplateOption
+    } = this.option();
+    const fieldTemplate = this._getTemplate(fieldTemplateOption);
+    if (fieldTemplate && fieldTemplateOption) {
       this._renderFieldTemplate(fieldTemplate);
       return;
     }
@@ -332,25 +335,27 @@ class Lookup extends DropDownList {
     super._popupShownHandler();
   }
   _scrollToSelectedItem() {
-    var _this$_list2, _this$_list3;
-    const selectedIndex = (_this$_list2 = this._list) === null || _this$_list2 === void 0 ? void 0 : _this$_list2.option('selectedIndex');
-    const listItems = (_this$_list3 = this._list) === null || _this$_list3 === void 0 ? void 0 : _this$_list3.option('items');
+    var _this$_list2;
+    const {
+      selectedIndex,
+      items: listItems
+    } = ((_this$_list2 = this._list) === null || _this$_list2 === void 0 ? void 0 : _this$_list2.option()) ?? {};
     // @ts-expect-error ts-error
     const itemsCount = listItems.length;
     if (itemsCount !== 0) {
-      var _this$_list4, _this$_list7;
-      if ((_this$_list4 = this._list) !== null && _this$_list4 !== void 0 && _this$_list4.option('grouped')) {
-        var _this$_list5;
+      var _this$_list3, _this$_list6;
+      if ((_this$_list3 = this._list) !== null && _this$_list3 !== void 0 && _this$_list3.option('grouped')) {
+        var _this$_list4;
         // @ts-expect-error ts-error
-        (_this$_list5 = this._list) === null || _this$_list5 === void 0 || _this$_list5.scrollToItem({
+        (_this$_list4 = this._list) === null || _this$_list4 === void 0 || _this$_list4.scrollToItem({
           group: itemsCount - 1,
           item: listItems[itemsCount - 1].items.length - 1
         });
       } else {
-        var _this$_list6;
-        (_this$_list6 = this._list) === null || _this$_list6 === void 0 || _this$_list6.scrollToItem(itemsCount - 1);
+        var _this$_list5;
+        (_this$_list5 = this._list) === null || _this$_list5 === void 0 || _this$_list5.scrollToItem(itemsCount - 1);
       }
-      (_this$_list7 = this._list) === null || _this$_list7 === void 0 || _this$_list7.scrollToItem(selectedIndex);
+      (_this$_list6 = this._list) === null || _this$_list6 === void 0 || _this$_list6.scrollToItem(selectedIndex);
     }
   }
   _getDifferenceOffsets(selectedListItem) {
@@ -434,7 +439,6 @@ class Lookup extends DropDownList {
         items.push(item);
       });
     });
-    // @ts-expect-error
     return $(items);
   }
   _calculateListHeight(grouped) {
@@ -469,8 +473,8 @@ class Lookup extends DropDownList {
     return listHeight + (grouped ? MATERIAL_LOOKUP_LIST_PADDING : MATERIAL_LOOKUP_LIST_PADDING * 2);
   }
   _getPopupHeight() {
-    var _this$_list8;
-    if ((_this$_list8 = this._list) !== null && _this$_list8 !== void 0 && _this$_list8.itemElements().length) {
+    var _this$_list7;
+    if ((_this$_list7 = this._list) !== null && _this$_list7 !== void 0 && _this$_list7.itemElements().length) {
       return this._calculateListHeight(this.option('grouped')) + (this._$searchWrapper ? getOuterHeight(this._$searchWrapper) : 0)
       // @ts-expect-error ts-error
       + (this._popup.bottomToolbar() ? getOuterHeight(this._popup.bottomToolbar()) : 0)
@@ -715,16 +719,16 @@ class Lookup extends DropDownList {
   }
   _filterDataSource() {
     if (this._list && !this._list._dataSource && this._isMinSearchLengthExceeded()) {
-      var _this$_list9;
-      (_this$_list9 = this._list) === null || _this$_list9 === void 0 || _this$_list9._scrollView.startLoading();
+      var _this$_list8;
+      (_this$_list8 = this._list) === null || _this$_list8 === void 0 || _this$_list8._scrollView.startLoading();
     }
     // @ts-expect-error ts-error
     super._filterDataSource(...arguments);
   }
   _dataSourceFiltered() {
-    var _this$_list10;
+    var _this$_list9;
     super._dataSourceFiltered(...arguments);
-    (_this$_list10 = this._list) === null || _this$_list10 === void 0 || _this$_list10._scrollView.finishLoading();
+    (_this$_list9 = this._list) === null || _this$_list9 === void 0 || _this$_list9._scrollView.finishLoading();
   }
   _updateActiveDescendant() {
     super._updateActiveDescendant();
@@ -834,8 +838,8 @@ class Lookup extends DropDownList {
         var _this$_searchBox7;
         (_this$_searchBox7 = this._searchBox) === null || _this$_searchBox7 === void 0 || _this$_searchBox7.focus();
       } else {
-        var _this$_list11;
-        (_this$_list11 = this._list) === null || _this$_list11 === void 0 || _this$_list11.focus();
+        var _this$_list10;
+        (_this$_list10 = this._list) === null || _this$_list10 === void 0 || _this$_list10.focus();
       }
     });
   }
@@ -850,8 +854,8 @@ class Lookup extends DropDownList {
     this._selectListItem(e.itemData, e.event.currentTarget);
   }
   _selectListItem(itemData, target) {
-    var _this$_list12;
-    (_this$_list12 = this._list) === null || _this$_list12 === void 0 || _this$_list12.selectItem(target);
+    var _this$_list11;
+    (_this$_list11 = this._list) === null || _this$_list11 === void 0 || _this$_list11.selectItem(target);
     const {
       applyValueMode
     } = this.option();
@@ -860,10 +864,10 @@ class Lookup extends DropDownList {
     }
   }
   _currentSelectedItem() {
-    var _this$_list13;
+    var _this$_list12;
     return this.option('grouped')
     // @ts-expect-error ts-error
-    ? this._list.option('selectedItems[0]').items[0] : (_this$_list13 = this._list) === null || _this$_list13 === void 0 ? void 0 : _this$_list13.option('selectedItems[0]');
+    ? this._list.option('selectedItems[0]').items[0] : (_this$_list12 = this._list) === null || _this$_list12 === void 0 ? void 0 : _this$_list12.option('selectedItems[0]');
   }
   _resetValue(e) {
     this._saveValueChangeEvent(e.event);

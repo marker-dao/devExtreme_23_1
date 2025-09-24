@@ -2,8 +2,9 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import numberLocalization from '../../../common/core/localization/number';
 import $ from '../../../core/renderer';
 import Tooltip from '../../ui/m_tooltip';
-import { SliderTooltipPositionController } from './m_slider_tooltip_position_controller';
-// NOTE: Visibility is contolled by the 'visible' option and 'dx-slider-tooltip-visible-on-hover' class.
+import { SliderTooltipPositionController } from '../../ui/slider/slider_tooltip_position_controller';
+// NOTE: Visibility is contolled by the 'visible' option
+// and 'dx-slider-tooltip-visible-on-hover' class
 const SLIDER_TOOLTIP_VISIBILITY_CLASS = 'dx-slider-tooltip-visible-on-hover';
 class SliderTooltip extends Tooltip {
   _getDefaultOptions() {

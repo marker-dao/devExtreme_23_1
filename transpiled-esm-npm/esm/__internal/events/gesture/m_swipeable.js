@@ -48,8 +48,8 @@ class Swipeable extends DOMComponent {
         context: this
       });
       // @ts-expect-error ts-error
-      eventName = addNamespace(eventName, NAME);
-      eventsEngine.on(this.$element(), eventName, this._eventData, e => action({
+      const event = addNamespace(eventName, NAME);
+      eventsEngine.on(this.$element(), event, this._eventData, e => action({
         event: e
       }));
     });

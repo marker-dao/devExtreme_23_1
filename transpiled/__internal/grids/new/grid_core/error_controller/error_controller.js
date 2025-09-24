@@ -4,10 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ErrorController = void 0;
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 class ErrorController {
   constructor() {
-    this._errors = (0, _signalsCore.signal)([]);
+    this._errors = (0, _index.signal)([]);
     this.errors = this._errors;
     this.counter = 0;
   }

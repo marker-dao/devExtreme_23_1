@@ -10,22 +10,20 @@ var _common = require("../../../core/utils/common");
 var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _type = require("../../../core/utils/type");
-var _layout_manager = require("../../../viz/chart_components/layout_manager");
-var trackerModule = _interopRequireWildcard(require("../../../viz/chart_components/tracker"));
-var _chart_theme_manager = require("../../../viz/components/chart_theme_manager");
-var _data_validator = require("../../../viz/components/data_validator");
-var _legend = require("../../../viz/components/legend");
-var _data_source = require("../../../viz/core/data_source");
-var _export = require("../../../viz/core/export");
-var _loading_indicator = require("../../../viz/core/loading_indicator");
-var _title = require("../../../viz/core/title");
-var _tooltip = require("../../../viz/core/tooltip");
-var _utils = require("../../../viz/core/utils");
-var _base_series = require("../../../viz/series/base_series");
+var _tracker = _interopRequireDefault(require("../../../viz/chart_components/tracker"));
+var _layout_manager = require("../../viz/chart_components/layout_manager");
+var _chart_theme_manager = require("../../viz/components/chart_theme_manager");
+var _data_validator = require("../../viz/components/data_validator");
+var _legend = require("../../viz/components/legend");
+var _data_source = require("../../viz/core/data_source");
+var _export = require("../../viz/core/export");
+var _loading_indicator = require("../../viz/core/loading_indicator");
+var _title = require("../../viz/core/title");
+var _tooltip = require("../../viz/core/tooltip");
+var _utils = require("../../viz/core/utils");
+var _base_series = require("../../viz/series/base_series");
 var _m_base_widget = _interopRequireDefault(require("../core/m_base_widget"));
 var _rolling_stock = require("./rolling_stock");
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 // @ts-expect-error
 
@@ -471,8 +469,7 @@ const BaseChart = exports.BaseChart = _m_base_widget.default.inherit({
   },
   _trackerType: 'ChartTracker',
   _createTracker() {
-    // eslint-disable-next-line import/namespace
-    this._tracker = new trackerModule[this._trackerType]({
+    this._tracker = new _tracker.default[this._trackerType]({
       seriesGroup: this._seriesGroup,
       renderer: this._renderer,
       tooltip: this._tooltip,

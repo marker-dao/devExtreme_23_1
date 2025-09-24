@@ -1,4 +1,4 @@
-import { computed, signal } from '@preact/signals-core';
+import { computed, signal } from '../../../../core/state_manager/index';
 import { createRef } from 'inferno';
 import { ColumnsController } from '../columns_controller/index';
 import { View } from '../core/view';

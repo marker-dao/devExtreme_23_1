@@ -75,8 +75,9 @@ const UA_PARSERS = {
     const version = matches ? [parseInt(matches[1], 10), parseInt(matches[2], 10), parseInt(matches[3] || 0, 10)] : [];
     const isIPhone4 = window.screen.height === 960 / 2;
     const grade = isIPhone4 ? 'B' : 'A';
+    const isDesktopMode = /Macintosh/i.test(userAgent) && !/Mobile/i.test(userAgent);
     return {
-      deviceType: isPhone ? 'phone' : 'tablet',
+      deviceType: isDesktopMode ? 'desktop' : isPhone ? 'phone' : 'tablet',
       platform: 'ios',
       version,
       grade
@@ -264,7 +265,6 @@ class Devices {
     return DEFAULT_DEVICE;
   }
   _changeOrientation() {
-    // @ts-expect-error
     const $window = (0, _renderer.default)(this._window);
     const orientation = (0, _size.getHeight)($window) > (0, _size.getWidth)($window) ? 'portrait' : 'landscape';
     if (this._currentOrientation === orientation) {

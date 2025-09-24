@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-require("../../ui/list/modules/m_selection");
+require("../../ui/list/modules/selection");
 var _date = _interopRequireDefault(require("../../../common/core/localization/date"));
 var _common = require("../../../core/utils/common");
 var _date_serialization = _interopRequireDefault(require("../../../core/utils/date_serialization"));
@@ -12,7 +12,7 @@ var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
 var _m_utils = require("../../ui/drop_down_editor/m_utils");
-var _m_listEdit = _interopRequireDefault(require("../../ui/list/m_list.edit.search"));
+var _listEdit = _interopRequireDefault(require("../../ui/list/list.edit.search"));
 var _m_date_box = _interopRequireDefault(require("./m_date_box.strategy"));
 var _m_date_utils = _interopRequireDefault(require("./m_date_utils"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -69,7 +69,7 @@ class ListStrategy extends _m_date_box.default {
     this._refreshItems();
   }
   _getWidgetName() {
-    return _m_listEdit.default;
+    return _listEdit.default;
   }
   _getWidgetOptions() {
     return {

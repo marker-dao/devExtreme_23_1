@@ -192,7 +192,7 @@ class SingleLineStrategy {
     if (property === 'disabled' || property === 'options.disabled') {
       if (this._toolbar._isMenuItem(item)) {
         var _this$_menu;
-        (_this$_menu = this._menu) === null || _this$_menu === void 0 || _this$_menu._itemOptionChanged(item, property, value);
+        (_this$_menu = this._menu) === null || _this$_menu === void 0 || _this$_menu._itemOptionChanged(item, 'disabled', value);
         return;
       }
     }

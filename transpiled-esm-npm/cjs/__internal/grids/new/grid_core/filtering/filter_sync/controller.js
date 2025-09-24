@@ -5,17 +5,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.FilterSyncController = void 0;
 var _common = require("../../../../../../core/utils/common");
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../../core/state_manager/index");
 var _m_utils = require("../../../../../filter_builder/m_utils");
-var _index = require("../../../../../grids/new/grid_core/search/index");
-var _index2 = require("../../columns_controller/index");
+var _index2 = require("../../../../../grids/new/grid_core/search/index");
+var _index3 = require("../../columns_controller/index");
 var _utils = require("../../columns_controller/utils");
-var _index3 = require("../header_filter/index");
+var _index4 = require("../header_filter/index");
 var _utils2 = require("../header_filter/utils");
-var _index4 = require("../index");
+var _index5 = require("../index");
 var _utils3 = require("./utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // import type { ReadonlySignal } from '@preact/signals-core';
-// import { computed } from '@preact/signals-core';
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // import type { ReadonlySignal } from '../../../../../core/state_manager/index';
+// import { computed } from '../../../../../core/state_manager/index';
 const FILTER_DEEP_COMPARISON_OPTS = {
   maxDepth: 6,
   strict: true
@@ -34,7 +34,7 @@ class FilterSyncController {
     this.previousFilterPanelEnabled = this.filterController.filterPanelFilterEnabled.peek();
     this.previousHeaderFilterInfoArray = [];
     // --- FilterPanel -> HeaderFilter ---
-    (0, _signalsCore.effect)(() => {
+    (0, _index.effect)(() => {
       const filterPanelValue = this.filterController.filterValueOption.value;
       const isFilterPanelEnabled = this.filterController.filterPanelFilterEnabled.value;
       if ((0, _common.equalByValue)(this.previousFilterPanelValue, filterPanelValue, FILTER_DEEP_COMPARISON_OPTS) && this.previousFilterPanelEnabled === isFilterPanelEnabled) {
@@ -58,7 +58,7 @@ class FilterSyncController {
       this.previousHeaderFilterInfoArray = this.headerFilterController.headerFilterInfoArray.peek();
     });
     // --- HeaderFilter -> FilterPanel ---
-    (0, _signalsCore.effect)(() => {
+    (0, _index.effect)(() => {
       const headerFilterInfoArray = this.headerFilterController.headerFilterInfoArray.value;
       if ((0, _common.equalByValue)(this.previousHeaderFilterInfoArray, headerFilterInfoArray, FILTER_DEEP_COMPARISON_OPTS)) {
         return;
@@ -82,7 +82,7 @@ class FilterSyncController {
     });
   }
   clearFilters() {
-    (0, _signalsCore.batch)(() => {
+    (0, _index.batch)(() => {
       this.searchController.searchTextOption.value = '';
       this.filterController.filterValueOption.value = null;
       this.headerFilterController.clearHeaderFilters();
@@ -109,11 +109,11 @@ class FilterSyncController {
     const normalizedValue = !(newFilterPanelValue !== null && newFilterPanelValue !== void 0 && newFilterPanelValue.length) ? null : newFilterPanelValue;
     // NOTE: If we update filters from HeaderFilter side
     // For better UX the filter panel will be enabled
-    (0, _signalsCore.batch)(() => {
+    (0, _index.batch)(() => {
       this.filterController.filterValueOption.value = normalizedValue;
       this.filterController.filterPanelFilterEnabled.value = true;
     });
   }
 }
 exports.FilterSyncController = FilterSyncController;
-FilterSyncController.dependencies = [_index2.ColumnsController, _index4.FilterController, _index3.HeaderFilterController, _index.SearchController];
+FilterSyncController.dependencies = [_index3.ColumnsController, _index5.FilterController, _index4.HeaderFilterController, _index2.SearchController];

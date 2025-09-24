@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_accordion = _interopRequireDefault(require("../__internal/ui/m_accordion"));
+var _accordion = _interopRequireDefault(require("../__internal/ui/accordion"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_accordion.default; // STYLE accordion
+var _default = exports.default = _accordion.default; // STYLE accordion
 /**
  * @name dxAccordionOptions.onSelectionChanging
  * @hidden

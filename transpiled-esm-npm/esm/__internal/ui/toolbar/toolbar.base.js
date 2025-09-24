@@ -355,8 +355,7 @@ class ToolbarBase extends CollectionWidgetAsync {
         const check = () => {
           let readyToResolve = true;
           this.$element().parents().each((_, parent) => {
-            // @ts-expect-error ts-error
-            if (fx.isAnimating($(parent))) {
+            if (fx.isAnimating($(parent).get(0))) {
               readyToResolve = false;
               return false;
             }
@@ -380,7 +379,6 @@ class ToolbarBase extends CollectionWidgetAsync {
         const promises = [];
         $labels.each((_, label) => {
           const text = $(label).text();
-          // @ts-expect-error ts-error
           const fontWeight = $(label).css('fontWeight');
           promises.push(waitWebFont(text, fontWeight));
           return true;

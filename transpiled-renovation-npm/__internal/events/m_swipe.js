@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.swipe = exports.start = exports.end = void 0;
 var _emitter_registrator = _interopRequireDefault(require("../../common/core/events/core/emitter_registrator"));
 var _emitter = _interopRequireDefault(require("../../common/core/events/gesture/emitter.gesture"));
-var _index = require("../../common/core/events/utils/index");
+var _utils = require("../../common/core/events/utils");
 var _size = require("../../core/utils/size");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const SWIPE_START_EVENT = exports.start = 'dxswipestart';
@@ -20,11 +20,11 @@ const HorizontalStrategy = {
     return [this._maxLeftOffset, this._maxRightOffset];
   },
   calcOffsetRatio(e) {
-    const endEventData = (0, _index.eventData)(e);
+    const endEventData = (0, _utils.eventData)(e);
     return (endEventData.x - (this._savedEventData && this._savedEventData.x || 0)) / this._itemSizeFunc().call(this, e);
   },
   isFastSwipe(e) {
-    const endEventData = (0, _index.eventData)(e);
+    const endEventData = (0, _utils.eventData)(e);
     return this.FAST_SWIPE_SPEED_LIMIT * Math.abs(endEventData.x - this._tickData.x) >= endEventData.time - this._tickData.time;
   }
 };
@@ -36,11 +36,11 @@ const VerticalStrategy = {
     return [this._maxTopOffset, this._maxBottomOffset];
   },
   calcOffsetRatio(e) {
-    const endEventData = (0, _index.eventData)(e);
+    const endEventData = (0, _utils.eventData)(e);
     return (endEventData.y - (this._savedEventData && this._savedEventData.y || 0)) / this._itemSizeFunc().call(this, e);
   },
   isFastSwipe(e) {
-    const endEventData = (0, _index.eventData)(e);
+    const endEventData = (0, _utils.eventData)(e);
     return this.FAST_SWIPE_SPEED_LIMIT * Math.abs(endEventData.y - this._tickData.y) >= endEventData.time - this._tickData.time;
   }
 };
@@ -66,10 +66,10 @@ const SwipeEmitter = _emitter.default.inherit({
     return this.itemSizeFunc || this._defaultItemSizeFunc;
   },
   _init(e) {
-    this._tickData = (0, _index.eventData)(e);
+    this._tickData = (0, _utils.eventData)(e);
   },
   _start(e) {
-    this._savedEventData = (0, _index.eventData)(e);
+    this._savedEventData = (0, _utils.eventData)(e);
     e = this._fireEvent(SWIPE_START_EVENT, e);
     if (!e.cancel) {
       this._maxLeftOffset = e.maxLeftOffset;
@@ -80,7 +80,7 @@ const SwipeEmitter = _emitter.default.inherit({
   },
   _move(e) {
     const strategy = this._getStrategy();
-    const moveEventData = (0, _index.eventData)(e);
+    const moveEventData = (0, _utils.eventData)(e);
     let offset = strategy.calcOffsetRatio.call(this, e);
     offset = this._fitOffset(offset, this.elastic);
     if (moveEventData.time - this._tickData.time > this.TICK_INTERVAL) {

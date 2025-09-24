@@ -13,9 +13,9 @@ import { extend } from '../../core/utils/extend';
 import { map } from '../../core/utils/iterator';
 import { isDefined, isObject } from '../../core/utils/type';
 import DataExpressionMixin from '../../ui/editor/ui.data_expression';
-import { tabbable } from '../../ui/widget/selectors';
+import { tabbable } from '../core/utils/m_selectors';
 import DropDownEditor from '../ui/drop_down_editor/m_drop_down_editor';
-import { getElementMaxHeightByWindow } from '../ui/overlay/m_utils';
+import { getElementMaxHeightByWindow } from '../ui/overlay/utils';
 const {
   getActiveElement
 } = domAdapter;
@@ -44,7 +44,6 @@ class DropDownBox extends DropDownEditor {
     return this._getElements().filter(tabbable);
   }
   _getElements() {
-    // @ts-expect-error ts-error
     return $(this.content()).find('*');
   }
   _getDefaultOptions() {
@@ -262,6 +261,10 @@ class DropDownBox extends DropDownEditor {
   }
   // eslint-disable-next-line class-methods-use-this
   _setCollectionWidgetOption() {}
+  // eslint-disable-next-line class-methods-use-this
+  _shouldLogFieldTemplateDeprecationWarning() {
+    return true;
+  }
   _optionChanged(args) {
     // @ts-expect-error ts-error
     this._dataExpressionOptionChanged(args);

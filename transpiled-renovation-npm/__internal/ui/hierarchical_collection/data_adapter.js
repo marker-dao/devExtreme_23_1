@@ -11,7 +11,7 @@ var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _type = require("../../../core/utils/type");
 var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
-var _m_search_box_mixin = _interopRequireWildcard(require("../../ui/collection/m_search_box_mixin"));
+var _search_box_controller = _interopRequireWildcard(require("../../ui/collection/search_box_controller"));
 var _m_text_box = _interopRequireDefault(require("../../ui/text_box/m_text_box"));
 var _data_converter = _interopRequireDefault(require("./data_converter"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
@@ -20,27 +20,10 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 const EXPANDED = 'expanded';
 const SELECTED = 'selected';
 const DISABLED = 'disabled';
-_m_search_box_mixin.default.setEditorClass(_m_text_box.default);
+_search_box_controller.default.setEditorClass(_m_text_box.default);
 class DataAdapter {
   constructor(options) {
-    this._initialDataStructure = [];
-    this.options = {};
-    (0, _extend.extend)(this.options, this._defaultOptions(), options);
-    this.options.dataConverter.setDataAccessors(this.options.dataAccessors);
-    this._selectedNodesKeys = [];
-    this._expandedNodesKeys = [];
-    this._dataStructure = [];
-    this._createInternalDataStructure();
-    this.getTreeNodes();
-  }
-  setOption(name, value) {
-    this.options[name] = value;
-    if (name === 'recursiveSelection') {
-      this._updateSelection();
-    }
-  }
-  _defaultOptions() {
-    return {
+    this.options = {
       dataAccessors: {},
       items: [],
       multipleSelection: true,
@@ -54,11 +37,24 @@ class DataAdapter {
       onNodeChanged: _common.noop,
       sort: null
     };
+    this._selectedNodesKeys = [];
+    this._expandedNodesKeys = [];
+    this._dataStructure = [];
+    this._initialDataStructure = [];
+    (0, _extend.extend)(this.options, options);
+    this.options.dataConverter.setDataAccessors(this.options.dataAccessors);
+    this._createInternalDataStructure();
+    this.getTreeNodes();
+  }
+  setOption(name, value) {
+    this.options[name] = value;
+    if (name === 'recursiveSelection') {
+      this._updateSelection();
+    }
   }
   _createInternalDataStructure() {
     this._initialDataStructure = this.options.dataConverter.createPlainStructure(this.options.items, this.options.rootValue, this.options.dataType);
     this._dataStructure = this.options.searchValue.length ? this.search(this.options.searchValue) : this._initialDataStructure;
-    // @ts-expect-error ts-error
     this.options.dataConverter._dataStructure = this._dataStructure;
     this._updateSelection();
     this._updateExpansion();
@@ -82,7 +78,7 @@ class DataAdapter {
   }
   _updateNodesKeysArray(property) {
     let array = [];
-    (0, _iterator.each)(this._getDataBySelectionMode(), (_, node) => {
+    (0, _iterator.each)(this._getDataBySelectionMode(), (_index, node) => {
       if (!this._isNodeVisible(node)) {
         return;
       }
@@ -109,18 +105,18 @@ class DataAdapter {
     return data === this._dataStructure ? this.options.dataConverter._getByKey(key) : this.options.dataConverter.getByKey(data.filter(Boolean), key);
   }
   _setChildrenSelection() {
-    (0, _iterator.each)(this._dataStructure, (_, node) => {
+    (0, _iterator.each)(this._dataStructure, (_index, node) => {
       if (!(node !== null && node !== void 0 && node.internalFields.childrenKeys.length)) {
         return;
       }
       const isSelected = node.internalFields.selected;
-      if (isSelected === true) {
+      if (isSelected) {
         this._toggleChildrenSelection(node, isSelected);
       }
     });
   }
   _setParentSelection() {
-    (0, _iterator.each)(this._dataStructure, (_, node) => {
+    (0, _iterator.each)(this._dataStructure, (_index, node) => {
       if (!node) return;
       const parent = this.options.dataConverter.getParentNode(node);
       if (parent && node.internalFields.parentKey !== this.options.rootValue) {
@@ -132,7 +128,7 @@ class DataAdapter {
     });
   }
   _setParentExpansion() {
-    (0, _iterator.each)(this._dataStructure, (_, node) => {
+    (0, _iterator.each)(this._dataStructure, (_index, node) => {
       if (!(node !== null && node !== void 0 && node.internalFields.expanded)) {
         return;
       }
@@ -153,7 +149,7 @@ class DataAdapter {
     const keys = processedKeys ?? [];
     if (nodeKey !== undefined && !keys.includes(nodeKey)) {
       keys.push(nodeKey);
-      (0, _iterator.each)(node.internalFields.childrenKeys, (_, key) => {
+      (0, _iterator.each)(node.internalFields.childrenKeys, (_index, key) => {
         const child = this.getNodeByKey(key);
         callback(child);
         if (child !== null && child !== void 0 && child.internalFields.childrenKeys.length && recursive) {
@@ -214,18 +210,15 @@ class DataAdapter {
     if (node.internalFields[field] === state) {
       return;
     }
-    // @ts-expect-error ts-error
     node.internalFields[field] = state;
     if (node.internalFields.publicNode) {
-      // @ts-expect-error ts-error
       node.internalFields.publicNode[field] = state;
     }
-    // @ts-expect-error ts-error
     this.options.dataAccessors.setters[field](node.internalFields.item, state);
     this.options.onNodeChanged(node);
   }
   _markChildren(keys) {
-    (0, _iterator.each)(keys, (_, key) => {
+    (0, _iterator.each)(keys, (_index, key) => {
       const index = this.getIndexByKey(key);
       const node = this.getNodeByKey(key);
       this._dataStructure[index] = null;
@@ -277,7 +270,7 @@ class DataAdapter {
   }
   getNodeByItem(item) {
     let result = null;
-    (0, _iterator.each)(this._dataStructure, (_, node) => {
+    (0, _iterator.each)(this._dataStructure, (_index, node) => {
       if ((node === null || node === void 0 ? void 0 : node.internalFields.item) === item) {
         result = node;
         return false;
@@ -288,7 +281,7 @@ class DataAdapter {
   }
   getNodesByItems(items) {
     const nodes = [];
-    (0, _iterator.each)(items, (_, item) => {
+    (0, _iterator.each)(items, (_index, item) => {
       const node = this.getNodeByItem(item);
       if (node) {
         nodes.push(node);
@@ -311,7 +304,7 @@ class DataAdapter {
     return this.options.dataConverter.getVisibleItemsCount();
   }
   getPublicNode(node) {
-    return node.internalFields.publicNode;
+    return node === null || node === void 0 ? void 0 : node.internalFields.publicNode;
   }
   getRootNodes() {
     return this.getChildrenNodes(this.options.rootValue);
@@ -366,7 +359,7 @@ class DataAdapter {
     }
     const lastSelectedKey = this._selectedNodesKeys[this._selectedNodesKeys.length - 1];
     const dataStructure = this._isSingleModeUnselect(state) ? this._initialDataStructure : this._dataStructure;
-    (0, _iterator.each)(dataStructure, (index, node) => {
+    (0, _iterator.each)(dataStructure, (_index, node) => {
       if (node && this._isNodeVisible(node)) {
         this._setFieldState(node, SELECTED, state);
       }
@@ -393,16 +386,14 @@ class DataAdapter {
     this._expandedNodesKeys = this._updateNodesKeysArray(EXPANDED);
   }
   isFiltered(item) {
-    return !this.options.searchValue.length
-    // @ts-expect-error ts-error
-    || !!this._filterDataStructure(this.options.searchValue, [item]).length;
+    return !this.options.searchValue.length || !!this._filterDataStructure(this.options.searchValue, [item]).length;
   }
   static _createCriteria(selector, value, operation) {
     const searchFilter = [];
     if (!Array.isArray(selector)) {
       return [selector, operation, value];
     }
-    (0, _iterator.each)(selector, (i, item) => {
+    (0, _iterator.each)(selector, (_index, item) => {
       searchFilter.push([item, operation, value], 'or');
     });
     searchFilter.pop();
@@ -410,8 +401,7 @@ class DataAdapter {
   }
   _filterDataStructure(filterValue, dataStructure) {
     const selector = this.options.searchExpr ?? this.options.dataAccessors.getters.display;
-    const operation = (0, _m_search_box_mixin.getOperationBySearchMode)(this.options.searchMode);
-    // @ts-expect-error
+    const operation = (0, _search_box_controller.getOperationBySearchMode)(this.options.searchMode);
     const criteria = DataAdapter._createCriteria(selector, filterValue, operation);
     const data = dataStructure ?? this._initialDataStructure;
     // @ts-expect-error ts-error

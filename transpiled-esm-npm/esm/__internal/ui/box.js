@@ -232,6 +232,7 @@ class Box extends CollectionWidget {
       itemData
     } = args;
     if (itemData.box) {
+      // @ts-expect-error
       return itemTemplate.source ? itemTemplate.source() : $();
     }
     return super._createItemByTemplate(itemTemplate, args);

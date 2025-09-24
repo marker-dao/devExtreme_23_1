@@ -1,10 +1,9 @@
 import { equalByValue } from '../../../../../core/utils/common';
 import formatHelper from '../../../../../format_helper';
-import { computed, signal } from '@preact/signals-core';
+import { computed, signal } from '../../../../core/state_manager/index';
 import { ColumnsController } from '../../../../grids/new/grid_core/columns_controller/columns_controller';
 import { DataController } from '../../../../grids/new/grid_core/data_controller/data_controller';
 import { SearchController } from '../../../../grids/new/grid_core/search/index';
-import { parseValue } from '../utils/parse_value/index';
 export class ItemsController {
   constructor(dataController, columnsController, searchController) {
     this.dataController = dataController;
@@ -32,7 +31,7 @@ export class ItemsController {
     const fields = columns.map((column, index) => {
       const value = column.calculateFieldValue(data);
       const displayValue = column.calculateDisplayValue(data);
-      const formattedText = formatHelper.format(parseValue(column, displayValue), column.format);
+      const formattedText = formatHelper.format(displayValue, column.format);
       const text = column.customizeText ? column.customizeText({
         value: displayValue,
         valueText: formattedText

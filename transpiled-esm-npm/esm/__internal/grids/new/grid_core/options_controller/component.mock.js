@@ -1,5 +1,5 @@
 import { Component } from '../../../../../core/component';
-import { signal } from '@preact/signals-core';
+import { signal } from '../../../../core/state_manager/index';
 import { extend } from '../../../../core/utils/m_extend';
 // NOTE: We cannot modify the base "_getDefaultOptions" method with Component base class params
 // So, we use closure here to modify this method during class creation

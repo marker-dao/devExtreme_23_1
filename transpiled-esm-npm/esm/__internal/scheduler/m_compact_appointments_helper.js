@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { locate, move } from '../../common/core/animation/translator';
 import dateLocalization from '../../common/core/localization/date';
 import messageLocalization from '../../common/core/localization/message';
@@ -6,12 +5,9 @@ import $ from '../../core/renderer';
 import { FunctionTemplate } from '../../core/templates/function_template';
 import Button from '../../ui/button';
 import { APPOINTMENT_SETTINGS_KEY, LIST_ITEM_CLASS, LIST_ITEM_DATA_KEY } from './constants';
-import { AppointmentTooltipInfo } from './m_data_structures';
 const APPOINTMENT_COLLECTOR_CLASS = 'dx-scheduler-appointment-collector';
 const COMPACT_APPOINTMENT_COLLECTOR_CLASS = `${APPOINTMENT_COLLECTOR_CLASS}-compact`;
 const APPOINTMENT_COLLECTOR_CONTENT_CLASS = `${APPOINTMENT_COLLECTOR_CLASS}-content`;
-const WEEK_VIEW_COLLECTOR_OFFSET = 5;
-const COMPACT_THEME_WEEK_VIEW_COLLECTOR_OFFSET = 1;
 export class CompactAppointmentsHelper {
   constructor(instance) {
     this.instance = instance;
@@ -22,11 +18,11 @@ export class CompactAppointmentsHelper {
       isCompact,
       items
     } = options;
-    const template = this._createTemplate(items.data.length, isCompact);
+    const template = this._createTemplate(items.length, isCompact);
     const button = this._createCompactButton(template, options);
     const $button = button.$element();
     this.elements.push($button);
-    $button.data('items', this._createTooltipInfos(items));
+    $button.data('items', items);
     return $button;
   }
   clear() {
@@ -35,20 +31,6 @@ export class CompactAppointmentsHelper {
       button.remove();
     });
     this.elements = [];
-  }
-  _createTooltipInfos(items) {
-    return items.data.map((appointment, index) => {
-      var _items$settings;
-      const targeted = _extends({}, appointment);
-      if (((_items$settings = items.settings) === null || _items$settings === void 0 ? void 0 : _items$settings.length) > 0) {
-        const {
-          info
-        } = items.settings[index];
-        this.instance._dataAccessors.set('startDate', targeted, info.sourceAppointment.startDate);
-        this.instance._dataAccessors.set('endDate', targeted, info.sourceAppointment.endDate);
-      }
-      return new AppointmentTooltipInfo(appointment, targeted, items.colors[index], items.settings[index]);
-    });
   }
   _onButtonClick(e, options) {
     const $button = $(e.element);
@@ -90,12 +72,6 @@ export class CompactAppointmentsHelper {
       workSpace._createDragBehaviorBase($element, $schedulerElement, options);
     };
   }
-  _getCollectorOffset(width, cellWidth) {
-    return cellWidth - width - this._getCollectorRightOffset();
-  }
-  _getCollectorRightOffset() {
-    return this.instance.getRenderingStrategyInstance()._isCompactTheme() ? COMPACT_THEME_WEEK_VIEW_COLLECTOR_OFFSET : WEEK_VIEW_COLLECTOR_OFFSET;
-  }
   _setPosition(element, position) {
     move(element, {
       top: position.top,
@@ -120,7 +96,7 @@ export class CompactAppointmentsHelper {
       sortedIndex,
       items
     } = _ref;
-    const appointmentDate = this._getDateText(items.data[0]);
+    const appointmentDate = this._getDateText(items[0].appointment);
     const result = $('<div>').addClass(APPOINTMENT_COLLECTOR_CLASS).attr('aria-roledescription', appointmentDate).toggleClass(COMPACT_APPOINTMENT_COLLECTOR_CLASS, isCompact).appendTo($container);
     result.data(APPOINTMENT_SETTINGS_KEY, {
       sortedIndex
@@ -131,8 +107,8 @@ export class CompactAppointmentsHelper {
   _renderTemplate(template, items, isCompact) {
     return new FunctionTemplate(options => template.render({
       model: {
-        appointmentCount: items.data.length,
-        items: items.data,
+        appointmentCount: items.length,
+        items: items.map(item => item.appointment),
         isCompact
       },
       container: options.container

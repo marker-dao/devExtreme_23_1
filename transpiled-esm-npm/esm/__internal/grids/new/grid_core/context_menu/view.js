@@ -1,4 +1,4 @@
-import { computed } from '@preact/signals-core';
+import { computed } from '../../../../core/state_manager/index';
 import { View } from '../core/view';
 import { ContextMenu } from './context_menu';
 const CLASS = {

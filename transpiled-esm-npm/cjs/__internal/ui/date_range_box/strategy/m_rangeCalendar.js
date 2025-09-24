@@ -109,8 +109,8 @@ class RangeCalendarStrategy extends _m_date_boxStrategy.default {
       value,
       selectionMode: 'range',
       viewsCount: multiView ? 2 : 1,
-      _allowChangeSelectionOrder: true,
-      _currentSelection: this.getCurrentSelection()
+      allowChangeSelectionOrder: true,
+      currentSelection: this.getCurrentSelection()
     });
   }
   _refreshActiveDescendant(e) {
@@ -193,10 +193,10 @@ class RangeCalendarStrategy extends _m_date_boxStrategy.default {
     _events_engine.default.trigger(targetDateBox.field(), 'dxclick');
   }
   getCurrentSelection() {
-    return this.getDateRangeBox().option('_currentSelection');
+    return this.getDateRangeBox().option('currentSelection');
   }
   _getCalendarCurrentSelection() {
-    return this.getWidget().option('_currentSelection');
+    return this.getWidget().option('currentSelection');
   }
   _closeDropDownByEnter() {
     if (this._getCalendarCurrentSelection() === 'startDate') {

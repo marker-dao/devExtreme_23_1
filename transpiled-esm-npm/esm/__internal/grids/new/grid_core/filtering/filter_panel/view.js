@@ -1,4 +1,4 @@
-import { computed } from '@preact/signals-core';
+import { computed } from '../../../../../core/state_manager/index';
 import { FilterBuilderView as OldFilterBuilderView } from '../../../../../grids/grid_core/filter/m_filter_builder';
 import { FilterPanelView as OldFilterPanelView } from '../../../../../grids/grid_core/filter/m_filter_panel';
 import { View } from '../../core/view';

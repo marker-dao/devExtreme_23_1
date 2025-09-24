@@ -9,7 +9,7 @@ import { getImageContainer } from '../../../core/utils/icon';
 import { isDefined, isPlainObject } from '../../../core/utils/type';
 import { current as currentTheme, isFluent, isMaterialBased } from '../../../ui/themes';
 import supportUtils from '../../core/utils/m_support';
-import MultiView from '../../ui/multi_view/m_multi_view';
+import MultiView from '../../ui/multi_view/multi_view';
 import Tabs, { TABS_ITEM_TEXT_CLASS, TABS_ITEM_TEXT_SPAN_CLASS, TABS_ITEM_TEXT_SPAN_PSEUDO_CLASS } from '../../ui/tabs/tabs';
 import TabPanelItem from './item';
 // STYLE tabPanel
@@ -456,7 +456,6 @@ class TabPanel extends MultiView {
         break;
       case 'focusedElement':
         {
-          // @ts-expect-error ts-error
           const id = value ? $(value).index() : value;
           // @ts-expect-error ts-error
           const newItem = value && this._tabs ? this._tabs._itemElements().eq(id) : value;

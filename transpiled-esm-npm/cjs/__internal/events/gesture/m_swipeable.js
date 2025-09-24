@@ -55,8 +55,8 @@ class Swipeable extends _dom_component.default {
         context: this
       });
       // @ts-expect-error ts-error
-      eventName = (0, _index.addNamespace)(eventName, NAME);
-      _events_engine.default.on(this.$element(), eventName, this._eventData, e => action({
+      const event = (0, _index.addNamespace)(eventName, NAME);
+      _events_engine.default.on(this.$element(), event, this._eventData, e => action({
         event: e
       }));
     });

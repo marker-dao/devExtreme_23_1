@@ -1,6 +1,6 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../../../core/renderer';
-import { computed, signal } from '@preact/signals-core';
+import { computed, signal } from '../../../../core/state_manager/index';
 import { sortColumns } from '../../../../grids/grid_core/columns_controller/m_columns_controller_utils';
 import { ColumnsController } from '../columns_controller/columns_controller';
 import { getColumnIndexByName } from '../columns_controller/utils';

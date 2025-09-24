@@ -227,7 +227,7 @@ export class ViewDataGenerator {
       if (currentGroupIndex !== previousGroupIndex) {
         groupedData.push({
           dateTable: [],
-          isGroupedAllDayPanel: getIsGroupedAllDayPanel(!!isAllDayRow, isVerticalGrouping),
+          isGroupedAllDayPanel: getIsGroupedAllDayPanel(Boolean(isAllDayRow), isVerticalGrouping),
           groupIndex: currentGroupIndex,
           key: getKeyByGroup(currentGroupIndex, isVerticalGrouping)
         });
@@ -333,7 +333,7 @@ export class ViewDataGenerator {
       viewOffset
     } = options;
     const startDate = dateUtils.trimTime(data.startDate);
-    const shiftedStartDate = dateUtilsTs.addOffsets(startDate, [viewOffset]);
+    const shiftedStartDate = dateUtilsTs.addOffsets(startDate, viewOffset);
     return _extends({}, data, {
       startDate: shiftedStartDate,
       endDate: shiftedStartDate,
@@ -518,9 +518,9 @@ export class ViewDataGenerator {
           allDay: selectedCellAllDay,
           startDate: selectedCellStartDate
         } = _ref5;
-        return groupIndex === selectedCellGroupIndex && (index === selectedCellIndex || selectedCellIndex === undefined && startDate.getTime() === selectedCellStartDate.getTime()) && !!allDay === !!selectedCellAllDay;
+        return groupIndex === selectedCellGroupIndex && (index === selectedCellIndex || selectedCellIndex === undefined && startDate.getTime() === selectedCellStartDate.getTime()) && Boolean(allDay) === Boolean(selectedCellAllDay);
       });
-      const isFocused = !!focusedCell && index === focusedCell.cellData.index && groupIndex === focusedCell.cellData.groupIndex && allDay === focusedCell.cellData.allDay;
+      const isFocused = Boolean(focusedCell) && index === focusedCell.cellData.index && groupIndex === focusedCell.cellData.groupIndex && allDay === focusedCell.cellData.allDay;
       if (!isFocused && indexInSelectedCells === -1) {
         return cell;
       }

@@ -1235,6 +1235,12 @@ class RowsView extends _m_columns_view.ColumnsView {
     const $rowsViewElement = $element.closest(`.${this.addWidgetPrefix(ROWS_VIEW_CLASS)}`);
     return $rowsViewElement.is(this.element());
   }
+  /**
+   * @extended: TreeList's rowsView extender & selection
+   */
+  _renderIcons($iconContainer, options) {
+    return $iconContainer;
+  }
 }
 exports.RowsView = RowsView;
 const rowsModule = exports.rowsModule = {

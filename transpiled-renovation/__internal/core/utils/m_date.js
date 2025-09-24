@@ -410,13 +410,17 @@ function sameHoursAndMinutes(date1, date2) {
   return date1 && date2 && date1.getHours() === date2.getHours() && date1.getMinutes() === date2.getMinutes();
 }
 const sameDecade = function (date1, date2) {
-  if (!(0, _type.isDefined)(date1) || !(0, _type.isDefined)(date2)) return;
+  if (!(0, _type.isDefined)(date1) || !(0, _type.isDefined)(date2)) {
+    return false;
+  }
   const startDecadeDate1 = date1.getFullYear() - date1.getFullYear() % 10;
   const startDecadeDate2 = date2.getFullYear() - date2.getFullYear() % 10;
   return date1 && date2 && startDecadeDate1 === startDecadeDate2;
 };
 const sameCentury = function (date1, date2) {
-  if (!(0, _type.isDefined)(date1) || !(0, _type.isDefined)(date2)) return;
+  if (!(0, _type.isDefined)(date1) || !(0, _type.isDefined)(date2)) {
+    return false;
+  }
   const startCenturyDate1 = date1.getFullYear() - date1.getFullYear() % 100;
   const startCenturyDate2 = date2.getFullYear() - date2.getFullYear() % 100;
   return date1 && date2 && startCenturyDate1 === startCenturyDate2;
@@ -496,7 +500,7 @@ function getWeekNumber(date, firstDayOfWeek, rule) {
     case 'fullWeek':
       {
         if (daysInFirstWeek === DAYS_IN_WEEK) {
-          weekNumber++;
+          weekNumber += 1;
         }
         if (weekNumber === 0) {
           const lastDateInPreviousYear = getLastDateInYear(date.getFullYear() - 1);
@@ -507,7 +511,7 @@ function getWeekNumber(date, firstDayOfWeek, rule) {
     case 'firstDay':
       {
         if (daysInFirstWeek > 0) {
-          weekNumber++;
+          weekNumber += 1;
         }
         const isSunday = firstWeekDayInYear === SUNDAY_WEEK_NUMBER || lastWeekDayInYear === SUNDAY_WEEK_NUMBER;
         if (weekNumber > USUAL_WEEK_COUNT_IN_YEAR && !isSunday || weekNumber === 54) {
@@ -518,7 +522,7 @@ function getWeekNumber(date, firstDayOfWeek, rule) {
     case 'firstFourDays':
       {
         if (daysInFirstWeek > 3) {
-          weekNumber++;
+          weekNumber += 1;
         }
         const isThursday = firstWeekDayInYear === THURSDAY_WEEK_NUMBER || lastWeekDayInYear === THURSDAY_WEEK_NUMBER;
         if (weekNumber > USUAL_WEEK_COUNT_IN_YEAR && !isThursday) {
@@ -531,6 +535,7 @@ function getWeekNumber(date, firstDayOfWeek, rule) {
         return weekNumber;
       }
     default:
+      return weekNumber;
       break;
   }
 }

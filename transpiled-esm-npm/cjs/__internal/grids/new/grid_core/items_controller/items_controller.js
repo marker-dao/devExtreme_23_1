@@ -6,20 +6,19 @@ Object.defineProperty(exports, "__esModule", {
 exports.ItemsController = void 0;
 var _common = require("../../../../../core/utils/common");
 var _format_helper = _interopRequireDefault(require("../../../../../format_helper"));
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _columns_controller = require("../../../../grids/new/grid_core/columns_controller/columns_controller");
 var _data_controller = require("../../../../grids/new/grid_core/data_controller/data_controller");
-var _index = require("../../../../grids/new/grid_core/search/index");
-var _index2 = require("../utils/parse_value/index");
+var _index2 = require("../../../../grids/new/grid_core/search/index");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class ItemsController {
   constructor(dataController, columnsController, searchController) {
     this.dataController = dataController;
     this.columnsController = columnsController;
     this.searchController = searchController;
-    this.selectedCardKeys = (0, _signalsCore.signal)([]);
-    this.additionalItems = (0, _signalsCore.signal)([]);
-    this.items = (0, _signalsCore.computed)(() => {
+    this.selectedCardKeys = (0, _index.signal)([]);
+    this.additionalItems = (0, _index.signal)([]);
+    this.items = (0, _index.computed)(() => {
       // NOTE: We should trigger computed by search options change
       // But all work with these options encapsulated in SearchHighlightTextProcessor
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -39,7 +38,7 @@ class ItemsController {
     const fields = columns.map((column, index) => {
       const value = column.calculateFieldValue(data);
       const displayValue = column.calculateDisplayValue(data);
-      const formattedText = _format_helper.default.format((0, _index2.parseValue)(column, displayValue), column.format);
+      const formattedText = _format_helper.default.format(displayValue, column.format);
       const text = column.customizeText ? column.customizeText({
         value: displayValue,
         valueText: formattedText
@@ -77,4 +76,4 @@ class ItemsController {
   }
 }
 exports.ItemsController = ItemsController;
-ItemsController.dependencies = [_data_controller.DataController, _columns_controller.ColumnsController, _index.SearchController];
+ItemsController.dependencies = [_data_controller.DataController, _columns_controller.ColumnsController, _index2.SearchController];

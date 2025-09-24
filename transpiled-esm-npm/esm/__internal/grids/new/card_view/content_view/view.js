@@ -7,7 +7,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 */
 import { compileGetter } from '../../../../../core/utils/data';
 import { isDefined } from '../../../../../core/utils/type';
-import { computed, effect, signal } from '@preact/signals-core';
+import { computed, effect, signal } from '../../../../core/state_manager/index';
 import { NavigationStrategyMatrix } from '../../../../grids/new/grid_core/keyboard_navigation/index';
 import { ContentView as ContentViewBase } from '../../grid_core/content_view/view';
 import { ContentView as ContentViewComponent } from './content_view';

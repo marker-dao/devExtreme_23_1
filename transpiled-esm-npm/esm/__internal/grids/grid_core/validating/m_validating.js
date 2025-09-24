@@ -20,8 +20,8 @@ import Overlay from '../../../../ui/overlay/ui.overlay';
 import { current, isFluent } from '../../../../ui/themes';
 import ValidationEngine from '../../../../ui/validation_engine';
 import Validator from '../../../../ui/validator';
-import { focused } from '../../../../ui/widget/selectors';
 import errors from '../../../../ui/widget/ui.errors';
+import { focused } from '../../../core/utils/m_selectors';
 import { EDITORS_INPUT_SELECTOR } from '../editing/const';
 import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
@@ -666,12 +666,16 @@ export const validatingEditingExtender = Base => class ValidateEditingController
     }
     super._validateEditFormAfterUpdate.apply(this, arguments);
   }
-  _prepareEditCell(params) {
-    // @ts-expect-error
-    const isNotCanceled = super._prepareEditCell.apply(this, arguments);
-    if (isNotCanceled && params.column.showEditorAlways) {
+  _prepareEditCell(parameters) {
+    const {
+      column,
+      item
+    } = parameters;
+    const isNotCanceled = super._prepareEditCell(parameters);
+    const key = !item.isNewRow ? item.key : undefined;
+    if (isNotCanceled && column.showEditorAlways) {
       this._validatingController.updateValidationState({
-        key: params.key
+        key
       });
     }
     return isNotCanceled;

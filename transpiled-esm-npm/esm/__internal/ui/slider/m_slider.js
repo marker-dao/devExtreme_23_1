@@ -15,7 +15,7 @@ import { Deferred } from '../../../core/utils/deferred';
 import { getExponentLength, getRemainderByDivision, roundFloatPart } from '../../../core/utils/math';
 import { getWidth, setWidth } from '../../../core/utils/size';
 import { current as currentTheme, isMaterial } from '../../../ui/themes';
-import { render } from '../../../ui/widget/utils.ink_ripple';
+import { render } from '../../core/utils/m_ink_ripple';
 import TrackBar from '../m_track_bar';
 import SliderHandle from './m_slider_handle';
 const SLIDER_CLASS = 'dx-slider';
@@ -30,6 +30,10 @@ const SLIDER_TOOLTIP_POSITION_CLASS_PREFIX = 'dx-slider-tooltip-position-';
 const INVALID_MESSAGE_VISIBLE_CLASS = 'dx-invalid-message-visible';
 const SLIDER_VALIDATION_NAMESPACE = 'Validation';
 class Slider extends TrackBar {
+  // eslint-disable-next-line class-methods-use-this
+  _activeStateUnit() {
+    return SLIDER_HANDLE_SELECTOR;
+  }
   _supportedKeys() {
     const {
       rtlEnabled
@@ -134,10 +138,6 @@ class Slider extends TrackBar {
       focusStateEnabled: true,
       valueChangeMode: 'onHandleMove'
     });
-  }
-  _init() {
-    super._init();
-    this._activeStateUnit = SLIDER_HANDLE_SELECTOR;
   }
   _toggleValidationMessage(visible) {
     if (!this.option('isValid')) {

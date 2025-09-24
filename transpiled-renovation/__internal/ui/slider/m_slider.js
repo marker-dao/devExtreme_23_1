@@ -19,7 +19,7 @@ var _deferred = require("../../../core/utils/deferred");
 var _math = require("../../../core/utils/math");
 var _size = require("../../../core/utils/size");
 var _themes = require("../../../ui/themes");
-var _utils = require("../../../ui/widget/utils.ink_ripple");
+var _m_ink_ripple = require("../../core/utils/m_ink_ripple");
 var _m_track_bar = _interopRequireDefault(require("../m_track_bar"));
 var _m_slider_handle = _interopRequireDefault(require("./m_slider_handle"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -36,6 +36,10 @@ const SLIDER_TOOLTIP_POSITION_CLASS_PREFIX = 'dx-slider-tooltip-position-';
 const INVALID_MESSAGE_VISIBLE_CLASS = 'dx-invalid-message-visible';
 const SLIDER_VALIDATION_NAMESPACE = 'Validation';
 class Slider extends _m_track_bar.default {
+  // eslint-disable-next-line class-methods-use-this
+  _activeStateUnit() {
+    return SLIDER_HANDLE_SELECTOR;
+  }
   _supportedKeys() {
     const {
       rtlEnabled
@@ -141,10 +145,6 @@ class Slider extends _m_track_bar.default {
       valueChangeMode: 'onHandleMove'
     });
   }
-  _init() {
-    super._init();
-    this._activeStateUnit = SLIDER_HANDLE_SELECTOR;
-  }
   _toggleValidationMessage(visible) {
     if (!this.option('isValid')) {
       this.$element().toggleClass(INVALID_MESSAGE_VISIBLE_CLASS, visible);
@@ -204,7 +204,7 @@ class Slider extends _m_track_bar.default {
     return this._$submitElement;
   }
   _renderInkRipple() {
-    this._inkRipple = (0, _utils.render)({
+    this._inkRipple = (0, _m_ink_ripple.render)({
       waveSizeCoefficient: 0.7,
       isCentered: true,
       wavesNumber: 2,

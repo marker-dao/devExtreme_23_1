@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ColumnChooserControllerMock = void 0;
 var _tree_view = _interopRequireDefault(require("../../../../../ui/tree_view"));
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _controller = require("./controller");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class ColumnChooserControllerMock extends _controller.ColumnChooserController {
@@ -17,7 +17,7 @@ class ColumnChooserControllerMock extends _controller.ColumnChooserController {
       showCheckBoxesMode: 'selectAll',
       onSelectionChanged: this.onSelectionChanged.bind(this)
     });
-    (0, _signalsCore.effect)(() => {
+    (0, _index.effect)(() => {
       this.treeView.option('items', this.items.value);
     });
   }

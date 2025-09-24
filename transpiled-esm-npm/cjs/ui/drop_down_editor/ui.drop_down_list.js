@@ -9,6 +9,10 @@ var _default = exports.default = _m_drop_down_list.default;
  * @hidden
  */
 /**
+ * @name dxDropDownListOptions.fieldAddons
+ * @hidden
+ */
+/**
  * @name dxDropDownListOptions.applyValueMode
  * @hidden
  */

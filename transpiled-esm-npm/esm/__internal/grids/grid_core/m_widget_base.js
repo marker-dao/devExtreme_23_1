@@ -5,6 +5,10 @@ import { isFunction } from '../../../core/utils/type';
 import Widget from '../../../ui/widget/ui.widget';
 const GRID_CORE_ROW_SELECTOR = '.dx-row';
 export default class GridCoreWidget extends Widget {
+  // eslint-disable-next-line class-methods-use-this
+  _activeStateUnit() {
+    return GRID_CORE_ROW_SELECTOR;
+  }
   _getDefaultOptions() {
     // @ts-expect-error
     const result = super._getDefaultOptions();
@@ -16,7 +20,6 @@ export default class GridCoreWidget extends Widget {
     return result;
   }
   _init() {
-    this._activeStateUnit = GRID_CORE_ROW_SELECTOR;
     // @ts-expect-error
     super._init();
   }

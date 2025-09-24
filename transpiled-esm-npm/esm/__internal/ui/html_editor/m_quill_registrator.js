@@ -17,10 +17,6 @@ import BaseTheme from './themes/m_base';
 class QuillRegistrator {
   constructor() {
     this._customModules = [];
-    // @ts-expect-error
-    if (QuillRegistrator.initialized) {
-      return;
-    }
     const quill = this.getQuill();
     const DirectionStyle = quill.import('attributors/style/direction');
     quill.register({
@@ -42,18 +38,15 @@ class QuillRegistrator {
       'themes/basic': BaseTheme
     }, true);
     this._customModules = [];
-    // @ts-expect-error
-    QuillRegistrator._initialized = true;
   }
   createEditor(container, config) {
-    const quill = this.getQuill();
-    // eslint-disable-next-line new-cap
-    return new quill(container, config);
+    const QuillConstructor = this.getQuill();
+    return new QuillConstructor(container, config);
   }
   registerModules(modulesConfig) {
     const isModule = RegExp('modules/*');
     const quill = this.getQuill();
-    const isRegisteredModule = modulePath => !!quill.imports[modulePath];
+    const isRegisteredModule = modulePath => Boolean(quill.imports[modulePath]);
     // eslint-disable-next-line no-restricted-syntax
     for (const modulePath in modulesConfig) {
       if (isModule.test(modulePath) && !isRegisteredModule(modulePath)) {

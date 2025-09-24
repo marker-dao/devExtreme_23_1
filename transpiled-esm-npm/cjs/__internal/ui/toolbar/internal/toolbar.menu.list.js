@@ -3,22 +3,21 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.TOOLBAR_MENU_ACTION_CLASS = void 0;
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _iterator = require("../../../../core/utils/iterator");
-var _m_list = require("../../../ui/list/m_list.base");
+var _list = require("../../../ui/list/list.base");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-const TOOLBAR_MENU_ACTION_CLASS = 'dx-toolbar-menu-action';
+const TOOLBAR_MENU_ACTION_CLASS = exports.TOOLBAR_MENU_ACTION_CLASS = 'dx-toolbar-menu-action';
 const TOOLBAR_HIDDEN_BUTTON_CLASS = 'dx-toolbar-hidden-button';
 const TOOLBAR_HIDDEN_BUTTON_GROUP_CLASS = 'dx-toolbar-hidden-button-group';
 const TOOLBAR_MENU_SECTION_CLASS = 'dx-toolbar-menu-section';
 const TOOLBAR_MENU_CUSTOM_CLASS = 'dx-toolbar-menu-custom';
 const TOOLBAR_MENU_LAST_SECTION_CLASS = 'dx-toolbar-menu-last-section';
 const SCROLLVIEW_CONTENT_CLASS = 'dx-scrollview-content';
-class ToolbarMenuList extends _m_list.ListBase {
-  _init() {
-    super._init();
-    this._activeStateUnit = `.${TOOLBAR_MENU_ACTION_CLASS}:not(.${TOOLBAR_HIDDEN_BUTTON_GROUP_CLASS})`;
+class ToolbarMenuList extends _list.ListBase {
+  _activeStateUnit() {
+    return `.${TOOLBAR_MENU_ACTION_CLASS}:not(.${TOOLBAR_HIDDEN_BUTTON_GROUP_CLASS})`;
   }
   _initMarkup() {
     this._renderSections();

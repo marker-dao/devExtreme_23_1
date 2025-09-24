@@ -19,9 +19,9 @@ import { isDefined, isObject, isWindow } from '../../../core/utils/type';
 import { getWindow } from '../../../core/utils/window';
 import DataExpressionMixin from '../../../ui/editor/ui.data_expression';
 import errors from '../../../ui/widget/ui.errors';
+import { getDataSourceOptions } from '../../data/data_converter/grouped';
 import DropDownEditor from '../../ui/drop_down_editor/m_drop_down_editor';
-import List from '../../ui/list/m_list.edit.search';
-import DataConverterMixin from '../../ui/shared/m_grouped_data_converter_mixin';
+import List from '../../ui/list/list.edit.search';
 const window = getWindow();
 const LIST_ITEM_SELECTOR = '.dx-list-item';
 const LIST_ITEM_DATA_KEY = 'dxListItemData';
@@ -37,8 +37,13 @@ class DropDownList extends DropDownEditor {
       tab(e) {
         if (this._allowSelectItemByTab()) {
           this._saveValueChangeEvent(e);
-          const $focusedItem = $(this._list.option('focusedElement'));
-          $focusedItem.length && this._setSelectedElement($focusedItem);
+          const {
+            focusedElement
+          } = this._list.option();
+          const $focusedItem = $(focusedElement);
+          if ($focusedItem.length) {
+            this._setSelectedElement($focusedItem);
+          }
         }
         parentSupportedKeys.tab(e);
       },
@@ -150,6 +155,7 @@ class DropDownList extends DropDownEditor {
     this._initItemClickAction();
   }
   _initContentReadyAction() {
+    // @ts-expect-error
     this._contentReadyAction = this._createActionByOption('onContentReady', {
       excludeValidators: ['disabled', 'readOnly']
     });
@@ -306,7 +312,9 @@ class DropDownList extends DropDownEditor {
   }
   _getPlainItems(items) {
     let plainItems = [];
-    const grouped = this._getGroupedOption();
+    const {
+      grouped
+    } = this.option();
     items = items || this.option('items') || this._dataSource.items() || [];
     for (let i = 0; i < items.length; i++) {
       var _items$i;
@@ -418,7 +426,10 @@ class DropDownList extends DropDownEditor {
   }
   _getKeyboardListeners() {
     const canListHaveFocus = this._canListHaveFocus();
-    return super._getKeyboardListeners().concat([!canListHaveFocus && this._list]);
+    if (!canListHaveFocus) {
+      return super._getKeyboardListeners().concat([this._list]);
+    }
+    return super._getKeyboardListeners();
   }
   _renderList() {
     // @ts-expect-error
@@ -470,17 +481,19 @@ class DropDownList extends DropDownEditor {
       itemTemplate,
       groupTemplate,
       hoverStateEnabled,
-      focusStateEnabled
+      focusStateEnabled,
+      encodeNoDataText,
+      useItemTextAsTitle
     } = this.option();
     const options = {
       selectionMode: 'single',
       _templates: this.option('_templates'),
       templateProvider: this.option('templateProvider'),
       noDataText,
-      encodeNoDataText: this.option('encodeNoDataText'),
+      encodeNoDataText,
       grouped,
       wrapItemText,
-      useItemTextAsTitle: this.option('useItemTextAsTitle'),
+      useItemTextAsTitle,
       onContentReady: this._listContentReadyHandler.bind(this),
       itemTemplate,
       indicateLoading: false,
@@ -517,8 +530,15 @@ class DropDownList extends DropDownEditor {
       paginate: false
     };
   }
-  _getGroupedOption() {
-    return this.option('grouped');
+  _getSpecificDataSourceOption() {
+    const {
+      grouped
+    } = this.option();
+    const dataSource = this.option('dataSource');
+    if (dataSource && grouped) {
+      return getDataSourceOptions(dataSource);
+    }
+    return dataSource;
   }
   _dataSourceFromUrlLoadMode() {
     return 'raw';
@@ -854,6 +874,6 @@ class DropDownList extends DropDownEditor {
   }
 }
 // @ts-expect-error ts-error
-DropDownList.include(DataExpressionMixin, DataConverterMixin);
+DropDownList.include(DataExpressionMixin);
 registerComponent('dxDropDownList', DropDownList);
 export default DropDownList;

@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_gallery = _interopRequireDefault(require("../__internal/ui/m_gallery"));
+var _gallery = _interopRequireDefault(require("../__internal/ui/gallery"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_gallery.default; // STYLE gallery
+var _default = exports.default = _gallery.default; // STYLE gallery
 /**
  * @name dxGalleryOptions.activeStateEnabled
  * @type boolean

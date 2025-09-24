@@ -1,6 +1,6 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import '../ui/list/modules/m_selection';
-import { normalizeKeyName } from '../../common/core/events/utils/index';
+import '../ui/list/modules/selection';
+import { normalizeKeyName } from '../../common/core/events/utils';
 import messageLocalization from '../../common/core/localization/message';
 import registerComponent from '../../core/component_registrator';
 import domAdapter from '../../core/dom_adapter';
@@ -245,8 +245,13 @@ class SelectBox extends DropDownList {
     delete this._preventInputValueRender;
   }
   _scrollToSelectedItem() {
-    var _this$_list;
-    (_this$_list = this._list) === null || _this$_list === void 0 || _this$_list.scrollToItem(this._list.option('selectedItem'));
+    if (!this._list) {
+      return;
+    }
+    const {
+      selectedItem
+    } = this._list.option();
+    this._list.scrollToItem(selectedItem);
   }
   _listContentReadyHandler() {
     super._listContentReadyHandler();
@@ -349,8 +354,11 @@ class SelectBox extends DropDownList {
     this._updateField(focusedItem);
   }
   _updateField(item) {
-    const fieldTemplate = this._getTemplateByOption('fieldTemplate');
-    if (!(fieldTemplate && this.option('fieldTemplate'))) {
+    const {
+      fieldTemplate: fieldTemplateOption
+    } = this.option();
+    const fieldTemplate = this._getTemplate(fieldTemplateOption);
+    if (!(fieldTemplate && fieldTemplateOption)) {
       // @ts-expect-error ts-error
       const text = this._displayGetter(item);
       this.option('text', text);
@@ -770,6 +778,10 @@ class SelectBox extends DropDownList {
       start: valueLength,
       end: displayValue.length
     });
+  }
+  // eslint-disable-next-line class-methods-use-this
+  _shouldLogFieldTemplateDeprecationWarning() {
+    return true;
   }
   _dispose() {
     this._renderInputValueAsync = noop;

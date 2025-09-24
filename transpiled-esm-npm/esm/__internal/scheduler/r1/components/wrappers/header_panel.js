@@ -1,5 +1,4 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-/* eslint-disable class-methods-use-this */
 import registerComponent from '../../../../../core/component_registrator';
 import { ComponentWrapper } from '../../../../core/r1/index';
 import { HeaderPanel } from '../base/header_panel';

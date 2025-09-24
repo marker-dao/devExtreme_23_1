@@ -171,7 +171,7 @@ export default class ViewDataProvider {
     var _this$groupedDataMap$2;
     if (this._options.isVerticalGrouping) {
       var _this$groupedDataMap$;
-      return !!((_this$groupedDataMap$ = this.groupedDataMap.dateTableGroupedMap[groupIndex]) !== null && _this$groupedDataMap$ !== void 0 && _this$groupedDataMap$[0][0].cellData.allDay);
+      return Boolean((_this$groupedDataMap$ = this.groupedDataMap.dateTableGroupedMap[groupIndex]) === null || _this$groupedDataMap$ === void 0 ? void 0 : _this$groupedDataMap$[0][0].cellData.allDay);
     }
     return ((_this$groupedDataMap$2 = this.groupedDataMap.allDayPanelGroupedMap[groupIndex]) === null || _this$groupedDataMap$2 === void 0 ? void 0 : _this$groupedDataMap$2.length) > 0;
   }
@@ -197,7 +197,7 @@ export default class ViewDataProvider {
           groupIndex: currentGroupIndex,
           allDay: currentAllDay
         } = cellData;
-        if (groupIndex === currentGroupIndex && allDay === !!currentAllDay && this._compareDatesAndAllDay(date, currentStartDate, currentEndDate, allDay)) {
+        if (groupIndex === currentGroupIndex && allDay === Boolean(currentAllDay) && this._compareDatesAndAllDay(date, currentStartDate, currentEndDate, allDay)) {
           return {
             position: {
               columnIndex,
@@ -306,7 +306,7 @@ export default class ViewDataProvider {
   }
   getLastCellEndDate() {
     const lastEndDate = new Date(this.getLastViewDate().getTime() - dateUtils.dateToMilliseconds('minute'));
-    return dateUtilsTs.addOffsets(lastEndDate, [-this._options.viewOffset]);
+    return dateUtilsTs.addOffsets(lastEndDate, -this._options.viewOffset);
   }
   getLastViewDateByEndDayHour(endDayHour) {
     const lastCellEndDate = this.getLastCellEndDate();

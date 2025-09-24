@@ -57,7 +57,8 @@ class VirtualRow extends _index.BaseInfernoComponent {
       "rightVirtualCellCount": rightVirtualCellCount,
       children: virtualCells.map((_, index) => (0, _inferno.createComponentVNode)(2, _virtual_cell.VirtualCell, {
         "width": _virtual_cell.VirtualCellDefaultProps.width,
-        "isHeaderCell": _virtual_cell.VirtualCellDefaultProps.isHeaderCell
+        "isHeaderCell": _virtual_cell.VirtualCellDefaultProps.isHeaderCell,
+        "className": "dx-scheduler-cell-sizes-horizontal"
       }, index.toString()))
     });
   }

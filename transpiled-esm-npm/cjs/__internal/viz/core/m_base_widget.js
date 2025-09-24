@@ -16,15 +16,15 @@ var _iterator = require("../../../core/utils/iterator");
 var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
-var _base_theme_manager = require("../../../viz/core/base_theme_manager");
-var _base_widget = require("../../../viz/core/base_widget.utils");
 var _errors_warnings = _interopRequireDefault(require("../../../viz/core/errors_warnings"));
-var _helpers = require("../../../viz/core/helpers");
-var _layout = _interopRequireDefault(require("../../../viz/core/layout"));
-var _renderer2 = require("../../../viz/core/renderers/renderer");
-var _utils = require("../../../viz/core/utils");
-var _utils2 = require("../../../viz/utils");
+var _utils = require("../../../viz/utils");
 var _m_charts = _interopRequireDefault(require("../../common/m_charts"));
+var _base_theme_manager = require("../../viz/core/base_theme_manager");
+var _base_widget = require("../../viz/core/base_widget.utils");
+var _helpers = require("../../viz/core/helpers");
+var _layout = _interopRequireDefault(require("../../viz/core/layout"));
+var _renderer2 = require("../../viz/core/renderers/renderer");
+var _utils2 = require("../../viz/core/utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 // @ts-expect-error
 
@@ -350,7 +350,7 @@ const baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.i
     // Canvas is calculated before the renderer is created in order to capture actual
     // size of the container
     const rawCanvas = this._calculateRawCanvas();
-    this._canvas = (0, _utils2.floorCanvasDimensions)(rawCanvas);
+    this._canvas = (0, _utils.floorCanvasDimensions)(rawCanvas);
     this._renderer = new _renderer2.Renderer({
       cssClass: `${this._rootClassPrefix} ${this._rootClass}`,
       pathModified: this.option('pathModified'),
@@ -446,8 +446,8 @@ const baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.i
   },
   _updateSize() {
     const rawCanvas = this._calculateRawCanvas();
-    if ((0, _utils2.areCanvasesDifferent)(this._canvas, rawCanvas) || this.__forceRender /* for charts */) {
-      this._canvas = (0, _utils2.floorCanvasDimensions)(rawCanvas);
+    if ((0, _utils.areCanvasesDifferent)(this._canvas, rawCanvas) || this.__forceRender /* for charts */) {
+      this._canvas = (0, _utils.floorCanvasDimensions)(rawCanvas);
       this._recreateSizeDependentObjects(true);
       this._renderer.resize(this._canvas.width, this._canvas.height);
       this._change(['LAYOUT']);
@@ -472,7 +472,7 @@ const baseWidget = isServerSide ? getEmptyComponent() : _dom_component.default.i
     return isScalar ? option !== undefined ? option : theme : (0, _extend.extend)(true, {}, theme, option);
   },
   _setupResizeHandler() {
-    const redrawOnResize = (0, _utils.parseScalar)(this._getOption('redrawOnResize', true), true);
+    const redrawOnResize = (0, _utils2.parseScalar)(this._getOption('redrawOnResize', true), true);
     if (this._disposeResizeHandler) {
       this._removeResizeHandler();
     }

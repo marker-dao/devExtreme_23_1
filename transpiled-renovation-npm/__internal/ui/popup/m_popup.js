@@ -30,7 +30,7 @@ var zIndexPool = _interopRequireWildcard(require("../../ui/overlay/z_index"));
 var _constants = require("../../ui/toolbar/constants");
 var _m_popup_drag = _interopRequireDefault(require("./m_popup_drag"));
 var _m_popup_overflow_manager = require("./m_popup_overflow_manager");
-var _m_popup_position_controller = require("./m_popup_position_controller");
+var _popup_position_controller = require("./popup_position_controller");
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -421,7 +421,8 @@ class Popup extends _overlay.default {
       (_this$_$topToolbar = this._$topToolbar) === null || _this$_$topToolbar === void 0 || _this$_$topToolbar.toggleClass(POPUP_HAS_CLOSE_BUTTON_CLASS, this._hasCloseButton());
     } else {
       var _this$_$topToolbar2;
-      (_this$_$topToolbar2 = this._$topToolbar) === null || _this$_$topToolbar2 === void 0 || _this$_$topToolbar2.detach();
+      (_this$_$topToolbar2 = this._$topToolbar) === null || _this$_$topToolbar2 === void 0 || _this$_$topToolbar2.remove();
+      this._$topToolbar = undefined;
     }
     this._toggleAriaLabel();
   }
@@ -443,7 +444,8 @@ class Popup extends _overlay.default {
     const items = this._getToolbarItems('bottom');
     if (!items.length) {
       var _this$_$bottomToolbar;
-      (_this$_$bottomToolbar = this._$bottomToolbar) === null || _this$_$bottomToolbar === void 0 || _this$_$bottomToolbar.detach();
+      (_this$_$bottomToolbar = this._$bottomToolbar) === null || _this$_$bottomToolbar === void 0 || _this$_$bottomToolbar.remove();
+      this._$bottomToolbar = undefined;
       return;
     }
     if (this._$bottomToolbar) {
@@ -583,6 +585,7 @@ class Popup extends _overlay.default {
         icon: 'close',
         onClick: this._createToolbarItemAction(undefined),
         stylingMode: 'text',
+        // @ts-expect-error ts-error
         integrationOptions: {}
       });
       (0, _renderer.default)(container).append($button);
@@ -708,6 +711,7 @@ class Popup extends _overlay.default {
     this.$content().toggleClass(POPUP_CONTENT_SCROLLABLE_CLASS, isNativeScrollingEnabled);
   }
   _getPositionControllerConfig() {
+    const superConfiguration = super._getPositionControllerConfig();
     const {
       fullScreen,
       forceApplyBindings,
@@ -715,19 +719,25 @@ class Popup extends _overlay.default {
       dragAndResizeArea,
       outsideDragFactor
     } = this.option();
-    return _extends({}, super._getPositionControllerConfig(), {
+    const properties = _extends({}, superConfiguration.properties, {
       fullScreen,
       forceApplyBindings,
       dragOutsideBoundary,
       dragAndResizeArea,
       outsideDragFactor
     });
+    const elements = _extends({}, superConfiguration.elements);
+    const configuration = {
+      properties,
+      elements
+    };
+    return configuration;
   }
   _initPositionController() {
     if (this._positionController) {
       return;
     }
-    this._positionController = new _m_popup_position_controller.PopupPositionController(this._getPositionControllerConfig());
+    this._positionController = new _popup_position_controller.PopupPositionController(this._getPositionControllerConfig());
   }
   _getDragTarget() {
     return this.topToolbar();
@@ -1037,7 +1047,7 @@ class Popup extends _overlay.default {
         super._optionChanged(args);
         if (this.option('resizeEnabled')) {
           var _this$_resizable;
-          // @ts-expect-error ts-error
+          // @ts-expect-error resizable area option type compatibility
           (_this$_resizable = this._resizable) === null || _this$_resizable === void 0 || _this$_resizable.option('area', this._positionController.$dragResizeContainer);
         }
         break;
@@ -1064,21 +1074,24 @@ class Popup extends _overlay.default {
         this._renderDrag();
         break;
       case 'dragAndResizeArea':
+        // @ts-expect-error property type compatibility
         this._positionController.dragAndResizeArea = value;
         if (this.option('resizeEnabled')) {
-          // @ts-expect-error ts-error
+          // @ts-expect-error resizable area option type compatibility
           this._resizable.option('area', this._positionController.$dragResizeContainer);
         }
         this._positionController.positionContent();
         break;
       case 'dragOutsideBoundary':
+        // @ts-expect-error property type compatibility
         this._positionController.dragOutsideBoundary = value;
         if (this.option('resizeEnabled')) {
-          // @ts-expect-error ts-error
+          // @ts-expect-error resizable area option type compatibility
           this._resizable.option('area', this._positionController.$dragResizeContainer);
         }
         break;
       case 'outsideDragFactor':
+        // @ts-expect-error property type compatibility
         this._positionController.outsideDragFactor = value;
         break;
       case 'resizeEnabled':
@@ -1090,6 +1103,7 @@ class Popup extends _overlay.default {
         (0, _visibility_change.triggerResizeEvent)(this.$overlayContent());
         break;
       case 'fullScreen':
+        // @ts-expect-error property type compatibility
         this._positionController.fullScreen = value;
         this._toggleFullScreenClass(Boolean(value));
         this._toggleSafariScrolling();

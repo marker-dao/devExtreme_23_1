@@ -8,8 +8,8 @@ var _component_registrator = _interopRequireDefault(require("../../core/componen
 var _common = require("../../core/utils/common");
 var _extend = require("../../core/utils/extend");
 var _type = require("../../core/utils/type");
-var _annotations = require("../../viz/core/annotations");
-var _utils = require("../../viz/core/utils");
+var _annotations = require("../viz/core/annotations");
+var _utils = require("../viz/core/utils");
 var _m_advanced_chart = require("./chart_components/m_advanced_chart");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const DEFAULT_PANE_NAME = 'default';

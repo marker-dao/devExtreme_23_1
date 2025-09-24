@@ -45,6 +45,12 @@ Object.defineProperty(exports, "ShortenCommand", {
     return _shorten.ShortenCommand;
   }
 });
+Object.defineProperty(exports, "SmartPasteCommand", {
+  enumerable: true,
+  get: function () {
+    return _smartPaste.SmartPasteCommand;
+  }
+});
 Object.defineProperty(exports, "SummarizeCommand", {
   enumerable: true,
   get: function () {
@@ -64,5 +70,6 @@ var _execute = require("../../../core/ai_integration/commands/execute");
 var _expand = require("../../../core/ai_integration/commands/expand");
 var _proofread = require("../../../core/ai_integration/commands/proofread");
 var _shorten = require("../../../core/ai_integration/commands/shorten");
+var _smartPaste = require("../../../core/ai_integration/commands/smartPaste");
 var _summarize = require("../../../core/ai_integration/commands/summarize");
 var _translate = require("../../../core/ai_integration/commands/translate");

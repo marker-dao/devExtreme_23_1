@@ -39,6 +39,9 @@ const CONFIGS = {
   }
 };
 class TileView extends CollectionWidget {
+  _activeStateUnit() {
+    return TILEVIEW_ITEM_SELECTOR;
+  }
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       direction: 'horizontal',
@@ -81,7 +84,6 @@ class TileView extends CollectionWidget {
   }
   _init() {
     super._init();
-    this._activeStateUnit = TILEVIEW_ITEM_SELECTOR;
     this.$element().addClass(TILEVIEW_CLASS);
     this._initScrollView();
   }

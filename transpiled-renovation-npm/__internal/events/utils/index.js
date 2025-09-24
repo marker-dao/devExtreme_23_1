@@ -8,7 +8,7 @@ var _events_engine = _interopRequireDefault(require("../../../common/core/events
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
-var _selectors = require("../../../ui/widget/selectors");
+var _m_selectors = require("../../core/utils/m_selectors");
 var _m_add_namespace = _interopRequireDefault(require("./m_add_namespace"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable spellcheck/spell-checker */
@@ -69,7 +69,6 @@ const EVENT_SOURCES_REGEX = {
   pointer: /^(ms)?pointer/i
 };
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 const eventSource = _ref => {
@@ -80,7 +79,6 @@ const eventSource = _ref => {
   /* eslint-disable @typescript-eslint/no-invalid-void-type */
   // eslint-disable-next-line consistent-return
   (0, _iterator.each)(EVENT_SOURCES_REGEX, function (key) {
-    // eslint-disable-next-line @typescript-eslint/no-invalid-this
     if (this.test(type)) {
       result = key;
       return false;
@@ -184,7 +182,7 @@ const needSkipEvent = e => {
     return touchInEditable || e.which > 1; // only left mouse button
   }
   if (isTouchEvent(e)) {
-    return touchInEditable && (0, _selectors.focused)($target);
+    return touchInEditable && (0, _m_selectors.focused)($target);
   }
 };
 exports.needSkipEvent = needSkipEvent;

@@ -360,8 +360,7 @@ class ToolbarBase extends _collection_widget.default {
         const check = () => {
           let readyToResolve = true;
           this.$element().parents().each((_, parent) => {
-            // @ts-expect-error ts-error
-            if (_animation.fx.isAnimating((0, _renderer.default)(parent))) {
+            if (_animation.fx.isAnimating((0, _renderer.default)(parent).get(0))) {
               readyToResolve = false;
               return false;
             }
@@ -385,7 +384,6 @@ class ToolbarBase extends _collection_widget.default {
         const promises = [];
         $labels.each((_, label) => {
           const text = (0, _renderer.default)(label).text();
-          // @ts-expect-error ts-error
           const fontWeight = (0, _renderer.default)(label).css('fontWeight');
           promises.push((0, _themes.waitWebFont)(text, fontWeight));
           return true;

@@ -96,6 +96,9 @@
 
         "dxForm-optionalMark": "neobligāts",
         "dxForm-requiredMessage": "{0} ir obligāts",
+        "dxForm-smartPasteButtonText": "Smart Paste",
+        "dxForm-resetButtonText": "Atiestatīt",
+        "dxForm-submitButtonText": "Submit",
 
         "dxNumberBox-invalidValueMessage": "Vērtībai jābūt skaitlim",
         "dxNumberBox-noDataText": "Nav datu",
@@ -848,6 +851,9 @@
         "dxSplitter-resizeHandleAriaLabel": "Split bar",
         "dxSplitter-resizeHandleAriaRoleDescription": "Separator",
 
-        "dxStepper-optionalMark": "(Optional)"
+        "dxStepper-optionalMark": "(Optional)",
+
+        "dxSpeechToText-ariaLabelStart": "Press to start voice transcription",
+        "dxSpeechToText-ariaLabelStop": "Press to stop voice transcription"
     }
 }

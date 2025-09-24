@@ -5,14 +5,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ContentView = void 0;
 var _renderer = _interopRequireDefault(require("../../../../../core/renderer"));
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _columns_controller = require("../../../../grids/new/grid_core/columns_controller/columns_controller");
 var _controller = require("../../../../grids/new/grid_core/context_menu/controller");
 var _view = require("../../../../grids/new/grid_core/core/view");
-var _index = require("../../../../grids/new/grid_core/data_controller/index");
+var _index2 = require("../../../../grids/new/grid_core/data_controller/index");
 var _error_controller = require("../../../../grids/new/grid_core/error_controller/error_controller");
-var _index2 = require("../../../../grids/new/grid_core/keyboard_navigation/index");
-var _index3 = require("../../../../grids/new/grid_core/search/index");
+var _index3 = require("../../../../grids/new/grid_core/keyboard_navigation/index");
+var _index4 = require("../../../../grids/new/grid_core/search/index");
 var _controller2 = require("../../../../grids/new/grid_core/selection/controller");
 var _inferno = require("inferno");
 var _controller3 = require("../editing/controller");
@@ -38,7 +38,7 @@ class ContentView extends _view.View {
     this.searchUIController = searchUIController;
     this.keyboardNavigationController = keyboardNavigationController;
     this.lifecycle = lifecycle;
-    this.isNoData = (0, _signalsCore.computed)(() => {
+    this.isNoData = (0, _index.computed)(() => {
       const {
         isLoading,
         items
@@ -49,9 +49,9 @@ class ContentView extends _view.View {
     });
     this.scrollableRef = (0, _inferno.createRef)();
     this.loadingText = this.options.twoWay('loadPanel.message');
-    this.viewportHeight = (0, _signalsCore.signal)(0);
-    this.scrollTop = (0, _signalsCore.signal)(0);
-    this.width = (0, _signalsCore.signal)(0);
+    this.viewportHeight = (0, _index.signal)(0);
+    this.scrollTop = (0, _index.signal)(0);
+    this.width = (0, _index.signal)(0);
   }
   getBaseProps() {
     const loadPanelConfig = this.options.oneWay('loadPanel');
@@ -136,4 +136,4 @@ class ContentView extends _view.View {
   }
 }
 exports.ContentView = ContentView;
-ContentView.dependencies = [_index.DataController, _options_controller.OptionsController, _error_controller.ErrorController, _columns_controller.ColumnsController, _controller2.SelectionController, _items_controller.ItemsController, _controller3.EditingController, _controller.BaseContextMenuController, _index3.SearchUIController, _index2.KeyboardNavigationController, _controller4.LifeCycleController];
+ContentView.dependencies = [_index2.DataController, _options_controller.OptionsController, _error_controller.ErrorController, _columns_controller.ColumnsController, _controller2.SelectionController, _items_controller.ItemsController, _controller3.EditingController, _controller.BaseContextMenuController, _index4.SearchUIController, _index3.KeyboardNavigationController, _controller4.LifeCycleController];

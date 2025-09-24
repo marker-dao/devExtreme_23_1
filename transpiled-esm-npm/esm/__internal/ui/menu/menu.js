@@ -10,12 +10,12 @@ import { noop } from '../../../core/utils/common';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { getOuterWidth } from '../../../core/utils/size';
-import { isDefined, isObject, isPlainObject } from '../../../core/utils/type';
+import { isDefined, isObject } from '../../../core/utils/type';
 import Button from '../../../ui/button';
 import Overlay from '../../../ui/overlay/ui.overlay';
 import TreeView from '../../../ui/tree_view';
 import MenuBase from '../../ui/context_menu/menu_base';
-import { getElementMaxHeightByWindow } from '../../ui/overlay/m_utils';
+import { getElementMaxHeightByWindow } from '../../ui/overlay/utils';
 import Submenu from './submenu';
 const DX_MENU_CLASS = 'dx-menu';
 const DX_MENU_VERTICAL_CLASS = `${DX_MENU_CLASS}-vertical`;
@@ -205,7 +205,6 @@ class Menu extends MenuBase {
   _initActions() {
     this._actions = {};
     each(ACTIONS, (_index, action) => {
-      // @ts-expect-error ts-error
       this._actions[action] = this._createActionByOption(action);
     });
   }
@@ -248,48 +247,41 @@ class Menu extends MenuBase {
     this._hamburger = new Button($('<div>').addClass(DX_ADAPTIVE_HAMBURGER_BUTTON_CLASS), {
       icon: 'menu',
       activeStateEnabled: false,
-      onClick: this._toggleTreeView.bind(this)
+      onClick: () => {
+        this._toggleTreeView();
+      }
     });
     return this._hamburger.$element();
   }
-  _toggleTreeView(state) {
-    var _this$_overlay2;
-    if (isPlainObject(state)) {
-      var _this$_overlay;
-      const {
-        visible
-      } = ((_this$_overlay = this._overlay) === null || _this$_overlay === void 0 ? void 0 : _this$_overlay.option()) ?? {};
-      // eslint-disable-next-line no-param-reassign
-      state = !visible;
-    }
-    (_this$_overlay2 = this._overlay) === null || _this$_overlay2 === void 0 || _this$_overlay2.option('visible', state);
-    if (state) {
+  _toggleTreeView(visible) {
+    var _this$_overlay, _this$_overlay2;
+    const isTreeViewVisible = visible ?? !((_this$_overlay = this._overlay) !== null && _this$_overlay !== void 0 && (_this$_overlay = _this$_overlay.option()) !== null && _this$_overlay !== void 0 && _this$_overlay.visible);
+    (_this$_overlay2 = this._overlay) === null || _this$_overlay2 === void 0 || _this$_overlay2.option('visible', isTreeViewVisible);
+    if (isTreeViewVisible) {
       var _this$_treeView;
       (_this$_treeView = this._treeView) === null || _this$_treeView === void 0 || _this$_treeView.focus();
     }
-    this._toggleHamburgerActiveState(state);
+    this._toggleHamburgerActiveState(isTreeViewVisible);
   }
   _toggleHamburgerActiveState(isActive) {
     var _this$_hamburger;
     (_this$_hamburger = this._hamburger) === null || _this$_hamburger === void 0 || _this$_hamburger.$element().toggleClass(DX_STATE_ACTIVE_CLASS, isActive);
   }
-  _toggleAdaptiveMode(state) {
+  _toggleAdaptiveMode(isAdaptive) {
     const $menuItemsContainer = this.$element().find(`.${DX_MENU_HORIZONTAL_CLASS}`);
     const $adaptiveElements = this.$element().find(`.${DX_ADAPTIVE_MODE_CLASS}`);
-    if (state) {
+    if (isAdaptive) {
       this._hideVisibleSubmenu();
     } else {
       var _this$_treeView2;
       (_this$_treeView2 = this._treeView) === null || _this$_treeView2 === void 0 || _this$_treeView2.collapseAll();
       if (this._overlay) {
-        this._toggleTreeView(state);
+        this._toggleTreeView(isAdaptive);
       }
     }
-    this._setAriaRole(state);
-    // @ts-expect-error ts-error
-    $menuItemsContainer.toggle(!state);
-    // @ts-expect-error ts-error
-    $adaptiveElements.toggle(state);
+    this._setAriaRole(isAdaptive);
+    $menuItemsContainer.toggle(!isAdaptive);
+    $adaptiveElements.toggle(isAdaptive);
   }
   _removeAdaptivity() {
     if (!this._$adaptiveContainer) {
@@ -387,7 +379,6 @@ class Menu extends MenuBase {
       cssClass
     } = this.option();
     const $hamburger = this._renderHamburgerButton();
-    // @ts-expect-error ts-error
     this._treeView = this._createComponent($('<div>'), TreeView, this._getTreeViewOptions());
     this._overlay = this._createComponent($('<div>'), Overlay, this._getAdaptiveOverlayOptions());
     this._overlay.$content().append(this._treeView.$element()).addClass(DX_ADAPTIVE_MODE_CLASS)
@@ -628,7 +619,7 @@ class Menu extends MenuBase {
     const isVisibleSubmenuHiding = this._visibleSubmenu === submenu;
     const isFocusedElementHiding = focusedElement === submenuFocusedElement;
     if (isVisibleSubmenuHiding && isFocusedElementHiding) {
-      this.option('focusedElement', $menuAnchorItem);
+      this.option('focusedElement', getPublicElement($menuAnchorItem));
     }
     if (!eventArgs.cancel) {
       if (isVisibleSubmenuHiding) {
@@ -860,9 +851,7 @@ class Menu extends MenuBase {
     if (submenu) {
       return submenu;
     }
-    // eslint-disable-next-line no-param-reassign
-    itemData = itemData ?? this._getItemData($itemElement);
-    const node = this._dataAdapter.getNodeByItem(itemData);
+    const node = this._dataAdapter.getNodeByItem(itemData ?? this._getItemData($itemElement));
     if (node && this._hasChildren(node)) {
       return this._renderSubmenuItems(node, $itemElement);
     }

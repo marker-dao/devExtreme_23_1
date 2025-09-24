@@ -10,7 +10,7 @@ export const BasePaginationDefaultProps = _extends({}, BaseWidgetDefaultProps, {
   visible: true,
   hasKnownLastPage: true,
   pagesNavigatorVisible: 'auto',
-  showPageSizeSelector: true,
+  showPageSizeSelector: 'auto',
   allowedPageSizes: [5, 10],
   showNavigationButtons: false,
   itemCount: 1,

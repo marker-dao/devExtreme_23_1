@@ -32,6 +32,7 @@ class Chat extends Widget {
       dayHeaderFormat: 'shortdate',
       messageTemplate: null,
       messageTimestampFormat: 'shorttime',
+      emptyViewTemplate: null,
       alerts: [],
       showAvatar: true,
       showUserName: true,
@@ -121,6 +122,7 @@ class Chat extends Widget {
       allowDeleting: message => this._allowDeleteAction(message),
       isEditActionDisabled: message => this._messageToEdit === message,
       messageTemplate: this._getMessageTemplate(),
+      emptyViewTemplate: this._getEmptyViewTemplate(),
       showDayHeaders,
       showAvatar,
       showUserName,
@@ -178,23 +180,30 @@ class Chat extends Widget {
     }
     return allowDeleting ?? false;
   }
-  _getMessageTemplate() {
+  _getRenderTemplateFunction(optionName) {
     const {
-      messageTemplate
+      [optionName]: templateOption
     } = this.option();
-    if (messageTemplate) {
-      return (message, $container) => {
-        const template = this._getTemplateByOption('messageTemplate');
+    if (templateOption) {
+      return (data, $container) => {
+        const template = this._getTemplateByOption(optionName);
+        const dataFieldName = optionName === 'messageTemplate' ? 'message' : 'texts';
         template.render({
           container: $container,
           model: {
             component: this,
-            message
+            [dataFieldName]: data
           }
         });
       };
     }
     return null;
+  }
+  _getMessageTemplate() {
+    return this._getRenderTemplateFunction('messageTemplate');
+  }
+  _getEmptyViewTemplate() {
+    return this._getRenderTemplateFunction('emptyViewTemplate');
   }
   _messageEditingStartHandler(e) {
     var _this$_messageEditing;
@@ -506,6 +515,9 @@ class Chat extends Widget {
         break;
       case 'messageTemplate':
         this._messageList.option(name, this._getMessageTemplate());
+        break;
+      case 'emptyViewTemplate':
+        this._messageList.option(name, this._getEmptyViewTemplate());
         break;
       case 'reloadOnChange':
         break;

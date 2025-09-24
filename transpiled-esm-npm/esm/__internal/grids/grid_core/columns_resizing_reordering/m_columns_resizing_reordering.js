@@ -12,7 +12,7 @@ import { each } from '../../../../core/utils/iterator';
 import { getBoundingRect } from '../../../../core/utils/position';
 import { getHeight, getWidth, setHeight, setWidth } from '../../../../core/utils/size';
 import { isDefined, isObject, isString } from '../../../../core/utils/type';
-import swatchContainer from '../../../../ui/widget/swatch_container';
+import swatchContainer from '../../../core/utils/swatch_container';
 import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
 import { CLASSES } from './const';

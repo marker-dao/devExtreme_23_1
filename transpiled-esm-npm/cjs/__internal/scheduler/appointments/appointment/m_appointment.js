@@ -16,7 +16,7 @@ var _extend = require("../../../../core/utils/extend");
 var _resizable = _interopRequireDefault(require("../../../../ui/resizable"));
 var _m_tooltip = require("../../../ui/tooltip/m_tooltip");
 var _m_classes = require("../../m_classes");
-var _m_recurrence = require("../../m_recurrence");
+var _validate_rule = require("../../recurrence/validate_rule");
 var _text_utils = require("./text_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const DEFAULT_HORIZONTAL_HANDLES = 'left right';
@@ -58,18 +58,18 @@ class Appointment extends _dom_component.default {
       isDragSource: false
     });
   }
-  notifyObserver(subject, args) {
-    const observer = this.option('observer');
-    if (observer) {
-      observer.fire(subject, args);
-    }
+  notifyObserver(funcName, args) {
+    this.invoke(funcName, ...args);
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   invoke(funcName) {
-    const observer = this.option('observer');
-    if (observer) {
-      return observer.fire.apply(observer, arguments);
+    const notifyScheduler = this.option('notifyScheduler');
+    if (!notifyScheduler) {
+      return undefined;
     }
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+    return notifyScheduler.invoke(funcName, ...args);
   }
   _optionChanged(args) {
     switch (args.name) {
@@ -207,14 +207,14 @@ class Appointment extends _dom_component.default {
     });
   }
   _renderAllDayClass() {
-    this.$element().toggleClass(_m_classes.ALL_DAY_APPOINTMENT_CLASS, !!this.option('allDay'));
+    this.$element().toggleClass(_m_classes.ALL_DAY_APPOINTMENT_CLASS, Boolean(this.option('allDay')));
   }
   _renderDragSourceClass() {
-    this.$element().toggleClass(_m_classes.APPOINTMENT_DRAG_SOURCE_CLASS, !!this.option('isDragSource'));
+    this.$element().toggleClass(_m_classes.APPOINTMENT_DRAG_SOURCE_CLASS, Boolean(this.option('isDragSource')));
   }
   _renderRecurrenceClass() {
     const rule = this.dataAccessors.get('recurrenceRule', this.rawAppointment);
-    if ((0, _m_recurrence.getRecurrenceProcessor)().isValidRecurrenceRule(rule)) {
+    if ((0, _validate_rule.validateRRule)(rule)) {
       this.$element().addClass(_m_classes.RECURRENCE_APPOINTMENT_CLASS);
     }
   }

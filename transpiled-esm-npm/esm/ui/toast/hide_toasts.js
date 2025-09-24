@@ -1,2 +1,2 @@
-import hideToasts from '../../__internal/ui/toast/m_hide_toasts';
+import hideToasts from '../../__internal/ui/toast/hide_toasts';
 export default hideToasts;

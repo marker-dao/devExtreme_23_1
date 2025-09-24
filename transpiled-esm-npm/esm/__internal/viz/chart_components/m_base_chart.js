@@ -5,19 +5,19 @@ import { grep, noop } from '../../../core/utils/common';
 import { extend } from '../../../core/utils/extend';
 import { reverseEach as _reverseEach } from '../../../core/utils/iterator';
 import { isDefined as _isDefined, isFunction } from '../../../core/utils/type';
-import { LayoutManager } from '../../../viz/chart_components/layout_manager';
-import * as trackerModule from '../../../viz/chart_components/tracker';
-import { ThemeManager } from '../../../viz/components/chart_theme_manager';
-import { validateData } from '../../../viz/components/data_validator';
-import { Legend } from '../../../viz/components/legend';
+import trackerModule from '../../../viz/chart_components/tracker';
+import { LayoutManager } from '../../viz/chart_components/layout_manager';
+import { ThemeManager } from '../../viz/components/chart_theme_manager';
+import { validateData } from '../../viz/components/data_validator';
+import { Legend } from '../../viz/components/legend';
 // PLUGINS_SECTION
-import { plugin as dataSourcePlugin } from '../../../viz/core/data_source';
-import { plugin as exportPlugin } from '../../../viz/core/export';
-import { plugin as loadingIndicatorPlugin } from '../../../viz/core/loading_indicator';
-import { plugin as titlePlugin } from '../../../viz/core/title';
-import { plugin as tooltipPlugin } from '../../../viz/core/tooltip';
-import { map as _map, processSeriesTemplate, setCanvasValues as _setCanvasValues } from '../../../viz/core/utils';
-import { Series } from '../../../viz/series/base_series';
+import { plugin as dataSourcePlugin } from '../../viz/core/data_source';
+import { plugin as exportPlugin } from '../../viz/core/export';
+import { plugin as loadingIndicatorPlugin } from '../../viz/core/loading_indicator';
+import { plugin as titlePlugin } from '../../viz/core/title';
+import { plugin as tooltipPlugin } from '../../viz/core/tooltip';
+import { map as _map, processSeriesTemplate, setCanvasValues as _setCanvasValues } from '../../viz/core/utils';
+import { Series } from '../../viz/series/base_series';
 import BaseWidget from '../core/m_base_widget';
 import { RollingStock } from './rolling_stock';
 const {
@@ -460,7 +460,6 @@ export const BaseChart = BaseWidget.inherit({
   },
   _trackerType: 'ChartTracker',
   _createTracker() {
-    // eslint-disable-next-line import/namespace
     this._tracker = new trackerModule[this._trackerType]({
       seriesGroup: this._seriesGroup,
       renderer: this._renderer,

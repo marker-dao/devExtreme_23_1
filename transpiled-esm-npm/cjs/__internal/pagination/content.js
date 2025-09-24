@@ -121,10 +121,19 @@ class PaginationContent extends _index.InfernoComponent {
     return !!this.props.pagesNavigatorVisible && this.props.pageCount > 0;
   }
   getPagesContainerVisibility() {
-    if (this.props.pagesNavigatorVisible === 'auto' && this.props.pageCount === 1 && this.props.hasKnownLastPage) {
-      return 'hidden';
-    }
-    return undefined;
+    const {
+      pagesNavigatorVisible,
+      pageCount,
+      hasKnownLastPage,
+      showInfo,
+      showNavigationButtons,
+      showPageSizeSelector
+    } = this.props;
+    const shouldHideBasedOnPageCount = pagesNavigatorVisible === 'auto' && pageCount === 1 && hasKnownLastPage;
+    const hasExplicitVisibleComponents = Boolean(showInfo) || Boolean(showNavigationButtons) || showPageSizeSelector === true;
+    const shouldHide = shouldHideBasedOnPageCount && !hasExplicitVisibleComponents;
+    const result = shouldHide ? 'hidden' : undefined;
+    return result;
   }
   getIsLargeDisplayMode() {
     const displayMode = this.getNormalizedDisplayMode();

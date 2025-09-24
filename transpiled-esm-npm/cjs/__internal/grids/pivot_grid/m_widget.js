@@ -23,7 +23,7 @@ var _button = _interopRequireDefault(require("../../../ui/button"));
 var _context_menu = _interopRequireDefault(require("../../../ui/context_menu"));
 var _ui = _interopRequireDefault(require("../../../ui/popup/ui.popup"));
 var _themes = require("../../../ui/themes");
-var _ui2 = _interopRequireDefault(require("../../../ui/widget/ui.widget"));
+var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _m_utils = _interopRequireDefault(require("../../grids/grid_core/m_utils"));
 var _m_chart_integration = require("./chart_integration/m_chart_integration");
 var _m_data_area = _interopRequireDefault(require("./data_area/m_data_area"));
@@ -89,9 +89,9 @@ function getCommonBorderWidth(elements, direction) {
 function clickedOnFieldsArea($targetElement) {
   return $targetElement.closest(`.${FIELDS_CLASS}`).length || $targetElement.find(`.${FIELDS_CLASS}`).length;
 }
-const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
+class PivotGrid extends _widget.default {
   _getDefaultOptions() {
-    return (0, _extend.extend)(this.callBase(), {
+    return (0, _extend.extend)(super._getDefaultOptions(), {
       scrolling: {
         timeout: 300,
         renderingThreshold: 150,
@@ -204,7 +204,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
         }
       }
     });
-  },
+  }
   _updateCalculatedOptions(fields) {
     const that = this;
     (0, _iterator.each)(fields, (_, field) => {
@@ -216,7 +216,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
         }
       });
     });
-  },
+  }
   _getDataControllerOptions() {
     const that = this;
     return {
@@ -235,7 +235,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
         that._updateCalculatedOptions(fields);
       }
     };
-  },
+  }
   _initDataController() {
     const that = this;
     that._dataController && that._dataController.dispose();
@@ -250,27 +250,29 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       that._scrollTop = options.top;
     });
     that._dataController.loadingChanged.add(() => {
+      // @ts-expect-error ts-error
       that._updateLoading();
     });
     that._dataController.progressChanged.add(that._updateLoading.bind(that));
     that._dataController.dataSourceChanged.add(() => {
-      that._trigger('onChanged');
+      that._trigger('onChanged', undefined);
     });
     const expandValueChanging = that.option('onExpandValueChanging');
     if (expandValueChanging) {
       that._dataController.expandValueChanging.add(e => {
+        // @ts-expect-error ts-error
         expandValueChanging(e);
       });
     }
-  },
+  }
   _init() {
     const that = this;
-    that.callBase();
+    super._init();
     that._initDataController();
     _m_utils.default.logHeaderFilterDeprecatedWarningIfNeed(this);
     that._scrollLeft = that._scrollTop = null;
     that._initActions();
-  },
+  }
   _initActions() {
     const that = this;
     that._actions = {
@@ -280,10 +282,10 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       onExporting: that._createActionByOption('onExporting'),
       onCellPrepared: that._createActionByOption('onCellPrepared')
     };
-  },
+  }
   _trigger(eventName, eventArg) {
     this._actions[eventName](eventArg);
-  },
+  }
   _optionChanged(args) {
     const that = this;
     if (FIELD_CALCULATED_OPTIONS.includes(args.name)) {
@@ -299,7 +301,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       case 'scrolling':
       case 'stateStoring':
         that._initDataController();
-        that._fieldChooserPopup.hide();
+        that.getFieldChooserPopup().hide();
         that._renderFieldChooser();
         that._invalidate();
         break;
@@ -318,7 +320,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       case 'renderCellCountLimit':
         break;
       case 'rtlEnabled':
-        that.callBase(args);
+        super._optionChanged(args);
         that._renderFieldChooser();
         that._renderContextMenu();
         (0, _window.hasWindow)() && that._renderLoadPanel(that._dataArea.groupElement(), that.$element());
@@ -375,13 +377,13 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       case 'height':
       case 'width':
         that._hasHeight = null;
-        that.callBase(args);
+        super._optionChanged(args);
         that.resize();
         break;
       default:
-        that.callBase(args);
+        super._optionChanged(args);
     }
-  },
+  }
   _updateScrollPosition(columnsArea, rowsArea, dataArea) {
     let force = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
     const that = this;
@@ -412,7 +414,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       that._dataController.updateWindowScrollPosition(that._scrollTop);
     }
     that._scrollUpdating = false;
-  },
+  }
   _subscribeToEvents(columnsArea, rowsArea, dataArea) {
     const that = this;
     const scrollHandler = function (e, area) {
@@ -426,6 +428,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
         that._scrollLeft = leftOffset;
         that._scrollTop = topOffset;
         that._updateScrollPosition(columnsArea, rowsArea, dataArea);
+        // @ts-expect-error ts-error
         if (that.option('scrolling.mode') === 'virtual') {
           that._dataController.setViewportPosition(that._scrollLeft, that._scrollTop);
         }
@@ -435,16 +438,19 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       subscribeToScrollEvent(area, e => scrollHandler(e, area));
     });
     !that._hasHeight && that._dataController.subscribeToWindowScrollEvents(dataArea.groupElement());
-  },
-  _clean: _common.noop,
+  }
+  _clean() {
+    (0, _common.noop)();
+  }
   _needDelayResizing(cellsInfo) {
     const cellsCount = cellsInfo.length * (cellsInfo.length ? cellsInfo[0].length : 0);
-    return cellsCount > this.option('renderCellCountLimit');
-  },
+    return cellsCount > Number(this.option('renderCellCountLimit'));
+  }
   _renderFieldChooser() {
     const that = this;
     const container = that._pivotGridContainer;
     const fieldChooserOptions = that.option('fieldChooser') || {};
+    // @ts-expect-error ts-error
     const toolbarItems = fieldChooserOptions.applyChangesMode === 'onDemand' ? [{
       toolbar: 'bottom',
       location: 'after',
@@ -452,8 +458,8 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       options: {
         text: _message.default.format('OK'),
         onClick() {
-          that._fieldChooserPopup.$content().dxPivotGridFieldChooser('applyChanges');
-          that._fieldChooserPopup.hide();
+          that.getFieldChooserPopup().$content().dxPivotGridFieldChooser('applyChanges');
+          that.getFieldChooserPopup().hide();
         }
       }
     }, {
@@ -463,20 +469,25 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       options: {
         text: _message.default.format('Cancel'),
         onClick() {
-          that._fieldChooserPopup.hide();
+          that.getFieldChooserPopup().hide();
         }
       }
     }] : [];
     const fieldChooserComponentOptions = {
+      // @ts-expect-error ts-error
       layout: fieldChooserOptions.layout,
+      // @ts-expect-error ts-error
       texts: fieldChooserOptions.texts || {},
       dataSource: that.getDataSource(),
+      // @ts-expect-error ts-error
       allowSearch: fieldChooserOptions.allowSearch,
+      // @ts-expect-error ts-error
       searchTimeout: fieldChooserOptions.searchTimeout,
       width: undefined,
       height: undefined,
       headerFilter: that.option('headerFilter'),
       encodeHtml: that.option('fieldChooser.encodeHtml') ?? that.option('encodeHtml'),
+      // @ts-expect-error ts-error
       applyChangesMode: fieldChooserOptions.applyChangesMode,
       rtlEnabled: that.option('rtlEnabled'),
       onContextMenuPreparing(e) {
@@ -485,12 +496,15 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
     };
     const popupOptions = {
       shading: false,
+      // @ts-expect-error ts-error
       title: fieldChooserOptions.title,
       width: fieldChooserOptions.width,
       height: fieldChooserOptions.height,
       showCloseButton: true,
       resizeEnabled: true,
+      // @ts-expect-error ts-error
       minWidth: fieldChooserOptions.minWidth,
+      // @ts-expect-error ts-error
       minHeight: fieldChooserOptions.minHeight,
       toolbarItems,
       onResize(e) {
@@ -505,13 +519,15 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
         fieldChooser.cancelChanges();
       }
     };
-    if (that._fieldChooserPopup) {
+    if (that.getFieldChooserPopup()) {
       that._fieldChooserPopup.option(popupOptions);
       that._fieldChooserPopup.$content().dxPivotGridFieldChooser(fieldChooserComponentOptions);
     } else {
-      that._fieldChooserPopup = that._createComponent((0, _renderer.default)(DIV).addClass(FIELD_CHOOSER_POPUP_CLASS).appendTo(container), _ui.default, popupOptions);
+      that._fieldChooserPopup = that._createComponent((0, _renderer.default)(DIV).addClass(FIELD_CHOOSER_POPUP_CLASS).appendTo(container), _ui.default,
+      // @ts-expect-error ts-error
+      popupOptions);
     }
-  },
+  }
   _renderContextMenu() {
     const that = this;
     const $container = that._pivotGridContainer;
@@ -544,7 +560,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       cssClass: PIVOTGRID_CLASS,
       target: that.$element()
     });
-  },
+  }
   _getContextMenuItems(e) {
     const that = this;
     let items = [];
@@ -558,12 +574,14 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
         items.push({
           beginGroup: true,
           icon: 'none',
+          // @ts-expect-error ts-error
           text: texts.expandAll,
           onItemClick() {
             dataSource.expandAll(field.index);
           }
         });
         items.push({
+          // @ts-expect-error ts-error
           text: texts.collapseAll,
           icon: 'none',
           onItemClick() {
@@ -582,6 +600,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
               return;
             }
             const showDataFieldCaption = !(0, _type.isDefined)(e.cell.dataIndex) && e.dataFields.length > 1;
+            // @ts-expect-error ts-error
             const textFormat = e.area === 'column' ? texts.sortColumnBySummary : texts.sortRowBySummary;
             const checked = (0, _m_widget_utils.findField)(e.dataFields, field.sortBySummaryField) === dataIndex && (e.cell.path || []).join('/') === (field.sortBySummaryPath || []).join('/');
             const text = (0, _string.format)(textFormat, showDataFieldCaption ? `${field.caption} - ${dataField.caption}` : field.caption);
@@ -608,6 +627,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
           items.push({
             beginGroup: sortingBySummaryItemCount === 0,
             icon: 'none',
+            // @ts-expect-error ts-error
             text: texts.removeAllSorting,
             onItemClick() {
               (0, _iterator.each)(oppositeAreaFields, (_, field) => {
@@ -628,9 +648,10 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       items.push({
         beginGroup: true,
         icon: 'columnchooser',
+        // @ts-expect-error ts-error
         text: texts.showFieldChooser,
         onItemClick() {
-          that._fieldChooserPopup.show();
+          that.getFieldChooserPopup().show();
         }
       });
     }
@@ -638,8 +659,10 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       items.push({
         beginGroup: true,
         icon: 'xlsxfile',
+        // @ts-expect-error ts-error
         text: texts.exportToExcel,
         onItemClick() {
+          // @ts-expect-error ts-error
           that.exportTo();
         }
       });
@@ -651,7 +674,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       return items;
     }
     return undefined;
-  },
+  }
   _createEventArgs(targetElement, dxEvent) {
     const that = this;
     const dataSource = that.getDataSource();
@@ -665,14 +688,14 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       return (0, _extend.extend)(that._createFieldArgs(targetElement), args);
     }
     return (0, _extend.extend)(that._createCellArgs(targetElement), args);
-  },
+  }
   _createFieldArgs(targetElement) {
     const field = (0, _renderer.default)(targetElement).children().data('field');
     const args = {
       field
     };
     return (0, _type.isDefined)(field) ? args : {};
-  },
+  }
   _createCellArgs(cellElement) {
     const $cellElement = (0, _renderer.default)(cellElement);
     const columnIndex = cellElement.cellIndex;
@@ -690,7 +713,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       cell
     };
     return args;
-  },
+  }
   _handleCellClick(e) {
     const that = this;
     const args = that._createEventArgs(e.currentTarget, e);
@@ -704,12 +727,16 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
     cell && !args.cancel && (0, _type.isDefined)(cell.expanded) && setTimeout(() => {
       that._dataController[cell.expanded ? 'collapseHeaderItem' : 'expandHeaderItem'](args.area, cell.path);
     });
-  },
+  }
   _getNoDataText() {
     return this.option('texts.noData');
-  },
-  _renderNoDataText: _m_utils.default.renderNoDataText,
-  _renderLoadPanel: _m_utils.default.renderLoadPanel,
+  }
+  _renderNoDataText(element) {
+    return _m_utils.default.renderNoDataText.call(this, element);
+  }
+  _renderLoadPanel(element, container) {
+    return _m_utils.default.renderLoadPanel.call(this, element, container, undefined);
+  }
   _updateLoading(progress) {
     const that = this;
     const isLoading = that._dataController.isLoading();
@@ -743,7 +770,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       that._loadPanel.option(visibilityOptions);
       that.$element().toggleClass(OVERFLOW_HIDDEN_CLASS, !isLoading);
     }
-  },
+  }
   _renderDescriptionArea() {
     const $element = this.$element();
     const $descriptionCell = $element.find(`.${DESCRIPTION_AREA_CELL_CLASS}`);
@@ -752,16 +779,24 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
     const $filterHeader = $element.find('.dx-filter-header');
     const $columnHeader = $element.find('.dx-column-header');
     let $targetContainer;
+    // @ts-expect-error ts-error
     if (fieldPanel.visible && fieldPanel.showFilterFields) {
       $targetContainer = $filterHeader;
+      // @ts-expect-error ts-error
     } else if (fieldPanel.visible && (fieldPanel.showDataFields || fieldPanel.showColumnFields)) {
       $targetContainer = $columnHeader;
     } else {
       $targetContainer = $descriptionCell;
     }
-    $columnHeader.toggleClass(BOTTOM_BORDER_CLASS, !!(fieldPanel.visible && (fieldPanel.showDataFields || fieldPanel.showColumnFields)));
-    $filterHeader.toggleClass(BOTTOM_BORDER_CLASS, !!(fieldPanel.visible && fieldPanel.showFilterFields));
-    $descriptionCell.toggleClass('dx-pivotgrid-background', fieldPanel.visible && (fieldPanel.showDataFields || fieldPanel.showColumnFields || fieldPanel.showRowFields));
+    $columnHeader.toggleClass(BOTTOM_BORDER_CLASS,
+    // @ts-expect-error ts-error
+    !!(fieldPanel.visible && (fieldPanel.showDataFields || fieldPanel.showColumnFields)));
+    $filterHeader.toggleClass(BOTTOM_BORDER_CLASS,
+    // @ts-expect-error ts-error
+    !!(fieldPanel.visible && fieldPanel.showFilterFields));
+    $descriptionCell.toggleClass('dx-pivotgrid-background', fieldPanel.visible
+    // @ts-expect-error ts-error
+    && (fieldPanel.showDataFields || fieldPanel.showColumnFields || fieldPanel.showRowFields));
     this.$element().find('.dx-pivotgrid-toolbar').remove();
     $toolbarContainer.prependTo($targetContainer);
     const stylingMode = (0, _themes.isFluent)((0, _themes.current)()) ? 'text' : 'contained';
@@ -769,6 +804,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       const $buttonElement = (0, _renderer.default)(DIV).appendTo($toolbarContainer).addClass('dx-pivotgrid-field-chooser-button');
       const buttonOptions = {
         icon: 'columnchooser',
+        // @ts-expect-error ts-error
         hint: this.option('texts.showFieldChooser'),
         stylingMode,
         onClick: () => {
@@ -781,20 +817,24 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       const $buttonElement = (0, _renderer.default)(DIV).appendTo($toolbarContainer).addClass('dx-pivotgrid-export-button');
       const buttonOptions = {
         icon: 'xlsxfile',
+        // @ts-expect-error ts-error
         hint: this.option('texts.exportToExcel'),
         stylingMode,
         onClick: () => {
+          // @ts-expect-error ts-error
           this.exportTo();
         }
       };
       this._createComponent($buttonElement, _button.default, buttonOptions);
     }
-  },
+  }
   _detectHasContainerHeight() {
     const that = this;
     const element = that.$element();
     if ((0, _type.isDefined)(that._hasHeight)) {
+      // @ts-expect-error ts-error
       const height = that.option('height') || that.$element().get(0).style.height;
+      // @ts-expect-error ts-error
       if (height && that._hasHeight ^ height !== 'auto') {
         that._hasHeight = null;
       }
@@ -809,7 +849,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
     that._hasHeight = (0, _size.getHeight)(element) !== TEST_HEIGHT;
     that._pivotGridContainer.removeClass('dx-hidden');
     testElement.remove();
-  },
+  }
   _renderHeaders(rowHeaderContainer, columnHeaderContainer, filterHeaderContainer, dataHeaderContainer) {
     const that = this;
     const dataSource = that.getDataSource();
@@ -821,8 +861,9 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
     that._filterFields.render(filterHeaderContainer, dataSource.getAreaFields('filter'));
     that._dataFields = that._dataFields || new _m_fields_area.FieldsArea(that, 'data');
     that._dataFields.render(dataHeaderContainer, dataSource.getAreaFields('data'));
+    // @ts-expect-error ts-error
     that.$element().dxPivotGridFieldChooserBase('instance').renderSortable();
-  },
+  }
   _createTableElement() {
     const that = this;
     const $table = (0, _renderer.default)('<table>').css({
@@ -830,33 +871,33 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
     }).toggleClass(BORDERS_CLASS, !!that.option('showBorders')).toggleClass('dx-word-wrap', !!that.option('wordWrapEnabled'));
     _events_engine.default.on($table, (0, _index.addNamespace)(_click.name, 'dxPivotGrid'), 'td', that._handleCellClick.bind(that));
     return $table;
-  },
+  }
   _renderDataArea(dataAreaElement) {
     const that = this;
     const dataArea = that._dataArea || new _m_data_area.default.DataArea(that);
     that._dataArea = dataArea;
     dataArea.render(dataAreaElement, that._dataController.getCellsInfo());
     return dataArea;
-  },
+  }
   _renderRowsArea(rowsAreaElement) {
     const that = this;
     const rowsArea = that._rowsArea || new _m_headers_area.default.VerticalHeadersArea(that);
     that._rowsArea = rowsArea;
     rowsArea.render(rowsAreaElement, that._dataController.getRowsInfo());
     return rowsArea;
-  },
+  }
   _renderColumnsArea(columnsAreaElement) {
     const that = this;
     const columnsArea = that._columnsArea || new _m_headers_area.default.HorizontalHeadersArea(that);
     that._columnsArea = columnsArea;
     columnsArea.render(columnsAreaElement, that._dataController.getColumnsInfo());
     return columnsArea;
-  },
+  }
   _initMarkup() {
     const that = this;
-    that.callBase.apply(this, arguments);
+    super._initMarkup();
     that.$element().addClass(PIVOTGRID_CLASS);
-  },
+  }
   _renderContentImpl() {
     const that = this;
     let columnsAreaElement;
@@ -888,6 +929,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       (0, _renderer.default)(TR).addClass(BOTTOM_ROW_CLASS).append(rowsAreaElement).append(dataAreaElement).appendTo(tableElement);
       that._pivotGridContainer.append(tableElement);
       that.$element().append(that._pivotGridContainer);
+      // @ts-expect-error ts-error
       if (that.option('rowHeaderLayout') === 'tree') {
         rowsAreaElement.addClass('dx-area-tree-view');
       }
@@ -899,6 +941,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       allowFieldDragging: that.option('fieldPanel.allowFieldDragging'),
       headerFilter: that.option('headerFilter'),
       visible: that.option('visible'),
+      // @ts-expect-error ts-error
       remoteSort: that.option('scrolling.mode') === 'virtual'
     });
     const dataArea = that._renderDataArea(dataAreaElement);
@@ -917,7 +960,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
     });
     that._renderHeaders(rowHeaderContainer, columnHeaderContainer, filterHeaderContainer, dataHeaderContainer);
     that._update(isFirstDrawing);
-  },
+  }
   _update(isFirstDrawing) {
     const that = this;
     const updateHandler = function () {
@@ -928,57 +971,57 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
     } else {
       updateHandler();
     }
-  },
+  }
   _fireContentReadyAction() {
     if (!this._dataController.isLoading()) {
-      this.callBase();
+      super._fireContentReadyAction();
     }
-  },
+  }
   getScrollPath(area) {
     const that = this;
     if (area === 'column') {
       return that._columnsArea.getScrollPath(that._scrollLeft);
     }
     return that._rowsArea.getScrollPath(that._scrollTop);
-  },
+  }
   getDataSource() {
     return this._dataController.getDataSource();
-  },
+  }
   getFieldChooserPopup() {
     return this._fieldChooserPopup;
-  },
+  }
   hasScroll(area) {
     const that = this;
     return area === 'column' ? that._columnsArea.hasScroll() : that._rowsArea.hasScroll();
-  },
+  }
   _dimensionChanged() {
     this.updateDimensions();
-  },
+  }
   _visibilityChanged(visible) {
     if (visible) {
       this.updateDimensions();
     }
-  },
+  }
   _dispose() {
     const that = this;
     clearTimeout(that._hideLoadingTimeoutID);
-    that.callBase.apply(that, arguments);
+    super._dispose();
     if (that._dataController) {
       that._dataController.dispose();
     }
-  },
+  }
   _tableElement() {
     return this.$element().find('table').first();
-  },
+  }
   addWidgetPrefix(className) {
     return `dx-pivotgrid-${className}`;
-  },
+  }
   resize() {
     this.updateDimensions();
-  },
+  }
   isReady() {
-    return this.callBase() && !this._dataController.isLoading();
-  },
+    return super.isReady() && !this._dataController.isLoading();
+  }
   updateDimensions() {
     const that = this;
     let groupWidth;
@@ -1001,6 +1044,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
     if (!(0, _window.hasWindow)()) {
       return undefined;
     }
+    // @ts-expect-error ts-error
     const needSynchronizeFieldPanel = rowFieldsHeader.isVisible() && that.option('rowHeaderLayout') !== 'tree';
     that._detectHasContainerHeight();
     if (!that._dataArea.headElement().length) {
@@ -1112,6 +1156,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
           }
         }
         const scrollingOptions = that.option('scrolling');
+        // @ts-expect-error ts-error
         if (scrollingOptions.mode === 'virtual') {
           that._setVirtualContentParams(scrollingOptions, resultWidths, resultHeights, groupWidth, groupHeight, that._hasHeight, rowsAreaWidth);
         }
@@ -1123,6 +1168,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
         (0, _iterator.each)([that._columnsArea, that._rowsArea, that._dataArea], (_, area) => {
           updateScrollableResults.push(area && area.updateScrollable());
         });
+        // @ts-expect-error ts-error
         that._updateLoading();
         that._renderNoDataText(dataAreaCell);
         _deferred.when.apply(_renderer.default, updateScrollableResults).done(() => {
@@ -1133,7 +1179,7 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       });
     });
     return d;
-  },
+  }
   _setVirtualContentParams(scrollingOptions, resultWidths, resultHeights, groupWidth, groupHeight, hasHeight, rowsAreaWidth) {
     const virtualContentParams = this._dataController.calculateVirtualContentParams({
       virtualRowHeight: scrollingOptions.virtualRowHeight,
@@ -1161,11 +1207,14 @@ const PivotGrid = exports.PivotGrid = _ui2.default.inherit({
       width: virtualContentParams.width,
       height: (0, _size.getHeight)(this._columnsArea.groupElement())
     });
-  },
+  }
   applyPartialDataSource(area, path, dataSource) {
     this._dataController.applyPartialDataSource(area, path, dataSource);
   }
-}).inherit(_m_export.ExportController).include(_m_chart_integration.ChartIntegrationMixin);
+}
+exports.PivotGrid = PivotGrid;
+Object.assign(PivotGrid.prototype, _m_export.ExportController);
+Object.assign(PivotGrid.prototype, _m_chart_integration.ChartIntegrationMixin);
 (0, _component_registrator.default)('dxPivotGrid', PivotGrid);
 var _default = exports.default = {
   PivotGrid

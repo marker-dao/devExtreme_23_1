@@ -4,12 +4,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.HeaderFilterViewController = void 0;
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../../core/state_manager/index");
 var _m_utils = require("../../../../../filter_builder/m_utils");
 var _m_utils2 = _interopRequireDefault(require("../../../../../grids/grid_core/m_utils"));
-var _index = require("../../columns_controller/index");
+var _index2 = require("../../columns_controller/index");
 var _utils = require("../../columns_controller/utils");
-var _index2 = require("../../data_controller/index");
+var _index3 = require("../../data_controller/index");
 var _options_controller = require("../../options_controller/options_controller");
 var _filter_controller = require("../filter_controller");
 var _utils2 = require("../utils");
@@ -23,7 +23,7 @@ class HeaderFilterViewController {
     this.dataController = dataController;
     this.columnsController = columnsController;
     this.filterController = filterController;
-    this.popupStateInternal = (0, _signalsCore.signal)(null);
+    this.popupStateInternal = (0, _index.signal)(null);
     this.popupState = this.popupStateInternal;
   }
   openPopup(element, column, onFilterCloseCallback, customApply, isFilterBuilder) {
@@ -112,4 +112,4 @@ class HeaderFilterViewController {
   }
 }
 exports.HeaderFilterViewController = HeaderFilterViewController;
-HeaderFilterViewController.dependencies = [_options_controller.OptionsController, _index2.DataController, _index.ColumnsController, _filter_controller.FilterController];
+HeaderFilterViewController.dependencies = [_options_controller.OptionsController, _index3.DataController, _index2.ColumnsController, _filter_controller.FilterController];

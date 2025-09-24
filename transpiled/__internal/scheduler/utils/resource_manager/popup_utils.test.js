@@ -1,12 +1,12 @@
 "use strict";
 
 var _globals = require("@jest/globals");
-var _resourceManager = require("../../../scheduler/__mock__/resourceManager.mock");
+var _resource_manager = require("../../../scheduler/__mock__/resource_manager.mock");
 var _popup_utils = require("./popup_utils");
 (0, _globals.describe)('popup utils', () => {
   (0, _globals.describe)('createResourceEditorModel', () => {
     (0, _globals.it)('should return resource editor model', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       (0, _globals.expect)((0, _popup_utils.createResourceEditorModel)(manager.resourceById)).toEqual([{
         dataField: 'nested.priorityId',
         editorOptions: {

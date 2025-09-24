@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.AppointmentDataAccessor = void 0;
 var _data = require("../../../../core/utils/data");
 var _date_serialization = _interopRequireDefault(require("../../../../core/utils/date_serialization"));
+var _validate_rule = require("../../recurrence/validate_rule");
 var _data_accessor = require("./data_accessor");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -92,6 +93,11 @@ class AppointmentDataAccessor extends _data_accessor.DataAccessor {
     this.getter[name] = getter;
     this.setter[name] = setter;
     this.expr[field] = expr;
+  }
+  isRecurrent(appointment) {
+    const recurrenceRule = this.get('recurrenceRule', appointment);
+    const isRecurrent = (0, _validate_rule.validateRRule)(recurrenceRule);
+    return isRecurrent;
   }
 }
 exports.AppointmentDataAccessor = AppointmentDataAccessor;

@@ -3,19 +3,19 @@
 Object.defineProperty(exports, "alert", {
   enumerable: true,
   get: function () {
-    return _m_dialog.alert;
+    return _dialog.alert;
   }
 });
 Object.defineProperty(exports, "confirm", {
   enumerable: true,
   get: function () {
-    return _m_dialog.confirm;
+    return _dialog.confirm;
   }
 });
 Object.defineProperty(exports, "custom", {
   enumerable: true,
   get: function () {
-    return _m_dialog.custom;
+    return _dialog.custom;
   }
 });
-var _m_dialog = require("../__internal/ui/m_dialog");
+var _dialog = require("../__internal/ui/dialog");

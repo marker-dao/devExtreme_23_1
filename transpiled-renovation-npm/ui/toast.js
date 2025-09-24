@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_toast = _interopRequireDefault(require("../__internal/ui/toast/m_toast"));
+var _toast = _interopRequireDefault(require("../__internal/ui/toast/toast"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_toast.default; // STYLE toast
+var _default = exports.default = _toast.default; // STYLE toast
 /**
  * @name dxToastOptions.disabled
  * @hidden

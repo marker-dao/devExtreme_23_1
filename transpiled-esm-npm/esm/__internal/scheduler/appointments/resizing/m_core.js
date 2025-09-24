@@ -15,7 +15,7 @@ const getCellData = function (_ref, cellRowIndex, cellColumnIndex, isOccupiedAll
   // but long appointments are not. So for all day appointments endDate === startDate,
   // for long appointments endDate = startDate + 1 day.
   if (!isAllDay) {
-    cellData.endDate = dateUtilsTs.addOffsets(cellData.startDate, [toMs('day')]);
+    cellData.endDate = dateUtilsTs.addOffsets(cellData.startDate, toMs('day'));
   }
   return cellData;
 };
@@ -107,13 +107,10 @@ const getAppointmentCellsInfo = options => {
   } = options;
   const DOMMetaTable = appointmentSettings.allDay && !isVerticalGroupedWorkSpace ? [DOMMetaData.allDayPanelCellsMeta] : DOMMetaData.dateTableCellsMeta;
   const {
-    positionByMap
-  } = appointmentSettings;
-  const {
     height: cellHeight,
     width: cellWidth
-  } = DOMMetaTable[positionByMap.rowIndex][positionByMap.columnIndex];
-  const cellCountInRow = DOMMetaTable[positionByMap.rowIndex].length;
+  } = DOMMetaTable[appointmentSettings.rowIndex][appointmentSettings.columnIndex];
+  const cellCountInRow = DOMMetaTable[appointmentSettings.rowIndex].length;
   return {
     cellWidth,
     cellHeight,

@@ -1,6 +1,6 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
-import { complexIdResourceMock, getResourceManagerMock, resourceConfigMock, resourceIndexesMock, resourceItemsByIdMock } from '../../../scheduler/__mock__/resourceManager.mock';
+import { complexIdResourceMock, getResourceManagerMock, resourceConfigMock, resourceIndexesMock, resourceItemsByIdMock } from '../../../scheduler/__mock__/resource_manager.mock';
 import { getAppointmentColor, getPaintedResource } from './appointment_color_utils';
 const ownerFirstColor = '#cb2824';
 const ownerSecondColor = '#cb7d7b';

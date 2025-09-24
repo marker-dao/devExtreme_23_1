@@ -9,7 +9,7 @@ var _function_template = require("../../../core/templates/function_template");
 var _type = require("../../../core/utils/type");
 var _button = _interopRequireDefault(require("../../../ui/button"));
 var _promise = require("../../core/utils/promise");
-var _m_list = _interopRequireDefault(require("../../ui/list/m_list.edit"));
+var _list = _interopRequireDefault(require("../../ui/list/list.edit"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const TOOLTIP_APPOINTMENT_ITEM = 'dx-tooltip-appointment-item';
 const TOOLTIP_APPOINTMENT_ITEM_CONTENT = `${TOOLTIP_APPOINTMENT_ITEM}-content`;
@@ -102,7 +102,7 @@ class TooltipStrategyBase {
     return (0, _renderer.default)('<div>').appendTo(this._options.container).addClass(wrapperClass);
   }
   _createList(listElement, dataList) {
-    return this._options.createComponent(listElement, _m_list.default, this._createListOption(dataList));
+    return this._options.createComponent(listElement, _list.default, this._createListOption(dataList));
   }
   _renderTemplate(appointment, targetedAppointment, index, color) {
     const itemListContent = this._createItemListContent(appointment, targetedAppointment, color);
@@ -118,7 +118,7 @@ class TooltipStrategyBase {
     return this._createFunctionTemplate(template, appointment, targetedAppointment, index);
   }
   _createFunctionTemplate(template, appointmentData, targetedAppointmentData, index) {
-    const isButtonClicked = !!this._extraOptions.isButtonClick;
+    const isButtonClicked = Boolean(this._extraOptions.isButtonClick);
     const isEmptyDropDownAppointmentTemplate = this._isEmptyDropDownAppointmentTemplate();
     // @ts-expect-error
     return new _function_template.FunctionTemplate(options => {
@@ -173,7 +173,11 @@ class TooltipStrategyBase {
     const $marker = (0, _renderer.default)('<div>').addClass(TOOLTIP_APPOINTMENT_ITEM_MARKER);
     const $markerBody = (0, _renderer.default)('<div>').addClass(TOOLTIP_APPOINTMENT_ITEM_MARKER_BODY);
     $marker.append($markerBody);
-    color && color.done(value => $markerBody.css('background', value));
+    color.then(value => {
+      if (value) {
+        $markerBody.css('background', value);
+      }
+    });
     return $marker;
   }
   _createItemListInfo(object) {

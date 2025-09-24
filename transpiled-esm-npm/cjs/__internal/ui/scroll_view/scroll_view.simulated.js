@@ -200,9 +200,7 @@ class ScrollViewScroller extends _scrollable.Scroller {
 }
 exports.ScrollViewScroller = ScrollViewScroller;
 class SimulatedScrollViewStrategy extends _scrollable.SimulatedStrategy {
-  // @ts-expect-error ts-error
   _init(scrollView) {
-    // @ts-expect-error ts-error
     super._init(scrollView);
     this._$pullDown = scrollView._$pullDown;
     this._$topPocket = scrollView._$topPocket;

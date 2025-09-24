@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/no-extraneous-class */
-/* eslint-disable prefer-const */
-/* eslint-disable @typescript-eslint/init-declarations */
 /* eslint-disable max-classes-per-file */
-/* eslint-disable class-methods-use-this */
 import { describe, expect, it } from '@jest/globals';
 import { DIContext } from './index';
 describe('basic', () => {
@@ -151,5 +147,105 @@ describe('dependency cycle', () => {
   it('should throw', () => {
     expect(() => ctx.get(MyClass1)).toThrow();
     expect(() => ctx.get(MyClass2)).toThrow();
+  });
+});
+describe('decorators', () => {
+  class MyClass {
+    constructor() {
+      this.value = 1;
+      this.tag = '';
+    }
+  }
+  MyClass.dependencies = [];
+  class AnotherClass {
+    constructor() {
+      this.counter = 0;
+    }
+  }
+  AnotherClass.dependencies = [];
+  it('should apply global decorators to created instances', () => {
+    const ctx = new DIContext();
+    ctx.register(MyClass);
+    ctx.registerDecorator(instance => {
+      if (instance instanceof MyClass) {
+        instance.value = 2;
+      }
+      return instance;
+    });
+    expect(ctx.get(MyClass).value).toBe(2);
+  });
+  it('should apply global decorators to registered instances', () => {
+    const ctx = new DIContext();
+    const instance = new MyClass();
+    ctx.registerDecorator(obj => {
+      if (obj instanceof MyClass) {
+        obj.value = 3;
+      }
+      return obj;
+    });
+    ctx.registerInstance(MyClass, instance);
+    expect(ctx.get(MyClass).value).toBe(3);
+    expect(instance.value).toBe(3);
+  });
+  it('should apply multiple global decorators in the correct order', () => {
+    const ctx = new DIContext();
+    ctx.register(MyClass);
+    ctx.registerDecorator(instance => {
+      if (instance instanceof MyClass) {
+        instance.value += 1;
+        instance.tag += 'A';
+      }
+      return instance;
+    });
+    ctx.registerDecorator(instance => {
+      if (instance instanceof MyClass) {
+        instance.value += 2;
+        instance.tag += 'B';
+      }
+      return instance;
+    });
+    const result = ctx.get(MyClass);
+    expect(result.value).toBe(4);
+    expect(result.tag).toBe('AB');
+  });
+  it('should apply global decorators to instances created from fabrics', () => {
+    const ctx = new DIContext();
+    class BaseClass {
+      constructor() {
+        this.value = 1;
+      }
+    }
+    BaseClass.dependencies = [];
+    class ExtendedClass extends BaseClass {
+      constructor() {
+        super(...arguments);
+        this.extraValue = 10;
+      }
+    }
+    ExtendedClass.dependencies = [];
+    ctx.register(BaseClass, ExtendedClass);
+    ctx.registerDecorator(instance => {
+      if (instance instanceof ExtendedClass) {
+        instance.extraValue = 20;
+      }
+      return instance;
+    });
+    const result = ctx.get(BaseClass);
+    expect(result).toBeInstanceOf(ExtendedClass);
+    expect(result.extraValue).toBe(20);
+  });
+  it('should prevent adding decorators after instance creation', () => {
+    const ctx = new DIContext();
+    ctx.register(MyClass);
+    ctx.register(AnotherClass);
+    const myClassInstance = ctx.get(MyClass);
+    expect(() => ctx.registerDecorator(obj => {
+      if (obj instanceof MyClass) {
+        obj.value = 42;
+        obj.tag = 'decorated';
+      }
+    })).toThrowError();
+    expect(myClassInstance.value).toBe(1);
+    expect(myClassInstance.tag).toBe('');
   });
 });

@@ -175,33 +175,26 @@ const editingControllerExtender = Base => class CellBasedEditingControllerExtend
     return coreResult !== undefined ? coreResult : d.promise();
   }
   _editCellCore(options) {
-    const dataController = this._dataController;
-    const isEditByOptionChanged = isDefined(options.oldColumnIndex) || isDefined(options.oldRowIndex);
+    const editCellOptions = this._getNormalizedEditCellOptions(options);
     const {
       columnIndex,
       rowIndex,
       column,
       item
-    } = this._getNormalizedEditCellOptions(options);
-    const params = {
-      data: item === null || item === void 0 ? void 0 : item.data,
-      cancel: false,
-      column
-    };
+    } = editCellOptions;
     if (item.key === undefined) {
       this._dataController.fireError('E1043');
       return;
     }
     if (column && (item.rowType === 'data' || item.rowType === 'detailAdaptive') && !item.removed && this.isCellOrBatchEditMode()) {
-      if (!isEditByOptionChanged && this.isEditCell(rowIndex, columnIndex)) {
+      if (this.isEditCell(rowIndex, columnIndex)) {
         return true;
       }
-      const editRowIndex = rowIndex + dataController.getRowIndexOffset();
       return when(this._beforeEditCell(rowIndex, columnIndex, item)).done(cancel => {
         if (cancel) {
           return;
         }
-        if (!this._prepareEditCell(params, item, columnIndex, editRowIndex)) {
+        if (!this._prepareEditCell(editCellOptions)) {
           this._processCanceledEditingCell();
         }
       });
@@ -261,18 +254,28 @@ const editingControllerExtender = Base => class CellBasedEditingControllerExtend
       item
     };
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _prepareEditCell(params, item, editColumnIndex, editRowIndex) {
-    if (!item.isNewRow) {
-      params.key = item.key;
-    }
-    if (this._isEditingStart(params)) {
+  _prepareEditCell(_ref2) {
+    let {
+      item,
+      column,
+      oldColumn,
+      columnIndex,
+      oldRowIndex
+    } = _ref2;
+    const editingStartParams = {
+      data: item === null || item === void 0 ? void 0 : item.data,
+      cancel: false,
+      column,
+      key: !item.isNewRow ? item.key : undefined
+    };
+    if (this._isEditingStart(editingStartParams)) {
       return false;
     }
     this._pageIndex = this._dataController.pageIndex();
-    this._setEditRowKey(item.key);
-    this._setEditColumnNameByIndex(editColumnIndex);
-    if (!params.column.showEditorAlways) {
+    this._setEditRowKey(item.key, true);
+    this._setEditColumnNameByIndex(columnIndex, true);
+    this._repaintEditCell(column, oldColumn, oldRowIndex);
+    if (!column.showEditorAlways) {
       this._addInternalData({
         key: item.key,
         oldData: item.oldData ?? item.data
@@ -333,10 +336,10 @@ const editingControllerExtender = Base => class CellBasedEditingControllerExtend
   _resetModifiedClassCells(changes) {
     if (this.isBatchEditMode()) {
       const columnsCount = this._columnsController.getVisibleColumns().length;
-      changes.forEach(_ref2 => {
+      changes.forEach(_ref3 => {
         let {
           key
-        } = _ref2;
+        } = _ref3;
         const rowIndex = this._dataController.getRowIndexByKey(key);
         for (let columnIndex = 0; columnIndex < columnsCount; columnIndex++) {
           const cellElement = this._rowsView._getCellElement(rowIndex, columnIndex);
@@ -345,7 +348,6 @@ const editingControllerExtender = Base => class CellBasedEditingControllerExtend
       });
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _prepareChange(options, value, text) {
     const $cellElement = $(options.cellElement);
     if (this.isBatchEditMode() && options.key !== undefined) {
@@ -431,7 +433,6 @@ const editingControllerExtender = Base => class CellBasedEditingControllerExtend
       super._refreshCore(params);
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _allowRowAdding(params) {
     if (this.isBatchEditMode()) {
       return true;

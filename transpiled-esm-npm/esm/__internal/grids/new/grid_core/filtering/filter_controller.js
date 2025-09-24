@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { computed } from '@preact/signals-core';
+import { computed } from '../../../../core/state_manager/index';
 import gridCoreUtils from '../../../../grids/grid_core/m_utils';
 import { getColumnByIndexOrName } from '../../../../grids/new/grid_core/columns_controller/utils';
 import { HeaderFilterController } from '../../../../grids/new/grid_core/filtering/header_filter/controller';

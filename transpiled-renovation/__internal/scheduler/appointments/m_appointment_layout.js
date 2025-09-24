@@ -28,7 +28,6 @@ const createAgendaAppointmentLayout = (formatText, config) => {
   const result = (0, _renderer.default)(_dom_adapter.default.createDocumentFragment());
   const leftLayoutContainer = (0, _renderer.default)('<div>').addClass('dx-scheduler-agenda-appointment-left-layout').appendTo(result);
   const rightLayoutContainer = (0, _renderer.default)('<div>').addClass('dx-scheduler-agenda-appointment-right-layout').appendTo(result);
-  // eslint-disable-next-line no-unused-vars
   const marker = (0, _renderer.default)('<div>').addClass(_m_classes.APPOINTMENT_CONTENT_CLASSES.AGENDA_MARKER).appendTo(leftLayoutContainer);
   config.isRecurrence && (0, _renderer.default)('<span>').addClass(`${_m_classes.APPOINTMENT_CONTENT_CLASSES.RECURRING_ICON} dx-icon-repeat`).attr('aria-label', recurringText).appendTo(marker);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

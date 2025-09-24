@@ -1,6 +1,6 @@
 import { describe, expect, it, jest } from '@jest/globals';
 import { Deferred } from '../../../../../../core/utils/deferred';
-import { signal } from '@preact/signals-core';
+import { signal } from '../../../../../core/state_manager/index';
 import { StoreLoadAdapter } from './store_load_adapter';
 const setup = localOperations => {
   const remoteStoreLoadFnMock = jest.fn().mockImplementation(() => Deferred().resolve());

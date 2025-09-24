@@ -4,7 +4,7 @@ import Callbacks from '../../../core/utils/callbacks';
 import { Deferred } from '../../../core/utils/deferred';
 import { each } from '../../../core/utils/iterator';
 import LoadIndicator from '../../../ui/load_indicator';
-import NativeStrategy from './scrollable.native';
+import NativeStrategy from '../../ui/scroll_view/scrollable.native';
 const SCROLLVIEW_PULLDOWN_REFRESHING_CLASS = 'dx-scrollview-pull-down-loading';
 const SCROLLVIEW_PULLDOWN_READY_CLASS = 'dx-scrollview-pull-down-ready';
 const SCROLLVIEW_PULLDOWN_IMAGE_CLASS = 'dx-scrollview-pull-down-image';

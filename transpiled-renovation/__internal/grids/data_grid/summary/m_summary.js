@@ -19,6 +19,7 @@ var _m_columns_view = require("../../../grids/grid_core/views/m_columns_view");
 var _m_aggregate_calculator = _interopRequireDefault(require("../m_aggregate_calculator"));
 var _m_core = _interopRequireDefault(require("../m_core"));
 var _m_data_source_adapter = _interopRequireDefault(require("../m_data_source_adapter"));
+var _utils2 = require("./utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable max-classes-per-file */
 
@@ -456,7 +457,7 @@ const data = Base => class SummaryDataControllerExtender extends Base {
     if (!(0, _type.isEmptyObject)(summaryCellsByColumns)) {
       visibleColumns.forEach((column, visibleIndex) => {
         const prevColumn = visibleColumns[visibleIndex - 1];
-        const columnIndex = isGroupRow && ((prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.command) === 'expand' || column.command === 'expand') ? prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.index : column.index;
+        const columnIndex = (0, _utils2.getSummaryCellIndex)(column, prevColumn, isGroupRow);
         summaryCells.push(summaryCellsByColumns[columnIndex] || []);
       });
     }

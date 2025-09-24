@@ -210,6 +210,45 @@ const setup = function () {
       });
       (0, _globals.expect)(selectionController.getSelectedCardsData()).toEqual(dataController.items.peek());
     });
+    (0, _globals.describe)('when the selected cards are on different pages', () => {
+      (0, _globals.it)('should return data for all selected cards', () => {
+        const {
+          selectionController,
+          dataController
+        } = setup({
+          keyExpr: 'id',
+          dataSource: [{
+            id: 1,
+            value: 'test1'
+          }, {
+            id: 2,
+            value: 'test2'
+          }, {
+            id: 3,
+            value: 'test3'
+          }],
+          selectedCardKeys: [1, 3],
+          paging: {
+            enabled: true,
+            pageSize: 2
+          }
+        });
+        (0, _globals.expect)(dataController.items.peek()).toEqual([{
+          id: 1,
+          value: 'test1'
+        }, {
+          id: 2,
+          value: 'test2'
+        }]);
+        (0, _globals.expect)(selectionController.getSelectedCardsData()).toEqual([{
+          id: 1,
+          value: 'test1'
+        }, {
+          id: 3,
+          value: 'test3'
+        }]);
+      });
+    });
   });
   (0, _globals.describe)('clearSelection', () => {
     (0, _globals.it)('should clear the selection', () => {

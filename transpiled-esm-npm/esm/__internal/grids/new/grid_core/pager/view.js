@@ -1,4 +1,4 @@
-import { computed, effect, signal } from '@preact/signals-core';
+import { computed, effect, signal } from '../../../../core/state_manager/index';
 import { MAX_PAGES_COUNT } from '../../../../grids/grid_core/pager/m_pager';
 import { View } from '../core/view';
 import { DataController } from '../data_controller/index';

@@ -1,6 +1,7 @@
 import $ from '../../../core/renderer';
 import { each } from '../../../core/utils/iterator';
 import { attachInstanceToElement, getInstanceByElement } from '../../../core/utils/public_component';
+import { isObject } from '../../../core/utils/type';
 const INVISIBLE_STATE_CLASS = 'dx-state-invisible';
 const DISABLED_STATE_CLASS = 'dx-state-disabled';
 const ITEM_CONTENT_PLACEHOLDER_CLASS = 'dx-item-content-placeholder';
@@ -82,8 +83,10 @@ class CollectionItem {
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static getInstance($element) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return getInstanceByElement($element, this);
+  }
+  static isClickableItem(item) {
+    return isObject(item) && 'onClick' in item;
   }
 }
 export default CollectionItem;

@@ -84,7 +84,7 @@ class ButtonCollection extends CollectionWidgetEdit {
     this.setAria('pressed', value, $target);
   }
   _renderItemContentByNode(args, $node) {
-    args.container = $(args.container.children().first());
+    args.container = $(args.container).children().first();
     return super._renderItemContentByNode(args, $node);
   }
   _focusTarget() {

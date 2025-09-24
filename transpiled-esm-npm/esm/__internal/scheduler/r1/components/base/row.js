@@ -21,8 +21,8 @@ export class Row extends BaseInfernoComponent {
       rightVirtualCellWidth = RowDefaultProps.rightVirtualCellWidth,
       styles
     } = this.props;
-    const hasLeftVirtualCell = !!leftVirtualCellCount;
-    const hasRightVirtualCell = !!rightVirtualCellCount;
+    const hasLeftVirtualCell = Boolean(leftVirtualCellCount);
+    const hasRightVirtualCell = Boolean(rightVirtualCellCount);
     return createVNode(1, "tr", className, [hasLeftVirtualCell && leftVirtualCellCount != null && splitNumber(leftVirtualCellCount, MAX_COL_SPAN).map(colSpan => createComponentVNode(2, VirtualCell, {
       "width": leftVirtualCellWidth * (colSpan / leftVirtualCellCount),
       "colSpan": colSpan,

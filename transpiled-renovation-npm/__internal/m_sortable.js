@@ -555,6 +555,7 @@ class Sortable extends _m_draggable.default {
       case 'onAdd':
       case 'onRemove':
       case 'onReorder':
+        // @ts-expect-error ts-error
         this[`_${name}Action`] = this._createActionByOption(name);
         break;
       case 'fromIndex':
@@ -598,13 +599,11 @@ class Sortable extends _m_draggable.default {
   _isPositionVisible(position) {
     const $element = this.$element();
     let scrollContainer;
-    // @ts-expect-error ts-error
     if ($element.css('overflow') !== 'hidden') {
       scrollContainer = $element.get(0);
     } else {
       // @ts-expect-error ts-error
       $element.parents().each(function () {
-        // @ts-expect-error
         if ((0, _renderer.default)(this).css('overflow') !== 'visible') {
           scrollContainer = this;
           return false;
@@ -712,7 +711,6 @@ class Sortable extends _m_draggable.default {
       position.top = isLastVerticalPosition && position.top >= outerPlaceholderHeight ? position.top - outerPlaceholderHeight : position.top;
       that._move(position, $placeholderElement);
     }
-    // @ts-expect-error bad toggle type
     $placeholderElement.toggle(!!position);
   }
   _getPositions(items, elementSize, fromIndex, toIndex) {

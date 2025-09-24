@@ -6,7 +6,6 @@ import { addNamespace } from '../../../common/core/events/utils/index';
 import { triggerResizeEvent } from '../../../common/core/events/visibility_change';
 import registerComponent from '../../../core/component_registrator';
 import $ from '../../../core/renderer';
-// @ts-expect-error ts-error
 import { pairToObject } from '../../../core/utils/common';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
@@ -126,7 +125,6 @@ class Resizable extends DOMComponent {
   }
   _getElementSize() {
     const $element = this.$element();
-    // @ts-expect-error ts-error
     return $element.css('boxSizing') === 'border-box' ? {
       width: getOuterWidth($element),
       height: getOuterHeight($element)
@@ -382,7 +380,6 @@ class Resizable extends DOMComponent {
       step,
       roundStepValue
     } = this.option();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return pairToObject(step, !roundStepValue);
   }
   _roundNotStrict(delta) {

@@ -4,9 +4,9 @@ import { createComponentVNode, normalizeProps } from "inferno";
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable max-classes-per-file */
-import { effect } from '@preact/signals-core';
 import { infernoRenderer } from '../../../../core/m_inferno_renderer';
 import { BaseInfernoComponent } from '../../../../core/r1/runtime/inferno/base_component';
+import { effect } from '../../../../core/state_manager/index';
 import { hasWindow } from '../../../../core/utils/m_window';
 export class View {
   constructor() {

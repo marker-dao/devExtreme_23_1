@@ -5,6 +5,7 @@ import { ExecuteCommand } from '../../../core/ai_integration/commands/execute';
 import { ExpandCommand } from '../../../core/ai_integration/commands/expand';
 import { ProofreadCommand } from '../../../core/ai_integration/commands/proofread';
 import { ShortenCommand } from '../../../core/ai_integration/commands/shorten';
+import { SmartPasteCommand } from '../../../core/ai_integration/commands/smartPaste';
 import { SummarizeCommand } from '../../../core/ai_integration/commands/summarize';
 import { TranslateCommand } from '../../../core/ai_integration/commands/translate';
-export { BaseCommand, ChangeStyleCommand, ChangeToneCommand, ExecuteCommand, ExpandCommand, ProofreadCommand, ShortenCommand, SummarizeCommand, TranslateCommand };
+export { BaseCommand, ChangeStyleCommand, ChangeToneCommand, ExecuteCommand, ExpandCommand, ProofreadCommand, ShortenCommand, SmartPasteCommand, SummarizeCommand, TranslateCommand };

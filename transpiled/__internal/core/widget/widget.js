@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.WIDGET_CLASS = exports.HOVER_STATE_CLASS = exports.FOCUSED_STATE_CLASS = void 0;
+exports.default = exports.WIDGET_CLASS = exports.HOVER_STATE_CLASS = exports.FOCUSED_STATE_CLASS = exports.EMPTY_ACTIVE_STATE_UNIT = exports.ACTIVE_STATE_CLASS = void 0;
 require("../../../common/core/events/click");
 require("../../../common/core/events/core/emitter.feedback");
 require("../../../common/core/events/hover");
@@ -16,27 +16,25 @@ var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _type = require("../../../core/utils/type");
 var _version = require("../../../core/utils/version");
-var _selectors = require("../../../ui/widget/selectors");
-var _dom_component = _interopRequireDefault(require("./dom_component"));
+var _m_selectors = require("../../core/utils/m_selectors");
+var _dom_component = _interopRequireDefault(require("../../core/widget/dom_component"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const WIDGET_CLASS = exports.WIDGET_CLASS = 'dx-widget';
 const DISABLED_STATE_CLASS = 'dx-state-disabled';
+const ACTIVE_STATE_CLASS = exports.ACTIVE_STATE_CLASS = 'dx-state-active';
 const FOCUSED_STATE_CLASS = exports.FOCUSED_STATE_CLASS = 'dx-state-focused';
 const HOVER_STATE_CLASS = exports.HOVER_STATE_CLASS = 'dx-state-hover';
 const INVISIBLE_STATE_CLASS = 'dx-state-invisible';
-function setAttribute(name, value, target) {
-  // eslint-disable-next-line no-param-reassign
-  name = name === 'role' || name === 'id' ? name : `aria-${name}`;
-  // eslint-disable-next-line no-param-reassign
-  value = (0, _type.isDefined)(value) ? value.toString() : null;
-  target.attr(name, value);
+const EMPTY_ACTIVE_STATE_UNIT = exports.EMPTY_ACTIVE_STATE_UNIT = '';
+const DEFAULT_FEEDBACK_HIDE_TIMEOUT = 400;
+const DEFAULT_FEEDBACK_SHOW_TIMEOUT = 30;
+function setAttribute(name, value, $target) {
+  const attributeName = name === 'role' || name === 'id' ? name : `aria-${name}`;
+  const attr = (0, _type.isDefined)(value) ? value.toString() : null;
+  $target.attr(attributeName, attr);
 }
 class Widget extends _dom_component.default {
-  constructor() {
-    super(...arguments);
-    this._feedbackHideTimeout = 400;
-    this._feedbackShowTimeout = 30;
-  }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   static getOptionsFromContainer(_ref) {
     let {
@@ -53,7 +51,17 @@ class Widget extends _dom_component.default {
     }
     return options;
   }
-  _supportedKeys() {
+  _activeStateUnit() {
+    return EMPTY_ACTIVE_STATE_UNIT;
+  }
+  _feedbackHideTimeout() {
+    return DEFAULT_FEEDBACK_HIDE_TIMEOUT;
+  }
+  _feedbackShowTimeout() {
+    return DEFAULT_FEEDBACK_SHOW_TIMEOUT;
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _supportedKeys(e) {
     return {};
   }
   _getDefaultOptions() {
@@ -78,7 +86,7 @@ class Widget extends _dom_component.default {
     });
   }
   _defaultOptionsRules() {
-    return super._defaultOptionsRules().concat([{
+    const rules = [...super._defaultOptionsRules(), {
       device() {
         const device = _devices.default.real();
         const {
@@ -89,11 +97,11 @@ class Widget extends _dom_component.default {
         } = device;
         return platform === 'ios' && (0, _version.compare)(version, '13.3') <= 0;
       },
-      // @ts-expect-error
       options: {
         useResizeObserver: false
       }
-    }]);
+    }];
+    return rules;
   }
   _init() {
     super._init();
@@ -222,11 +230,11 @@ class Widget extends _dom_component.default {
     return focusTargets.includes(element);
   }
   _findActiveTarget($element) {
-    return $element.find(this._activeStateUnit).not(`.${DISABLED_STATE_CLASS}`);
+    return $element.find(this._activeStateUnit()).not(`.${DISABLED_STATE_CLASS}`);
   }
   _getActiveElement() {
     const activeElement = this._eventBindingTarget();
-    if (this._activeStateUnit) {
+    if (this._activeStateUnit()) {
       return this._findActiveTarget(activeElement);
     }
     return activeElement;
@@ -278,8 +286,7 @@ class Widget extends _dom_component.default {
     }
   }
   _toggleFocusClass(isFocused, $element) {
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-    const $focusTarget = $element && $element.length ? $element : this._focusTarget();
+    const $focusTarget = $element !== null && $element !== void 0 && $element.length ? $element : this._focusTarget();
     $focusTarget.toggleClass(FOCUSED_STATE_CLASS, isFocused);
   }
   _hasFocusClass(element) {
@@ -307,7 +314,6 @@ class Widget extends _dom_component.default {
       this._keyboardListenerId = _short.keyboard.on(this._keyboardEventBindingTarget(), this._focusTarget(), opts => this._keyboardHandler(opts));
     }
   }
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   _keyboardHandler(options, onlyChildProcessing) {
     if (!onlyChildProcessing) {
       const {
@@ -315,7 +321,6 @@ class Widget extends _dom_component.default {
         keyName,
         which
       } = options;
-      // @ts-expect-error
       const keys = this._supportedKeys(originalEvent);
       const func = keys[keyName] || keys[which];
       if (func !== undefined) {
@@ -330,9 +335,8 @@ class Widget extends _dom_component.default {
     const {
       onKeyboardHandled
     } = this.option();
-    // eslint-disable-next-line @stylistic/max-len
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/prefer-optional-chain
-    keyboardListeners.forEach(listener => listener && listener._keyboardHandler(options));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    keyboardListeners.forEach(listener => listener === null || listener === void 0 ? void 0 : listener._keyboardHandler(options));
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     onKeyboardHandled && onKeyboardHandled(options);
     return true;
@@ -356,7 +360,7 @@ class Widget extends _dom_component.default {
     const {
       hoverStateEnabled
     } = this.option();
-    const selector = this._activeStateUnit;
+    const selector = this._activeStateUnit();
     const namespace = 'UIFeedback';
     const $el = this._eventBindingTarget();
     _short.hover.off($el, {
@@ -386,7 +390,7 @@ class Widget extends _dom_component.default {
     const {
       activeStateEnabled
     } = this.option();
-    const selector = this._activeStateUnit;
+    const selector = this._activeStateUnit();
     const namespace = 'UIFeedback';
     const $el = this._eventBindingTarget();
     _short.active.off($el, {
@@ -409,8 +413,8 @@ class Widget extends _dom_component.default {
       }, {
         excludeValidators: ['disabled', 'readOnly']
       }), {
-        showTimeout: this._feedbackShowTimeout,
-        hideTimeout: this._feedbackHideTimeout,
+        showTimeout: this._feedbackShowTimeout(),
+        hideTimeout: this._feedbackHideTimeout(),
         selector,
         namespace
       });
@@ -423,11 +427,11 @@ class Widget extends _dom_component.default {
     });
   }
   _attachFocusEvents() {
-    const $el = this._focusEventTarget();
-    _short.focus.on($el, e => this._focusInHandler(e), e => this._focusOutHandler(e), {
+    const $element = this._focusEventTarget();
+    _short.focus.on($element, e => this._focusInHandler(e), e => this._focusOutHandler(e), {
       namespace: `${this.NAME}Focus`,
       // @ts-expect-error
-      isFocusable: (index, el) => (0, _renderer.default)(el).is(_selectors.focusable)
+      isFocusable: (_index, el) => (0, _renderer.default)(el).is(_m_selectors.focusable)
     });
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -438,17 +442,17 @@ class Widget extends _dom_component.default {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   event) {
     this.option('isActive', value);
-    $element.toggleClass('dx-state-active', value);
+    $element.toggleClass(ACTIVE_STATE_CLASS, value);
   }
   _updatedHover() {
     const hoveredElement = this._options.silent('hoveredElement');
     this._hover(hoveredElement, hoveredElement);
   }
   _findHoverTarget($el) {
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-    return $el && $el.closest(this._activeStateUnit || this._eventBindingTarget());
+    return $el === null || $el === void 0 ? void 0 : $el.closest(this._activeStateUnit() || this._eventBindingTarget());
   }
   _hover($el, $previous) {
+    var _$previous;
     const {
       hoverStateEnabled,
       disabled,
@@ -456,14 +460,10 @@ class Widget extends _dom_component.default {
     } = this.option();
     // eslint-disable-next-line no-param-reassign
     $previous = this._findHoverTarget($previous);
-    // eslint-disable-next-line @stylistic/max-len
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/prefer-optional-chain
-    $previous && $previous.toggleClass(HOVER_STATE_CLASS, false);
+    (_$previous = $previous) === null || _$previous === void 0 || _$previous.toggleClass(HOVER_STATE_CLASS, false);
     if ($el && hoverStateEnabled && !disabled && !isActive) {
       const newHoveredElement = this._findHoverTarget($el);
-      // eslint-disable-next-line @stylistic/max-len
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/prefer-optional-chain
-      newHoveredElement && newHoveredElement.toggleClass(HOVER_STATE_CLASS, true);
+      newHoveredElement === null || newHoveredElement === void 0 || newHoveredElement.toggleClass(HOVER_STATE_CLASS, true);
     }
   }
   _toggleDisabledState(value) {
@@ -597,8 +597,7 @@ class Widget extends _dom_component.default {
   }
   registerKeyHandler(key, handler) {
     const currentKeys = this._supportedKeys();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    this._supportedKeys = () => (0, _extend.extend)(currentKeys, {
+    this._supportedKeys = () => _extends({}, currentKeys, {
       [key]: handler
     });
   }

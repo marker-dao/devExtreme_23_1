@@ -68,14 +68,12 @@ const getNonFixedAndStickyCells = ($cells, addWidgetPrefix) => $cells
 // @ts-expect-error
 .filter((_, cell) => $(cell).hasClass(addWidgetPrefix(CLASSES.stickyColumn)) || !isFixedCell($(cell), addWidgetPrefix));
 const getLastLeftFixedCell = ($cells, $container, addWidgetPrefix) => {
-  // @ts-expect-error
   const rtlEnabled = $container.css('direction') === 'rtl';
   const processedCells = rtlEnabled ? $cells.toArray() : $cells.toArray().reverse();
   const lastLeftFixedCell = processedCells.find(cell => isStickyCellPinnedToLeft($(cell), $container, addWidgetPrefix) || isLastLeftFixedCell($(cell), addWidgetPrefix));
   return $(lastLeftFixedCell ?? '');
 };
 const getFirstRightFixedCell = ($cells, $container, addWidgetPrefix) => {
-  // @ts-expect-error
   const rtlEnabled = $container.css('direction') === 'rtl';
   const processedCells = rtlEnabled ? $cells.toArray().reverse() : $cells.toArray();
   const firstRightFixedCell = processedCells.find(cell => isStickyCellPinnedToRight($(cell), $container, addWidgetPrefix) || isFirstRightFixedCell($(cell), addWidgetPrefix));

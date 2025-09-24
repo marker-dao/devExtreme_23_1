@@ -5,14 +5,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.EditPopupView = void 0;
 var _renderer = _interopRequireDefault(require("../../../../../../core/renderer"));
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../../core/state_manager/index");
 var _m_extend = require("../../../../../core/utils/m_extend");
 var _m_editing_utils = require("../../../../../grids/grid_core/editing/m_editing_utils");
 var _inferno = require("inferno");
 var _columns_controller = require("../../columns_controller/columns_controller");
 var _view = require("../../core/view");
 var _items_controller = require("../../items_controller/items_controller");
-var _index = require("../../keyboard_navigation/index");
+var _index2 = require("../../keyboard_navigation/index");
 var _options_controller = require("../../options_controller/options_controller");
 var _controller = require("../../toolbar/controller");
 var _controller2 = require("../controller");
@@ -40,7 +40,7 @@ class EditPopupView extends _view.View {
     this.promises = new _utils.PendingPromises();
     this.formRef = (0, _inferno.createRef)();
     this.component = _component.EditPopup;
-    this.items = (0, _signalsCore.computed)(() => {
+    this.items = (0, _index.computed)(() => {
       const userItems = this.options.oneWay('editing.form.items').value;
       if (userItems) {
         return userItems;
@@ -51,7 +51,7 @@ class EditPopupView extends _view.View {
         dataField: column.dataField
       }));
     });
-    this.customEditorItems = (0, _signalsCore.computed)(() => {
+    this.customEditorItems = (0, _index.computed)(() => {
       const items = this.items.value;
       const result = [];
       (0, _m_editing_utils.forEachFormItems)(items, item => {
@@ -62,7 +62,7 @@ class EditPopupView extends _view.View {
       });
       return result;
     });
-    this.visible = (0, _signalsCore.computed)(() => !!this.editingController.editingCard.value);
+    this.visible = (0, _index.computed)(() => !!this.editingController.editingCard.value);
     this.customizeItems = item => {
       var _simpleFormItem$edito, _editingCard$fields$f;
       const editingCard = this.editingController.editingCard.peek();
@@ -124,7 +124,7 @@ class EditPopupView extends _view.View {
         simpleFormItem.editorOptions.type = column.dataType;
       }
     };
-    this.toolbar.addDefaultItem((0, _signalsCore.signal)({
+    this.toolbar.addDefaultItem((0, _index.signal)({
       name: 'addCardButton',
       location: 'after',
       widget: 'dxButton',
@@ -144,7 +144,7 @@ class EditPopupView extends _view.View {
     });
   }
   getProps() {
-    return (0, _signalsCore.computed)(() => ({
+    return (0, _index.computed)(() => ({
       visible: this.visible.value,
       formProps: this.options.oneWay('editing.form').value,
       popupProps: this.options.oneWay('editing.popup').value,
@@ -169,4 +169,4 @@ class EditPopupView extends _view.View {
   }
 }
 exports.EditPopupView = EditPopupView;
-EditPopupView.dependencies = [_options_controller.OptionsController, _columns_controller.ColumnsController, _items_controller.ItemsController, _controller2.EditingController, _controller.ToolbarController, _index.KeyboardNavigationController];
+EditPopupView.dependencies = [_options_controller.OptionsController, _columns_controller.ColumnsController, _items_controller.ItemsController, _controller2.EditingController, _controller.ToolbarController, _index2.KeyboardNavigationController];

@@ -32,8 +32,8 @@ export class Table extends BaseInfernoComponent {
       tableRef,
       virtualCellsCount
     } = this.props;
-    const hasTopVirtualRow = !!topVirtualRowHeight;
-    const hasBottomVirtualRow = !!bottomVirtualRowHeight;
+    const hasTopVirtualRow = Boolean(topVirtualRowHeight);
+    const hasBottomVirtualRow = Boolean(bottomVirtualRowHeight);
     const resultStyles = this.getResultStyles();
     return createVNode(1, "table", className, createVNode(1, "tbody", null, [hasTopVirtualRow && createComponentVNode(2, VirtualRow, {
       "height": topVirtualRowHeight,

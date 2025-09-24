@@ -607,7 +607,8 @@ function writeAnimQueueData($element, queueData) {
 const destroyAnimQueueData = function ($element) {
   $element.removeData(ANIM_QUEUE_KEY);
 };
-function isAnimating($element) {
+function isAnimating(element) {
+  const $element = (0, _renderer.default)(element);
   return !!$element.data(ANIM_DATA_KEY);
 }
 function shiftFromAnimationQueue($element, queueData) {

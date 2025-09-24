@@ -1,7 +1,7 @@
 import $ from '../../../core/renderer';
 import { camelize } from '../../../core/utils/inflector';
-import { animation } from './drawer.animation';
-import DrawerStrategy from './drawer.rendering.strategy';
+import { animation } from '../../ui/drawer/drawer.animation';
+import DrawerStrategy from '../../ui/drawer/drawer.rendering.strategy';
 class ShrinkStrategy extends DrawerStrategy {
   _internalRenderPosition(changePositionUsingFxAnimation, whenAnimationCompleted) {
     const drawer = this.getDrawerInstance();

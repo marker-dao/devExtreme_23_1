@@ -2,19 +2,19 @@
 
 var _globals = require("@jest/globals");
 var _deferred = require("../../../../../../core/utils/deferred");
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../../core/state_manager/index");
 var _store_load_adapter = require("./store_load_adapter");
 const setup = localOperations => {
   const remoteStoreLoadFnMock = _globals.jest.fn().mockImplementation(() => (0, _deferred.Deferred)().resolve());
   const localStoreLoadFnMock = _globals.jest.fn().mockImplementation(() => (0, _deferred.Deferred)().resolve());
-  const dataSourceMock = (0, _signalsCore.signal)({
+  const dataSourceMock = (0, _index.signal)({
     store() {
       return {
         load: remoteStoreLoadFnMock
       };
     }
   });
-  const localLoadOptionsMock = (0, _signalsCore.signal)(localOperations);
+  const localLoadOptionsMock = (0, _index.signal)(localOperations);
   const arrayStoreMock = {
     load: localStoreLoadFnMock
   };

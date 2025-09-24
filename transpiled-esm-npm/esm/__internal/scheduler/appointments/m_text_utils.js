@@ -1,5 +1,11 @@
 import dateLocalization from '../../../common/core/localization/date';
 import dateUtils from '../../../core/utils/date';
+export var DateFormatType;
+(function (DateFormatType) {
+  DateFormatType["DATETIME"] = "DATETIME";
+  DateFormatType["TIME"] = "TIME";
+  DateFormatType["DATE"] = "DATE";
+})(DateFormatType || (DateFormatType = {}));
 export const createFormattedDateText = options => {
   const {
     startDate,
@@ -12,23 +18,23 @@ export const createFormattedDateText = options => {
 };
 export const getFormatType = (startDate, endDate, isAllDay, isDateAndTimeView) => {
   if (isAllDay) {
-    return 'DATE';
+    return DateFormatType.DATE;
   }
   if (isDateAndTimeView && dateUtils.sameDate(startDate, endDate)) {
-    return 'TIME';
+    return DateFormatType.TIME;
   }
-  return 'DATETIME';
+  return DateFormatType.DATETIME;
 };
 export const formatDates = (startDate, endDate, formatType) => {
   const dateFormat = 'monthandday';
   const timeFormat = 'shorttime';
   const isSameDate = startDate.getDate() === endDate.getDate();
   switch (formatType) {
-    case 'DATETIME':
+    case DateFormatType.DATETIME:
       return [dateLocalization.format(startDate, dateFormat), ' ', dateLocalization.format(startDate, timeFormat), ' - ', isSameDate ? '' : `${dateLocalization.format(endDate, dateFormat)} `, dateLocalization.format(endDate, timeFormat)].join('');
-    case 'TIME':
+    case DateFormatType.TIME:
       return `${dateLocalization.format(startDate, timeFormat)} - ${dateLocalization.format(endDate, timeFormat)}`;
-    case 'DATE':
+    case DateFormatType.DATE:
       return `${dateLocalization.format(startDate, dateFormat)}${isSameDate ? '' : ` - ${dateLocalization.format(endDate, dateFormat)}`}`;
     default:
       return undefined;

@@ -8,10 +8,8 @@ import { each } from '../../../../core/utils/iterator';
 import { getHeight, getWidth } from '../../../../core/utils/size';
 import { isDefined } from '../../../../core/utils/type';
 import gridCoreUtils from '../m_utils';
-const MASTER_DETAIL_CELL_CLASS = 'dx-master-detail-cell';
-const MASTER_DETAIL_ROW_CLASS = 'dx-master-detail-row';
-const CELL_FOCUS_DISABLED_CLASS = 'dx-cell-focus-disabled';
-const ROW_LINES_CLASS = 'dx-row-lines';
+import { CLASSES } from './const';
+import { isDetailRow } from './utils';
 const columns = Base => class ColumnsMasterDetailExtender extends Base {
   _getExpandColumnsCore() {
     const expandColumns = super._getExpandColumnsCore();
@@ -195,7 +193,7 @@ const resizing = Base => class ResizingMasterDetailExtender extends Base {
     this._updateParentDataGrids(this.component.$element());
   }
   _updateParentDataGrids($element) {
-    const $masterDetailRow = $element.closest(`.${MASTER_DETAIL_ROW_CLASS}`);
+    const $masterDetailRow = $element.closest(`.${CLASSES.detailRow}`);
     if ($masterDetailRow.length) {
       when(this._updateMasterDataGrid($masterDetailRow, $element)).done(() => {
         this._updateParentDataGrids($masterDetailRow.parent());
@@ -255,11 +253,14 @@ const resizing = Base => class ResizingMasterDetailExtender extends Base {
   }
   _toggleBestFitMode(isBestFit) {
     super._toggleBestFitMode.apply(this, arguments);
-    if (this.option('masterDetail.template')) {
-      const $rowsTable = this._rowsView.getTableElement();
-      if ($rowsTable) {
-        $rowsTable.find('.dx-master-detail-cell').css('maxWidth', isBestFit ? 0 : '');
-      }
+    const hasMasterDetailTemplate = this.option('masterDetail.template');
+    if (!hasMasterDetailTemplate) {
+      return;
+    }
+    const $rowsTable = this._rowsView.getTableElement();
+    if ($rowsTable) {
+      const detailSelector = `.${this.addWidgetPrefix(CLASSES.detailContainer)}, .${CLASSES.detailCell}`;
+      $rowsTable.find(detailSelector).css('maxWidth', isBestFit ? 0 : '');
     }
   }
 };
@@ -282,14 +283,12 @@ const rowsView = Base => class RowsViewMasterDetailExtender extends Base {
     }
     return template;
   }
-  _isDetailRow(row) {
-    return (row === null || row === void 0 ? void 0 : row.rowType) && row.rowType.indexOf('detail') === 0;
-  }
   _createRow(row) {
     const $row = super._createRow.apply(this, arguments);
-    if (row && this._isDetailRow(row)) {
-      this.option('showRowLines') && $row.addClass(ROW_LINES_CLASS);
-      $row.addClass(MASTER_DETAIL_ROW_CLASS);
+    const isDetailRowResult = isDetailRow(row);
+    if (isDetailRowResult) {
+      const showRowLines = this.option('showRowLines');
+      $row.addClass(CLASSES.detailRow).toggleClass(CLASSES.rowLines, showRowLines);
       if (isDefined(row.visible)) {
         $row.toggle(row.visible);
       }
@@ -300,7 +299,8 @@ const rowsView = Base => class RowsViewMasterDetailExtender extends Base {
     const {
       row
     } = options;
-    if (row.rowType && this._isDetailRow(row)) {
+    const isDetailRowResult = isDetailRow(row);
+    if (isDetailRowResult) {
       if (this._needRenderCell(0, options.columnIndices)) {
         this._renderMasterDetailCell($row, row, options);
       }
@@ -320,7 +320,7 @@ const rowsView = Base => class RowsViewMasterDetailExtender extends Base {
       columnIndex: 0,
       change: options.change
     });
-    $detailCell.addClass(CELL_FOCUS_DISABLED_CLASS).addClass(MASTER_DETAIL_CELL_CLASS).attr('colSpan', visibleColumns.length);
+    $detailCell.addClass(CLASSES.cellFocusDisabledClass).addClass(CLASSES.detailCell).attr('colSpan', visibleColumns.length);
     const isEditForm = row.isEditing;
     if (!isEditForm) {
       $detailCell.attr('aria-roledescription', messageLocalization.format('dxDataGrid-masterDetail'));

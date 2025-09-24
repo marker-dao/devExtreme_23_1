@@ -384,7 +384,6 @@ class ColumnHeadersView extends (0, _m_column_context_menu_mixin.ColumnContextMe
           $cellElement = that._getCellElement(rowIndex, columnsController.getVisibleIndex(column.index, rowIndex));
           $cellElement && result.push($cellElement.get(0));
         });
-        // @ts-expect-error
         return (0, _renderer.default)(result);
       }
       if (!index || index < rowCount) {

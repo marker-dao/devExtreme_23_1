@@ -13,7 +13,13 @@ const EVENT_NAME = exports.name = 'dxmousewheel';
 const EVENT_NAMESPACE = 'dxWheel';
 const NATIVE_EVENT_NAME = 'wheel';
 const PIXEL_MODE = 0;
-const DELTA_MUTLIPLIER = 30;
+const DELTA_MULTIPLIER = 30;
+var DeltaMode;
+(function (DeltaMode) {
+  DeltaMode[DeltaMode["DOM_DELTA_PIXEL"] = 0] = "DOM_DELTA_PIXEL";
+  DeltaMode[DeltaMode["DOM_DELTA_LINE"] = 1] = "DOM_DELTA_LINE";
+  DeltaMode[DeltaMode["DOM_DELTA_PAGE"] = 2] = "DOM_DELTA_PAGE";
+})(DeltaMode || (DeltaMode = {}));
 const wheel = {
   setup(element) {
     const $element = (0, _renderer.default)(element);
@@ -29,11 +35,12 @@ const wheel = {
       deltaX,
       deltaZ
     } = e.originalEvent;
+    const delta = this._getWheelDelta(deltaY, deltaX);
     (0, _index.fireEvent)({
       type: EVENT_NAME,
       originalEvent: e,
       // @ts-expect-error
-      delta: this._normalizeDelta(deltaY, deltaMode),
+      delta: this._normalizeDelta(delta, deltaMode),
       deltaX,
       deltaY,
       deltaZ,
@@ -49,7 +56,16 @@ const wheel = {
     }
     // Use multiplier to get rough delta value in px for the LINE or PAGE mode
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1392460
-    return -DELTA_MUTLIPLIER * delta;
+    return -DELTA_MULTIPLIER * delta;
+  },
+  _getWheelDelta(deltaY, deltaX) {
+    if (deltaY) {
+      return deltaY;
+    }
+    if (deltaX) {
+      return deltaX;
+    }
+    return 0;
   }
 };
 (0, _event_registrator.default)(EVENT_NAME, wheel);

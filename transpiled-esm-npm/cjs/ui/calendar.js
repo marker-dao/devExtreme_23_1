@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_calendar = _interopRequireDefault(require("../__internal/ui/calendar/m_calendar"));
+var _calendar = _interopRequireDefault(require("../__internal/ui/calendar/calendar"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_calendar.default; // STYLE calendar
+var _default = exports.default = _calendar.default; // STYLE calendar
 /**
  * @name dxCalendarOptions.currentDate
  * @type Date

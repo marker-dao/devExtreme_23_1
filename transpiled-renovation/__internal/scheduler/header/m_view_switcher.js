@@ -13,7 +13,7 @@ const ClASS = {
   dropDownButtonContent: 'dx-scheduler-view-switcher-dropdown-button-content'
 };
 const getViewsAndSelectedView = header => {
-  const views = header.option('views');
+  const views = (0, _m_utils.formatViews)(header.option('views'));
   const selectedView = header.option('currentView').name;
   const isSelectedViewInViews = views.some(view => view.name === selectedView);
   return {
@@ -21,24 +21,24 @@ const getViewsAndSelectedView = header => {
     views
   };
 };
+const isViewSwitcherVisible = views => views.length > 1;
 const getTabViewSwitcher = (header, item) => {
   const {
     selectedView,
     views
   } = getViewsAndSelectedView(header);
+  const isVisible = isViewSwitcherVisible(views);
   // @ts-expect-error
   const stylingMode = (0, _themes.isFluent)() ? 'outlined' : 'contained';
-  const items = views.map(view => _extends({}, view, {
-    text: view.name
-  }));
   return _extends({
     widget: 'dxButtonGroup',
     locateInMenu: 'auto',
     location: 'after',
     name: 'viewSwitcher',
     cssClass: ClASS.container,
+    visible: isVisible,
     options: {
-      items,
+      items: views,
       keyExpr: 'name',
       selectedItemKeys: [selectedView],
       stylingMode,
@@ -60,20 +60,21 @@ const getDropDownViewSwitcher = (header, item) => {
     selectedView,
     views
   } = getViewsAndSelectedView(header);
-  const isOnlyOneView = (0, _m_utils.isOneView)(views, selectedView);
+  const isVisible = isViewSwitcherVisible(views);
   return _extends({
     widget: 'dxDropDownButton',
     locateInMenu: 'never',
     location: 'after',
     name: 'viewSwitcher',
     cssClass: ClASS.container,
+    visible: isVisible,
     options: {
       items: views,
       useSelectMode: true,
       keyExpr: 'name',
       selectedItemKey: selectedView,
-      displayExpr: 'name',
-      showArrowIcon: !isOnlyOneView,
+      displayExpr: 'text',
+      showArrowIcon: true,
       elementAttr: {
         class: ClASS.dropDownButton
       },
@@ -83,17 +84,10 @@ const getDropDownViewSwitcher = (header, item) => {
       onContentReady: e => {
         const viewSwitcher = e.component;
         header._addEvent('currentView', view => {
-          const currentViews = header.option('views');
-          viewSwitcher.option('showArrowIcon', !(0, _m_utils.isOneView)(currentViews, view.name));
           viewSwitcher.option('selectedItemKey', (0, _m_utils.getViewName)(view));
         });
       },
       dropDownOptions: {
-        onShowing: e => {
-          if (isOnlyOneView) {
-            e.cancel = true;
-          }
-        },
         width: 'max-content',
         _wrapperClassExternal: ClASS.dropDownButtonContent
       }

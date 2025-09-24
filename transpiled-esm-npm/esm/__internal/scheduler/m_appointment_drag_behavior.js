@@ -70,7 +70,7 @@ export default class AppointmentDragBehavior {
   }
   getItemSettings(appointment) {
     const itemData = $(appointment).data(LIST_ITEM_DATA_KEY);
-    return (itemData === null || itemData === void 0 ? void 0 : itemData.settings) || [];
+    return itemData === null || itemData === void 0 ? void 0 : itemData.settings;
   }
   createDragStartHandler(options, appointmentDragging) {
     return e => {

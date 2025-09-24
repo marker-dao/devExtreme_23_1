@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = exports.RemoteStore = void 0;
 var _data_source = require("../../../../common/data/data_source/data_source");
 var _utils = require("../../../../common/data/data_source/utils");
-var _class = _interopRequireDefault(require("../../../../core/class"));
 var _date_serialization = _interopRequireDefault(require("../../../../core/utils/date_serialization"));
 var _deferred = require("../../../../core/utils/deferred");
 var _extend = require("../../../../core/utils/extend");
@@ -418,94 +417,96 @@ function prepareFields(fields) {
     (0, _m_widget_utils.setDefaultFieldValueFormatting)(field);
   });
 }
-const RemoteStore = exports.RemoteStore = _class.default.inherit(function () {
-  return {
-    ctor(options) {
-      this._dataSource = new _data_source.DataSource(options);
-      this._store = this._dataSource.store();
-    },
-    getFields(fields) {
+class RemoteStore {
+  constructor(options) {
+    this._dataSource = new _data_source.DataSource(options);
+    this._store = this._dataSource.store();
+  }
+  getFields(fields) {
+    // @ts-expect-error
+    const d = new _deferred.Deferred();
+    this._store.load({
+      skip: 0,
+      take: 20
+    }).done(data => {
       // @ts-expect-error
-      const d = new _deferred.Deferred();
-      this._store.load({
-        skip: 0,
-        take: 20
-      }).done(data => {
-        // @ts-expect-error
-        const normalizedArguments = (0, _utils.normalizeLoadResult)(data);
-        d.resolve(_m_widget_utils.default.discoverObjectFields(normalizedArguments.data, fields));
-      }).fail(d.reject);
-      return d;
-    },
-    key() {
-      return this._store.key();
-    },
-    load(options) {
-      const that = this;
-      // @ts-expect-error
-      const d = new _deferred.Deferred();
-      const result = {
-        rows: [],
-        columns: [],
-        values: [],
-        grandTotalRowIndex: 0,
-        grandTotalColumnIndex: 0,
-        rowHash: {},
-        columnHash: {},
-        rowIndex: 1,
-        columnIndex: 1
-      };
-      const requestsOptions = createRequestsOptions(options);
-      const deferreds = [];
-      prepareFields(options.rows);
-      prepareFields(options.columns);
-      prepareFields(options.filters);
-      (0, _iterator.each)(requestsOptions, (_, requestOptions) => {
-        const loadOptions = createLoadOptions(requestOptions, that.filter(), options.rows.length);
-        const loadDeferred = that._store.load(loadOptions);
-        deferreds.push(loadDeferred);
+      const normalizedArguments = (0, _utils.normalizeLoadResult)(data);
+      d.resolve(_m_widget_utils.default.discoverObjectFields(normalizedArguments.data, fields));
+    }).fail(d.reject);
+    return d;
+  }
+  key() {
+    return this._store.key();
+  }
+  load(options) {
+    const that = this;
+    // @ts-expect-error
+    const d = new _deferred.Deferred();
+    const result = {
+      rows: [],
+      columns: [],
+      values: [],
+      grandTotalRowIndex: 0,
+      grandTotalColumnIndex: 0,
+      rowHash: {},
+      columnHash: {},
+      rowIndex: 1,
+      columnIndex: 1
+    };
+    const requestsOptions = createRequestsOptions(options);
+    const deferreds = [];
+    prepareFields(options.rows);
+    prepareFields(options.columns);
+    prepareFields(options.filters);
+    (0, _iterator.each)(requestsOptions, (_, requestOptions) => {
+      const loadOptions = createLoadOptions(requestOptions, that.filter(), options.rows.length);
+      const loadDeferred = that._store.load(loadOptions);
+      deferreds.push(loadDeferred);
+    });
+    _deferred.when.apply(null, deferreds).done(function () {
+      const args = deferreds.length > 1 ? arguments : [arguments];
+      (0, _iterator.each)(args, (index, argument) => {
+        const normalizedArguments = (0, _utils.normalizeLoadResult)(argument[0], argument[1]);
+        parseResult(normalizedArguments.data, normalizedArguments.extra, requestsOptions[index], result);
       });
-      _deferred.when.apply(null, deferreds).done(function () {
-        const args = deferreds.length > 1 ? arguments : [arguments];
-        (0, _iterator.each)(args, (index, argument) => {
-          const normalizedArguments = (0, _utils.normalizeLoadResult)(argument[0], argument[1]);
-          parseResult(normalizedArguments.data, normalizedArguments.extra, requestsOptions[index], result);
-        });
-        d.resolve({
-          rows: result.rows,
-          columns: result.columns,
-          values: result.values,
-          grandTotalRowIndex: result.grandTotalRowIndex,
-          grandTotalColumnIndex: result.grandTotalColumnIndex
-        });
-      }).fail(d.reject);
-      return d;
-    },
-    filter() {
-      return this._dataSource.filter.apply(this._dataSource, arguments);
-    },
-    supportPaging() {
-      return false;
-    },
-    createDrillDownDataSource(loadOptions, params) {
-      loadOptions = loadOptions || {};
-      params = params || {};
-      const store = this._store;
-      const filters = (0, _m_widget_utils.getFiltersByPath)(loadOptions.rows, params.rowPath).concat((0, _m_widget_utils.getFiltersByPath)(loadOptions.columns, params.columnPath)).concat(getFiltersForDimension(loadOptions.rows)).concat(loadOptions.filters || []).concat(getFiltersForDimension(loadOptions.columns));
-      const filterExp = createFilterExpressions(filters);
-      return new _data_source.DataSource({
-        load(loadOptions) {
-          const filter = mergeFilters([filterExp, loadOptions.filter]);
-          const extendedLoadOptions = (0, _extend.extend)({}, loadOptions, {
-            filter: filter.length === 0 ? undefined : filter,
-            select: params.customColumns
-          });
-          return store.load(extendedLoadOptions);
-        }
+      d.resolve({
+        rows: result.rows,
+        columns: result.columns,
+        values: result.values,
+        grandTotalRowIndex: result.grandTotalRowIndex,
+        grandTotalColumnIndex: result.grandTotalColumnIndex
       });
+    }).fail(d.reject);
+    return d;
+  }
+  filter() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
     }
-  };
-}());
+    return this._dataSource.filter.apply(this._dataSource, args);
+  }
+  supportPaging() {
+    return false;
+  }
+  createDrillDownDataSource(loadOptions, params) {
+    loadOptions = loadOptions || {};
+    params = params || {};
+    const store = this._store;
+    const filters = (0, _m_widget_utils.getFiltersByPath)(loadOptions.rows, params.rowPath).concat((0, _m_widget_utils.getFiltersByPath)(loadOptions.columns, params.columnPath)).concat(getFiltersForDimension(loadOptions.rows)).concat(loadOptions.filters || []).concat(getFiltersForDimension(loadOptions.columns));
+    const filterExp = createFilterExpressions(filters);
+    return new _data_source.DataSource({
+      load(loadOptions) {
+        const filter = mergeFilters([filterExp, loadOptions.filter]);
+        const extendedLoadOptions = (0, _extend.extend)({}, loadOptions, {
+          filter: filter.length === 0 ? undefined : filter,
+          select: params.customColumns
+        });
+        return store.load(extendedLoadOptions);
+      }
+    });
+  }
+}
+exports.RemoteStore = RemoteStore;
 var _default = exports.default = {
   RemoteStore
 };

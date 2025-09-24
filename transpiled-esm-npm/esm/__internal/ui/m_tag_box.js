@@ -384,7 +384,10 @@ class TagBox extends SelectBox {
     this._tagTemplate = this._getTemplateByOption('tagTemplate');
   }
   _renderField() {
-    const isDefaultFieldTemplate = !isDefined(this.option('fieldTemplate'));
+    const {
+      fieldTemplate
+    } = this.option();
+    const isDefaultFieldTemplate = !isDefined(fieldTemplate);
     this.$element().toggleClass(TAGBOX_DEFAULT_FIELD_TEMPLATE_CLASS, isDefaultFieldTemplate).toggleClass(TAGBOX_CUSTOM_FIELD_TEMPLATE_CLASS, !isDefaultFieldTemplate);
     super._renderField();
   }
@@ -809,9 +812,9 @@ class TagBox extends SelectBox {
       // @ts-expect-error ts-error
       this.option('selectedItems', this._selectedItems.slice());
     }
-    this._cleanTags();
     const fieldTemplate = this._getFieldTemplate();
     if (!fieldTemplate) {
+      this._cleanTags();
       this._renderTagsCore();
     }
   }
@@ -1096,6 +1099,7 @@ class TagBox extends SelectBox {
       value.push(item);
     }
   }
+  // @ts-expect-error ts-error
   _fieldRenderData() {
     // @ts-expect-error ts-error
     return this._selectedItems.slice();

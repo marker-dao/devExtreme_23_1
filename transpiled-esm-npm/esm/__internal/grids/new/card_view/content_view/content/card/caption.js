@@ -1,5 +1,4 @@
 import { createVNode, createFragment, createComponentVNode, createTextVNode } from "inferno";
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { getPublicElement } from '../../../../../../../core/element';
 import $ from '../../../../../../../core/renderer';
 import { Component, createRef } from 'inferno';

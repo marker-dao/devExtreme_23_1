@@ -6,7 +6,7 @@ import { createComponentVNode } from "inferno";
   no-new
 */
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { signal } from '@preact/signals-core';
+import { signal } from '../../../../../core/state_manager/index';
 import { render, rerender } from 'inferno';
 import { HeaderFilterPopupComponent, HeaderFilterPopupView } from './view';
 const oldHeaderFilterMock = {

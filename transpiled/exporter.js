@@ -48,9 +48,9 @@ function _export(data, options, getData) {
   return new _deferred.Deferred().resolve();
 }
 const image = exports.image = {
-  ///#DEBUG
+  /// #DEBUG
   asyncEach: _image_creator.asyncEach,
-  ///#ENDDEBUG
+  /// #ENDDEBUG
   creator: _image_creator.imageCreator,
   getData: _image_creator.getData,
   testFormats: _image_creator.testFormats

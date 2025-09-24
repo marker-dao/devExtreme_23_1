@@ -1,7 +1,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import $ from '../../../../../../core/renderer';
-import { computed, signal } from '@preact/signals-core';
+import { computed, signal } from '../../../../../core/state_manager/index';
 import { extend } from '../../../../../core/utils/m_extend';
 import { forEachFormItems } from '../../../../../grids/grid_core/editing/m_editing_utils';
 import { createRef } from 'inferno';

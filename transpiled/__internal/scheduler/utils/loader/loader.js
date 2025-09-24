@@ -12,7 +12,7 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 class Loader {
   constructor(config, dataSourceOptions) {
     this.items = [];
-    this.data = []; // TODO(9): probably we dont need it. Used in getGroupPanelData
+    this.data = [];
     this.unsubscribe = _common.noop;
     this.dataSource = (0, _utils.normalizeDataSource)(config.dataSource, dataSourceOptions);
     this.isSharedDataSource = config.dataSource instanceof _data_source.default;

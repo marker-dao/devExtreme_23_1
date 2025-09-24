@@ -20,7 +20,7 @@ var _data_controller = _interopRequireDefault(require("../../data_controller"));
 var _button_group = _interopRequireDefault(require("../../ui/button_group"));
 var _widget = _interopRequireDefault(require("../core/widget/widget"));
 var _m_utils = require("../ui/drop_down_editor/m_utils");
-var _m_listEdit = _interopRequireDefault(require("../ui/list/m_list.edit.search"));
+var _listEdit = _interopRequireDefault(require("../ui/list/list.edit.search"));
 var _m_popup = _interopRequireDefault(require("../ui/popup/m_popup"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -110,7 +110,7 @@ class DropDownButton extends _widget.default {
       content: new _function_template.FunctionTemplate(options => {
         const $popupContent = (0, _renderer.default)(options.container);
         const $listContainer = (0, _renderer.default)('<div>').appendTo($popupContent);
-        this._list = this._createComponent($listContainer, _m_listEdit.default, this._listOptions());
+        this._list = this._createComponent($listContainer, _listEdit.default, this._listOptions());
         this._list.registerKeyHandler('escape', this._escHandler.bind(this));
         this._list.registerKeyHandler('tab', this._escHandler.bind(this));
         this._list.registerKeyHandler('leftArrow', this._escHandler.bind(this));
@@ -378,6 +378,7 @@ class DropDownButton extends _widget.default {
       wrapItemText,
       focusStateEnabled,
       hoverStateEnabled,
+      useItemTextAsTitle,
       grouped,
       groupTemplate,
       noDataText,
@@ -392,7 +393,7 @@ class DropDownButton extends _widget.default {
       wrapItemText,
       focusStateEnabled,
       hoverStateEnabled,
-      useItemTextAsTitle: this.option('useItemTextAsTitle'),
+      useItemTextAsTitle,
       // eslint-disable-next-line
       onContentReady: () => this._fireContentReadyAction(),
       selectedItemKeys: (0, _type.isDefined)(selectedItemKey) && useSelectMode ? [selectedItemKey] : [],
@@ -515,7 +516,6 @@ class DropDownButton extends _widget.default {
     if (!this._buttonGroup) {
       this.$element().append($buttonGroup);
     }
-    // @ts-expect-error ts-error
     this._buttonGroup = this._createComponent($buttonGroup, _button_group.default, this._getButtonGroupOptions());
     this._buttonGroup.registerKeyHandler('downArrow', this._upDownKeyHandler.bind(this));
     this._buttonGroup.registerKeyHandler('tab', this._tabHandler.bind(this));

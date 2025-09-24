@@ -11,7 +11,7 @@ import { format } from '../../../../core/utils/string';
 import { isDefined, isFunction } from '../../../../core/utils/type';
 import errors from '../../../../ui/widget/ui.errors';
 import { prepareItems } from '../../../grids/grid_core/m_export';
-import List from '../../../ui/list/m_list.edit.search';
+import List from '../../../ui/list/list.edit.search';
 import dataGridCore from '../m_core';
 const DATAGRID_EXPORT_MENU_CLASS = 'dx-datagrid-export-menu';
 const DATAGRID_EXPORT_BUTTON_CLASS = 'dx-datagrid-export-button';

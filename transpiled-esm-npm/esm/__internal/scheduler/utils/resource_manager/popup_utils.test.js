@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { getResourceManagerMock } from '../../../scheduler/__mock__/resourceManager.mock';
+import { getResourceManagerMock } from '../../../scheduler/__mock__/resource_manager.mock';
 import { createResourceEditorModel } from './popup_utils';
 describe('popup utils', () => {
   describe('createResourceEditorModel', () => {

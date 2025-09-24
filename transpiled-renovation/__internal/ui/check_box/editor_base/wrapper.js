@@ -24,7 +24,6 @@ class Editor extends _component_wrapper.ComponentWrapper {
     props.onFocusIn = () => {
       const isValidationMessageShownOnFocus = this.option('validationMessageMode') === 'auto';
       if (isValidationMessageShownOnFocus) {
-        // @ts-expect-error
         const $validationMessageWrapper = (0, _renderer.default)((0, _dom.querySelectorInSameDocument)(this.element(), '.dx-invalid-message.dx-overlay-wrapper'));
         $validationMessageWrapper === null || $validationMessageWrapper === void 0 || $validationMessageWrapper.removeClass(INVALID_MESSAGE_AUTO);
         const timeToWaitBeforeShow = 150;

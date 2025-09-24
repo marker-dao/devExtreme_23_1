@@ -4,8 +4,7 @@ import { getPublicElement } from '../../../core/element';
 import { cleanDataRecursive } from '../../../core/element_data';
 import errors from '../../../core/errors';
 import $ from '../../../core/renderer';
-// @ts-expect-error
-import { grep, noop } from '../../../core/utils/common';
+import { noop } from '../../../core/utils/common';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { attachInstanceToElement, getInstanceByElement } from '../../../core/utils/public_component';
@@ -18,10 +17,8 @@ import TemplateManagerModule from '../../core/m_template_manager';
 import { uiLayerInitialized } from '../../core/utils/m_common';
 import { Component } from '../../core/widget/component';
 class DOMComponent extends Component {
-  // eslint-disable-next-line @stylistic/max-len
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static getInstance(element) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return getInstanceByElement($(element), this);
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -59,7 +56,6 @@ class DOMComponent extends Component {
     this._$element = $(element);
   }
   _getSynchronizableOptionsForCreateComponent() {
-    // @ts-expect-error
     return ['rtlEnabled', 'disabled', 'templatesRenderAsynchronously'];
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -209,12 +205,11 @@ class DOMComponent extends Component {
   }
   _clean() {}
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _modelByElement(element) {
+  _modelByElement($element) {
     const {
       modelByElement
     } = this.option();
-    const $element = this.$element();
-    return modelByElement ? modelByElement($element) : undefined;
+    return modelByElement ? modelByElement(this.$element()) : undefined;
   }
   _invalidate() {
     if (this._isUpdateAllowed()) {
@@ -227,9 +222,8 @@ class DOMComponent extends Component {
     this._renderComponent();
   }
   _dispose() {
-    // eslint-disable-next-line @stylistic/max-len
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-unused-expressions
-    this._templateManager && this._templateManager.dispose();
+    var _this$_templateManage;
+    (_this$_templateManage = this._templateManager) === null || _this$_templateManage === void 0 || _this$_templateManage.dispose();
     super._dispose();
     this._clean();
     this._detachWindowResizeCallback();
@@ -247,7 +241,7 @@ class DOMComponent extends Component {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   componentConfiguration) {
     const configuration = componentConfiguration ?? {};
-    const synchronizableOptions = grep(this._getSynchronizableOptionsForCreateComponent(), value => !(value in configuration));
+    const synchronizableOptions = this._getSynchronizableOptionsForCreateComponent().filter(value => !(value in configuration));
     const {
       integrationOptions
     } = this.option();
@@ -258,9 +252,12 @@ class DOMComponent extends Component {
     const nestedComponentConfig = extend({
       integrationOptions
     }, nestedComponentOptions(this));
-    synchronizableOptions.forEach(
-    // eslint-disable-next-line no-return-assign
-    optionName => nestedComponentConfig[optionName] = this.option(optionName));
+    synchronizableOptions.forEach(optionName => {
+      const {
+        [optionName]: value
+      } = this.option();
+      nestedComponentConfig[optionName] = value;
+    });
     this._extendConfig(configuration, nestedComponentConfig);
     // eslint-disable-next-line no-void
     let instance = void 0;
@@ -297,30 +294,32 @@ class DOMComponent extends Component {
     // @ts-expect-error
     return instance;
   }
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   _extendConfig(configuration, extendConfig) {
     each(extendConfig, (key, value) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      !Object.prototype.hasOwnProperty.call(configuration, key) && (configuration[key] = value);
+      configuration[key] ?? (configuration[key] = value);
     });
   }
   _defaultActionConfig() {
     const $element = this.$element();
     const context = this._modelByElement($element);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return extend(super._defaultActionConfig(), {
-      context
-    });
+    const defaultConfig = super._defaultActionConfig();
+    if (context) {
+      defaultConfig.context = context;
+    }
+    return defaultConfig;
   }
   _defaultActionArgs() {
+    const args = super._defaultActionArgs();
     const $element = this.$element();
     const model = this._modelByElement($element);
     const element = this.element();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return extend(super._defaultActionArgs(), {
-      element,
-      model
-    });
+    if (element) {
+      args.element = element;
+    }
+    if (model) {
+      args.model = model;
+    }
+    return args;
   }
   _optionChanged(args) {
     const {
@@ -347,8 +346,7 @@ class DOMComponent extends Component {
   }
   _removeAttributes(element) {
     const attrs = element.attributes;
-    // eslint-disable-next-line no-plusplus
-    for (let i = attrs.length - 1; i >= 0; i--) {
+    for (let i = attrs.length - 1; i >= 0; i -= 1) {
       const attr = attrs[i];
       if (attr) {
         const {

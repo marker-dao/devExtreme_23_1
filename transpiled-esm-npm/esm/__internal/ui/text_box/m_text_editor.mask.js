@@ -8,7 +8,7 @@ import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { isEmpty } from '../../../core/utils/string';
 import { isDefined } from '../../../core/utils/type';
-import { focused } from '../../../ui/widget/selectors';
+import { focused } from '../../core/utils/m_selectors';
 import TextEditorBase from './m_text_editor.base';
 import { EmptyMaskRule, MaskRule, StubMaskRule } from './m_text_editor.mask.rule';
 import MaskStrategy from './m_text_editor.mask.strategy';

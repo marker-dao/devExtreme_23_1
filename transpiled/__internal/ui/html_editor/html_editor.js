@@ -244,9 +244,14 @@ class HtmlEditor extends _editor.default {
     if ((0, _type.isFunction)(customizeModules)) {
       customizeModules(modulesConfig);
     }
+    const {
+      placeholder,
+      readOnly,
+      disabled
+    } = this.option();
     this._quillInstance = this._getRegistrator().createEditor(this._$htmlContainer[0], {
-      placeholder: this.option('placeholder'),
-      readOnly: this.option('readOnly') || this.option('disabled'),
+      placeholder,
+      readOnly: Boolean(readOnly) || Boolean(disabled),
       modules: modulesConfig,
       theme: 'basic'
     });

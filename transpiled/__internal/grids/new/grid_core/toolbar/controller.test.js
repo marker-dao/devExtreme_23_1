@@ -1,7 +1,7 @@
 "use strict";
 
 var _globals = require("@jest/globals");
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _di = require("../di.test_utils");
 var _options_controller = require("../options_controller/options_controller.mock");
 var _controller = require("./controller");
@@ -45,7 +45,7 @@ const setup = config => {
             }]
           }
         });
-        toolbarController.addDefaultItem((0, _signalsCore.signal)({
+        toolbarController.addDefaultItem((0, _index.signal)({
           name: 'searchPanel',
           location: 'after'
         }));
@@ -63,7 +63,7 @@ const setup = config => {
       const {
         toolbarController
       } = setup();
-      toolbarController.addDefaultItem((0, _signalsCore.signal)({
+      toolbarController.addDefaultItem((0, _index.signal)({
         name: 'searchPanel',
         location: 'after'
       }));
@@ -76,8 +76,8 @@ const setup = config => {
       const {
         toolbarController
       } = setup();
-      const needRender = (0, _signalsCore.signal)(true);
-      toolbarController.addDefaultItem((0, _signalsCore.signal)({
+      const needRender = (0, _index.signal)(true);
+      toolbarController.addDefaultItem((0, _index.signal)({
         name: 'searchPanel',
         location: 'after'
       }), needRender);
@@ -97,13 +97,13 @@ const setup = config => {
       const {
         toolbarController
       } = setup();
-      const needRender = (0, _signalsCore.signal)(true);
-      toolbarController.addDefaultItem((0, _signalsCore.signal)({
+      const needRender = (0, _index.signal)(true);
+      toolbarController.addDefaultItem((0, _index.signal)({
         name: 'addCardButton'
       }), needRender);
-      toolbarController.addDefaultItem((0, _signalsCore.signal)({
+      toolbarController.addDefaultItem((0, _index.signal)({
         name: 'searchPanel'
-      }), (0, _signalsCore.signal)(true));
+      }), (0, _index.signal)(true));
       (0, _globals.expect)(toolbarController.items.peek()).toStrictEqual([{
         name: 'addCardButton'
       }, {

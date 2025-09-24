@@ -5,7 +5,7 @@ import $ from '../../../core/renderer';
 import { asyncNoop, noop } from '../../../core/utils/common';
 import { each } from '../../../core/utils/iterator';
 import { isDefined, isObject, isPlainObject } from '../../../core/utils/type';
-import { render } from '../../../ui/widget/utils.ink_ripple';
+import { render } from '../../core/utils/m_ink_ripple';
 import MenuItem from '../../ui/collection/item';
 import MenuBaseEditStrategy from '../../ui/context_menu/menu_base.edit.strategy';
 import HierarchicalCollectionWidget from '../../ui/hierarchical_collection/hierarchical_collection_widget';
@@ -36,6 +36,9 @@ const DX_ICON_WITH_URL_CLASS = 'dx-icon-with-url';
 const ITEM_URL_CLASS = 'dx-item-url';
 const DX_MENU_ITEM_DATA_KEY = 'dxMenuItemDataKey';
 class MenuBase extends HierarchicalCollectionWidget {
+  _activeStateUnit() {
+    return `.${ITEM_CLASS}`;
+  }
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       items: [],
@@ -120,7 +123,6 @@ class MenuBase extends HierarchicalCollectionWidget {
   }
   _init() {
     super._init();
-    this._activeStateUnit = `.${ITEM_CLASS}`;
     this._renderSelectedItem();
     this._initActions();
   }
@@ -229,14 +231,14 @@ class MenuBase extends HierarchicalCollectionWidget {
   _renderInkRipple() {
     this._inkRipple = render();
   }
-  _toggleActiveState($element, value, e) {
-    super._toggleActiveState($element, value, e);
+  _toggleActiveState($element, value, event) {
+    super._toggleActiveState($element, value);
     if (!this._inkRipple) {
       return;
     }
     const config = {
       element: $element,
-      event: e
+      event
     };
     if (value) {
       this._inkRipple.showWave(config);
@@ -310,7 +312,6 @@ class MenuBase extends HierarchicalCollectionWidget {
     }
     return delay;
   }
-  // TODO: try to simplify
   _getItemElementByEventArgs(eventArgs) {
     let $target = $(eventArgs.target);
     if ($target.hasClass(this._itemClass()) || $target.get(0) === eventArgs.currentTarget) {
@@ -455,6 +456,9 @@ class MenuBase extends HierarchicalCollectionWidget {
     });
     e._skipHandling = true;
   }
+  _isUrlItem(item) {
+    return !!item && 'url' in item && !!item.url;
+  }
   _itemClick(actionArgs) {
     var _actionArgs$args;
     const {
@@ -466,7 +470,7 @@ class MenuBase extends HierarchicalCollectionWidget {
     }
     const $itemElement = this._getItemElementByEventArgs(event);
     const link = $itemElement === null || $itemElement === void 0 ? void 0 : $itemElement.find(`.${ITEM_URL_CLASS}`)[0];
-    if (!(itemData !== null && itemData !== void 0 && itemData.url) || !link) {
+    if (!this._isUrlItem(itemData) || !link) {
       return;
     }
     const isNativeLinkClick = $(event.target).closest(`.${ITEM_URL_CLASS}`).length;
@@ -537,7 +541,6 @@ class MenuBase extends HierarchicalCollectionWidget {
               this._toggleItemSelection(selectedNode, false);
             }
             this._toggleItemSelection(node, true);
-            this._updateSelectedItems();
           }
           break;
         }
@@ -571,21 +574,23 @@ class MenuBase extends HierarchicalCollectionWidget {
     });
     return result;
   }
-  _updateSelectedItems(oldSelection, newSelection) {
-    if (oldSelection || newSelection) {
-      this._fireSelectionChangeEvent(newSelection, oldSelection);
+  _updateSelectedItems() {}
+  _updateSelectedItem(addedItem, removedItem) {
+    if (addedItem || removedItem) {
+      this._fireSelectionChangeEvent(addedItem, removedItem);
     }
   }
-  _fireSelectionChangeEvent(addedSelection, removedSelection) {
+  _fireSelectionChangeEvent(addedItem, removedItem) {
     this._createActionByOption('onSelectionChanged', {
       excludeValidators: ['disabled', 'readOnly']
     })({
-      addedItems: [addedSelection],
-      removedItems: [removedSelection]
+      addedItems: [addedItem],
+      removedItems: [removedItem]
     });
   }
   selectItem(itemElement) {
-    const itemData = itemElement.nodeType ? this._getItemData(itemElement) : itemElement;
+    const isElement = item => typeof item === 'object' && 'nodeType' in item && !!item.nodeType;
+    const itemData = isElement(itemElement) ? this._getItemData(itemElement) : itemElement;
     const selectedKey = this._dataAdapter.getSelectedNodesKeys()[0];
     const selectedItem = this.option('selectedItem');
     const node = this._dataAdapter.getNodeByItem(itemData);
@@ -595,7 +600,7 @@ class MenuBase extends HierarchicalCollectionWidget {
         this._toggleItemSelection(selectedNode, false);
       }
       this._toggleItemSelection(node, true);
-      this._updateSelectedItems(selectedItem, itemData);
+      this._updateSelectedItem(itemData, selectedItem);
       this._setOptionWithoutOptionChange('selectedItem', itemData);
     }
   }
@@ -605,7 +610,7 @@ class MenuBase extends HierarchicalCollectionWidget {
     const selectedItem = this.option('selectedItem');
     if (node !== null && node !== void 0 && node.internalFields.selected) {
       this._toggleItemSelection(node, false);
-      this._updateSelectedItems(selectedItem, null);
+      this._updateSelectedItem(null, selectedItem);
       this._setOptionWithoutOptionChange('selectedItem', null);
     }
   }

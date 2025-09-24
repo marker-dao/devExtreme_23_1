@@ -4,7 +4,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
   @typescript-eslint/explicit-module-boundary-types
 */
 import $ from '../../../../../core/renderer';
-import { computed, signal } from '@preact/signals-core';
+import { computed, signal } from '../../../../core/state_manager/index';
 import { ColumnsController } from '../../../../grids/new/grid_core/columns_controller/columns_controller';
 import { BaseContextMenuController } from '../../../../grids/new/grid_core/context_menu/controller';
 import { View } from '../../../../grids/new/grid_core/core/view';

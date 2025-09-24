@@ -5,7 +5,7 @@ import eventsEngine from '../../../common/core/events/core/events_engine';
 import { move as dragEventMove } from '../../../common/core/events/drag';
 import pointerEvents from '../../../common/core/events/pointer';
 import { keyboard } from '../../../common/core/events/short';
-import { addNamespace, isCommandKeyPressed, normalizeKeyName } from '../../../common/core/events/utils/index';
+import { addNamespace, isCommandKeyPressed, normalizeKeyName } from '../../../common/core/events/utils';
 import { triggerHidingEvent, triggerResizeEvent, triggerShownEvent } from '../../../common/core/events/visibility_change';
 import registerComponent from '../../../core/component_registrator';
 import devices from '../../../core/devices';
@@ -23,13 +23,13 @@ import readyCallbacks from '../../../core/utils/ready_callbacks';
 import { getOuterHeight, getOuterWidth } from '../../../core/utils/size';
 import { isFunction, isObject, isPromise, isWindow } from '../../../core/utils/type';
 import { changeCallback } from '../../../core/utils/view_port';
-import { tabbable } from '../../../ui/widget/selectors';
 import uiErrors from '../../../ui/widget/ui.errors';
 import domUtils from '../../core/utils/m_dom';
-import Widget from '../../core/widget/widget';
+import selectors from '../../core/utils/m_selectors';
 import windowUtils from '../../core/utils/m_window';
-import { OVERLAY_POSITION_ALIASES, OverlayPositionController } from './m_overlay_position_controller';
-import * as zIndexPool from './z_index';
+import Widget from '../../core/widget/widget';
+import { OVERLAY_POSITION_ALIASES, OverlayPositionController } from '../../ui/overlay/overlay_position_controller';
+import * as zIndexPool from '../../ui/overlay/z_index';
 const ready = readyCallbacks.add;
 const window = windowUtils.getWindow();
 const viewPortChanged = changeCallback;
@@ -125,18 +125,18 @@ class Overlay extends Widget {
     });
   }
   _defaultOptionsRules() {
-    return super._defaultOptionsRules().concat([{
+    const rules = [...super._defaultOptionsRules(), {
       device() {
         return !windowUtils.hasWindow();
       },
-      // @ts-expect-error overload
       options: {
         width: null,
         height: null,
         animation: null,
         _checkParentVisibility: false
       }
-    }]);
+    }];
+    return rules;
   }
   _setOptionsByReference() {
     super._setOptionsByReference();
@@ -627,11 +627,11 @@ class Overlay extends Widget {
       const $currentElement = $elements.eq(i);
       const $reverseElement = $elements.eq(elementsCount - i);
       // @ts-expect-error is should can get function as callback
-      if (!$first && $currentElement.is(tabbable)) {
+      if (!$first && $currentElement.is(selectors.tabbable)) {
         $first = $currentElement;
       }
       // @ts-expect-error is should can get function as callback
-      if (!$last && $reverseElement.is(tabbable)) {
+      if (!$last && $reverseElement.is(selectors.tabbable)) {
         $last = $reverseElement;
       }
       if ($first && $last) {
@@ -777,7 +777,6 @@ class Overlay extends Widget {
     // @ts-expect-error add should can get dxElementWrapper
     $parent.add($parent.parents()).each((index, element) => {
       const $element = $(element);
-      // @ts-expect-error css should can get 1 argument
       if ($element.css('display') === 'none') {
         isHidden = true;
         return false;
@@ -836,18 +835,25 @@ class Overlay extends Widget {
     } = this.option();
     // NOTE: position is passed to controller in renderGeometry
     // to prevent window field using in server side mode
-    return {
+    const properties = {
       container,
       visualContainer,
       restorePosition,
+      _fixWrapperPosition,
+      _skipContentPositioning,
+      onPositioned: (_this$_actions5 = this._actions) === null || _this$_actions5 === void 0 ? void 0 : _this$_actions5.onPositioned,
+      onVisualPositionChanged: (_this$_actions6 = this._actions) === null || _this$_actions6 === void 0 ? void 0 : _this$_actions6.onVisualPositionChanged
+    };
+    const elements = {
       $root: this.$element(),
       $content: this._$content,
-      $wrapper: this._$wrapper,
-      onPositioned: (_this$_actions5 = this._actions) === null || _this$_actions5 === void 0 ? void 0 : _this$_actions5.onPositioned,
-      onVisualPositionChanged: (_this$_actions6 = this._actions) === null || _this$_actions6 === void 0 ? void 0 : _this$_actions6.onVisualPositionChanged,
-      _fixWrapperPosition,
-      _skipContentPositioning
+      $wrapper: this._$wrapper
     };
+    const positionControllerConfiguration = {
+      properties,
+      elements
+    };
+    return positionControllerConfiguration;
   }
   _initPositionController() {
     this._positionController = new OverlayPositionController(this._getPositionControllerConfig());
@@ -910,7 +916,9 @@ class Overlay extends Widget {
   }
   _moveToContainer() {
     const $wrapperContainer = this._positionController.$container;
-    this._$wrapper.appendTo($wrapperContainer);
+    if ($wrapperContainer !== undefined) {
+      this._$wrapper.appendTo($wrapperContainer);
+    }
     this._$content.appendTo(this._$wrapper);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -933,10 +941,11 @@ class Overlay extends Widget {
     this._positionController.positionContent();
   }
   _isAllWindowCovered() {
+    var _this$_positionContro;
     const {
       shading
     } = this.option();
-    const element = this._positionController.$visualContainer.get(0);
+    const element = (_this$_positionContro = this._positionController.$visualContainer) === null || _this$_positionContro === void 0 ? void 0 : _this$_positionContro.get(0);
     return isWindow(element) && Boolean(shading);
   }
   _toggleSafariScrolling() {
@@ -968,7 +977,7 @@ class Overlay extends Widget {
       $visualContainer
     } = this._positionController;
     const documentElement = domAdapter.getDocumentElement();
-    const isVisualContainerWindow = isWindow($visualContainer.get(0));
+    const isVisualContainerWindow = isWindow($visualContainer === null || $visualContainer === void 0 ? void 0 : $visualContainer.get(0));
     const wrapperWidth = isVisualContainerWindow ? documentElement.clientWidth : getOuterWidth($visualContainer);
     const wrapperHeight = isVisualContainerWindow ? window.innerHeight : getOuterHeight($visualContainer);
     this._$wrapper.css({
@@ -1005,9 +1014,7 @@ class Overlay extends Widget {
     }
   }
   _isVisible() {
-    const {
-      visible
-    } = this.option();
+    const visible = this.option('visible');
     return Boolean(visible);
   }
   _visibilityChanged(visible) {

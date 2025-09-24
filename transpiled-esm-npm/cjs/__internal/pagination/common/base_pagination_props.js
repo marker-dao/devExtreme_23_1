@@ -17,7 +17,7 @@ const BasePaginationDefaultProps = exports.BasePaginationDefaultProps = _extends
   visible: true,
   hasKnownLastPage: true,
   pagesNavigatorVisible: 'auto',
-  showPageSizeSelector: true,
+  showPageSizeSelector: 'auto',
   allowedPageSizes: [5, 10],
   showNavigationButtons: false,
   itemCount: 1,

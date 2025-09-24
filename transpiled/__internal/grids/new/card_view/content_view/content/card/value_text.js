@@ -8,8 +8,6 @@ var _inferno = require("inferno");
 var _element = require("../../../../../../../core/element");
 var _renderer = _interopRequireDefault(require("../../../../../../../core/renderer"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 const ROOT_CLASS = 'dx-cardview-field-value';
 const CLASS = {
   root: ROOT_CLASS,

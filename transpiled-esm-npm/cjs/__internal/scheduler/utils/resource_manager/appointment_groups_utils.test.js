@@ -1,28 +1,28 @@
 "use strict";
 
 var _globals = require("@jest/globals");
-var _resourceManager = require("../../../scheduler/__mock__/resourceManager.mock");
+var _resource_manager = require("../../../scheduler/__mock__/resource_manager.mock");
 var _appointment_groups_utils = require("./appointment_groups_utils");
 (0, _globals.describe)('appointment groups utils', () => {
   (0, _globals.describe)('getResourceItemById', () => {
     (0, _globals.it)('should return resource item by id', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       (0, _globals.expect)((0, _appointment_groups_utils.getResourceItemById)(manager.resourceById.assigneeId, 1)).toEqual(manager.resourceById.assigneeId.items[0]);
     });
     (0, _globals.it)('should return undefined for unreached item', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)(_resourceManager.complexIdResourceMock);
+      const manager = (0, _resource_manager.getResourceManagerMock)(_resource_manager.complexIdResourceMock);
       (0, _globals.expect)((0, _appointment_groups_utils.getResourceItemById)(manager.resources[0], {
         _value: 'guid-2'
       })).toEqual(manager.resources[0].items[1]);
     });
     (0, _globals.it)('should return resource item by complex id', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       (0, _globals.expect)((0, _appointment_groups_utils.getResourceItemById)(manager.resourceById.assigneeId, 10)).toEqual(undefined);
     });
   });
   (0, _globals.describe)('getAppointmentGroupValues', () => {
     (0, _globals.it)('should return appointment group array values', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       (0, _globals.expect)((0, _appointment_groups_utils.getAppointmentGroupValues)({
         assigneeId: [1, 2],
         roomId: 3,
@@ -38,7 +38,7 @@ var _appointment_groups_utils = require("./appointment_groups_utils");
   });
   (0, _globals.describe)('getRawAppointmentGroupValues', () => {
     (0, _globals.it)('should return appointment group initial values', () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       (0, _globals.expect)((0, _appointment_groups_utils.getRawAppointmentGroupValues)({
         assigneeId: [1, 2],
         roomId: 3,
@@ -67,8 +67,8 @@ var _appointment_groups_utils = require("./appointment_groups_utils");
   });
   (0, _globals.describe)('getAppointmentResources', () => {
     (0, _globals.it)('should return appointment resource texts in order as in appointment', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
-      await manager.loadGroupResources(_resourceManager.resourceIndexesMock);
+      const manager = (0, _resource_manager.getResourceManagerMock)();
+      await manager.loadGroupResources(_resource_manager.resourceIndexesMock);
       (0, _globals.expect)((0, _appointment_groups_utils.getAppointmentResources)({
         assigneeId: [4, 1, 2],
         roomId: [2],
@@ -85,12 +85,12 @@ var _appointment_groups_utils = require("./appointment_groups_utils");
       }]);
     });
     (0, _globals.it)('label can be undefined if not specified', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)([{
+      const manager = (0, _resource_manager.getResourceManagerMock)([{
         field: 'roomId',
-        dataSource: _resourceManager.resourceItemsByIdMock.roomId,
+        dataSource: _resource_manager.resourceItemsByIdMock.roomId,
         allowMultiple: true
       }]);
-      await manager.loadGroupResources(_resourceManager.resourceIndexesMock);
+      await manager.loadGroupResources(_resource_manager.resourceIndexesMock);
       (0, _globals.expect)((0, _appointment_groups_utils.getAppointmentResources)({
         roomId: [2, 0]
       }, manager.resourceById)).toEqual([{
@@ -99,7 +99,7 @@ var _appointment_groups_utils = require("./appointment_groups_utils");
       }]);
     });
     (0, _globals.it)('should return appointment resource texts with complex ids', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)(_resourceManager.complexIdResourceMock);
+      const manager = (0, _resource_manager.getResourceManagerMock)(_resource_manager.complexIdResourceMock);
       await manager.loadGroupResources(['ownerId']);
       (0, _globals.expect)((0, _appointment_groups_utils.getAppointmentResources)({
         ownerId: [{
@@ -120,13 +120,13 @@ var _appointment_groups_utils = require("./appointment_groups_utils");
       const appointment = {
         something: 1
       };
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       (0, _appointment_groups_utils.setAppointmentGroupValues)(appointment, manager.resourceById, undefined);
       (0, _globals.expect)(appointment).toEqual(appointment);
     });
     (0, _globals.it)('should set appointment group values', () => {
       const appointment = {};
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       (0, _appointment_groups_utils.setAppointmentGroupValues)(appointment, manager.resourceById, {
         assigneeId: 1,
         roomId: 2,
@@ -143,8 +143,8 @@ var _appointment_groups_utils = require("./appointment_groups_utils");
   });
   (0, _globals.describe)('getAppointmentGroupIndex', () => {
     (0, _globals.it)('should return appointment group indexes', async () => {
-      const manager = (0, _resourceManager.getResourceManagerMock)();
-      await manager.loadGroupResources(_resourceManager.resourceIndexesMock);
+      const manager = (0, _resource_manager.getResourceManagerMock)();
+      await manager.loadGroupResources(_resource_manager.resourceIndexesMock);
       (0, _globals.expect)((0, _appointment_groups_utils.getAppointmentGroupIndex)({
         assigneeId: [1, 2],
         roomId: [2],
@@ -160,7 +160,7 @@ var _appointment_groups_utils = require("./appointment_groups_utils");
           priorityId: 1
         }
       }];
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       await manager.loadGroupResources(['assigneeId', 'nested.priorityId']);
       (0, _globals.expect)((0, _appointment_groups_utils.groupAppointmentsByGroupLeafs)(manager.resourceById, manager.groupsLeafs, appointments)).toEqual([[appointments[0]], [], [], [], [], [], [], []]);
     });
@@ -181,7 +181,7 @@ var _appointment_groups_utils = require("./appointment_groups_utils");
           priorityId: 2
         }
       }];
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       await manager.loadGroupResources(['assigneeId', 'nested.priorityId']);
       (0, _globals.expect)((0, _appointment_groups_utils.groupAppointmentsByGroupLeafs)(manager.resourceById, manager.groupsLeafs, appointments)).toEqual([[appointments[0]], [], [appointments[0], appointments[1]], [], [], [appointments[2]], [], [appointments[2]]]);
     });
@@ -202,7 +202,7 @@ var _appointment_groups_utils = require("./appointment_groups_utils");
           priorityId: 2
         }
       }];
-      const manager = (0, _resourceManager.getResourceManagerMock)();
+      const manager = (0, _resource_manager.getResourceManagerMock)();
       (0, _globals.expect)((0, _appointment_groups_utils.groupAppointmentsByGroupLeafs)(manager.resourceById, manager.groupsLeafs, appointments)).toEqual([appointments]);
     });
   });

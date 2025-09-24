@@ -656,14 +656,16 @@ class DateBox extends _m_drop_down_editor.default {
     }
   }
   _getSerializationFormat() {
-    const value = this.option('value');
+    const {
+      value
+    } = this.option();
     if (this.option('dateSerializationFormat') && (0, _config.default)().forceIsoDateParsing) {
       return this.option('dateSerializationFormat');
     }
     if ((0, _type.isNumeric)(value)) {
       return 'number';
     }
-    if (!(0, _type.isString)(value)) {
+    if (!(0, _type.isString)(value) || value === '') {
       return;
     }
     return _date_serialization.default.getDateSerializationFormat(value);

@@ -53,12 +53,6 @@ Object.defineProperty(exports, "formatWeekdayAndDay", {
     return _format_weekday.formatWeekdayAndDay;
   }
 });
-Object.defineProperty(exports, "getAppointmentDataItems", {
-  enumerable: true,
-  get: function () {
-    return _get_appointment_data_items.getAppointmentDataItems;
-  }
-});
 Object.defineProperty(exports, "getAppointmentKey", {
   enumerable: true,
   get: function () {
@@ -277,7 +271,6 @@ var _work_week = require("./work_week");
 var _base = require("./base");
 var _exclude_from_recurrence = require("./exclude_from_recurrence");
 var _format_weekday = require("./format_weekday");
-var _get_appointment_data_items = require("./get_appointment_data_items");
 const agendaUtils = exports.agendaUtils = {
   calculateStartViewDate: _agenda.calculateStartViewDate
 };

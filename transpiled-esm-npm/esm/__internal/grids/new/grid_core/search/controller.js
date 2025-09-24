@@ -1,4 +1,4 @@
-import { computed } from '@preact/signals-core';
+import { computed } from '../../../../core/state_manager/index';
 import { ColumnsController } from '../columns_controller/columns_controller';
 import { OptionsController } from '../options_controller/options_controller';
 import { calculateSearchFilter, splitHighlightedText } from './utils';

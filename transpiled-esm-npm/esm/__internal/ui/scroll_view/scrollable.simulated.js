@@ -17,7 +17,7 @@ import { getHeight, getWidth } from '../../../core/utils/size';
 import { isDefined } from '../../../core/utils/type';
 import { getWindow, hasWindow } from '../../../core/utils/window';
 import Animator from '../../ui/scroll_view/animator';
-import Scrollbar from './scrollbar';
+import Scrollbar from '../../ui/scroll_view/scrollbar';
 const SCROLLABLE_SIMULATED = 'dxSimulatedScrollable';
 const SCROLLABLE_STRATEGY = 'dxScrollableStrategy';
 const SCROLLABLE_SIMULATED_CURSOR = `${SCROLLABLE_SIMULATED}Cursor`;
@@ -415,7 +415,6 @@ export class Scroller {
     return this._getRealDimension(this._$container.get(0), this._dimension);
   }
   _contentSize() {
-    // @ts-expect-error CSS method access
     const isOverflowHidden = this._$content.css(`overflow${this._axis.toUpperCase()}`) === 'hidden';
     let contentSize = this._getRealDimension(this._$content.get(0), this._dimension);
     if (!isOverflowHidden) {
@@ -477,7 +476,10 @@ export class SimulatedStrategy {
   render() {
     this._$element.addClass(SCROLLABLE_SIMULATED_CLASS);
     this._createScrollers();
-    if (this.option('useKeyboard')) {
+    const {
+      useKeyboard
+    } = this.option();
+    if (useKeyboard) {
       this._$container.prop('tabIndex', 0);
     }
     this._attachKeyboardHandler();

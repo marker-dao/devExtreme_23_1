@@ -8,7 +8,7 @@ import { when } from '../../../core/utils/deferred';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import CollectionWidgetAsync from '../../ui/collection/collection_widget.async';
-const PRIVATE_KEY_FIELD = '__dx_key__';
+export const PRIVATE_KEY_FIELD = '__dx_key__';
 class CollectionWidgetLiveUpdate extends CollectionWidgetAsync {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -58,7 +58,10 @@ class CollectionWidgetLiveUpdate extends CollectionWidgetAsync {
   }
   _shouldAddNewGroup(changes, items) {
     let result = false;
-    if (this.option('grouped')) {
+    const {
+      grouped
+    } = this.option();
+    if (grouped) {
       if (!changes.length) {
         result = true;
       }
@@ -87,7 +90,6 @@ class CollectionWidgetLiveUpdate extends CollectionWidgetAsync {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           return data[PRIVATE_KEY_FIELD];
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return this.keyOf(data);
       };
       const result = findChanges({

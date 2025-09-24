@@ -390,7 +390,10 @@ class TagBox extends _m_select_box.default {
     this._tagTemplate = this._getTemplateByOption('tagTemplate');
   }
   _renderField() {
-    const isDefaultFieldTemplate = !(0, _type.isDefined)(this.option('fieldTemplate'));
+    const {
+      fieldTemplate
+    } = this.option();
+    const isDefaultFieldTemplate = !(0, _type.isDefined)(fieldTemplate);
     this.$element().toggleClass(TAGBOX_DEFAULT_FIELD_TEMPLATE_CLASS, isDefaultFieldTemplate).toggleClass(TAGBOX_CUSTOM_FIELD_TEMPLATE_CLASS, !isDefaultFieldTemplate);
     super._renderField();
   }
@@ -815,9 +818,9 @@ class TagBox extends _m_select_box.default {
       // @ts-expect-error ts-error
       this.option('selectedItems', this._selectedItems.slice());
     }
-    this._cleanTags();
     const fieldTemplate = this._getFieldTemplate();
     if (!fieldTemplate) {
+      this._cleanTags();
       this._renderTagsCore();
     }
   }
@@ -1102,6 +1105,7 @@ class TagBox extends _m_select_box.default {
       value.push(item);
     }
   }
+  // @ts-expect-error ts-error
   _fieldRenderData() {
     // @ts-expect-error ts-error
     return this._selectedItems.slice();

@@ -1,5 +1,5 @@
 import createCallback from '../../../../../core/utils/callbacks';
-import { effect } from '@preact/signals-core';
+import { effect } from '../../../../core/state_manager/index';
 import { DataController } from './data_controller';
 export class CompatibilityDataController {
   constructor(realDataController) {

@@ -5,8 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.defaultInkRippleProps = exports.InkRipple = void 0;
 var _inferno = require("inferno");
-var _utils = require("../../../ui/widget/utils.ink_ripple");
 var _index = require("../../core/r1/runtime/inferno/index");
+var _m_ink_ripple = require("../../core/utils/m_ink_ripple");
 const _excluded = ["config"];
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
@@ -23,7 +23,7 @@ class InkRipple extends _index.BaseInfernoComponent {
   }
   get getConfig() {
     if (this.__getterCache.getConfig === undefined) {
-      this.__getterCache.getConfig = (0, _utils.initConfig)(this.props.config);
+      this.__getterCache.getConfig = (0, _m_ink_ripple.initConfig)(this.props.config);
     }
     return this.__getterCache.getConfig;
   }
@@ -34,11 +34,11 @@ class InkRipple extends _index.BaseInfernoComponent {
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   hideWave(opts) {
-    (0, _utils.hideWave)(this.getConfig, opts);
+    (0, _m_ink_ripple.hideWave)(this.getConfig, opts);
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   showWave(opts) {
-    (0, _utils.showWave)(this.getConfig, opts);
+    (0, _m_ink_ripple.showWave)(this.getConfig, opts);
   }
   componentWillUpdate(nextProps) {
     if (this.props.config !== nextProps.config) {

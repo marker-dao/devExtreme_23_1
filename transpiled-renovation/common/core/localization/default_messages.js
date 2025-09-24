@@ -90,6 +90,9 @@ const defaultMessages = exports.defaultMessages = {
     "dxSwitch-switchedOffText": "OFF",
     "dxForm-optionalMark": "optional",
     "dxForm-requiredMessage": "{0} is required",
+    "dxForm-smartPasteButtonText": "Smart Paste",
+    "dxForm-resetButtonText": "Reset",
+    "dxForm-submitButtonText": "Submit",
     "dxNumberBox-invalidValueMessage": "Value must be a number",
     "dxNumberBox-noDataText": "No data",
     "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",
@@ -783,6 +786,8 @@ const defaultMessages = exports.defaultMessages = {
     "dxMultiView-itemAriaLabel": "{0} of {1}",
     "dxSplitter-resizeHandleAriaLabel": "Split bar",
     "dxSplitter-resizeHandleAriaRoleDescription": "Separator",
-    "dxStepper-optionalMark": "(Optional)"
+    "dxStepper-optionalMark": "(Optional)",
+    "dxSpeechToText-ariaLabelStart": "Press to start voice transcription",
+    "dxSpeechToText-ariaLabelStop": "Press to stop voice transcription"
   }
 };

@@ -10,25 +10,10 @@ var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _themes = require("../../../../ui/themes");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DEFAULT_APPOINTMENT_TEMPLATE_NAME = 'item';
 const DEFAULT_APPOINTMENT_COLLECTOR_TEMPLATE_NAME = 'appointmentCollector';
 const DEFAULT_DROP_DOWN_APPOINTMENT_TEMPLATE_NAME = 'dropDownAppointment';
-const DEFAULT_SCHEDULER_INTERNAL_OPTIONS = exports.DEFAULT_SCHEDULER_INTERNAL_OPTIONS = {
-  loadedResources: [],
-  indicatorTime: undefined,
-  renovateRender: true,
-  _draggingMode: 'outlook',
-  _appointmentTooltipOffset: {
-    x: 0,
-    y: 0
-  },
-  _appointmentCountPerCell: 2,
-  _collectorOffset: 0,
-  _appointmentOffset: 26,
-  appointmentPopupTemplate: 'appointmentPopup',
-  disabledExpr: 'disabled',
-  allowMultipleCellSelection: true
-};
 const DEFAULT_SCHEDULER_OPTIONS = exports.DEFAULT_SCHEDULER_OPTIONS = {
   views: ['day', 'week'],
   currentView: 'day',
@@ -110,9 +95,28 @@ const DEFAULT_SCHEDULER_OPTIONS = exports.DEFAULT_SCHEDULER_OPTIONS = {
       name: 'dateNavigator'
     }, {
       location: 'after',
-      name: 'viewSwitcher'
+      name: 'viewSwitcher',
+      locateInMenu: 'auto'
     }]
   }
+};
+const DEFAULT_SCHEDULER_INTERNAL_OPTIONS = exports.DEFAULT_SCHEDULER_INTERNAL_OPTIONS = {
+  indicatorTime: undefined,
+  renovateRender: true,
+  editing: _extends({
+    legacyForm: false
+  }, DEFAULT_SCHEDULER_OPTIONS.editing),
+  _draggingMode: 'outlook',
+  _appointmentTooltipOffset: {
+    x: 0,
+    y: 0
+  },
+  _appointmentCountPerCell: 2,
+  _collectorOffset: 0,
+  _appointmentOffset: 26,
+  appointmentPopupTemplate: 'appointmentPopup',
+  disabledExpr: 'disabled',
+  allowMultipleCellSelection: true
 };
 const DEFAULT_SCHEDULER_INTEGRATION_OPTIONS = exports.DEFAULT_SCHEDULER_INTEGRATION_OPTIONS = {
   integrationOptions: {

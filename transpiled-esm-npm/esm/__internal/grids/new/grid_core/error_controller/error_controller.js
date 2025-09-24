@@ -1,4 +1,4 @@
-import { signal } from '@preact/signals-core';
+import { signal } from '../../../../core/state_manager/index';
 export class ErrorController {
   constructor() {
     this._errors = signal([]);

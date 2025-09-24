@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.registerTrialPanelComponents = registerTrialPanelComponents;
 exports.showTrialPanel = showTrialPanel;
 var _trial_panel = require("./trial_panel.client");
-function showTrialPanel(buyNowUrl, licensingDocUrl, version, customStyles) {
+function showTrialPanel(buyNowUrl, licensingDocUrl, version, subscriptions, customStyles) {
   if ((0, _trial_panel.isClient)()) {
-    (0, _trial_panel.renderTrialPanel)(buyNowUrl, licensingDocUrl, version, customStyles);
+    (0, _trial_panel.renderTrialPanel)(buyNowUrl, licensingDocUrl, version, subscriptions, customStyles);
   }
 }
 function registerTrialPanelComponents(customStyles) {

@@ -7,6 +7,7 @@ exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _iterator = require("../../../core/utils/iterator");
 var _public_component = require("../../../core/utils/public_component");
+var _type = require("../../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const INVISIBLE_STATE_CLASS = 'dx-state-invisible';
 const DISABLED_STATE_CLASS = 'dx-state-disabled';
@@ -89,8 +90,10 @@ class CollectionItem {
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static getInstance($element) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return (0, _public_component.getInstanceByElement)($element, this);
+  }
+  static isClickableItem(item) {
+    return (0, _type.isObject)(item) && 'onClick' in item;
   }
 }
 var _default = exports.default = CollectionItem;

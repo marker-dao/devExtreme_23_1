@@ -8,7 +8,6 @@ import './module_not_extended/error_handling';
 import './m_grid_view';
 import './module_not_extended/header_panel';
 import registerComponent from '../../../core/component_registrator';
-import { isDefined } from '../../../core/utils/type';
 import { isMaterialBased } from '../../../ui/themes';
 import gridCoreUtils from '../../grids/grid_core/m_utils';
 import GridCoreWidget from '../../grids/grid_core/m_widget_base';
@@ -57,10 +56,7 @@ class TreeList extends GridCoreWidget {
     return treeListCore;
   }
   focus(element) {
-    super.focus();
-    if (isDefined(element)) {
-      this.getController('keyboardNavigation').focus(element);
-    }
+    this.getController('keyboardNavigation').focus(element);
   }
 }
 // @ts-expect-error

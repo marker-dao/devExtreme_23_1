@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ToolbarController = void 0;
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _options_controller = require("../options_controller/options_controller");
 var _const = require("./const");
 var _utils = require("./utils");
@@ -13,16 +13,16 @@ class ToolbarController {
   constructor(options) {
     this.options = options;
     this.itemSubscriptions = {};
-    this.defaultItems = (0, _signalsCore.signal)({});
+    this.defaultItems = (0, _index.signal)({});
     this.userItems = this.options.oneWay('toolbar.items');
-    this.items = (0, _signalsCore.computed)(() => (0, _utils.normalizeToolbarItems)((0, _utils.getSortedToolbarItems)(this.defaultItems.value), this.userItems.value, _const.DEFAULT_TOOLBAR_ITEMS));
+    this.items = (0, _index.computed)(() => (0, _utils.normalizeToolbarItems)((0, _utils.getSortedToolbarItems)(this.defaultItems.value), this.userItems.value, _const.DEFAULT_TOOLBAR_ITEMS));
   }
   addDefaultItem(item) {
-    let needRender = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : (0, _signalsCore.signal)(true);
+    let needRender = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : (0, _index.signal)(true);
     const {
       name
     } = item.peek();
-    this.itemSubscriptions[name] = (0, _signalsCore.effect)(() => {
+    this.itemSubscriptions[name] = (0, _index.effect)(() => {
       const newDefaultItems = _extends({}, this.defaultItems.peek());
       if (needRender.value) {
         newDefaultItems[name] = item.value;

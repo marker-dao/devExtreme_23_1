@@ -64,7 +64,6 @@ class RangeSlider extends Slider {
       },
       home(e) {
         this._processKeyboardEvent(e);
-        // @ts-expect-error ts-error
         const isStart = $(e.target).hasClass(RANGE_SLIDER_START_HANDLE_CLASS);
         const valueOption = isStart ? 'start' : 'end';
         const startOption = isStart ? 'min' : 'start';
@@ -73,7 +72,6 @@ class RangeSlider extends Slider {
       },
       end(e) {
         this._processKeyboardEvent(e);
-        // @ts-expect-error ts-error
         const isStart = $(e.target).hasClass(RANGE_SLIDER_START_HANDLE_CLASS);
         const valueOption = isStart ? 'start' : 'end';
         const endOption = isStart ? 'end' : 'max';

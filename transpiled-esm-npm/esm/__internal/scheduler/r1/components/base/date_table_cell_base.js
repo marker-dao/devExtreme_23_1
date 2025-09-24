@@ -39,7 +39,7 @@ export class DateTableCellBase extends BaseInfernoComponent {
         groups,
         groupIndex: groups ? groupIndex : undefined,
         text: '',
-        allDay: !!allDay || undefined
+        allDay: Boolean(allDay) || undefined
       }, contentTemplateProps === null || contentTemplateProps === void 0 ? void 0 : contentTemplateProps.data),
       index
     };
@@ -69,7 +69,7 @@ export class DateTableCellBase extends BaseInfernoComponent {
       crossScrollingEnabled
     } = viewContext;
     const cellSizeHorizontalClass = renderUtils.getCellSizeHorizontalClass(viewType, crossScrollingEnabled);
-    const cellSizeVerticalClass = renderUtils.getCellSizeVerticalClass(!!allDay);
+    const cellSizeVerticalClass = renderUtils.getCellSizeVerticalClass(Boolean(allDay));
     const classes = combineClasses({
       [cellSizeHorizontalClass]: true,
       [cellSizeVerticalClass]: true,

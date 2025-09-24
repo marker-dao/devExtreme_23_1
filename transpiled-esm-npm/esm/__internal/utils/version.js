@@ -1,7 +1,7 @@
+import config from '../../core/config';
 import errors from '../../core/errors';
 const MAX_MINOR_VERSION = 2;
 const MIN_MINOR_VERSION = 1;
-const assertedVersions = [];
 const VERSION_SPLITTER = '.';
 export function stringifyVersion(version) {
   const {
@@ -19,10 +19,16 @@ export function parseVersion(version) {
     patch
   };
 }
+export function getAssertedVersions() {
+  var _config;
+  return ((_config = config()) === null || _config === void 0 ? void 0 : _config.versionAssertions) ?? [];
+}
 export function assertDevExtremeVersion(packageName, version) {
-  assertedVersions.push({
-    packageName,
-    version
+  config({
+    versionAssertions: [...getAssertedVersions(), {
+      packageName,
+      version
+    }]
   });
 }
 export function clearAssertedVersions() {}
@@ -50,7 +56,7 @@ export function getPreviousMajorVersion(_ref) {
   return previousMajorVersion;
 }
 export function assertedVersionsCompatible(currentVersion) {
-  const mismatchingVersions = assertedVersions.filter(assertedVersion => !versionsEqual(parseVersion(assertedVersion.version), currentVersion));
+  const mismatchingVersions = getAssertedVersions().filter(assertedVersion => !versionsEqual(parseVersion(assertedVersion.version), currentVersion));
   if (mismatchingVersions.length) {
     errors.log('W0023', stringifyVersionList([{
       packageName: 'devextreme',

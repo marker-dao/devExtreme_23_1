@@ -3,13 +3,13 @@ import { noop as _noop } from '../../../core/utils/common';
 import { extend as _extend } from '../../../core/utils/extend';
 import { reverseEach as _reverseEach } from '../../../core/utils/iterator';
 import { isDefined as _isDefined, type } from '../../../core/utils/type';
-import { Axis } from '../../../viz/axes/base_axis';
-import { SeriesFamily } from '../../../viz/core/series_family';
-import { convertVisualRangeObject, map as _map, mergeMarginOptions, rangesAreEqual, setCanvasValues, unique } from '../../../viz/core/utils';
-import rangeDataCalculator from '../../../viz/series/helpers/range_data_calculator';
-import { Range } from '../../../viz/translators/range';
 // @ts-expect-error
 import { areCanvasesDifferent, floorCanvasDimensions } from '../../../viz/utils';
+import { Axis } from '../../viz/axes/base_axis';
+import { SeriesFamily } from '../../viz/core/series_family';
+import { convertVisualRangeObject, map as _map, mergeMarginOptions, rangesAreEqual, setCanvasValues, unique } from '../../viz/core/utils';
+import rangeDataCalculator from '../../viz/series/helpers/range_data_calculator';
+import { Range } from '../../viz/translators/range';
 import { BaseChart } from './m_base_chart';
 const {
   isArray

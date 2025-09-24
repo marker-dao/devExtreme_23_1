@@ -5,13 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _events_engine = _interopRequireDefault(require("../../../../common/core/events/core/events_engine"));
-var _index = require("../../../../common/core/events/utils/index");
+var _utils = require("../../../../common/core/events/utils");
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _extend = require("../../../../core/utils/extend");
 var _size = require("../../../../core/utils/size");
 var _popup = _interopRequireDefault(require("../../../../ui/popup"));
 var _m_window = _interopRequireDefault(require("../../../core/utils/m_window"));
-var _m_listEdit = _interopRequireDefault(require("../../../ui/list/m_list.edit.search"));
+var _listEdit = _interopRequireDefault(require("../../../ui/list/list.edit.search"));
 var _devextremeQuill = _interopRequireDefault(require("devextreme-quill"));
 var _m_base = _interopRequireDefault(require("./m_base"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -41,7 +41,7 @@ if (_devextremeQuill.default) {
     }
     renderList($container, options) {
       const $list = (0, _renderer.default)('<div>').addClass(SUGGESTION_LIST_CLASS).appendTo($container);
-      this._list = this.options.editorInstance._createComponent($list, _m_listEdit.default, options);
+      this._list = this.options.editorInstance._createComponent($list, _listEdit.default, options);
     }
     renderPopup() {
       const {
@@ -109,7 +109,7 @@ if (_devextremeQuill.default) {
       }
     }
     _renderPreventFocusOut() {
-      const eventName = (0, _index.addNamespace)('mousedown', MODULE_NAMESPACE);
+      const eventName = (0, _utils.addNamespace)('mousedown', MODULE_NAMESPACE);
       // @ts-expect-error
       _events_engine.default.on(this._popup.$wrapper(), eventName, e => {
         e.preventDefault();

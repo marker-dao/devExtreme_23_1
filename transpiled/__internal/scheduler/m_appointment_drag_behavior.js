@@ -77,7 +77,7 @@ class AppointmentDragBehavior {
   }
   getItemSettings(appointment) {
     const itemData = (0, _renderer.default)(appointment).data(_constants.LIST_ITEM_DATA_KEY);
-    return (itemData === null || itemData === void 0 ? void 0 : itemData.settings) || [];
+    return itemData === null || itemData === void 0 ? void 0 : itemData.settings;
   }
   createDragStartHandler(options, appointmentDragging) {
     return e => {

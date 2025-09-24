@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
 var _emitterGesture = _interopRequireDefault(require("../../../common/core/events/gesture/emitter.gesture.scroll"));
-var _index = require("../../../common/core/events/utils/index");
+var _utils = require("../../../common/core/events/utils");
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _devices = _interopRequireDefault(require("../../../core/devices"));
 var _element = require("../../../core/element");
@@ -17,21 +17,17 @@ var _deferred = require("../../../core/utils/deferred");
 var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
-var _dom_component = _interopRequireDefault(require("../../core/widget/dom_component"));
-var _get_element_location_internal = require("../../ui/scroll_view/utils/get_element_location_internal");
 var _m_support = _interopRequireDefault(require("../../core/utils/m_support"));
-var _scrollable = require("./scrollable.device");
-var _scrollable2 = _interopRequireDefault(require("./scrollable.native"));
-var _scrollable3 = require("./scrollable.simulated");
+var _dom_component = _interopRequireDefault(require("../../core/widget/dom_component"));
+var _consts = require("../../ui/scroll_view/consts");
+var _scrollable = require("../../ui/scroll_view/scrollable.device");
+var _scrollable2 = _interopRequireDefault(require("../../ui/scroll_view/scrollable.native"));
+var _scrollable3 = require("../../ui/scroll_view/scrollable.simulated");
+var _get_element_location_internal = require("../../ui/scroll_view/utils/get_element_location_internal");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const SCROLLABLE = 'dxScrollable';
 const SCROLLABLE_STRATEGY = 'dxScrollableStrategy';
-const SCROLLABLE_CLASS = 'dx-scrollable';
-const SCROLLABLE_DISABLED_CLASS = 'dx-scrollable-disabled';
-const SCROLLABLE_CONTAINER_CLASS = 'dx-scrollable-container';
-const SCROLLABLE_WRAPPER_CLASS = 'dx-scrollable-wrapper';
-const SCROLLABLE_CONTENT_CLASS = 'dx-scrollable-content';
 const VERTICAL = 'vertical';
 const HORIZONTAL = 'horizontal';
 const BOTH = 'both';
@@ -101,10 +97,10 @@ class Scrollable extends _dom_component.default {
     }
   }
   _initScrollableMarkup() {
-    const $element = this.$element().addClass(SCROLLABLE_CLASS);
-    const $container = (0, _renderer.default)('<div>').addClass(SCROLLABLE_CONTAINER_CLASS);
-    const $wrapper = (0, _renderer.default)('<div>').addClass(SCROLLABLE_WRAPPER_CLASS);
-    const $content = (0, _renderer.default)('<div>').addClass(SCROLLABLE_CONTENT_CLASS);
+    const $element = this.$element().addClass(_consts.SCROLLABLE_CLASS);
+    const $container = (0, _renderer.default)('<div>').addClass(_consts.SCROLLABLE_CONTAINER_CLASS);
+    const $wrapper = (0, _renderer.default)('<div>').addClass(_consts.SCROLLABLE_WRAPPER_CLASS);
+    const $content = (0, _renderer.default)('<div>').addClass(_consts.SCROLLABLE_CONTENT_CLASS);
     this._$container = $container;
     this._$wrapper = $wrapper;
     this._$content = $content;
@@ -153,14 +149,14 @@ class Scrollable extends _dom_component.default {
       scrollTarget: this._$container
     };
     _events_engine.default.off(this._$wrapper, `.${SCROLLABLE}`);
-    _events_engine.default.on(this._$wrapper, (0, _index.addNamespace)(_emitterGesture.default.init, SCROLLABLE), initEventData, this._initHandler.bind(this));
-    _events_engine.default.on(this._$wrapper, (0, _index.addNamespace)(_emitterGesture.default.start, SCROLLABLE), strategy.handleStart.bind(strategy));
-    _events_engine.default.on(this._$wrapper, (0, _index.addNamespace)(_emitterGesture.default.move, SCROLLABLE), strategy.handleMove.bind(strategy));
-    _events_engine.default.on(this._$wrapper, (0, _index.addNamespace)(_emitterGesture.default.end, SCROLLABLE), strategy.handleEnd.bind(strategy));
-    _events_engine.default.on(this._$wrapper, (0, _index.addNamespace)(_emitterGesture.default.cancel, SCROLLABLE), strategy.handleCancel.bind(strategy));
-    _events_engine.default.on(this._$wrapper, (0, _index.addNamespace)(_emitterGesture.default.stop, SCROLLABLE), strategy.handleStop.bind(strategy));
+    _events_engine.default.on(this._$wrapper, (0, _utils.addNamespace)(_emitterGesture.default.init, SCROLLABLE), initEventData, this._initHandler.bind(this));
+    _events_engine.default.on(this._$wrapper, (0, _utils.addNamespace)(_emitterGesture.default.start, SCROLLABLE), strategy.handleStart.bind(strategy));
+    _events_engine.default.on(this._$wrapper, (0, _utils.addNamespace)(_emitterGesture.default.move, SCROLLABLE), strategy.handleMove.bind(strategy));
+    _events_engine.default.on(this._$wrapper, (0, _utils.addNamespace)(_emitterGesture.default.end, SCROLLABLE), strategy.handleEnd.bind(strategy));
+    _events_engine.default.on(this._$wrapper, (0, _utils.addNamespace)(_emitterGesture.default.cancel, SCROLLABLE), strategy.handleCancel.bind(strategy));
+    _events_engine.default.on(this._$wrapper, (0, _utils.addNamespace)(_emitterGesture.default.stop, SCROLLABLE), strategy.handleStop.bind(strategy));
     _events_engine.default.off(this._$container, `.${SCROLLABLE}`);
-    _events_engine.default.on(this._$container, (0, _index.addNamespace)('scroll', SCROLLABLE), strategy.handleScroll.bind(strategy));
+    _events_engine.default.on(this._$container, (0, _utils.addNamespace)('scroll', SCROLLABLE), strategy.handleScroll.bind(strategy));
   }
   _validate(e) {
     if (this._isLocked()) {
@@ -186,7 +182,7 @@ class Scrollable extends _dom_component.default {
     const {
       disabled
     } = this.option();
-    this.$element().toggleClass(SCROLLABLE_DISABLED_CLASS, disabled);
+    this.$element().toggleClass(_consts.SCROLLABLE_DISABLED_CLASS, disabled);
     if (this.option('disabled')) {
       this._lock();
     } else {
@@ -208,7 +204,6 @@ class Scrollable extends _dom_component.default {
     const {
       useNative
     } = this.option();
-    // @ts-expect-error ts-error
     this._strategy = useNative ? new _scrollable2.default(this) : new _scrollable3.SimulatedStrategy(this);
   }
   _createActions() {
@@ -424,7 +419,7 @@ class Scrollable extends _dom_component.default {
   scrollToElement(element, offset) {
     const $element = (0, _renderer.default)(element);
     const elementInsideContent = this.$content().find(element).length;
-    const elementIsInsideContent = $element.parents(`.${SCROLLABLE_CLASS}`).length - $element.parents(`.${SCROLLABLE_CONTENT_CLASS}`).length === 0;
+    const elementIsInsideContent = $element.parents(`.${_consts.SCROLLABLE_CLASS}`).length - $element.parents(`.${_consts.SCROLLABLE_CONTENT_CLASS}`).length === 0;
     if (!elementInsideContent || !elementIsInsideContent) {
       return;
     }

@@ -54,10 +54,10 @@ class DateTableMonthCell extends _index.BaseInfernoComponent {
       today
     } = this.props;
     const classes = (0, _render_utils.combineClasses)({
-      'dx-scheduler-date-table-other-month': !!otherMonth,
-      'dx-scheduler-date-table-current-date': !!today,
-      'dx-scheduler-date-table-first-of-month': !!isFirstDayMonthHighlighting,
-      [className ?? '']: !!className
+      'dx-scheduler-date-table-other-month': Boolean(otherMonth),
+      'dx-scheduler-date-table-current-date': Boolean(today),
+      'dx-scheduler-date-table-first-of-month': Boolean(isFirstDayMonthHighlighting),
+      [className ?? '']: Boolean(className)
     });
     const contentTemplateProps = this.getContentTemplateProps();
     return (0, _inferno.createComponentVNode)(2, _date_table_cell_base.DateTableCellBase, {

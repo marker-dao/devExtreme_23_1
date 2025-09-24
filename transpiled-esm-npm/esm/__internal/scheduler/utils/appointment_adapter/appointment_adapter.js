@@ -1,5 +1,4 @@
 import { deepExtendArraySafe } from '../../../core/utils/m_object';
-import { getRecurrenceProcessor } from '../../m_recurrence';
 export class AppointmentAdapter {
   constructor(source, dataAccessors) {
     this.source = source;
@@ -64,7 +63,7 @@ export class AppointmentAdapter {
     return endDate && startDate ? endDate.getTime() - startDate.getTime() : 0;
   }
   get isRecurrent() {
-    return getRecurrenceProcessor().isValidRecurrenceRule(this.recurrenceRule);
+    return this.dataAccessors.isRecurrent(this.source);
   }
   clone() {
     return new AppointmentAdapter(deepExtendArraySafe({}, this.source, false, false, false, true), this.dataAccessors);

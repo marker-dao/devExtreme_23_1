@@ -28,6 +28,8 @@ const RTM_MIN_PATCH_VERSION = 3;
 const KEY_SPLITTER = '.';
 const BUY_NOW_LINK = 'https://go.devexpress.com/Licensing_Installer_Watermark_DevExtremeJQuery.aspx';
 const LICENSING_DOC_LINK = 'https://go.devexpress.com/Licensing_Documentation_DevExtremeJQuery.aspx';
+const NBSP = '\u00A0';
+const SUBSCRIPTION_NAMES = `Universal, DXperience, ASP.NET${NBSP}and${NBSP}Blazor, DevExtreme${NBSP}Complete`;
 const GENERAL_ERROR = {
   kind: _types.TokenKind.corrupted,
   error: 'general'
@@ -206,7 +208,7 @@ function validateLicense(licenseKey) {
   if (error && !internal) {
     const buyNowLink = (0, _config.default)().buyNowLink ?? BUY_NOW_LINK;
     const licensingDocLink = (0, _config.default)().licensingDocLink ?? LICENSING_DOC_LINK;
-    (0, _trial_panel.showTrialPanel)(buyNowLink, licensingDocLink, _version.fullVersion);
+    (0, _trial_panel.showTrialPanel)(buyNowLink, licensingDocLink, _version.fullVersion, SUBSCRIPTION_NAMES);
   }
   const preview = isPreview(version.patch);
   if (error) {

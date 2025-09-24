@@ -9,7 +9,6 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _bindable_template = require("../../../core/templates/bindable_template");
 var _common = require("../../../core/utils/common");
 var _data = require("../../../core/utils/data");
-var _extend = require("../../../core/utils/extend");
 var _icon = require("../../../core/utils/icon");
 var _iterator = require("../../../core/utils/iterator");
 var _type = require("../../../core/utils/type");
@@ -58,12 +57,16 @@ class HierarchicalCollectionWidget extends _uiCollection_widget.default {
   }
   _initDataAdapter() {
     const accessors = this._createDataAdapterAccessors();
-    this._dataAdapter = new _data_adapter.default((0, _extend.extend)({
+    const {
+      items = []
+    } = this.option();
+    this._dataAdapter = new _data_adapter.default(_extends({
       dataAccessors: {
         getters: accessors.getters,
         setters: accessors.setters
       },
-      items: this.option('items')
+      // @ts-expect-error
+      items
     }, this._getDataAdapterOptions()));
   }
   _getDataAdapterOptions() {
@@ -133,7 +136,7 @@ class HierarchicalCollectionWidget extends _uiCollection_widget.default {
     return (0, _renderer.default)('<span>').text(itemData.text);
   }
   _initAccessors() {
-    (0, _iterator.each)(this._getAccessors(), (_, accessor) => {
+    (0, _iterator.each)(this._getAccessors(), (_index, accessor) => {
       this._compileAccessor(accessor);
     });
     this._compileDisplayGetter();
@@ -183,17 +186,15 @@ class HierarchicalCollectionWidget extends _uiCollection_widget.default {
       getters: {},
       setters: {}
     };
-    (0, _iterator.each)(this._getAccessors(), (_, accessor) => {
+    (0, _iterator.each)(this._getAccessors(), (_index, accessor) => {
       const getterName = `_${accessor}Getter`;
       const setterName = `_${accessor}Setter`;
       const newAccessor = accessor === 'parentId' ? 'parentKey' : accessor;
       accessors.getters[newAccessor] = this[getterName];
       accessors.setters[newAccessor] = this[setterName];
     });
-    // @ts-expect-error ts-error
-    accessors.getters.display = !this._displayGetter
-    // @ts-expect-error ts-error
-    ? itemData => itemData.text : this._displayGetter;
+    // @ts-expect-error
+    accessors.getters.display = this._displayGetter ?? (itemData => itemData.text);
     return accessors;
   }
   _initMarkup() {

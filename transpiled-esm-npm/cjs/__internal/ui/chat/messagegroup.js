@@ -79,9 +79,8 @@ class MessageGroup extends _widget.default {
     });
   }
   _renderMessageBubble(message) {
-    const $bubble = (0, _renderer.default)('<div>').data(_messagebubble.MESSAGE_DATA_KEY, message);
+    const $bubble = (0, _renderer.default)('<div>').data(_messagebubble.MESSAGE_DATA_KEY, message).appendTo(this._$messageBubbleContainer);
     this._createComponent($bubble, _messagebubble.default, this._getMessageBubbleOptions(message));
-    this._$messageBubbleContainer.append($bubble);
   }
   _getMessageBubbleOptions(message) {
     const options = {
@@ -105,7 +104,7 @@ class MessageGroup extends _widget.default {
     return options;
   }
   _renderMessageBubbles(items) {
-    this._$messageBubbleContainer = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGEGROUP_CONTENT_CLASS);
+    this._$messageBubbleContainer = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGEGROUP_CONTENT_CLASS).appendTo(this.element());
     items.forEach((message, index) => {
       const shouldCreateEditedElement = index !== 0 && message.type !== 'image' && message.isEdited === true && !message.isDeleted;
       if (shouldCreateEditedElement) {
@@ -114,7 +113,6 @@ class MessageGroup extends _widget.default {
       }
       this._renderMessageBubble(message);
     });
-    this._$messageBubbleContainer.appendTo(this.element());
   }
   _renderMessageGroupInformation(message, shouldRenderEditedMessage) {
     const {

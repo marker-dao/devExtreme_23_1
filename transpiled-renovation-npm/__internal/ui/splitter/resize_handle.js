@@ -8,7 +8,7 @@ var _click = require("../../../common/core/events/click");
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
 var _double_click = require("../../../common/core/events/double_click");
 var _drag = require("../../../common/core/events/drag");
-var _index = require("../../../common/core/events/utils/index");
+var _utils = require("../../../common/core/events/utils");
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
 var _guid = _interopRequireDefault(require("../../../core/guid"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
@@ -47,7 +47,7 @@ class ResizeHandle extends _widget.default {
           rtlEnabled
         } = this.option();
         const forbidCollapseNext = rtlEnabled ? showCollapsePrev === false : showCollapseNext === false;
-        if ((0, _index.isCommandKeyPressed)(e)) {
+        if ((0, _utils.isCommandKeyPressed)(e)) {
           if (direction === RESIZE_DIRECTION.vertical || forbidCollapseNext) {
             return;
           }
@@ -72,7 +72,7 @@ class ResizeHandle extends _widget.default {
           rtlEnabled
         } = this.option();
         const forbidCollapsePrev = rtlEnabled ? showCollapseNext === false : showCollapsePrev === false;
-        if ((0, _index.isCommandKeyPressed)(e)) {
+        if ((0, _utils.isCommandKeyPressed)(e)) {
           if (direction === RESIZE_DIRECTION.vertical || forbidCollapsePrev) {
             return;
           }
@@ -94,7 +94,7 @@ class ResizeHandle extends _widget.default {
           direction,
           showCollapsePrev
         } = this.option();
-        if ((0, _index.isCommandKeyPressed)(e)) {
+        if ((0, _utils.isCommandKeyPressed)(e)) {
           if (direction === RESIZE_DIRECTION.horizontal || showCollapsePrev === false) {
             return;
           }
@@ -112,7 +112,7 @@ class ResizeHandle extends _widget.default {
           direction,
           showCollapseNext
         } = this.option();
-        if ((0, _index.isCommandKeyPressed)(e)) {
+        if ((0, _utils.isCommandKeyPressed)(e)) {
           if (direction === RESIZE_DIRECTION.horizontal || showCollapseNext === false) {
             return;
           }
@@ -145,11 +145,11 @@ class ResizeHandle extends _widget.default {
   _init() {
     super._init();
     const namespace = `${RESIZE_HANDLER_MODULE_NAMESPACE}${new _guid.default()}`;
-    this.RESIZE_START_EVENT_NAME = (0, _index.addNamespace)(_drag.start, namespace);
-    this.RESIZE_EVENT_NAME = (0, _index.addNamespace)(_drag.move, namespace);
-    this.RESIZE_END_EVENT_NAME = (0, _index.addNamespace)(_drag.end, namespace);
-    this.CLICK_EVENT_NAME = (0, _index.addNamespace)(_click.name, namespace);
-    this.DOUBLE_CLICK_EVENT_NAME = (0, _index.addNamespace)(_double_click.name, namespace);
+    this.RESIZE_START_EVENT_NAME = (0, _utils.addNamespace)(_drag.start, namespace);
+    this.RESIZE_EVENT_NAME = (0, _utils.addNamespace)(_drag.move, namespace);
+    this.RESIZE_END_EVENT_NAME = (0, _utils.addNamespace)(_drag.end, namespace);
+    this.CLICK_EVENT_NAME = (0, _utils.addNamespace)(_click.name, namespace);
+    this.DOUBLE_CLICK_EVENT_NAME = (0, _utils.addNamespace)(_double_click.name, namespace);
   }
   _initMarkup() {
     super._initMarkup();

@@ -18,8 +18,8 @@ var _ui = _interopRequireDefault(require("../../ui/popup/ui.popup"));
 var _ui2 = _interopRequireDefault(require("../../ui/shared/ui.editor_factory_mixin"));
 var _tree_view = _interopRequireDefault(require("../../ui/tree_view"));
 var _ui3 = _interopRequireDefault(require("../../ui/widget/ui.widget"));
-var _m_utils = require("../ui/overlay/m_utils");
-var _m_utils2 = require("./m_utils");
+var _utils = require("../ui/overlay/utils");
+var _m_utils = require("./m_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable max-classes-per-file */
 
@@ -158,16 +158,16 @@ class FilterBuilder extends _ui3.default {
   getFilterExpression() {
     const fields = this._getNormalizedFields();
     const value = (0, _extend.extend)(true, [], this._model);
-    return (0, _m_utils2.getFilterExpression)((0, _m_utils2.getNormalizedFilter)(value), fields, this._customOperations, SOURCE);
+    return (0, _m_utils.getFilterExpression)((0, _m_utils.getNormalizedFilter)(value), fields, this._customOperations, SOURCE);
   }
   _getNormalizedFields() {
-    return (0, _m_utils2.getNormalizedFields)(this.option('fields'));
+    return (0, _m_utils.getNormalizedFields)(this.option('fields'));
   }
   _updateFilter() {
     this._disableInvalidateForValue = true;
     const value = (0, _extend.extend)(true, [], this._model);
-    const normalizedValue = (0, _m_utils2.getNormalizedFilter)(value);
-    const oldValue = (0, _m_utils2.getNormalizedFilter)(this._getModel(this.option('value')));
+    const normalizedValue = (0, _m_utils.getNormalizedFilter)(value);
+    const oldValue = (0, _m_utils.getNormalizedFilter)(this._getModel(this.option('value')));
     if (JSON.stringify(oldValue) !== JSON.stringify(normalizedValue)) {
       this.option('value', normalizedValue);
     }
@@ -187,14 +187,14 @@ class FilterBuilder extends _ui3.default {
     this._editorFactory = new EditorFactory();
   }
   _initCustomOperations() {
-    this._customOperations = (0, _m_utils2.getMergedOperations)(this.option('customOperations'), this.option('filterOperationDescriptions.between'), this);
+    this._customOperations = (0, _m_utils.getMergedOperations)(this.option('customOperations'), this.option('filterOperationDescriptions.between'), this);
   }
   _getDefaultGroupOperation() {
     var _this$option;
     return ((_this$option = this.option('groupOperations')) === null || _this$option === void 0 ? void 0 : _this$option[0]) ?? OPERATORS.and;
   }
   _getModel(value) {
-    return (0, _m_utils2.convertToInnerStructure)(value, this._customOperations, this._getDefaultGroupOperation());
+    return (0, _m_utils.convertToInnerStructure)(value, this._customOperations, this._getDefaultGroupOperation());
   }
   _initModel() {
     this._model = this._getModel(this.option('value'));
@@ -250,12 +250,12 @@ class FilterBuilder extends _ui3.default {
     let groupLevel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
     const $group = this._createGroupElement(criteria, parent, groupLevel);
     const $groupContent = $group.find(`.${FILTER_BUILDER_GROUP_CONTENT_CLASS}`);
-    const groupCriteria = (0, _m_utils2.getGroupCriteria)(criteria);
+    const groupCriteria = (0, _m_utils.getGroupCriteria)(criteria);
     for (let i = 0; i < groupCriteria.length; i++) {
       const innerCriteria = groupCriteria[i];
-      if ((0, _m_utils2.isGroup)(innerCriteria)) {
+      if ((0, _m_utils.isGroup)(innerCriteria)) {
         this._createGroupElementByCriteria(innerCriteria, criteria, groupLevel + 1).appendTo($groupContent);
-      } else if ((0, _m_utils2.isCondition)(innerCriteria)) {
+      } else if ((0, _m_utils.isCondition)(innerCriteria)) {
         this._createConditionElement(innerCriteria, criteria, `${groupLevel + 1}`).appendTo($groupContent);
       }
     }
@@ -268,7 +268,7 @@ class FilterBuilder extends _ui3.default {
     const $group = (0, _renderer.default)('<div>').addClass(FILTER_BUILDER_GROUP_CLASS).append($groupItem).append($groupContent);
     if (parent != null) {
       this._createRemoveButton(() => {
-        (0, _m_utils2.removeItem)(parent, criteria);
+        (0, _m_utils.removeItem)(parent, criteria);
         $group.remove();
         this._updateFilter();
       }, 'group').appendTo($groupItem);
@@ -282,14 +282,14 @@ class FilterBuilder extends _ui3.default {
     $groupItem.attr('aria-owns', `${$guid}`);
     this._createGroupOperationButton(criteria).appendTo($groupItem);
     this._createAddButton(() => {
-      const newGroup = (0, _m_utils2.createEmptyGroup)(this._getDefaultGroupOperation());
-      (0, _m_utils2.addItem)(newGroup, criteria);
+      const newGroup = (0, _m_utils.createEmptyGroup)(this._getDefaultGroupOperation());
+      (0, _m_utils.addItem)(newGroup, criteria);
       this._createGroupElement(newGroup, criteria, groupLevel + 1).appendTo($groupContent);
       this._updateFilter();
     }, () => {
       const field = this.option('fields')[0];
-      const newCondition = (0, _m_utils2.createCondition)(field, this._customOperations);
-      (0, _m_utils2.addItem)(newCondition, criteria);
+      const newCondition = (0, _m_utils.createCondition)(field, this._customOperations);
+      (0, _m_utils.addItem)(newCondition, criteria);
       this._createConditionElement(newCondition, criteria, groupLevel + 1).appendTo($groupContent);
       this._updateFilter();
     }, groupLevel).appendTo($groupItem);
@@ -300,7 +300,7 @@ class FilterBuilder extends _ui3.default {
   }
   _createGroupOperationButton(criteria) {
     const groupOperations = this._getGroupOperations(criteria);
-    let groupMenuItem = (0, _m_utils2.getGroupMenuItem)(criteria, groupOperations);
+    let groupMenuItem = (0, _m_utils.getGroupMenuItem)(criteria, groupOperations);
     const caption = groupMenuItem.text;
     const $operationButton = groupOperations && groupOperations.length < 2 ? this._createButton(caption).addClass(DISABLED_STATE_CLASS) : this._createButtonWithMenu({
       caption,
@@ -310,7 +310,7 @@ class FilterBuilder extends _ui3.default {
         keyExpr: 'value',
         onItemClick: e => {
           if (groupMenuItem !== e.itemData) {
-            (0, _m_utils2.setGroupValue)(criteria, e.itemData.value);
+            (0, _m_utils.setGroupValue)(criteria, e.itemData.value);
             $operationButton.text(e.itemData.text);
             groupMenuItem = e.itemData;
             this._updateFilter();
@@ -396,13 +396,13 @@ class FilterBuilder extends _ui3.default {
     return $button;
   }
   _hasValueButton(condition) {
-    const customOperation = (0, _m_utils2.getCustomOperation)(this._customOperations, condition[1]);
+    const customOperation = (0, _m_utils.getCustomOperation)(this._customOperations, condition[1]);
     return customOperation ? customOperation.hasValue !== false : condition[2] !== null;
   }
   _createOperationButtonWithMenu(condition, field) {
     const that = this;
-    const availableOperations = (0, _m_utils2.getAvailableOperations)(field, this.option('filterOperationDescriptions'), this._customOperations);
-    let currentOperation = (0, _m_utils2.getOperationFromAvailable)((0, _m_utils2.getOperationValue)(condition), availableOperations);
+    const availableOperations = (0, _m_utils.getAvailableOperations)(field, this.option('filterOperationDescriptions'), this._customOperations);
+    let currentOperation = (0, _m_utils.getOperationFromAvailable)((0, _m_utils.getOperationValue)(condition), availableOperations);
     const $operationButton = this._createButtonWithMenu({
       caption: currentOperation.text,
       menu: {
@@ -417,7 +417,7 @@ class FilterBuilder extends _ui3.default {
         onItemClick: e => {
           if (currentOperation !== e.itemData) {
             currentOperation = e.itemData;
-            (0, _m_utils2.updateConditionByOperation)(condition, currentOperation.value, that._customOperations);
+            (0, _m_utils.updateConditionByOperation)(condition, currentOperation.value, that._customOperations);
             const $valueButton = $operationButton.siblings().filter(`.${FILTER_BUILDER_ITEM_VALUE_CLASS}`);
             if (that._hasValueButton(condition)) {
               if ($valueButton.length !== 0) {
@@ -446,10 +446,10 @@ class FilterBuilder extends _ui3.default {
   _createFieldButtonWithMenu(fields, condition, field) {
     const that = this;
     const allowHierarchicalFields = this.option('allowHierarchicalFields');
-    const items = (0, _m_utils2.getItems)(fields, allowHierarchicalFields);
-    let item = (0, _m_utils2.getField)(field.name || field.dataField, items);
+    const items = (0, _m_utils.getItems)(fields, allowHierarchicalFields);
+    let item = (0, _m_utils.getField)(field.name || field.dataField, items);
     const getFullCaption = function (item, items) {
-      return allowHierarchicalFields ? (0, _m_utils2.getCaptionWithParents)(item, items) : item.caption;
+      return allowHierarchicalFields ? (0, _m_utils.getCaptionWithParents)(item, items) : item.caption;
     };
     condition[0] = item.name || item.dataField;
     const $fieldButton = this._createButtonWithMenu({
@@ -465,7 +465,7 @@ class FilterBuilder extends _ui3.default {
             item = e.itemData;
             condition[0] = item.name || item.dataField;
             condition[2] = item.dataType === 'object' ? null : '';
-            (0, _m_utils2.updateConditionByOperation)(condition, (0, _m_utils2.getDefaultOperation)(item), that._customOperations);
+            (0, _m_utils.updateConditionByOperation)(condition, (0, _m_utils.getDefaultOperation)(item), that._customOperations);
             $fieldButton.siblings().filter(`.${FILTER_BUILDER_ITEM_TEXT_CLASS}`).remove();
             that._createOperationAndValueButtons(condition, item, $fieldButton.parent());
             const caption = getFullCaption(item, e.component.option('items'));
@@ -485,10 +485,10 @@ class FilterBuilder extends _ui3.default {
   _createConditionItem(condition, parent, groupLevel) {
     const $item = (0, _renderer.default)('<div>').addClass(FILTER_BUILDER_GROUP_ITEM_CLASS);
     const fields = this._getNormalizedFields();
-    const field = (0, _m_utils2.getField)(condition[0], fields);
+    const field = (0, _m_utils.getField)(condition[0], fields);
     this._addAriaAttributes($item, '', 'treeitem', null, null, groupLevel);
     this._createRemoveButton(() => {
-      (0, _m_utils2.removeItem)(parent, condition);
+      (0, _m_utils.removeItem)(parent, condition);
       const isSingleChild = $item.parent().children().length === 1;
       if (isSingleChild) {
         $item.parent().remove();
@@ -505,7 +505,7 @@ class FilterBuilder extends _ui3.default {
     let groupOperations = this.option('groupOperations');
     const groupOperationDescriptions = this.option('groupOperationDescriptions');
     if (!groupOperations || !groupOperations.length) {
-      groupOperations = [(0, _m_utils2.getGroupValue)(criteria).replace('!', 'not')];
+      groupOperations = [(0, _m_utils.getGroupValue)(criteria).replace('!', 'not')];
     }
     return groupOperations.map(operation => ({
       text: groupOperationDescriptions[operation],
@@ -553,14 +553,14 @@ class FilterBuilder extends _ui3.default {
     const $text = (0, _renderer.default)('<div>').html('&nbsp;').addClass(FILTER_BUILDER_ITEM_VALUE_TEXT_CLASS).attr('tabindex', 0).appendTo($container);
     this._addAriaAttributes($text, _message.default.format('dxFilterBuilder-filterAriaItemValue'), 'button', true);
     const value = item[2];
-    const customOperation = (0, _m_utils2.getCustomOperation)(that._customOperations, item[1]);
+    const customOperation = (0, _m_utils.getCustomOperation)(that._customOperations, item[1]);
     if (!customOperation && field.lookup) {
-      (0, _m_utils2.getCurrentLookupValueText)(field, value, result => {
-        (0, _m_utils2.renderValueText)($text, result);
+      (0, _m_utils.getCurrentLookupValueText)(field, value, result => {
+        (0, _m_utils.renderValueText)($text, result);
       });
     } else {
-      (0, _deferred.when)((0, _m_utils2.getCurrentValueText)(field, value, customOperation)).done(result => {
-        (0, _m_utils2.renderValueText)($text, result, customOperation);
+      (0, _deferred.when)((0, _m_utils.getCurrentValueText)(field, value, customOperation)).done(result => {
+        (0, _m_utils.renderValueText)($text, result, customOperation);
       });
     }
     that._subscribeOnClickAndEnterKey($text, e => {
@@ -651,7 +651,7 @@ class FilterBuilder extends _ui3.default {
     };
     const options = {
       value: value === '' ? null : value,
-      filterOperation: (0, _m_utils2.getOperationValue)(item),
+      filterOperation: (0, _m_utils.getOperationValue)(item),
       setValue(data) {
         value = data === null ? '' : data;
       },
@@ -699,7 +699,7 @@ class FilterBuilder extends _ui3.default {
   }
   _createValueEditor($container, field, options) {
     const $editor = (0, _renderer.default)('<div>').attr('tabindex', 0).appendTo($container);
-    const customOperation = (0, _m_utils2.getCustomOperation)(this._customOperations, options.filterOperation);
+    const customOperation = (0, _m_utils.getCustomOperation)(this._customOperations, options.filterOperation);
     const editorTemplate = customOperation && customOperation.editorTemplate ? customOperation.editorTemplate : field.editorTemplate;
     if (editorTemplate) {
       const template = this._getTemplate(editorTemplate);
@@ -736,7 +736,7 @@ class FilterBuilder extends _ui3.default {
       },
       _ignoreFunctionValueDeprecation: true,
       maxHeight() {
-        return (0, _m_utils.getElementMaxHeightByWindow)(options.menu.position.of);
+        return (0, _utils.getElementMaxHeightByWindow)(options.menu.position.of);
       },
       visible: true,
       focusStateEnabled: false,

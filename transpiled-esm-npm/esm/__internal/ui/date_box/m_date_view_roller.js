@@ -51,6 +51,7 @@ class DateViewRoller extends Scrollable {
     this._renderSelectedIndexChanged();
   }
   _renderSelectedIndexChanged() {
+    // @ts-expect-error ts-error
     this._selectedIndexChanged = this._createActionByOption('onSelectedIndexChanged');
   }
   _renderWheelEvent() {
@@ -65,6 +66,7 @@ class DateViewRoller extends Scrollable {
     }
     // @ts-expect-error ts-error
     const eventName = addNamespace(clickEventName, this.NAME);
+    // @ts-expect-error ts-error
     const clickAction = this._createActionByOption('onClick');
     eventsEngine.off($(this.container()), eventName);
     eventsEngine.on($(this.container()), eventName, e => {

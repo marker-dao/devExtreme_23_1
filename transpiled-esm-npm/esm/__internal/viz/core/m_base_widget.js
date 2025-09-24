@@ -10,16 +10,16 @@ import { each } from '../../../core/utils/iterator';
 import { getHeight, getWidth } from '../../../core/utils/size';
 import { isDefined, isFunction, isNumeric, isObject as _isObject, type } from '../../../core/utils/type';
 import { getWindow, hasWindow } from '../../../core/utils/window';
-import { BaseThemeManager } from '../../../viz/core/base_theme_manager';
-import { createEventTrigger, createIncidentOccurred, createResizeHandler } from '../../../viz/core/base_widget.utils';
 import warnings from '../../../viz/core/errors_warnings';
-import { changes, replaceInherit } from '../../../viz/core/helpers';
-import _Layout from '../../../viz/core/layout';
-import { Renderer } from '../../../viz/core/renderers/renderer';
-import { parseScalar as _parseScalar } from '../../../viz/core/utils';
 // @ts-expect-error
 import { areCanvasesDifferent, floorCanvasDimensions } from '../../../viz/utils';
 import graphicObject from '../../common/m_charts';
+import { BaseThemeManager } from '../../viz/core/base_theme_manager';
+import { createEventTrigger, createIncidentOccurred, createResizeHandler } from '../../viz/core/base_widget.utils';
+import { changes, replaceInherit } from '../../viz/core/helpers';
+import _Layout from '../../viz/core/layout';
+import { Renderer } from '../../viz/core/renderers/renderer';
+import { parseScalar as _parseScalar } from '../../viz/core/utils';
 const {
   log
 } = warnings;

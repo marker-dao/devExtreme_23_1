@@ -12,6 +12,7 @@ class DIContext {
     this.fabrics = new Map();
     this.aliases = new Map();
     this.antiRecursionSet = new Set();
+    this.globalDecorators = [];
   }
   register(id, fabric) {
     // eslint-disable-next-line no-param-reassign
@@ -19,7 +20,8 @@ class DIContext {
     this.fabrics.set(id, fabric);
   }
   registerInstance(id, instance) {
-    this.instances.set(id, instance);
+    const decoratedInstance = this.applyGlobalDecorators(instance);
+    this.instances.set(id, decoratedInstance);
   }
   get(id) {
     const instance = this.tryGet(id);
@@ -36,12 +38,25 @@ class DIContext {
     }
     const fabric = this.fabrics.get(id);
     if (fabric) {
-      const res = this.create(fabric);
-      this.instances.set(id, res);
-      this.instances.set(fabric, res);
-      return res;
+      const instance = this.create(fabric);
+      const decoratedInstance = this.applyGlobalDecorators(instance);
+      this.instances.set(id, decoratedInstance);
+      this.instances.set(fabric, decoratedInstance);
+      return decoratedInstance;
     }
     return null;
+  }
+  registerDecorator(decoratorFn) {
+    if (this.hasInitiatedInstances) {
+      throw new Error('Cannot register decorator: decorators must be registered before any instances are created or retrieved from the DI container.');
+    }
+    this.globalDecorators.push(decoratorFn);
+  }
+  get hasInitiatedInstances() {
+    return this.instances.size > 0;
+  }
+  applyGlobalDecorators(instance) {
+    return this.globalDecorators.reduce((currentInstance, currentDecorator) => currentDecorator(currentInstance), instance);
   }
   create(fabric) {
     if (this.antiRecursionSet.has(fabric)) {

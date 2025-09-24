@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.FilterPanelView = void 0;
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../../core/state_manager/index");
 var _m_filter_builder = require("../../../../../grids/grid_core/filter/m_filter_builder");
 var _m_filter_panel = require("../../../../../grids/grid_core/filter/m_filter_panel");
 var _view = require("../../core/view");
@@ -23,7 +23,7 @@ class FilterPanelView extends _view.View {
     this.oldFilterBuilderView.init();
   }
   getProps() {
-    return (0, _signalsCore.computed)(() => ({
+    return (0, _index.computed)(() => ({
       oldFilterBuilderView: this.oldFilterBuilderView,
       oldFilterPanelView: this.oldFilterPanelView,
       filterValue: this.filterController.filterValueOption.value,

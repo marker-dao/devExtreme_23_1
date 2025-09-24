@@ -1,7 +1,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import scrollEvents from '../../../common/core/events/gesture/emitter.gesture.scroll';
-import { addNamespace } from '../../../common/core/events/utils/index';
+import { addNamespace } from '../../../common/core/events/utils';
 import registerComponent from '../../../core/component_registrator';
 import devices from '../../../core/devices';
 import { getPublicElement } from '../../../core/element';
@@ -12,19 +12,15 @@ import { Deferred, when } from '../../../core/utils/deferred';
 import { getHeight, getOuterHeight, getOuterWidth, getWidth } from '../../../core/utils/size';
 import { isDefined, isPlainObject } from '../../../core/utils/type';
 import { hasWindow } from '../../../core/utils/window';
-import DOMComponent from '../../core/widget/dom_component';
-import { getElementLocationInternal } from '../../ui/scroll_view/utils/get_element_location_internal';
 import supportUtils from '../../core/utils/m_support';
-import { deviceDependentOptions } from './scrollable.device';
-import NativeStrategy from './scrollable.native';
-import { SimulatedStrategy } from './scrollable.simulated';
+import DOMComponent from '../../core/widget/dom_component';
+import { SCROLLABLE_CLASS, SCROLLABLE_CONTAINER_CLASS, SCROLLABLE_CONTENT_CLASS, SCROLLABLE_DISABLED_CLASS, SCROLLABLE_WRAPPER_CLASS } from '../../ui/scroll_view/consts';
+import { deviceDependentOptions } from '../../ui/scroll_view/scrollable.device';
+import NativeStrategy from '../../ui/scroll_view/scrollable.native';
+import { SimulatedStrategy } from '../../ui/scroll_view/scrollable.simulated';
+import { getElementLocationInternal } from '../../ui/scroll_view/utils/get_element_location_internal';
 const SCROLLABLE = 'dxScrollable';
 const SCROLLABLE_STRATEGY = 'dxScrollableStrategy';
-const SCROLLABLE_CLASS = 'dx-scrollable';
-const SCROLLABLE_DISABLED_CLASS = 'dx-scrollable-disabled';
-const SCROLLABLE_CONTAINER_CLASS = 'dx-scrollable-container';
-const SCROLLABLE_WRAPPER_CLASS = 'dx-scrollable-wrapper';
-const SCROLLABLE_CONTENT_CLASS = 'dx-scrollable-content';
 const VERTICAL = 'vertical';
 const HORIZONTAL = 'horizontal';
 const BOTH = 'both';
@@ -201,7 +197,6 @@ class Scrollable extends DOMComponent {
     const {
       useNative
     } = this.option();
-    // @ts-expect-error ts-error
     this._strategy = useNative ? new NativeStrategy(this) : new SimulatedStrategy(this);
   }
   _createActions() {

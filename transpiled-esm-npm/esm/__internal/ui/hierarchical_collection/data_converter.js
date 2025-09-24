@@ -1,4 +1,6 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
+import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
+const _excluded = ["items"];
 import { each } from '../../../core/utils/iterator';
 import { isDefined, isPrimitive } from '../../../core/utils/type';
 import errors from '../../../ui/widget/ui.errors';
@@ -10,12 +12,12 @@ class DataConverter {
     this._indexByKey = {};
   }
   _convertItemsToNodes(items, parentKey) {
-    each(items, (_, item) => {
+    each(items, (_index, item) => {
       const parentId = isDefined(parentKey) ? parentKey : this._getParentId(item);
       const node = this._convertItemToNode(item, parentId);
       this._dataStructure.push(node);
       this._checkForDuplicateId(node.internalFields.key);
-      this._indexByKey[String(node.internalFields.key)] = this._dataStructure.length - 1;
+      this._indexByKey[node.internalFields.key] = this._dataStructure.length - 1;
       if (this._itemHasChildren(item)) {
         this._convertItemsToNodes(this._dataAccessors.getters.items(item), node.internalFields.key);
       }
@@ -47,6 +49,7 @@ class DataConverter {
     if (item.visible !== false) {
       this._visibleItemsCount += 1;
     }
+    const itemWithoutItems = _objectWithoutPropertiesLoose(item, _excluded);
     const node = _extends({
       internalFields: {
         disabled: this._dataAccessors.getters.disabled(item, {
@@ -63,12 +66,12 @@ class DataConverter {
         item: this._makeObjectFromPrimitive(item),
         childrenKeys: []
       }
-    }, item);
-    delete node.items;
+    }, itemWithoutItems);
+    // @ts-expect-error
     return node;
   }
   setChildrenKeys() {
-    each(this._dataStructure, (_, node) => {
+    each(this._dataStructure, (_index, node) => {
       if (node.internalFields.parentKey === this._rootValue) return;
       const parent = this.getParentNode(node);
       if (parent) {
@@ -109,7 +112,7 @@ class DataConverter {
   convertToPublicNodes(data, parent) {
     if (!data.length) return [];
     const publicNodes = [];
-    each(data, (_, node) => {
+    each(data, (_index, node) => {
       const internalNode = isPrimitive(node) ? this._getByKey(node) : node;
       if (!internalNode) {
         return;
@@ -128,10 +131,9 @@ class DataConverter {
     this._dataAccessors = accessors;
   }
   _getByKey(key) {
-    return this._dataStructure[this.getIndexByKey(key)] || null;
+    return this._dataStructure[this.getIndexByKey(key)] ?? null;
   }
   getParentNode(node) {
-    // @ts-expect-error ts-error
     return this._getByKey(node.internalFields.parentKey);
   }
   getByKey(data, key) {
@@ -140,7 +142,7 @@ class DataConverter {
     }
     const findByKey = function findByKey(searchData, searchKey) {
       let result = null;
-      each(searchData, (_, element) => {
+      each(searchData, (_index, element) => {
         var _element$internalFiel;
         const currentElementKey = ((_element$internalFiel = element.internalFields) === null || _element$internalFiel === void 0 ? void 0 : _element$internalFiel.key) ?? element.key;
         if ((currentElementKey === null || currentElementKey === void 0 ? void 0 : currentElementKey.toString()) === searchKey.toString()) {
@@ -174,7 +176,7 @@ class DataConverter {
   }
   removeChildrenKeys() {
     this._indexByKey = {};
-    each(this._dataStructure, (index, node) => {
+    each(this._dataStructure, (_index, node) => {
       node.internalFields.childrenKeys = [];
     });
   }

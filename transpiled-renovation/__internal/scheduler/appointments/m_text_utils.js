@@ -3,10 +3,16 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getFormatType = exports.formatDates = exports.createFormattedDateText = void 0;
+exports.getFormatType = exports.formatDates = exports.createFormattedDateText = exports.DateFormatType = void 0;
 var _date = _interopRequireDefault(require("../../../common/core/localization/date"));
 var _date2 = _interopRequireDefault(require("../../../core/utils/date"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+var DateFormatType;
+(function (DateFormatType) {
+  DateFormatType["DATETIME"] = "DATETIME";
+  DateFormatType["TIME"] = "TIME";
+  DateFormatType["DATE"] = "DATE";
+})(DateFormatType || (exports.DateFormatType = DateFormatType = {}));
 const createFormattedDateText = options => {
   const {
     startDate,
@@ -20,12 +26,12 @@ const createFormattedDateText = options => {
 exports.createFormattedDateText = createFormattedDateText;
 const getFormatType = (startDate, endDate, isAllDay, isDateAndTimeView) => {
   if (isAllDay) {
-    return 'DATE';
+    return DateFormatType.DATE;
   }
   if (isDateAndTimeView && _date2.default.sameDate(startDate, endDate)) {
-    return 'TIME';
+    return DateFormatType.TIME;
   }
-  return 'DATETIME';
+  return DateFormatType.DATETIME;
 };
 exports.getFormatType = getFormatType;
 const formatDates = (startDate, endDate, formatType) => {
@@ -33,11 +39,11 @@ const formatDates = (startDate, endDate, formatType) => {
   const timeFormat = 'shorttime';
   const isSameDate = startDate.getDate() === endDate.getDate();
   switch (formatType) {
-    case 'DATETIME':
+    case DateFormatType.DATETIME:
       return [_date.default.format(startDate, dateFormat), ' ', _date.default.format(startDate, timeFormat), ' - ', isSameDate ? '' : `${_date.default.format(endDate, dateFormat)} `, _date.default.format(endDate, timeFormat)].join('');
-    case 'TIME':
+    case DateFormatType.TIME:
       return `${_date.default.format(startDate, timeFormat)} - ${_date.default.format(endDate, timeFormat)}`;
-    case 'DATE':
+    case DateFormatType.DATE:
       return `${_date.default.format(startDate, dateFormat)}${isSameDate ? '' : ` - ${_date.default.format(endDate, dateFormat)}`}`;
     default:
       return undefined;

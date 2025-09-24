@@ -96,6 +96,9 @@
 
         "dxForm-optionalMark": "valfri",
         "dxForm-requiredMessage": "{0} är nödvändigt",
+        "dxForm-smartPasteButtonText": "Smart Paste",
+        "dxForm-resetButtonText": "Återställ",
+        "dxForm-submitButtonText": "Submit",
 
         "dxNumberBox-invalidValueMessage": "Värdet måste vara ett nummer",
         "dxNumberBox-noDataText": "Inget data",
@@ -848,6 +851,9 @@
         "dxSplitter-resizeHandleAriaLabel": "Split bar",
         "dxSplitter-resizeHandleAriaRoleDescription": "Separator",
 
-        "dxStepper-optionalMark": "(Optional)"
+        "dxStepper-optionalMark": "(Optional)",
+
+        "dxSpeechToText-ariaLabelStart": "Press to start voice transcription",
+        "dxSpeechToText-ariaLabelStop": "Press to stop voice transcription"
     }
 }

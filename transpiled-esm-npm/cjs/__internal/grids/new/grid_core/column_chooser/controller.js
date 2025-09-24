@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ColumnChooserController = void 0;
 var _renderer = _interopRequireDefault(require("../../../../../core/renderer"));
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _m_columns_controller_utils = require("../../../../grids/grid_core/columns_controller/m_columns_controller_utils");
 var _columns_controller = require("../columns_controller/columns_controller");
 var _utils = require("../columns_controller/utils");
@@ -19,7 +19,7 @@ class ColumnChooserController {
   constructor(columnsController, options) {
     this.columnsController = columnsController;
     this.options = options;
-    this.draggingItem = (0, _signalsCore.signal)(null);
+    this.draggingItem = (0, _index.signal)(null);
     this.onColumnMove = column => {
       this.columnsController.columnOption(column, 'visible', false);
     };
@@ -35,7 +35,7 @@ class ColumnChooserController {
       const $placeholderElement = (0, _renderer.default)(e.placeholderElement);
       $placeholderElement.addClass(CLASS.hidden);
     };
-    this.chooserColumns = (0, _signalsCore.computed)(() => {
+    this.chooserColumns = (0, _index.computed)(() => {
       const sortOrder = this.options.oneWay('columnChooser.sortOrder').value;
       const mode = this.options.oneWay('columnChooser.mode').value;
       let chooserColumns = this.columnsController.columns.value;
@@ -46,7 +46,7 @@ class ColumnChooserController {
       chooserColumns = (0, _m_columns_controller_utils.sortColumns)(chooserColumns, sortOrder);
       return chooserColumns;
     });
-    this.items = (0, _signalsCore.computed)(() => this.chooserColumns.value.map((column, index) => ({
+    this.items = (0, _index.computed)(() => this.chooserColumns.value.map((column, index) => ({
       id: index,
       columnName: column.name,
       selected: column.visible,

@@ -4,10 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.PagerView = void 0;
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _m_pager = require("../../../../grids/grid_core/pager/m_pager");
 var _view = require("../core/view");
-var _index = require("../data_controller/index");
+var _index2 = require("../data_controller/index");
 var _options_controller = require("../options_controller/options_controller");
 var _pager = require("./pager");
 var _utils = require("./utils");
@@ -18,15 +18,15 @@ class PagerView extends _view.View {
     this.options = options;
     this.component = _pager.PagerView;
     this.pageSizesConfig = this.options.oneWay('pager.allowedPageSizes');
-    this.allowedPageSizes = (0, _signalsCore.signal)(undefined);
+    this.allowedPageSizes = (0, _index.signal)(undefined);
     this.visibleConfig = this.options.oneWay('pager.visible');
-    this.visible = (0, _signalsCore.computed)(() => (0, _utils.isVisible)(this.visibleConfig.value, this.dataController.pageCount.value));
-    (0, _signalsCore.effect)(() => {
+    this.visible = (0, _index.computed)(() => (0, _utils.isVisible)(this.visibleConfig.value, this.dataController.pageCount.value));
+    (0, _index.effect)(() => {
       this.allowedPageSizes.value = (0, _utils.calculatePageSizes)(this.allowedPageSizes.peek(), this.pageSizesConfig.value, this.dataController.pageSize.value);
     });
   }
   getProps() {
-    return (0, _signalsCore.computed)(() => ({
+    return (0, _index.computed)(() => ({
       itemCount: this.dataController.totalCount.value,
       allowedPageSizes: this.allowedPageSizes.value,
       visible: this.visible.value,
@@ -52,4 +52,4 @@ class PagerView extends _view.View {
   }
 }
 exports.PagerView = PagerView;
-PagerView.dependencies = [_index.DataController, _options_controller.OptionsController];
+PagerView.dependencies = [_index2.DataController, _options_controller.OptionsController];

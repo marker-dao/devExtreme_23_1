@@ -50,10 +50,10 @@ class DateHeaderCell extends _index.BaseInfernoComponent {
       [cellSizeHorizontalClass]: true,
       'dx-scheduler-header-panel-current-time-cell': today,
       'dx-scheduler-header-panel-week-cell': isWeekDayCell,
-      [className ?? '']: !!className
+      [className ?? '']: Boolean(className)
     });
     const classes = _index3.renderUtils.getGroupCellClasses(isFirstGroupCell, isLastGroupCell, cellClasses);
-    const useTemplate = !isTimeCellTemplate && !!dateCellTemplate || isTimeCellTemplate && !!timeCellTemplate;
+    const useTemplate = !isTimeCellTemplate && Boolean(dateCellTemplate) || isTimeCellTemplate && Boolean(timeCellTemplate);
     const children = useTemplate ? // this is a workaround for https://github.com/DevExpress/devextreme-renovation/issues/574
     (0, _inferno.createFragment)([isTimeCellTemplate && (0, _inferno.createComponentVNode)(2, _index2.PublicTemplate, {
       "template": timeCellTemplate,

@@ -14,7 +14,6 @@ require("./module_not_extended/error_handling");
 require("./m_grid_view");
 require("./module_not_extended/header_panel");
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
-var _type = require("../../../core/utils/type");
 var _themes = require("../../../ui/themes");
 var _m_utils = _interopRequireDefault(require("../../grids/grid_core/m_utils"));
 var _m_widget_base = _interopRequireDefault(require("../../grids/grid_core/m_widget_base"));
@@ -64,10 +63,7 @@ class TreeList extends _m_widget_base.default {
     return _m_core.default;
   }
   focus(element) {
-    super.focus();
-    if ((0, _type.isDefined)(element)) {
-      this.getController('keyboardNavigation').focus(element);
-    }
+    this.getController('keyboardNavigation').focus(element);
   }
 }
 // @ts-expect-error

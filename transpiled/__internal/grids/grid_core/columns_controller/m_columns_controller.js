@@ -442,7 +442,9 @@ class ColumnsController extends _m_modules.default.Controller {
     if (expandColumns.length) {
       expandColumn = this.columnOption('command:expand');
     }
-    expandColumns = (0, _iterator.map)(expandColumns, column => (0, _extend.extend)({}, column, {
+    expandColumns = (0, _iterator.map)(expandColumns, column => (0, _extend.extend)({}, _extends({}, column, {
+      ownerBand: undefined
+    }), {
       visibleWidth: null,
       minWidth: null,
       cellTemplate: !(0, _type.isDefined)(column.groupIndex) ? column.cellTemplate : null,
@@ -1225,7 +1227,9 @@ class ColumnsController extends _m_modules.default.Controller {
     return result;
   }
   setName(column) {
-    column.name = column.name || column.dataField || column.type;
+    if (!(0, _m_columns_controller_utils.isColumnNameRequired)(column)) {
+      column.name = column.name || column.dataField || column.type;
+    }
   }
   setUserState(state) {
     const that = this;
@@ -1256,8 +1260,9 @@ class ColumnsController extends _m_modules.default.Controller {
   }
   _checkColumns() {
     const usedNames = {};
-    let hasEditableColumnWithoutName = false;
     const duplicatedNames = [];
+    let hasEditableColumnWithoutName = false;
+    let hasColumnsWithoutRequiredNames = false;
     this._columns.forEach(column => {
       var _column$columns;
       const {
@@ -1270,12 +1275,17 @@ class ColumnsController extends _m_modules.default.Controller {
           duplicatedNames.push(`"${name}"`);
         }
         usedNames[name] = true;
+      } else if ((0, _m_columns_controller_utils.isColumnNameRequired)(column)) {
+        hasColumnsWithoutRequiredNames = true;
       } else if (isEditable) {
         hasEditableColumnWithoutName = true;
       }
     });
     if (duplicatedNames.length) {
       _ui.default.log('E1059', duplicatedNames.join(', '));
+    }
+    if (hasColumnsWithoutRequiredNames) {
+      _ui.default.log('E1066');
     }
     if (hasEditableColumnWithoutName) {
       _ui.default.log('E1060');

@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = exports.SELECTBOX_CLASS = void 0;
-require("../ui/list/modules/m_selection");
-var _index = require("../../common/core/events/utils/index");
+require("../ui/list/modules/selection");
+var _utils = require("../../common/core/events/utils");
 var _message = _interopRequireDefault(require("../../common/core/localization/message"));
 var _component_registrator = _interopRequireDefault(require("../../core/component_registrator"));
 var _dom_adapter = _interopRequireDefault(require("../../core/dom_adapter"));
@@ -250,8 +250,13 @@ class SelectBox extends _m_drop_down_list.default {
     delete this._preventInputValueRender;
   }
   _scrollToSelectedItem() {
-    var _this$_list;
-    (_this$_list = this._list) === null || _this$_list === void 0 || _this$_list.scrollToItem(this._list.option('selectedItem'));
+    if (!this._list) {
+      return;
+    }
+    const {
+      selectedItem
+    } = this._list.option();
+    this._list.scrollToItem(selectedItem);
   }
   _listContentReadyHandler() {
     super._listContentReadyHandler();
@@ -295,7 +300,7 @@ class SelectBox extends _m_drop_down_list.default {
       const isLastPage = this._dataController.isLastPage();
       const isLastItem = selectedIndex === this._items().length - 1;
       this._saveValueChangeEvent(e);
-      const step = (0, _index.normalizeKeyName)(e) === 'downArrow' ? 1 : -1;
+      const step = (0, _utils.normalizeKeyName)(e) === 'downArrow' ? 1 : -1;
       if (hasPages && !isLastPage && isLastItem && step > 0) {
         if (!this._popup) {
           this._createPopup();
@@ -354,8 +359,11 @@ class SelectBox extends _m_drop_down_list.default {
     this._updateField(focusedItem);
   }
   _updateField(item) {
-    const fieldTemplate = this._getTemplateByOption('fieldTemplate');
-    if (!(fieldTemplate && this.option('fieldTemplate'))) {
+    const {
+      fieldTemplate: fieldTemplateOption
+    } = this.option();
+    const fieldTemplate = this._getTemplate(fieldTemplateOption);
+    if (!(fieldTemplate && fieldTemplateOption)) {
       // @ts-expect-error ts-error
       const text = this._displayGetter(item);
       this.option('text', text);
@@ -775,6 +783,10 @@ class SelectBox extends _m_drop_down_list.default {
       start: valueLength,
       end: displayValue.length
     });
+  }
+  // eslint-disable-next-line class-methods-use-this
+  _shouldLogFieldTemplateDeprecationWarning() {
+    return true;
   }
   _dispose() {
     this._renderInputValueAsync = _common.noop;

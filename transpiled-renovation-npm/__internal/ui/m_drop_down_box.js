@@ -17,9 +17,9 @@ var _extend = require("../../core/utils/extend");
 var _iterator = require("../../core/utils/iterator");
 var _type = require("../../core/utils/type");
 var _ui = _interopRequireDefault(require("../../ui/editor/ui.data_expression"));
-var _selectors = require("../../ui/widget/selectors");
+var _m_selectors = require("../core/utils/m_selectors");
 var _m_drop_down_editor = _interopRequireDefault(require("../ui/drop_down_editor/m_drop_down_editor"));
-var _m_utils = require("../ui/overlay/m_utils");
+var _utils = require("../ui/overlay/utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
 const {
@@ -47,10 +47,9 @@ class DropDownBox extends _m_drop_down_editor.default {
   }
   _getTabbableElements() {
     // @ts-expect-error ts-error
-    return this._getElements().filter(_selectors.tabbable);
+    return this._getElements().filter(_m_selectors.tabbable);
   }
   _getElements() {
-    // @ts-expect-error ts-error
     return (0, _renderer.default)(this.content()).find('*');
   }
   _getDefaultOptions() {
@@ -256,7 +255,7 @@ class DropDownBox extends _m_drop_down_editor.default {
       maxHeight: function () {
         var _this$_popupPosition;
         const popupLocation = (_this$_popupPosition = this._popupPosition) === null || _this$_popupPosition === void 0 ? void 0 : _this$_popupPosition.v.location;
-        return (0, _m_utils.getElementMaxHeightByWindow)(this.$element(), popupLocation);
+        return (0, _utils.getElementMaxHeightByWindow)(this.$element(), popupLocation);
       }.bind(this)
     });
   }
@@ -268,6 +267,10 @@ class DropDownBox extends _m_drop_down_editor.default {
   }
   // eslint-disable-next-line class-methods-use-this
   _setCollectionWidgetOption() {}
+  // eslint-disable-next-line class-methods-use-this
+  _shouldLogFieldTemplateDeprecationWarning() {
+    return true;
+  }
   _optionChanged(args) {
     // @ts-expect-error ts-error
     this._dataExpressionOptionChanged(args);

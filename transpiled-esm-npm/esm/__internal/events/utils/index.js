@@ -2,7 +2,7 @@ import eventsEngine from '../../../common/core/events/core/events_engine';
 import $ from '../../../core/renderer';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
-import { focused } from '../../../ui/widget/selectors';
+import { focused } from '../../core/utils/m_selectors';
 import mappedAddNamespace from './m_add_namespace';
 /* eslint-disable spellcheck/spell-checker */
 const KEY_MAP = {
@@ -62,7 +62,6 @@ const EVENT_SOURCES_REGEX = {
   pointer: /^(ms)?pointer/i
 };
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 export const eventSource = _ref => {
@@ -73,7 +72,6 @@ export const eventSource = _ref => {
   /* eslint-disable @typescript-eslint/no-invalid-void-type */
   // eslint-disable-next-line consistent-return
   each(EVENT_SOURCES_REGEX, function (key) {
-    // eslint-disable-next-line @typescript-eslint/no-invalid-this
     if (this.test(type)) {
       result = key;
       return false;

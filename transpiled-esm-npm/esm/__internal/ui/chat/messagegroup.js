@@ -70,9 +70,8 @@ class MessageGroup extends Widget {
     });
   }
   _renderMessageBubble(message) {
-    const $bubble = $('<div>').data(MESSAGE_DATA_KEY, message);
+    const $bubble = $('<div>').data(MESSAGE_DATA_KEY, message).appendTo(this._$messageBubbleContainer);
     this._createComponent($bubble, MessageBubble, this._getMessageBubbleOptions(message));
-    this._$messageBubbleContainer.append($bubble);
   }
   _getMessageBubbleOptions(message) {
     const options = {
@@ -96,7 +95,7 @@ class MessageGroup extends Widget {
     return options;
   }
   _renderMessageBubbles(items) {
-    this._$messageBubbleContainer = $('<div>').addClass(CHAT_MESSAGEGROUP_CONTENT_CLASS);
+    this._$messageBubbleContainer = $('<div>').addClass(CHAT_MESSAGEGROUP_CONTENT_CLASS).appendTo(this.element());
     items.forEach((message, index) => {
       const shouldCreateEditedElement = index !== 0 && message.type !== 'image' && message.isEdited === true && !message.isDeleted;
       if (shouldCreateEditedElement) {
@@ -105,7 +104,6 @@ class MessageGroup extends Widget {
       }
       this._renderMessageBubble(message);
     });
-    this._$messageBubbleContainer.appendTo(this.element());
   }
   _renderMessageGroupInformation(message, shouldRenderEditedMessage) {
     const {

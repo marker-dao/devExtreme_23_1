@@ -14,6 +14,7 @@ const COMPOSITION_END_EVENT = 'compositionend';
 const KEYDOWN_EVENT = 'keydown';
 const NAMESPACE = 'KeyboardProcessor';
 const createKeyDownOptions = e => ({
+  // @ts-expect-error
   keyName: (0, _index.normalizeKeyName)(e),
   key: e.key,
   code: e.code,

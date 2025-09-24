@@ -8,6 +8,7 @@ import dateUtils from '../../../core/utils/date';
 import { extend } from '../../../core/utils/extend';
 import { each } from '../../../core/utils/iterator';
 import { setHeight, setOuterHeight } from '../../../core/utils/size';
+import { EMPTY_ACTIVE_STATE_UNIT } from '../../core/widget/widget';
 import { DATE_TABLE_CLASS, DATE_TABLE_ROW_CLASS, GROUP_HEADER_CONTENT_CLASS, GROUP_ROW_CLASS, TIME_PANEL_CLASS } from '../m_classes';
 import tableCreatorModule from '../m_table_creator';
 import { agendaUtils, formatWeekday, getVerticalGroupCountClass } from '../r1/utils/index';
@@ -27,21 +28,21 @@ const LAST_ROW_CLASS = 'dx-scheduler-date-table-last-row';
 const INNER_CELL_MARGIN = 5;
 const OUTER_CELL_MARGIN = 20;
 class SchedulerAgenda extends WorkSpace {
+  // eslint-disable-next-line class-methods-use-this
+  _activeStateUnit() {
+    return EMPTY_ACTIVE_STATE_UNIT;
+  }
   get type() {
     return VIEWS.AGENDA;
   }
   get renderingStrategy() {
     return this.invoke('getLayoutManager').getRenderingStrategyInstance();
   }
-  get appointmentDataProvider() {
-    return this.option('getAppointmentDataProvider')();
-  }
   getStartViewDate() {
     return this._startViewDate;
   }
   _init() {
     super._init();
-    this._activeStateUnit = undefined;
   }
   _getDefaultOptions() {
     return extend(super._getDefaultOptions(), {

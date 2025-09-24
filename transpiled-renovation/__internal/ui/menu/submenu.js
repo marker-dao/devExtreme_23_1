@@ -82,8 +82,6 @@ class Submenu extends _context_menu2.default {
     } = this.option();
     onHoverStart === null || onHoverStart === void 0 || onHoverStart(e);
     super._hoverStartHandler(e);
-    // @ts-expect-error ts-error
-    this._toggleFocusClass(true, e.currentTarget);
   }
   _drawSubmenu($rootItem) {
     var _this$_actions$onShow, _this$_actions, _this$_actions$onShow2, _this$_actions2;
@@ -139,7 +137,6 @@ class Submenu extends _context_menu2.default {
       position: positionOption
     } = this.option();
     const $submenu = this._itemContainer().children(`.${DX_SUBMENU_CLASS}`).eq(0);
-    // @ts-expect-error ts-error
     const $rootItem = (0, _renderer.default)(positionOption === null || positionOption === void 0 ? void 0 : positionOption.of).find('.dx-context-menu-container-border');
     const position = {
       // @ts-expect-error ts-error

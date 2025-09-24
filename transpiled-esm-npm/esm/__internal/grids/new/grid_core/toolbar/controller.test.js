@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { signal } from '@preact/signals-core';
+import { signal } from '../../../../core/state_manager/index';
 import { getContext } from '../di.test_utils';
 import { OptionsControllerMock } from '../options_controller/options_controller.mock';
 import { ToolbarController } from './controller';

@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.ContentView = void 0;
 var _data = require("../../../../../core/utils/data");
 var _type = require("../../../../../core/utils/type");
-var _signalsCore = require("@preact/signals-core");
-var _index = require("../../../../grids/new/grid_core/keyboard_navigation/index");
+var _index = require("../../../../core/state_manager/index");
+var _index2 = require("../../../../grids/new/grid_core/keyboard_navigation/index");
 var _view = require("../../grid_core/content_view/view");
 var _content_view = require("./content_view");
 var _utils = require("./utils");
@@ -21,10 +21,10 @@ class ContentView extends _view.ContentView {
     // @ts-expect-error
     super(...arguments);
     this.cardMinWidth = this.options.oneWay('cardMinWidth');
-    this.rowHeight = (0, _signalsCore.signal)(0);
-    this.columnGap = (0, _signalsCore.signal)(0);
+    this.rowHeight = (0, _index.signal)(0);
+    this.columnGap = (0, _index.signal)(0);
     this.cardsPerRowProp = this.options.oneWay('cardsPerRow');
-    this.cardsPerRow = (0, _signalsCore.computed)(() => {
+    this.cardsPerRow = (0, _index.computed)(() => {
       const width = this.width.value;
       const cardMinWidth = this.cardMinWidth.value;
       const pageSize = this.dataController.pageSize.value;
@@ -38,15 +38,15 @@ class ContentView extends _view.ContentView {
       });
       return result ?? 1;
     });
-    this.navigationStrategy = new _index.NavigationStrategyMatrix(this.cardsPerRow.peek());
+    this.navigationStrategy = new _index2.NavigationStrategyMatrix(this.cardsPerRow.peek());
     this.component = _content_view.ContentView;
-    this.items = (0, _signalsCore.computed)(() => this.itemsController.items.value.filter(item => item.visible));
-    (0, _signalsCore.effect)(() => {
+    this.items = (0, _index.computed)(() => this.itemsController.items.value.filter(item => item.visible));
+    (0, _index.effect)(() => {
       this.navigationStrategy.updateColumnsCount(this.cardsPerRow.value);
     });
   }
   getProps() {
-    return (0, _signalsCore.computed)(() => _extends({}, this.getBaseProps(), {
+    return (0, _index.computed)(() => _extends({}, this.getBaseProps(), {
       contentProps: {
         items: this.items.value,
         kbnEnabled: this.keyboardNavigationController.enabled.value,

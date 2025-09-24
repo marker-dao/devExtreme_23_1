@@ -42,8 +42,9 @@ export class FocusController extends core.ViewController {
         if (Array.isArray(value) && JSON.stringify(value) === JSON.stringify(previousValue)) {
           return;
         }
-        this._focusRowByKey(value);
-        this.getKeyboardController()._fireFocusedRowChanged();
+        this._focusRowByKey(value).done(() => {
+          this.getKeyboardController()._fireFocusedRowChanged();
+        });
         args.handled = true;
         break;
       case 'focusedColumnIndex':
@@ -66,26 +67,14 @@ export class FocusController extends core.ViewController {
     if (!this.option('focusedRowEnabled')) {
       return;
     }
-    const isEmptyData = this.getDataController().isEmpty();
-    const currentIndex = this._getCurrentFocusRowIndex(isEmptyData, index);
+    const currentIndex = index !== undefined ? index : this.option('focusedRowIndex');
     if (currentIndex < 0) {
-      if (isEmptyData || this.isAutoNavigateToFocusedRow()) {
+      if (this.isAutoNavigateToFocusedRow()) {
         this._resetFocusedRow();
       }
     } else {
       this._focusRowByIndexCore(currentIndex, operationTypes);
     }
-  }
-  _getCurrentFocusRowIndex(isEmptyData, index) {
-    let currentIndex = index;
-    if (currentIndex === undefined) {
-      if (isEmptyData) {
-        currentIndex = -1;
-      } else {
-        currentIndex = this.option('focusedRowIndex');
-      }
-    }
-    return currentIndex;
   }
   _focusRowByIndexCore(index, operationTypes) {
     const pageSize = this.getDataController().pageSize();
@@ -139,9 +128,9 @@ export class FocusController extends core.ViewController {
   _focusRowByKey(key) {
     if (!isDefined(key)) {
       this._resetFocusedRow();
-    } else {
-      this._navigateToRow(key, true);
+      return Deferred().resolve();
     }
+    return this._navigateToRow(key, true);
   }
   _resetFocusedRow() {
     const focusedRowKey = this.option('focusedRowKey');
@@ -168,7 +157,7 @@ export class FocusController extends core.ViewController {
     if (!this.isAutoNavigateToFocusedRow()) {
       this.option('focusedRowIndex', -1);
     }
-    return this._navigateToRow(key);
+    return this._navigateToRow(key, false);
   }
   _navigateToRow(key, needFocusRow) {
     const that = this;
@@ -469,7 +458,7 @@ const columns = Base => class FocusColumnsExtender extends Base {
 const data = Base => class FocusDataControllerExtender extends Base {
   constructor() {
     super(...arguments);
-    this._needToUpdateFocusedRowByIndex = false;
+    this._isDataPushed = false;
   }
   _applyChange(change) {
     if (change && change.changeType === 'updateFocusedRow') return;
@@ -478,26 +467,27 @@ const data = Base => class FocusDataControllerExtender extends Base {
   }
   _fireChanged(e) {
     super._fireChanged(e);
+    const forceUpdateFocusedRow = this._isDataPushed;
+    this._isDataPushed = false;
     if (this.option('focusedRowEnabled') && this._dataSource) {
       const isPartialUpdate = e.changeType === 'update' && e.repaintChangesOnly;
       const isPartialUpdateWithDeleting = isPartialUpdate && e.changeTypes && e.changeTypes.indexOf('remove') >= 0;
-      if (this._needToUpdateFocusedRowByIndex) {
-        this._needToUpdateFocusedRowByIndex = false;
-        this._focusController._focusRowByIndex();
+      if (forceUpdateFocusedRow && this.isEmpty()) {
+        this._focusController._resetFocusedRow();
       } else if (e.changeType === 'refresh' && e.items.length || isPartialUpdateWithDeleting) {
         this._updatePageIndexes();
-        this._updateFocusedRow(e);
+        this._updateFocusedRowIfNeeded(e, forceUpdateFocusedRow);
       } else if (e.changeType === 'append' || e.changeType === 'prepend') {
         this._updatePageIndexes();
-      } else if (e.changeType === 'update' && e.repaintChangesOnly) {
-        this._updateFocusedRow(e);
+      } else if (isPartialUpdate) {
+        this._updateFocusedRowIfNeeded(e, forceUpdateFocusedRow);
       }
     }
   }
   _handleDataPushed(changes) {
     super._handleDataPushed(changes);
     const focusedRowKey = this.option('focusedRowKey');
-    this._needToUpdateFocusedRowByIndex = changes === null || changes === void 0 ? void 0 : changes.some(change => change.type === 'remove' && equalByValue(change.key, focusedRowKey));
+    this._isDataPushed = isDefined(focusedRowKey) && !!changes.length;
   }
   _updatePageIndexes() {
     const prevRenderingPageIndex = this._lastRenderingPageIndex || 0;
@@ -508,7 +498,8 @@ const data = Base => class FocusDataControllerExtender extends Base {
   isPagingByRendering() {
     return this._isPagingByRendering;
   }
-  _updateFocusedRow(e) {
+  _updateFocusedRowIfNeeded(e) {
+    let forceUpdate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     const operationTypes = e.operationTypes || {};
     const {
       reload,
@@ -521,25 +512,47 @@ const data = Base => class FocusDataControllerExtender extends Base {
     const focusedRowKey = this.option('focusedRowKey');
     const isAutoNavigate = this._focusController.isAutoNavigateToFocusedRow();
     const isReload = reload && pageIndex === false;
-    if (isReload && !fullReload && isDefined(focusedRowKey)) {
-      this._focusController._navigateToRow(focusedRowKey, true).done(focusedRowIndex => {
-        if (focusedRowIndex < 0) {
-          this._focusController._focusRowByIndex(undefined, operationTypes);
+    const rowIndexByKey = this.getRowIndexByKey(focusedRowKey);
+    switch (true) {
+      case forceUpdate:
+        {
+          this._focusController._focusRowByKeyOrIndex();
+          break;
         }
-      });
-    } else if (pagingWithoutVirtualScrolling && isAutoNavigate) {
-      const rowIndexByKey = this.getRowIndexByKey(focusedRowKey);
-      const focusedRowIndex = this.option('focusedRowIndex');
-      const isValidRowIndexByKey = rowIndexByKey >= 0;
-      const isValidFocusedRowIndex = focusedRowIndex >= 0;
-      const isSameRowIndex = focusedRowIndex === rowIndexByKey;
-      if (isValidFocusedRowIndex && (isSameRowIndex || !isValidRowIndexByKey)) {
-        this._focusController._focusRowByIndex(focusedRowIndex, operationTypes);
-      }
-    } else if (pagingWithoutVirtualScrolling && !isAutoNavigate && this.getRowIndexByKey(focusedRowKey) < 0) {
-      this.option('focusedRowIndex', -1);
-    } else if (operationTypes.fullReload) {
-      this._focusController._focusRowByKeyOrIndex();
+      case isReload && !fullReload && isDefined(focusedRowKey):
+        {
+          this._focusController._navigateToRow(focusedRowKey, true).done(focusedRowIndex => {
+            if (focusedRowIndex < 0) {
+              this._focusController._focusRowByIndex(undefined, operationTypes);
+            }
+          });
+          break;
+        }
+      case pagingWithoutVirtualScrolling && isAutoNavigate:
+        {
+          const focusedRowIndex = this.option('focusedRowIndex');
+          const isValidRowIndexByKey = rowIndexByKey >= 0;
+          const isValidFocusedRowIndex = focusedRowIndex >= 0;
+          const isSameRowIndex = focusedRowIndex === rowIndexByKey;
+          if (isValidFocusedRowIndex && (isSameRowIndex || !isValidRowIndexByKey)) {
+            this._focusController._focusRowByIndex(focusedRowIndex, operationTypes);
+          }
+          break;
+        }
+      case pagingWithoutVirtualScrolling && !isAutoNavigate && rowIndexByKey < 0:
+        {
+          this.option('focusedRowIndex', -1);
+          break;
+        }
+      case operationTypes.fullReload:
+        {
+          this._focusController._focusRowByKeyOrIndex();
+          break;
+        }
+      default:
+        {
+          break;
+        }
     }
   }
   /**

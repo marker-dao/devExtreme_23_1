@@ -8,7 +8,7 @@ var _component_registrator = _interopRequireDefault(require("../../../core/compo
 var _guid = _interopRequireDefault(require("../../../core/guid"));
 var _extend = require("../../../core/utils/extend");
 var _ready_callbacks = _interopRequireDefault(require("../../../core/utils/ready_callbacks"));
-var _swatch_container = _interopRequireDefault(require("../../../ui/widget/swatch_container"));
+var _swatch_container = _interopRequireDefault(require("../../core/utils/swatch_container"));
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _m_speed_dial_main_item = require("./m_speed_dial_main_item");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }

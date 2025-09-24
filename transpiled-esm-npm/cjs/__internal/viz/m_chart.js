@@ -12,22 +12,20 @@ var _math = require("../../core/utils/math");
 var _size = require("../../core/utils/size");
 var _type = require("../../core/utils/type");
 var _window = require("../../core/utils/window");
-var _crosshair = require("../../viz/chart_components/crosshair");
-var _layout_manager = require("../../viz/chart_components/layout_manager");
-var _multi_axes_synchronizer = _interopRequireDefault(require("../../viz/chart_components/multi_axes_synchronizer"));
-var _scroll_bar = require("../../viz/chart_components/scroll_bar");
-var _shutter_zoom = _interopRequireDefault(require("../../viz/chart_components/shutter_zoom"));
-var _zoom_and_pan = _interopRequireDefault(require("../../viz/chart_components/zoom_and_pan"));
-var _annotations = require("../../viz/core/annotations");
-var _utils = require("../../viz/core/utils");
-var _range_data_calculator = _interopRequireDefault(require("../../viz/series/helpers/range_data_calculator"));
-var _range = require("../../viz/translators/range");
-var _utils2 = require("../../viz/utils");
+var _crosshair = require("../viz/chart_components/crosshair");
+var _layout_manager = require("../viz/chart_components/layout_manager");
+var _multi_axes_synchronizer = _interopRequireDefault(require("../viz/chart_components/multi_axes_synchronizer"));
+var _scroll_bar = require("../viz/chart_components/scroll_bar");
+var _shutter_zoom = _interopRequireDefault(require("../viz/chart_components/shutter_zoom"));
+var _zoom_and_pan = _interopRequireDefault(require("../viz/chart_components/zoom_and_pan"));
+var _annotations = require("../viz/core/annotations");
+var _utils = require("../viz/core/utils");
+var _range_data_calculator = _interopRequireDefault(require("../viz/series/helpers/range_data_calculator"));
+var _range = require("../viz/translators/range");
+var _utils2 = require("../viz/utils");
 var _m_advanced_chart = require("./chart_components/m_advanced_chart");
 var _m_base_chart = require("./chart_components/m_base_chart");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-// @ts-expect-error
-
 const DEFAULT_PANE_NAME = 'default';
 const VISUAL_RANGE = 'VISUAL_RANGE';
 const DEFAULT_PANES = [{
@@ -483,6 +481,7 @@ const dxChart = _m_advanced_chart.AdvancedChart.inherit({
   _checkPaneName(seriesTheme) {
     const paneList = (0, _utils.map)(this.panes, pane => pane.name);
     seriesTheme.pane = seriesTheme.pane || this.defaultPane;
+    // @ts-expect-error
     return paneList.includes(seriesTheme.pane);
   },
   _initCustomPositioningAxes() {

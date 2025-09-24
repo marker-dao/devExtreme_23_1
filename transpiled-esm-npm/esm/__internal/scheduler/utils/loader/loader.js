@@ -5,7 +5,7 @@ import { loadResource, normalizeDataSource } from './utils';
 export class Loader {
   constructor(config, dataSourceOptions) {
     this.items = [];
-    this.data = []; // TODO(9): probably we dont need it. Used in getGroupPanelData
+    this.data = [];
     this.unsubscribe = noop;
     this.dataSource = normalizeDataSource(config.dataSource, dataSourceOptions);
     this.isSharedDataSource = config.dataSource instanceof DataSource;

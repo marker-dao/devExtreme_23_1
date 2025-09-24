@@ -13,7 +13,7 @@ import Popup from '../../ui/popup/ui.popup';
 import EditorFactoryMixin from '../../ui/shared/ui.editor_factory_mixin';
 import TreeView from '../../ui/tree_view';
 import Widget from '../../ui/widget/ui.widget';
-import { getElementMaxHeightByWindow } from '../ui/overlay/m_utils';
+import { getElementMaxHeightByWindow } from '../ui/overlay/utils';
 import { addItem, convertToInnerStructure, createCondition, createEmptyGroup, getAvailableOperations, getCaptionWithParents, getCurrentLookupValueText, getCurrentValueText, getCustomOperation, getDefaultOperation, getField, getFilterExpression, getGroupCriteria, getGroupMenuItem, getGroupValue, getItems, getMergedOperations, getNormalizedFields, getNormalizedFilter, getOperationFromAvailable, getOperationValue, isCondition, isGroup, removeItem, renderValueText, setGroupValue, updateConditionByOperation } from './m_utils';
 const FILTER_BUILDER_CLASS = 'dx-filterbuilder';
 const FILTER_BUILDER_GROUP_CLASS = `${FILTER_BUILDER_CLASS}-group`;

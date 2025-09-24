@@ -25,7 +25,7 @@ const DAY_MS = 24 * HOUR_MS;
         expectedResult
       } = _ref;
       const date = new Date('2023-09-05T00:00:00Z');
-      const result = _date.dateUtilsTs.addOffsets(date, offsets);
+      const result = _date.dateUtilsTs.addOffsets(date, ...offsets);
       (0, _globals.expect)(result).toEqual(expectedResult);
     });
   });

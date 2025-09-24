@@ -142,12 +142,10 @@ class DiagramToolbar extends _uiDiagram.default {
     if (isSelectButton) {
       options = (0, _extend.extend)(true, options, {
         options: {
-          fieldTemplate: (data, container) => {
-            (0, _renderer.default)('<i>').addClass(data && data.icon || nullIconClass).appendTo(container);
-            (0, _renderer.default)('<div>').dxTextBox({
-              readOnly: true,
-              stylingMode: 'outlined'
-            }).appendTo(container);
+          fieldAddons: {
+            beforeTemplate: (data, container) => {
+              (0, _renderer.default)('<i>').addClass(data && data.icon || nullIconClass).appendTo(container);
+            }
           },
           itemTemplate: (data, index, container) => {
             (0, _renderer.default)(container).attr('title', data.hint);
@@ -190,12 +188,10 @@ class DiagramToolbar extends _uiDiagram.default {
       options = (0, _extend.extend)(true, options, {
         options: {
           openOnFieldClick: true,
-          fieldTemplate: (data, container) => {
-            (0, _renderer.default)('<i>').addClass(icon).css('borderBottomColor', data).appendTo(container);
-            (0, _renderer.default)('<div>').dxTextBox({
-              readOnly: true,
-              stylingMode: 'outlined'
-            }).appendTo(container);
+          fieldAddons: {
+            beforeTemplate: (data, container) => {
+              (0, _renderer.default)('<i>').addClass(icon).css('borderBottomColor', data).appendTo(container);
+            }
           }
         }
       });

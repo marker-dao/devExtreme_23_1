@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.SortingController = void 0;
-var _signalsCore = require("@preact/signals-core");
-var _index = require("../columns_controller/index");
+var _index = require("../../../../core/state_manager/index");
+var _index2 = require("../columns_controller/index");
 var _utils = require("../columns_controller/utils");
 var _options_controller = require("../options_controller/options_controller");
 var _utils2 = require("./utils");
@@ -20,8 +20,8 @@ class SortingController {
     this.descendingText = this.options.oneWay('sorting.descendingText');
     this.mode = this.options.oneWay('sorting.mode');
     this._showSortIndexes = this.options.oneWay('sorting.showSortIndexes');
-    this.sortedColumns = (0, _signalsCore.computed)(() => this.columnsController.visibleColumns.value.filter(column => column.sortOrder));
-    this.orderedSortedColumns = (0, _signalsCore.computed)(() => {
+    this.sortedColumns = (0, _index.computed)(() => this.columnsController.visibleColumns.value.filter(column => column.sortOrder));
+    this.orderedSortedColumns = (0, _index.computed)(() => {
       const columns = this.sortedColumns.value;
       const mode = this.mode.value;
       const result = columns.sort(_utils2.sortOrderDelegate);
@@ -36,7 +36,7 @@ class SortingController {
       }
       return result;
     });
-    this.showSortIndexes = (0, _signalsCore.computed)(() => {
+    this.showSortIndexes = (0, _index.computed)(() => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const _showSortIndexes = this._showSortIndexes.value;
       const sortedColumns = this.sortedColumns.value;
@@ -45,7 +45,7 @@ class SortingController {
       }
       return sortedColumns.length > 1;
     });
-    this.sortParameters = (0, _signalsCore.computed)(() => {
+    this.sortParameters = (0, _index.computed)(() => {
       const columns = this.orderedSortedColumns.value;
       const result = [];
       columns.forEach(c => {
@@ -104,7 +104,7 @@ class SortingController {
     this.onSingleModeSortCore(column, isClearSortingRequired, nextSortOrder);
   }
   onSingleModeSortCore(column, isClearSortingRequired, nextSortOrder) {
-    (0, _signalsCore.batch)(() => {
+    (0, _index.batch)(() => {
       if (isClearSortingRequired) {
         this.clearSorting();
       }
@@ -125,7 +125,7 @@ class SortingController {
     this.onMultipleModeSortCore(column, isClearSortingRequired, nextSortOrder);
   }
   onMultipleModeSortCore(column, isClearSortingRequired, nextSortOrder) {
-    (0, _signalsCore.batch)(() => {
+    (0, _index.batch)(() => {
       if (isClearSortingRequired) {
         this.clearSorting();
       }
@@ -173,4 +173,4 @@ class SortingController {
   }
 }
 exports.SortingController = SortingController;
-SortingController.dependencies = [_options_controller.OptionsController, _index.ColumnsController];
+SortingController.dependencies = [_options_controller.OptionsController, _index2.ColumnsController];

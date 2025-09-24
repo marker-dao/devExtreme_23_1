@@ -46,7 +46,6 @@ class SplitterItem extends _item.default {
     this._$element.attr('id', null);
   }
   getIndex() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this._owner._getIndexByItemData(this._rawData);
   }
   getResizeHandle() {

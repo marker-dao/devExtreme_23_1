@@ -1,4 +1,4 @@
-import { computed } from '@preact/signals-core';
+import { computed } from '../../../../../core/state_manager/index';
 import { ColumnsController } from '../../../../../grids/new/grid_core/columns_controller/index';
 import { getComposedHeaderFilter, getHeaderFilterInfoArray } from './utils';
 export class HeaderFilterController {

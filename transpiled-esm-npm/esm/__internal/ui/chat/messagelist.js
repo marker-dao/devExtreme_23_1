@@ -10,6 +10,7 @@ import dateSerialization from '../../../core/utils/date_serialization';
 import { isElementInDom } from '../../../core/utils/dom';
 import { getHeight } from '../../../core/utils/size';
 import { isDate, isDefined } from '../../../core/utils/type';
+import { getPublicElement } from '../../core/m_element';
 import Widget from '../../core/widget/widget';
 import ContextMenu from '../../ui/context_menu/context_menu';
 import ScrollView from '../../ui/scroll_view/scroll_view';
@@ -51,6 +52,7 @@ class MessageList extends Widget {
       showAvatar: true,
       showUserName: true,
       showMessageTimestamp: true,
+      emptyViewTemplate: null,
       messageTemplate: null
     });
   }
@@ -106,11 +108,23 @@ class MessageList extends Widget {
     this._containerClientHeight = newHeight;
   }
   _renderEmptyViewContent() {
-    const $emptyView = $('<div>').addClass(CHAT_MESSAGELIST_EMPTY_VIEW_CLASS).attr('id', `dx-${new Guid()}`);
-    $('<div>').appendTo($emptyView).addClass(CHAT_MESSAGELIST_EMPTY_IMAGE_CLASS);
     const messageText = messageLocalization.format('dxChat-emptyListMessage');
-    $('<div>').appendTo($emptyView).addClass(CHAT_MESSAGELIST_EMPTY_MESSAGE_CLASS).text(messageText);
     const promptText = messageLocalization.format('dxChat-emptyListPrompt');
+    const {
+      emptyViewTemplate
+    } = this.option();
+    const $emptyView = $('<div>').addClass(CHAT_MESSAGELIST_EMPTY_VIEW_CLASS).attr('id', `dx-${new Guid()}`);
+    if (emptyViewTemplate) {
+      const data = {
+        message: messageText,
+        prompt: promptText
+      };
+      emptyViewTemplate(data, getPublicElement($emptyView));
+      $emptyView.appendTo(this._$content);
+      return;
+    }
+    $('<div>').appendTo($emptyView).addClass(CHAT_MESSAGELIST_EMPTY_IMAGE_CLASS);
+    $('<div>').appendTo($emptyView).addClass(CHAT_MESSAGELIST_EMPTY_MESSAGE_CLASS).text(messageText);
     $('<div>').appendTo($emptyView).addClass(CHAT_MESSAGELIST_EMPTY_PROMPT_CLASS).text(promptText);
     $emptyView.appendTo(this._$content);
   }
@@ -173,6 +187,7 @@ class MessageList extends Widget {
         icon: 'edit',
         text: editText,
         disabled: isEditActionDisabled(message),
+        // @ts-expect-error itemElement
         onClick: e => {
           const onMessageEditStarted = onMessageEditingStart === null || onMessageEditingStart === void 0 ? void 0 : onMessageEditingStart({
             event: e.event,
@@ -190,6 +205,7 @@ class MessageList extends Widget {
       buttons.push({
         icon: 'trash',
         text: deleteText,
+        // @ts-expect-error itemElement
         onClick(e) {
           onMessageDeleting === null || onMessageDeleting === void 0 || onMessageDeleting({
             event: e.event,
@@ -260,7 +276,6 @@ class MessageList extends Widget {
       useKeyboard: false,
       bounceEnabled: false,
       reachBottomText: '',
-      indicateLoading: false,
       onReachBottom: noop
     });
   }
@@ -595,6 +610,7 @@ class MessageList extends Widget {
       case 'showUserName':
       case 'showMessageTimestamp':
       case 'messageTemplate':
+      case 'emptyViewTemplate':
       case 'dayHeaderFormat':
       case 'messageTimestampFormat':
         this._invalidate();

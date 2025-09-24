@@ -5,6 +5,10 @@ var _m_date_range_box = _interopRequireDefault(require("../__internal/ui/date_ra
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var _default = exports.default = _m_date_range_box.default; // STYLE dateRangeBox
 /**
+ * @name dxDateRangeBoxOptions.fieldAddons
+ * @hidden
+ */
+/**
  * @name dxDateRangeBoxOptions.inputAttr
  * @hidden
  */

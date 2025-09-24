@@ -103,8 +103,8 @@ export class GroupedDataMapProvider {
         // we should shift the real cellData dates by viewOffset
         // to find correct cell indexes.
         const cellData = isAppointmentRender ? _extends({}, originCellData, {
-          startDate: dateUtilsTs.addOffsets(cell.cellData.startDate, [-viewOffset]),
-          endDate: dateUtilsTs.addOffsets(cell.cellData.endDate, [-viewOffset])
+          startDate: dateUtilsTs.addOffsets(cell.cellData.startDate, -viewOffset),
+          endDate: dateUtilsTs.addOffsets(cell.cellData.endDate, -viewOffset)
         }) : originCellData;
         if (this._isSameGroupIndexAndIndex(cellData, groupIndex, index)) {
           if (this.isStartDateInCell(startDate, isAllDay, cellData, originCellData)) {
@@ -143,7 +143,7 @@ export class GroupedDataMapProvider {
     }
   }
   getCellSecondIntervalOffset(cellStartDate, cellEndDate) {
-    const nextHourCellStartDate = dateUtilsTs.addOffsets(cellStartDate, [toMs('hour')]);
+    const nextHourCellStartDate = dateUtilsTs.addOffsets(cellStartDate, toMs('hour'));
     const cellTimezoneDiff = timezoneUtils.getDaylightOffset(cellStartDate, cellEndDate);
     const cellNextHourTimezoneDiff = timezoneUtils.getDaylightOffset(cellStartDate, nextHourCellStartDate);
     const isDSTInsideCell = cellTimezoneDiff !== 0;
@@ -151,8 +151,8 @@ export class GroupedDataMapProvider {
     return !isDSTInsideCell && isWinterTimezoneNextHour ? Math.abs(cellNextHourTimezoneDiff * toMs('minute')) : 0;
   }
   isStartDateInTwoIntervalsCell(startDate, secondIntervalOffset, cellStartDate, cellEndDate) {
-    const nextIntervalCellStartDate = dateUtilsTs.addOffsets(cellStartDate, [secondIntervalOffset]);
-    const nextIntervalCellEndDate = dateUtilsTs.addOffsets(cellEndDate, [secondIntervalOffset]);
+    const nextIntervalCellStartDate = dateUtilsTs.addOffsets(cellStartDate, secondIntervalOffset);
+    const nextIntervalCellEndDate = dateUtilsTs.addOffsets(cellEndDate, secondIntervalOffset);
     const isInOriginInterval = startDate >= cellStartDate && startDate < cellEndDate;
     const isInSecondInterval = startDate >= nextIntervalCellStartDate && startDate < nextIntervalCellEndDate;
     return isInOriginInterval || isInSecondInterval;
@@ -192,7 +192,7 @@ export class GroupedDataMapProvider {
       let {
         startDate
       } = _ref3;
-      return !!startDate;
+      return Boolean(startDate);
     });
   }
   getGroupIndices() {

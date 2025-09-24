@@ -40,8 +40,6 @@ class ResourceManager {
     this.groups = groups;
     this.groupsLeafs = groupLeafs;
     this.groupsTree = groupTree;
-    // TODO(9): Get rid of it as soon as you can. Fallback, this class has all necessary
-    return this.groupResources();
   }
   groupCount() {
     return this.groupsLeafs.length;

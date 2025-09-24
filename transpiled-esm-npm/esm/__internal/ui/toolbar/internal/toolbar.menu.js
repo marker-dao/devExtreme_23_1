@@ -1,5 +1,4 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import '../../../../ui/popup/ui.popup';
 import devices from '../../../../core/devices';
 import $ from '../../../../core/renderer';
 import { ChildDefaultTemplate } from '../../../../core/templates/child_default_template';
@@ -8,7 +7,8 @@ import { getWindow } from '../../../../core/utils/window';
 import { current, isFluent, isMaterialBased } from '../../../../ui/themes';
 import Widget from '../../../core/widget/widget';
 import Button from '../../../ui/button/wrapper';
-import ToolbarMenuList from '../../../ui/toolbar/internal/toolbar.menu.list';
+import Popup from '../../../ui/popup/m_popup';
+import ToolbarMenuList, { TOOLBAR_MENU_ACTION_CLASS } from '../../../ui/toolbar/internal/toolbar.menu.list';
 import { toggleItemFocusableElementTabIndex } from '../../../ui/toolbar/toolbar.utils';
 const DROP_DOWN_MENU_CLASS = 'dx-dropdownmenu';
 const DROP_DOWN_MENU_POPUP_CLASS = 'dx-dropdownmenu-popup';
@@ -22,7 +22,10 @@ export default class DropDownMenu extends Widget {
   _supportedKeys() {
     var _this$_list;
     let extension = {};
-    if (!this.option('opened') || !((_this$_list = this._list) !== null && _this$_list !== void 0 && _this$_list.option('focusedElement'))) {
+    const {
+      opened
+    } = this.option();
+    if (!opened || !((_this$_list = this._list) !== null && _this$_list !== void 0 && _this$_list.option('focusedElement'))) {
       extension = this._button._supportedKeys();
     }
     return _extends({}, super._supportedKeys(), extension, {
@@ -151,8 +154,8 @@ export default class DropDownMenu extends Widget {
     this._button = this._createComponent($button, Button, {
       icon: 'overflow',
       template: 'content',
-      // @ts-expect-error ts-error
-      stylingMode: isFluent() ? 'text' : 'contained',
+      stylingMode: isFluent(current()) ? 'text' : 'contained',
+      // @ts-expect-error
       useInkRipple,
       hoverStateEnabled: false,
       focusStateEnabled: false,
@@ -164,8 +167,7 @@ export default class DropDownMenu extends Widget {
     });
   }
   _toggleActiveState($element, value) {
-    // @ts-expect-error ts-error
-    this._button._toggleActiveState($element, value);
+    this._button._toggleActiveState($element[0], value);
   }
   _toggleMenuVisibility(opened) {
     var _this$_popup3, _this$_popup4;
@@ -187,33 +189,40 @@ export default class DropDownMenu extends Widget {
       container,
       animation
     } = this.option();
-    this._popup = this._createComponent(this._$popup, 'dxPopup', {
-      onInitialized(_ref) {
-        let {
+    this._popup = this._createComponent(this._$popup, Popup, {
+      onInitialized(e) {
+        const {
           component
-        } = _ref;
+        } = e;
+        // @ts-expect-error
         component.$wrapper().addClass(DROP_DOWN_MENU_POPUP_WRAPPER_CLASS).addClass(DROP_DOWN_MENU_POPUP_CLASS);
       },
       deferRendering: false,
       preventScrollEvents: false,
+      _ignorePreventScrollEventsDeprecation: true,
       contentTemplate: contentElement => this._renderList(contentElement),
       _ignoreFunctionValueDeprecation: true,
+      // @ts-expect-error
       maxHeight: () => this._getMaxHeight(),
       position: {
+        // @ts-expect-error
         my: `top ${rtlEnabled ? 'left' : 'right'}`,
+        // @ts-expect-error
         at: `bottom ${rtlEnabled ? 'left' : 'right'}`,
         collision: 'fit flip',
+        // @ts-expect-error
         offset: {
           v: POPUP_VERTICAL_OFFSET
         },
+        // @ts-expect-error
         of: this.$element()
       },
       animation,
-      onOptionChanged: _ref2 => {
+      onOptionChanged: _ref => {
         let {
           name,
           value
-        } = _ref2;
+        } = _ref;
         if (name === 'visible') {
           this.option('opened', value);
         }
@@ -228,7 +237,20 @@ export default class DropDownMenu extends Widget {
       dragEnabled: false,
       showTitle: false,
       fullScreen: false,
+      ignoreChildEvents: false,
       _fixWrapperPosition: true
+    });
+    this._popup.registerKeyHandler('space', e => {
+      this._popupKeyHandler(e);
+    });
+    this._popup.registerKeyHandler('enter', e => {
+      this._popupKeyHandler(e);
+    });
+    this._popup.registerKeyHandler('escape', e => {
+      var _this$_popup5;
+      if ((_this$_popup5 = this._popup) !== null && _this$_popup5 !== void 0 && _this$_popup5.$overlayContent().is($(e.target))) {
+        this.option('opened', false);
+      }
     });
   }
   _getMaxHeight() {
@@ -257,24 +279,34 @@ export default class DropDownMenu extends Widget {
       noDataText: '',
       itemTemplate,
       onItemClick: e => {
-        var _this$_itemClickActio;
-        const {
-          closeOnClick
-        } = this.option();
-        if (closeOnClick) {
-          this.option('opened', false);
-        }
-        (_this$_itemClickActio = this._itemClickAction) === null || _this$_itemClickActio === void 0 || _this$_itemClickActio.call(this, e);
+        this._itemClickHandler(e);
       },
       tabIndex: -1,
       focusStateEnabled: false,
       activeStateEnabled: true,
       onItemRendered,
-      // @ts-expect-error ts-error
       _itemAttributes: {
         role: 'menuitem'
       }
     });
+  }
+  _popupKeyHandler(e) {
+    if ($(e.target).closest(`.${TOOLBAR_MENU_ACTION_CLASS}`).length) {
+      this._closePopup();
+    }
+  }
+  _closePopup() {
+    const {
+      closeOnClick
+    } = this.option();
+    if (closeOnClick) {
+      this.option('opened', false);
+    }
+  }
+  _itemClickHandler(e) {
+    var _this$_itemClickActio;
+    this._closePopup();
+    (_this$_itemClickActio = this._itemClickAction) === null || _this$_itemClickActio === void 0 || _this$_itemClickActio.call(this, e);
   }
   _itemOptionChanged(item, property, value) {
     var _this$_list3;
@@ -303,7 +335,7 @@ export default class DropDownMenu extends Widget {
     (_this$_button = this._button) === null || _this$_button === void 0 || _this$_button.option('visible', visible);
   }
   _optionChanged(args) {
-    var _this$_list5, _this$_list6, _this$_list7, _this$_popup5;
+    var _this$_list5, _this$_list6, _this$_list7, _this$_popup6;
     const {
       name,
       value
@@ -346,7 +378,7 @@ export default class DropDownMenu extends Widget {
       case 'closeOnClick':
         break;
       case 'container':
-        (_this$_popup5 = this._popup) === null || _this$_popup5 === void 0 || _this$_popup5.option(name, value);
+        (_this$_popup6 = this._popup) === null || _this$_popup6 === void 0 || _this$_popup6.option(name, value);
         break;
       case 'disabled':
         if (this._list) {

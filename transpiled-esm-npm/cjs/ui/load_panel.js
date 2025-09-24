@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_load_panel = _interopRequireDefault(require("../__internal/ui/m_load_panel"));
+var _load_panel = _interopRequireDefault(require("../__internal/ui/load_panel"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_load_panel.default;
+var _default = exports.default = _load_panel.default;
 /**
  * @name dxLoadPanelOptions.disabled
  * @hidden

@@ -6,18 +6,17 @@ import { getPrecision } from '../../core/utils/math';
 import { getHeight } from '../../core/utils/size';
 import { isDefined as _isDefined, type } from '../../core/utils/type';
 import { hasWindow } from '../../core/utils/window';
-import { Crosshair, getMargins } from '../../viz/chart_components/crosshair';
-import { LayoutManager } from '../../viz/chart_components/layout_manager';
-import multiAxesSynchronizer from '../../viz/chart_components/multi_axes_synchronizer';
-import { ScrollBar } from '../../viz/chart_components/scroll_bar';
-import shutterZoom from '../../viz/chart_components/shutter_zoom';
-import zoomAndPan from '../../viz/chart_components/zoom_and_pan';
-import { plugins } from '../../viz/core/annotations';
-import { convertVisualRangeObject, extractColor, getCategoriesInfo, getLog, isRelativeHeightPane, map as _map, normalizePanesHeight, PANE_PADDING, rangesAreEqual, updatePanesCanvases } from '../../viz/core/utils';
-import rangeDataCalculator from '../../viz/series/helpers/range_data_calculator';
-import { Range } from '../../viz/translators/range';
-// @ts-expect-error
-import { prepareSegmentRectPoints } from '../../viz/utils';
+import { Crosshair, getMargins } from '../viz/chart_components/crosshair';
+import { LayoutManager } from '../viz/chart_components/layout_manager';
+import multiAxesSynchronizer from '../viz/chart_components/multi_axes_synchronizer';
+import { ScrollBar } from '../viz/chart_components/scroll_bar';
+import shutterZoom from '../viz/chart_components/shutter_zoom';
+import zoomAndPan from '../viz/chart_components/zoom_and_pan';
+import { plugins } from '../viz/core/annotations';
+import { convertVisualRangeObject, extractColor, getCategoriesInfo, getLog, isRelativeHeightPane, map as _map, normalizePanesHeight, PANE_PADDING, rangesAreEqual, updatePanesCanvases } from '../viz/core/utils';
+import rangeDataCalculator from '../viz/series/helpers/range_data_calculator';
+import { Range } from '../viz/translators/range';
+import { prepareSegmentRectPoints } from '../viz/utils';
 import { AdvancedChart } from './chart_components/m_advanced_chart';
 import { overlapping } from './chart_components/m_base_chart';
 const DEFAULT_PANE_NAME = 'default';
@@ -475,6 +474,7 @@ const dxChart = AdvancedChart.inherit({
   _checkPaneName(seriesTheme) {
     const paneList = _map(this.panes, pane => pane.name);
     seriesTheme.pane = seriesTheme.pane || this.defaultPane;
+    // @ts-expect-error
     return paneList.includes(seriesTheme.pane);
   },
   _initCustomPositioningAxes() {

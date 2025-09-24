@@ -5,6 +5,7 @@ import { HIDDEN_COLUMNS_WIDTH } from '../adaptivity/const';
 import { isAdaptiveItem, isGroupFooterRow, isGroupRow as isGroupRowElement } from '../keyboard_navigation/m_keyboard_navigation_utils';
 import gridCoreUtils from '../m_utils';
 import { CLASSES as MASTER_DETAIL_CLASSES } from '../master_detail/const';
+import { isDetailRow } from '../master_detail/utils';
 import { isGroupRow } from '../views/m_rows_view';
 import { CLASSES, StickyPosition } from './const';
 import { GridCoreStickyColumnsDom } from './dom';
@@ -221,7 +222,6 @@ const columnHeadersView = Base => class ColumnHeadersViewStickyColumnsExtender e
             onItemClick
           });
         }
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         items = items || [];
         items.push({
           text: columnFixingOptions.texts.fix,
@@ -250,15 +250,17 @@ const rowsView = Base => class RowsViewStickyColumnsExtender extends baseStickyC
     // @ts-expect-error
     const $detailCell = super._renderMasterDetailCell($row, row, options);
     if (this.hasStickyColumns()) {
-      $detailCell.addClass(this.addWidgetPrefix(CLASSES.stickyColumnLeft));
-      setWidth($detailCell, this._getMasterDetailWidth());
+      const detailContainerSelector = `.${this.addWidgetPrefix(MASTER_DETAIL_CLASSES.detailContainer)}`;
+      const $detailContainer = $detailCell.find(detailContainerSelector);
+      $detailContainer.addClass(this.addWidgetPrefix(CLASSES.stickyColumnLeft));
+      setWidth($detailContainer, this._getMasterDetailWidth());
     }
     return $detailCell;
   }
   _updateMasterDetailWidths() {
+    const $detailContainers = this._getRowElements().children(`.${MASTER_DETAIL_CLASSES.detailCell}`).children(`.${this.addWidgetPrefix(MASTER_DETAIL_CLASSES.detailContainer)}`);
     const width = this._getMasterDetailWidth();
-    const $masterDetailCells = this._getRowElements().children('.dx-master-detail-cell');
-    setWidth($masterDetailCells, `${width}px`);
+    setWidth($detailContainers, `${width}px`);
   }
   setStickyOffsets(rowIndex, offsets) {
     super.setStickyOffsets(rowIndex, offsets);
@@ -297,10 +299,14 @@ const rowsView = Base => class RowsViewStickyColumnsExtender extends baseStickyC
     }
   }
   _renderCellContent($cell, options, renderOptions) {
-    if (!isGroupRow(options) || !this.hasStickyColumns()) {
+    const hasStickyColumns = this.hasStickyColumns();
+    const isGroupRowResult = isGroupRow(options);
+    const isDetailRowResult = isDetailRow(options);
+    const needWrapContent = isGroupRowResult || isDetailRowResult;
+    if (!hasStickyColumns || !needWrapContent) {
       return super._renderCellContent($cell, options, renderOptions);
     }
-    const $container = $('<div>').addClass(this.addWidgetPrefix(CLASSES.groupRowContainer)).appendTo($cell);
+    const $container = $('<div>').toggleClass(this.addWidgetPrefix(CLASSES.groupRowContainer), isGroupRowResult).toggleClass(this.addWidgetPrefix(MASTER_DETAIL_CLASSES.detailContainer), isDetailRowResult).appendTo($cell);
     return super._renderCellContent($container, options, renderOptions);
   }
   _renderGroupSummaryCellsCore($groupCell, options, groupCellColSpan, alignByColumnCellCount) {

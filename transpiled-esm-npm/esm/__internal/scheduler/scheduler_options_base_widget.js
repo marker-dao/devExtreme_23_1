@@ -40,6 +40,7 @@ export class SchedulerOptionsBaseWidget extends Widget {
     // @ts-expect-error
     super._initMarkup();
     this.updateViews();
+    this.validateOptions();
   }
   schedulerOptionChanged(args) {
     switch (args.name) {

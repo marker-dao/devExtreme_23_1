@@ -22,7 +22,7 @@ describe('Date utils', () => {
         expectedResult
       } = _ref;
       const date = new Date('2023-09-05T00:00:00Z');
-      const result = dateUtilsTs.addOffsets(date, offsets);
+      const result = dateUtilsTs.addOffsets(date, ...offsets);
       expect(result).toEqual(expectedResult);
     });
   });

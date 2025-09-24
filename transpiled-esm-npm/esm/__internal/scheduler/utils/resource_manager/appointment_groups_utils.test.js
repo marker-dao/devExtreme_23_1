@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { complexIdResourceMock, getResourceManagerMock, resourceIndexesMock, resourceItemsByIdMock } from '../../../scheduler/__mock__/resourceManager.mock';
+import { complexIdResourceMock, getResourceManagerMock, resourceIndexesMock, resourceItemsByIdMock } from '../../../scheduler/__mock__/resource_manager.mock';
 import { getAppointmentGroupIndex, getAppointmentGroupValues, getAppointmentResources, getRawAppointmentGroupValues, getResourceItemById, getSafeGroupValues, groupAppointmentsByGroupLeafs, setAppointmentGroupValues } from './appointment_groups_utils';
 describe('appointment groups utils', () => {
   describe('getResourceItemById', () => {

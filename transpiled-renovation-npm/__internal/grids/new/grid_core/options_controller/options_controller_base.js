@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.OptionsController = void 0;
 var _component = require("../../../../../core/component");
 var _data = require("../../../../../core/utils/data");
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _m_extend = require("../../../../core/utils/m_extend");
 var _template_wrapper = require("../inferno_wrappers/template_wrapper");
-var _index = require("../utils/tree/index");
+var _index2 = require("../utils/tree/index");
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
@@ -37,7 +37,7 @@ class OptionsController {
     this.initialized = this.component.initialized;
     // @ts-expect-error
     this.defaults = ((_component$_getDefaul = component._getDefaultOptions) === null || _component$_getDefaul === void 0 ? void 0 : _component$_getDefaul.call(component)) ?? {};
-    this.internalOptions = (0, _signalsCore.signal)({
+    this.internalOptions = (0, _index.signal)({
       options: (0, _m_extend.extend)(true, {}, component.option()),
       changes: null
     });
@@ -59,26 +59,26 @@ class OptionsController {
     let changes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     const pathParts = (0, _data.getPathParts)(optionFullName);
     this.internalOptions.value = {
-      options: (0, _index.mergeOptionTrees)(this.internalOptions.peek().options, this.component.option(), this.defaults, pathParts),
+      options: (0, _index2.mergeOptionTrees)(this.internalOptions.peek().options, this.component.option(), this.defaults, pathParts),
       changes
     };
   }
   oneWay(name) {
     return getOr(this.cache.oneWay, name, () => {
       const pathArray = (0, _data.getPathParts)(name);
-      return (0, _signalsCore.computed)(() => (0, _index.getTreeNodeByPath)(this.internalOptions.value.options, pathArray));
+      return (0, _index.computed)(() => (0, _index2.getTreeNodeByPath)(this.internalOptions.value.options, pathArray));
     });
   }
   oneWayWithChanges(name) {
     return getOr(this.cache.oneWayWithChanges, name, () => {
       const pathArray = (0, _data.getPathParts)(name);
-      return (0, _signalsCore.computed)(() => {
+      return (0, _index.computed)(() => {
         const {
           options,
           changes
         } = this.internalOptions.value;
         return {
-          value: (0, _index.getTreeNodeByPath)(options, pathArray),
+          value: (0, _index2.getTreeNodeByPath)(options, pathArray),
           changes
         };
       });
@@ -88,8 +88,8 @@ class OptionsController {
     return getOr(this.cache.twoWay, name, () => {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that = this;
-      const obs = (0, _signalsCore.signal)(this.component.option(name));
-      (0, _signalsCore.effect)(() => {
+      const obs = (0, _index.signal)(this.component.option(name));
+      (0, _index.effect)(() => {
         obs.value = this.oneWay(name).value;
       });
       return {
@@ -142,7 +142,7 @@ class OptionsController {
   template(name) {
     return getOr(this.cache.template, name, () => {
       const templateOption = this.oneWay(name);
-      return (0, _signalsCore.computed)(
+      return (0, _index.computed)(
       // @ts-expect-error
       () => templateOption.value && this.normalizeTemplate(templateOption.value));
     });
@@ -150,7 +150,7 @@ class OptionsController {
   action(name) {
     return getOr(this.cache.action, name, () => {
       const actionOption = this.oneWay(name);
-      return (0, _signalsCore.computed)(() => {
+      return (0, _index.computed)(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         actionOption.value;
         // @ts-expect-error

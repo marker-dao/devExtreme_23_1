@@ -121,10 +121,10 @@ class MultiselectDateBox extends TypedDateBox {
     const dateRangeBox = this._getDateRangeBox();
     const [startDateInput, endDateInput] = dateRangeBox.field();
     if ((0, _renderer.default)(target).is((0, _renderer.default)(startDateInput))) {
-      dateRangeBox.option('_currentSelection', 'startDate');
+      dateRangeBox.option('currentSelection', 'startDate');
     }
     if ((0, _renderer.default)(target).is((0, _renderer.default)(endDateInput))) {
-      dateRangeBox.option('_currentSelection', 'endDate');
+      dateRangeBox.option('currentSelection', 'endDate');
     }
     if (!dateRangeBox.getStartDateBox().getStrategy().getWidget()) {
       return;
@@ -142,7 +142,7 @@ class MultiselectDateBox extends TypedDateBox {
         calendar.option('currentDate', startDate);
       }
       this.getStrategy().setActiveStartDateBox();
-      calendar.option('_currentSelection', 'startDate');
+      calendar.option('currentSelection', 'startDate');
       if (dateRangeBox.option('disableOutOfRangeSelection')) {
         // @ts-expect-error
         calendar._setViewsMaxOption(endDate);
@@ -161,7 +161,7 @@ class MultiselectDateBox extends TypedDateBox {
         calendar.option('currentDate', endDate);
       }
       dateRangeBox.getStartDateBox().getStrategy().setActiveEndDateBox();
-      calendar.option('_currentSelection', 'endDate');
+      calendar.option('currentSelection', 'endDate');
       if (dateRangeBox.option('disableOutOfRangeSelection')) {
         // @ts-expect-error
         calendar._setViewsMinOption(startDate);

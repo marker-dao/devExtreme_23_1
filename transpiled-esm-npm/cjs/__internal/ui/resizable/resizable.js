@@ -20,7 +20,7 @@ var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
 var _dom_component = _interopRequireDefault(require("../../core/widget/dom_component"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const RESIZABLE = 'dxResizable';
 const RESIZABLE_CLASS = 'dx-resizable';
 const RESIZABLE_RESIZING_CLASS = 'dx-resizable-resizing';
@@ -132,7 +132,6 @@ class Resizable extends _dom_component.default {
   }
   _getElementSize() {
     const $element = this.$element();
-    // @ts-expect-error ts-error
     return $element.css('boxSizing') === 'border-box' ? {
       width: (0, _size.getOuterWidth)($element),
       height: (0, _size.getOuterHeight)($element)
@@ -388,7 +387,6 @@ class Resizable extends _dom_component.default {
       step,
       roundStepValue
     } = this.option();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return (0, _common.pairToObject)(step, !roundStepValue);
   }
   _roundNotStrict(delta) {

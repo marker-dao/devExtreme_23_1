@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.NOT_EXISTING_INDEX = void 0;
+exports.indexExists = exports.default = exports.NOT_EXISTING_INDEX = void 0;
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
 var _data_source = require("../../../common/data/data_source/data_source");
 var _utils = require("../../../common/data/data_source/utils");
@@ -11,25 +11,29 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _common = require("../../../core/utils/common");
 var _data = require("../../../core/utils/data");
 var _deferred = require("../../../core/utils/deferred");
-var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
 var _type = require("../../../core/utils/type");
 var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
 var _collection_widget = _interopRequireDefault(require("../../ui/collection/collection_widget.base"));
 var _collection_widgetEditStrategy = _interopRequireDefault(require("../../ui/collection/collection_widget.edit.strategy.plain"));
-var _m_selection = _interopRequireDefault(require("../../ui/selection/m_selection"));
+var _selection = _interopRequireDefault(require("../../ui/selection/selection"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const ITEM_DELETING_DATA_KEY = 'dxItemDeleting';
 const SELECTED_ITEM_CLASS = 'dx-item-selected';
 const NOT_EXISTING_INDEX = exports.NOT_EXISTING_INDEX = -1;
 const indexExists = index => index !== NOT_EXISTING_INDEX;
+exports.indexExists = indexExists;
 class CollectionWidget extends _collection_widget.default {
+  constructor(element, options) {
+    CollectionWidget._userOptions = options ?? {};
+    // @ts-expect-error
+    super(element, options);
+  }
   _setOptionsByReference() {
     super._setOptionsByReference();
-    (0, _extend.extend)(this._optionsByReference, {
-      selectedItem: true
-    });
+    // @ts-expect-error
+    this._optionsByReference.selectedItem = true;
   }
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -49,10 +53,6 @@ class CollectionWidget extends _collection_widget.default {
       onItemDeleting: null,
       onItemDeleted: null
     });
-  }
-  ctor(element, options) {
-    this._userOptions = options || {};
-    super.ctor(element, options);
   }
   _init() {
     this._initEditStrategy();
@@ -115,7 +115,10 @@ class CollectionWidget extends _collection_widget.default {
     return this._dataController.key();
   }
   keyOf(item) {
-    if (this.option('keyExpr')) {
+    const {
+      keyExpr
+    } = this.option();
+    if (keyExpr) {
       return this._keyGetter(item);
     }
     if (this._dataController.store()) {
@@ -132,10 +135,15 @@ class CollectionWidget extends _collection_widget.default {
     const {
       itemsGetter
     } = this._editStrategy;
-    this._selection = new _m_selection.default({
+    const {
+      selectionMode,
+      maxFilterLengthInRequest
+    } = this.option();
+    // @ts-expect-error TItem
+    this._selection = new _selection.default({
       allowNullValue: this._nullValueSelectionSupported(),
-      mode: this.option('selectionMode'),
-      maxFilterLengthInRequest: this.option('maxFilterLengthInRequest'),
+      mode: selectionMode,
+      maxFilterLengthInRequest,
       equalByReference: !this._isKeySpecified(),
       onSelectionChanging: args => {
         var _this$_actions$onSele, _this$_actions;
@@ -257,10 +265,11 @@ class CollectionWidget extends _collection_widget.default {
       case 'selectedItems':
         {
           const {
-            selectedItems = []
+            selectedItems = [],
+            selectionRequired
           } = this.option();
           const selectedIndex = selectedItems.length ? this._editStrategy.getIndexByItemData(selectedItems[0]) : NOT_EXISTING_INDEX;
-          if (this.option('selectionRequired') && !indexExists(selectedIndex)) {
+          if (selectionRequired && !indexExists(selectedIndex)) {
             return this._syncSelectionOptions('selectedIndex');
           }
           this._setOptionWithoutOptionChange('selectedItem', selectedItems[0]);
@@ -271,10 +280,12 @@ class CollectionWidget extends _collection_widget.default {
       case 'selectedItem':
         {
           const {
-            selectedItem = {}
+            selectedItem,
+            selectionRequired
           } = this.option();
+          // @ts-expect-error
           const selectedIndex = this._editStrategy.getIndexByItemData(selectedItem);
-          if (this.option('selectionRequired') && !indexExists(selectedIndex)) {
+          if (selectionRequired && !indexExists(selectedIndex)) {
             return this._syncSelectionOptions('selectedIndex');
           }
           if ((0, _type.isDefined)(selectedItem)) {
@@ -308,12 +319,11 @@ class CollectionWidget extends _collection_widget.default {
   _chooseSelectOption() {
     let optionName = 'selectedIndex';
     const isOptionDefined = name => {
-      const optionValue = this.option(name);
-      // @ts-expect-error ts-error
-      const length = (0, _type.isDefined)(optionValue) && optionValue.length;
-      // @ts-expect-error ts-error
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return length || name in this._userOptions;
+      const {
+        [name]: optionValue
+      } = this.option();
+      const length = (0, _type.isDefined)(optionValue) && Array.isArray(optionValue) && optionValue.length;
+      return !!length || name in CollectionWidget._userOptions;
     };
     if (isOptionDefined('selectedItems')) {
       optionName = 'selectedItems';
@@ -346,15 +356,21 @@ class CollectionWidget extends _collection_widget.default {
       this._syncSelectionOptions('selectedItems');
     } else if (selectionMode === 'single') {
       const newSelection = selectedItems ?? [];
-      if (newSelection.length > 1 || !newSelection.length && this.option('selectionRequired') && items !== null && items !== void 0 && items.length) {
-        var _normalizedSelection;
+      const {
+        selectionRequired
+      } = this.option();
+      if (newSelection.length > 1 || !newSelection.length && selectionRequired && items !== null && items !== void 0 && items.length) {
         const currentSelection = this._selection.getSelectedItems();
         let normalizedSelection = newSelection[0] ?? currentSelection[0];
         if (normalizedSelection === undefined) {
           // eslint-disable-next-line prefer-destructuring
           normalizedSelection = this._editStrategy.itemsGetter()[0];
         }
-        if (this.option('grouped') && (_normalizedSelection = normalizedSelection) !== null && _normalizedSelection !== void 0 && _normalizedSelection.items) {
+        const {
+          grouped
+        } = this.option();
+        const hasSubItems = item => (0, _type.isObject)(item) && 'items' in item && Array.isArray(item.items);
+        if (grouped && hasSubItems(normalizedSelection)) {
           normalizedSelection.items = [normalizedSelection.items[0]];
         }
         this._selection.setSelection(this._getKeysByItems([normalizedSelection]));
@@ -386,7 +402,10 @@ class CollectionWidget extends _collection_widget.default {
     });
   }
   _itemSelectHandler(e, shouldIgnoreSelectByClick) {
-    if (!shouldIgnoreSelectByClick && !this.option('selectByClick')) {
+    const {
+      selectByClick
+    } = this.option();
+    if (!shouldIgnoreSelectByClick && !selectByClick) {
       return;
     }
     const $itemElement = e.currentTarget;
@@ -572,7 +591,9 @@ class CollectionWidget extends _collection_widget.default {
   _deleteItemFromDS($item) {
     const dataController = this._dataController;
     const deferred = (0, _deferred.Deferred)();
-    const disabledState = this.option('disabled');
+    const {
+      disabled
+    } = this.option();
     const dataStore = dataController.store();
     if (!dataStore) {
       return (0, _deferred.Deferred)().resolve().promise();
@@ -591,14 +612,17 @@ class CollectionWidget extends _collection_widget.default {
       deferred.reject();
     });
     deferred.always(() => {
-      this.option('disabled', disabledState);
+      this.option('disabled', disabled);
     });
     return deferred;
   }
   _tryRefreshLastPage() {
     const deferred = (0, _deferred.Deferred)();
+    const {
+      grouped
+    } = this.option();
     // @ts-expect-error mixin method
-    if (this._isLastPage() || this.option('grouped')) {
+    if (this._isLastPage() || grouped) {
       deferred.resolve();
     } else {
       this._refreshLastPage().done(() => {
@@ -665,7 +689,10 @@ class CollectionWidget extends _collection_widget.default {
       return;
     }
     const selectedItemKeys = this._selection.getSelectedItemKeys();
-    if (this.option('selectionRequired') && selectedItemKeys.length <= 1) {
+    const {
+      selectionRequired
+    } = this.option();
+    if (selectionRequired && selectedItemKeys.length <= 1) {
       return;
     }
     const key = this._getKeyByIndex(itemIndex);
@@ -761,4 +788,5 @@ class CollectionWidget extends _collection_widget.default {
     });
   }
 }
+CollectionWidget._userOptions = {};
 var _default = exports.default = CollectionWidget;

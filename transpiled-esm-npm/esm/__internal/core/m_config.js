@@ -15,6 +15,7 @@ const config = {
   useJQuery: undefined,
   editorStylingMode: undefined,
   useLegacyVisibleIndex: false,
+  versionAssertions: [],
   floatingActionButtonConfig: {
     icon: 'add',
     closeIcon: 'close',

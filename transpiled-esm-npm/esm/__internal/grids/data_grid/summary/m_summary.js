@@ -14,6 +14,7 @@ import { ColumnsView } from '../../../grids/grid_core/views/m_columns_view';
 import AggregateCalculator from '../m_aggregate_calculator';
 import gridCore from '../m_core';
 import dataSourceAdapterProvider from '../m_data_source_adapter';
+import { getSummaryCellIndex } from './utils';
 const DATAGRID_TOTAL_FOOTER_CLASS = 'dx-datagrid-total-footer';
 const DATAGRID_SUMMARY_ITEM_CLASS = 'dx-datagrid-summary-item';
 const DATAGRID_TEXT_CONTENT_CLASS = 'dx-datagrid-text-content';
@@ -446,7 +447,7 @@ const data = Base => class SummaryDataControllerExtender extends Base {
     if (!isEmptyObject(summaryCellsByColumns)) {
       visibleColumns.forEach((column, visibleIndex) => {
         const prevColumn = visibleColumns[visibleIndex - 1];
-        const columnIndex = isGroupRow && ((prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.command) === 'expand' || column.command === 'expand') ? prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.index : column.index;
+        const columnIndex = getSummaryCellIndex(column, prevColumn, isGroupRow);
         summaryCells.push(summaryCellsByColumns[columnIndex] || []);
       });
     }

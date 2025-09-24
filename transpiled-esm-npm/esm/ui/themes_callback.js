@@ -1,2 +1,2 @@
-import Callbacks from '../core/utils/callbacks';
-export const themeReadyCallback = Callbacks();
+import { themeReadyCallback } from '../__internal/ui/m_themes_callback';
+export { themeReadyCallback };

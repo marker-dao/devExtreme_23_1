@@ -8,7 +8,7 @@ require("../radio_group");
 var _date = _interopRequireDefault(require("../../common/core/localization/date"));
 var _message = _interopRequireDefault(require("../../common/core/localization/message"));
 require("../list_light");
-require("../../__internal/ui/list/modules/m_deleting");
+require("../../__internal/ui/list/modules/deleting");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class GanttDialog {
   constructor(owner, $element) {
@@ -34,7 +34,7 @@ class GanttDialog {
       return;
     }
     const isRefresh = this._popupInstance._isVisible() && this._dialogInfo && this._dialogInfo instanceof this.infoMap[name];
-    this._dialogInfo = new this.infoMap[name](parameters, this._apply.bind(this), this.hide.bind(this), editingOptions);
+    this._dialogInfo = new this.infoMap[name](parameters, this._apply.bind(this), this.hide.bind(this), editingOptions, this);
     this._popupInstance.option({
       showTitle: !!this._dialogInfo.getTitle(),
       title: this._dialogInfo.getTitle(),
@@ -51,7 +51,9 @@ class GanttDialog {
     }
   }
   hide() {
-    this._popupInstance.hide();
+    if (this._dialogInfo.shouldHidePopup()) {
+      this._popupInstance.hide();
+    }
     if (this._afterClosing) {
       this._afterClosing();
     }
@@ -59,11 +61,12 @@ class GanttDialog {
 }
 exports.GanttDialog = GanttDialog;
 class DialogInfoBase {
-  constructor(parameters, applyAction, hideAction, editingOptions) {
+  constructor(parameters, applyAction, hideAction, editingOptions, owner) {
     this._parameters = parameters;
     this._applyAction = applyAction;
     this._hideAction = hideAction;
     this._editingOptions = editingOptions;
+    this._owner = owner;
   }
   _getFormItems() {
     return {};
@@ -132,6 +135,9 @@ class DialogInfoBase {
     return formData;
   }
   isValidated() {
+    return true;
+  }
+  shouldHidePopup() {
     return true;
   }
 }
@@ -241,8 +247,10 @@ class TaskEditDialogInfo extends DialogInfoBase {
             text: '...',
             hint: _message.default.format('dxGantt-dialogEditResourceListHint'),
             onClick: () => {
+              const formData = this.getFormData();
               const showTaskEditDialogCallback = () => {
                 this._parameters.showTaskEditDialogCommand.execute();
+                this._restoreFormData(formData);
               };
               this._parameters.showResourcesDialogCommand.execute(showTaskEditDialogCallback);
             }
@@ -250,6 +258,19 @@ class TaskEditDialogInfo extends DialogInfoBase {
         }]
       }
     }];
+  }
+  _restoreFormData(formData) {
+    const newForm = this._owner._dialogInfo._form;
+    const titleEdit = newForm.getEditor('title');
+    const assignedEdit = newForm.getEditor('assigned.items');
+    const startEdit = newForm.getEditor('start');
+    const endEdit = newForm.getEditor('end');
+    const progressEdit = newForm.getEditor('progress');
+    titleEdit.option('value', formData.title);
+    assignedEdit.option('value', formData.assigned.items);
+    startEdit.option('value', formData.start);
+    endEdit.option('value', formData.end);
+    progressEdit.option('value', formData.progress);
   }
   _getValidationMessage(isStartDependencies, correctDate) {
     if (isStartDependencies) {
@@ -277,7 +298,7 @@ class TaskEditDialogInfo extends DialogInfoBase {
     this._parameters.title = formData.title;
     this._parameters.start = formData.start;
     this._parameters.end = formData.end;
-    this._parameters.progress = formData.progress * 100;
+    this._parameters.progress = Math.round(formData.progress * 100);
     this._parameters.assigned = formData.assigned;
   }
   isValidated() {
@@ -345,6 +366,9 @@ class ResourcesEditDialogInfo extends DialogInfoBase {
         }]
       }
     }];
+  }
+  shouldHidePopup() {
+    return false;
   }
 }
 class ConfirmDialogInfo extends DialogInfoBase {

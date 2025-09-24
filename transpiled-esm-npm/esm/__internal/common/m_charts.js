@@ -1,5 +1,5 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import { getNextDefsSvgId } from '../../viz/core/utils';
+import { getNextDefsSvgId } from '../viz/core/utils';
 const graphicObjects = {};
 export const registerPattern = options => {
   const id = getNextDefsSvgId();

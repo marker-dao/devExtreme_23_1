@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.AppointmentAdapter = void 0;
 var _m_object = require("../../../core/utils/m_object");
-var _m_recurrence = require("../../m_recurrence");
 class AppointmentAdapter {
   constructor(source, dataAccessors) {
     this.source = source;
@@ -70,7 +69,7 @@ class AppointmentAdapter {
     return endDate && startDate ? endDate.getTime() - startDate.getTime() : 0;
   }
   get isRecurrent() {
-    return (0, _m_recurrence.getRecurrenceProcessor)().isValidRecurrenceRule(this.recurrenceRule);
+    return this.dataAccessors.isRecurrent(this.source);
   }
   clone() {
     return new AppointmentAdapter((0, _m_object.deepExtendArraySafe)({}, this.source, false, false, false, true), this.dataAccessors);

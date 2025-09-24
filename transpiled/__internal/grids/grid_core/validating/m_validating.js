@@ -23,8 +23,8 @@ var _ui = _interopRequireDefault(require("../../../../ui/overlay/ui.overlay"));
 var _themes = require("../../../../ui/themes");
 var _validation_engine = _interopRequireDefault(require("../../../../ui/validation_engine"));
 var _validator = _interopRequireDefault(require("../../../../ui/validator"));
-var _selectors = require("../../../../ui/widget/selectors");
 var _ui2 = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
+var _m_selectors = require("../../../core/utils/m_selectors");
 var _const = require("../editing/const");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
@@ -334,7 +334,7 @@ class ValidatingController extends _m_modules.default.Controller {
       }
       if (result.status === VALIDATION_STATUS.invalid) {
         const $focus = $container.find(':focus');
-        if (!(0, _selectors.focused)($focus)) {
+        if (!(0, _m_selectors.focused)($focus)) {
           // @ts-expect-error
           _events_engine.default.trigger($focus, 'focus');
           // @ts-expect-error
@@ -676,12 +676,16 @@ const validatingEditingExtender = Base => class ValidateEditingControllerExtende
     }
     super._validateEditFormAfterUpdate.apply(this, arguments);
   }
-  _prepareEditCell(params) {
-    // @ts-expect-error
-    const isNotCanceled = super._prepareEditCell.apply(this, arguments);
-    if (isNotCanceled && params.column.showEditorAlways) {
+  _prepareEditCell(parameters) {
+    const {
+      column,
+      item
+    } = parameters;
+    const isNotCanceled = super._prepareEditCell(parameters);
+    const key = !item.isNewRow ? item.key : undefined;
+    if (isNotCanceled && column.showEditorAlways) {
       this._validatingController.updateValidationState({
-        key: params.key
+        key
       });
     }
     return isNotCanceled;

@@ -15,7 +15,7 @@ var _string = require("../../../../core/utils/string");
 var _type = require("../../../../core/utils/type");
 var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
 var _m_export = require("../../../grids/grid_core/m_export");
-var _m_listEdit = _interopRequireDefault(require("../../../ui/list/m_list.edit.search"));
+var _listEdit = _interopRequireDefault(require("../../../ui/list/list.edit.search"));
 var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
@@ -660,7 +660,7 @@ const headerPanel = Base => class ExportHeaderPanelExtender extends Base {
       toolbarButtonOptions.options = widgetOptions;
       toolbarButtonOptions.widget = 'dxDropDownButton';
       toolbarButtonOptions.menuItemTemplate = (_data, _index, container) => {
-        this._createComponent((0, _renderer.default)(container), _m_listEdit.default, {
+        this._createComponent((0, _renderer.default)(container), _listEdit.default, {
           items
         });
       };

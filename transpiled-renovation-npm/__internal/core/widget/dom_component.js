@@ -25,13 +25,9 @@ var _component = require("../../core/widget/component");
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-// @ts-expect-error
-
 class DOMComponent extends _component.Component {
-  // eslint-disable-next-line @stylistic/max-len
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static getInstance(element) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return (0, _public_component.getInstanceByElement)((0, _renderer.default)(element), this);
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -69,7 +65,6 @@ class DOMComponent extends _component.Component {
     this._$element = (0, _renderer.default)(element);
   }
   _getSynchronizableOptionsForCreateComponent() {
-    // @ts-expect-error
     return ['rtlEnabled', 'disabled', 'templatesRenderAsynchronously'];
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -219,12 +214,11 @@ class DOMComponent extends _component.Component {
   }
   _clean() {}
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _modelByElement(element) {
+  _modelByElement($element) {
     const {
       modelByElement
     } = this.option();
-    const $element = this.$element();
-    return modelByElement ? modelByElement($element) : undefined;
+    return modelByElement ? modelByElement(this.$element()) : undefined;
   }
   _invalidate() {
     if (this._isUpdateAllowed()) {
@@ -237,9 +231,8 @@ class DOMComponent extends _component.Component {
     this._renderComponent();
   }
   _dispose() {
-    // eslint-disable-next-line @stylistic/max-len
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-unused-expressions
-    this._templateManager && this._templateManager.dispose();
+    var _this$_templateManage;
+    (_this$_templateManage = this._templateManager) === null || _this$_templateManage === void 0 || _this$_templateManage.dispose();
     super._dispose();
     this._clean();
     this._detachWindowResizeCallback();
@@ -257,7 +250,7 @@ class DOMComponent extends _component.Component {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   componentConfiguration) {
     const configuration = componentConfiguration ?? {};
-    const synchronizableOptions = (0, _common.grep)(this._getSynchronizableOptionsForCreateComponent(), value => !(value in configuration));
+    const synchronizableOptions = this._getSynchronizableOptionsForCreateComponent().filter(value => !(value in configuration));
     const {
       integrationOptions
     } = this.option();
@@ -268,9 +261,12 @@ class DOMComponent extends _component.Component {
     const nestedComponentConfig = (0, _extend.extend)({
       integrationOptions
     }, nestedComponentOptions(this));
-    synchronizableOptions.forEach(
-    // eslint-disable-next-line no-return-assign
-    optionName => nestedComponentConfig[optionName] = this.option(optionName));
+    synchronizableOptions.forEach(optionName => {
+      const {
+        [optionName]: value
+      } = this.option();
+      nestedComponentConfig[optionName] = value;
+    });
     this._extendConfig(configuration, nestedComponentConfig);
     // eslint-disable-next-line no-void
     let instance = void 0;
@@ -307,30 +303,32 @@ class DOMComponent extends _component.Component {
     // @ts-expect-error
     return instance;
   }
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   _extendConfig(configuration, extendConfig) {
     (0, _iterator.each)(extendConfig, (key, value) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      !Object.prototype.hasOwnProperty.call(configuration, key) && (configuration[key] = value);
+      configuration[key] ?? (configuration[key] = value);
     });
   }
   _defaultActionConfig() {
     const $element = this.$element();
     const context = this._modelByElement($element);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return (0, _extend.extend)(super._defaultActionConfig(), {
-      context
-    });
+    const defaultConfig = super._defaultActionConfig();
+    if (context) {
+      defaultConfig.context = context;
+    }
+    return defaultConfig;
   }
   _defaultActionArgs() {
+    const args = super._defaultActionArgs();
     const $element = this.$element();
     const model = this._modelByElement($element);
     const element = this.element();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return (0, _extend.extend)(super._defaultActionArgs(), {
-      element,
-      model
-    });
+    if (element) {
+      args.element = element;
+    }
+    if (model) {
+      args.model = model;
+    }
+    return args;
   }
   _optionChanged(args) {
     const {
@@ -357,8 +355,7 @@ class DOMComponent extends _component.Component {
   }
   _removeAttributes(element) {
     const attrs = element.attributes;
-    // eslint-disable-next-line no-plusplus
-    for (let i = attrs.length - 1; i >= 0; i--) {
+    for (let i = attrs.length - 1; i >= 0; i -= 1) {
       const attr = attrs[i];
       if (attr) {
         const {

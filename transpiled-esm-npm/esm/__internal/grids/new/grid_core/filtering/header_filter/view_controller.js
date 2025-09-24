@@ -1,5 +1,5 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import { signal } from '@preact/signals-core';
+import { signal } from '../../../../../core/state_manager/index';
 import { removeFieldConditionsFromFilter } from '../../../../../filter_builder/m_utils';
 import gridCoreUtils from '../../../../../grids/grid_core/m_utils';
 import { ColumnsController } from '../../columns_controller/index';

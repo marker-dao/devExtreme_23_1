@@ -18,7 +18,7 @@ var _iterator = require("../../../../core/utils/iterator");
 var _type = require("../../../../core/utils/type");
 var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
 var _m_support = _interopRequireDefault(require("../../../core/utils/m_support"));
-var _m_selection = _interopRequireDefault(require("../../../ui/selection/m_selection"));
+var _selection = _interopRequireDefault(require("../../../ui/selection/selection"));
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
@@ -256,7 +256,8 @@ class SelectionController extends _m_modules.default.Controller {
   }
   _createSelection() {
     const options = this._getSelectionConfig();
-    return new _m_selection.default(options);
+    // @ts-expect-error TKey
+    return new _selection.default(options);
   }
   /**
    * @extended: state_storing, TreeList's selection
@@ -559,15 +560,15 @@ const dataSelectionExtenderMixin = Base => class DataControllerSelectionExtender
     return dataItem;
   }
   refresh(options) {
-    const that = this;
     // @ts-expect-error
     const d = new _deferred.Deferred();
-    super.refresh.apply(this, arguments).done(() => {
-      if (!options || options.selection) {
-        that._selectionController.refresh().done(d.resolve).fail(d.reject);
-      } else {
+    super.refresh(options).done(() => {
+      const skipSelectionRefresh = (0, _type.isObject)(options) && !options.selection;
+      if (skipSelectionRefresh) {
         d.resolve();
+        return;
       }
+      this._selectionController.refresh().done(d.resolve).fail(d.reject);
     }).fail(d.reject);
     return d.promise();
   }
@@ -618,14 +619,20 @@ const columnHeadersSelectionExtenderMixin = Base => class ColumnHeadersSelection
     super.init();
     this._selectionController.selectionChanged.add(this._updateSelectAllValue.bind(this));
   }
+  _isSelectAllCheckBoxVisible() {
+    const isEmptyData = this._dataController.isEmpty();
+    const allowSelectAll = this.option('selection.allowSelectAll');
+    const isSelectAll = this._selectionController.isSelectAll();
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    return !isEmptyData && (allowSelectAll || isSelectAll !== false);
+  }
   _updateSelectAllValue() {
     const that = this;
     const $element = that.element();
     const $editor = $element === null || $element === void 0 ? void 0 : $element.find(`.${SELECT_CHECKBOX_CLASS}`);
-    if ($element && $editor.length && that.option('selection.mode') === 'multiple') {
-      const selectAllValue = that._selectionController.isSelectAll();
-      const hasSelection = selectAllValue !== false;
-      const isVisible = that.option('selection.allowSelectAll') ? !that._dataController.isEmpty() : hasSelection;
+    if ($element && $editor.length && this.option('selection.mode') === 'multiple') {
+      const selectAllValue = this._selectionController.isSelectAll();
+      const isVisible = this._isSelectAllCheckBoxVisible();
       $editor.dxCheckBox('instance').option({
         visible: isVisible,
         value: selectAllValue
@@ -641,22 +648,24 @@ const columnHeadersSelectionExtenderMixin = Base => class ColumnHeadersSelection
     }
   }
   _renderSelectAllCheckBox($container, column) {
-    const that = this;
-    const isEmptyData = that._dataController.isEmpty();
-    const groupElement = (0, _renderer.default)('<div>').appendTo($container).addClass(SELECT_CHECKBOX_CLASS);
-    that.setAria('label', _message.default.format('dxDataGrid-ariaSelectAll'), groupElement);
-    that._editorFactoryController.createEditor(groupElement, (0, _extend.extend)({}, column, {
+    const $checkbox = this._createSelectAllCheckboxElement(column);
+    $checkbox.appendTo($container);
+    return $checkbox;
+  }
+  _createSelectAllCheckboxElement(column) {
+    const $groupElement = (0, _renderer.default)('<div>').addClass(SELECT_CHECKBOX_CLASS);
+    this.setAria('label', _message.default.format('dxDataGrid-ariaSelectAll'), $groupElement);
+    this._editorFactoryController.createEditor($groupElement, (0, _extend.extend)({}, column, {
       parentType: 'headerRow',
       dataType: 'boolean',
       value: this._selectionController.isSelectAll(),
       editorOptions: {
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        visible: !isEmptyData && (that.option('selection.allowSelectAll') || this._selectionController.isSelectAll() !== false)
+        visible: this._isSelectAllCheckBoxVisible()
       },
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      tabIndex: that.option('useLegacyKeyboardNavigation') ? -1 : that.option('tabIndex') || 0,
+      tabIndex: this.option('useLegacyKeyboardNavigation') ? -1 : this.option('tabIndex') || 0,
       setValue: (value, e) => {
-        const allowSelectAll = that.option('selection.allowSelectAll');
+        const allowSelectAll = this.option('selection.allowSelectAll');
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         e.component.option('visible', allowSelectAll || e.component.option('value') !== false);
         if (!e.event || this._selectionController.isSelectAll() === value) {
@@ -670,13 +679,17 @@ const columnHeadersSelectionExtenderMixin = Base => class ColumnHeadersSelection
         e.event.preventDefault();
       }
     }));
-    return groupElement;
+    return $groupElement;
   }
   _attachSelectAllCheckBoxClickEvent($element) {
     _events_engine.default.on($element, _click.name, this.createAction(e => {
       const {
         event
       } = e;
+      if (!this._isSelectAllCheckBoxVisible()) {
+        event.preventDefault();
+        return;
+      }
       if (!(0, _renderer.default)(event.target).closest(`.${SELECT_CHECKBOX_CLASS}`).length) {
         // @ts-expect-error
         _events_engine.default.trigger((0, _renderer.default)(event.currentTarget).children(`.${SELECT_CHECKBOX_CLASS}`), _click.name);

@@ -25,10 +25,10 @@ var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
 var _ui = _interopRequireDefault(require("../../../ui/scroll_view/ui.scrollable"));
 var _ui2 = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
+var _ui3 = _interopRequireDefault(require("../../../ui/widget/ui.widget"));
 var _scroll = require("../../core/utils/scroll");
 var _index2 = require("../../scheduler/r1/components/index");
 var _index3 = require("../../scheduler/r1/utils/index");
-var _m_widget_observer = _interopRequireDefault(require("../base/m_widget_observer"));
 var _constants = require("../constants");
 var _global_cache = require("../global_cache");
 var _m_appointment_drag_behavior = _interopRequireDefault(require("../m_appointment_drag_behavior"));
@@ -52,10 +52,10 @@ const {
 } = _m_table_creator.default;
 // The constant is needed so that the dragging is not sharp. To prevent small twitches
 const DRAGGING_MOUSE_FAULT = 10;
-// @ts-expect-error
+// @ts-expect-error Widget exposes a static abstract() helper not typed in its d.ts
 const {
   abstract
-} = _m_widget_observer.default;
+} = _ui3.default;
 const toMs = _date.default.dateToMilliseconds;
 const COMPONENT_CLASS = 'dx-scheduler-work-space';
 const GROUPED_WORKSPACE_CLASS = 'dx-scheduler-work-space-grouped';
@@ -115,10 +115,14 @@ const DEFAULT_WORKSPACE_RENDER_OPTIONS = {
   },
   generateNewData: true
 };
-class SchedulerWorkSpace extends _m_widget_observer.default {
+class SchedulerWorkSpace extends _ui3.default {
   constructor() {
     super(...arguments);
     this.viewDirection = 'vertical';
+  }
+  // eslint-disable-next-line class-methods-use-this
+  _activeStateUnit() {
+    return CELL_SELECTOR;
   }
   // eslint-disable-next-line @typescript-eslint/class-literal-property-style
   get type() {
@@ -184,13 +188,26 @@ class SchedulerWorkSpace extends _m_widget_observer.default {
   get isDefaultDraggingMode() {
     return this.option('draggingMode') === 'default';
   }
+  notifyObserver(funcName, args) {
+    this.invoke(funcName, ...args);
+  }
+  invoke(funcName) {
+    const notifyScheduler = this.option('notifyScheduler');
+    if (!notifyScheduler) {
+      return undefined;
+    }
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+    return notifyScheduler.invoke(funcName, ...args);
+  }
   _supportedKeys() {
     const clickHandler = function (e) {
       e.preventDefault();
       e.stopPropagation();
       const selectedCells = this._getSelectedCellsData();
       if (selectedCells !== null && selectedCells !== void 0 && selectedCells.length) {
-        const selectedCellsElement = selectedCells.map(cellData => this._getCellByData(cellData)).filter(cell => !!cell);
+        const selectedCellsElement = selectedCells.map(cellData => this._getCellByData(cellData)).filter(cell => Boolean(cell));
         e.target = selectedCellsElement;
         this._showPopup = true;
         this._cellClickAction({
@@ -337,11 +354,11 @@ class SchedulerWorkSpace extends _m_widget_observer.default {
   }
   _isVerticalGroupedWorkSpace() {
     var _this$option;
-    return !!((_this$option = this.option('groups')) !== null && _this$option !== void 0 && _this$option.length) && this.option('groupOrientation') === 'vertical';
+    return Boolean((_this$option = this.option('groups')) === null || _this$option === void 0 ? void 0 : _this$option.length) && this.option('groupOrientation') === 'vertical';
   }
   _isHorizontalGroupedWorkSpace() {
     var _this$option2;
-    return !!((_this$option2 = this.option('groups')) !== null && _this$option2 !== void 0 && _this$option2.length) && this.option('groupOrientation') === 'horizontal';
+    return Boolean((_this$option2 = this.option('groups')) === null || _this$option2 === void 0 ? void 0 : _this$option2.length) && this.option('groupOrientation') === 'horizontal';
   }
   _isWorkSpaceWithCount() {
     return this.option('intervalCount') > 1;
@@ -1362,7 +1379,7 @@ class SchedulerWorkSpace extends _m_widget_observer.default {
       view: {
         type: this.type
       },
-      crossScrollingEnabled: !!this.option('crossScrollingEnabled')
+      crossScrollingEnabled: Boolean(this.option('crossScrollingEnabled'))
     };
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1784,7 +1801,6 @@ class SchedulerWorkSpace extends _m_widget_observer.default {
     this._scrollSync = {};
     this._viewDataProvider = null;
     this._cellsSelectionState = null;
-    this._activeStateUnit = CELL_SELECTOR;
     // @ts-expect-error
     super._init();
     this._initGrouping();
@@ -2406,13 +2422,14 @@ const createDragBehaviorConfig = (container, rootElement, isDefaultDraggingMode,
   };
   const createDragAppointment = (itemData, settings, appointments) => {
     const appointmentIndex = appointments.option('items').length;
-    settings.isCompact = false;
-    settings.virtual = false;
-    const items = appointments._renderItem(appointmentIndex, {
-      itemData,
-      settings: [settings]
-    });
-    return items[0];
+    const $item = appointments._renderItem(appointmentIndex, _extends({
+      itemData
+    }, settings, {
+      isCompact: false,
+      virtual: false,
+      sortedIndex: -1
+    }));
+    return $item;
   };
   const onDragStart = e => {
     if (!isDefaultDraggingMode) {
@@ -2467,7 +2484,7 @@ const createDragBehaviorConfig = (container, rootElement, isDefaultDraggingMode,
       return;
     }
     const elements = getElementsFromPoint();
-    const isMoveUnderControl = !!elements.find(el => el === rootElement.get(0));
+    const isMoveUnderControl = Boolean(elements.find(el => el === rootElement.get(0)));
     const dateTables = getDateTables();
     const droppableCell = elements.find(el => {
       const {

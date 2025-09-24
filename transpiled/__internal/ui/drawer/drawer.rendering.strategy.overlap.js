@@ -9,9 +9,9 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _common = require("../../../core/utils/common");
 var _inflector = require("../../../core/utils/inflector");
 var _size = require("../../../core/utils/size");
+var _drawer = require("../../ui/drawer/drawer.animation");
+var _drawerRendering = _interopRequireDefault(require("../../ui/drawer/drawer.rendering.strategy"));
 var _overlay = _interopRequireDefault(require("../../ui/overlay/overlay"));
-var _drawer = require("./drawer.animation");
-var _drawerRendering = _interopRequireDefault(require("./drawer.rendering.strategy"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class OverlapStrategy extends _drawerRendering.default {
   renderPanelContent(whenPanelContentRendered) {

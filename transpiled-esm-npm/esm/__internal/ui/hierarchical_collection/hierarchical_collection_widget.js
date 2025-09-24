@@ -4,7 +4,6 @@ import $ from '../../../core/renderer';
 import { BindableTemplate } from '../../../core/templates/bindable_template';
 import { noop } from '../../../core/utils/common';
 import { compileGetter, compileSetter } from '../../../core/utils/data';
-import { extend } from '../../../core/utils/extend';
 import { getImageContainer } from '../../../core/utils/icon';
 import { each } from '../../../core/utils/iterator';
 import { isFunction, isObject } from '../../../core/utils/type';
@@ -51,12 +50,16 @@ class HierarchicalCollectionWidget extends CollectionWidgetAsync {
   }
   _initDataAdapter() {
     const accessors = this._createDataAdapterAccessors();
-    this._dataAdapter = new DataAdapter(extend({
+    const {
+      items = []
+    } = this.option();
+    this._dataAdapter = new DataAdapter(_extends({
       dataAccessors: {
         getters: accessors.getters,
         setters: accessors.setters
       },
-      items: this.option('items')
+      // @ts-expect-error
+      items
     }, this._getDataAdapterOptions()));
   }
   _getDataAdapterOptions() {
@@ -126,7 +129,7 @@ class HierarchicalCollectionWidget extends CollectionWidgetAsync {
     return $('<span>').text(itemData.text);
   }
   _initAccessors() {
-    each(this._getAccessors(), (_, accessor) => {
+    each(this._getAccessors(), (_index, accessor) => {
       this._compileAccessor(accessor);
     });
     this._compileDisplayGetter();
@@ -176,17 +179,15 @@ class HierarchicalCollectionWidget extends CollectionWidgetAsync {
       getters: {},
       setters: {}
     };
-    each(this._getAccessors(), (_, accessor) => {
+    each(this._getAccessors(), (_index, accessor) => {
       const getterName = `_${accessor}Getter`;
       const setterName = `_${accessor}Setter`;
       const newAccessor = accessor === 'parentId' ? 'parentKey' : accessor;
       accessors.getters[newAccessor] = this[getterName];
       accessors.setters[newAccessor] = this[setterName];
     });
-    // @ts-expect-error ts-error
-    accessors.getters.display = !this._displayGetter
-    // @ts-expect-error ts-error
-    ? itemData => itemData.text : this._displayGetter;
+    // @ts-expect-error
+    accessors.getters.display = this._displayGetter ?? (itemData => itemData.text);
     return accessors;
   }
   _initMarkup() {

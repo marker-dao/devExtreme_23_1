@@ -3,13 +3,13 @@ import { drop as dragEventDrop, end as dragEventEnd, enter as dragEventEnter, le
 import { addNamespace } from '../../../../common/core/events/utils/index';
 import registerComponent from '../../../../core/component_registrator';
 import domAdapter from '../../../../core/dom_adapter';
-import DOMComponent from '../../../../core/dom_component';
 import $ from '../../../../core/renderer';
 import { extend } from '../../../../core/utils/extend';
 import { each } from '../../../../core/utils/iterator';
 import { getHeight, getOuterHeight, getOuterWidth, getWidth, setHeight, setWidth } from '../../../../core/utils/size';
 import { isDefined } from '../../../../core/utils/type';
-import swatchContainer from '../../../../ui/widget/swatch_container';
+import swatchContainer from '../../../core/utils/swatch_container';
+import DOMComponent from '../../../core/widget/dom_component';
 const {
   getSwatchContainer
 } = swatchContainer;
@@ -122,9 +122,9 @@ function getScrollWrapper(scrollable) {
     }
   };
 }
-const Sortable = DOMComponent.inherit({
+class Sortable extends DOMComponent {
   _getDefaultOptions() {
-    return extend(this.callBase(), {
+    return extend(super._getDefaultOptions(), {
       onChanged: null,
       onDragging: null,
       itemRender: null,
@@ -139,11 +139,12 @@ const Sortable = DOMComponent.inherit({
       groupFilter: null,
       useIndicator: false
     });
-  },
+  }
   _renderItem($sourceItem, target) {
     const itemRender = this.option('itemRender');
     let $item;
     if (itemRender) {
+      // @ts-expect-error ts-error
       $item = itemRender($sourceItem, target);
     } else {
       $item = $sourceItem.clone();
@@ -153,7 +154,7 @@ const Sortable = DOMComponent.inherit({
       });
     }
     return $item;
-  },
+  }
   _renderIndicator($item, isVertical, $targetGroup, isLast) {
     const height = getOuterHeight($item, true);
     const width = getOuterWidth($item, true);
@@ -171,18 +172,18 @@ const Sortable = DOMComponent.inherit({
     } else {
       setHeight(this._indicator, height);
     }
-  },
+  }
   _renderDraggable($sourceItem) {
     this._$draggable && this._$draggable.remove();
     this._$draggable = this._renderItem($sourceItem, 'drag').addClass(this.option('dragClass')).appendTo(getSwatchContainer($sourceItem)).css({
       zIndex: 1000000,
       position: 'absolute'
     });
-  },
+  }
   _detachEventHandlers() {
     const dragEventsString = [dragEventMove, dragEventStart, dragEventEnd, dragEventEnter, dragEventLeave, dragEventDrop].join(' ');
     eventsEngine.off(this._getEventListener(), addNamespace(dragEventsString, SORTABLE_NAMESPACE), undefined);
-  },
+  }
   _getItemOffset(isVertical, itemsOffset, e) {
     for (let i = 0; i < itemsOffset.length; i += 1) {
       let shouldInsert;
@@ -200,12 +201,13 @@ const Sortable = DOMComponent.inherit({
       }
     }
     return undefined;
-  },
+  }
   _getEventListener() {
     const groupSelector = this.option('groupSelector');
     const element = this.$element();
+    // @ts-expect-error ts-error
     return groupSelector ? element.find(groupSelector) : element;
-  },
+  }
   _attachEventHandlers() {
     const that = this;
     const itemSelector = that.option('itemSelector');
@@ -232,11 +234,16 @@ const Sortable = DOMComponent.inherit({
       });
     };
     const createGroups = function () {
+      // @ts-expect-error ts-error
       const root = domAdapter.getRootNode(that.$element().get(0));
       if (!groupSelector) {
         return element;
       }
-      return groupFilter ? $(root).find(groupSelector).filter(groupFilter) : element.find(groupSelector);
+      return groupFilter
+      // @ts-expect-error ts-error
+      ? $(root).find(groupSelector).filter(groupFilter)
+      // @ts-expect-error ts-error
+      : element.find(groupSelector);
     };
     const disposeScrollWrapper = function () {
       var _scrollWrapper;
@@ -251,6 +258,7 @@ const Sortable = DOMComponent.inherit({
         targetGroup: $targetGroup.attr('group'),
         targetIndex: $targetGroup.find(itemSelector).index($targetItem)
       };
+      // @ts-expect-error ts-error
       onDragging && onDragging(draggingArgs);
       if (draggingArgs.cancel) {
         $targetGroup = undefined;
@@ -367,6 +375,7 @@ const Sortable = DOMComponent.inherit({
           $targetGroup.removeClass(targetClass);
           changedArgs.targetGroup = $targetGroup.attr('group');
           if (sourceGroup !== changedArgs.targetGroup || targetIndex > -1) {
+            // @ts-expect-error ts-error
             onChanged && onChanged(changedArgs);
             changedArgs.removeSourceElement && $sourceItem.remove();
           }
@@ -381,21 +390,21 @@ const Sortable = DOMComponent.inherit({
         $targetItem = null;
       });
     }
-  },
+  }
   _init() {
-    this.callBase();
+    super._init();
     this._attachEventHandlers();
-  },
+  }
   _render() {
-    this.callBase();
+    super._render();
     this.$element().addClass(SORTABLE_CLASS);
-  },
+  }
   _dispose() {
     const that = this;
-    that.callBase.apply(that, arguments);
+    super._dispose();
     that._$draggable && that._$draggable.detach();
     that._indicator && that._indicator.detach();
-  },
+  }
   _optionChanged(args) {
     const that = this;
     switch (args.name) {
@@ -416,13 +425,13 @@ const Sortable = DOMComponent.inherit({
       case 'direction':
         break;
       default:
-        that.callBase(args);
+        super._optionChanged(args);
     }
-  },
+  }
   _useTemplates() {
     return false;
   }
-});
+}
 
 // TODO remove dxSortableOld component
 registerComponent('dxSortableOld', Sortable);

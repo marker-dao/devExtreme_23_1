@@ -4,11 +4,7 @@ import { getOuterHeight, setHeight, setWidth } from '../../core/utils/size';
 import { APPOINTMENT_SETTINGS_KEY } from './constants';
 export const utils = {
   dataAccessors: {
-    getAppointmentSettings: element => $(element).data(APPOINTMENT_SETTINGS_KEY),
-    getAppointmentInfo: element => {
-      const settings = utils.dataAccessors.getAppointmentSettings(element);
-      return settings === null || settings === void 0 ? void 0 : settings.info;
-    }
+    getAppointmentSettings: element => $(element).data(APPOINTMENT_SETTINGS_KEY)
   },
   DOM: {
     getHeaderHeight: header => header ? header._$element && parseInt(getOuterHeight(header._$element), 10) : 0

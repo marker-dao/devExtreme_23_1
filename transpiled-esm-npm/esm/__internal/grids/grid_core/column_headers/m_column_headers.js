@@ -377,7 +377,6 @@ export class ColumnHeadersView extends ColumnContextMenuMixin(ColumnsView) {
           $cellElement = that._getCellElement(rowIndex, columnsController.getVisibleIndex(column.index, rowIndex));
           $cellElement && result.push($cellElement.get(0));
         });
-        // @ts-expect-error
         return $(result);
       }
       if (!index || index < rowCount) {

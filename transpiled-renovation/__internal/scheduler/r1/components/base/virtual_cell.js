@@ -18,13 +18,14 @@ class VirtualCell extends _index.BaseInfernoComponent {
     const {
       colSpan,
       isHeaderCell,
+      className = '',
       width,
       styles
     } = this.props;
     const modifiedStyles = _index2.renderUtils.addWidthToStyle(width, styles);
     const Cell = isHeaderCell ? _header_cell.HeaderCell : _ordinary_cell.OrdinaryCell;
     return (0, _inferno.createComponentVNode)(2, Cell, {
-      "className": "dx-scheduler-virtual-cell",
+      "className": `dx-scheduler-virtual-cell ${className}`,
       "styles": modifiedStyles,
       "colSpan": colSpan
     });

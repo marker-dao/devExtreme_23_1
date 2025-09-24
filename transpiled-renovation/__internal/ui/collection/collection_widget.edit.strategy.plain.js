@@ -59,7 +59,7 @@ class PlainEditStrategy extends _collection_widgetEdit.default {
     items.splice(destinationIndex, 0, movedItemData);
   }
   _isItemIndex(index) {
-    return typeof index === 'number' && Math.round(index) === index;
+    return this._isNormalizedItemIndex(index);
   }
   _getNormalizedItemIndex(itemElement) {
     return this._collectionWidget._itemElements().index(itemElement);

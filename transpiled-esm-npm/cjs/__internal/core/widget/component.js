@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.Component = void 0;
 var _action = _interopRequireDefault(require("../../../core/action"));
 var _class = _interopRequireDefault(require("../../../core/class"));
-var _config3 = _interopRequireDefault(require("../../../core/config"));
+var _config = _interopRequireDefault(require("../../../core/config"));
 var _errors = _interopRequireDefault(require("../../../core/errors"));
 var _events_strategy = require("../../../core/events_strategy");
 var _index = require("../../../core/options/index");
@@ -19,7 +19,7 @@ var _extend = require("../../../core/utils/extend");
 var _public_component = require("../../../core/utils/public_component");
 var _type = require("../../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @stylistic/max-len
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const getEventName = actionName => actionName.charAt(2).toLowerCase() + actionName.substr(3);
 const isInnerOption = optionName => optionName.indexOf('_', 0) === 0;
 class Component extends _class.default.inherit({}) {
@@ -84,7 +84,7 @@ class Component extends _class.default.inherit({}) {
       this._options.onStartChange(() => this.beginUpdate());
       this._options.onEndChange(() => this.endUpdate());
       this._options.addRules(this._defaultOptionsRules());
-      this._options.validateOptions(o => this._validateOptions(o));
+      this._options.validateOptions(opts => this._validateOptions(opts));
       if (options && options.onInitializing) {
         // @ts-expect-error
         options.onInitializing.apply(this, [options]);
@@ -148,8 +148,7 @@ class Component extends _class.default.inherit({}) {
     this._disposed = true;
   }
   _lockUpdate() {
-    // eslint-disable-next-line no-plusplus
-    this._updateLockCount++;
+    this._updateLockCount += 1;
   }
   _unlockUpdate() {
     this._updateLockCount = Math.max(this._updateLockCount - 1, 0);
@@ -195,14 +194,13 @@ class Component extends _class.default.inherit({}) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this._isUpdateAllowed() && this._commitUpdate();
   }
-  // eslint-disable-next-line @stylistic/max-len
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   _optionChanging() {}
   _notifyOptionChanged(option, value, previousValue) {
     if (this._initialized) {
       const optionNames = [option].concat(this._options.getAliasesByName(option));
-      // eslint-disable-next-line @typescript-eslint/prefer-for-of, no-plusplus
-      for (let i = 0; i < optionNames.length; i++) {
+      // eslint-disable-next-line @typescript-eslint/prefer-for-of
+      for (let i = 0; i < optionNames.length; i += 1) {
         const name = optionNames[i];
         const args = {
           name: (0, _data.getPathParts)(name)[0],
@@ -264,14 +262,12 @@ class Component extends _class.default.inherit({}) {
     let eventName;
     // eslint-disable-next-line @typescript-eslint/init-declarations
     let actionFunc;
-    // eslint-disable-next-line no-param-reassign
-    config = (0, _extend.extend)({}, config);
+    let actionConfig = _extends({}, config ?? {});
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const result = function () {
-      var _config, _config2;
+      var _actionConfig, _actionConfig2;
       if (!eventName) {
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing, no-param-reassign
-        config = config || {};
+        actionConfig = actionConfig || {};
         if (typeof optionName !== 'string') {
           throw _errors.default.Error('E0008');
         }
@@ -280,34 +276,31 @@ class Component extends _class.default.inherit({}) {
         }
         actionFunc = _this.option(optionName);
       }
-      if (!action && !actionFunc && !((_config = config) !== null && _config !== void 0 && _config.beforeExecute) && !((_config2 = config) !== null && _config2 !== void 0 && _config2.afterExecute) && !_this._eventsStrategy.hasEvent(eventName)) {
+      if (!action && !actionFunc && !((_actionConfig = actionConfig) !== null && _actionConfig !== void 0 && _actionConfig.beforeExecute) && !((_actionConfig2 = actionConfig) !== null && _actionConfig2 !== void 0 && _actionConfig2.afterExecute) && !_this._eventsStrategy.hasEvent(eventName)) {
         return;
       }
       if (!action) {
-        // @ts-expect-error
         const {
           beforeExecute
-        } = config;
-        // @ts-expect-error
-        config.beforeExecute = function () {
+        } = actionConfig;
+        actionConfig.beforeExecute = function () {
           for (var _len2 = arguments.length, props = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
             props[_key2] = arguments[_key2];
           }
-          // eslint-disable-next-line @stylistic/max-len
-          // eslint-disable-next-line @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-unused-expressions
-          beforeExecute && beforeExecute.apply(_this, props);
+          beforeExecute === null || beforeExecute === void 0 || beforeExecute.apply(_this, props);
           _this._eventsStrategy.fireEvent(eventName, props[0].args);
         };
-        action = _this._createAction(actionFunc, config);
+        action = _this._createAction(actionFunc, actionConfig);
       }
       // @ts-expect-error
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
-      if ((0, _config3.default)().wrapActionsBeforeExecute) {
-        const beforeActionExecute = _this.option('beforeActionExecute') || _common.noop;
-        // @ts-expect-error
-        const wrappedAction = beforeActionExecute(_this, action, config) || action;
+      if ((0, _config.default)().wrapActionsBeforeExecute) {
+        const {
+          beforeActionExecute = _common.noop
+        } = _this.option();
+        const wrappedAction = beforeActionExecute(_this, action, actionConfig) || action;
         // eslint-disable-next-line consistent-return, @typescript-eslint/no-unsafe-return
         return wrappedAction.apply(_this, args);
       }
@@ -315,13 +308,13 @@ class Component extends _class.default.inherit({}) {
       return action.apply(_this, args);
     };
     // @ts-expect-error
-    if ((0, _config3.default)().wrapActionsBeforeExecute) {
+    if ((0, _config.default)().wrapActionsBeforeExecute) {
       return result;
     }
-    const onActionCreated = this.option('onActionCreated') || _common.noop;
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return onActionCreated(this, result, config) || result;
+    const {
+      onActionCreated = _common.noop
+    } = this.option();
+    return onActionCreated(this, result, actionConfig) || result;
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   on(eventName, eventHandler) {
@@ -335,7 +328,7 @@ class Component extends _class.default.inherit({}) {
   }
   hasActionSubscription(actionName) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return !!this._options.silent(actionName) || this._eventsStrategy.hasEvent(getEventName(actionName));
+    return !!this._options.silent(actionName) || (0, _type.isString)(actionName) && this._eventsStrategy.hasEvent(getEventName(actionName));
   }
   isOptionDeprecated(name) {
     return this._options.isDeprecated(name);

@@ -11,7 +11,8 @@ import ButtonGroup from '../../ui/button_group';
 import Editor from '../../ui/editor/editor';
 import Form from '../../ui/form';
 import { current, isFluent } from '../../ui/themes';
-import { getRecurrenceProcessor } from './m_recurrence';
+import { getRecurrenceString, parseRecurrenceRule } from './recurrence/base';
+import { daysFromByDayRule } from './recurrence/days_from_by_day_rule';
 const RECURRENCE_EDITOR = 'dx-recurrence-editor';
 const LABEL_POSTFIX = '-label';
 const WRAPPER_POSTFIX = '-wrapper';
@@ -69,12 +70,10 @@ const days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 const getStylingModeFunc = () => isFluent(current()) ? 'filled' : undefined;
 class RecurrenceRule {
   constructor(rule) {
-    this._recurrenceProcessor = getRecurrenceProcessor();
-    this._recurrenceProcessor = getRecurrenceProcessor();
-    this._recurrenceRule = this._recurrenceProcessor.evalRecurrenceRule(rule).rule;
+    this._recurrenceRule = parseRecurrenceRule(rule);
   }
   makeRules(string) {
-    this._recurrenceRule = this._recurrenceProcessor.evalRecurrenceRule(string).rule;
+    this._recurrenceRule = parseRecurrenceRule(string);
   }
   makeRule(field, value) {
     if (!value || Array.isArray(value) && !value.length) {
@@ -103,13 +102,13 @@ class RecurrenceRule {
     return 'never';
   }
   getRecurrenceString() {
-    return this._recurrenceProcessor.getRecurrenceString(this._recurrenceRule);
+    return getRecurrenceString(this._recurrenceRule);
   }
   getRules() {
     return this._recurrenceRule;
   }
   getDaysFromByDayRule() {
-    return this._recurrenceProcessor.daysFromByDayRule(this._recurrenceRule);
+    return daysFromByDayRule(this._recurrenceRule);
   }
 }
 class RecurrenceEditor extends Editor {
@@ -407,8 +406,7 @@ class RecurrenceEditor extends Editor {
     this._changeEditorValue();
   }
   _changeEditorValue() {
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    this.option('value', this._recurrenceRule.getRecurrenceString() || '');
+    this.option('value', this._recurrenceRule.getRecurrenceString() ?? '');
   }
   _daysOfWeekByRules() {
     let daysByRule = this._recurrenceRule.getDaysFromByDayRule();

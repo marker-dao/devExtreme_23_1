@@ -15,6 +15,7 @@ var _date_serialization = _interopRequireDefault(require("../../../core/utils/da
 var _dom = require("../../../core/utils/dom");
 var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
+var _m_element = require("../../core/m_element");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _context_menu = _interopRequireDefault(require("../../ui/context_menu/context_menu"));
 var _scroll_view = _interopRequireDefault(require("../../ui/scroll_view/scroll_view"));
@@ -60,6 +61,7 @@ class MessageList extends _widget.default {
       showAvatar: true,
       showUserName: true,
       showMessageTimestamp: true,
+      emptyViewTemplate: null,
       messageTemplate: null
     });
   }
@@ -115,11 +117,23 @@ class MessageList extends _widget.default {
     this._containerClientHeight = newHeight;
   }
   _renderEmptyViewContent() {
-    const $emptyView = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGELIST_EMPTY_VIEW_CLASS).attr('id', `dx-${new _common.Guid()}`);
-    (0, _renderer.default)('<div>').appendTo($emptyView).addClass(CHAT_MESSAGELIST_EMPTY_IMAGE_CLASS);
     const messageText = _message.default.format('dxChat-emptyListMessage');
-    (0, _renderer.default)('<div>').appendTo($emptyView).addClass(CHAT_MESSAGELIST_EMPTY_MESSAGE_CLASS).text(messageText);
     const promptText = _message.default.format('dxChat-emptyListPrompt');
+    const {
+      emptyViewTemplate
+    } = this.option();
+    const $emptyView = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGELIST_EMPTY_VIEW_CLASS).attr('id', `dx-${new _common.Guid()}`);
+    if (emptyViewTemplate) {
+      const data = {
+        message: messageText,
+        prompt: promptText
+      };
+      emptyViewTemplate(data, (0, _m_element.getPublicElement)($emptyView));
+      $emptyView.appendTo(this._$content);
+      return;
+    }
+    (0, _renderer.default)('<div>').appendTo($emptyView).addClass(CHAT_MESSAGELIST_EMPTY_IMAGE_CLASS);
+    (0, _renderer.default)('<div>').appendTo($emptyView).addClass(CHAT_MESSAGELIST_EMPTY_MESSAGE_CLASS).text(messageText);
     (0, _renderer.default)('<div>').appendTo($emptyView).addClass(CHAT_MESSAGELIST_EMPTY_PROMPT_CLASS).text(promptText);
     $emptyView.appendTo(this._$content);
   }
@@ -182,6 +196,7 @@ class MessageList extends _widget.default {
         icon: 'edit',
         text: editText,
         disabled: isEditActionDisabled(message),
+        // @ts-expect-error itemElement
         onClick: e => {
           const onMessageEditStarted = onMessageEditingStart === null || onMessageEditingStart === void 0 ? void 0 : onMessageEditingStart({
             event: e.event,
@@ -199,6 +214,7 @@ class MessageList extends _widget.default {
       buttons.push({
         icon: 'trash',
         text: deleteText,
+        // @ts-expect-error itemElement
         onClick(e) {
           onMessageDeleting === null || onMessageDeleting === void 0 || onMessageDeleting({
             event: e.event,
@@ -269,7 +285,6 @@ class MessageList extends _widget.default {
       useKeyboard: false,
       bounceEnabled: false,
       reachBottomText: '',
-      indicateLoading: false,
       onReachBottom: _common2.noop
     });
   }
@@ -604,6 +619,7 @@ class MessageList extends _widget.default {
       case 'showUserName':
       case 'showMessageTimestamp':
       case 'messageTemplate':
+      case 'emptyViewTemplate':
       case 'dayHeaderFormat':
       case 'messageTimestampFormat':
         this._invalidate();

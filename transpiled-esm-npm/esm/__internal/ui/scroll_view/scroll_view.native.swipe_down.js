@@ -5,7 +5,7 @@ import Callbacks from '../../../core/utils/callbacks';
 import { Deferred } from '../../../core/utils/deferred';
 import { getOuterHeight } from '../../../core/utils/size';
 import LoadIndicator from '../../../ui/load_indicator';
-import NativeStrategy from './scrollable.native';
+import NativeStrategy from '../../ui/scroll_view/scrollable.native';
 const SCROLLVIEW_PULLDOWN_DOWN_LOADING_CLASS = 'dx-scrollview-pull-down-loading';
 const SCROLLVIEW_PULLDOWN_INDICATOR_CLASS = 'dx-scrollview-pull-down-indicator';
 const SCROLLVIEW_PULLDOWN_REFRESHING_CLASS = 'dx-scrollview-pull-down-refreshing';
@@ -172,7 +172,6 @@ class SwipeDownNativeScrollViewStrategy extends NativeStrategy {
     });
   }
   pullDownEnable(enabled) {
-    // @ts-expect-error ts-error
     this._$topPocket.toggle(enabled);
     this._pullDownEnabled = enabled;
   }

@@ -47,6 +47,7 @@ class SchedulerOptionsBaseWidget extends _ui.default {
     // @ts-expect-error
     super._initMarkup();
     this.updateViews();
+    this.validateOptions();
   }
   schedulerOptionChanged(args) {
     switch (args.name) {

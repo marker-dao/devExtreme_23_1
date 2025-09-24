@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.HeaderFilterPopupView = exports.HeaderFilterPopupComponent = void 0;
 var _inferno = require("inferno");
 var _renderer = _interopRequireDefault(require("../../../../../../core/renderer"));
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../../core/state_manager/index");
 var _m_header_filter_core = require("../../../../../grids/grid_core/header_filter/m_header_filter_core");
 var _view = require("../../../../../grids/new/grid_core/core/view");
 var _widget_mock = require("../../../../../grids/new/grid_core/widget_mock");
@@ -40,7 +40,7 @@ class HeaderFilterPopupView extends _view.View {
     this.component = HeaderFilterPopupComponent;
     this.oldHeaderFilterPopup = new _m_header_filter_core.HeaderFilterView(this.widget);
     this.oldHeaderFilterPopup.init();
-    (0, _signalsCore.effect)(() => {
+    (0, _index.effect)(() => {
       const popupState = this.headerFilterViewController.popupState.value;
       if (!popupState) {
         return;
@@ -49,7 +49,7 @@ class HeaderFilterPopupView extends _view.View {
     });
   }
   getProps() {
-    return (0, _signalsCore.computed)(() => ({
+    return (0, _index.computed)(() => ({
       oldHeaderFilterPopup: this.oldHeaderFilterPopup
     }));
   }

@@ -10,11 +10,31 @@ import { deepExtendArraySafe } from '../../../../core/utils/object';
 import { getDefaultAlignment } from '../../../../core/utils/position';
 import { isDefined, isFunction, isNumeric, isObject, isString, type } from '../../../../core/utils/type';
 import variableWrapper from '../../../../core/utils/variable_wrapper';
+import errors from '../../../../ui/widget/ui.errors';
 import { HIDDEN_COLUMNS_WIDTH } from '../adaptivity/const';
 import gridCoreUtils from '../m_utils';
 import { StickyPosition } from '../sticky_columns/const';
 import { getColumnFixedPosition } from '../sticky_columns/utils';
-import { COLUMN_CHOOSER_LOCATION, COLUMN_INDEX_OPTIONS, DEFAULT_COLUMN_OPTIONS, GROUP_COMMAND_COLUMN_NAME, GROUP_LOCATION, IGNORE_COLUMN_OPTION_NAMES, USER_STATE_FIELD_NAMES, USER_STATE_FIELD_NAMES_15_1 } from './const';
+import { COLUMN_CHOOSER_LOCATION, COLUMN_INDEX_OPTIONS, COMMAND_COLUMNS_WITH_REQUIRED_NAMES, DEFAULT_COLUMN_OPTIONS, GROUP_COMMAND_COLUMN_NAME, GROUP_LOCATION, IGNORE_COLUMN_OPTION_NAMES, UNSUPPORTED_PROPERTIES_FOR_CHILD_COLUMNS, USER_STATE_FIELD_NAMES, USER_STATE_FIELD_NAMES_15_1 } from './const';
+const warnFixedInChildColumnsOnce = (controller, childColumns) => {
+  if (controller !== null && controller !== void 0 && controller._isWarnedAboutUnsupportedProperties) return;
+  if (!childColumns || !Array.isArray(childColumns) || (childColumns === null || childColumns === void 0 ? void 0 : childColumns.length) === 0) return;
+  let unsupportedProperty = null;
+  for (const column of childColumns) {
+    if (unsupportedProperty) break;
+    if (!column || typeof column !== 'object' || column === null) continue;
+    for (const property of UNSUPPORTED_PROPERTIES_FOR_CHILD_COLUMNS) {
+      if (property in column) {
+        unsupportedProperty = property;
+        break;
+      }
+    }
+  }
+  if (unsupportedProperty) {
+    controller && (controller._isWarnedAboutUnsupportedProperties = true);
+    errors.log('W1028', unsupportedProperty);
+  }
+};
 export const setFilterOperationsAsDefaultValues = function (column) {
   column.filterOperations = column.defaultFilterOperations;
 };
@@ -71,6 +91,7 @@ export const createColumnsFromOptions = function (that, columnsOptions, bandColu
         }
         result.push(column);
         if (column.columns) {
+          warnFixedInChildColumnsOnce(that, column.columns);
           result = result.concat(createColumnsFromOptions(that, column.columns, column, result.length));
           delete column.columns;
           column.hasColumns = true;
@@ -847,9 +868,15 @@ export const isFirstOrLastColumn = function (that, targetColumn, rowIndex) {
   let fixedPosition = arguments.length > 5 ? arguments[5] : undefined;
   const targetColumnIndex = targetColumn.index;
   const bandColumnsCache = that.getBandColumnsCache();
-  const parentBandColumns = getParentBandColumns(targetColumnIndex, bandColumnsCache.columnParentByIndex);
+  const parentBandColumns = !isDefined(targetColumn.type) && getParentBandColumns(targetColumnIndex, bandColumnsCache.columnParentByIndex);
   if (parentBandColumns !== null && parentBandColumns !== void 0 && parentBandColumns.length) {
     return isFirstOrLastBandColumn(that, parentBandColumns.concat([targetColumn]), onlyWithinBandColumn, isLast, fixedPosition);
   }
   return onlyWithinBandColumn || isFirstOrLastColumnCore(that, targetColumn, rowIndex, onlyWithinBandColumn, isLast, fixedPosition);
+};
+export const isColumnNameRequired = function (_ref) {
+  let {
+    type = ''
+  } = _ref;
+  return COMMAND_COLUMNS_WITH_REQUIRED_NAMES.includes(type);
 };

@@ -3,9 +3,9 @@ import { createVNode, createComponentVNode, normalizeProps } from "inferno";
 import { resizeObserverSingleton } from '../../../../core/m_resize_observer';
 import { ErrorRow } from '../../../../grids/new/grid_core/content_view/error_row';
 import { NoDataText } from '../../../../grids/new/grid_core/content_view/no_data_text';
-import { LoadPanel } from '../../../../grids/new/grid_core/inferno_wrappers/load_panel';
 import { Scrollable } from '../../../../grids/new/grid_core/inferno_wrappers/scrollable';
 import { Component, createRef } from 'inferno';
+import { LoadPanel } from './load_panel';
 export const CLASSES = {
   contentView: 'dx-gridcore-contentview'
 };

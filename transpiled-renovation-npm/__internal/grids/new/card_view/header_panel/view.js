@@ -4,15 +4,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.HeaderPanelView = void 0;
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _columns_controller = require("../../../../grids/new/grid_core/columns_controller/columns_controller");
 var _view = require("../../../../grids/new/grid_core/core/view");
-var _index = require("../../../../grids/new/grid_core/keyboard_navigation/index");
-var _index2 = require("../../grid_core/column_chooser/index");
+var _index2 = require("../../../../grids/new/grid_core/keyboard_navigation/index");
+var _index3 = require("../../grid_core/column_chooser/index");
 var _filter_controller = require("../../grid_core/filtering/filter_controller");
 var _view_controller = require("../../grid_core/filtering/header_filter/view_controller");
-var _index3 = require("../../grid_core/sorting_controller/index");
-var _index4 = require("../context_menu/index");
+var _index4 = require("../../grid_core/sorting_controller/index");
+var _index5 = require("../context_menu/index");
 var _options_controller = require("../options_controller");
 var _controller = require("./controller");
 var _header_panel = require("./header_panel");
@@ -32,8 +32,8 @@ class HeaderPanelView extends _view.View {
     this.filterController = filterController;
     this.columnChooserView = columnChooserView;
     this.component = _header_panel.HeaderPanel;
-    this.navigationStrategy = new _index.NavigationStrategyHorizontalList();
-    this.showDropzone = (0, _signalsCore.computed)(() => {
+    this.navigationStrategy = new _index2.NavigationStrategyHorizontalList();
+    this.showDropzone = (0, _index.computed)(() => {
       var _this$columnChooserCo;
       const allowReordering = this.columnsController.allowColumnReordering.value;
       const column = (_this$columnChooserCo = this.columnChooserController.draggingItem.value) === null || _this$columnChooserCo === void 0 ? void 0 : _this$columnChooserCo.column;
@@ -46,7 +46,7 @@ class HeaderPanelView extends _view.View {
     });
   }
   getProps() {
-    return (0, _signalsCore.computed)(() => ({
+    return (0, _index.computed)(() => ({
       visibleColumns: this.columnsController.visibleColumns.value,
       kbnEnabled: this.keyboardNavigationController.enabled.value,
       navigationStrategy: this.navigationStrategy,
@@ -101,4 +101,4 @@ class HeaderPanelView extends _view.View {
   }
 }
 exports.HeaderPanelView = HeaderPanelView;
-HeaderPanelView.dependencies = [_controller.HeaderPanelController, _index4.ContextMenuController, _index3.SortingController, _columns_controller.ColumnsController, _options_controller.OptionsController, _view_controller.HeaderFilterViewController, _index.KeyboardNavigationController, _index2.ColumnChooserController, _filter_controller.FilterController, _index2.ColumnChooserView];
+HeaderPanelView.dependencies = [_controller.HeaderPanelController, _index5.ContextMenuController, _index4.SortingController, _columns_controller.ColumnsController, _options_controller.OptionsController, _view_controller.HeaderFilterViewController, _index2.KeyboardNavigationController, _index3.ColumnChooserController, _filter_controller.FilterController, _index3.ColumnChooserView];

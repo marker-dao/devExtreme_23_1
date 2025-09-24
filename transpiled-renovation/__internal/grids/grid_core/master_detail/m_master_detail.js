@@ -12,15 +12,13 @@ var _iterator = require("../../../../core/utils/iterator");
 var _size = require("../../../../core/utils/size");
 var _type = require("../../../../core/utils/type");
 var _m_utils = _interopRequireDefault(require("../m_utils"));
+var _const = require("./const");
+var _utils = require("./utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable max-classes-per-file */
 
 // @ts-expect-error
 
-const MASTER_DETAIL_CELL_CLASS = 'dx-master-detail-cell';
-const MASTER_DETAIL_ROW_CLASS = 'dx-master-detail-row';
-const CELL_FOCUS_DISABLED_CLASS = 'dx-cell-focus-disabled';
-const ROW_LINES_CLASS = 'dx-row-lines';
 const columns = Base => class ColumnsMasterDetailExtender extends Base {
   _getExpandColumnsCore() {
     const expandColumns = super._getExpandColumnsCore();
@@ -205,7 +203,7 @@ const resizing = Base => class ResizingMasterDetailExtender extends Base {
     this._updateParentDataGrids(this.component.$element());
   }
   _updateParentDataGrids($element) {
-    const $masterDetailRow = $element.closest(`.${MASTER_DETAIL_ROW_CLASS}`);
+    const $masterDetailRow = $element.closest(`.${_const.CLASSES.detailRow}`);
     if ($masterDetailRow.length) {
       (0, _deferred.when)(this._updateMasterDataGrid($masterDetailRow, $element)).done(() => {
         this._updateParentDataGrids($masterDetailRow.parent());
@@ -265,11 +263,14 @@ const resizing = Base => class ResizingMasterDetailExtender extends Base {
   }
   _toggleBestFitMode(isBestFit) {
     super._toggleBestFitMode.apply(this, arguments);
-    if (this.option('masterDetail.template')) {
-      const $rowsTable = this._rowsView.getTableElement();
-      if ($rowsTable) {
-        $rowsTable.find('.dx-master-detail-cell').css('maxWidth', isBestFit ? 0 : '');
-      }
+    const hasMasterDetailTemplate = this.option('masterDetail.template');
+    if (!hasMasterDetailTemplate) {
+      return;
+    }
+    const $rowsTable = this._rowsView.getTableElement();
+    if ($rowsTable) {
+      const detailSelector = `.${this.addWidgetPrefix(_const.CLASSES.detailContainer)}, .${_const.CLASSES.detailCell}`;
+      $rowsTable.find(detailSelector).css('maxWidth', isBestFit ? 0 : '');
     }
   }
 };
@@ -292,14 +293,12 @@ const rowsView = Base => class RowsViewMasterDetailExtender extends Base {
     }
     return template;
   }
-  _isDetailRow(row) {
-    return (row === null || row === void 0 ? void 0 : row.rowType) && row.rowType.indexOf('detail') === 0;
-  }
   _createRow(row) {
     const $row = super._createRow.apply(this, arguments);
-    if (row && this._isDetailRow(row)) {
-      this.option('showRowLines') && $row.addClass(ROW_LINES_CLASS);
-      $row.addClass(MASTER_DETAIL_ROW_CLASS);
+    const isDetailRowResult = (0, _utils.isDetailRow)(row);
+    if (isDetailRowResult) {
+      const showRowLines = this.option('showRowLines');
+      $row.addClass(_const.CLASSES.detailRow).toggleClass(_const.CLASSES.rowLines, showRowLines);
       if ((0, _type.isDefined)(row.visible)) {
         $row.toggle(row.visible);
       }
@@ -310,7 +309,8 @@ const rowsView = Base => class RowsViewMasterDetailExtender extends Base {
     const {
       row
     } = options;
-    if (row.rowType && this._isDetailRow(row)) {
+    const isDetailRowResult = (0, _utils.isDetailRow)(row);
+    if (isDetailRowResult) {
       if (this._needRenderCell(0, options.columnIndices)) {
         this._renderMasterDetailCell($row, row, options);
       }
@@ -330,7 +330,7 @@ const rowsView = Base => class RowsViewMasterDetailExtender extends Base {
       columnIndex: 0,
       change: options.change
     });
-    $detailCell.addClass(CELL_FOCUS_DISABLED_CLASS).addClass(MASTER_DETAIL_CELL_CLASS).attr('colSpan', visibleColumns.length);
+    $detailCell.addClass(_const.CLASSES.cellFocusDisabledClass).addClass(_const.CLASSES.detailCell).attr('colSpan', visibleColumns.length);
     const isEditForm = row.isEditing;
     if (!isEditForm) {
       $detailCell.attr('aria-roledescription', _message.default.format('dxDataGrid-masterDetail'));

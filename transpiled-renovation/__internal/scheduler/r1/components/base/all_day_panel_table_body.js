@@ -31,7 +31,7 @@ class AllDayPanelTableBody extends _index.BaseInfernoComponent {
     } = this.props;
     const classes = (0, _render_utils.combineClasses)({
       'dx-scheduler-all-day-table-row': true,
-      [className ?? '']: !!className
+      [className ?? '']: Boolean(className)
     });
     return (0, _inferno.createComponentVNode)(2, _row.Row, {
       "leftVirtualCellWidth": leftVirtualCellWidth,

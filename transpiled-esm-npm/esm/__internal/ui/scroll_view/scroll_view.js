@@ -7,12 +7,12 @@ import { getPublicElement } from '../../../core/element';
 import $ from '../../../core/renderer';
 import { hasWindow } from '../../../core/utils/window';
 import LoadIndicator from '../../../ui/load_indicator';
-import { isMaterialBased } from '../../../ui/themes';
-import LoadPanel from '../../ui/m_load_panel';
-import PullDownStrategy from './scroll_view.native.pull_down';
-import SwipeDownStrategy from './scroll_view.native.swipe_down';
-import SimulatedStrategy from './scroll_view.simulated';
-import Scrollable from './scrollable';
+import { current, isMaterialBased } from '../../../ui/themes';
+import LoadPanel from '../../ui/load_panel';
+import PullDownStrategy from '../../ui/scroll_view/scroll_view.native.pull_down';
+import SwipeDownStrategy from '../../ui/scroll_view/scroll_view.native.swipe_down';
+import SimulatedStrategy from '../../ui/scroll_view/scroll_view.simulated';
+import Scrollable from '../../ui/scroll_view/scrollable';
 // STYLE scrollView
 const SCROLLVIEW_CLASS = 'dx-scrollview';
 const SCROLLVIEW_CONTENT_CLASS = `${SCROLLVIEW_CLASS}-content`;
@@ -47,7 +47,6 @@ export class ScrollViewServerSide extends Scrollable {
     const {
       name
     } = args;
-    // @ts-expect-error ts-error
     if (name !== 'onUpdated') {
       return super._optionChanged(args);
     }
@@ -78,8 +77,7 @@ export class ScrollView extends Scrollable {
       }
     }, {
       device() {
-        // @ts-expect-error ts-error
-        return isMaterialBased();
+        return isMaterialBased(current());
       },
       options: {
         pullingDownText: '',
@@ -151,10 +149,8 @@ export class ScrollView extends Scrollable {
       refreshStrategy
     } = this.option();
     const strategyName = useNative ? refreshStrategy : 'simulated';
-    const strategyClass = refreshStrategies[strategyName];
-    // @ts-expect-error ts-error
-    // eslint-disable-next-line new-cap
-    this._strategy = new strategyClass(this);
+    const StrategyClass = refreshStrategies[strategyName ?? 'pullDown'];
+    this._strategy = new StrategyClass(this);
     this._strategy.pullDownCallbacks.add(this._pullDownHandler.bind(this));
     this._strategy.releaseCallbacks.add(this._releaseHandler.bind(this));
     this._strategy.reachBottomCallbacks.add(this._reachBottomHandler.bind(this));
@@ -186,7 +182,6 @@ export class ScrollView extends Scrollable {
       return this._pullDownEnabled;
     }
     if (this._$pullDown && this._strategy) {
-      // @ts-expect-error ts-error
       this._$pullDown.toggle(enabled);
       this._strategy.pullDownEnable(enabled);
       this._pullDownEnabled = enabled;
@@ -198,7 +193,6 @@ export class ScrollView extends Scrollable {
       return this._reachBottomEnabled;
     }
     if (this._$reachBottom && this._strategy) {
-      // @ts-expect-error ts-error
       this._$reachBottom.toggle(enabled);
       this._strategy.reachBottomEnable(enabled);
       this._reachBottomEnabled = enabled;

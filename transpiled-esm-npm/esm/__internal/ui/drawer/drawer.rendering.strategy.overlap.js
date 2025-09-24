@@ -3,9 +3,9 @@ import $ from '../../../core/renderer';
 import { ensureDefined } from '../../../core/utils/common';
 import { camelize } from '../../../core/utils/inflector';
 import { getWidth } from '../../../core/utils/size';
+import { animation } from '../../ui/drawer/drawer.animation';
+import DrawerStrategy from '../../ui/drawer/drawer.rendering.strategy';
 import Overlay from '../../ui/overlay/overlay';
-import { animation } from './drawer.animation';
-import DrawerStrategy from './drawer.rendering.strategy';
 class OverlapStrategy extends DrawerStrategy {
   renderPanelContent(whenPanelContentRendered) {
     delete this._initialPosition;

@@ -15,23 +15,9 @@ var _dependency_injector = _interopRequireDefault(require("../../../core/utils/d
 var _extend = require("../../../core/utils/extend");
 var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
+var _m_consts = require("../../events/core/m_consts");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const window = (0, _window.getWindow)();
-/* eslint-disable spellcheck/spell-checker */
-const EMPTY_EVENT_NAME = 'dxEmptyEventType';
-const NATIVE_EVENTS_TO_SUBSCRIBE = {
-  mouseenter: 'mouseover',
-  mouseleave: 'mouseout',
-  pointerenter: 'pointerover',
-  pointerleave: 'pointerout'
-};
-const NATIVE_EVENTS_TO_TRIGGER = {
-  focusin: 'focus',
-  focusout: 'blur'
-};
-const NO_BUBBLE_EVENTS = ['blur', 'focus', 'load'];
-const forcePassiveFalseEventNames = ['touchmove', 'wheel', 'mousewheel', 'touchstart'];
-const EVENT_PROPERTIES = ['target', 'relatedTarget', 'delegateTarget', 'altKey', 'bubbles', 'cancelable', 'changedTouches', 'ctrlKey', 'detail', 'eventPhase', 'metaKey', 'shiftKey', 'view', 'char', 'code', 'charCode', 'key', 'keyCode', 'button', 'buttons', 'offsetX', 'offsetY', 'pointerId', 'pointerType', 'targetTouches', 'toElement', 'touches'];
 function matchesSafe(target, selector) {
   return !(0, _type.isWindow)(target) && target.nodeName !== '#document' && _dom_adapter.default.elementMatches(target, selector);
 }
@@ -73,7 +59,7 @@ const eventsEngine = (0, _dependency_injector.default)({
     const handlersController = getHandlersController(element, event.type);
     special.callMethod(eventName, 'trigger', element, [event, extraParameters]);
     handlersController.callHandlers(event, extraParameters);
-    const noBubble = special.getField(eventName, 'noBubble') || event.isPropagationStopped() || NO_BUBBLE_EVENTS.includes(eventName);
+    const noBubble = special.getField(eventName, 'noBubble') || event.isPropagationStopped() || _m_consts.NO_BUBBLE_EVENTS.includes(eventName);
     if (!noBubble) {
       const parents = [];
       const getParents = function (element) {
@@ -154,7 +140,7 @@ function getHandlersController(element, eventName) {
   const eventNameParts = eventName.split('.');
   const namespaces = eventNameParts.slice(1);
   const eventNameIsDefined = !!eventNameParts[0];
-  eventName = eventNameParts[0] || EMPTY_EVENT_NAME;
+  eventName = eventNameParts[0] || _m_consts.EMPTY_EVENT_NAME;
   if (!elementData) {
     elementData = {};
     elementDataMap.set(element, elementData);
@@ -176,7 +162,7 @@ function getHandlersController(element, eventName) {
         } = e;
         let secondaryTargetIsInside;
         let result;
-        if (eventName in NATIVE_EVENTS_TO_SUBSCRIBE) {
+        if (eventName in _m_consts.NATIVE_EVENTS_TO_SUBSCRIBE) {
           secondaryTargetIsInside = relatedTarget && target && (relatedTarget === target || contains(target, relatedTarget));
         }
         if (extraParameters !== undefined) {
@@ -236,12 +222,12 @@ function getHandlersController(element, eventName) {
       }
       if (shouldAddNativeListener) {
         eventData.nativeHandler = getNativeHandler(eventName);
-        if (passiveEventHandlersSupported() && forcePassiveFalseEventNames.includes(eventName)) {
+        if (passiveEventHandlersSupported() && _m_consts.forcePassiveFalseEventNames.includes(eventName)) {
           nativeListenerOptions = {
             passive: false
           };
         }
-        eventData.removeListener = _dom_adapter.default.listen(element, NATIVE_EVENTS_TO_SUBSCRIBE[eventName] || eventName, eventData.nativeHandler, nativeListenerOptions);
+        eventData.removeListener = _dom_adapter.default.listen(element, _m_consts.NATIVE_EVENTS_TO_SUBSCRIBE[eventName] || eventName, eventData.nativeHandler, nativeListenerOptions);
       }
       special.callMethod(eventName, 'add', element, [handleObject]);
     },
@@ -263,7 +249,7 @@ function getHandlersController(element, eventName) {
           return skip;
         });
         const lastHandlerForTheType = !eventData.handleObjects.length;
-        const shouldRemoveNativeListener = lastHandlerForTheType && eventName !== EMPTY_EVENT_NAME;
+        const shouldRemoveNativeListener = lastHandlerForTheType && eventName !== _m_consts.EMPTY_EVENT_NAME;
         if (shouldRemoveNativeListener) {
           special.callMethod(eventName, 'teardown', element, [namespaces, removedHandler]);
           if (eventData.nativeHandler) {
@@ -297,8 +283,8 @@ function getHandlersController(element, eventName) {
         }
       };
       eventData.handleObjects.forEach(handleCallback);
-      if (namespaces.length && elementData[EMPTY_EVENT_NAME]) {
-        elementData[EMPTY_EVENT_NAME].handleObjects.forEach(handleCallback);
+      if (namespaces.length && elementData[_m_consts.EMPTY_EVENT_NAME]) {
+        elementData[_m_consts.EMPTY_EVENT_NAME].handleObjects.forEach(handleCallback);
       }
     }
   };
@@ -437,7 +423,7 @@ function iterate(callback) {
   };
 }
 function callNativeMethod(eventName, element) {
-  const nativeMethodName = NATIVE_EVENTS_TO_TRIGGER[eventName] || eventName;
+  const nativeMethodName = _m_consts.NATIVE_EVENTS_TO_TRIGGER[eventName] || eventName;
   const isLinkClickEvent = function (eventName, element) {
     return eventName === 'click' && element.localName === 'a';
   };
@@ -519,7 +505,7 @@ function addProperty(propName, hook, eventInstance) {
   });
 }
 // @ts-expect-error
-EVENT_PROPERTIES.forEach(prop => addProperty(prop, event => event[prop]));
+_m_consts.EVENT_PROPERTIES.forEach(prop => addProperty(prop, event => event[prop]));
 (0, _hook_touch_props.default)(addProperty);
 const beforeSetStrategy = (0, _callbacks.default)();
 const afterSetStrategy = (0, _callbacks.default)();
@@ -543,6 +529,6 @@ eventsEngine.subscribeGlobal = function () {
     });
   }));
 };
-eventsEngine.forcePassiveFalseEventNames = forcePassiveFalseEventNames;
+eventsEngine.forcePassiveFalseEventNames = _m_consts.forcePassiveFalseEventNames;
 eventsEngine.passiveEventHandlersSupported = passiveEventHandlersSupported;
 var _default = exports.default = eventsEngine;

@@ -5,8 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.headerFilterMixin = exports.allowHeaderFiltering = exports.HeaderFilterView = void 0;
 exports.updateHeaderFilterItemSelectionState = updateHeaderFilterItemSelectionState;
-require("../../../ui/list/modules/m_search");
-require("../../../ui/list/modules/m_selection");
+require("../../../ui/list/modules/search");
+require("../../../ui/list/modules/selection");
 var _message = _interopRequireDefault(require("../../../../common/core/localization/message"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _extend = require("../../../../core/utils/extend");
@@ -14,8 +14,8 @@ var _iterator = require("../../../../core/utils/iterator");
 var _type = require("../../../../core/utils/type");
 var _ui = _interopRequireDefault(require("../../../../ui/popup/ui.popup"));
 var _m_modules = _interopRequireDefault(require("../../../grids/grid_core/m_modules"));
-var _m_listEdit = _interopRequireDefault(require("../../../ui/list/m_list.edit.search"));
-var _m_tree_view = _interopRequireDefault(require("../../../ui/tree_view/m_tree_view.search"));
+var _listEdit = _interopRequireDefault(require("../../../ui/list/list.edit.search"));
+var _tree_view = _interopRequireDefault(require("../../../ui/tree_view/tree_view.search"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable max-classes-per-file */
@@ -303,7 +303,7 @@ class HeaderFilterView extends _m_modules.default.View {
       },
       itemTemplate(data, _, element) {
         const $element = (0, _renderer.default)(element);
-        if (options.encodeHtml) {
+        if (options.encodeHtml !== false) {
           return $element.text(data.text);
         }
         return $element.html(data.text);
@@ -335,13 +335,13 @@ class HeaderFilterView extends _m_modules.default.View {
       }
     };
     if (options.type === 'tree') {
-      that._listComponent = that._createComponent((0, _renderer.default)('<div>').appendTo($content), _m_tree_view.default, (0, _extend.extend)(widgetOptions, {
+      that._listComponent = that._createComponent((0, _renderer.default)('<div>').appendTo($content), _tree_view.default, (0, _extend.extend)(widgetOptions, {
         showCheckBoxesMode: needShowSelectAllCheckbox ? 'selectAll' : 'normal',
         onOptionChanged: onTreeViewOptionChanged,
         keyExpr: 'id'
       }));
     } else {
-      that._listComponent = that._createComponent((0, _renderer.default)('<div>').appendTo($content), _m_listEdit.default, (0, _extend.extend)(widgetOptions, {
+      that._listComponent = that._createComponent((0, _renderer.default)('<div>').appendTo($content), _listEdit.default, (0, _extend.extend)(widgetOptions, {
         searchExpr: that._getSearchExpr(options, headerFilterOptions),
         pageLoadMode: 'scrollBottom',
         showSelectionControls: true,

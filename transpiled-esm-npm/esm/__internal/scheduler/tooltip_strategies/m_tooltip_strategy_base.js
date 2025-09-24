@@ -3,7 +3,7 @@ import { FunctionTemplate } from '../../../core/templates/function_template';
 import { isRenderer } from '../../../core/utils/type';
 import Button from '../../../ui/button';
 import { createPromise } from '../../core/utils/promise';
-import List from '../../ui/list/m_list.edit';
+import List from '../../ui/list/list.edit';
 const TOOLTIP_APPOINTMENT_ITEM = 'dx-tooltip-appointment-item';
 const TOOLTIP_APPOINTMENT_ITEM_CONTENT = `${TOOLTIP_APPOINTMENT_ITEM}-content`;
 const TOOLTIP_APPOINTMENT_ITEM_CONTENT_SUBJECT = `${TOOLTIP_APPOINTMENT_ITEM}-content-subject`;
@@ -111,7 +111,7 @@ export class TooltipStrategyBase {
     return this._createFunctionTemplate(template, appointment, targetedAppointment, index);
   }
   _createFunctionTemplate(template, appointmentData, targetedAppointmentData, index) {
-    const isButtonClicked = !!this._extraOptions.isButtonClick;
+    const isButtonClicked = Boolean(this._extraOptions.isButtonClick);
     const isEmptyDropDownAppointmentTemplate = this._isEmptyDropDownAppointmentTemplate();
     // @ts-expect-error
     return new FunctionTemplate(options => {
@@ -166,7 +166,11 @@ export class TooltipStrategyBase {
     const $marker = $('<div>').addClass(TOOLTIP_APPOINTMENT_ITEM_MARKER);
     const $markerBody = $('<div>').addClass(TOOLTIP_APPOINTMENT_ITEM_MARKER_BODY);
     $marker.append($markerBody);
-    color && color.done(value => $markerBody.css('background', value));
+    color.then(value => {
+      if (value) {
+        $markerBody.css('background', value);
+      }
+    });
     return $marker;
   }
   _createItemListInfo(object) {

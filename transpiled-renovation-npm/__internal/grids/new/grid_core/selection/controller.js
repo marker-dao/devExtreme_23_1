@@ -5,11 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SelectionController = void 0;
 var _message = _interopRequireDefault(require("../../../../../localization/message"));
-var _signalsCore = require("@preact/signals-core");
-var _index = require("../../../../grids/new/grid_core/data_controller/index");
-var _index2 = require("../../../../grids/new/grid_core/options_validation/index");
+var _index = require("../../../../core/state_manager/index");
+var _index2 = require("../../../../grids/new/grid_core/data_controller/index");
+var _index3 = require("../../../../grids/new/grid_core/options_validation/index");
 var _const = require("../../../../grids/new/grid_core/selection/const");
-var _m_selection = _interopRequireDefault(require("../../../../ui/selection/m_selection"));
+var _selection = _interopRequireDefault(require("../../../../ui/selection/selection"));
 var _items_controller = require("../items_controller/items_controller");
 var _options_controller = require("../options_controller/options_controller");
 var _controller = require("../toolbar/controller");
@@ -25,7 +25,7 @@ class SelectionController {
     this.optionsValidationController = optionsValidationController;
     this.selectedCardKeys = this.options.twoWay('selectedCardKeys');
     // Note: moved option validation logic to computed to make it execute before other effects
-    this.normalizedSelectedCardKeys = (0, _signalsCore.computed)(() => {
+    this.normalizedSelectedCardKeys = (0, _index.computed)(() => {
       const selectedCardKeys = this.selectedCardKeys.value;
       const isSelectionEnabled = this.selectionOption.value.mode !== _const2.SelectionMode.None;
       if (isSelectionEnabled && Array.isArray(selectedCardKeys) && selectedCardKeys.length) {
@@ -34,10 +34,10 @@ class SelectionController {
       return this.selectedCardKeys.value;
     });
     this.selectionOption = this.options.oneWay('selection');
-    this._isCheckBoxesRendered = (0, _signalsCore.signal)(false);
+    this._isCheckBoxesRendered = (0, _index.signal)(false);
     this.onSelectionChanging = this.options.action('onSelectionChanging');
     this.onSelectionChanged = this.options.action('onSelectionChanged');
-    this.isCheckBoxesRendered = (0, _signalsCore.computed)(() => {
+    this.isCheckBoxesRendered = (0, _index.computed)(() => {
       const selectionMode = this.options.oneWay('selection.mode').value;
       const showCheckBoxesMode = this.options.oneWay('selection.showCheckBoxesMode').value;
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -55,8 +55,8 @@ class SelectionController {
       }
       return false;
     });
-    this._isCheckBoxesVisible = (0, _signalsCore.signal)(false);
-    this.isCheckBoxesVisible = (0, _signalsCore.computed)(() => {
+    this._isCheckBoxesVisible = (0, _index.signal)(false);
+    this.isCheckBoxesVisible = (0, _index.computed)(() => {
       const {
         mode,
         showCheckBoxesMode
@@ -68,7 +68,7 @@ class SelectionController {
       }
       return false;
     });
-    this.needToHiddenCheckBoxes = (0, _signalsCore.computed)(() => {
+    this.needToHiddenCheckBoxes = (0, _index.computed)(() => {
       const {
         mode,
         showCheckBoxesMode
@@ -79,28 +79,28 @@ class SelectionController {
       }
       return false;
     });
-    this.allowSelectOnClick = (0, _signalsCore.computed)(() => {
+    this.allowSelectOnClick = (0, _index.computed)(() => {
       const {
         mode,
         showCheckBoxesMode
       } = this.selectionOption.value;
       return mode !== _const2.SelectionMode.Multiple || showCheckBoxesMode !== _const.ShowCheckBoxesMode.Always;
     });
-    this.needToAddSelectionButtons = (0, _signalsCore.computed)(() => {
+    this.needToAddSelectionButtons = (0, _index.computed)(() => {
       const selectionMode = this.options.oneWay('selection.mode').value;
       const allowSelectAll = this.options.oneWay('selection.allowSelectAll').value;
       return selectionMode === _const2.SelectionMode.Multiple && allowSelectAll;
     });
-    this.selectionHelper = (0, _signalsCore.computed)(() => {
+    this.selectionHelper = (0, _index.computed)(() => {
       const dataSource = this.dataController.dataSource.value;
       const selectionOption = this.selectionOption.value;
       if (selectionOption.mode === _const2.SelectionMode.None) {
         return undefined;
       }
       const selectionConfig = this.getSelectionConfig(dataSource, selectionOption);
-      return new _m_selection.default(selectionConfig);
+      return new _selection.default(selectionConfig);
     });
-    (0, _signalsCore.effect)(() => {
+    (0, _index.effect)(() => {
       const selectedCardKeys = this.normalizedSelectedCardKeys.value;
       const selectionOption = this.selectionOption.value;
       if (selectionOption.mode !== _const2.SelectionMode.None) {
@@ -112,14 +112,14 @@ class SelectionController {
         }
       }
     });
-    (0, _signalsCore.effect)(() => {
+    (0, _index.effect)(() => {
       const isLoaded = this.dataController.isLoaded.value;
       if (isLoaded) {
         const selectedCardKeys = this.selectedCardKeys.peek();
         this.selectCards(selectedCardKeys);
       }
     });
-    (0, _signalsCore.effect)(() => {
+    (0, _index.effect)(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       this.dataController.items.value;
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -204,7 +204,7 @@ class SelectionController {
   updateSelectionToolbarButtons(selectedCardKeys) {
     const isSelectAll = this.isSelectAll();
     const isOnePageSelectAll = this.isOnePageSelectAll();
-    this.toolbarController.addDefaultItem((0, _signalsCore.signal)({
+    this.toolbarController.addDefaultItem((0, _index.signal)({
       name: 'selectAllButton',
       widget: 'dxButton',
       options: {
@@ -218,7 +218,7 @@ class SelectionController {
       location: 'before',
       locateInMenu: 'auto'
     }), this.needToAddSelectionButtons);
-    this.toolbarController.addDefaultItem((0, _signalsCore.signal)({
+    this.toolbarController.addDefaultItem((0, _index.signal)({
       name: 'clearSelectionButton',
       widget: 'dxButton',
       options: {
@@ -292,8 +292,9 @@ class SelectionController {
     return selectionHelper === null || selectionHelper === void 0 ? void 0 : selectionHelper.clearSelection();
   }
   getSelectedCardsData() {
-    const selectedCardKey = this.getSelectedCardKeys();
-    return selectedCardKey.map(key => this.itemsController.getCardByKey(key)).filter(item => !!item).map(item => item.data);
+    var _this$selectionHelper4;
+    // @ts-expect-error undefined is not assignable to DataObject[]
+    return (_this$selectionHelper4 = this.selectionHelper) === null || _this$selectionHelper4 === void 0 || (_this$selectionHelper4 = _this$selectionHelper4.peek()) === null || _this$selectionHelper4 === void 0 ? void 0 : _this$selectionHelper4.getSelectedItems();
   }
   getSelectedCardKeys() {
     return this.normalizedSelectedCardKeys.peek();
@@ -327,4 +328,4 @@ class SelectionController {
   }
 }
 exports.SelectionController = SelectionController;
-SelectionController.dependencies = [_options_controller.OptionsController, _index.DataController, _items_controller.ItemsController, _controller.ToolbarController, _index2.OptionsValidationController];
+SelectionController.dependencies = [_options_controller.OptionsController, _index2.DataController, _items_controller.ItemsController, _controller.ToolbarController, _index3.OptionsValidationController];

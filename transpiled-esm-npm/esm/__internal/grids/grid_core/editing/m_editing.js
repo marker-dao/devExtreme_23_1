@@ -485,14 +485,6 @@ class EditingControllerImpl extends modules.ViewController {
       this._focusEditingCell();
     }
   }
-  _setEditRowKeyByIndex(rowIndex, silent) {
-    const key = this._dataController.getKeyByRowIndex(rowIndex);
-    if (key === undefined) {
-      this._dataController.fireError('E1043');
-      return;
-    }
-    this._setEditRowKey(key, silent);
-  }
   getEditRowIndex() {
     return this._getVisibleEditRowIndex();
   }
@@ -2103,6 +2095,9 @@ class EditingControllerImpl extends modules.ViewController {
     return visibleEditRowIndex >= 0 ? rows[visibleEditRowIndex].isNewRow : false;
   }
   _isRowDeleteAllowed() {}
+  _prepareEditCell(parameters) {
+    return false;
+  }
   shouldHighlightCell(parameters) {
     const cellModified = this.isCellModified(parameters);
     return cellModified && parameters.column.setCellValue && (this.getEditMode() !== EDIT_MODE_ROW || !parameters.row.isEditing);

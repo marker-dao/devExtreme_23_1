@@ -17,6 +17,7 @@ var CommandNames;
   CommandNames["Shorten"] = "shorten";
   CommandNames["Summarize"] = "summarize";
   CommandNames["Translate"] = "translate";
+  CommandNames["SmartPaste"] = "smartPaste";
 })(CommandNames || (exports.CommandNames = CommandNames = {}));
 const COMMANDS = exports.COMMANDS = {
   [CommandNames.ChangeStyle]: _index.ChangeStyleCommand,
@@ -26,7 +27,8 @@ const COMMANDS = exports.COMMANDS = {
   [CommandNames.Proofread]: _index.ProofreadCommand,
   [CommandNames.Shorten]: _index.ShortenCommand,
   [CommandNames.Summarize]: _index.SummarizeCommand,
-  [CommandNames.Translate]: _index.TranslateCommand
+  [CommandNames.Translate]: _index.TranslateCommand,
+  [CommandNames.SmartPaste]: _index.SmartPasteCommand
 };
 class AIIntegration {
   constructor(provider) {
@@ -66,6 +68,9 @@ class AIIntegration {
   }
   translate(params, callbacks) {
     return this.executeCommand(CommandNames.Translate, params, callbacks);
+  }
+  smartPaste(params, callbacks) {
+    return this.executeCommand(CommandNames.SmartPaste, params, callbacks);
   }
 }
 exports.AIIntegration = AIIntegration;

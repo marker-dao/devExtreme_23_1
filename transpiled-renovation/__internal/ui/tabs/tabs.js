@@ -21,14 +21,14 @@ var _window = require("../../../core/utils/window");
 var _button = _interopRequireDefault(require("../../../ui/button"));
 var _uiCollection_widget = _interopRequireDefault(require("../../../ui/collection/ui.collection_widget.live_update"));
 var _themes = require("../../../ui/themes");
-var _utils2 = require("../../../ui/widget/utils.ink_ripple");
+var _m_ink_ripple = require("../../core/utils/m_ink_ripple");
 var _scrollable = _interopRequireDefault(require("../../ui/scroll_view/scrollable"));
 var _get_boundary_props = require("../../ui/scroll_view/utils/get_boundary_props");
 var _get_scroll_left_max = require("../../ui/scroll_view/utils/get_scroll_left_max");
 var _constants = require("./constants");
 var _item = _interopRequireDefault(require("./item"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // eslint-disable-next-line import/no-named-default
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE tabs
 const TABS_CLASS = exports.TABS_CLASS = 'dx-tabs';
 const TABS_WRAPPER_CLASS = exports.TABS_WRAPPER_CLASS = 'dx-tabs-wrapper';
@@ -100,6 +100,12 @@ const STYLING_MODE = {
   secondary: 'secondary'
 };
 class Tabs extends _uiCollection_widget.default {
+  _activeStateUnit() {
+    return `.${TABS_ITEM_CLASS}`;
+  }
+  _feedbackHideTimeout() {
+    return FEEDBACK_HIDE_TIMEOUT;
+  }
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
@@ -174,7 +180,6 @@ class Tabs extends _uiCollection_widget.default {
     } = this.option();
     const indicatorPosition = this._getIndicatorPosition();
     super._init();
-    this._activeStateUnit = `.${TABS_ITEM_CLASS}`;
     this.setAria('role', 'tablist');
     this.$element().addClass(TABS_CLASS);
     this._toggleScrollingEnabledClass(scrollingEnabled);
@@ -184,7 +189,6 @@ class Tabs extends _uiCollection_widget.default {
     this._toggleStylingModeClass(stylingMode);
     this._renderWrapper();
     this._renderMultiple();
-    this._feedbackHideTimeout = FEEDBACK_HIDE_TIMEOUT;
   }
   _prepareDefaultItemTemplate(data, $container) {
     const text = (0, _type.isPlainObject)(data) ? data === null || data === void 0 ? void 0 : data.text : data;
@@ -317,19 +321,19 @@ class Tabs extends _uiCollection_widget.default {
     this._cleanNavButtons();
   }
   _renderInkRipple() {
-    this._inkRipple = (0, _utils2.render)();
+    this._inkRipple = (0, _m_ink_ripple.render)();
   }
   _getPointerEvent() {
     return _pointer.default.up;
   }
-  _toggleActiveState($element, value, e) {
-    super._toggleActiveState($element, value, e);
+  _toggleActiveState($element, value, event) {
+    super._toggleActiveState($element, value, event);
     if (!this._inkRipple) {
       return;
     }
     const config = {
       element: $element,
-      event: e
+      event
     };
     if (value) {
       this._inkRipple.showWave(config);
@@ -453,6 +457,7 @@ class Tabs extends _uiCollection_widget.default {
     const navButton = this._createComponent((0, _renderer.default)('<div>').addClass(TABS_NAV_BUTTON_CLASS), _button.default, {
       focusStateEnabled: false,
       icon,
+      // @ts-expect-error
       integrationOptions: {},
       elementAttr: {
         role: null,
@@ -661,7 +666,7 @@ class Tabs extends _uiCollection_widget.default {
         break;
       case 'focusedElement':
         {
-          this._toggleFocusedDisabledClasses(value);
+          this._toggleFocusedDisabledClasses((0, _renderer.default)(value));
           super._optionChanged(args);
           this._scrollToItem(value);
           break;

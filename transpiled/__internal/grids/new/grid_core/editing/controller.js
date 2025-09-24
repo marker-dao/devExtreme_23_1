@@ -6,13 +6,13 @@ Object.defineProperty(exports, "__esModule", {
 exports.EditingController = void 0;
 var _data = require("../../../../../common/data");
 var _type = require("../../../../../core/utils/type");
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _m_editing_utils = require("../../../../grids/grid_core/editing/m_editing_utils");
-var _index = require("../../../../grids/new/grid_core/options_validation/index");
+var _index2 = require("../../../../grids/new/grid_core/options_validation/index");
 var _columns_controller = require("../columns_controller/columns_controller");
 var _data_controller = require("../data_controller/data_controller");
 var _items_controller = require("../items_controller/items_controller");
-var _index2 = require("../keyboard_navigation/index");
+var _index3 = require("../keyboard_navigation/index");
 var _options_controller = require("../options_controller/options_controller");
 var _confirm_controller = require("./confirm_controller");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-non-null-assertion */ /* eslint-disable spellcheck/spell-checker */
@@ -45,7 +45,7 @@ class EditingController {
     this.onCardRemoving = this.options.action('onCardRemoving');
     this.onSaving = this.options.action('onSaving');
     this.onSaved = this.options.action('onSaved');
-    this.editingCard = (0, _signalsCore.computed)(() => {
+    this.editingCard = (0, _index.computed)(() => {
       const editCardKey = this.editCardKey.value;
       const items = this.itemsController.items.value;
       const changes = this.changes.value;
@@ -58,7 +58,7 @@ class EditingController {
       }
       const insertChange = changes.find(change => change.key === editCardKey && change.type === 'insert');
       const oldData = (insertChange === null || insertChange === void 0 ? void 0 : insertChange.data) ?? oldItem.data;
-      const newData = (0, _data.applyChanges)([oldData], changes, {
+      const newData = insertChange ? _extends({}, oldData, changes) : (0, _data.applyChanges)([oldData], changes, {
         keyExpr: this.dataController.dataSource.peek().key(),
         immutable: true
       })[0];
@@ -99,7 +99,7 @@ class EditingController {
     this.changes.value = [...this.changes.peek(), {
       type: 'insert',
       key: newItemKey,
-      data: {}
+      data: eventArgs.data
     }];
     this.editCardKey.value = newItemKey;
   }
@@ -263,4 +263,4 @@ class EditingController {
   }
 }
 exports.EditingController = EditingController;
-EditingController.dependencies = [_options_controller.OptionsController, _items_controller.ItemsController, _columns_controller.ColumnsController, _data_controller.DataController, _index2.KeyboardNavigationController, _index.OptionsValidationController, _confirm_controller.ConfirmController];
+EditingController.dependencies = [_options_controller.OptionsController, _items_controller.ItemsController, _columns_controller.ColumnsController, _data_controller.DataController, _index3.KeyboardNavigationController, _index2.OptionsValidationController, _confirm_controller.ConfirmController];

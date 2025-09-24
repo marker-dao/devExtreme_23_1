@@ -15,7 +15,7 @@ import DataController from '../../data_controller';
 import ButtonGroup from '../../ui/button_group';
 import Widget from '../core/widget/widget';
 import { getElementWidth, getSizeValue } from '../ui/drop_down_editor/m_utils';
-import List from '../ui/list/m_list.edit.search';
+import List from '../ui/list/list.edit.search';
 import Popup from '../ui/popup/m_popup';
 const DROP_DOWN_BUTTON_CLASS = 'dx-dropdownbutton';
 const DROP_DOWN_BUTTON_CONTENT = 'dx-dropdownbutton-content';
@@ -371,6 +371,7 @@ class DropDownButton extends Widget {
       wrapItemText,
       focusStateEnabled,
       hoverStateEnabled,
+      useItemTextAsTitle,
       grouped,
       groupTemplate,
       noDataText,
@@ -385,7 +386,7 @@ class DropDownButton extends Widget {
       wrapItemText,
       focusStateEnabled,
       hoverStateEnabled,
-      useItemTextAsTitle: this.option('useItemTextAsTitle'),
+      useItemTextAsTitle,
       // eslint-disable-next-line
       onContentReady: () => this._fireContentReadyAction(),
       selectedItemKeys: isDefined(selectedItemKey) && useSelectMode ? [selectedItemKey] : [],
@@ -508,7 +509,6 @@ class DropDownButton extends Widget {
     if (!this._buttonGroup) {
       this.$element().append($buttonGroup);
     }
-    // @ts-expect-error ts-error
     this._buttonGroup = this._createComponent($buttonGroup, ButtonGroup, this._getButtonGroupOptions());
     this._buttonGroup.registerKeyHandler('downArrow', this._upDownKeyHandler.bind(this));
     this._buttonGroup.registerKeyHandler('tab', this._tabHandler.bind(this));

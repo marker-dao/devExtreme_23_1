@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-require("../../../../ui/popup/ui.popup");
 var _devices = _interopRequireDefault(require("../../../../core/devices"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _child_default_template = require("../../../../core/templates/child_default_template");
@@ -13,8 +12,11 @@ var _window = require("../../../../core/utils/window");
 var _themes = require("../../../../ui/themes");
 var _widget = _interopRequireDefault(require("../../../core/widget/widget"));
 var _wrapper = _interopRequireDefault(require("../../../ui/button/wrapper"));
-var _toolbarMenu = _interopRequireDefault(require("../../../ui/toolbar/internal/toolbar.menu.list"));
+var _m_popup = _interopRequireDefault(require("../../../ui/popup/m_popup"));
+var _toolbarMenu = _interopRequireWildcard(require("../../../ui/toolbar/internal/toolbar.menu.list"));
 var _toolbar = require("../../../ui/toolbar/toolbar.utils");
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DROP_DOWN_MENU_CLASS = 'dx-dropdownmenu';
@@ -29,7 +31,10 @@ class DropDownMenu extends _widget.default {
   _supportedKeys() {
     var _this$_list;
     let extension = {};
-    if (!this.option('opened') || !((_this$_list = this._list) !== null && _this$_list !== void 0 && _this$_list.option('focusedElement'))) {
+    const {
+      opened
+    } = this.option();
+    if (!opened || !((_this$_list = this._list) !== null && _this$_list !== void 0 && _this$_list.option('focusedElement'))) {
       extension = this._button._supportedKeys();
     }
     return _extends({}, super._supportedKeys(), extension, {
@@ -158,8 +163,8 @@ class DropDownMenu extends _widget.default {
     this._button = this._createComponent($button, _wrapper.default, {
       icon: 'overflow',
       template: 'content',
-      // @ts-expect-error ts-error
-      stylingMode: (0, _themes.isFluent)() ? 'text' : 'contained',
+      stylingMode: (0, _themes.isFluent)((0, _themes.current)()) ? 'text' : 'contained',
+      // @ts-expect-error
       useInkRipple,
       hoverStateEnabled: false,
       focusStateEnabled: false,
@@ -171,8 +176,7 @@ class DropDownMenu extends _widget.default {
     });
   }
   _toggleActiveState($element, value) {
-    // @ts-expect-error ts-error
-    this._button._toggleActiveState($element, value);
+    this._button._toggleActiveState($element[0], value);
   }
   _toggleMenuVisibility(opened) {
     var _this$_popup3, _this$_popup4;
@@ -194,33 +198,40 @@ class DropDownMenu extends _widget.default {
       container,
       animation
     } = this.option();
-    this._popup = this._createComponent(this._$popup, 'dxPopup', {
-      onInitialized(_ref) {
-        let {
+    this._popup = this._createComponent(this._$popup, _m_popup.default, {
+      onInitialized(e) {
+        const {
           component
-        } = _ref;
+        } = e;
+        // @ts-expect-error
         component.$wrapper().addClass(DROP_DOWN_MENU_POPUP_WRAPPER_CLASS).addClass(DROP_DOWN_MENU_POPUP_CLASS);
       },
       deferRendering: false,
       preventScrollEvents: false,
+      _ignorePreventScrollEventsDeprecation: true,
       contentTemplate: contentElement => this._renderList(contentElement),
       _ignoreFunctionValueDeprecation: true,
+      // @ts-expect-error
       maxHeight: () => this._getMaxHeight(),
       position: {
+        // @ts-expect-error
         my: `top ${rtlEnabled ? 'left' : 'right'}`,
+        // @ts-expect-error
         at: `bottom ${rtlEnabled ? 'left' : 'right'}`,
         collision: 'fit flip',
+        // @ts-expect-error
         offset: {
           v: POPUP_VERTICAL_OFFSET
         },
+        // @ts-expect-error
         of: this.$element()
       },
       animation,
-      onOptionChanged: _ref2 => {
+      onOptionChanged: _ref => {
         let {
           name,
           value
-        } = _ref2;
+        } = _ref;
         if (name === 'visible') {
           this.option('opened', value);
         }
@@ -235,7 +246,20 @@ class DropDownMenu extends _widget.default {
       dragEnabled: false,
       showTitle: false,
       fullScreen: false,
+      ignoreChildEvents: false,
       _fixWrapperPosition: true
+    });
+    this._popup.registerKeyHandler('space', e => {
+      this._popupKeyHandler(e);
+    });
+    this._popup.registerKeyHandler('enter', e => {
+      this._popupKeyHandler(e);
+    });
+    this._popup.registerKeyHandler('escape', e => {
+      var _this$_popup5;
+      if ((_this$_popup5 = this._popup) !== null && _this$_popup5 !== void 0 && _this$_popup5.$overlayContent().is((0, _renderer.default)(e.target))) {
+        this.option('opened', false);
+      }
     });
   }
   _getMaxHeight() {
@@ -264,24 +288,34 @@ class DropDownMenu extends _widget.default {
       noDataText: '',
       itemTemplate,
       onItemClick: e => {
-        var _this$_itemClickActio;
-        const {
-          closeOnClick
-        } = this.option();
-        if (closeOnClick) {
-          this.option('opened', false);
-        }
-        (_this$_itemClickActio = this._itemClickAction) === null || _this$_itemClickActio === void 0 || _this$_itemClickActio.call(this, e);
+        this._itemClickHandler(e);
       },
       tabIndex: -1,
       focusStateEnabled: false,
       activeStateEnabled: true,
       onItemRendered,
-      // @ts-expect-error ts-error
       _itemAttributes: {
         role: 'menuitem'
       }
     });
+  }
+  _popupKeyHandler(e) {
+    if ((0, _renderer.default)(e.target).closest(`.${_toolbarMenu.TOOLBAR_MENU_ACTION_CLASS}`).length) {
+      this._closePopup();
+    }
+  }
+  _closePopup() {
+    const {
+      closeOnClick
+    } = this.option();
+    if (closeOnClick) {
+      this.option('opened', false);
+    }
+  }
+  _itemClickHandler(e) {
+    var _this$_itemClickActio;
+    this._closePopup();
+    (_this$_itemClickActio = this._itemClickAction) === null || _this$_itemClickActio === void 0 || _this$_itemClickActio.call(this, e);
   }
   _itemOptionChanged(item, property, value) {
     var _this$_list3;
@@ -310,7 +344,7 @@ class DropDownMenu extends _widget.default {
     (_this$_button = this._button) === null || _this$_button === void 0 || _this$_button.option('visible', visible);
   }
   _optionChanged(args) {
-    var _this$_list5, _this$_list6, _this$_list7, _this$_popup5;
+    var _this$_list5, _this$_list6, _this$_list7, _this$_popup6;
     const {
       name,
       value
@@ -353,7 +387,7 @@ class DropDownMenu extends _widget.default {
       case 'closeOnClick':
         break;
       case 'container':
-        (_this$_popup5 = this._popup) === null || _this$_popup5 === void 0 || _this$_popup5.option(name, value);
+        (_this$_popup6 = this._popup) === null || _this$_popup6 === void 0 || _this$_popup6.option(name, value);
         break;
       case 'disabled':
         if (this._list) {

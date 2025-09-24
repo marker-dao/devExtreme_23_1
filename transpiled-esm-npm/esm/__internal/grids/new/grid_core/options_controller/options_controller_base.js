@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Component } from '../../../../../core/component';
 import { getPathParts } from '../../../../../core/utils/data';
-import { computed, effect, signal } from '@preact/signals-core';
+import { computed, effect, signal } from '../../../../core/state_manager/index';
 import { extend } from '../../../../core/utils/m_extend';
 import { TemplateWrapper } from '../inferno_wrappers/template_wrapper';
 import { getTreeNodeByPath, mergeOptionTrees } from '../utils/tree/index';

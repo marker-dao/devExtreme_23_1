@@ -21,9 +21,9 @@ import { getDefaultAlignment } from '../../../core/utils/position';
 import { isDefined } from '../../../core/utils/type';
 import { hasWindow } from '../../../core/utils/window';
 import Popup from '../../../ui/popup/ui.popup';
-import { focused } from '../../../ui/widget/selectors';
 import errors from '../../../ui/widget/ui.errors';
 import Widget from '../../../ui/widget/ui.widget';
+import { focused } from '../../core/utils/m_selectors';
 import TextBox from '../../ui/text_box/m_text_box';
 import DropDownButton from './m_drop_down_button';
 import { getElementWidth, getSizeValue } from './m_utils';
@@ -35,8 +35,16 @@ const DROP_DOWN_EDITOR_OVERLAY_FLIPPED = 'dx-dropdowneditor-overlay-flipped';
 const DROP_DOWN_EDITOR_ACTIVE = 'dx-dropdowneditor-active';
 const DROP_DOWN_EDITOR_FIELD_CLICKABLE = 'dx-dropdowneditor-field-clickable';
 const DROP_DOWN_EDITOR_FIELD_TEMPLATE_WRAPPER = 'dx-dropdowneditor-field-template-wrapper';
+export const DROP_DOWN_EDITOR_BEFORE_FIELD_ADDON = 'dx-dropdowneditor-field-before-template-wrapper';
+export const DROP_DOWN_EDITOR_AFTER_FIELD_ADDON = 'dx-dropdowneditor-field-after-template-wrapper';
 const OVERLAY_CONTENT_LABEL = 'Dropdown';
 const isIOs = devices.current().platform === 'ios';
+export const DROP_DOWN_EDITOR_DEPRECATED_OPTIONS = {
+  fieldTemplate: {
+    since: '25.2',
+    message: 'Use the \'fieldAddons\' option instead'
+  }
+};
 function createTemplateWrapperElement() {
   return $('<div>').addClass(DROP_DOWN_EDITOR_FIELD_TEMPLATE_WRAPPER);
 }
@@ -230,6 +238,7 @@ class DropDownEditor extends TextBox {
   _renderInput() {
     super._renderInput();
     this._renderTemplateWrapper();
+    this._renderFieldAddons();
     this._wrapInput();
     this._setDefaultAria();
   }
@@ -260,20 +269,37 @@ class DropDownEditor extends TextBox {
   }
   _cleanFocusState() {
     super._cleanFocusState();
-    if (this.option('fieldTemplate')) {
+    const {
+      fieldTemplate
+    } = this.option();
+    if (fieldTemplate) {
       this._detachFocusEvents();
     }
   }
   _getFieldTemplate() {
-    return this.option('fieldTemplate') && this._getTemplateByOption('fieldTemplate');
+    const {
+      fieldTemplate
+    } = this.option();
+    if (!fieldTemplate) {
+      return;
+    }
+    return this._getTemplate(fieldTemplate);
   }
   _renderMask() {
-    if (this.option('fieldTemplate')) {
+    const {
+      fieldTemplate
+    } = this.option();
+    if (fieldTemplate) {
       return;
     }
     super._renderMask();
   }
   _renderField() {
+    const fieldAddonsTemplates = this._getFieldAddonsTemplates();
+    if (fieldAddonsTemplates) {
+      this._renderFieldAddonsContent(fieldAddonsTemplates);
+      return;
+    }
     const fieldTemplate = this._getFieldTemplate();
     if (fieldTemplate) {
       this._renderTemplatedField(fieldTemplate, this._fieldRenderData());
@@ -295,6 +321,26 @@ class DropDownEditor extends TextBox {
   _getButtonsContainer() {
     const fieldTemplate = this._getFieldTemplate();
     return fieldTemplate ? this._$container : this._$textEditorContainer;
+  }
+  _renderBeforeFieldAddon() {
+    if (!this._$beforeFieldAddon) {
+      this._$beforeFieldAddon = $('<div>').addClass(DROP_DOWN_EDITOR_BEFORE_FIELD_ADDON).insertBefore(this._$textEditorContainer);
+    }
+  }
+  _renderAfterFieldAddon() {
+    if (!this._$afterFieldAddon) {
+      this._$afterFieldAddon = $('<div>').addClass(DROP_DOWN_EDITOR_AFTER_FIELD_ADDON).insertAfter(this._$textEditorContainer);
+    }
+  }
+  _renderFieldAddons() {
+    const {
+      fieldAddons
+    } = this.option();
+    if (!fieldAddons) {
+      return;
+    }
+    this._renderBeforeFieldAddon();
+    this._renderAfterFieldAddon();
   }
   _renderTemplateWrapper() {
     const fieldTemplate = this._getFieldTemplate();
@@ -343,6 +389,61 @@ class DropDownEditor extends TextBox {
       }
     });
   }
+  _getFieldAddonsTemplates() {
+    const {
+      fieldAddons
+    } = this.option();
+    if (!fieldAddons) {
+      return null;
+    }
+    const {
+      beforeTemplate: before,
+      afterTemplate: after
+    } = fieldAddons;
+    const beforeTemplate = before ? this._getTemplate(before) : null;
+    const afterTemplate = after ? this._getTemplate(after) : null;
+    return {
+      beforeTemplate,
+      afterTemplate
+    };
+  }
+  _clearFieldAddons(removeField) {
+    var _this$_$beforeFieldAd, _this$_$afterFieldAdd;
+    (_this$_$beforeFieldAd = this._$beforeFieldAddon) === null || _this$_$beforeFieldAd === void 0 || _this$_$beforeFieldAd.empty();
+    (_this$_$afterFieldAdd = this._$afterFieldAddon) === null || _this$_$afterFieldAdd === void 0 || _this$_$afterFieldAdd.empty();
+    if (removeField) {
+      this._$beforeFieldAddon = null;
+      this._$afterFieldAddon = null;
+    }
+  }
+  _renderBeforeFieldAddonContent(beforeTemplate) {
+    if (beforeTemplate && this._$beforeFieldAddon) {
+      beforeTemplate.render({
+        model: this._fieldRenderData(),
+        container: getPublicElement(this._$beforeFieldAddon)
+      });
+    }
+  }
+  _renderAfterFieldAddonContent(afterTemplate) {
+    if (afterTemplate && this._$afterFieldAddon) {
+      afterTemplate.render({
+        model: this._fieldRenderData(),
+        container: getPublicElement(this._$afterFieldAddon)
+      });
+    }
+  }
+  _renderFieldAddonsContent(fieldAddonsTemplates) {
+    this._clearFieldAddons();
+    if (!fieldAddonsTemplates) {
+      return;
+    }
+    const {
+      beforeTemplate,
+      afterTemplate
+    } = fieldAddonsTemplates;
+    this._renderBeforeFieldAddonContent(beforeTemplate);
+    this._renderAfterFieldAddonContent(afterTemplate);
+  }
   _integrateInput() {
     const {
       isValid
@@ -364,7 +465,10 @@ class DropDownEditor extends TextBox {
     this._renderEmptinessEvent();
   }
   _fieldRenderData() {
-    return this.option('value');
+    const {
+      value
+    } = this.option();
+    return value;
   }
   _initTemplates() {
     this._templateManager.addDefaultTemplates({
@@ -406,7 +510,6 @@ class DropDownEditor extends TextBox {
     }
   }
   _isTargetOutOfComponent(newTarget) {
-    // @ts-expect-error ts-error
     const popupWrapper = this.content ? $(this.content()).closest(`.${DROP_DOWN_EDITOR_OVERLAY}`) : this._$popup;
     // @ts-expect-error
     const isTargetOutsidePopup = $(newTarget).closest(`.${DROP_DOWN_EDITOR_OVERLAY}`, popupWrapper).length === 0;
@@ -713,6 +816,7 @@ class DropDownEditor extends TextBox {
   _clean() {
     delete this._openOnFieldClickAction;
     delete this._$templateWrapper;
+    this._clearFieldAddons(true);
     if (this._$popup) {
       this._$popup.remove();
       delete this._$popup;
@@ -816,6 +920,16 @@ class DropDownEditor extends TextBox {
     }
     return super._getSubmitElement();
   }
+  // eslint-disable-next-line class-methods-use-this
+  _shouldLogFieldTemplateDeprecationWarning() {
+    return false;
+  }
+  _setDeprecatedOptions() {
+    super._setDeprecatedOptions();
+    if (this._shouldLogFieldTemplateDeprecationWarning()) {
+      extend(this._deprecatedOptions, DROP_DOWN_EDITOR_DEPRECATED_OPTIONS);
+    }
+  }
   _dispose() {
     this._detachFocusOutEvents();
     super._dispose();
@@ -843,6 +957,7 @@ class DropDownEditor extends TextBox {
         // for dashboards
         this._initPopupInitializedAction();
         break;
+      case 'fieldAddons':
       case 'fieldTemplate':
       case 'acceptCustomValue':
       case 'openOnFieldClick':

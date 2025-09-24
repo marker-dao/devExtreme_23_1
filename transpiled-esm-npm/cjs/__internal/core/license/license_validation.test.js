@@ -637,3 +637,85 @@ _globals.jest.mock('./key', () => ({
     (0, _globals.expect)(trialPanelSpy).toHaveBeenCalled();
   });
 });
+(0, _globals.describe)('assertedVersions integration', () => {
+  const packages = [{
+    packageName: 'test-package',
+    version: '1.2.3'
+  }];
+  (0, _globals.beforeEach)(() => {
+    _globals.jest.resetModules();
+    _globals.jest.spyOn(_errors.default, 'log').mockImplementation(() => {});
+  });
+  (0, _globals.afterEach)(() => {
+    _globals.jest.restoreAllMocks();
+    delete globalThis.DevExpress;
+    (0, _version.clearAssertedVersions)();
+  });
+  (0, _globals.describe)('set version in assertDevExtremeVersion', () => {
+    (0, _globals.test)('returns false and logs error when asserted versions are not compatible', () => {
+      (0, _version.assertDevExtremeVersion)('test-package', '1.2.3');
+      const result = (0, _version.assertedVersionsCompatible)({
+        major: 2,
+        minor: 0,
+        patch: 0
+      });
+      (0, _globals.expect)(result).toBe(false);
+      (0, _globals.expect)(_errors.default.log).toHaveBeenCalledWith('W0023', _globals.expect.stringContaining('test-package'));
+    });
+    (0, _globals.test)('returns true when asserted versions are compatible', () => {
+      (0, _version.assertDevExtremeVersion)('test-package', '1.2.3');
+      const result = (0, _version.assertedVersionsCompatible)({
+        major: 1,
+        minor: 2,
+        patch: 3
+      });
+      (0, _globals.expect)(result).toBe(true);
+      (0, _globals.expect)(_errors.default.log).not.toHaveBeenCalled();
+    });
+    (0, _globals.test)('clears asserted versions from config', () => {
+      (0, _version.assertDevExtremeVersion)('test-package-2', '1.2.3');
+      (0, _version.clearAssertedVersions)();
+      (0, _globals.expect)((0, _config.default)().versionAssertions).toEqual([]);
+    });
+  });
+  (0, _globals.describe)('set version in DevExpress.config', () => {
+    (0, _globals.test)('returns true when all global version assertions are compatible', () => {
+      globalThis.DevExpress = {
+        config: {
+          versionAssertions: packages
+        }
+      };
+      // eslint-disable-next-line
+      const versionUtils = require('../../../__internal/utils/version');
+      // eslint-disable-next-line
+      const errors = require('../../../core/errors').default;
+      _globals.jest.spyOn(errors, 'log').mockImplementation(() => {});
+      const result = versionUtils.assertedVersionsCompatible({
+        major: 1,
+        minor: 2,
+        patch: 3
+      });
+      (0, _globals.expect)(result).toBe(true);
+      (0, _globals.expect)(errors.log).not.toHaveBeenCalled();
+    });
+    (0, _globals.test)('returns false and log error when any global version assertion is not compatible', () => {
+      globalThis.DevExpress = {
+        config: {
+          versionAssertions: packages
+        }
+      };
+      // eslint-disable-next-line
+      const versionUtils = require('../../../__internal/utils/version');
+      // eslint-disable-next-line
+      const errors = require('../../../core/errors').default;
+      _globals.jest.spyOn(errors, 'log').mockImplementation(() => {});
+      const result = versionUtils.assertedVersionsCompatible({
+        major: 2,
+        minor: 0,
+        patch: 0
+      });
+      (0, _globals.expect)(result).toBe(false);
+      (0, _globals.expect)(errors.log).toHaveBeenCalledWith('W0023', _globals.expect.stringContaining('test-package'));
+    });
+  });
+});

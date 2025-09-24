@@ -5,9 +5,9 @@ import { addNamespace } from '../../../common/core/events/utils/index';
 import $ from '../../../core/renderer';
 import { getImageContainer } from '../../../core/utils/icon';
 import { isPlainObject } from '../../../core/utils/type';
-import Overlay from '../../../ui/overlay/ui.overlay';
 import { isMaterial } from '../../../ui/themes';
-import { render } from '../../../ui/widget/utils.ink_ripple';
+import { render } from '../../core/utils/m_ink_ripple';
+import Overlay from '../../ui/overlay/overlay';
 const FAB_CLASS = 'dx-fa-button';
 const FAB_ICON_CLASS = 'dx-fa-button-icon';
 const FAB_LABEL_CLASS = 'dx-fa-button-label';
@@ -139,6 +139,7 @@ class SpeedDialItem extends Overlay {
       this._clickAction(clickActionArgs);
     });
   }
+  // @ts-expect-error
   _defaultActionArgs() {
     return {
       component: this._getActionComponent()
@@ -154,9 +155,7 @@ class SpeedDialItem extends Overlay {
   _getInkRippleContainer() {
     return this._$icon;
   }
-  _toggleActiveState($element, value,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  event) {
+  _toggleActiveState($element, value, event) {
     super._toggleActiveState($element, value, event);
     if (!this._inkRipple) {
       return;

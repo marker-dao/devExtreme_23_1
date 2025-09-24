@@ -41,8 +41,8 @@ const createTimeZoneDataSource = () => new DataSource({
 const getStylingModeFunc = () => isFluent(current()) ? 'filled' : undefined;
 const getStartDateWithStartHour = (startDate, startDayHour) => new Date(new Date(startDate).setHours(startDayHour));
 const validateAppointmentFormDate = (editor, value, previousValue) => {
-  const isCurrentDateCorrect = value === null || !!value;
-  const isPreviousDateCorrect = previousValue === null || !!previousValue;
+  const isCurrentDateCorrect = value === null || Boolean(value);
+  const isPreviousDateCorrect = previousValue === null || Boolean(previousValue);
   if (!isCurrentDateCorrect && isPreviousDateCorrect) {
     editor.option('value', previousValue);
   }
@@ -52,12 +52,28 @@ const updateRecurrenceItemVisibility = (recurrenceRuleExpr, value, form) => {
   form.itemOption(APPOINTMENT_FORM_GROUP_NAMES.Recurrence, 'visible', value);
   (_form$getEditor = form.getEditor(recurrenceRuleExpr)) === null || _form$getEditor === void 0 || _form$getEditor.changeValueByVisibility(value);
 };
+const defaultFormOptions = {
+  showValidationSummary: true,
+  scrollingEnabled: true,
+  colCount: 'auto',
+  colCountByScreen: {
+    lg: 2,
+    xs: 1
+  },
+  showColonAfterLabel: false,
+  labelLocation: 'top',
+  screenByWidth: width => width < SCREEN_SIZE_OF_SINGLE_COLUMN || devices.current().deviceType !== 'desktop' ? 'xs' : 'lg',
+  elementAttr: {
+    class: E2E_TEST_CLASSES.form
+  }
+};
 export class AppointmentForm {
   constructor(scheduler) {
     // NOTE: flag to prevent double value set during form updating
     this.isFormUpdating = false;
     this.scheduler = scheduler;
-    this.form = null;
+    const element = $('<div>');
+    this.form = this.scheduler.createComponent(element, Form, _extends({}, defaultFormOptions));
   }
   get dxForm() {
     return this.form;
@@ -86,7 +102,7 @@ export class AppointmentForm {
     } = dataAccessors;
     const isRecurrence = Boolean(dataAccessors.get('recurrenceRule', formData));
     const colSpan = isRecurrence ? 1 : 2;
-    const mainItems = [...this._createMainItems(expr, triggerResize, changeSize, allowTimeZoneEditing), ...this.scheduler.createResourceEditorModel()];
+    const mainItems = [...this.createMainItems(expr, triggerResize, changeSize, allowTimeZoneEditing), ...this.scheduler.createResourceEditorModel()];
     changeSize(isRecurrence);
     const items = [{
       itemType: 'group',
@@ -102,42 +118,27 @@ export class AppointmentForm {
       name: APPOINTMENT_FORM_GROUP_NAMES.Recurrence,
       visible: isRecurrence,
       colSpan,
-      items: this._createRecurrenceEditor(expr)
+      items: this.createRecurrenceEditor(expr)
     }];
-    const element = $('<div>');
-    this.scheduler.createComponent(element, Form, {
+    this.form.option({
       items,
-      showValidationSummary: true,
-      scrollingEnabled: true,
-      colCount: 'auto',
-      colCountByScreen: {
-        lg: 2,
-        xs: 1
-      },
-      formData,
-      showColonAfterLabel: false,
-      labelLocation: 'top',
-      onInitialized: e => {
-        this.form = e.component;
-      },
-      screenByWidth: width => width < SCREEN_SIZE_OF_SINGLE_COLUMN || devices.current().deviceType !== 'desktop' ? 'xs' : 'lg',
-      elementAttr: {
-        class: E2E_TEST_CLASSES.form
-      }
+      formData
     });
   }
-  _dateBoxValueChanged(args, dateExpr, isNeedCorrect) {
+  dateBoxValueChanged(args, dateExpr, isNeedCorrect) {
     validateAppointmentFormDate(args.component, args.value, args.previousValue);
     const value = dateSerialization.deserializeDate(args.value);
     const previousValue = dateSerialization.deserializeDate(args.previousValue);
     const dateEditor = this.form.getEditor(dateExpr);
+    // @ts-expect-error should be fixed in the future
     const dateValue = dateSerialization.deserializeDate(dateEditor.option('value'));
     if (!this.isFormUpdating && dateValue && value && isNeedCorrect(dateValue, value)) {
       const duration = previousValue ? dateValue.getTime() - previousValue.getTime() : 0;
+      // @ts-expect-error should be fixed in the future
       dateEditor.option('value', new Date(value.getTime() + duration));
     }
   }
-  _createTimezoneEditor(timeZoneExpr, secondTimeZoneExpr, visibleIndex, colSpan, isMainTimeZone, cssClass) {
+  createTimezoneEditor(timeZoneExpr, secondTimeZoneExpr, visibleIndex, colSpan, isMainTimeZone, cssClass) {
     let visible = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : false;
     const noTzTitle = messageLocalization.format('dxScheduler-noTimezoneTitle');
     return {
@@ -162,6 +163,7 @@ export class AppointmentForm {
           } = this;
           const secondTimezoneEditor = form.getEditor(secondTimeZoneExpr);
           if (isMainTimeZone) {
+            // @ts-expect-error should be fixed in the future
             secondTimezoneEditor.option('value', args.value);
           }
         }
@@ -169,16 +171,16 @@ export class AppointmentForm {
       visible
     };
   }
-  _createDateBoxItems(dataExprs, allowTimeZoneEditing) {
+  createDateBoxItems(dataExprs, allowTimeZoneEditing) {
     const colSpan = allowTimeZoneEditing ? 2 : 1;
     const firstDayOfWeek = this.scheduler.getFirstDayOfWeek();
     return [this.createDateBoxEditor(dataExprs.startDateExpr, colSpan, firstDayOfWeek, 'dxScheduler-editorLabelStartDate', E2E_TEST_CLASSES.startDateEditor, args => {
-      this._dateBoxValueChanged(args, dataExprs.endDateExpr, (endValue, startValue) => endValue < startValue);
-    }), this._createTimezoneEditor(dataExprs.startDateTimeZoneExpr, dataExprs.endDateTimeZoneExpr, 1, colSpan, true, E2E_TEST_CLASSES.startDateTimeZoneEditor, allowTimeZoneEditing), this.createDateBoxEditor(dataExprs.endDateExpr, colSpan, firstDayOfWeek, 'dxScheduler-editorLabelEndDate', E2E_TEST_CLASSES.endDateEditor, args => {
-      this._dateBoxValueChanged(args, dataExprs.startDateExpr, (startValue, endValue) => endValue < startValue);
-    }), this._createTimezoneEditor(dataExprs.endDateTimeZoneExpr, dataExprs.startDateTimeZoneExpr, 3, colSpan, false, E2E_TEST_CLASSES.endDateTimeZoneEditor, allowTimeZoneEditing)];
+      this.dateBoxValueChanged(args, dataExprs.endDateExpr, (endValue, startValue) => endValue < startValue);
+    }), this.createTimezoneEditor(dataExprs.startDateTimeZoneExpr, dataExprs.endDateTimeZoneExpr, 1, colSpan, true, E2E_TEST_CLASSES.startDateTimeZoneEditor, allowTimeZoneEditing), this.createDateBoxEditor(dataExprs.endDateExpr, colSpan, firstDayOfWeek, 'dxScheduler-editorLabelEndDate', E2E_TEST_CLASSES.endDateEditor, args => {
+      this.dateBoxValueChanged(args, dataExprs.startDateExpr, (startValue, endValue) => endValue < startValue);
+    }), this.createTimezoneEditor(dataExprs.endDateTimeZoneExpr, dataExprs.startDateTimeZoneExpr, 3, colSpan, false, E2E_TEST_CLASSES.endDateTimeZoneEditor, allowTimeZoneEditing)];
   }
-  _changeFormItemDateType(name, groupName, isAllDay) {
+  changeFormItemDateType(name, groupName, isAllDay) {
     const editorPath = this.getEditorPath(name, groupName);
     const itemEditorOptions = this.form.itemOption(editorPath).editorOptions;
     const type = isAllDay ? 'date' : 'datetime';
@@ -187,7 +189,7 @@ export class AppointmentForm {
     });
     this.form.itemOption(editorPath, 'editorOptions', newEditorOption);
   }
-  _createMainItems(dataExprs, triggerResize, changeSize, allowTimeZoneEditing) {
+  createMainItems(dataExprs, triggerResize, changeSize, allowTimeZoneEditing) {
     return [{
       name: this.normalizeEditorName(dataExprs.textExpr),
       dataField: dataExprs.textExpr,
@@ -207,7 +209,7 @@ export class AppointmentForm {
         lg: 2,
         xs: 1
       },
-      items: this._createDateBoxItems(dataExprs, allowTimeZoneEditing)
+      items: this.createDateBoxItems(dataExprs, allowTimeZoneEditing)
     }, {
       itemType: 'group',
       colSpan: 2,
@@ -231,21 +233,26 @@ export class AppointmentForm {
             } = args;
             const startDateEditor = this.form.getEditor(dataExprs.startDateExpr);
             const endDateEditor = this.form.getEditor(dataExprs.endDateExpr);
+            // @ts-expect-error should be fixed in the future
             const startDate = dateSerialization.deserializeDate(startDateEditor.option('value'));
             if (!this.isFormUpdating && startDate) {
               if (value) {
                 const allDayStartDate = dateUtils.trimTime(startDate);
+                // @ts-expect-error should be fixed in the future
                 startDateEditor.option('value', new Date(allDayStartDate));
+                // @ts-expect-error should be fixed in the future
                 endDateEditor.option('value', new Date(allDayStartDate));
               } else {
                 const startDateWithStartHour = getStartDateWithStartHour(startDate, this.scheduler.getStartDayHour());
                 const endDate = this.scheduler.getCalculatedEndDate(startDateWithStartHour);
+                // @ts-expect-error should be fixed in the future
                 startDateEditor.option('value', startDateWithStartHour);
+                // @ts-expect-error should be fixed in the future
                 endDateEditor.option('value', endDate);
               }
             }
-            this._changeFormItemDateType(dataExprs.startDateExpr, 'Main', value);
-            this._changeFormItemDateType(dataExprs.endDateExpr, 'Main', value);
+            this.changeFormItemDateType(dataExprs.startDateExpr, 'Main', value);
+            this.changeFormItemDateType(dataExprs.endDateExpr, 'Main', value);
           }
         }
       }, {
@@ -291,7 +298,7 @@ export class AppointmentForm {
       colSpan: 2
     }];
   }
-  _createRecurrenceEditor(dataExprs) {
+  createRecurrenceEditor(dataExprs) {
     return [{
       name: this.normalizeEditorName(dataExprs.recurrenceRuleExpr),
       dataField: dataExprs.recurrenceRuleExpr,

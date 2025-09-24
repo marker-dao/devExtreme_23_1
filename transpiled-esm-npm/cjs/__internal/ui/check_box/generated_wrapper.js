@@ -8,6 +8,7 @@ var _component_registrator = _interopRequireDefault(require("../../../core/compo
 var _check_box = require("./check_box");
 var _wrapper = _interopRequireDefault(require("./wrapper"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+// STYLE checkbox
 class CheckBox extends _wrapper.default {
   getProps() {
     const props = super.getProps();
@@ -18,13 +19,13 @@ class CheckBox extends _wrapper.default {
   focus() {
     var _this$viewRef;
     // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, prefer-rest-params
+    // eslint-disable-next-line prefer-rest-params
     return (_this$viewRef = this.viewRef) === null || _this$viewRef === void 0 ? void 0 : _this$viewRef.focus(...arguments);
   }
   blur() {
     var _this$viewRef2;
     // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, prefer-rest-params
+    // eslint-disable-next-line prefer-rest-params
     return (_this$viewRef2 = this.viewRef) === null || _this$viewRef2 === void 0 ? void 0 : _this$viewRef2.blur(...arguments);
   }
   // @ts-expect-error

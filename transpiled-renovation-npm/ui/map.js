@@ -1,9 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _m_map = _interopRequireDefault(require("../__internal/ui/map/m_map"));
+var _map = _interopRequireDefault(require("../__internal/ui/map/map"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _m_map.default; // STYLE map
+var _default = exports.default = _map.default; // STYLE map
 /**
  * @name dxMapOptions.bounds
  * @type object

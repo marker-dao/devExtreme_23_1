@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ColumnChooserView = void 0;
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _inferno = require("inferno");
-var _index = require("../columns_controller/index");
+var _index2 = require("../columns_controller/index");
 var _view = require("../core/view");
 var _options_controller = require("../options_controller/options_controller");
 var _controller = require("../toolbar/controller");
@@ -21,20 +21,20 @@ class ColumnChooserView extends _view.View {
     this.columnsController = columnsController;
     this.options = options;
     this.component = _column_chooser.ColumnChooser;
-    this.popupVisible = (0, _signalsCore.signal)(false);
+    this.popupVisible = (0, _index.signal)(false);
     this.popupRef = (0, _inferno.createRef)();
     this.treeViewRef = (0, _inferno.createRef)();
     this.toolbarButtonElement = undefined;
-    this.selectModeConfig = (0, _signalsCore.computed)(() => ({
+    this.selectModeConfig = (0, _index.computed)(() => ({
       showCheckBoxesMode: this.options.oneWay('columnChooser.selection.allowSelectAll').value ? 'selectAll' : 'normal',
       selectByClick: this.options.oneWay('columnChooser.selection.selectByClick').value,
       onSelectionChanged: this.columnChooserController.onSelectionChanged.bind(this.columnChooserController)
     }));
-    this.dragAndDropModeConfig = (0, _signalsCore.computed)(() => ({
+    this.dragAndDropModeConfig = (0, _index.computed)(() => ({
       noDataText: this.options.oneWay('columnChooser.emptyPanelText').value,
       activeStateEnabled: false
     }));
-    this.popupToolbarItems = (0, _signalsCore.computed)(() => {
+    this.popupToolbarItems = (0, _index.computed)(() => {
       const title = this.options.oneWay('columnChooser.title').value;
       const items = [{
         text: title,
@@ -44,8 +44,8 @@ class ColumnChooserView extends _view.View {
       return items;
     });
     this.mode = this.options.oneWay('columnChooser.mode');
-    this.dragModeOpened = (0, _signalsCore.computed)(() => this.popupVisible.value && this.mode.value === 'dragAndDrop');
-    this.toolbarController.addDefaultItem((0, _signalsCore.signal)({
+    this.dragModeOpened = (0, _index.computed)(() => this.popupVisible.value && this.mode.value === 'dragAndDrop');
+    this.toolbarController.addDefaultItem((0, _index.signal)({
       name: 'columnChooserButton',
       widget: 'dxButton',
       options: {
@@ -79,7 +79,7 @@ class ColumnChooserView extends _view.View {
     (_this$popupRef$curren = this.popupRef.current) === null || _this$popupRef$curren === void 0 || _this$popupRef$curren.hide();
   }
   getProps() {
-    return (0, _signalsCore.computed)(() => ({
+    return (0, _index.computed)(() => ({
       popupRef: this.popupRef,
       treeViewRef: this.treeViewRef,
       visible: this.popupVisible.value,
@@ -120,4 +120,4 @@ class ColumnChooserView extends _view.View {
   }
 }
 exports.ColumnChooserView = ColumnChooserView;
-ColumnChooserView.dependencies = [_controller.ToolbarController, _controller2.ColumnChooserController, _index.ColumnsController, _options_controller.OptionsController];
+ColumnChooserView.dependencies = [_controller.ToolbarController, _controller2.ColumnChooserController, _index2.ColumnsController, _options_controller.OptionsController];

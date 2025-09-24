@@ -86,9 +86,6 @@ class TemplateWrapper extends _index.InfernoComponent {
     const $container = (0, _renderer.default)(container);
     const $oldContainerContent = $container.contents().toArray();
     const content = renderTemplateContent(this.props, (0, _element.getPublicElement)($container));
-    // TODO Vinogradov: Fix the renderer function type.
-    // @ts-expect-error The renderer function's argument hasn't the full range of possible types
-    // (the Element[] type is missing).
     (0, _dom.replaceWith)((0, _renderer.default)(node), (0, _renderer.default)(content));
     // NOTE: This is a dispose method that called before renderTemplate.
     return () => {

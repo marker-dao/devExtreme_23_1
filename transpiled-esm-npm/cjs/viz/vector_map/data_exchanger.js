@@ -1,38 +1,9 @@
 "use strict";
 
-exports.DataExchanger = DataExchanger;
-var _callbacks = _interopRequireDefault(require("../../core/utils/callbacks"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function DataExchanger() {
-  this._store = {};
-}
-DataExchanger.prototype = {
-  constructor: DataExchanger,
-  dispose: function () {
-    this._store = null;
-    return this;
-  },
-  _get: function (category, name) {
-    const store = this._store[category] || (this._store[category] = {});
-    return store[name] || (store[name] = {
-      callbacks: (0, _callbacks.default)()
-    });
-  },
-  set: function (category, name, data) {
-    const item = this._get(category, name);
-    item.data = data;
-    item.callbacks.fire(data);
-    return this;
-  },
-  bind: function (category, name, callback) {
-    const item = this._get(category, name);
-    item.callbacks.add(callback);
-    item.data && callback(item.data);
-    return this;
-  },
-  unbind: function (category, name, callback) {
-    const item = this._get(category, name);
-    item.callbacks.remove(callback);
-    return this;
-  }
-};
+exports.default = void 0;
+var DataExchanger = _interopRequireWildcard(require("../../__internal/viz/vector_map/data_exchanger"));
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+var _default = exports.default = DataExchanger;
+module.exports = exports.default;
+module.exports.default = exports.default;

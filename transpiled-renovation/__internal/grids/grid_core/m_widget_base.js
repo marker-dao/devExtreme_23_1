@@ -12,6 +12,10 @@ var _ui = _interopRequireDefault(require("../../../ui/widget/ui.widget"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const GRID_CORE_ROW_SELECTOR = '.dx-row';
 class GridCoreWidget extends _ui.default {
+  // eslint-disable-next-line class-methods-use-this
+  _activeStateUnit() {
+    return GRID_CORE_ROW_SELECTOR;
+  }
   _getDefaultOptions() {
     // @ts-expect-error
     const result = super._getDefaultOptions();
@@ -23,7 +27,6 @@ class GridCoreWidget extends _ui.default {
     return result;
   }
   _init() {
-    this._activeStateUnit = GRID_CORE_ROW_SELECTOR;
     // @ts-expect-error
     super._init();
   }

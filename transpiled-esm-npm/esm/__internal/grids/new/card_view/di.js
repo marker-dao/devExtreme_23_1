@@ -1,3 +1,4 @@
+import { setupStateManager } from '../../../core/state_manager/index';
 import * as BaseContentViewModule from '../grid_core/content_view/index';
 import { BaseContextMenuController } from '../grid_core/context_menu/controller';
 import { register as gridCoreDIRegister } from '../grid_core/di';
@@ -7,6 +8,10 @@ import { ContextMenuView } from './context_menu/view';
 import { HeaderPanelController } from './header_panel/controller';
 import { HeaderPanelView } from './header_panel/view';
 export function register(diContext) {
+  setupStateManager({
+    diContext,
+    componentName: 'CardView'
+  });
   gridCoreDIRegister(diContext);
   diContext.register(ContentViewModule.View);
   // TODO: fix after refactoring View Composition

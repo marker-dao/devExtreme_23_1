@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
-import '../../../ui/list/modules/m_search';
-import '../../../ui/list/modules/m_selection';
+import '../../../ui/list/modules/search';
+import '../../../ui/list/modules/selection';
 import messageLocalization from '../../../../common/core/localization/message';
 import $ from '../../../../core/renderer';
 import { extend } from '../../../../core/utils/extend';
@@ -8,8 +8,8 @@ import { each } from '../../../../core/utils/iterator';
 import { isDefined, isFunction } from '../../../../core/utils/type';
 import Popup from '../../../../ui/popup/ui.popup';
 import Modules from '../../../grids/grid_core/m_modules';
-import List from '../../../ui/list/m_list.edit.search';
-import TreeView from '../../../ui/tree_view/m_tree_view.search';
+import List from '../../../ui/list/list.edit.search';
+import TreeView from '../../../ui/tree_view/tree_view.search';
 import gridCoreUtils from '../m_utils';
 const HEADER_FILTER_CLASS = 'dx-header-filter';
 const HEADER_FILTER_MENU_CLASS = 'dx-header-filter-menu';
@@ -294,7 +294,7 @@ export class HeaderFilterView extends Modules.View {
       },
       itemTemplate(data, _, element) {
         const $element = $(element);
-        if (options.encodeHtml) {
+        if (options.encodeHtml !== false) {
           return $element.text(data.text);
         }
         return $element.html(data.text);

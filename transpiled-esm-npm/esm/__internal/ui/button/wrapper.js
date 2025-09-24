@@ -4,6 +4,7 @@ import { getImageSourceType } from '../../../core/utils/icon';
 import ValidationEngine from '../../../ui/validation_engine';
 import { ComponentWrapper } from '../../core/r1/component_wrapper';
 import { Button as ButtonComponent, buttonComponentProps, defaultOptions } from './button';
+// STYLE button
 export default class Button extends ComponentWrapper {
   // eslint-disable-next-line @stylistic/max-len
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types

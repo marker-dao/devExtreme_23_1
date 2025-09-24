@@ -22,9 +22,9 @@ var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
 var _ui = _interopRequireDefault(require("../../../ui/editor/ui.data_expression"));
 var _ui2 = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
+var _grouped = require("../../data/data_converter/grouped");
 var _m_drop_down_editor = _interopRequireDefault(require("../../ui/drop_down_editor/m_drop_down_editor"));
-var _m_listEdit = _interopRequireDefault(require("../../ui/list/m_list.edit.search"));
-var _m_grouped_data_converter_mixin = _interopRequireDefault(require("../../ui/shared/m_grouped_data_converter_mixin"));
+var _listEdit = _interopRequireDefault(require("../../ui/list/list.edit.search"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = (0, _window.getWindow)();
@@ -42,8 +42,13 @@ class DropDownList extends _m_drop_down_editor.default {
       tab(e) {
         if (this._allowSelectItemByTab()) {
           this._saveValueChangeEvent(e);
-          const $focusedItem = (0, _renderer.default)(this._list.option('focusedElement'));
-          $focusedItem.length && this._setSelectedElement($focusedItem);
+          const {
+            focusedElement
+          } = this._list.option();
+          const $focusedItem = (0, _renderer.default)(focusedElement);
+          if ($focusedItem.length) {
+            this._setSelectedElement($focusedItem);
+          }
         }
         parentSupportedKeys.tab(e);
       },
@@ -155,6 +160,7 @@ class DropDownList extends _m_drop_down_editor.default {
     this._initItemClickAction();
   }
   _initContentReadyAction() {
+    // @ts-expect-error
     this._contentReadyAction = this._createActionByOption('onContentReady', {
       excludeValidators: ['disabled', 'readOnly']
     });
@@ -311,7 +317,9 @@ class DropDownList extends _m_drop_down_editor.default {
   }
   _getPlainItems(items) {
     let plainItems = [];
-    const grouped = this._getGroupedOption();
+    const {
+      grouped
+    } = this.option();
     items = items || this.option('items') || this._dataSource.items() || [];
     for (let i = 0; i < items.length; i++) {
       var _items$i;
@@ -423,7 +431,10 @@ class DropDownList extends _m_drop_down_editor.default {
   }
   _getKeyboardListeners() {
     const canListHaveFocus = this._canListHaveFocus();
-    return super._getKeyboardListeners().concat([!canListHaveFocus && this._list]);
+    if (!canListHaveFocus) {
+      return super._getKeyboardListeners().concat([this._list]);
+    }
+    return super._getKeyboardListeners();
   }
   _renderList() {
     // @ts-expect-error
@@ -432,7 +443,7 @@ class DropDownList extends _m_drop_down_editor.default {
     // @ts-expect-error ts-error
     .appendTo(this._popup.$content());
     this._$list = $list;
-    this._list = this._createComponent($list, _m_listEdit.default, this._listConfig());
+    this._list = this._createComponent($list, _listEdit.default, this._listConfig());
     this._refreshList();
     this._renderPreventBlurOnListClick();
     this._setListFocusedElementOptionChange();
@@ -475,17 +486,19 @@ class DropDownList extends _m_drop_down_editor.default {
       itemTemplate,
       groupTemplate,
       hoverStateEnabled,
-      focusStateEnabled
+      focusStateEnabled,
+      encodeNoDataText,
+      useItemTextAsTitle
     } = this.option();
     const options = {
       selectionMode: 'single',
       _templates: this.option('_templates'),
       templateProvider: this.option('templateProvider'),
       noDataText,
-      encodeNoDataText: this.option('encodeNoDataText'),
+      encodeNoDataText,
       grouped,
       wrapItemText,
-      useItemTextAsTitle: this.option('useItemTextAsTitle'),
+      useItemTextAsTitle,
       onContentReady: this._listContentReadyHandler.bind(this),
       itemTemplate,
       indicateLoading: false,
@@ -522,8 +535,15 @@ class DropDownList extends _m_drop_down_editor.default {
       paginate: false
     };
   }
-  _getGroupedOption() {
-    return this.option('grouped');
+  _getSpecificDataSourceOption() {
+    const {
+      grouped
+    } = this.option();
+    const dataSource = this.option('dataSource');
+    if (dataSource && grouped) {
+      return (0, _grouped.getDataSourceOptions)(dataSource);
+    }
+    return dataSource;
   }
   _dataSourceFromUrlLoadMode() {
     return 'raw';
@@ -859,6 +879,6 @@ class DropDownList extends _m_drop_down_editor.default {
   }
 }
 // @ts-expect-error ts-error
-DropDownList.include(_ui.default, _m_grouped_data_converter_mixin.default);
+DropDownList.include(_ui.default);
 (0, _component_registrator.default)('dxDropDownList', DropDownList);
 var _default = exports.default = DropDownList;

@@ -14,10 +14,9 @@ import { getHeight, getOuterWidth, getWidth } from '../../../core/utils/size';
 import { isDefined, isPlainObject } from '../../../core/utils/type';
 import { hasWindow } from '../../../core/utils/window';
 import Button from '../../../ui/button';
-// eslint-disable-next-line import/no-named-default
-import { default as CollectionWidget } from '../../../ui/collection/ui.collection_widget.live_update';
+import CollectionWidgetLiveUpdate from '../../../ui/collection/ui.collection_widget.live_update';
 import { current as currentTheme, isFluent, isMaterial } from '../../../ui/themes';
-import { render } from '../../../ui/widget/utils.ink_ripple';
+import { render } from '../../core/utils/m_ink_ripple';
 import Scrollable from '../../ui/scroll_view/scrollable';
 import { isReachedBottom, isReachedLeft, isReachedRight, isReachedTop } from '../../ui/scroll_view/utils/get_boundary_props';
 import { getScrollLeftMax } from '../../ui/scroll_view/utils/get_scroll_left_max';
@@ -93,7 +92,13 @@ const STYLING_MODE = {
   primary: 'primary',
   secondary: 'secondary'
 };
-class Tabs extends CollectionWidget {
+class Tabs extends CollectionWidgetLiveUpdate {
+  _activeStateUnit() {
+    return `.${TABS_ITEM_CLASS}`;
+  }
+  _feedbackHideTimeout() {
+    return FEEDBACK_HIDE_TIMEOUT;
+  }
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
@@ -168,7 +173,6 @@ class Tabs extends CollectionWidget {
     } = this.option();
     const indicatorPosition = this._getIndicatorPosition();
     super._init();
-    this._activeStateUnit = `.${TABS_ITEM_CLASS}`;
     this.setAria('role', 'tablist');
     this.$element().addClass(TABS_CLASS);
     this._toggleScrollingEnabledClass(scrollingEnabled);
@@ -178,7 +182,6 @@ class Tabs extends CollectionWidget {
     this._toggleStylingModeClass(stylingMode);
     this._renderWrapper();
     this._renderMultiple();
-    this._feedbackHideTimeout = FEEDBACK_HIDE_TIMEOUT;
   }
   _prepareDefaultItemTemplate(data, $container) {
     const text = isPlainObject(data) ? data === null || data === void 0 ? void 0 : data.text : data;
@@ -316,14 +319,14 @@ class Tabs extends CollectionWidget {
   _getPointerEvent() {
     return pointerEvents.up;
   }
-  _toggleActiveState($element, value, e) {
-    super._toggleActiveState($element, value, e);
+  _toggleActiveState($element, value, event) {
+    super._toggleActiveState($element, value, event);
     if (!this._inkRipple) {
       return;
     }
     const config = {
       element: $element,
-      event: e
+      event
     };
     if (value) {
       this._inkRipple.showWave(config);
@@ -447,6 +450,7 @@ class Tabs extends CollectionWidget {
     const navButton = this._createComponent($('<div>').addClass(TABS_NAV_BUTTON_CLASS), Button, {
       focusStateEnabled: false,
       icon,
+      // @ts-expect-error
       integrationOptions: {},
       elementAttr: {
         role: null,
@@ -655,7 +659,7 @@ class Tabs extends CollectionWidget {
         break;
       case 'focusedElement':
         {
-          this._toggleFocusedDisabledClasses(value);
+          this._toggleFocusedDisabledClasses($(value));
           super._optionChanged(args);
           this._scrollToItem(value);
           break;

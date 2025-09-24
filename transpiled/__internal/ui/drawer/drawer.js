@@ -156,8 +156,8 @@ class Drawer extends _widget.default {
     });
   }
   _removePanelManualPosition() {
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-    if (this._$panelContentWrapper && this._$panelContentWrapper.attr('manualposition')) {
+    var _this$_$panelContentW;
+    if ((_this$_$panelContentW = this._$panelContentWrapper) !== null && _this$_$panelContentW !== void 0 && _this$_$panelContentW.attr('manualposition')) {
       this._$panelContentWrapper.removeAttr('manualPosition');
       this._$panelContentWrapper.css({
         position: '',
@@ -170,13 +170,13 @@ class Drawer extends _widget.default {
   }
   _togglePanelContentHiddenClass() {
     const callback = () => {
-      var _this$_$panelContentW;
+      var _this$_$panelContentW2;
       const {
         minSize,
         opened
       } = this.option();
       const shouldBeSet = minSize ? false : !opened;
-      (_this$_$panelContentW = this._$panelContentWrapper) === null || _this$_$panelContentW === void 0 || _this$_$panelContentW.toggleClass(DRAWER_PANEL_CONTENT_HIDDEN_CLASS, shouldBeSet);
+      (_this$_$panelContentW2 = this._$panelContentWrapper) === null || _this$_$panelContentW2 === void 0 || _this$_$panelContentW2.toggleClass(DRAWER_PANEL_CONTENT_HIDDEN_CLASS, shouldBeSet);
     };
     if (this._whenAnimationCompleted && !this.option('opened')) {
       (0, _deferred.when)(this._whenAnimationCompleted).done(callback);
@@ -356,9 +356,9 @@ class Drawer extends _widget.default {
     }
   }
   setZIndex(zIndex) {
-    var _this$_$panelContentW2;
+    var _this$_$panelContentW3;
     this._$shader.css('zIndex', zIndex - 1);
-    (_this$_$panelContentW2 = this._$panelContentWrapper) === null || _this$_$panelContentW2 === void 0 || _this$_$panelContentW2.css('zIndex', zIndex);
+    (_this$_$panelContentW3 = this._$panelContentWrapper) === null || _this$_$panelContentW3 === void 0 || _this$_$panelContentW3.css('zIndex', zIndex);
   }
   resizeContent() {
     this.resizeViewContent();

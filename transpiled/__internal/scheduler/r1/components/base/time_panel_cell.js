@@ -56,7 +56,7 @@ class TimePanelCell extends _index.BaseInfernoComponent {
     const classes = (0, _render_utils.combineClasses)({
       'dx-scheduler-time-panel-cell': true,
       [cellSizeVerticalClass]: true,
-      'dx-scheduler-time-panel-current-time-cell': !!highlighted,
+      'dx-scheduler-time-panel-current-time-cell': Boolean(highlighted),
       [className ?? '']: true
     });
     const timeCellTemplateProps = this.getTimeCellTemplateProps();

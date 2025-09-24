@@ -1,6 +1,6 @@
 import { createVNode } from "inferno";
 import $ from '../../../../../../core/renderer';
-import { computed, effect } from '@preact/signals-core';
+import { computed, effect } from '../../../../../core/state_manager/index';
 import { HeaderFilterView as OldHeaderFilterPopup } from '../../../../../grids/grid_core/header_filter/m_header_filter_core';
 import { View } from '../../../../../grids/new/grid_core/core/view';
 import { WidgetMock } from '../../../../../grids/new/grid_core/widget_mock';

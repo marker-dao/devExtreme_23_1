@@ -238,6 +238,7 @@ class Box extends _collection_widget.default {
       itemData
     } = args;
     if (itemData.box) {
+      // @ts-expect-error
       return itemTemplate.source ? itemTemplate.source() : (0, _renderer.default)();
     }
     return super._createItemByTemplate(itemTemplate, args);

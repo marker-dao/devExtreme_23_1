@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.BaseContextMenuView = void 0;
-var _signalsCore = require("@preact/signals-core");
+var _index = require("../../../../core/state_manager/index");
 var _view = require("../core/view");
 var _context_menu = require("./context_menu");
 const CLASS = {
@@ -17,7 +17,7 @@ class BaseContextMenuView extends _view.View {
     this.component = _context_menu.ContextMenu;
   }
   getProps() {
-    return (0, _signalsCore.computed)(() => ({
+    return (0, _index.computed)(() => ({
       componentRef: this.controller.contextMenuRef,
       cssClass: this.getWidgetContainerClass(),
       onInitialized: e => {

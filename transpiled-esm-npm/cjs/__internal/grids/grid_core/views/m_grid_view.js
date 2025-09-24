@@ -240,7 +240,6 @@ class ResizingController extends _m_modules.default.ViewController {
     const columnsController = this._columnsController;
     const visibleColumns = columnsController.getVisibleColumns();
     const columnAutoWidth = this.option('columnAutoWidth');
-    const wordWrapEnabled = this.option('wordWrapEnabled');
     const hasUndefinedColumnWidth = visibleColumns.some(column => !(0, _type.isDefined)(column.width));
     let needBestFit = this._needBestFit();
     let hasMinWidth = false;
@@ -276,6 +275,7 @@ class ResizingController extends _m_modules.default.ViewController {
       }
       return undefined;
     });
+    this._toggleContentMinHeight(this._hasHeight); // T1047239, T1270354
     this._setVisibleWidths(visibleColumns, []);
     const $element = this.component.$element();
     if (needBestFit) {
@@ -285,7 +285,6 @@ class ResizingController extends _m_modules.default.ViewController {
       this._toggleBestFitMode(true);
       resetBestFitMode = true;
     }
-    this._toggleContentMinHeight(wordWrapEnabled); // T1047239
     if ($element && $element.get(0) && this._maxWidth) {
       delete this._maxWidth;
       $element[0].style.maxWidth = '';
@@ -335,9 +334,7 @@ class ResizingController extends _m_modules.default.ViewController {
         if (needBestFit || isColumnWidthsCorrected || hasUndefinedColumnWidth) {
           this._setVisibleWidths(visibleColumns, resultWidths);
         }
-        if (wordWrapEnabled) {
-          this._toggleContentMinHeight(false);
-        }
+        this._toggleContentMinHeight(false);
       });
     });
   }

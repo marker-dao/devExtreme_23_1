@@ -12,8 +12,8 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _extend = require("../../../core/utils/extend");
 var _size = require("../../../core/utils/size");
 var _themes = require("../../../ui/themes");
-var _swatch_container = _interopRequireDefault(require("../../../ui/widget/swatch_container"));
 var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
+var _swatch_container = _interopRequireDefault(require("../../core/utils/swatch_container"));
 var _m_speed_dial_item = _interopRequireDefault(require("./m_speed_dial_item"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -194,7 +194,6 @@ class SpeedDialMainItem extends _m_speed_dial_item.default {
     for (let i = 0; i < actions.length; i++) {
       actions[i].option('animation', this._getActionAnimation(actions[i], i, lastActionIndex));
       actions[i].option('position', this._getActionPosition(actions, i));
-      // @ts-expect-error
       actions[i]._$wrapper.css('position', this._$wrapper.css('position'));
       actions[i].toggle();
     }

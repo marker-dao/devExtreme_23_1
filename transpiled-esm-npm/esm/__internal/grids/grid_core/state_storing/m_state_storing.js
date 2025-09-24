@@ -57,19 +57,22 @@ const processLoadState = that => {
     });
   }
 };
-const DEFAULT_FILTER_VALUE = null;
 const getFilterValue = (that, state) => {
+  var _filterSyncController;
   // TODO: getController
   const filterSyncController = that.getController('filterSync');
-  const columnsController = that.getController('columns');
-  const hasFilterState = state.columns || state.filterValue !== undefined;
-  if (filterSyncController) {
-    if (hasFilterState) {
-      return state.filterValue || filterSyncController.getFilterValueFromColumns(state.columns);
-    }
-    return that._initialFilterValue || filterSyncController.getFilterValueFromColumns(columnsController.getColumns());
+  if (!filterSyncController) {
+    return null;
   }
-  return DEFAULT_FILTER_VALUE;
+  if (state.filterValue !== undefined) {
+    return state.filterValue;
+  }
+  const filterValueFromColumns = (_filterSyncController = filterSyncController.getFilterValueFromColumns) === null || _filterSyncController === void 0 ? void 0 : _filterSyncController.call(filterSyncController, state.columns);
+  if ((filterValueFromColumns === null || filterValueFromColumns === void 0 ? void 0 : filterValueFromColumns.length) > 0) {
+    return filterValueFromColumns;
+  }
+  const columns = that.getController('columns').getColumns();
+  return that._initialFilterValue ?? filterSyncController.getFilterValueFromColumns(columns);
 };
 const rowsView = Base => class StateStoringRowsViewExtender extends Base {
   init() {
