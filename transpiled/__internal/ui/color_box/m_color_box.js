@@ -178,7 +178,7 @@ class ColorBox extends _m_drop_down_editor.default {
     if (!newValue) return false;
     const color = new _color.default(newValue);
     if (color.colorIsInvalid) {
-      this._input().val(oldValue);
+      this._input().val(oldValue === null ? undefined : oldValue);
       return;
     }
     // @ts-expect-error ts-error

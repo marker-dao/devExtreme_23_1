@@ -27,12 +27,6 @@ class SchedulerOptionsBaseWidget extends _ui.default {
     const options = super._getDefaultOptions();
     return (0, _m_extend.extend)(true, options, _extends({}, _constants.DEFAULT_SCHEDULER_OPTIONS, _constants.DEFAULT_SCHEDULER_INTERNAL_OPTIONS, _constants.DEFAULT_SCHEDULER_INTEGRATION_OPTIONS));
   }
-  _setDeprecatedOptions() {
-    // @ts-expect-error
-    super._setDeprecatedOptions();
-    // @ts-expect-error
-    (0, _m_extend.extend)(this._deprecatedOptions, _constants.DEPRECATED_SCHEDULER_OPTIONS);
-  }
   _defaultOptionsRules() {
     // @ts-expect-error
     const rules = super._defaultOptionsRules();

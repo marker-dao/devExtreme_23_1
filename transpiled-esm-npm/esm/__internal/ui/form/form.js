@@ -1437,6 +1437,8 @@ class Form extends Widget {
           (_this$_smartPastedAct = this._smartPastedAction) === null || _this$_smartPastedAct === void 0 || _this$_smartPastedAct.call(this, {
             aiResult
           });
+        }, () => {
+          this._hideLoadPanel();
         });
         this._processCommandCompletion();
       },

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/form/form.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1445,6 +1445,8 @@ class Form extends Widget {
           (_this$_smartPastedAct = this._smartPastedAction) === null || _this$_smartPastedAct === void 0 || _this$_smartPastedAct.call(this, {
             aiResult
           });
+        }, () => {
+          this._hideLoadPanel();
         });
         this._processCommandCompletion();
       },

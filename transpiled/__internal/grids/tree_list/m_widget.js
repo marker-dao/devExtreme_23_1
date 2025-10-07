@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _m_widget_base = _interopRequireDefault(require("./m_widget_base"));
 require("./m_state_storing");
+require("./module_not_extended/ai_column");
 require("./module_not_extended/column_chooser");
 require("./m_master_detail");
 require("./editing/m_editing");
@@ -31,6 +32,7 @@ require("./module_not_extended/headers_keyboard_navigation");
 require("./module_not_extended/virtual_columns");
 require("./m_focus");
 require("./module_not_extended/row_dragging");
+require("./module_not_extended/toast");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 // NOTE: Order of imports important here and shouldn't be changed.
 /* eslint-disable simple-import-sort/imports */

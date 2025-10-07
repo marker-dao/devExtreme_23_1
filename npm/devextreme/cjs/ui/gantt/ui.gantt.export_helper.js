@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/gantt/ui.gantt.export_helper.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -156,7 +156,7 @@ class GanttExportHelper {
     return task && this._getGridDisplayText(colIndex, task);
   }
   _getGridDisplayText(colIndex, data) {
-    const columns = this._treeList.getController('columns').getColumns();
+    const columns = this._treeList.getController('columns').getVisibleColumns();
     const column = columns[colIndex];
     const field = column === null || column === void 0 ? void 0 : column.dataField;
     const format = column === null || column === void 0 ? void 0 : column.format;

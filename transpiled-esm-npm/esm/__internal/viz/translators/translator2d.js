@@ -184,6 +184,7 @@ _Translator2d.prototype = {
           break;
         case 'semidiscrete':
           script = intervalTranslator;
+          // @ts-expect-error
           canvasOptions.ratioOfCanvasRange = canvasOptions.canvasLength / (dateUtils.addInterval(canvasOptions.rangeMaxVisible, options.interval) - canvasOptions.rangeMinVisible);
           break;
         case 'discrete':

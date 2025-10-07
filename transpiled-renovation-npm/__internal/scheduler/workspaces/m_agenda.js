@@ -429,7 +429,7 @@ class SchedulerAgenda extends _m_work_space.default {
     const startDateHour = newDate.getHours();
     const startDateMinutes = newDate.getMinutes();
     if (this.needUpdateScrollPosition(startDateHour, startDateMinutes, bounds, newDate)) {
-      this.scrollToTime(startDateHour, startDateMinutes, newDate);
+      this.scrollTo(newDate);
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

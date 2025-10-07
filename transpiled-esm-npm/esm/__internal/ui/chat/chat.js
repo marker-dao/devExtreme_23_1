@@ -9,7 +9,7 @@ import { invokeConditionally } from '../../core/utils/conditional_invoke';
 import Widget from '../../core/widget/widget';
 import AlertList from '../../ui/chat/alertlist';
 import ConfirmationPopup from '../../ui/chat/confirmationpopup';
-import MessageBox from '../../ui/chat/messagebox';
+import MessageBox from '../../ui/chat/message_box/message_box';
 import MessageList from '../../ui/chat/messagelist';
 const CHAT_CLASS = 'dx-chat';
 const TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';

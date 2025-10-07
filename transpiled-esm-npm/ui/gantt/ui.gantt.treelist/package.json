@@ -15,6 +15,7 @@
     "../../../esm/__internal/grids/tree_list/module_not_extended/header_panel.js",
     "../../../esm/ui/toolbar/ui.toolbar.base.js",
     "../../../esm/__internal/grids/tree_list/m_state_storing.js",
+    "../../../esm/__internal/grids/tree_list/module_not_extended/ai_column.js",
     "../../../esm/__internal/grids/tree_list/module_not_extended/column_chooser.js",
     "../../../esm/ui/themes.js",
     "../../../esm/__internal/grids/tree_list/m_master_detail.js",
@@ -53,6 +54,7 @@
     "../../../esm/__internal/grids/tree_list/module_not_extended/virtual_columns.js",
     "../../../esm/__internal/grids/tree_list/m_focus.js",
     "../../../esm/__internal/grids/tree_list/module_not_extended/row_dragging.js",
+    "../../../esm/__internal/grids/tree_list/module_not_extended/toast.js",
     "../../../esm/ui/tree_list/ui.tree_list.base.js"
   ],
   "main": "../../../cjs/ui/gantt/ui.gantt.treelist.js",

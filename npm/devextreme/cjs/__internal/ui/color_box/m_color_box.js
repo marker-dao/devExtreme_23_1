@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/color_box/m_color_box.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -186,7 +186,7 @@ class ColorBox extends _m_drop_down_editor.default {
     if (!newValue) return false;
     const color = new _color.default(newValue);
     if (color.colorIsInvalid) {
-      this._input().val(oldValue);
+      this._input().val(oldValue === null ? undefined : oldValue);
       return;
     }
     // @ts-expect-error ts-error

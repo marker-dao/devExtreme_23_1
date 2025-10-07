@@ -22,14 +22,23 @@ var _abstract_store = _interopRequireDefault(require("../../../../data/abstract_
 var _filtering = _interopRequireDefault(require("../../../../ui/shared/filtering"));
 var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
 var _m_inflector = _interopRequireDefault(require("../../../core/utils/m_inflector"));
+var _const = require("../ai_column/const");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
-var _const = require("../sticky_columns/const");
-var _const2 = require("./const");
+var _const2 = require("../sticky_columns/const");
+var _const3 = require("./const");
 var _m_columns_controller_utils = require("./m_columns_controller_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable prefer-destructuring */
 class ColumnsController extends _m_modules.default.Controller {
+  getCommonColumnSettings(column) {
+    if (!(column !== null && column !== void 0 && column.type)) {
+      return this.option('commonColumnSettings');
+    }
+    return column.type === _const.AI_COLUMN_NAME ? {
+      allowHiding: true
+    } : {};
+  }
   init(isApplyingUserState) {
     this._dataController = this.getController('data');
     this._focusController = this.getController('focus');
@@ -57,7 +66,7 @@ class ColumnsController extends _m_modules.default.Controller {
       type: 'expand',
       command: 'expand',
       width: 'auto',
-      cssClass: _const2.COMMAND_EXPAND_CLASS,
+      cssClass: _const3.COMMAND_EXPAND_CLASS,
       allowEditing: false,
       allowGrouping: false,
       allowSorting: false,
@@ -96,7 +105,7 @@ class ColumnsController extends _m_modules.default.Controller {
     const that = this;
     let column;
     const columnIndexes = [];
-    path.replace(_const2.COLUMN_OPTION_REGEXP, (_, columnIndex) => {
+    path.replace(_const3.COLUMN_OPTION_REGEXP, (_, columnIndex) => {
       // eslint-disable-next-line radix
       columnIndexes.push(parseInt(columnIndex));
       return '';
@@ -170,7 +179,7 @@ class ColumnsController extends _m_modules.default.Controller {
   _columnOptionChanged(args) {
     let columnOptionValue = {};
     const column = this.getColumnByPath(args.fullName);
-    const columnOptionName = args.fullName.replace(_const2.COLUMN_OPTION_REGEXP, '');
+    const columnOptionName = args.fullName.replace(_const3.COLUMN_OPTION_REGEXP, '');
     if (column) {
       if (columnOptionName) {
         columnOptionValue[columnOptionName] = args.value;
@@ -186,7 +195,7 @@ class ColumnsController extends _m_modules.default.Controller {
     const {
       component
     } = this;
-    if (args.fullName.replace(_const2.COLUMN_OPTION_REGEXP, '') === 'width' && component._updateLockCount) {
+    if (args.fullName.replace(_const3.COLUMN_OPTION_REGEXP, '') === 'width' && component._updateLockCount) {
       component._requireResize = true;
     }
   }
@@ -250,7 +259,7 @@ class ColumnsController extends _m_modules.default.Controller {
     return this._dataSourceApplied;
   }
   getCommonSettings(column) {
-    const commonColumnSettings = (!column || !column.type) && this.option('commonColumnSettings') || {};
+    const commonColumnSettings = this.getCommonColumnSettings(column);
     const groupingOptions = this.option('grouping') ?? {};
     const groupPanelOptions = this.option('groupPanel') ?? {};
     return (0, _extend.extend)({
@@ -375,7 +384,7 @@ class ColumnsController extends _m_modules.default.Controller {
         for (let j = 0; j < visibleColumns.length; j++) {
           const prevColumn = visibleColumns[j - 1];
           const column = visibleColumns[j];
-          if (!column.fixed || column.fixedPosition === _const.StickyPosition.Sticky) {
+          if (!column.fixed || column.fixedPosition === _const2.StickyPosition.Sticky) {
             if (i === 0) {
               if (column.isBand && column.colspan) {
                 transparentColspan += column.colspan;
@@ -453,7 +462,7 @@ class ColumnsController extends _m_modules.default.Controller {
       fixedPosition: rtlEnabled ? 'right' : 'left'
     }, expandColumn, {
       index: column.index,
-      type: column.type || _const2.GROUP_COMMAND_COLUMN_NAME
+      type: column.type || _const3.GROUP_COMMAND_COLUMN_NAME
     }));
     return expandColumns;
   }
@@ -559,7 +568,7 @@ class ColumnsController extends _m_modules.default.Controller {
           var _parentBandColumns$, _parentBandColumns$2;
           column.fixed = ((_parentBandColumns$ = parentBandColumns[0]) === null || _parentBandColumns$ === void 0 ? void 0 : _parentBandColumns$.fixed) ?? column.fixed;
           column.fixedPosition = ((_parentBandColumns$2 = parentBandColumns[0]) === null || _parentBandColumns$2 === void 0 ? void 0 : _parentBandColumns$2.fixedPosition) ?? column.fixedPosition;
-          if (column.fixed && column.fixedPosition !== _const.StickyPosition.Sticky) {
+          if (column.fixed && column.fixedPosition !== _const2.StickyPosition.Sticky) {
             const isDefaultCommandColumn = !!column.command && !_m_utils.default.isCustomCommandColumn(this._columns, column);
             let isFixedToEnd = column.fixedPosition === 'right';
             if (rtlEnabled && !isDefaultCommandColumn) {
@@ -609,10 +618,10 @@ class ColumnsController extends _m_modules.default.Controller {
       });
       // The order of processing is important
       if (rowspanExpandColumns <= rowIndex) {
-        rowspanExpandColumns += _m_columns_controller_utils.processExpandColumns.call(this, result[rowIndex], expandColumns, _const2.DETAIL_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
+        rowspanExpandColumns += _m_columns_controller_utils.processExpandColumns.call(this, result[rowIndex], expandColumns, _const3.DETAIL_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
       }
       if (rowspanGroupColumns <= rowIndex) {
-        rowspanGroupColumns += _m_columns_controller_utils.processExpandColumns.call(this, result[rowIndex], expandColumns, _const2.GROUP_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
+        rowspanGroupColumns += _m_columns_controller_utils.processExpandColumns.call(this, result[rowIndex], expandColumns, _const3.GROUP_COMMAND_COLUMN_NAME, firstPositiveIndexColumn);
       }
     }
     result.push((0, _m_columns_controller_utils.getDataColumns)(result));
@@ -660,7 +669,7 @@ class ColumnsController extends _m_modules.default.Controller {
     const sourceColumn = that._columns[columnIndex];
     if (sourceColumn && (sourceColumn.allowReordering || sourceColumn.allowGrouping || sourceColumn.allowHiding)) {
       if (sourceLocation === targetLocation) {
-        if (sourceLocation === _const2.COLUMN_CHOOSER_LOCATION) {
+        if (sourceLocation === _const3.COLUMN_CHOOSER_LOCATION) {
           return false;
         }
         // @ts-expect-error
@@ -669,10 +678,10 @@ class ColumnsController extends _m_modules.default.Controller {
         toVisibleIndex = (0, _type.isObject)(toVisibleIndex) ? toVisibleIndex.columnIndex : toVisibleIndex;
         return fromVisibleIndex !== toVisibleIndex && fromVisibleIndex + 1 !== toVisibleIndex;
       }
-      if (sourceLocation === _const2.GROUP_LOCATION && targetLocation !== _const2.COLUMN_CHOOSER_LOCATION || targetLocation === _const2.GROUP_LOCATION) {
+      if (sourceLocation === _const3.GROUP_LOCATION && targetLocation !== _const3.COLUMN_CHOOSER_LOCATION || targetLocation === _const3.GROUP_LOCATION) {
         return sourceColumn && sourceColumn.allowGrouping;
       }
-      if (sourceLocation === _const2.COLUMN_CHOOSER_LOCATION || targetLocation === _const2.COLUMN_CHOOSER_LOCATION) {
+      if (sourceLocation === _const3.COLUMN_CHOOSER_LOCATION || targetLocation === _const3.COLUMN_CHOOSER_LOCATION) {
         return sourceColumn && sourceColumn.allowHiding;
       }
       return true;
@@ -691,11 +700,11 @@ class ColumnsController extends _m_modules.default.Controller {
       // @ts-expect-error
       toVisibleIndex = (0, _type.isObject)(toVisibleIndex) ? toVisibleIndex.columnIndex : toVisibleIndex;
       targetGroupIndex = toIndex >= 0 ? that._columns[toIndex].groupIndex : -1;
-      if ((0, _type.isDefined)(column.groupIndex) && sourceLocation === _const2.GROUP_LOCATION) {
+      if ((0, _type.isDefined)(column.groupIndex) && sourceLocation === _const3.GROUP_LOCATION) {
         if (targetGroupIndex > column.groupIndex) {
           targetGroupIndex--;
         }
-        if (targetLocation !== _const2.GROUP_LOCATION) {
+        if (targetLocation !== _const3.GROUP_LOCATION) {
           options.groupIndex = undefined;
         } else {
           prevGroupIndex = column.groupIndex;
@@ -703,20 +712,20 @@ class ColumnsController extends _m_modules.default.Controller {
           (0, _m_columns_controller_utils.updateColumnGroupIndexes)(that);
         }
       }
-      if (targetLocation === _const2.GROUP_LOCATION) {
+      if (targetLocation === _const3.GROUP_LOCATION) {
         options.groupIndex = (0, _m_columns_controller_utils.moveColumnToGroup)(that, column, targetGroupIndex);
         column.groupIndex = prevGroupIndex;
       } else if (toVisibleIndex >= 0) {
         const targetColumn = that._columns[toIndex];
         if (!targetColumn || column.ownerBand !== targetColumn.ownerBand) {
-          options.visibleIndex = _const2.MAX_SAFE_INTEGER;
+          options.visibleIndex = _const3.MAX_SAFE_INTEGER;
         } else if ((0, _m_columns_controller_utils.isColumnFixed)(that, column) ^ (0, _m_columns_controller_utils.isColumnFixed)(that, targetColumn)) {
-          options.visibleIndex = _const2.MAX_SAFE_INTEGER;
+          options.visibleIndex = _const3.MAX_SAFE_INTEGER;
         } else {
           options.visibleIndex = targetColumn.visibleIndex;
         }
       }
-      const isVisible = targetLocation !== _const2.COLUMN_CHOOSER_LOCATION;
+      const isVisible = targetLocation !== _const3.COLUMN_CHOOSER_LOCATION;
       if (column.visible !== isVisible) {
         options.visible = isVisible;
       }
@@ -881,7 +890,7 @@ class ColumnsController extends _m_modules.default.Controller {
       column.alignment = column.alignment || (0, _m_columns_controller_utils.getAlignmentByDataType)(dataType, this.option('rtlEnabled'));
       column.format = column.format || _m_utils.default.getFormatByDataType(dataType);
       column.customizeText = column.customizeText || (0, _m_columns_controller_utils.getCustomizeTextByDataType)(dataType);
-      column.defaultFilterOperations = column.defaultFilterOperations || !lookup && _const2.DATATYPE_OPERATIONS[dataType] || [];
+      column.defaultFilterOperations = column.defaultFilterOperations || !lookup && _const3.DATATYPE_OPERATIONS[dataType] || [];
       if (!(0, _type.isDefined)(column.filterOperations)) {
         (0, _m_columns_controller_utils.setFilterOperationsAsDefaultValues)(column);
       }
@@ -1216,7 +1225,7 @@ class ColumnsController extends _m_modules.default.Controller {
     }
     for (i = 0; i < columns.length; i++) {
       result[i] = {};
-      (0, _iterator.each)(_const2.USER_STATE_FIELD_NAMES, handleStateField);
+      (0, _iterator.each)(_const3.USER_STATE_FIELD_NAMES, handleStateField);
     }
     return result;
   }
@@ -1509,7 +1518,7 @@ class ColumnsController extends _m_modules.default.Controller {
     return _m_utils.default.isCustomCommandColumn(this._columns, commandColumn);
   }
   getColumnId(column) {
-    if (column.command && column.type === _const2.GROUP_COMMAND_COLUMN_NAME) {
+    if (column.command && column.type === _const3.GROUP_COMMAND_COLUMN_NAME) {
       if (_m_utils.default.isCustomCommandColumn(this._columns, column)) {
         return `type:${column.type}`;
       }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/scheduler_options_base_widget.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import Widget from '../../ui/widget/ui.widget';
 import { extend } from '../core/utils/m_extend';
-import { DEFAULT_SCHEDULER_INTEGRATION_OPTIONS, DEFAULT_SCHEDULER_INTERNAL_OPTIONS, DEFAULT_SCHEDULER_OPTIONS, DEFAULT_SCHEDULER_OPTIONS_RULES, DEPRECATED_SCHEDULER_OPTIONS } from './utils/options/constants';
+import { DEFAULT_SCHEDULER_INTEGRATION_OPTIONS, DEFAULT_SCHEDULER_INTERNAL_OPTIONS, DEFAULT_SCHEDULER_OPTIONS, DEFAULT_SCHEDULER_OPTIONS_RULES } from './utils/options/constants';
 import { getCurrentView, getViewOption, getViews } from './utils/options/utils';
 import { SchedulerOptionsValidator, SchedulerOptionsValidatorErrorsHandler } from './utils/options_validator/index';
 export class SchedulerOptionsBaseWidget extends Widget {
@@ -27,12 +27,6 @@ export class SchedulerOptionsBaseWidget extends Widget {
     // @ts-expect-error
     const options = super._getDefaultOptions();
     return extend(true, options, _extends({}, DEFAULT_SCHEDULER_OPTIONS, DEFAULT_SCHEDULER_INTERNAL_OPTIONS, DEFAULT_SCHEDULER_INTEGRATION_OPTIONS));
-  }
-  _setDeprecatedOptions() {
-    // @ts-expect-error
-    super._setDeprecatedOptions();
-    // @ts-expect-error
-    extend(this._deprecatedOptions, DEPRECATED_SCHEDULER_OPTIONS);
   }
   _defaultOptionsRules() {
     // @ts-expect-error

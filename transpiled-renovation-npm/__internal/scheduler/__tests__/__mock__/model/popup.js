@@ -112,6 +112,13 @@ class PopupModel {
       }
       return cancelButton;
     };
+    this.getCloseButton = () => {
+      const closeButton = this.element.querySelector('.dx-closebutton.dx-button');
+      if (!closeButton) {
+        throw new Error('Close button not found');
+      }
+      return closeButton;
+    };
     this.getFormEditor = fieldName => {
       const form = this.getForm();
       if (form === null) {

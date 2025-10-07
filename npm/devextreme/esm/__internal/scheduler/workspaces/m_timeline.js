@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/workspaces/m_timeline.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -226,24 +226,6 @@ class SchedulerTimeline extends SchedulerWorkSpace {
   }
   getWorkSpaceLeftOffset() {
     return 0;
-  }
-  scrollToTime(hours, minutes, date) {
-    const coordinates = this._getScrollCoordinates(hours, minutes, date);
-    const scrollable = this.getScrollable();
-    const offset = this.option('rtlEnabled') ? getBoundingRect(this.getScrollableContainer().get(0)).width : 0;
-    if (this.option('templatesRenderAsynchronously')) {
-      setTimeout(() => {
-        scrollable.scrollBy({
-          left: coordinates.left - scrollable.scrollLeft() - offset,
-          top: 0
-        });
-      });
-    } else {
-      scrollable.scrollBy({
-        left: coordinates.left - scrollable.scrollLeft() - offset,
-        top: 0
-      });
-    }
   }
   renderRAllDayPanel() {}
   renderRTimeTable() {}

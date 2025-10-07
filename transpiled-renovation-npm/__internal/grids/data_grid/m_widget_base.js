@@ -25,7 +25,7 @@ var _m_widget_base = _interopRequireDefault(require("../../grids/grid_core/m_wid
 var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const DATAGRID_DEPRECATED_TEMPLATE_WARNING = 'Specifying grid templates with the jQuery selector name is now deprecated. Use the DOM Node or the jQuery object that references this selector instead.';
-_m_core.default.registerModulesOrder(['stateStoring', 'columns', 'selection', 'editorFactory', 'columnChooser', 'grouping', 'editing', 'editingRowBased', 'editingFormBased', 'editingCellBased', 'masterDetail', 'validating', 'adaptivity', 'data', 'virtualScrolling', 'columnHeaders', 'filterRow', 'headerPanel', 'headerFilter', 'sorting', 'search', 'rows', 'pager', 'columnsResizingReordering', 'contextMenu', 'keyboardNavigation', 'headersKeyboardNavigation', 'groupPanelKeyboardNavigation', 'errorHandling', 'summary', 'columnFixing', 'export', 'gridView']);
+_m_core.default.registerModulesOrder(['stateStoring', 'columns', 'aiColumn', 'selection', 'editorFactory', 'columnChooser', 'grouping', 'editing', 'editingRowBased', 'editingFormBased', 'editingCellBased', 'masterDetail', 'validating', 'adaptivity', 'data', 'virtualScrolling', 'columnHeaders', 'filterRow', 'headerPanel', 'headerFilter', 'sorting', 'search', 'rows', 'pager', 'columnsResizingReordering', 'contextMenu', 'keyboardNavigation', 'headersKeyboardNavigation', 'groupPanelKeyboardNavigation', 'errorHandling', 'summary', 'columnFixing', 'export', 'toast', 'gridView']);
 class DataGrid extends _m_widget_base.default {
   _defaultOptionsRules() {
     // @ts-expect-error

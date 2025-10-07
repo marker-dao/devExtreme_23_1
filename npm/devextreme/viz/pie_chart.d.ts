@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/pie_chart.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,17 +27,19 @@ import {
 } from '../localization';
 
 import {
-    basePointObject,
-    baseSeriesObject,
+  basePointObject,
+  baseSeriesObject,
 } from './chart';
 
 import {
-    BaseChart,
-    BaseChartAdaptiveLayout,
-    BaseChartLegend,
-    BaseChartOptions,
-    PointInteractionInfo,
-    TooltipInfo,
+  BaseChart,
+  BaseChartAdaptiveLayout,
+  BaseChartLegend,
+  BaseChartOptions,
+  BaseChartTooltip,
+  BasePointInfo,
+  PointInteractionInfo,
+  TooltipInfo,
 } from './chart_components/base_chart';
 
 import {
@@ -278,6 +280,30 @@ export interface PieChartSeries extends dxPieChartSeriesTypesCommonPieChartSerie
     tag?: any | undefined;
 }
 /**
+ * @public
+ * @docid dxPieChartTooltip
+ * @type object
+ */
+export type Tooltip = Omit<BaseChartTooltip<PointInfo>, 'contentTemplate' | 'customizeTooltip'> & {
+  /**
+   * @docid dxPieChartOptions.tooltip.contentTemplate
+   * @type_function_param1 pointInfo:dxPieChartPointInfo
+   * @type_function_return string|Element|jQuery
+   * @default undefined
+   * @public
+   */
+  contentTemplate?: template | ((pointInfo: PointInfo, element: DxElement) => string | UserDefinedElement) | undefined;
+  /**
+   * @docid dxPieChartOptions.tooltip.customizeTooltip
+   * @public
+   * @type_function_param1 pointInfo:dxPieChartPointInfo
+   * @type_function_return object
+   * @default undefined
+   * @notUsedInTheme
+   */
+  customizeTooltip?: ((pointInfo: PointInfo) => any) | undefined;
+};
+/**
  * @deprecated use Properties instead
  * @namespace DevExpress.viz
  * @docid
@@ -418,6 +444,12 @@ export interface dxPieChartOptions extends BaseChartOptions<dxPieChart, piePoint
      * @public
      */
     customizeAnnotation?: ((annotation: dxPieChartAnnotationConfig | any) => dxPieChartAnnotationConfig) | undefined;
+    /**
+     * @docid
+     * @type object
+     * @public
+     */
+    tooltip?: Tooltip;
 }
 
 /**
@@ -990,6 +1022,34 @@ export interface pieChartSeriesObject extends baseSeriesObject {
    */
   isHovered(): boolean;
 }
+
+/**
+ * @docid dxPieChartPointInfo
+ * @public
+ */
+export type PointInfo = BasePointInfo<piePointObject> & {
+  /**
+   * @docid
+   * @public
+   */
+  percent?: number;
+  /**
+   * @docid
+   * @public
+   */
+  percentText?: string;
+  /**
+   * @docid
+   * @public
+   */
+  points?: PointInfo;
+};
+
+/**
+ * @namespace DevExpress.viz
+ * @deprecated Use PointInfo instead
+ */
+export type dxPieChartPointInfo = PointInfo;
 
 /** @public */
 export type Properties = dxPieChartOptions;

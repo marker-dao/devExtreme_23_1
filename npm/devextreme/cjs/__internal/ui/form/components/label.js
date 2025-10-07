@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/form/components/label.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,7 +32,7 @@ function renderLabelMark(markOptions) {
     return (0, _renderer.default)();
   }
   const markClass = markOptions.showRequiredMark ? FIELD_ITEM_REQUIRED_MARK_CLASS : FIELD_ITEM_OPTIONAL_MARK_CLASS;
-  return (0, _renderer.default)('<span>').addClass(markClass).text(markText);
+  return (0, _renderer.default)('<span>').addClass(markClass).attr('aria-hidden', 'true').text(markText);
 }
 function renderLabel(_ref) {
   let {

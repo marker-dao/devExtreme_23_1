@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/speech_to_text/speech_to_text.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,7 +25,7 @@ var SpeechToTextState;
   SpeechToTextState["LISTENING"] = "listening";
   SpeechToTextState["DISABLED"] = "disabled";
 })(SpeechToTextState || (SpeechToTextState = {}));
-const ACTIONS = ['onStartClick', 'onStopClick', 'onResult', 'onError'];
+const ACTIONS = ['onStartClick', 'onStopClick', 'onResult', 'onError', 'onEnd'];
 class SpeechToText extends Widget {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -43,7 +43,9 @@ class SpeechToText extends Widget {
       onStartClick: undefined,
       onStopClick: undefined,
       onResult: undefined,
-      onError: undefined
+      onError: undefined,
+      onEnd: undefined,
+      speechRecognitionConfig: undefined
     });
   }
   _initSpeechRecognitionAdapter() {
@@ -184,31 +186,41 @@ class SpeechToText extends Widget {
     }
   }
   _handleStartClick(e) {
-    if (!this._isCustomSpeechRecognitionEnabled()) {
-      var _this$_speechRecognit;
+    var _this$_speechRecognit;
+    const isCustomEnabled = this._isCustomSpeechRecognitionEnabled();
+    const isSRAvailable = (_this$_speechRecognit = this._speechRecognitionAdapter) === null || _this$_speechRecognit === void 0 ? void 0 : _this$_speechRecognit.isAvailable();
+    if (!isCustomEnabled && isSRAvailable) {
+      var _this$_speechRecognit2;
       this._setState(SpeechToTextState.LISTENING);
-      (_this$_speechRecognit = this._speechRecognitionAdapter) === null || _this$_speechRecognit === void 0 || _this$_speechRecognit.start();
+      (_this$_speechRecognit2 = this._speechRecognitionAdapter) === null || _this$_speechRecognit2 === void 0 || _this$_speechRecognit2.start();
     }
     this._emitDxEvent('onStartClick', e.event);
   }
   _handleStopClick(e) {
     if (!this._isCustomSpeechRecognitionEnabled()) {
-      var _this$_speechRecognit2;
+      var _this$_speechRecognit3;
       this._setState(SpeechToTextState.INITIAL);
-      (_this$_speechRecognit2 = this._speechRecognitionAdapter) === null || _this$_speechRecognit2 === void 0 || _this$_speechRecognit2.stop();
+      (_this$_speechRecognit3 = this._speechRecognitionAdapter) === null || _this$_speechRecognit3 === void 0 || _this$_speechRecognit3.stop();
     }
     this._emitDxEvent('onStopClick', e.event);
   }
-  _handleSpeechRecognitionEnd() {
+  _handleSpeechRecognitionEnd(event) {
     if (this._state !== SpeechToTextState.DISABLED && !this._isCustomSpeechRecognitionEnabled()) {
       this._setState(SpeechToTextState.INITIAL);
     }
+    this._emitNativeEvent('onEnd', event);
   }
   _handleSpeechRecognitionResult(event) {
     this._emitNativeEvent('onResult', event);
   }
   _handleSpeechRecognitionError(event) {
     this._emitNativeEvent('onError', event);
+  }
+  _stopRecognitionOnDisable(disabled) {
+    if (disabled) {
+      var _this$_speechRecognit4;
+      (_this$_speechRecognit4 = this._speechRecognitionAdapter) === null || _this$_speechRecognit4 === void 0 || _this$_speechRecognit4.stop();
+    }
   }
   _setState(newState) {
     if (this._state === newState) {
@@ -232,8 +244,13 @@ class SpeechToText extends Widget {
   _updateCssClasses() {
     this.$element().toggleClass(SPEECH_TO_TEXT_LISTENING_CLASS, this._isListening());
   }
+  _updateSpeechRecognitionConfig(args) {
+    var _this$_speechRecognit5;
+    const options = Widget.getOptionsFromContainer(args);
+    (_this$_speechRecognit5 = this._speechRecognitionAdapter) === null || _this$_speechRecognit5 === void 0 || _this$_speechRecognit5.applyConfig(options);
+  }
   _optionChanged(args) {
-    var _this$_speechRecognit3, _this$_button2, _this$_button3;
+    var _this$_button2, _this$_button3;
     const {
       name,
       value
@@ -241,9 +258,10 @@ class SpeechToText extends Widget {
     switch (name) {
       case 'customSpeechRecognizer':
         this._handleCustomEngineState();
+        this._initSpeechRecognitionAdapter();
         break;
       case 'speechRecognitionConfig':
-        (_this$_speechRecognit3 = this._speechRecognitionAdapter) === null || _this$_speechRecognit3 === void 0 || _this$_speechRecognit3.applyConfig(value);
+        this._updateSpeechRecognitionConfig(args);
         break;
       case 'activeStateEnabled':
       case 'focusStateEnabled':
@@ -258,6 +276,7 @@ class SpeechToText extends Widget {
       case 'disabled':
         (_this$_button3 = this._button) === null || _this$_button3 === void 0 || _this$_button3.option(name, value);
         this._setState(value ? SpeechToTextState.DISABLED : SpeechToTextState.INITIAL);
+        this._stopRecognitionOnDisable(value);
         break;
       case 'startIcon':
       case 'stopIcon':
@@ -301,9 +320,9 @@ class SpeechToText extends Widget {
     super._clean();
   }
   _dispose() {
-    var _this$_speechRecognit4;
+    var _this$_speechRecognit6;
     this._actions = {};
-    (_this$_speechRecognit4 = this._speechRecognitionAdapter) === null || _this$_speechRecognit4 === void 0 || _this$_speechRecognit4.dispose();
+    (_this$_speechRecognit6 = this._speechRecognitionAdapter) === null || _this$_speechRecognit6 === void 0 || _this$_speechRecognit6.dispose();
     this._speechRecognitionAdapter = null;
     super._dispose();
   }

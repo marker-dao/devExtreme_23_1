@@ -14,6 +14,7 @@ export class ErrorHandlingController extends modules.ViewController {
     this._resizingController = this.getController('resizing');
     this._columnsController = this.getController('columns');
     this._columnHeadersView = this.getView('columnHeadersView');
+    this._toastViewController = this.getController('toastViewController');
     this._rowsView = this.getView('rowsView');
   }
   _createErrorRow(error, $tableElements) {
@@ -107,6 +108,11 @@ export class ErrorHandlingController extends modules.ViewController {
       default:
         super.optionChanged(args);
     }
+  }
+  showToastError(message) {
+    this._toastViewController.showToast(message, {
+      type: 'error'
+    });
   }
 }
 const data = Base => class ErrorHandlingDataControllerExtends extends Base {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/viz/translators/interval_translator.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -117,6 +117,7 @@ var _default = exports.default = {
     if (value < rMin) {
       offset = 0;
     } else if (value > rMax) {
+      // @ts-expect-error
       offset = _date.default.addInterval(rMax, this._options.interval) - rMin;
     }
     const projectedValue = this._calculateProjection(offset * this._canvasOptions.ratioOfCanvasRange);

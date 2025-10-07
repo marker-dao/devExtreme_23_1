@@ -69,7 +69,6 @@ ui.dxChat = require('devextreme/ui/chat');
 ui.dxDateBox = require('devextreme/ui/date_box');
 ui.dxDateRangeBox = require('devextreme/ui/date_range_box');
 ui.dxDrawer = require('devextreme/ui/drawer');
-ui.dxDeferRendering = require('devextreme/ui/defer_rendering');
 ui.dxDropDownBox = require('devextreme/ui/drop_down_box');
 ui.dxFileUploader = require('devextreme/ui/file_uploader');
 ui.dxForm = require('devextreme/ui/form');

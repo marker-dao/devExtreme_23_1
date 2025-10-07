@@ -14,7 +14,7 @@ var _conditional_invoke = require("../../core/utils/conditional_invoke");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _alertlist = _interopRequireDefault(require("../../ui/chat/alertlist"));
 var _confirmationpopup = _interopRequireDefault(require("../../ui/chat/confirmationpopup"));
-var _messagebox = _interopRequireDefault(require("../../ui/chat/messagebox"));
+var _message_box = _interopRequireDefault(require("../../ui/chat/message_box/message_box"));
 var _messagelist = _interopRequireDefault(require("../../ui/chat/messagelist"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -337,7 +337,7 @@ class Chat extends _widget.default {
         this._messageUpdatingHandler(e);
       }
     };
-    this._messageBox = this._createComponent($messageBox, _messagebox.default, configuration);
+    this._messageBox = this._createComponent($messageBox, _message_box.default, configuration);
   }
   _updateRootAria() {
     const aria = {

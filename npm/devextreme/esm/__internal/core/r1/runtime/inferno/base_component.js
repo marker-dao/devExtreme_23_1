@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/core/r1/runtime/inferno/base_component.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -85,7 +85,8 @@ export class InfernoWrapperComponent extends InfernoComponent {
       const indexInRemoved = el.dxClasses.removed.indexOf(value);
       if (indexInRemoved > -1) {
         el.dxClasses.removed.splice(indexInRemoved, 1);
-      } else if (!el.dxClasses.added.includes(value)) {
+      }
+      if (!el.dxClasses.added.includes(value)) {
         el.dxClasses.added.push(value);
       }
     });
@@ -93,7 +94,8 @@ export class InfernoWrapperComponent extends InfernoComponent {
       const indexInAdded = el.dxClasses.added.indexOf(value);
       if (indexInAdded > -1) {
         el.dxClasses.added.splice(indexInAdded, 1);
-      } else if (!el.dxClasses.removed.includes(value)) {
+      }
+      if (!el.dxClasses.removed.includes(value)) {
         el.dxClasses.removed.push(value);
       }
     });

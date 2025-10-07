@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/tree_list/m_widget.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _m_widget_base = _interopRequireDefault(require("./m_widget_base"));
 require("./m_state_storing");
+require("./module_not_extended/ai_column");
 require("./module_not_extended/column_chooser");
 require("./m_master_detail");
 require("./editing/m_editing");
@@ -39,6 +40,7 @@ require("./module_not_extended/headers_keyboard_navigation");
 require("./module_not_extended/virtual_columns");
 require("./m_focus");
 require("./module_not_extended/row_dragging");
+require("./module_not_extended/toast");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 // NOTE: Order of imports important here and shouldn't be changed.
 /* eslint-disable simple-import-sort/imports */

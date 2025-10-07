@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/tree_list.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -68,6 +68,8 @@ import {
     SelectionBase,
     SelectionChangedInfo,
     ToolbarPreparingInfo,
+    AIColumnRequestCreatingInfo,
+    AIColumnResponseReceivedInfo,
 } from '../common/grids';
 
 import { dxToolbarItem } from './toolbar';
@@ -838,6 +840,22 @@ export type ColumnButtonClickEvent<TRowData = any, TKey = any> = NativeEventInfo
     column?: Column<TRowData, TKey>;
 };
 
+/**
+ * @docid _ui_tree_list_AIColumnRequestCreatingEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,AIColumnRequestCreatingInfo
+ */
+export type AIColumnRequestCreatingEvent<TRowData = any, TKey = any> = EventInfo<dxTreeList<TRowData, TKey>> & AIColumnRequestCreatingInfo<TRowData>;
+
+/**
+ * @docid _ui_tree_list_AIColumnResponseReceivedEvent
+ * @public
+ * @type object
+ * @inherits EventInfo,AIColumnResponseReceivedInfo
+ */
+export type AIColumnResponseReceivedEvent<TRowData = any, TKey = any> = EventInfo<dxTreeList<TRowData, TKey>> & AIColumnResponseReceivedInfo;
+
 /** @public */
 export type ColumnButtonTemplateData<TRowData = any, TKey = any> = {
     readonly component: dxTreeList<TRowData, TKey>;
@@ -1152,6 +1170,22 @@ export type dxTreeListOptions<TRowData = any, TKey = any> = Omit<GridBaseOptions
      * @public
      */
     toolbar?: Toolbar | undefined;
+    /**
+     * @docid
+     * @default null
+     * @type_function_param1 e:{ui/tree_list:AIColumnRequestCreatingEvent}
+     * @action
+     * @public
+     */
+    onAIColumnRequestCreating?: ((e: AIColumnRequestCreatingEvent) => void);
+    /**
+     * @docid
+     * @default null
+     * @type_function_param1 e:{ui/tree_list:AIColumnResponseReceivedEvent}
+     * @action
+     * @public
+     */
+    onAIColumnResponseReceived?: ((e: AIColumnResponseReceivedEvent) => void);
 };
 
 /**
@@ -1420,6 +1454,12 @@ export default class dxTreeList<TRowData = any, TKey = any> extends Widget<dxTre
      * @public
      */
     loadDescendants(keys: Array<TKey>, childrenOnly: boolean): DxPromise<void>;
+
+    abortAIColumnRequest(columnName: string): void;
+    sendAIColumnRequest(columnName: string): void;
+    refreshAIColumn(columnName: string): void;
+    clearAIColumn(columnName: string): void;
+    getAIColumnText(columnName: string, key: TKey): string;
 
     beginCustomLoading(messageText: string): void;
     byKey(key: TKey): DxPromise<TRowData>;

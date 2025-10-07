@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/dialog.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -111,9 +111,6 @@ const custom = params => {
     // @ts-expect-error trigger should be typed on type 'EventsEngineType'
     _events_engine.default.trigger($firstButton, 'focus');
   };
-  const onHidden = e => {
-    (0, _renderer.default)(e.element).remove();
-  };
   const animation = {
     show: {
       type: 'pop',
@@ -189,7 +186,6 @@ const custom = params => {
     height: 'auto',
     ignoreChildEvents: false,
     onContentReady,
-    onHidden,
     onHiding: () => {
       deferred.reject();
     },
@@ -205,7 +201,13 @@ const custom = params => {
     visualContainer: window,
     width
   };
-  const options = _extends({}, configuration, popupOptions);
+  const options = _extends({}, configuration, popupOptions, {
+    onHidden: e => {
+      var _popupOptions$onHidde;
+      (0, _renderer.default)(e.element).remove();
+      popupOptions === null || popupOptions === void 0 || (_popupOptions$onHidde = popupOptions.onHidden) === null || _popupOptions$onHidde === void 0 || _popupOptions$onHidde.call(popupOptions, e);
+    }
+  });
   // @ts-expect-error Incorrect constructor usage
   popupInstance = new _m_popup.default($element, options);
   popupInstance.$wrapper().addClass(DX_DIALOG_WRAPPER_CLASSNAME).addClass(DX_DIALOG_ROOT_CLASSNAME);

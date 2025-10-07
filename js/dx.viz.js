@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -4409,6 +4409,7 @@ const config = {
   editorStylingMode: undefined,
   useLegacyVisibleIndex: false,
   versionAssertions: [],
+  copyStylesToShadowDom: true,
   floatingActionButtonConfig: {
     icon: 'add',
     closeIcon: 'close',
@@ -7279,7 +7280,8 @@ class InfernoWrapperComponent extends InfernoComponent {
       const indexInRemoved = el.dxClasses.removed.indexOf(value);
       if (indexInRemoved > -1) {
         el.dxClasses.removed.splice(indexInRemoved, 1);
-      } else if (!el.dxClasses.added.includes(value)) {
+      }
+      if (!el.dxClasses.added.includes(value)) {
         el.dxClasses.added.push(value);
       }
     });
@@ -7287,7 +7289,8 @@ class InfernoWrapperComponent extends InfernoComponent {
       const indexInAdded = el.dxClasses.added.indexOf(value);
       if (indexInAdded > -1) {
         el.dxClasses.added.splice(indexInAdded, 1);
-      } else if (!el.dxClasses.removed.includes(value)) {
+      }
+      if (!el.dxClasses.removed.includes(value)) {
         el.dxClasses.removed.push(value);
       }
     });
@@ -11482,7 +11485,9 @@ const inRange = function (value, minValue, maxValue) {
 };
 exports.inRange = inRange;
 function getExponent(value) {
-  return Math.abs(parseInt(value.toExponential().split('e')[1], 10));
+  // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
+  const [_, exponentString] = value.toExponential().split('e');
+  return Math.abs(parseInt(exponentString, 10));
 }
 function getExponentialNotation(value) {
   const parts = value.toExponential().split('e');
@@ -11497,48 +11502,55 @@ function multiplyInExponentialForm(value, exponentShift) {
   const exponentialNotation = getExponentialNotation(value);
   return parseFloat(`${exponentialNotation.mantissa}e${exponentialNotation.exponent + exponentShift}`);
 }
-// T570217
-function isEdgeBug() {
-  const value = 0.0003;
-  const correctValue = '0.000300';
-  const precisionValue = 3;
-  return correctValue !== value.toPrecision(precisionValue);
-}
+const EXP_TO_CHANGE_NOTATION = 7;
+const MAX_PRECISION = 15;
+const MIN_PRECISION = 7;
 function adjust(value, interval) {
-  let precision = getPrecision(interval || 0) + 2;
-  const separatedValue = value.toString().split('.');
-  const sourceValue = value;
   const absValue = Math.abs(value);
-  let separatedAdjustedValue;
-  const isExponentValue = (0, _type.isExponential)(value);
   const integerPart = absValue > 1 ? 10 : 0;
-  if (separatedValue.length === 1) {
+  const precision = getPrecision(interval ?? 0) + 2;
+  const finalPrecision = precision > EXP_TO_CHANGE_NOTATION ? MAX_PRECISION : MIN_PRECISION;
+  const [integerValuePart, fractionalValuePart] = value.toString().split('.');
+  const sourceValue = value;
+  const isExponentValue = (0, _type.isExponential)(value);
+  if (isExponentValue) {
+    return adjustExponential(value, finalPrecision);
+  }
+  if (!fractionalValuePart) {
     return value;
   }
-  if (!isExponentValue) {
-    if ((0, _type.isExponential)(interval)) {
-      precision = separatedValue[0].length + getExponent(interval);
-    }
-    value = absValue;
-    value = value - Math.floor(value) + integerPart;
+  if ((0, _type.isExponential)(interval)) {
+    const expPrecision = integerValuePart.length + getExponent(interval);
+    return parseFloat(sourceValue.toPrecision(expPrecision));
   }
-  precision = isEdgeBug() && getExponent(value) > 6 || precision > 7 ? 15 : 7; // fix toPrecision() bug in Edge (T570217)
-  if (!isExponentValue) {
-    separatedAdjustedValue = parseFloat(value.toPrecision(precision)).toString().split('.');
-    if (separatedAdjustedValue[0] === integerPart.toString()) {
-      return parseFloat(`${separatedValue[0]}.${separatedAdjustedValue[1]}`);
-    }
+  const fractionalPart = absValue - Math.floor(absValue);
+  const adjustedValue = integerPart + fractionalPart;
+  const separatedAdjustedValue = parseFloat(adjustedValue.toPrecision(finalPrecision)).toString().split('.');
+  const isIntPartNotChanged = separatedAdjustedValue[0] === integerPart.toString();
+  if (isIntPartNotChanged) {
+    return parseFloat(`${integerValuePart}.${separatedAdjustedValue[1]}`);
   }
-  return parseFloat(sourceValue.toPrecision(precision));
+  return parseFloat(sourceValue.toPrecision(finalPrecision));
+}
+function adjustExponential(value, precision) {
+  const expValue = value.toExponential();
+  // eslint-disable-next-line @stylistic/max-len
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention
+  const [mantissa, _exponent] = expValue.split('e');
+  if (!mantissa.includes('.')) {
+    return parseFloat(expValue);
+  }
+  return parseFloat(value.toPrecision(precision));
 }
 function getPrecision(value) {
   const str = value.toString();
-  if (str.indexOf('.') < 0) {
+  if (!str.includes('.')) {
     return 0;
   }
-  const mantissa = str.split('.');
-  const positionOfDelimiter = mantissa[1].indexOf('e');
-  return positionOfDelimiter >= 0 ? positionOfDelimiter : mantissa[1].length;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention
+  const [_, fractionalPart] = str.split('.');
+  const positionOfDelimiter = fractionalPart.indexOf('e');
+  return positionOfDelimiter >= 0 ? positionOfDelimiter : fractionalPart.length;
 }
 function getRoot(x, n) {
   if (x < 0 && n % 2 !== 1) {
@@ -12046,7 +12058,7 @@ var _default = exports["default"] = {
 /***/ }),
 
 /***/ 17113:
-/***/ (function(__unused_webpack_module, exports) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
 
@@ -12054,12 +12066,14 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.addShadowDomStyles = addShadowDomStyles;
+exports.computeStyleSheetsHash = computeStyleSheetsHash;
 exports.getShadowElementsFromPoint = getShadowElementsFromPoint;
+var _config = _interopRequireDefault(__webpack_require__(66636));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const DX_RULE_PREFIX = 'dx-';
 let ownerDocumentStyleSheet = null;
 function createConstructedStyleSheet(rootNode) {
   try {
-    // eslint-disable-next-line no-undef
     return new CSSStyleSheet();
   } catch (err) {
     const styleElement = rootNode.ownerDocument.createElement('style');
@@ -12086,17 +12100,49 @@ function insertRule(targetStyleSheet, rule, needApplyAllStyles) {
     targetStyleSheet.insertRule(rule.cssText, targetStyleSheet.cssRules.length);
   }
 }
+const FNV_OFFSET_BASIS = 2166136261;
+const sheetHashes = new WeakMap();
+function computeStyleSheetsHash(styleSheets) {
+  let hash = FNV_OFFSET_BASIS;
+  for (const sheet of styleSheets) {
+    if (sheetHashes.has(sheet)) {
+      hash ^= sheetHashes.get(sheet);
+      continue;
+    }
+    let localHash = FNV_OFFSET_BASIS;
+    try {
+      for (const rule of sheet.cssRules) {
+        const text = rule.cssText;
+        for (let i = 0; i < text.length; i++) {
+          localHash ^= text.charCodeAt(i);
+          localHash += (localHash << 1) + (localHash << 4) + (localHash << 7) + (localHash << 8) + (localHash << 24);
+        }
+      }
+    } catch (_) {
+      // ignore
+    }
+    localHash >>>= 0;
+    sheetHashes.set(sheet, localHash);
+    hash ^= localHash;
+  }
+  return hash >>> 0;
+}
+const styleSheetHashes = new WeakMap();
 function addShadowDomStyles($element) {
   var _el$getRootNode;
-  const el = $element.get(0);
-  const root = (_el$getRootNode = el.getRootNode) === null || _el$getRootNode === void 0 ? void 0 : _el$getRootNode.call(el);
-  if (!(root !== null && root !== void 0 && root.host)) {
+  if (!(0, _config.default)().copyStylesToShadowDom) {
     return;
   }
+  const el = $element.get(0);
+  const root = (_el$getRootNode = el.getRootNode) === null || _el$getRootNode === void 0 ? void 0 : _el$getRootNode.call(el);
+  if (!(root !== null && root !== void 0 && root.host)) return;
   if (!ownerDocumentStyleSheet) {
     ownerDocumentStyleSheet = createConstructedStyleSheet(root);
     processRules(ownerDocumentStyleSheet, el.ownerDocument.styleSheets, false);
   }
+  const localHash = computeStyleSheetsHash(root.styleSheets);
+  if (styleSheetHashes.get(root) === localHash) return;
+  styleSheetHashes.set(root, localHash);
   const currentShadowDomStyleSheet = createConstructedStyleSheet(root);
   processRules(currentShadowDomStyleSheet, root.styleSheets, true);
   root.adoptedStyleSheets = [ownerDocumentStyleSheet, currentShadowDomStyleSheet];
@@ -12132,10 +12178,7 @@ function getShadowElementsFromPoint(x, y, root) {
     const el = elementQueue.shift();
     for (let i = 0; i < el.childNodes.length; i++) {
       const childNode = el.childNodes[i];
-      // eslint-disable-next-line no-undef
-      if (childNode.nodeType === Node.ELEMENT_NODE && isPositionInElementRectangle(childNode, x, y)
-      // eslint-disable-next-line no-undef
-      && getComputedStyle(childNode).pointerEvents !== 'none') {
+      if (childNode.nodeType === Node.ELEMENT_NODE && isPositionInElementRectangle(childNode, x, y) && getComputedStyle(childNode).pointerEvents !== 'none') {
         elementQueue.push(childNode);
       }
     }
@@ -83843,6 +83886,7 @@ var _default = exports["default"] = {
     const translateCategories = translate / interval;
     const visibleCount = (that.visibleCategories || []).length;
     let startCategoryIndex = parseInt((canvasOptions.startPointIndex || 0) + translateCategories + 0.5);
+    // @ts-expect-error
     const categoriesLength = parseInt((0, _math.adjust)(canvasOptions.canvasLength / interval) + (stick ? 1 : 0)) || 1;
     let endCategoryIndex;
     if (invert) {
@@ -84092,6 +84136,7 @@ var _default = exports["default"] = {
     if (value < rMin) {
       offset = 0;
     } else if (value > rMax) {
+      // @ts-expect-error
       offset = _date.default.addInterval(rMax, this._options.interval) - rMin;
     }
     const projectedValue = this._calculateProjection(offset * this._canvasOptions.ratioOfCanvasRange);
@@ -84607,6 +84652,7 @@ _Translator2d.prototype = {
           break;
         case 'semidiscrete':
           script = _interval_translator.default;
+          // @ts-expect-error
           canvasOptions.ratioOfCanvasRange = canvasOptions.canvasLength / (_date.default.addInterval(canvasOptions.rangeMaxVisible, options.interval) - canvasOptions.rangeMinVisible);
           break;
         case 'discrete':

@@ -549,7 +549,9 @@ class Splitter extends CollectionWidgetLiveUpdate {
     this._updateItemsRestrictions();
     const collapsedDelta = this._getCollapseDelta(item, value, this._panesCacheSize, this._collapseDirection);
     this._itemRestrictions.forEach(pane => {
-      pane.maxSize = undefined;
+      if (item.collapsed) {
+        pane.maxSize = undefined;
+      }
       pane.resizable = undefined;
     });
     this._layout = getNextLayout(this.getLayout(), collapsedDelta, this._activeResizeHandleIndex, this._itemRestrictions);

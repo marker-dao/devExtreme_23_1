@@ -24,7 +24,7 @@ function renderLabelMark(markOptions) {
     return (0, _renderer.default)();
   }
   const markClass = markOptions.showRequiredMark ? FIELD_ITEM_REQUIRED_MARK_CLASS : FIELD_ITEM_OPTIONAL_MARK_CLASS;
-  return (0, _renderer.default)('<span>').addClass(markClass).text(markText);
+  return (0, _renderer.default)('<span>').addClass(markClass).attr('aria-hidden', 'true').text(markText);
 }
 function renderLabel(_ref) {
   let {

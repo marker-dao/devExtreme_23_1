@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/scheduler_options_base_widget.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -34,12 +34,6 @@ class SchedulerOptionsBaseWidget extends _ui.default {
     // @ts-expect-error
     const options = super._getDefaultOptions();
     return (0, _m_extend.extend)(true, options, _extends({}, _constants.DEFAULT_SCHEDULER_OPTIONS, _constants.DEFAULT_SCHEDULER_INTERNAL_OPTIONS, _constants.DEFAULT_SCHEDULER_INTEGRATION_OPTIONS));
-  }
-  _setDeprecatedOptions() {
-    // @ts-expect-error
-    super._setDeprecatedOptions();
-    // @ts-expect-error
-    (0, _m_extend.extend)(this._deprecatedOptions, _constants.DEPRECATED_SCHEDULER_OPTIONS);
   }
   _defaultOptionsRules() {
     // @ts-expect-error

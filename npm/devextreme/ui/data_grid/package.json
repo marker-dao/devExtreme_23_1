@@ -15,6 +15,7 @@
     "../../esm/__internal/grids/data_grid/module_not_extended/header_panel.js",
     "../../esm/ui/toolbar/ui.toolbar.base.js",
     "../../esm/__internal/grids/data_grid/module_not_extended/state_storing.js",
+    "../../esm/__internal/grids/data_grid/module_not_extended/ai_column.js",
     "../../esm/__internal/grids/data_grid/module_not_extended/selection.js",
     "../../esm/__internal/grids/data_grid/module_not_extended/column_chooser.js",
     "../../esm/ui/themes.js",
@@ -58,7 +59,8 @@
     "../../esm/ui/button.js",
     "../../esm/ui/drop_down_button.js",
     "../../esm/__internal/grids/data_grid/focus/m_focus.js",
-    "../../esm/__internal/grids/data_grid/module_not_extended/row_dragging.js"
+    "../../esm/__internal/grids/data_grid/module_not_extended/row_dragging.js",
+    "../../esm/__internal/grids/data_grid/module_not_extended/toast.js"
   ],
   "main": "../../cjs/ui/data_grid.js",
   "module": "../../esm/ui/data_grid.js",

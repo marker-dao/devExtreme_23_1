@@ -381,7 +381,6 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
         this.updateAppointmentDataSource();
         this.repaint();
         break;
-      case 'dropDownAppointmentTemplate':
       case 'appointmentCollectorTemplate':
       case '_appointmentTooltipOffset':
       case '_appointmentCountPerCell':
@@ -1261,6 +1260,10 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
       popupOptions: {
         wrapperAttr: {
           class: POPUP_DIALOG_CLASS
+        },
+        onHidden: () => {
+          var _this$_appointments;
+          (_this$_appointments = this._appointments) === null || _this$_appointments === void 0 || _this$_appointments.focus();
         }
       }
     });
@@ -1551,10 +1554,6 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
   hideAppointmentTooltip() {
     var _this$_appointmentToo2;
     (_this$_appointmentToo2 = this._appointmentTooltip) === null || _this$_appointmentToo2 === void 0 || _this$_appointmentToo2.hide();
-  }
-  scrollToTime(hours, minutes, date) {
-    _ui.default.log('W0002', 'dxScheduler', 'scrollToTime', '21.1', 'Use the "scrollTo" method instead');
-    this._workSpace.scrollToTime(hours, minutes, date);
   }
   scrollTo(date, groupValues, allDay) {
     this._workSpace.scrollTo(date, groupValues, allDay);

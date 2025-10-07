@@ -15,7 +15,7 @@ function renderLabelMark(markOptions) {
     return $();
   }
   const markClass = markOptions.showRequiredMark ? FIELD_ITEM_REQUIRED_MARK_CLASS : FIELD_ITEM_OPTIONAL_MARK_CLASS;
-  return $('<span>').addClass(markClass).text(markText);
+  return $('<span>').addClass(markClass).attr('aria-hidden', 'true').text(markText);
 }
 export function renderLabel(_ref) {
   let {

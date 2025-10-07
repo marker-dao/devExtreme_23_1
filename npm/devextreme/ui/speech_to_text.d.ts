@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/speech_to_text.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -105,6 +105,14 @@ export type ResultEvent = EventInfo<dxSpeechToText> & { event: Event };
  * @inherits EventInfo
  */
 export type ErrorEvent = EventInfo<dxSpeechToText> & { event: Event };
+
+/**
+ * @docid _ui_speech_to_text_EndEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
+export type EndEvent = EventInfo<dxSpeechToText> & { event: Event };
 
 /**
  * @docid _ui_speech_to_text_ContentReadyEvent
@@ -233,6 +241,15 @@ export interface Properties extends WidgetOptions<dxSpeechToText> {
    * @public
    */
   onError?: ((e: ErrorEvent) => void) | undefined;
+
+  /**
+   * @docid dxSpeechToTextOptions.onEnd
+   * @default undefined
+   * @type_function_param1 e:{ui/speech_to_text:EndEvent}
+   * @action
+   * @public
+   */
+  onEnd?: ((e: EndEvent) => void) | undefined;
 }
 
 /**

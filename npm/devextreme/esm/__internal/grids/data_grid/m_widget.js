@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/data_grid/m_widget.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,6 +10,7 @@
 /* eslint-disable simple-import-sort/imports */
 import DataGrid from './m_widget_base';
 import './module_not_extended/state_storing';
+import './module_not_extended/ai_column';
 import './module_not_extended/selection';
 import './module_not_extended/column_chooser';
 import './grouping/m_grouping';
@@ -39,4 +40,5 @@ import './module_not_extended/virtual_columns';
 import './export/m_export';
 import './focus/m_focus';
 import './module_not_extended/row_dragging';
+import './module_not_extended/toast';
 export default DataGrid;

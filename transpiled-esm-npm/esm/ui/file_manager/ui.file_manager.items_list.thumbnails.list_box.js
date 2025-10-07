@@ -271,6 +271,7 @@ class FileManagerThumbnailListBox extends CollectionWidget {
     return new Deferred().resolve().promise();
   }
   _focusOutHandler() {}
+  _focusInHandler() {}
   _getItems() {
     return this.option('items') || [];
   }

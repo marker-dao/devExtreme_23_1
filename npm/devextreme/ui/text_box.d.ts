@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/text_box.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,6 +15,7 @@ import {
 
 import {
     ValueChangedInfo,
+    EditorOptionsWithValue,
 } from './editor/editor';
 
 import dxTextEditor, {
@@ -179,13 +180,16 @@ export interface dxTextBoxOptions<TComponent> extends dxTextEditorOptions<TCompo
  * @namespace DevExpress.ui
  * @public
  */
-export default class dxTextBox<TProperties = Properties> extends dxTextEditor<TProperties> {
+export default class dxTextBox<
+    TProperties extends EditorOptionsWithValue = Properties,
+> extends dxTextEditor<TProperties> {
     /**
      * @docid
      * @publicName reset(value)
      * @public
+     * @param1 value:string
      */
-    reset(value?: string): void;
+    reset(value?: TProperties['value']): void;
 }
 
 interface TextBoxInstance extends dxTextBox<Properties> { }

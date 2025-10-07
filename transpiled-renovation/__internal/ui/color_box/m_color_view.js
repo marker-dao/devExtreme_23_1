@@ -208,7 +208,6 @@ class ColorView extends _editor.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       value: null,
-      // @ts-expect-error ts-error
       matchValue: null,
       onEnterKeyPressed: undefined,
       editAlphaChannel: false,

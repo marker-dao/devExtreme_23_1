@@ -275,6 +275,7 @@ class FileManagerThumbnailListBox extends _uiCollection_widget.default {
     return new _deferred.Deferred().resolve().promise();
   }
   _focusOutHandler() {}
+  _focusInHandler() {}
   _getItems() {
     return this.option('items') || [];
   }

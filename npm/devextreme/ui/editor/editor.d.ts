@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/editor/editor.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -120,13 +120,24 @@ export interface EditorOptions<TComponent> extends WidgetOptions<TComponent> {
      */
     readonly isDirty?: boolean;
 }
+
+/**
+ * @docid
+ * @hidden
+ */
+export interface EditorOptionsWithValue {
+    value?: unknown;
+}
+
 /**
  * @docid
  * @inherits Widget
  * @hidden
  * @namespace DevExpress.ui
  */
-export default class Editor<TProperties = Properties> extends Widget<TProperties> {
+export default class Editor<
+    TProperties extends EditorOptionsWithValue = Properties,
+> extends Widget<TProperties> {
     /**
      * @docid
      * @publicName clear()
@@ -136,11 +147,10 @@ export default class Editor<TProperties = Properties> extends Widget<TProperties
 
     /**
      * @docid
-     * @type_function_param1 value:any
      * @publicName reset(value)
      * @public
      */
-    reset(value?: any): void;
+    reset(value?: TProperties['value']): void;
 }
 
 interface EditorInstance extends Editor<Properties> { }

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.de.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -64,7 +64,7 @@
             "dxList-nextButtonText": "Mehr",
             "dxList-selectAll": "Alles auswählen",
             "dxList-listAriaLabel": "Items",
-            "dxList-listAriaLabel-deletable": "löschbare items",
+            "dxList-listAriaLabel-deletable": "Löschbare Elemente",
             "dxListEditDecorator-delete": "Entfernen",
             "dxListEditDecorator-more": "Mehr",
             "dxList-selectAll-indeterminate": "Half-checked",
@@ -157,7 +157,7 @@
             "dxDataGrid-ariaNotSortedColumn": "Nicht sortierte Spalte",
             "dxDataGrid-ariaSortedAscendingColumn": "Aufsteigend sortierte Spalte",
             "dxDataGrid-ariaSortedDescendingColumn": "Absteigend sortierte Spalte",
-            "dxDataGrid-ariaSortIndex": "Sortierter index {0}",
+            "dxDataGrid-ariaSortIndex": "Sortierreihenfolge {0}",
             "dxDataGrid-editingSaveAllChanges": "Änderungen speichern",
             "dxDataGrid-editingCancelAllChanges": "Änderungen verwerfen",
             "dxDataGrid-editingAddRow": "Neue Zeile",

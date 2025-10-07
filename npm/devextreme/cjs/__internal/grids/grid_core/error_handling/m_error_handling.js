@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/error_handling/m_error_handling.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -30,6 +30,7 @@ class ErrorHandlingController extends _m_modules.default.ViewController {
     this._resizingController = this.getController('resizing');
     this._columnsController = this.getController('columns');
     this._columnHeadersView = this.getView('columnHeadersView');
+    this._toastViewController = this.getController('toastViewController');
     this._rowsView = this.getView('rowsView');
   }
   _createErrorRow(error, $tableElements) {
@@ -123,6 +124,11 @@ class ErrorHandlingController extends _m_modules.default.ViewController {
       default:
         super.optionChanged(args);
     }
+  }
+  showToastError(message) {
+    this._toastViewController.showToast(message, {
+      type: 'error'
+    });
   }
 }
 exports.ErrorHandlingController = ErrorHandlingController;

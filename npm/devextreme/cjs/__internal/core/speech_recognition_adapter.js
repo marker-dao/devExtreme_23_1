@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/core/speech_recognition_adapter.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,6 +19,7 @@ const NOT_SUPPORTED_ERROR = exports.NOT_SUPPORTED_ERROR = 'E1065';
 const EVENT_NAMES = ['onresult', 'onerror', 'onend'];
 class SpeechRecognitionAdapter {
   constructor(config, events) {
+    this._isListening = false;
     const window = (0, _window.getWindow)();
     // @ts-expect-error SpeechRecognition API is not supported in TS
     const SpeechRecognitionConstructor = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -35,7 +36,14 @@ class SpeechRecognitionAdapter {
       return;
     }
     // eslint-disable-next-line spellcheck/spell-checker
-    this._speechRecognition.onend = events.onEnd;
+    this._speechRecognition.onstart = () => {
+      this._isListening = true;
+    };
+    // eslint-disable-next-line spellcheck/spell-checker
+    this._speechRecognition.onend = event => {
+      this._isListening = false;
+      events.onEnd(event);
+    };
     // eslint-disable-next-line spellcheck/spell-checker
     this._speechRecognition.onresult = events.onResult;
     this._speechRecognition.onerror = events.onError;
@@ -51,14 +59,23 @@ class SpeechRecognitionAdapter {
   }
   start() {
     var _this$_speechRecognit;
+    if (this._isListening) {
+      return;
+    }
     (_this$_speechRecognit = this._speechRecognition) === null || _this$_speechRecognit === void 0 || _this$_speechRecognit.start();
   }
   stop() {
     var _this$_speechRecognit2;
+    if (!this._isListening) {
+      return;
+    }
     (_this$_speechRecognit2 = this._speechRecognition) === null || _this$_speechRecognit2 === void 0 || _this$_speechRecognit2.stop();
   }
   dispose() {
     this._speechRecognition = null;
+  }
+  isAvailable() {
+    return Boolean(this._speechRecognition);
   }
 }
 exports.SpeechRecognitionAdapter = SpeechRecognitionAdapter;

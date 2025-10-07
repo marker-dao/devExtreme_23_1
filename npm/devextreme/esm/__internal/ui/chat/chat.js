@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/chat/chat.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,7 +17,7 @@ import { invokeConditionally } from '../../core/utils/conditional_invoke';
 import Widget from '../../core/widget/widget';
 import AlertList from '../../ui/chat/alertlist';
 import ConfirmationPopup from '../../ui/chat/confirmationpopup';
-import MessageBox from '../../ui/chat/messagebox';
+import MessageBox from '../../ui/chat/message_box/message_box';
 import MessageList from '../../ui/chat/messagelist';
 const CHAT_CLASS = 'dx-chat';
 const TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';

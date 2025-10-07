@@ -18,12 +18,21 @@ import Store from '../../../../data/abstract_store';
 import filterUtils from '../../../../ui/shared/filtering';
 import errors from '../../../../ui/widget/ui.errors';
 import inflector from '../../../core/utils/m_inflector';
+import { AI_COLUMN_NAME } from '../ai_column/const';
 import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
 import { StickyPosition } from '../sticky_columns/const';
 import { COLUMN_CHOOSER_LOCATION, COLUMN_OPTION_REGEXP, COMMAND_EXPAND_CLASS, DATATYPE_OPERATIONS, DETAIL_COMMAND_COLUMN_NAME, GROUP_COMMAND_COLUMN_NAME, GROUP_LOCATION, MAX_SAFE_INTEGER, USER_STATE_FIELD_NAMES } from './const';
 import { addExpandColumn, applyUserState, assignColumns, columnOptionCore, convertOwnerBandToColumnReference, createColumn, createColumnsFromDataSource, createColumnsFromOptions, defaultSetCellValue, digitsCount, findColumn, fireColumnsChanged, getAlignmentByDataType, getChildrenByBandColumn, getColumnByIndexes, getColumnIndexByVisibleIndex, getCustomizeTextByDataType, getDataColumns, getFixedPosition, getParentBandColumns, getRowCount, getSerializationFormat, getValueDataType, isColumnFixed, isColumnNameRequired, isFirstOrLastColumn, isSortOrderValid, mergeColumns, moveColumnToGroup, numberToString, processBandColumns, processExpandColumns, resetBandColumnsCache, resetColumnsCache, setFilterOperationsAsDefaultValues, sortColumns, strictParseNumber, updateColumnChanges, updateColumnGroupIndexes, updateIndexes, updateSerializers } from './m_columns_controller_utils';
 export class ColumnsController extends modules.Controller {
+  getCommonColumnSettings(column) {
+    if (!(column !== null && column !== void 0 && column.type)) {
+      return this.option('commonColumnSettings');
+    }
+    return column.type === AI_COLUMN_NAME ? {
+      allowHiding: true
+    } : {};
+  }
   init(isApplyingUserState) {
     this._dataController = this.getController('data');
     this._focusController = this.getController('focus');
@@ -244,7 +253,7 @@ export class ColumnsController extends modules.Controller {
     return this._dataSourceApplied;
   }
   getCommonSettings(column) {
-    const commonColumnSettings = (!column || !column.type) && this.option('commonColumnSettings') || {};
+    const commonColumnSettings = this.getCommonColumnSettings(column);
     const groupingOptions = this.option('grouping') ?? {};
     const groupPanelOptions = this.option('groupPanel') ?? {};
     return extend({

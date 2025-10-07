@@ -115,7 +115,12 @@ class TextArea extends _m_text_box.default {
     super._refreshEvents();
   }
   _getHeightDifference($input) {
-    return (0, _size.getVerticalOffsets)(this.$element().get(0), false) + (0, _size.getVerticalOffsets)(this._$textEditorContainer.get(0), false) + (0, _size.getVerticalOffsets)(this._$textEditorInputContainer.get(0), true) + (0, _size.getElementBoxParams)('height', (0, _window.getWindow)().getComputedStyle($input.get(0))).margin;
+    const verticalElementOffset = (0, _size.getVerticalOffsets)(this.$element().get(0), false);
+    const verticalEditorContainerOffset = (0, _size.getVerticalOffsets)(this._$textEditorContainer.get(0), false);
+    const verticalInputContainerOffsets = (0, _size.getVerticalOffsets)(this._$textEditorInputContainer.get(0), true);
+    const inputMargin = (0, _size.getElementBoxParams)('height', (0, _window.getWindow)().getComputedStyle($input.get(0))).margin;
+    const sum = verticalElementOffset + verticalEditorContainerOffset + verticalInputContainerOffsets + inputMargin;
+    return sum;
   }
   _updateInputHeight() {
     if (!(0, _window.hasWindow)()) {
@@ -154,8 +159,10 @@ class TextArea extends _m_text_box.default {
   _getBoundaryHeight(optionName) {
     const boundaryValue = this.option(optionName);
     if ((0, _type.isDefined)(boundaryValue)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return typeof boundaryValue === 'number' ? boundaryValue : (0, _size.parseHeight)(boundaryValue, this.$element().get(0).parentElement, this.$element().get(0));
     }
+    return undefined;
   }
   _renderInputType() {}
   _visibilityChanged(visible) {

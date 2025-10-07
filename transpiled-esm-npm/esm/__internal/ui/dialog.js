@@ -96,9 +96,6 @@ export const custom = params => {
     // @ts-expect-error trigger should be typed on type 'EventsEngineType'
     eventsEngine.trigger($firstButton, 'focus');
   };
-  const onHidden = e => {
-    $(e.element).remove();
-  };
   const animation = {
     show: {
       type: 'pop',
@@ -174,7 +171,6 @@ export const custom = params => {
     height: 'auto',
     ignoreChildEvents: false,
     onContentReady,
-    onHidden,
     onHiding: () => {
       deferred.reject();
     },
@@ -190,7 +186,13 @@ export const custom = params => {
     visualContainer: window,
     width
   };
-  const options = _extends({}, configuration, popupOptions);
+  const options = _extends({}, configuration, popupOptions, {
+    onHidden: e => {
+      var _popupOptions$onHidde;
+      $(e.element).remove();
+      popupOptions === null || popupOptions === void 0 || (_popupOptions$onHidde = popupOptions.onHidden) === null || _popupOptions$onHidde === void 0 || _popupOptions$onHidde.call(popupOptions, e);
+    }
+  });
   // @ts-expect-error Incorrect constructor usage
   popupInstance = new Popup($element, options);
   popupInstance.$wrapper().addClass(DX_DIALOG_WRAPPER_CLASSNAME).addClass(DX_DIALOG_ROOT_CLASSNAME);

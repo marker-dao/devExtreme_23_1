@@ -103,9 +103,6 @@ class SchedulerWorkSpaceMonth extends _m_work_space_indicator.default {
   _getHeaderDate() {
     return this._getViewStartByOptions();
   }
-  scrollToTime() {
-    return (0, _common.noop)();
-  }
   renderRAllDayPanel() {}
   renderRTimeTable() {}
   renderRDateTable() {

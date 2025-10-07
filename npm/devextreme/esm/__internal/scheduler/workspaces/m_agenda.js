@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/workspaces/m_agenda.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -430,7 +430,7 @@ class SchedulerAgenda extends WorkSpace {
     const startDateHour = newDate.getHours();
     const startDateMinutes = newDate.getMinutes();
     if (this.needUpdateScrollPosition(startDateHour, startDateMinutes, bounds, newDate)) {
-      this.scrollToTime(startDateHour, startDateMinutes, newDate);
+      this.scrollTo(newDate);
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

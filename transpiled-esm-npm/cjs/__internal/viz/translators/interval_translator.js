@@ -109,6 +109,7 @@ var _default = exports.default = {
     if (value < rMin) {
       offset = 0;
     } else if (value > rMax) {
+      // @ts-expect-error
       offset = _date.default.addInterval(rMax, this._options.interval) - rMin;
     }
     const projectedValue = this._calculateProjection(offset * this._canvasOptions.ratioOfCanvasRange);

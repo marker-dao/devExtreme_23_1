@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/drop_down_editor/ui.drop_down_editor.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -34,6 +34,8 @@ import {
 import {
     EventInfo,
 } from '../../common/core/events';
+
+import { EditorOptionsWithValue } from '../editor/editor';
 
 /** @public */
 export type DropDownPredefinedButton = 'clear' | 'dropDown';
@@ -173,7 +175,9 @@ export interface dxDropDownEditorOptions<TComponent> extends Omit<dxTextBoxOptio
  * @namespace DevExpress.ui
  * @options dxDropDownEditorOptions
  */
-export default class dxDropDownEditor<TProperties> extends dxTextBox<TProperties> {
+export default class dxDropDownEditor<
+    TProperties extends EditorOptionsWithValue = Properties,
+> extends dxTextBox<TProperties> {
     /**
      * @docid
      * @publicName close()
@@ -198,6 +202,13 @@ export default class dxDropDownEditor<TProperties> extends dxTextBox<TProperties
      * @public
      */
     open(): void;
+    /**
+     * @docid
+     * @publicName reset(value)
+     * @public
+     * @param1 value:any
+     */
+    reset(value?: TProperties['value']): void;
 }
 
 interface DropDownEditorInstance extends dxDropDownEditor<Properties> { }

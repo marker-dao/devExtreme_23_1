@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/tree_list/m_widget.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,6 +10,7 @@
 /* eslint-disable simple-import-sort/imports */
 import TreeList from './m_widget_base';
 import './m_state_storing';
+import './module_not_extended/ai_column';
 import './module_not_extended/column_chooser';
 import './m_master_detail';
 import './editing/m_editing';
@@ -35,4 +36,5 @@ import './module_not_extended/headers_keyboard_navigation';
 import './module_not_extended/virtual_columns';
 import './m_focus';
 import './module_not_extended/row_dragging';
+import './module_not_extended/toast';
 export default TreeList;

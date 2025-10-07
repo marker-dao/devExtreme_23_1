@@ -225,24 +225,6 @@ class SchedulerTimeline extends _m_work_space_indicator.default {
   getWorkSpaceLeftOffset() {
     return 0;
   }
-  scrollToTime(hours, minutes, date) {
-    const coordinates = this._getScrollCoordinates(hours, minutes, date);
-    const scrollable = this.getScrollable();
-    const offset = this.option('rtlEnabled') ? (0, _position.getBoundingRect)(this.getScrollableContainer().get(0)).width : 0;
-    if (this.option('templatesRenderAsynchronously')) {
-      setTimeout(() => {
-        scrollable.scrollBy({
-          left: coordinates.left - scrollable.scrollLeft() - offset,
-          top: 0
-        });
-      });
-    } else {
-      scrollable.scrollBy({
-        left: coordinates.left - scrollable.scrollLeft() - offset,
-        top: 0
-      });
-    }
-  }
   renderRAllDayPanel() {}
   renderRTimeTable() {}
   _renderGroupAllDayPanel() {}

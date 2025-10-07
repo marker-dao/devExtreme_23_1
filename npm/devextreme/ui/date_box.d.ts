@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/date_box.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -30,6 +30,7 @@ import dxDropDownEditor, {
 
 import {
     ValueChangedInfo,
+    EditorOptionsWithValue,
 } from './editor/editor';
 
 import {
@@ -377,7 +378,9 @@ export interface DateBoxBaseOptions<TComponent> extends Omit<
  * @hidden
  * @options DateBoxBaseOptions
  */
-export class DateBoxBase<TProperties = Properties> extends dxDropDownEditor<TProperties> {
+export class DateBoxBase<
+    TProperties extends EditorOptionsWithValue = Properties,
+> extends dxDropDownEditor<TProperties> {
     /**
      * @docid
      * @publicName close()
@@ -404,9 +407,9 @@ export default class dxDateBox extends DateBoxBase<Properties> {
      * @docid
      * @publicName reset(value)
      * @public
-     * @param1 value:Date|number|string|null
+     * @param1 value:Date | number | string | null
      */
-    reset(value?: DateLike): void;
+    reset(value?: Properties['value']): void;
 }
 
 /**

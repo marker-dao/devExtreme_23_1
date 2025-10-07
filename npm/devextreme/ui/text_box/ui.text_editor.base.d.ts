@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/text_box/ui.text_editor.base.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,6 +14,7 @@ import dxButton from '../button';
 
 import Editor, {
     EditorOptions,
+    EditorOptionsWithValue,
 } from '../editor/editor';
 
 import {
@@ -240,7 +241,9 @@ export interface dxTextEditorOptions<TComponent> extends EditorOptions<TComponen
  * @hidden
  * @namespace DevExpress.ui
  */
-export default class dxTextEditor<TProperties = Properties> extends Editor<TProperties> {
+export default class dxTextEditor<
+    TProperties extends EditorOptionsWithValue = Properties,
+> extends Editor<TProperties> {
     /**
      * @docid
      * @publicName blur()

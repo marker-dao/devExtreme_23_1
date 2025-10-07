@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/columns_resizing_reordering/m_columns_resizing_reordering.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -42,7 +42,6 @@ const HEADERS_DROP_HIGHLIGHT_CLASS = 'drop-highlight';
 const BLOCK_SEPARATOR_CLASS = 'dx-block-separator';
 const HEADER_ROW_CLASS = 'dx-header-row';
 const WIDGET_CLASS = 'dx-widget';
-const DRAGGING_COMMAND_CELL_CLASS = 'dx-drag-command-cell';
 const MODULE_NAMESPACE = 'dxDataGridResizingReordering';
 const COLUMNS_SEPARATOR_TOUCH_TRACKER_WIDTH = 10;
 const DRAGGING_DELTA = 5;
@@ -384,7 +383,6 @@ class DraggingHeaderView extends _m_modules.default.View {
     const {
       columnElement
     } = options;
-    const isCommandColumn = !!options.sourceColumn.type;
     that._isDragging = true;
     that._dragOptions = options;
     that._dropOptions = {
@@ -403,10 +401,10 @@ class DraggingHeaderView extends _m_modules.default.View {
     that._controller.drag(that._dropOptions);
     that.element().css({
       textAlign: columnElement === null || columnElement === void 0 ? void 0 : columnElement.css('textAlign'),
-      height: columnElement && (isCommandColumn && columnElement.get(0).clientHeight || (0, _size.getHeight)(columnElement)),
-      width: columnElement && (isCommandColumn && columnElement.get(0).clientWidth || (0, _size.getWidth)(columnElement)),
+      height: columnElement && (0, _size.getHeight)(columnElement),
+      width: columnElement && (0, _size.getWidth)(columnElement),
       whiteSpace: columnElement === null || columnElement === void 0 ? void 0 : columnElement.css('whiteSpace')
-    }).addClass(that.addWidgetPrefix(HEADERS_DRAG_ACTION_CLASS)).toggleClass(DRAGGING_COMMAND_CELL_CLASS, isCommandColumn).text(isCommandColumn ? '' : options.sourceColumn.caption);
+    }).addClass(that.addWidgetPrefix(HEADERS_DRAG_ACTION_CLASS)).text(options.sourceColumn.caption);
     that.element().appendTo(_swatch_container.default.getSwatchContainer(columnElement));
   }
   moveHeader(args) {

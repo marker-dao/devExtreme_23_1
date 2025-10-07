@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.splitByIndex = exports.getRealSeparatorIndex = exports.getNthOccurrence = exports.adjustPercentValue = void 0;
+exports.splitByIndex = exports.roundFloatPartPercentValue = exports.getRealSeparatorIndex = exports.getNthOccurrence = exports.adjustPercentValue = void 0;
 var _math = require("../../../core/utils/math");
 const getRealSeparatorIndex = function (str) {
   let quoteBalance = 0;
@@ -43,7 +43,17 @@ const splitByIndex = function (str, index) {
   return [str.slice(0, index), str.slice(index + 1)];
 };
 exports.splitByIndex = splitByIndex;
-const adjustPercentValue = function (rawValue, precision) {
-  return rawValue && (0, _math.adjust)(rawValue / 100, precision);
+const adjustPercentValue = function (rawValue, interval) {
+  if (!rawValue) {
+    return rawValue;
+  }
+  return (0, _math.adjust)(rawValue / 100, interval / 100);
 };
 exports.adjustPercentValue = adjustPercentValue;
+const roundFloatPartPercentValue = function (rawValue, precision) {
+  if (!rawValue) {
+    return rawValue;
+  }
+  return (0, _math.roundFloatPart)(rawValue / 100, precision);
+};
+exports.roundFloatPartPercentValue = roundFloatPartPercentValue;

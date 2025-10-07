@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/core/utils/m_shadow_dom.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,12 +12,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.addShadowDomStyles = addShadowDomStyles;
+exports.computeStyleSheetsHash = computeStyleSheetsHash;
 exports.getShadowElementsFromPoint = getShadowElementsFromPoint;
+var _config = _interopRequireDefault(require("../../../core/config"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const DX_RULE_PREFIX = 'dx-';
 let ownerDocumentStyleSheet = null;
 function createConstructedStyleSheet(rootNode) {
   try {
-    // eslint-disable-next-line no-undef
     return new CSSStyleSheet();
   } catch (err) {
     const styleElement = rootNode.ownerDocument.createElement('style');
@@ -44,17 +46,49 @@ function insertRule(targetStyleSheet, rule, needApplyAllStyles) {
     targetStyleSheet.insertRule(rule.cssText, targetStyleSheet.cssRules.length);
   }
 }
+const FNV_OFFSET_BASIS = 2166136261;
+const sheetHashes = new WeakMap();
+function computeStyleSheetsHash(styleSheets) {
+  let hash = FNV_OFFSET_BASIS;
+  for (const sheet of styleSheets) {
+    if (sheetHashes.has(sheet)) {
+      hash ^= sheetHashes.get(sheet);
+      continue;
+    }
+    let localHash = FNV_OFFSET_BASIS;
+    try {
+      for (const rule of sheet.cssRules) {
+        const text = rule.cssText;
+        for (let i = 0; i < text.length; i++) {
+          localHash ^= text.charCodeAt(i);
+          localHash += (localHash << 1) + (localHash << 4) + (localHash << 7) + (localHash << 8) + (localHash << 24);
+        }
+      }
+    } catch (_) {
+      // ignore
+    }
+    localHash >>>= 0;
+    sheetHashes.set(sheet, localHash);
+    hash ^= localHash;
+  }
+  return hash >>> 0;
+}
+const styleSheetHashes = new WeakMap();
 function addShadowDomStyles($element) {
   var _el$getRootNode;
-  const el = $element.get(0);
-  const root = (_el$getRootNode = el.getRootNode) === null || _el$getRootNode === void 0 ? void 0 : _el$getRootNode.call(el);
-  if (!(root !== null && root !== void 0 && root.host)) {
+  if (!(0, _config.default)().copyStylesToShadowDom) {
     return;
   }
+  const el = $element.get(0);
+  const root = (_el$getRootNode = el.getRootNode) === null || _el$getRootNode === void 0 ? void 0 : _el$getRootNode.call(el);
+  if (!(root !== null && root !== void 0 && root.host)) return;
   if (!ownerDocumentStyleSheet) {
     ownerDocumentStyleSheet = createConstructedStyleSheet(root);
     processRules(ownerDocumentStyleSheet, el.ownerDocument.styleSheets, false);
   }
+  const localHash = computeStyleSheetsHash(root.styleSheets);
+  if (styleSheetHashes.get(root) === localHash) return;
+  styleSheetHashes.set(root, localHash);
   const currentShadowDomStyleSheet = createConstructedStyleSheet(root);
   processRules(currentShadowDomStyleSheet, root.styleSheets, true);
   root.adoptedStyleSheets = [ownerDocumentStyleSheet, currentShadowDomStyleSheet];
@@ -90,10 +124,7 @@ function getShadowElementsFromPoint(x, y, root) {
     const el = elementQueue.shift();
     for (let i = 0; i < el.childNodes.length; i++) {
       const childNode = el.childNodes[i];
-      // eslint-disable-next-line no-undef
-      if (childNode.nodeType === Node.ELEMENT_NODE && isPositionInElementRectangle(childNode, x, y)
-      // eslint-disable-next-line no-undef
-      && getComputedStyle(childNode).pointerEvents !== 'none') {
+      if (childNode.nodeType === Node.ELEMENT_NODE && isPositionInElementRectangle(childNode, x, y) && getComputedStyle(childNode).pointerEvents !== 'none') {
         elementQueue.push(childNode);
       }
     }

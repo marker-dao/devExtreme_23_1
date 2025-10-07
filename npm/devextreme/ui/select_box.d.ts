@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/select_box.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,6 +35,7 @@ import dxDropDownList, {
 
 import {
     ValueChangedInfo,
+    EditorOptionsWithValue,
 } from './editor/editor';
 
 import {
@@ -287,7 +288,6 @@ export interface dxSelectBoxOptions<TComponent> extends dxDropDownListOptions<TC
      * @public
      */
     customItemCreateEvent?: string;
-
     /**
      * @docid
      * @type dxPopupOptions
@@ -301,7 +301,9 @@ export interface dxSelectBoxOptions<TComponent> extends dxDropDownListOptions<TC
  * @namespace DevExpress.ui
  * @public
  */
-export default class dxSelectBox<TProperties = Properties> extends dxDropDownList<TProperties> { }
+export default class dxSelectBox<
+    TProperties extends EditorOptionsWithValue = Properties,
+> extends dxDropDownList<TProperties> { }
 
 interface SelectBoxInstance extends dxSelectBox<Properties> { }
 

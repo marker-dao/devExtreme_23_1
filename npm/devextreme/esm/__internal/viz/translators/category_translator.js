@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/viz/translators/category_translator.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -68,6 +68,7 @@ export default {
     const translateCategories = translate / interval;
     const visibleCount = (that.visibleCategories || []).length;
     let startCategoryIndex = parseInt((canvasOptions.startPointIndex || 0) + translateCategories + 0.5);
+    // @ts-expect-error
     const categoriesLength = parseInt(adjust(canvasOptions.canvasLength / interval) + (stick ? 1 : 0)) || 1;
     let endCategoryIndex;
     if (invert) {

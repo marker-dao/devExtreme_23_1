@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/chart_components/base_chart.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,10 +28,10 @@ import {
   } from '../../localization';
 
 import {
-    basePointObject,
-    baseSeriesObject,
-    chartSeriesObject,
-    dxChartAnnotationConfig,
+  basePointObject,
+  baseSeriesObject,
+  chartSeriesObject,
+  dxChartAnnotationConfig,
 } from '../chart';
 
 import {
@@ -52,6 +52,70 @@ import {
   Palette,
   PaletteExtensionMode,
 } from '../../common/charts';
+
+/**
+ * @docid
+ * @type object
+ * @namespace DevExpress.viz
+ * @hidden
+ */
+export type BasePointInfo<TPoint extends basePointObject> = {
+  /**
+   * @docid
+   * @public
+   */
+  argument?: string | number | Date;
+  /**
+   * @docid
+   * @public
+   */
+  argumentText?: string;
+  /**
+   * @docid
+   * @public
+   */
+  highErrorValue?: number;
+  /**
+   * @docid
+   * @public
+   */
+  lowErrorValue?: number;
+  /**
+   * @docid
+   * @public
+   */
+  originalArgument?: string | number | Date;
+  /**
+   * @docid
+   * @public
+   */
+  originalValue?: string | number | Date;
+  /**
+   * @docid
+   * @public
+   */
+  point?: TPoint;
+  /**
+   * @docid
+   * @public
+   */
+  points?: BasePointInfo<TPoint>[];
+  /**
+   * @docid
+   * @public
+   */
+  seriesName?: any;
+  /**
+   * @docid
+   * @public
+   */
+  value?: string | number | Date;
+  /**
+   * @docid
+   * @public
+   */
+  valueText?: string;
+};
 
 /**
  * @docid
@@ -293,7 +357,7 @@ export interface BaseChartLegend extends BaseLegend {
  * @docid
  * @namespace DevExpress.viz
  */
-export interface BaseChartTooltip extends BaseWidgetTooltip {
+export interface BaseChartTooltip<TPointInfo = any> extends BaseWidgetTooltip {
     /**
      * @docid BaseChartOptions.tooltip.argumentFormat
      * @default undefined
@@ -307,7 +371,7 @@ export interface BaseChartTooltip extends BaseWidgetTooltip {
      * @default undefined
      * @public
      */
-    contentTemplate?: template | ((pointInfo: any, element: DxElement) => string | UserDefinedElement) | undefined;
+    contentTemplate?: template | ((pointInfo: TPointInfo, element: DxElement) => string | UserDefinedElement) | undefined;
     /**
      * @docid BaseChartOptions.tooltip.customizeTooltip
      * @type_function_param1 pointInfo:object
@@ -316,7 +380,7 @@ export interface BaseChartTooltip extends BaseWidgetTooltip {
      * @notUsedInTheme
      * @public
      */
-    customizeTooltip?: ((pointInfo: any) => any) | undefined;
+    customizeTooltip?: ((pointInfo: TPointInfo) => any) | undefined;
     /**
      * @docid BaseChartOptions.tooltip.shared
      * @default false

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/drop_down_editor/ui.drop_down_list.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,6 +26,7 @@ import {
 
 import {
     ValueChangedInfo,
+    EditorOptionsWithValue,
 } from '../editor/editor';
 
 import {
@@ -197,6 +198,8 @@ export interface dxDropDownListOptions<TComponent> extends DataExpressionMixinOp
  * @namespace DevExpress.ui
  * @options dxDropDownListOptions
  */
-export default class dxDropDownList<TProperties> extends dxDropDownEditor<TProperties> {
+export default class dxDropDownList<
+    TProperties extends EditorOptionsWithValue,
+> extends dxDropDownEditor<TProperties> {
     getDataSource(): DataSource;
 }

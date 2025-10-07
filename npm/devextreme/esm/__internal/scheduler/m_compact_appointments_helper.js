@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/m_compact_appointments_helper.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -48,7 +48,6 @@ export class CompactAppointmentsHelper {
     return {
       clickEvent: this._clickEvent(options.onAppointmentClick).bind(this),
       dragBehavior: options.allowDrag && this._createTooltipDragBehavior($appointmentCollector).bind(this),
-      dropDownAppointmentTemplate: this.instance.option().dropDownAppointmentTemplate,
       isButtonClick: true,
       _loopFocus: true
     };

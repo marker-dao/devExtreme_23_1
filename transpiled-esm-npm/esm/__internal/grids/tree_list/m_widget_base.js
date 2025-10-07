@@ -13,7 +13,7 @@ import gridCoreUtils from '../../grids/grid_core/m_utils';
 import GridCoreWidget from '../../grids/grid_core/m_widget_base';
 import treeListCore from './m_core';
 const TREELIST_CLASS = 'dx-treelist';
-treeListCore.registerModulesOrder(['stateStoring', 'columns', 'selection', 'editorFactory', 'columnChooser', 'editingRowBased', 'editingFormBased', 'editingCellBased', 'editing', 'grouping', 'masterDetail', 'validating', 'adaptivity', 'data', 'virtualScrolling', 'columnHeaders', 'filterRow', 'headerPanel', 'headerFilter', 'sorting', 'search', 'rows', 'pager', 'columnsResizingReordering', 'contextMenu', 'keyboardNavigation', 'headersKeyboardNavigation', 'errorHandling', 'summary', 'columnFixing', 'export', 'gridView']);
+treeListCore.registerModulesOrder(['stateStoring', 'columns', 'aiColumn', 'selection', 'editorFactory', 'columnChooser', 'editingRowBased', 'editingFormBased', 'editingCellBased', 'editing', 'grouping', 'masterDetail', 'validating', 'adaptivity', 'data', 'virtualScrolling', 'columnHeaders', 'filterRow', 'headerPanel', 'headerFilter', 'sorting', 'search', 'rows', 'pager', 'columnsResizingReordering', 'contextMenu', 'keyboardNavigation', 'headersKeyboardNavigation', 'errorHandling', 'summary', 'columnFixing', 'export', 'toast', 'gridView']);
 class TreeList extends GridCoreWidget {
   _initMarkup() {
     // @ts-expect-error

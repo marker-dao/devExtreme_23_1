@@ -47,7 +47,6 @@ class CompactAppointmentsHelper {
     return {
       clickEvent: this._clickEvent(options.onAppointmentClick).bind(this),
       dragBehavior: options.allowDrag && this._createTooltipDragBehavior($appointmentCollector).bind(this),
-      dropDownAppointmentTemplate: this.instance.option().dropDownAppointmentTemplate,
       isButtonClick: true,
       _loopFocus: true
     };

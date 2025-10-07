@@ -144,7 +144,7 @@ export class GanttExportHelper {
     return task && this._getGridDisplayText(colIndex, task);
   }
   _getGridDisplayText(colIndex, data) {
-    const columns = this._treeList.getController('columns').getColumns();
+    const columns = this._treeList.getController('columns').getVisibleColumns();
     const column = columns[colIndex];
     const field = column === null || column === void 0 ? void 0 : column.dataField;
     const format = column === null || column === void 0 ? void 0 : column.format;

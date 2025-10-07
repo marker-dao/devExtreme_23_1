@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/workspaces/m_work_space.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1280,17 +1280,6 @@ class SchedulerWorkSpace extends Widget {
       }
     });
     return result;
-  }
-  scrollToTime(hours, minutes, date) {
-    if (!this._isValidScrollDate(date)) {
-      return;
-    }
-    const coordinates = this._getScrollCoordinates(hours, minutes, date);
-    const scrollable = this.getScrollable();
-    scrollable.scrollBy({
-      top: coordinates.top - scrollable.scrollTop(),
-      left: 0
-    });
   }
   scrollTo(date, groupValues) {
     let allDay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;

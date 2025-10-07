@@ -1,7 +1,7 @@
 /**
 * DevExtreme (common/grids.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -68,6 +68,9 @@ import {
 import {
   Properties as PopupProperties,
 } from '../ui/popup';
+import {
+  Properties as TextBoxProperties,
+} from '../ui/text_box';
 
 import {
   Properties as ToolbarProperties,
@@ -78,6 +81,59 @@ import {
 } from '../ui/widget/ui.widget';
 import { PositionConfig } from './core/animation';
 import { PagerBase } from '../ui/pagination';
+import { AIIntegration } from './ai-integration';
+
+/**
+ * @docid
+ * @namespace DevExpress.common.grids
+ * @public
+ */
+export type AIColumnResponseReceivedInfo = {
+  /**
+   * @docid
+   * @type GridBaseColumn
+   */
+  readonly column: ColumnBase;
+  /** @docid */
+  error?: string;
+  /**
+   * @docid
+   * @type Array<object>
+   */
+  data: any[];
+  /**
+   * @docid
+   * @type object
+   */
+  additionalInfo?: Record<string, any>;
+};
+
+/**
+ * @docid
+ * @namespace DevExpress.common.grids
+ * @public
+ */
+export type AIColumnRequestCreatingInfo<TRowData = any> = {
+  /**
+   * @docid
+   * @type GridBaseColumn
+   */
+  readonly column: ColumnBase;
+  /**
+   * @docid
+   * @type Array<object>
+   */
+  readonly data: TRowData[];
+  /** @docid */
+  cancel?: boolean;
+  /**
+   * @docid
+   * @type object
+   */
+  additionalInfo?: Record<string, any>;
+  /** @docid */
+  useCache?: boolean;
+};
 
 /**
  * @docid
@@ -108,7 +164,69 @@ export type ApplyChangesMode = 'instantly' | 'onDemand';
  * @public
  * @namespace DevExpress.common.grids
  */
+export type AIColumnMode = 'auto' | 'manual';
+
+/**
+ * @public
+ * @namespace DevExpress.common.grids
+ */
 export type FixedPosition = 'left' | 'right' | 'sticky';
+
+/**
+ * @docid
+ * @namespace DevExpress.common.grids
+ * @public
+ */
+export type ColumnAIOptions = {
+  /**
+   * @docid
+   * @default undefined
+   * @public
+   */
+  aiIntegration?: AIIntegration | undefined;
+  /**
+   * @docid
+   * @default ""
+   * @public
+   */
+  prompt?: string;
+  /**
+   * @docid
+   * @default "auto"
+   * @public
+   */
+  mode?: AIColumnMode;
+  /**
+   * @docid
+   * @default true
+   * @public
+   */
+  showHeaderMenu?: boolean;
+  /**
+   * @docid
+   * @default ""
+   * @public
+   */
+  noDataText?: string;
+  /**
+   * @docid
+   * @default ""
+   * @public
+   */
+  emptyText?: string;
+  /**
+   * @docid
+   * @public
+   * @type dxPopupOptions
+   */
+  popup?: PopupProperties;
+  /**
+   * @docid
+   * @public
+   * @type dxTextBoxOptions
+   */
+  editorOptions?: TextBoxProperties;
+};
 
 /**
  * @hidden
@@ -117,6 +235,11 @@ export type FixedPosition = 'left' | 'right' | 'sticky';
  * @type object
  */
 export interface ColumnBase<TRowData = any> {
+  /**
+   * @docid GridBaseColumn.ai
+   * @public
+   */
+  ai?: ColumnAIOptions;
   /**
    * @docid GridBaseColumn.alignment
    * @default undefined
@@ -1383,6 +1506,37 @@ export type HeaderFilterTexts = {
 export interface GridBase<TRowData = any, TKey = any> {
   /**
    * @docid
+   * @publicName abortAIColumnRequest(columnName)
+   * @public
+   */
+  abortAIColumnRequest(columnName: string): void;
+  /**
+   * @docid
+   * @publicName sendAIColumnRequest(columnName)
+   * @public
+   */
+  sendAIColumnRequest(columnName: string): void;
+  /**
+   * @docid
+   * @publicName refreshAIColumn(columnName)
+   * @public
+   */
+  refreshAIColumn(columnName: string): void;
+  /**
+   * @docid
+   * @publicName clearAIColumn(columnName)
+   * @public
+   */
+  clearAIColumn(columnName: string): void;
+  /**
+   * @docid
+   * @publicName getAIColumnText(columnName, key)
+   * @public
+   */
+  getAIColumnText(columnName: string, key: TKey): string;
+
+  /**
+   * @docid
    * @publicName beginCustomLoading(messageText)
    * @public
    */
@@ -1815,6 +1969,12 @@ interface GridBaseOptionsBlank<TComponent extends GridBase<TRowData, TKey>, TRow
  * @type object
  */
 export type GridBaseOptions<TComponent extends GridBase<TRowData, TKey>, TRowData = any, TKey = any> = Omit<GridBaseOptionsBlank<TComponent, TRowData, TKey>, 'focusStateEnabled'> & {
+  /**
+   * @docid
+   * @default undefined
+   * @public
+   */
+  aiIntegration?: AIIntegration | undefined;
   /**
    * @docid
    * @default false

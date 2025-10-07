@@ -1,5 +1,5 @@
 /*!
- * DevExtreme-Quill Editor v.1.7.4
+ * DevExtreme-Quill Editor v.1.7.5
  * https://js.devexpress.com/
  * Copyright (c) 2020, Developer Express Inc.
  * Copyright (c) 2017, Slab
@@ -11640,6 +11640,73 @@ module.exports = diff;
 
 /***/ }),
 
+/***/ 7303:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Ay: () => (/* binding */ sanitizeSvg)
+/* harmony export */ });
+/* unused harmony exports allowedTags, allowedAttributes */
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+var allowedTags = Object.freeze(['svg', 'a', 'altglyph', 'altglyphdef', 'altglyphitem', 'animatecolor', 'animatemotion', 'animatetransform', 'circle', 'clippath', 'defs', 'desc', 'ellipse', 'enterkeyhint', 'exportparts', 'filter', 'font', 'g', 'glyph', 'glyphref', 'hkern', 'image', 'inputmode', 'line', 'lineargradient', 'marker', 'mask', 'metadata', 'mpath', 'part', 'path', 'pattern', 'polygon', 'polyline', 'radialgradient', 'rect', 'slot', 'stop', 'style', 'switch', 'symbol', 'text', 'textpath', 'title', 'tref', 'tspan', 'view', 'vkern']);
+var allowedAttributes = Object.freeze(['accent-height', 'accumulate', 'additive', 'alignment-baseline', 'amplitude', 'ascent', 'attributename', 'attributetype', 'azimuth', 'basefrequency', 'baseline-shift', 'begin', 'bias', 'by', 'class', 'clip', 'clippathunits', 'clip-path', 'clip-rule', 'color', 'color-interpolation', 'color-interpolation-filters', 'color-profile', 'color-rendering', 'cx', 'cy', 'd', 'dx', 'dy', 'diffuseconstant', 'direction', 'display', 'divisor', 'dur', 'edgemode', 'elevation', 'end', 'exponent', 'fill', 'fill-opacity', 'fill-rule', 'filter', 'filterunits', 'flood-color', 'flood-opacity', 'font-family', 'font-size', 'font-size-adjust', 'font-stretch', 'font-style', 'font-variant', 'font-weight', 'fx', 'fy', 'g1', 'g2', 'glyph-name', 'glyphref', 'gradientunits', 'gradienttransform', 'height', 'href', 'id', 'image-rendering', 'in', 'in2', 'intercept', 'k', 'k1', 'k2', 'k3', 'k4', 'kerning', 'keypoints', 'keysplines', 'keytimes', 'lang', 'lengthadjust', 'letter-spacing', 'kernelmatrix', 'kernelunitlength', 'lighting-color', 'local', 'marker-end', 'marker-mid', 'marker-start', 'markerheight', 'markerunits', 'markerwidth', 'maskcontentunits', 'maskunits', 'max', 'mask', 'media', 'method', 'mode', 'min', 'name', 'numoctaves', 'offset', 'operator', 'opacity', 'order', 'orient', 'orientation', 'origin', 'overflow', 'paint-order', 'path', 'pathlength', 'patterncontentunits', 'patterntransform', 'patternunits', 'points', 'preservealpha', 'preserveaspectratio', 'primitiveunits', 'r', 'rx', 'ry', 'radius', 'refx', 'refy', 'repeatcount', 'repeatdur', 'restart', 'result', 'rotate', 'scale', 'seed', 'shape-rendering', 'slope', 'specularconstant', 'specularexponent', 'spreadmethod', 'startoffset', 'stddeviation', 'stitchtiles', 'stop-color', 'stop-opacity', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'stroke-opacity', 'stroke', 'stroke-width', 'style', 'surfacescale', 'systemlanguage', 'tabindex', 'tablevalues', 'targetx', 'targety', 'transform', 'transform-origin', 'text-anchor', 'text-decoration', 'text-rendering', 'textlength', 'type', 'u1', 'u2', 'unicode', 'values', 'viewbox', 'visibility', 'version', 'vert-adv-y', 'vert-origin-x', 'vert-origin-y', 'width', 'word-spacing', 'wrap', 'writing-mode', 'xchannelselector', 'ychannelselector', 'x', 'x1', 'x2', 'xmlns', 'y', 'y1', 'y2', 'z', 'zoomandpan', 'xlink:href', 'xml:id', 'xlink:title', 'xml:space', 'xmlns:xlink']);
+function isSafeUrl(value) {
+  if (!value) return false;
+  var lower = value.trim().toLowerCase();
+  if (lower.startsWith('#') || lower.startsWith('data:image/')) {
+    return true;
+  }
+  if (
+  // eslint-disable-next-line no-script-url
+  lower.startsWith('javascript:') || lower.startsWith('vbscript:') || lower.startsWith('data:') || lower.startsWith('http:') || lower.startsWith('https:')) {
+    return false;
+  }
+  return true;
+}
+function sanitizeNode(node) {
+  var tagName = node.tagName.toLowerCase();
+  if (!allowedTags.includes(tagName)) {
+    node.remove();
+    return;
+  }
+  _toConsumableArray(node.attributes).forEach(function (attr) {
+    var name = attr.name,
+      value = attr.value;
+    if (!allowedAttributes.includes(name)) {
+      node.removeAttribute(name);
+      return;
+    }
+    if (name.startsWith('on')) {
+      node.removeAttribute(name);
+      return;
+    }
+    if ((name === 'href' || name === 'xlink:href') && !isSafeUrl(value)) {
+      node.removeAttribute(name);
+    }
+  });
+  _toConsumableArray(node.children).forEach(function (child) {
+    return sanitizeNode(child);
+  });
+}
+function sanitizeSvg(svgString) {
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(svgString, 'image/svg+xml');
+  var svgElement = doc.documentElement;
+  if (!svgElement || svgElement.tagName.toLowerCase() !== 'svg') {
+    return null;
+  }
+  sanitizeNode(svgElement);
+  return svgElement.outerHTML;
+}
+
+/***/ }),
+
 /***/ 7309:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -12216,7 +12283,7 @@ Quill.DEFAULTS = {
 Quill.events = _emitter__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .A.events;
 Quill.sources = _emitter__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .A.sources;
 // eslint-disable-next-line no-undef
-Quill.version =  false ? 0 : "1.7.4";
+Quill.version =  false ? 0 : "1.7.5";
 Quill.MS_LIST_DATA_KEY = 'mso-list-data';
 Quill.replaceStyleAttribute = function (html) {
   var tagAttrsRegex = /(?:(<[a-z0-9]+\s*))([\s\S]*?)(>|\/>)/gi;
@@ -18206,6 +18273,7 @@ module.exports = Object.keys || function keys(O) {
 /* harmony import */ var _core_emitter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5881);
 /* harmony import */ var _core_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7031);
 /* harmony import */ var _utils_has_window__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(2088);
+/* harmony import */ var _utils_sanitize_svg__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(7303);
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -18220,6 +18288,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -18314,11 +18383,28 @@ Uploader.DEFAULTS = {
     var _this4 = this;
     var promises = files.map(function (file) {
       return new Promise(function (resolve) {
+        var svgType = 'image/svg+xml';
         var reader = new FileReader();
-        reader.onload = function (e) {
-          resolve(e.target.result);
-        };
-        reader.readAsDataURL(file);
+        if (file.type === svgType) {
+          reader.onload = function (event) {
+            var result = event.target.result;
+            result = (0,_utils_sanitize_svg__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Ay)(result);
+            var blob = new Blob([result], {
+              type: svgType
+            });
+            var blobReader = new FileReader();
+            blobReader.onload = function (e) {
+              return resolve(e.target.result);
+            };
+            blobReader.readAsDataURL(blob);
+          };
+          reader.readAsText(file);
+        } else {
+          reader.onload = function (event) {
+            return resolve(event.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
       });
     });
     Promise.all(promises).then(function (images) {

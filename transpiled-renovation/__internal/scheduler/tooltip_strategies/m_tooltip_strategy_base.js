@@ -19,6 +19,7 @@ const TOOLTIP_APPOINTMENT_ITEM_MARKER = `${TOOLTIP_APPOINTMENT_ITEM}-marker`;
 const TOOLTIP_APPOINTMENT_ITEM_MARKER_BODY = `${TOOLTIP_APPOINTMENT_ITEM}-marker-body`;
 const TOOLTIP_APPOINTMENT_ITEM_DELETE_BUTTON_CONTAINER = `${TOOLTIP_APPOINTMENT_ITEM}-delete-button-container`;
 const TOOLTIP_APPOINTMENT_ITEM_DELETE_BUTTON = `${TOOLTIP_APPOINTMENT_ITEM}-delete-button`;
+const APPOINTMENT_TOOLTIP_TEMPLATE = 'appointmentTooltipTemplate';
 class TooltipStrategyBase {
   constructor(options) {
     this.asyncTemplatePromises = new Set();
@@ -108,18 +109,17 @@ class TooltipStrategyBase {
     const itemListContent = this._createItemListContent(appointment, targetedAppointment, color);
     this._options.addDefaultTemplates({
       // @ts-expect-error
-      [this._getItemListTemplateName()]: new _function_template.FunctionTemplate(options => {
+      appointmentTooltip: new _function_template.FunctionTemplate(options => {
         const $container = (0, _renderer.default)(options.container);
         $container.append(itemListContent);
         return $container;
       })
     });
-    const template = this._options.getAppointmentTemplate(`${this._getItemListTemplateName()}Template`);
+    const template = this._options.getAppointmentTemplate(APPOINTMENT_TOOLTIP_TEMPLATE);
     return this._createFunctionTemplate(template, appointment, targetedAppointment, index);
   }
   _createFunctionTemplate(template, appointmentData, targetedAppointmentData, index) {
     const isButtonClicked = Boolean(this._extraOptions.isButtonClick);
-    const isEmptyDropDownAppointmentTemplate = this._isEmptyDropDownAppointmentTemplate();
     // @ts-expect-error
     return new _function_template.FunctionTemplate(options => {
       // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
@@ -129,11 +129,11 @@ class TooltipStrategyBase {
       } = (0, _promise.createPromise)();
       this.asyncTemplatePromises.add(promise);
       return template.render({
-        model: isEmptyDropDownAppointmentTemplate ? {
+        model: {
           appointmentData,
           targetedAppointmentData,
           isButtonClicked
-        } : appointmentData,
+        },
         container: options.container,
         index,
         onRendered: () => {
@@ -142,12 +142,6 @@ class TooltipStrategyBase {
         }
       });
     });
-  }
-  _getItemListTemplateName() {
-    return this._isEmptyDropDownAppointmentTemplate() ? 'appointmentTooltip' : 'dropDownAppointment';
-  }
-  _isEmptyDropDownAppointmentTemplate() {
-    return !this._extraOptions.dropDownAppointmentTemplate || this._extraOptions.dropDownAppointmentTemplate === 'dropDownAppointment';
   }
   _onListItemClick(e) {
     this.hide();

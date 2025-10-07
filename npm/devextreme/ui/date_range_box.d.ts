@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/date_range_box.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -306,7 +306,7 @@ export type Properties = Omit<DateBoxBaseOptions<dxDateRangeBox>, 'inputAttr' | 
     startDateText?: string;
     /**
      * @docid dxDateRangeBoxOptions.value
-     * @type Array<Date|number|string|null>
+     * @type Array<Date | number | string | null>
      * @default [null,null]
      * @public
      */
@@ -343,8 +343,9 @@ export default class dxDateRangeBox extends DateRangeBoxBase {
    * @docid
    * @publicName reset(value)
    * @public
+   * @param1 value:Array<Date | number | string | null>
    */
-  reset(value?: Array<Date | number | string | null>): void;
+  reset(value?: Properties['value']): void;
 }
 
 

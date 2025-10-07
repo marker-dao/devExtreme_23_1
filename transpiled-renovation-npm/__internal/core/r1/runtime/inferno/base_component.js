@@ -86,7 +86,8 @@ class InfernoWrapperComponent extends InfernoComponent {
       const indexInRemoved = el.dxClasses.removed.indexOf(value);
       if (indexInRemoved > -1) {
         el.dxClasses.removed.splice(indexInRemoved, 1);
-      } else if (!el.dxClasses.added.includes(value)) {
+      }
+      if (!el.dxClasses.added.includes(value)) {
         el.dxClasses.added.push(value);
       }
     });
@@ -94,7 +95,8 @@ class InfernoWrapperComponent extends InfernoComponent {
       const indexInAdded = el.dxClasses.added.indexOf(value);
       if (indexInAdded > -1) {
         el.dxClasses.added.splice(indexInAdded, 1);
-      } else if (!el.dxClasses.removed.includes(value)) {
+      }
+      if (!el.dxClasses.removed.includes(value)) {
         el.dxClasses.removed.push(value);
       }
     });

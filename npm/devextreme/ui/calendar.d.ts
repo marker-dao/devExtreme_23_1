@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/calendar.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -244,9 +244,9 @@ export default class dxCalendar extends Editor<dxCalendarOptions> {
      * @docid
      * @publicName reset(value)
      * @public
-     * @param1 value:Date|number|string|Array<Date|number|string|null>|null
+     * @param1 value:Date | number | string | Array<Date | number | string | null> | null
      */
-    reset(value?: DateLike | Array<Date | number | string | null>): void;
+    reset(value?: Properties['value']): void;
 }
 
 /** @public */

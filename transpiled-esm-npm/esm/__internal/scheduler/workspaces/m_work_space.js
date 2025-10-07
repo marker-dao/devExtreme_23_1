@@ -1273,17 +1273,6 @@ class SchedulerWorkSpace extends Widget {
     });
     return result;
   }
-  scrollToTime(hours, minutes, date) {
-    if (!this._isValidScrollDate(date)) {
-      return;
-    }
-    const coordinates = this._getScrollCoordinates(hours, minutes, date);
-    const scrollable = this.getScrollable();
-    scrollable.scrollBy({
-      top: coordinates.top - scrollable.scrollTop(),
-      left: 0
-    });
-  }
   scrollTo(date, groupValues) {
     let allDay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     let throwWarning = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;

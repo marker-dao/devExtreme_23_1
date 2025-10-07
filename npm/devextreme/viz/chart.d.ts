@@ -1,7 +1,7 @@
 /**
 * DevExtreme (viz/chart.d.ts)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -37,6 +37,7 @@ import {
     BaseChartOptions,
     BaseChartTooltip,
     BaseChartAnnotationConfig,
+    BasePointInfo,
     PointInteractionInfo,
     TooltipInfo,
 } from './chart_components/base_chart';
@@ -404,6 +405,266 @@ export interface baseLabelObject {
      */
     show(holdVisible: boolean): void;
 }
+
+/**
+ * @docid
+ * @public
+ * @type object
+ */
+export type StackedPointInfo = CommonPointInfo & {
+  /**
+   * @docid
+   * @public
+   */
+  percent?: number;
+  /**
+   * @docid
+   * @public
+   */
+  percentText?: string;
+  /**
+   * @docid
+   * @public
+   */
+  points?: StackedPointInfo[];
+  /**
+   * @docid
+   * @public
+   */
+  total?: number;
+  /**
+   * @docid
+   * @public
+   */
+  totalText?: string;
+};
+
+/**
+ * @docid
+ * @public
+ * @type object
+ */
+export type BubblePointInfo = CommonPointInfo & {
+  /**
+   * @docid
+   * @public
+   */
+  points?: BubblePointInfo[];
+  /**
+   * @docid
+   * @public
+   */
+  size?: number;
+  /**
+   * @docid
+   * @public
+   */
+  sizeText?: string;
+};
+
+/**
+ * @docid
+ * @public
+ * @type object
+ */
+export type CandleStickPointInfo = {
+  /**
+   * @docid
+   * @public
+   */
+  argument?: string | number | Date;
+  /**
+   * @docid
+   * @public
+   */
+  closeValue?: number | string;
+  /**
+   * @docid
+   * @public
+   */
+  closeValueText?: string;
+  /**
+   * @docid
+   * @public
+   */
+  highValue?: number | string;
+  /**
+   * @docid
+   * @public
+   */
+  highValueText?: string;
+  /**
+   * @docid
+   * @public
+   */
+  lowValue?: number | string;
+  /**
+   * @docid
+   * @public
+   */
+  lowValueText?: string;
+  /**
+   * @docid
+   * @public
+   */
+  openValue?: number | string;
+  /**
+   * @docid
+   * @public
+   */
+  openValueText?: string;
+  /**
+   * @docid
+   * @public
+   */
+  originalArgument?: string | number | Date;
+  /**
+   * @docid
+   * @public
+   */
+  originalCloseValue?: number | string;
+  /**
+   * @docid
+   * @public
+   */
+  originalHighValue?: number | string;
+  /**
+   * @docid
+   * @public
+   */
+  originalLowValue?: number | string;
+  /**
+   * @docid
+   * @public
+   */
+  originalOpenValue?: number | string;
+  /**
+   * @docid
+   * @public
+   */
+  point?: chartPointObject;
+  /**
+   * @docid
+   * @public
+   */
+  points?: CandleStickPointInfo[];
+  /**
+   * @docid
+   * @public
+   */
+  reductionValue?: number | string;
+  /**
+   * @docid
+   * @public
+   */
+  seriesName?: any;
+  /**
+   * @docid
+   * @public
+   */
+  value?: number | string;
+  /**
+   * @docid
+   * @public
+   */
+  valueText?: string;
+};
+
+/**
+ * @docid
+ * @public
+ * @type object
+ */
+export type RangePointInfo = {
+  /**
+   * @docid
+   * @public
+   */
+  argument?: string | number | Date;
+  /**
+   * @docid
+   * @public
+   */
+  argumentText?: string;
+  /**
+   * @docid
+   * @public
+   */
+  valueText?: string;
+  /**
+   * @docid
+   * @public
+   */
+  rangeValue1?: string | number | Date;
+  /**
+   * @docid
+   * @public
+   */
+  rangeValue1Text?: string;
+  /**
+   * @docid
+   * @public
+   */
+  rangeValue2?: string | number | Date;
+  /**
+   * @docid
+   * @public
+   */
+  rangeValue2Text?: string;
+  /**
+   * @docid
+   * @public
+   */
+  seriesName?: any;
+  /**
+   * @docid
+   * @public
+   */
+  point?: chartPointObject;
+  /**
+   * @docid
+   * @public
+   */
+  points?: RangePointInfo[];
+  /**
+   * @docid
+   * @public
+   */
+  originalArgument?: string | number | Date;
+  /**
+   * @docid
+   * @public
+   */
+  originalMinValue?: string | number | Date;
+  /**
+   * @docid
+   * @public
+   */
+  originalValue?: string | number | Date;
+};
+
+/**
+ * @docid
+ * @public
+ */
+export type CommonPointInfo = BasePointInfo<chartPointObject>;
+
+/**
+ * @docid dxChartPointInfo
+ * @public
+ */
+export type PointInfo =
+  | CommonPointInfo
+  | StackedPointInfo
+  | BubblePointInfo
+  | CandleStickPointInfo
+  | RangePointInfo;
+
+/**
+ * @namespace DevExpress.viz
+ * @deprecated Use PointInfo instead
+ */
+export type dxChartPointInfo = PointInfo;
 
 /**
  * @docid
@@ -2431,11 +2692,13 @@ export type Panes = CommonPaneSettings & {
      */
     name?: string | undefined;
 };
+
 /**
- * @bublic
+ * @public
  * @docid dxChartTooltip
+ * @type object
  */
-export type Tooltip = BaseChartTooltip & {
+export type Tooltip = Omit<BaseChartTooltip<PointInfo>, 'contentTemplate' | 'customizeTooltip'> & {
     /**
      * @docid dxChartOptions.tooltip.location
      * @default 'center'
@@ -2443,7 +2706,25 @@ export type Tooltip = BaseChartTooltip & {
      * @public
      */
     location?: ChartTooltipLocation;
+    /**
+     * @docid dxChartOptions.tooltip.contentTemplate
+     * @type_function_param1 pointInfo:dxChartPointInfo
+     * @type_function_return string|Element|jQuery
+     * @default undefined
+     * @public
+     */
+    contentTemplate?: template | ((pointInfo: PointInfo, element: DxElement) => string | UserDefinedElement) | undefined;
+    /**
+     * @docid dxChartOptions.tooltip.customizeTooltip
+     * @public
+     * @type_function_param1 pointInfo:dxChartPointInfo
+     * @type_function_return object
+     * @default undefined
+     * @notUsedInTheme
+     */
+    customizeTooltip?: ((pointInfo: PointInfo) => any) | undefined;
 };
+
 /**
  * @public
  * @docid dxChartValueAxis

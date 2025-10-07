@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/m_text_area.js)
 * Version: 25.2.0
-* Build date: Wed Sep 24 2025
+* Build date: Tue Oct 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -116,7 +116,12 @@ class TextArea extends TextBox {
     super._refreshEvents();
   }
   _getHeightDifference($input) {
-    return getVerticalOffsets(this.$element().get(0), false) + getVerticalOffsets(this._$textEditorContainer.get(0), false) + getVerticalOffsets(this._$textEditorInputContainer.get(0), true) + getElementBoxParams('height', getWindow().getComputedStyle($input.get(0))).margin;
+    const verticalElementOffset = getVerticalOffsets(this.$element().get(0), false);
+    const verticalEditorContainerOffset = getVerticalOffsets(this._$textEditorContainer.get(0), false);
+    const verticalInputContainerOffsets = getVerticalOffsets(this._$textEditorInputContainer.get(0), true);
+    const inputMargin = getElementBoxParams('height', getWindow().getComputedStyle($input.get(0))).margin;
+    const sum = verticalElementOffset + verticalEditorContainerOffset + verticalInputContainerOffsets + inputMargin;
+    return sum;
   }
   _updateInputHeight() {
     if (!hasWindow()) {
@@ -155,8 +160,10 @@ class TextArea extends TextBox {
   _getBoundaryHeight(optionName) {
     const boundaryValue = this.option(optionName);
     if (isDefined(boundaryValue)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return typeof boundaryValue === 'number' ? boundaryValue : parseHeight(boundaryValue, this.$element().get(0).parentElement, this.$element().get(0));
     }
+    return undefined;
   }
   _renderInputType() {}
   _visibilityChanged(visible) {
