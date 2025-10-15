@@ -1,6 +1,6 @@
 import $ from '../../../core/renderer';
 import { FORM_LOAD_PANEL_CLASS, FORM_LOAD_PANEL_WRAPPER_CLASS } from '../../ui/form/constants';
-import LoadIndicator, { AnimationType } from '../../ui/load_indicator';
+import { AnimationType } from '../../ui/load_indicator';
 export const FORM_LOAD_INDICATOR_SIZE = 120;
 export class FormLoadPanel {
   constructor(dependencies) {
@@ -47,6 +47,11 @@ export class FormLoadPanel {
       },
       visible: false,
       showIndicator: true,
+      indicatorOptions: {
+        animationType: AnimationType.Sparkle,
+        width: FORM_LOAD_INDICATOR_SIZE,
+        height: FORM_LOAD_INDICATOR_SIZE
+      },
       showPane: false,
       shading: false,
       hideOnOutsideClick: false,
@@ -58,18 +63,5 @@ export class FormLoadPanel {
         class: FORM_LOAD_PANEL_WRAPPER_CLASS
       }
     });
-    this._configureLoadIndicator();
-  }
-  _configureLoadIndicator() {
-    var _this$_loadPanel4;
-    const $loadIndicator = (_this$_loadPanel4 = this._loadPanel) === null || _this$_loadPanel4 === void 0 ? void 0 : _this$_loadPanel4._$indicator;
-    if ($loadIndicator !== null && $loadIndicator !== void 0 && $loadIndicator.length) {
-      const loadIndicator = LoadIndicator.getInstance($loadIndicator.get(0));
-      loadIndicator.option({
-        animationType: AnimationType.Sparkle,
-        width: FORM_LOAD_INDICATOR_SIZE,
-        height: FORM_LOAD_INDICATOR_SIZE
-      });
-    }
   }
 }

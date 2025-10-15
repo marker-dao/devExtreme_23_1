@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/resizing/get_delta_time.test.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,7 +26,7 @@ describe('getDeltaTime', () => {
         },
         resizableStep: 50,
         cellDurationInMinutes: 30,
-        isAllDay: true
+        isAllDayPanel: true
       })).toBe(0);
     });
   });
@@ -46,7 +46,7 @@ describe('getDeltaTime', () => {
         },
         resizableStep: 50,
         cellDurationInMinutes: 30,
-        isAllDay: false
+        isAllDayPanel: false
       })).toBe(-30 * 60000);
     });
     it(`should return correct delta in px for resized all day appointment in vertical ${view} view`, () => {
@@ -64,7 +64,7 @@ describe('getDeltaTime', () => {
         },
         resizableStep: 50,
         cellDurationInMinutes: 30,
-        isAllDay: true
+        isAllDayPanel: true
       })).toBe(-24 * 3600000);
     });
   });
@@ -84,7 +84,7 @@ describe('getDeltaTime', () => {
         },
         resizableStep: 50,
         cellDurationInMinutes: 30,
-        isAllDay: false
+        isAllDayPanel: false
       })).toBe(-24 * 3600000);
     });
   });
@@ -104,7 +104,7 @@ describe('getDeltaTime', () => {
         },
         resizableStep: 50,
         cellDurationInMinutes: 30,
-        isAllDay: false
+        isAllDayPanel: false
       })).toBe(-30 * 60000);
     });
   });

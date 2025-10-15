@@ -1,12 +1,14 @@
 /**
 * DevExtreme (esm/__internal/ui/load_panel.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 import _extends from "@babel/runtime/helpers/esm/extends";
+const _excluded = ["src"];
 import messageLocalization from '../../common/core/localization/message';
 import registerComponent from '../../core/component_registrator';
 import $ from '../../core/renderer';
@@ -84,6 +86,16 @@ class LoadPanel extends Overlay {
     this.$element().addClass(LOADPANEL_CLASS);
     this.$wrapper().addClass(LOADPANEL_WRAPPER_CLASS);
     this._updateWrapperAria();
+  }
+  _setDeprecatedOptions() {
+    super._setDeprecatedOptions();
+    this._deprecatedOptions = _extends({}, this._deprecatedOptions, {
+      // @ts-expect-error ts-error
+      indicatorSrc: {
+        since: '25.2',
+        alias: 'indicatorOptions.src'
+      }
+    });
   }
   _updateWrapperAria() {
     this.$wrapper().removeAttr('aria-label').removeAttr('role');
@@ -163,10 +175,18 @@ class LoadPanel extends Overlay {
     if (!this._$indicator) {
       this._$indicator = $('<div>').addClass(LOADPANEL_INDICATOR_CLASS).appendTo(this._$loadPanelContentWrapper);
     }
-    this._createComponent(this._$indicator, LoadIndicator, {
+    const {
+      indicatorOptions = {},
+      indicatorSrc
+    } = this.option();
+    const {
+        src
+      } = indicatorOptions,
+      restIndicatorOptions = _objectWithoutPropertiesLoose(indicatorOptions, _excluded);
+    this._createComponent(this._$indicator, LoadIndicator, _extends({
       elementAttr: this._getAriaAttributes(),
-      indicatorSrc: this.option('indicatorSrc')
-    });
+      indicatorSrc: src ?? indicatorSrc
+    }, restIndicatorOptions));
   }
   _cleanPreviousContent() {
     this.$content().find(`.${LOADPANEL_MESSAGE_CLASS}`).remove();
@@ -191,6 +211,7 @@ class LoadPanel extends Overlay {
         this._togglePaneVisible();
         break;
       case 'indicatorSrc':
+      case 'indicatorOptions':
         this._renderLoadIndicator();
         break;
       default:

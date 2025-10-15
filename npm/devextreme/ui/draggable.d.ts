@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/draggable.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,12 +21,13 @@ import {
 } from '../common';
 
 import {
+    PointerInteractionEvent,
     Cancelable,
     EventInfo,
     NativeEventInfo,
     InitializedEventInfo,
     ChangedOptionInfo,
-} from '../common/core/events';
+} from '../events';
 
 import dxSortable from './sortable';
 
@@ -131,7 +132,7 @@ export type DisposingEvent = EventInfo<dxDraggable>;
  * @type object
  * @inherits Cancelable,NativeEventInfo
  */
-export type DragEndEvent = Cancelable & NativeEventInfo<dxDraggable, PointerEvent | MouseEvent | TouchEvent> & {
+export type DragEndEvent = Cancelable & NativeEventInfo<dxDraggable, PointerInteractionEvent> & {
     /** @docid _ui_draggable_DragEndEvent.itemData */
     readonly itemData?: any;
     /** @docid _ui_draggable_DragEndEvent.itemElement */
@@ -152,7 +153,7 @@ export type DragEndEvent = Cancelable & NativeEventInfo<dxDraggable, PointerEven
  * @type object
  * @inherits Cancelable,NativeEventInfo
  */
-export type DragMoveEvent = Cancelable & NativeEventInfo<dxDraggable, PointerEvent | MouseEvent | TouchEvent> & {
+export type DragMoveEvent = Cancelable & NativeEventInfo<dxDraggable, PointerInteractionEvent> & {
     /** @docid _ui_draggable_DragMoveEvent.itemData */
     readonly itemData?: any;
     /** @docid _ui_draggable_DragMoveEvent.itemElement */
@@ -173,7 +174,7 @@ export type DragMoveEvent = Cancelable & NativeEventInfo<dxDraggable, PointerEve
  * @type object
  * @inherits Cancelable,NativeEventInfo
  */
-export type DragStartEvent = Cancelable & NativeEventInfo<dxDraggable, PointerEvent | MouseEvent | TouchEvent> & {
+export type DragStartEvent = Cancelable & NativeEventInfo<dxDraggable, PointerInteractionEvent> & {
     /** @docid _ui_draggable_DragStartEvent.itemData */
     itemData?: any;
     /** @docid _ui_draggable_DragStartEvent.itemElement */

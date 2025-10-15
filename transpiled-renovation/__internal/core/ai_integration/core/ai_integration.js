@@ -7,6 +7,7 @@ exports.CommandNames = exports.COMMANDS = exports.AIIntegration = void 0;
 var _index = require("../../../core/ai_integration/commands/index");
 var _prompt_manager = require("../../../core/ai_integration/core/prompt_manager");
 var _request_manager = require("../../../core/ai_integration/core/request_manager");
+var _generateGridColumn = require("../commands/generateGridColumn");
 var CommandNames;
 (function (CommandNames) {
   CommandNames["ChangeStyle"] = "changeStyle";
@@ -18,6 +19,7 @@ var CommandNames;
   CommandNames["Summarize"] = "summarize";
   CommandNames["Translate"] = "translate";
   CommandNames["SmartPaste"] = "smartPaste";
+  CommandNames["GenerateGridColumn"] = "generateGridColumn";
 })(CommandNames || (exports.CommandNames = CommandNames = {}));
 const COMMANDS = exports.COMMANDS = {
   [CommandNames.ChangeStyle]: _index.ChangeStyleCommand,
@@ -28,7 +30,8 @@ const COMMANDS = exports.COMMANDS = {
   [CommandNames.Shorten]: _index.ShortenCommand,
   [CommandNames.Summarize]: _index.SummarizeCommand,
   [CommandNames.Translate]: _index.TranslateCommand,
-  [CommandNames.SmartPaste]: _index.SmartPasteCommand
+  [CommandNames.SmartPaste]: _index.SmartPasteCommand,
+  [CommandNames.GenerateGridColumn]: _generateGridColumn.GenerateGridColumnCommand
 };
 class AIIntegration {
   constructor(provider) {
@@ -71,6 +74,9 @@ class AIIntegration {
   }
   smartPaste(params, callbacks) {
     return this.executeCommand(CommandNames.SmartPaste, params, callbacks);
+  }
+  generateGridColumn(params, callbacks) {
+    return this.executeCommand(CommandNames.GenerateGridColumn, params, callbacks);
   }
 }
 exports.AIIntegration = AIIntegration;

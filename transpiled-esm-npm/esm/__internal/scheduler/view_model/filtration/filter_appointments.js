@@ -1,0 +1,27 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
+import { addAllDayPanelOccupation } from './utils/add_all_day_panel_occupation';
+import { filterByAttributes } from './utils/filter_by_attributes/filter_by_attributes';
+import { filterByIntervals } from './utils/filter_by_intervals/filter_by_intervals';
+import { getFilterOptions } from './utils/get_filter_options/get_filter_options';
+import { splitByGroupIndex } from './utils/split_by_group_index';
+import { splitByRecurrence } from './utils/split_by_recurrence/split_by_recurrence';
+const addDuration = entities => entities.map(entity => _extends({}, entity, {
+  duration: entity.endDateUTC - entity.startDateUTC
+}));
+const saveDatesBeforeSplit = entities => entities.map(entity => _extends({}, entity, {
+  datesBeforeSplit: {
+    startDateUTC: entity.startDateUTC,
+    endDateUTC: entity.endDateUTC
+  }
+}));
+export const filterAppointments = (schedulerStore, items) => {
+  const options = getFilterOptions(schedulerStore);
+  const step1 = addAllDayPanelOccupation(items, options);
+  const step2 = filterByAttributes(step1, options);
+  const step3 = splitByRecurrence(step2, options);
+  const step4 = filterByIntervals(step3, options);
+  const step5 = addDuration(step4);
+  const step6 = splitByGroupIndex(step5, options);
+  const step7 = saveDatesBeforeSplit(step6);
+  return step7;
+};

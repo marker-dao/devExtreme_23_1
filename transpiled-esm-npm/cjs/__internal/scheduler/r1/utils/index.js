@@ -272,7 +272,8 @@ var _base = require("./base");
 var _exclude_from_recurrence = require("./exclude_from_recurrence");
 var _format_weekday = require("./format_weekday");
 const agendaUtils = exports.agendaUtils = {
-  calculateStartViewDate: _agenda.calculateStartViewDate
+  calculateStartViewDate: _agenda.calculateStartViewDate,
+  calculateRows: _agenda.calculateRows
 };
 const dayUtils = exports.dayUtils = {
   calculateStartViewDate: _day.calculateStartViewDate

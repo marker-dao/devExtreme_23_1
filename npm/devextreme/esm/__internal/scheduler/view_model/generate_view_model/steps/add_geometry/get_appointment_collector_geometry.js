@@ -1,0 +1,28 @@
+/**
+* DevExtreme (esm/__internal/scheduler/view_model/generate_view_model/steps/add_geometry/get_appointment_collector_geometry.js)
+* Version: 25.2.0
+* Build date: Wed Oct 15 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { getAbstractSizeByViewOrientation, getRealSizeByViewOrientation } from './swap_by_view_orientation';
+export const getAppointmentCollectorGeometry = (entity, _ref) => {
+  let {
+    collectorPosition,
+    cellSize,
+    collectorSize,
+    collectorWithMarginsSize,
+    viewOrientation
+  } = _ref;
+  const collectorAbstractSize = getAbstractSizeByViewOrientation(collectorSize, viewOrientation);
+  const cellAbstractSize = getAbstractSizeByViewOrientation(cellSize, viewOrientation);
+  const abstractGeometry = {
+    offsetX: entity.columnIndex * cellAbstractSize.sizeX,
+    offsetY: collectorPosition === 'start' ? 0 : cellAbstractSize.sizeY - getAbstractSizeByViewOrientation(collectorWithMarginsSize, viewOrientation).sizeY,
+    sizeY: collectorAbstractSize.sizeY,
+    sizeX: collectorAbstractSize.sizeX
+  };
+  const entityGeometry = getRealSizeByViewOrientation(abstractGeometry, viewOrientation);
+  return entityGeometry;
+};

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/recurrence/base.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,14 +12,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.parseRecurrenceRule = exports.getRecurrenceString = exports.getDateByAsciiString = exports.getAsciiStringByDate = void 0;
-var _date = _interopRequireDefault(require("../../../core/utils/date"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-const toMs = _date.default.dateToMilliseconds;
-const getAsciiStringByDate = date => {
-  const currentOffset = date.getTimezoneOffset() * toMs('minute');
-  const offsetDate = new Date(date.getTime() + currentOffset);
-  return `${offsetDate.getFullYear() + `0${offsetDate.getMonth() + 1}`.slice(-2) + `0${offsetDate.getDate()}`.slice(-2)}T${`0${offsetDate.getHours()}`.slice(-2)}${`0${offsetDate.getMinutes()}`.slice(-2)}${`0${offsetDate.getSeconds()}`.slice(-2)}Z`;
-};
+const getAsciiStringByDate = date => `${date.getUTCFullYear() + `0${date.getUTCMonth() + 1}`.slice(-2) + `0${date.getUTCDate()}`.slice(-2)}T${`0${date.getUTCHours()}`.slice(-2)}${`0${date.getUTCMinutes()}`.slice(-2)}${`0${date.getUTCSeconds()}`.slice(-2)}Z`;
 exports.getAsciiStringByDate = getAsciiStringByDate;
 const getRecurrenceString = rule => {
   if (!(rule !== null && rule !== void 0 && rule.freq)) {

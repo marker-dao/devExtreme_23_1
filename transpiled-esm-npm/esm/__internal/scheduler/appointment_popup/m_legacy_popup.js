@@ -11,7 +11,7 @@ import { hide as hideLoading, show as showLoading } from '../m_loading';
 import { AppointmentAdapter } from '../utils/appointment_adapter/appointment_adapter';
 import { getAppointmentGroupValues, getRawAppointmentGroupValues } from '../utils/resource_manager/appointment_groups_utils';
 const toMs = dateUtils.dateToMilliseconds;
-export const APPOINTMENT_POPUP_CLASS = 'dx-scheduler-appointment-popup';
+export const APPOINTMENT_POPUP_CLASS = 'dx-scheduler-legacy-appointment-popup';
 const DAY_IN_MS = toMs('day');
 const POPUP_CONFIG = {
   height: 'auto',

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/data_grid.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -34,7 +34,8 @@ import {
     NativeEventInfo,
     InitializedEventInfo,
     ChangedOptionInfo,
-} from '../common/core/events';
+    InteractionEvent,
+} from '../events';
 
 import {
     dxToolbarItem,
@@ -674,7 +675,7 @@ export type FocusedCellChangedEvent<TRowData = any, TKey = any> = EventInfo<dxDa
  * @type object
  * @inherits Cancelable,NativeEventInfo
  */
-export type FocusedCellChangingEvent<TRowData = any, TKey = any> = Cancelable & NativeEventInfo<dxDataGrid<TRowData, TKey>, KeyboardEvent | PointerEvent | MouseEvent | TouchEvent> & {
+export type FocusedCellChangingEvent<TRowData = any, TKey = any> = Cancelable & NativeEventInfo<dxDataGrid<TRowData, TKey>, InteractionEvent> & {
   /** @docid _ui_data_grid_FocusedCellChangingEvent.cellElement */
   readonly cellElement: DxElement;
   /** @docid _ui_data_grid_FocusedCellChangingEvent.prevColumnIndex */
@@ -723,7 +724,7 @@ export type FocusedRowChangedEvent<TRowData = any, TKey = any> = EventInfo<dxDat
  * @type object
  * @inherits Cancelable,NativeEventInfo
  */
-export type FocusedRowChangingEvent<TRowData = any, TKey = any> = Cancelable & NativeEventInfo<dxDataGrid<TRowData, TKey>, KeyboardEvent | PointerEvent | MouseEvent | TouchEvent> & {
+export type FocusedRowChangingEvent<TRowData = any, TKey = any> = Cancelable & NativeEventInfo<dxDataGrid<TRowData, TKey>, InteractionEvent> & {
   /** @docid _ui_data_grid_FocusedRowChangingEvent.rowElement */
   readonly rowElement: DxElement;
   /** @docid _ui_data_grid_FocusedRowChangingEvent.prevRowIndex */

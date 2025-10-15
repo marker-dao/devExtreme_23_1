@@ -1,3 +1,4 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 import { fx } from '../../../../common/core/animation';
 import eventsEngine from '../../../../common/core/events/core/events_engine';
@@ -1168,7 +1169,7 @@ export class DraggingHeaderViewController extends modules.ViewController {
     type !== 'block' && columnsSeparator && columnsSeparator.hide();
   }
   allowDrop(parameters) {
-    return this._columnsController.allowMoveColumn(parameters.sourceColumnIndex, parameters.targetColumnIndex, parameters.sourceLocation, parameters.targetLocation);
+    return this._columnsController.allowMoveColumn(this.addColumnIndexOffset(parameters.sourceColumnIndex), this.addColumnIndexOffset(parameters.targetColumnIndex), parameters.sourceLocation, parameters.targetLocation);
   }
   drag(parameters) {
     const {
@@ -1226,6 +1227,15 @@ export class DraggingHeaderViewController extends modules.ViewController {
       }
     }
   }
+  addColumnIndexOffset(columnIndex) {
+    const offset = this._columnsController.getColumnIndexOffset();
+    if (isObject(columnIndex)) {
+      return _extends({}, columnIndex, {
+        columnIndex: columnIndex.columnIndex + offset
+      });
+    }
+    return columnIndex + offset;
+  }
   drop(parameters) {
     const {
       sourceColumnElement
@@ -1241,7 +1251,7 @@ export class DraggingHeaderViewController extends modules.ViewController {
       if (separator) {
         separator.hide();
       }
-      this._columnsController.moveColumn(parameters.sourceColumnIndex, parameters.targetColumnIndex, parameters.sourceLocation, parameters.targetLocation);
+      this._columnsController.moveColumn(this.addColumnIndexOffset(parameters.sourceColumnIndex), this.addColumnIndexOffset(parameters.targetColumnIndex), parameters.sourceLocation, parameters.targetLocation);
     }
   }
 }

@@ -14,7 +14,7 @@ export class BaseCommand {
       },
       onComplete: result => {
         var _callbacks$onComplete;
-        const finalResponse = this.parseResult(result);
+        const finalResponse = this.parseResult(result, params);
         callbacks === null || callbacks === void 0 || (_callbacks$onComplete = callbacks.onComplete) === null || _callbacks$onComplete === void 0 || _callbacks$onComplete.call(callbacks, finalResponse);
       },
       onError: error => {
@@ -22,7 +22,7 @@ export class BaseCommand {
         callbacks === null || callbacks === void 0 || (_callbacks$onError = callbacks.onError) === null || _callbacks$onError === void 0 || _callbacks$onError.call(callbacks, error);
       }
     };
-    const abort = this.requestManager.sendRequest(prompt, requestManagerCallbacks);
+    const abort = this.requestManager.sendRequest(prompt, requestManagerCallbacks, params);
     return abort;
   }
 }

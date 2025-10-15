@@ -221,6 +221,10 @@ var _default = exports.default = (0, _error.default)(_errors.default.ERROR_MESSA
   */
   E1066: 'All AI columns must have names.',
   /**
+  * @name ErrorsUIWidgets.E1067
+  */
+  E1067: '\'aiIntegration\' is not configured in the {0} column.',
+  /**
   * @name ErrorsUIWidgets.W1001
   */
   W1001: 'The "key" option cannot be modified after initialization',

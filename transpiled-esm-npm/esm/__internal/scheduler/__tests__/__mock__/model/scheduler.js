@@ -25,6 +25,10 @@ export class SchedulerModel {
   getAppointments() {
     return [...this.container.querySelectorAll('.dx-scheduler-appointment')].map(element => createAppointmentModel(element));
   }
+  getCollectorTexts() {
+    const collectors = this.container.querySelectorAll('.dx-scheduler-appointment-collector');
+    return getTexts(collectors);
+  }
   getDateTableContent() {
     const cells = this.container.querySelectorAll('.dx-scheduler-date-table-cell');
     return getTexts(cells);

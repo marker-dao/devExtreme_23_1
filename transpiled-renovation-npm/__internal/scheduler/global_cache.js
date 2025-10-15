@@ -33,5 +33,6 @@ class Cache {
 }
 exports.Cache = Cache;
 const globalCache = exports.globalCache = {
-  timezones: new Cache()
+  timezones: new Cache(),
+  DST: new Cache()
 };

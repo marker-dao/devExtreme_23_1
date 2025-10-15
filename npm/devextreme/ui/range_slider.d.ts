@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/range_slider.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,8 @@ import {
     NativeEventInfo,
     InitializedEventInfo,
     ChangedOptionInfo,
-} from '../common/core/events';
+    InteractionEvent,
+} from '../events';
 
 import {
     ValueChangedInfo,
@@ -61,7 +62,7 @@ export type OptionChangedEvent = EventInfo<dxRangeSlider> & ChangedOptionInfo;
  * @type object
  * @inherits NativeEventInfo,ValueChangedInfo
  */
-export type ValueChangedEvent = NativeEventInfo<dxRangeSlider, KeyboardEvent | MouseEvent | PointerEvent | TouchEvent | UIEvent | Event> & ValueChangedInfo & {
+export type ValueChangedEvent = NativeEventInfo<dxRangeSlider, InteractionEvent | UIEvent | Event> & ValueChangedInfo & {
     /** @docid _ui_range_slider_ValueChangedEvent.start */
     readonly start?: number;
     /** @docid _ui_range_slider_ValueChangedEvent.end */

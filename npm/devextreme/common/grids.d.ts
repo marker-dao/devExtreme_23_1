@@ -1,7 +1,7 @@
 /**
 * DevExtreme (common/grids.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -47,6 +47,8 @@ import {
   NativeEventInfo,
 } from './core/events';
 
+import { PointerInteractionEvent } from '../events';
+
 import {
   DxPromise,
 } from '../core/utils/deferred';
@@ -64,6 +66,8 @@ import {
   Properties as FormProperties,
   SimpleItem,
 } from '../ui/form';
+
+import { LoadPanelIndicatorProperties } from '../ui/load_panel';
 
 import {
   Properties as PopupProperties,
@@ -2600,8 +2604,13 @@ export type LoadPanel = {
   /**
    * @docid GridBaseOptions.loadPanel.indicatorSrc
    * @default ""
+   * @deprecated GridBaseOptions.loadPanel.indicatorOptions
    */
   indicatorSrc?: string;
+  /**
+   * @docid GridBaseOptions.loadPanel.indicatorOptions
+   */
+  indicatorOptions?: LoadPanelIndicatorProperties;
   /**
    * @docid GridBaseOptions.loadPanel.shading
    * @default false
@@ -2720,7 +2729,7 @@ export interface PagingBase {
   pageSize?: number;
 }
 
-export type ReducedNativeEventInfo<TComponent extends GridBase> = Required<Pick<NativeEventInfo<TComponent, PointerEvent | MouseEvent | TouchEvent>, 'component' | 'event'>>;
+export type ReducedNativeEventInfo<TComponent extends GridBase> = Required<Pick<NativeEventInfo<TComponent, PointerInteractionEvent>, 'component' | 'event'>>;
 
 /**
  * @docid

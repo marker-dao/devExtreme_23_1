@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointments/resizing/get_delta_time.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -37,14 +37,14 @@ export const getDeltaTime = (args, initialSize, options) => {
   const {
     viewType,
     resizableStep,
-    isAllDay
+    isAllDayPanel
   } = options;
   switch (true) {
-    case ['timelineMonth', 'month'].includes(viewType) || Boolean(isAllDay):
+    case ['timelineMonth', 'month'].includes(viewType) || Boolean(isAllDayPanel):
       return getAllDayDeltaWidth(args, initialSize, resizableStep) * toMs('day');
     case viewType === 'agenda':
       return 0;
-    case VERTICAL_VIEW_TYPES.includes(viewType) && !isAllDay:
+    case VERTICAL_VIEW_TYPES.includes(viewType) && !isAllDayPanel:
       return getVerticalDeltaTime(args, initialSize, options);
     default:
       return getHorizontalDeltaTime(args, initialSize, options);

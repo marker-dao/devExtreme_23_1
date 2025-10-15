@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointments/appointment/text_utils.test.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -38,7 +38,9 @@ const options = {
         data: {
           text: 'Appointment name',
           startDate: Date.UTC(2025, 2, 10, 10),
-          endDate: Date.UTC(2025, 2, 10, 10, 30)
+          endDate: Date.UTC(2025, 2, 10, 10, 30),
+          partIndex: 0,
+          partTotalCount: 0
         }
       }))).toBe('Appointment name: March 10, 2025, 10:00 AM - 10:30 AM');
     });

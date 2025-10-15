@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/collection/ui.collection_widget.base.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,6 +23,8 @@ import {
     ItemInfo,
     AsyncCancelable,
 } from '../../common/core/events';
+
+import { PointerInteractionEvent } from '../../events';
 
 import Widget, {
     WidgetOptions,
@@ -115,7 +117,7 @@ export interface CollectionWidgetOptions<
      * @action
      * @public
      */
-    onItemContextMenu?: ((e: NativeEventInfo<TComponent, MouseEvent | PointerEvent | TouchEvent> & ItemInfo<TItem>) => void);
+    onItemContextMenu?: ((e: NativeEventInfo<TComponent, PointerInteractionEvent> & ItemInfo<TItem>) => void);
     /**
      * @docid
      * @default null
@@ -126,7 +128,7 @@ export interface CollectionWidgetOptions<
      * @action
      * @public
      */
-    onItemHold?: ((e: NativeEventInfo<TComponent, MouseEvent | PointerEvent | TouchEvent> & ItemInfo<TItem>) => void);
+    onItemHold?: ((e: NativeEventInfo<TComponent, PointerInteractionEvent> & ItemInfo<TItem>) => void);
     /**
      * @docid
      * @default null

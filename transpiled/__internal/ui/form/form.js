@@ -1399,24 +1399,13 @@ class Form extends _widget.default {
     };
     this._abort = aiIntegration[command](params, callbacks);
   }
-  _updateFieldWithSmartPasteValue(dataField, value, item) {
+  _updateFieldWithSmartPasteValue(dataField, value) {
     const {
       formData
     } = this.option();
     if ((0, _type.isDefined)(formData)) {
-      let resultValue = value;
-      resultValue = (0, _formAi.parseResultForEditorType)(dataField, item === null || item === void 0 ? void 0 : item.editorType, value);
-      if (typeof resultValue !== undefined) {
-        this._updateFieldValue(dataField, resultValue);
-      }
+      this._updateFieldValue(dataField, value);
     }
-  }
-  _getEditorItemsMap() {
-    const dataItems = this._itemsRunTimeInfo.getItemsForDataExtraction();
-    return dataItems.reduce((itemsMap, item) => {
-      itemsMap[item.dataField] = item;
-      return itemsMap;
-    }, {});
   }
   _getSmartPasteCommandCallbacks() {
     return {
@@ -1432,15 +1421,13 @@ class Form extends _widget.default {
           var _this$_smartPastedAct;
           this._hideLoadPanel();
           this.beginUpdate();
-          const editorTypesMap = this._getEditorItemsMap();
           fieldsData.forEach(_ref => {
             let {
               name,
               value
             } = _ref;
             try {
-              const currentItem = editorTypesMap[name];
-              this._updateFieldWithSmartPasteValue(name, value, currentItem);
+              this._updateFieldWithSmartPasteValue(name, value);
             } catch (error) {
               _m_console.logger.error(error);
             }
@@ -1483,6 +1470,7 @@ class Form extends _widget.default {
       return {
         name: item.dataField,
         format: (0, _formAi.getItemFormatInfo)(item),
+        type: (0, _formAi.getFieldType)(item.editorType),
         instruction: (_item$aiOptions = item.aiOptions) === null || _item$aiOptions === void 0 ? void 0 : _item$aiOptions.instruction
       };
     });

@@ -1,3 +1,4 @@
+import $ from '../../../../../core/renderer';
 export class PopupModel {
   constructor(element) {
     this.getLabelIdByText = labelText => {
@@ -91,13 +92,13 @@ export class PopupModel {
       return (selected === null || selected === void 0 ? void 0 : selected.getAttribute('aria-label')) ?? (selected === null || selected === void 0 || (_selected$textContent = selected.textContent) === null || _selected$textContent === void 0 ? void 0 : _selected$textContent.trim()) ?? null;
     };
     this.getForm = () => this.element.querySelector('.dx-form');
-    this.getTitle = () => document.querySelector('.dx-popup-title');
-    this.getDoneButton = () => {
-      const doneButton = this.element.querySelector('.dx-button.dx-popup-done');
-      if (!doneButton) {
+    this.getTitle = () => document.querySelector('.dx-popup-title .dx-toolbar-label');
+    this.getSaveButton = () => {
+      const saveButton = this.element.querySelector('.dx-button.dx-popup-done');
+      if (!saveButton) {
         throw new Error('Done button not found');
       }
-      return doneButton;
+      return saveButton;
     };
     this.getCancelButton = () => {
       const cancelButton = this.element.querySelector('.dx-button.dx-popup-cancel');
@@ -128,5 +129,29 @@ export class PopupModel {
       return editSeriesButton;
     };
     this.element = element;
+    // @ts-expect-error
+    this.component = $('.dx-scheduler-appointment-popup.dx-popup.dx-widget').dxPopup('instance');
+  }
+  get form() {
+    // @ts-expect-error
+    return $(this.element.querySelector('.dx-form')).dxForm('instance');
+  }
+  get startDate() {
+    return this.element.querySelector('.dx-scheduler-form-start-date-editor .dx-datebox.dx-widget');
+  }
+  get startTime() {
+    return this.element.querySelector('.dx-scheduler-form-start-time-editor .dx-datebox.dx-widget');
+  }
+  get startTimeZone() {
+    return this.element.querySelector('.dx-scheduler-form-start-date-timezone-editor .dx-selectbox.dx-widget');
+  }
+  get endDate() {
+    return this.element.querySelector('.dx-scheduler-form-end-date-editor .dx-datebox.dx-widget');
+  }
+  get endTime() {
+    return this.element.querySelector('.dx-scheduler-form-end-time-editor .dx-datebox.dx-widget');
+  }
+  get endTimeZone() {
+    return this.element.querySelector('.dx-scheduler-form-end-date-timezone-editor .dx-selectbox.dx-widget');
   }
 }

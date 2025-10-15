@@ -18,7 +18,6 @@ var _date = _interopRequireDefault(require("../../../core/utils/date"));
 var _dom = require("../../../core/utils/dom");
 var _extend = require("../../../core/utils/extend");
 var _iterator = require("../../../core/utils/iterator");
-var _object = require("../../../core/utils/object");
 var _position = require("../../../core/utils/position");
 var _size = require("../../../core/utils/size");
 var _type = require("../../../core/utils/type");
@@ -27,7 +26,6 @@ var _date2 = require("../../core/utils/date");
 var _constants = require("../constants");
 var _m_classes = require("../m_classes");
 var _m_utils_time_zone = _interopRequireDefault(require("../m_utils_time_zone"));
-var _generate_dates = require("../recurrence/generate_dates");
 var _appointment_adapter = require("../utils/appointment_adapter/appointment_adapter");
 var _get_targeted_appointment = require("../utils/get_targeted_appointment");
 var _appointment_groups_utils = require("../utils/resource_manager/appointment_groups_utils");
@@ -37,10 +35,8 @@ var _m_appointment = require("./appointment/m_appointment");
 var _m_appointment_layout = require("./m_appointment_layout");
 var _m_text_utils = require("./m_text_utils");
 var _m_core = require("./resizing/m_core");
-var _count_visible_appointments = require("./utils/count_visible_appointments");
 var _get_arrays_diff = require("./utils/get_arrays_diff");
 var _get_view_model_diff = require("./utils/get_view_model_diff");
-var _m_utils = require("./utils/m_utils");
 var _sorted_index_utils = require("./utils/sorted_index_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable spellcheck/spell-checker */
@@ -68,9 +64,6 @@ class SchedulerAppointments extends _uiCollection_widget.default {
   }
   get dataAccessors() {
     return this.option('dataAccessors');
-  }
-  get appointmentsCount() {
-    return (0, _count_visible_appointments.countVisibleAppointments)(this.option('items') ?? []);
   }
   getResourceManager() {
     return this.option('getResourceManager')();
@@ -379,7 +372,7 @@ class SchedulerAppointments extends _uiCollection_widget.default {
       targetedAppointmentData
     } = model;
     if (this._currentAppointmentSettings && 'isAgendaModel' in this._currentAppointmentSettings) {
-      targetedAppointmentData = (0, _get_targeted_appointment.getTargetedAppointmentFromInfo)(this._currentAppointmentSettings.itemData, this._currentAppointmentSettings, this.dataAccessors, this.getResourceManager());
+      targetedAppointmentData = (0, _get_targeted_appointment.getTargetedAppointmentFromInfo)(this._currentAppointmentSettings.itemData, this._currentAppointmentSettings, this.dataAccessors, this.getResourceManager(), true);
     }
     const formatText = this.invoke('createFormattedDateText', appointment, targetedAppointmentData, appointment.allDay ? _m_text_utils.DateFormatType.DATE : _m_text_utils.DateFormatType.TIME);
     $container.append(this.isAgendaView ? (0, _m_appointment_layout.createAgendaAppointmentLayout)(formatText, config) : (0, _m_appointment_layout.createAppointmentLayout)(formatText, config));
@@ -514,6 +507,9 @@ class SchedulerAppointments extends _uiCollection_widget.default {
     this.renderGeneralAppointment(element, settings);
   }
   renderAgendaAppointment(element, settings) {
+    if (settings.isLastInGroup) {
+      element.addClass(_m_classes.AGENDA_LAST_IN_DATE_APPOINTMENT_CLASS);
+    }
     const {
       groups,
       groupsLeafs,
@@ -536,7 +532,7 @@ class SchedulerAppointments extends _uiCollection_widget.default {
   }
   renderGeneralAppointment(element, settings) {
     var _settings$info;
-    const allowResize = this.option('allowResize') && (!(0, _type.isDefined)(settings.skipResizing) || (0, _type.isString)(settings.skipResizing));
+    const allowResize = this.option('allowResize') && !settings.skipResizing;
     const allowDrag = this.option('allowDrag');
     const {
       allDay
@@ -546,6 +542,7 @@ class SchedulerAppointments extends _uiCollection_widget.default {
       groupsLeafs,
       resourceById
     } = this.getResourceManager();
+    const isGroupByDate = this.option('groupByDate');
     const config = {
       data: settings.itemData,
       groupIndex: settings.groupIndex,
@@ -556,8 +553,8 @@ class SchedulerAppointments extends _uiCollection_widget.default {
       allowResize,
       allowDrag,
       allDay,
-      reduced: settings.reduced,
-      isCompact: settings.isCompact,
+      // NOTE: hide reduced icon for grouped by date workspace
+      reduced: isGroupByDate ? undefined : settings.reduced,
       startDate: new Date((_settings$info = settings.info) === null || _settings$info === void 0 ? void 0 : _settings$info.appointment.startDate),
       cellWidth: this.invoke('getCellWidth'),
       cellHeight: this.invoke('getCellHeight'),
@@ -801,7 +798,7 @@ class SchedulerAppointments extends _uiCollection_widget.default {
       const resourceManager = this.getResourceManager();
       items.push({
         appointment: item.itemData,
-        targetedAppointment: (0, _get_targeted_appointment.getTargetedAppointment)(item.itemData, item, this.dataAccessors, this.option('timeZoneCalculator'), resourceManager),
+        targetedAppointment: (0, _get_targeted_appointment.getTargetedAppointment)(item.itemData, item, this.dataAccessors, resourceManager),
         color: resourceManager.getAppointmentColor(appointmentConfig),
         settings: item
       });
@@ -823,94 +820,6 @@ class SchedulerAppointments extends _uiCollection_widget.default {
     });
     this.renderedElementsBySortedIndex[appointment.sortedIndex] = $item;
     return $item;
-  }
-  _sortAppointmentsByStartDate(appointments) {
-    return (0, _m_utils.sortAppointmentsByStartDate)(appointments, this.dataAccessors);
-  }
-  _processRecurrenceAppointment(appointment, index, skipLongAppointments) {
-    // NOTE: this method is actual only for agenda
-    const recurrenceRule = this.dataAccessors.get('recurrenceRule', appointment);
-    const result = {
-      parts: [],
-      indexes: []
-    };
-    if (recurrenceRule) {
-      const dates = appointment.settings || appointment;
-      const startDate = this.dataAccessors.get('startDate', dates);
-      const startDateTimeZone = this.dataAccessors.get('startDateTimeZone', appointment);
-      const endDate = this.dataAccessors.get('endDate', dates);
-      const appointmentDuration = endDate.getTime() - startDate.getTime();
-      const recurrenceException = this.dataAccessors.get('recurrenceException', appointment);
-      const startViewDate = this.invoke('getStartViewDate');
-      const endViewDate = this.invoke('getEndViewDate');
-      const timezoneCalculator = this.option('timeZoneCalculator');
-      const recurrentDates = (0, _generate_dates.generateDates)({
-        rule: recurrenceRule,
-        exception: recurrenceException,
-        start: startDate,
-        end: endDate,
-        min: startViewDate,
-        max: endViewDate,
-        appointmentTimezoneOffset: timezoneCalculator.getOriginStartDateOffsetInMs(startDate, startDateTimeZone, false)
-      });
-      const recurrentDateCount = appointment.settings ? 1 : recurrentDates.length;
-      for (let i = 0; i < recurrentDateCount; i++) {
-        const appointmentPart = (0, _extend.extend)({}, appointment, true);
-        if (recurrentDates[i]) {
-          const appointmentSettings = this._applyStartDateToObj(recurrentDates[i], {});
-          this._applyEndDateToObj(new Date(recurrentDates[i].getTime() + appointmentDuration), appointmentSettings);
-          appointmentPart.settings = appointmentSettings;
-        } else {
-          appointmentPart.settings = dates;
-        }
-        result.parts.push(appointmentPart);
-        if (!skipLongAppointments) {
-          this._processLongAppointment(appointmentPart, result);
-        }
-      }
-      result.indexes.push(index);
-    }
-    return result;
-  }
-  _processLongAppointment(appointment, result) {
-    const parts = this.splitAppointmentByDay(appointment);
-    const partCount = parts.length;
-    const endViewDate = this.invoke('getEndViewDate').getTime();
-    const startViewDate = this.invoke('getStartViewDate').getTime();
-    const timeZoneCalculator = this.option('timeZoneCalculator');
-    result = result || {
-      parts: []
-    };
-    if (partCount > 1) {
-      (0, _extend.extend)(appointment, parts[0]);
-      for (let i = 1; i < partCount; i++) {
-        let startDate = this.dataAccessors.get('startDate', parts[i].settings);
-        startDate = timeZoneCalculator.createDate(startDate.getTime(), 'toGrid');
-        if (startDate < endViewDate && startDate > startViewDate) {
-          result.parts.push(parts[i]);
-        }
-      }
-    }
-    return result;
-  }
-  _reduceRecurrenceAppointments(recurrenceIndexes, appointments) {
-    (0, _iterator.each)(recurrenceIndexes, (i, index) => {
-      appointments.splice(index - i, 1);
-    });
-  }
-  _combineAppointments(appointments, additionalAppointments) {
-    if (additionalAppointments.length) {
-      appointments.push(...additionalAppointments);
-    }
-    this._sortAppointmentsByStartDate(appointments);
-  }
-  _applyStartDateToObj(startDate, obj) {
-    this.dataAccessors.set('startDate', obj, startDate);
-    return obj;
-  }
-  _applyEndDateToObj(endDate, obj) {
-    this.dataAccessors.set('endDate', obj, endDate);
-    return obj;
   }
   moveAppointmentBack(dragEvent) {
     const $appointment = this._$currentAppointment;
@@ -941,57 +850,6 @@ class SchedulerAppointments extends _uiCollection_widget.default {
       const focusedElement = (0, _element.getPublicElement)(this._$currentAppointment);
       this.option('focusedElement', focusedElement);
       _events_engine.default.trigger(focusedElement, 'focus');
-    }
-  }
-  splitAppointmentByDay(appointment) {
-    const dates = appointment.settings || appointment;
-    const originalStartDate = this.dataAccessors.get('startDate', dates);
-    let startDate = _date.default.makeDate(originalStartDate);
-    let endDate = _date.default.makeDate(this.dataAccessors.get('endDate', dates));
-    const maxAllowedDate = this.invoke('getEndViewDate');
-    const startDayHour = this.invoke('getStartDayHour');
-    const endDayHour = this.invoke('getEndDayHour');
-    const timeZoneCalculator = this.option('timeZoneCalculator');
-    const adapter = new _appointment_adapter.AppointmentAdapter(appointment, this.dataAccessors);
-    const appointmentIsLong = (0, _m_utils.getAppointmentTakesSeveralDays)(adapter);
-    const result = [];
-    startDate = timeZoneCalculator.createDate(startDate, 'toGrid');
-    endDate = timeZoneCalculator.createDate(endDate, 'toGrid');
-    if (startDate.getHours() <= endDayHour && startDate.getHours() >= startDayHour && !appointmentIsLong) {
-      result.push(this._applyStartDateToObj(new Date(startDate), {
-        appointmentData: appointment
-      }));
-      startDate.setDate(startDate.getDate() + 1);
-    }
-    while (appointmentIsLong && startDate.getTime() < endDate.getTime() && startDate < maxAllowedDate) {
-      const currentStartDate = new Date(startDate);
-      const currentEndDate = new Date(startDate);
-      this._checkStartDate(currentStartDate, originalStartDate, startDayHour);
-      this._checkEndDate(currentEndDate, endDate, endDayHour);
-      const appointmentData = (0, _object.deepExtendArraySafe)({}, appointment, true);
-      const appointmentSettings = {};
-      this._applyStartDateToObj(currentStartDate, appointmentSettings);
-      this._applyEndDateToObj(currentEndDate, appointmentSettings);
-      appointmentData.settings = appointmentSettings;
-      result.push(appointmentData);
-      startDate = _date.default.trimTime(startDate);
-      startDate.setDate(startDate.getDate() + 1);
-      startDate.setHours(startDayHour);
-    }
-    return result;
-  }
-  _checkStartDate(currentDate, originalDate, startDayHour) {
-    if (!_date.default.sameDate(currentDate, originalDate) || currentDate.getHours() <= startDayHour) {
-      currentDate.setHours(startDayHour, 0, 0, 0);
-    } else {
-      currentDate.setHours(originalDate.getHours(), originalDate.getMinutes(), originalDate.getSeconds(), originalDate.getMilliseconds());
-    }
-  }
-  _checkEndDate(currentDate, originalDate, endDayHour) {
-    if (!_date.default.sameDate(currentDate, originalDate) || currentDate.getHours() > endDayHour) {
-      currentDate.setHours(endDayHour, 0, 0, 0);
-    } else {
-      currentDate.setHours(originalDate.getHours(), originalDate.getMinutes(), originalDate.getSeconds(), originalDate.getMilliseconds());
     }
   }
   _removeDragSourceClassFromDraggedAppointment() {

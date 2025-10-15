@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/utils/resource_manager/agenda_group_utils.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 const hasGroupAppointments = (resourceById, appointments, node) => {
   const resource = resourceById[node.resourceIndex];
   const value = node.grouped[node.resourceIndex];
-  return appointments.some(appointment => resource.idsGetter(appointment).includes(value));
+  return appointments.some(appointment => resource.idsGetter(appointment.itemData).includes(value));
 };
 const filterGroupTree = (resourceById, appointments, node) => {
   if (!hasGroupAppointments(resourceById, appointments, node)) return undefined;

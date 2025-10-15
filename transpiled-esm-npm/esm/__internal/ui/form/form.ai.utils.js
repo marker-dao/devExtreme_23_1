@@ -1,7 +1,4 @@
-import Color from '../../../color';
 import { isObject } from '../../../core/utils/type';
-import errors from '../../../ui/widget/ui.errors';
-import { dateUtilsTs } from '../../core/utils/date';
 const getEditorTypeInfo = editorType => {
   switch (editorType) {
     case 'dxDateBox':
@@ -23,52 +20,25 @@ const getEditorTypeInfo = editorType => {
       return 'text';
   }
 };
-export const parseResultForEditorType = (dataField, editorType, value) => {
-  const errorValue = JSON.stringify(value);
+export const getFieldType = editorType => {
   switch (editorType) {
     case 'dxDateBox':
     case 'dxCalendar':
-      if (!dateUtilsTs.isValidDate(value)) {
-        throw errors.Error('E1064', dataField, errorValue, 'date');
-      }
-      return value;
+      return 'date';
     case 'dxDateRangeBox':
-      if (!Array.isArray(value) || value.length > 2 || value.some(item => !dateUtilsTs.isValidDate(item))) {
-        throw errors.Error('E1064', dataField, errorValue, 'date range');
-      }
-      return value;
-    case 'dxColorBox':
-      if (new Color(value).colorIsInvalid) {
-        throw errors.Error('E1064', dataField, errorValue, 'color');
-      }
-      return value;
+      return 'dateRange';
     case 'dxCheckBox':
     case 'dxSwitch':
-      if (value === 'false') {
-        return false;
-      }
-      if (value === 'true') {
-        return true;
-      }
-      throw errors.Error('E1064', dataField, errorValue, 'boolean');
+      return 'boolean';
     case 'dxNumberBox':
     case 'dxSlider':
-      if (Array.isArray(value) || isNaN(parseFloat(value))) {
-        throw errors.Error('E1064', dataField, errorValue, 'number');
-      }
-      return value;
+      return 'number';
     case 'dxRangeSlider':
-      if (!Array.isArray(value) || value.length > 2 || value.some(item => isNaN(parseFloat(item)))) {
-        throw errors.Error('E1064', dataField, errorValue, 'number range');
-      }
-      return value;
-    case 'dxHtmlEditor':
-      if (Array.isArray(value)) {
-        throw errors.Error('E1064', dataField, errorValue, 'string');
-      }
-      return value;
+      return 'numberRange';
+    case 'dxColorBox':
+      return 'color';
     default:
-      return value;
+      return 'string';
   }
 };
 const getItemsAcceptedValuesInfo = editorOptions => {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/card_view.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,7 +20,12 @@ import {
 } from '../common/grids';
 import DataSource, { DataSourceLike } from '../data/data_source';
 import Widget, { WidgetOptions } from './widget/ui.widget';
-import { Cancelable, EventInfo, NativeEventInfo } from '../events';
+import {
+    Cancelable,
+    EventInfo,
+    NativeEventInfo,
+    PointerInteractionEvent,
+} from '../events';
 import { dxToolbarItem, ToolbarItemLocation } from './toolbar';
 import { dxLoadPanelOptions } from './load_panel';
 import dxScrollable from './scroll_view/ui.scrollable';
@@ -641,7 +646,7 @@ type WithFieldValueInfo = {
  * @type object
  * @inherits NativeEventInfo,WithCardInfo
  */
-export type CardClickEvent = NativeEventInfo<dxCardView, PointerEvent | MouseEvent | TouchEvent> & WithCardInfo;
+export type CardClickEvent = NativeEventInfo<dxCardView, PointerInteractionEvent> & WithCardInfo;
 
 /**
  * @docid _ui_card_view_CardDblClickEvent
@@ -649,7 +654,7 @@ export type CardClickEvent = NativeEventInfo<dxCardView, PointerEvent | MouseEve
  * @type object
  * @inherits NativeEventInfo,WithCardInfo
  */
-export type CardDblClickEvent = NativeEventInfo<dxCardView, PointerEvent | MouseEvent | TouchEvent> & WithCardInfo;
+export type CardDblClickEvent = NativeEventInfo<dxCardView, PointerInteractionEvent> & WithCardInfo;
 
 /**
  * @docid _ui_card_view_CardPreparedEvent
@@ -665,7 +670,7 @@ export type CardPreparedEvent = EventInfo<dxCardView> & WithCardInfo;
  * @type object
  * @inherits NativeEventInfo,WithFieldCaptionInfo
  */
-export type FieldCaptionClickEvent = NativeEventInfo<dxCardView, PointerEvent | MouseEvent | TouchEvent> & WithFieldCaptionInfo;
+export type FieldCaptionClickEvent = NativeEventInfo<dxCardView, PointerInteractionEvent> & WithFieldCaptionInfo;
 
 /**
  * @docid _ui_card_view_FieldCaptionDblClickEvent
@@ -673,7 +678,7 @@ export type FieldCaptionClickEvent = NativeEventInfo<dxCardView, PointerEvent | 
  * @type object
  * @inherits NativeEventInfo,WithFieldCaptionInfo
  */
-export type FieldCaptionDblClickEvent = NativeEventInfo<dxCardView, PointerEvent | MouseEvent | TouchEvent> & WithFieldCaptionInfo;
+export type FieldCaptionDblClickEvent = NativeEventInfo<dxCardView, PointerInteractionEvent> & WithFieldCaptionInfo;
 
 /**
  * @docid _ui_card_view_FieldValuePreparedEvent
@@ -689,7 +694,7 @@ export type FieldValuePreparedEvent = EventInfo<dxCardView> & WithFieldValueInfo
  * @type object
  * @inherits NativeEventInfo,WithFieldValueInfo
  */
-export type FieldValueClickEvent = NativeEventInfo<dxCardView, PointerEvent | MouseEvent | TouchEvent> & WithFieldValueInfo;
+export type FieldValueClickEvent = NativeEventInfo<dxCardView, PointerInteractionEvent> & WithFieldValueInfo;
 
 /**
  * @docid _ui_card_view_FieldValueDblClickEvent
@@ -697,7 +702,7 @@ export type FieldValueClickEvent = NativeEventInfo<dxCardView, PointerEvent | Mo
  * @type object
  * @inherits NativeEventInfo,WithFieldValueInfo
  */
-export type FieldValueDblClickEvent = NativeEventInfo<dxCardView, PointerEvent | MouseEvent | TouchEvent> & WithFieldValueInfo;
+export type FieldValueDblClickEvent = NativeEventInfo<dxCardView, PointerInteractionEvent> & WithFieldValueInfo;
 
 /**
  * @docid _ui_card_view_FieldCaptionPreparedEvent

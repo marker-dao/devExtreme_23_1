@@ -59,7 +59,6 @@ class LoadIndicator extends _widget.default {
       }
     }]);
   }
-  // eslint-disable-next-line class-methods-use-this
   _useTemplates() {
     return false;
   }

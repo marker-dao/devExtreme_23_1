@@ -1,5 +1,5 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
-import { VIEWS } from './constants_view';
 import { getCurrentView, getViewOption, getViews, parseCurrentDate, parseDateOption } from './utils';
 describe('views utils', () => {
   describe('getViews', () => {
@@ -19,7 +19,9 @@ describe('views utils', () => {
         name: 'MyDay',
         groups: ['a', 'b']
       };
-      expect(getViews([input])).toEqual([input]);
+      expect(getViews([input])).toEqual([_extends({}, input, {
+        skippedDays: []
+      })]);
     });
     it.each([{
       input: {
@@ -50,62 +52,99 @@ describe('views utils', () => {
         input,
         output
       } = _ref;
-      expect(getViews([input])).toEqual([output]);
+      expect(getViews([input])).toEqual([_extends({}, output, {
+        skippedDays: []
+      })]);
     });
-    it.each(Object.values(VIEWS).map((view, index) => ({
-      input: view,
-      output: [{
+    it.each([{
+      input: 'day',
+      output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
         name: 'Day',
         type: 'day'
-      }, {
+      }
+    }, {
+      input: 'week',
+      output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
         name: 'Week',
         type: 'week'
-      }, {
-        groupOrientation: 'horizontal',
-        intervalCount: 1,
-        name: 'Work Week',
-        type: 'workWeek'
-      }, {
+      }
+    }, {
+      input: 'month',
+      output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
         name: 'Month',
         type: 'month'
-      }, {
+      }
+    }, {
+      input: 'timelineDay',
+      output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
         name: 'Timeline Day',
         type: 'timelineDay'
-      }, {
+      }
+    }, {
+      input: 'timelineWeek',
+      output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
         name: 'Timeline Week',
         type: 'timelineWeek'
-      }, {
-        groupOrientation: 'vertical',
-        intervalCount: 1,
-        name: 'Timeline Work Week',
-        type: 'timelineWorkWeek'
-      }, {
+      }
+    }, {
+      input: 'timelineMonth',
+      output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
         name: 'Timeline Month',
         type: 'timelineMonth'
-      }, {
+      }
+    }, {
+      input: 'agenda',
+      output: {
         agendaDuration: 7,
         intervalCount: 1,
         name: 'Agenda',
         type: 'agenda'
-      }][index]
-    })))('should return normalized $input.type view', _ref2 => {
+      }
+    }])('should return normalized $input.type view', _ref2 => {
       let {
         input,
         output
       } = _ref2;
-      expect(getViews([input])).toEqual([output]);
+      expect(getViews([input])).toEqual([_extends({}, output, {
+        skippedDays: []
+      })]);
+    });
+    it.each([{
+      input: 'workWeek',
+      output: {
+        groupOrientation: 'horizontal',
+        intervalCount: 1,
+        name: 'Work Week',
+        type: 'workWeek'
+      }
+    }, {
+      input: 'timelineWorkWeek',
+      output: {
+        groupOrientation: 'vertical',
+        intervalCount: 1,
+        name: 'Timeline Work Week',
+        type: 'timelineWorkWeek'
+      }
+    }])('should return normalized $input.type view', _ref3 => {
+      let {
+        input,
+        output
+      } = _ref3;
+      expect(getViews([input])).toEqual([_extends({}, output, {
+        skippedDays: [0, 6]
+      })]);
     });
   });
   describe('getCurrentView', () => {
@@ -114,7 +153,8 @@ describe('views utils', () => {
         agendaDuration: 7,
         intervalCount: 1,
         name: 'Agenda',
-        type: 'agenda'
+        type: 'agenda',
+        skippedDays: []
       });
     });
     it('should return view by type', () => {
@@ -124,7 +164,8 @@ describe('views utils', () => {
         agendaDuration: 7,
         intervalCount: 1,
         name: 'Agenda',
-        type: 'agenda'
+        type: 'agenda',
+        skippedDays: []
       });
     });
     it('should return view by name', () => {
@@ -135,7 +176,8 @@ describe('views utils', () => {
         agendaDuration: 7,
         intervalCount: 1,
         name: 'SuperAgenda',
-        type: 'agenda'
+        type: 'agenda',
+        skippedDays: []
       });
     });
     it('should return default view out of the views list', () => {
@@ -143,7 +185,8 @@ describe('views utils', () => {
         agendaDuration: 7,
         intervalCount: 1,
         name: 'Agenda',
-        type: 'agenda'
+        type: 'agenda',
+        skippedDays: []
       });
     });
     it('should return first view if nothing found', () => {
@@ -151,7 +194,8 @@ describe('views utils', () => {
         groupOrientation: 'horizontal',
         intervalCount: 1,
         name: 'Month',
-        type: 'month'
+        type: 'month',
+        skippedDays: []
       });
     });
     it('should return first known view if wrong current view requested', () => {
@@ -163,7 +207,8 @@ describe('views utils', () => {
         groupOrientation: 'horizontal',
         intervalCount: 1,
         name: 'Day',
-        type: 'day'
+        type: 'day',
+        skippedDays: []
       });
     });
   });

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29089,7 +29089,8 @@ class Cache {
 }
 exports.Cache = Cache;
 const globalCache = exports.globalCache = {
-  timezones: new Cache()
+  timezones: new Cache(),
+  DST: new Cache()
 };
 
 /***/ }),
@@ -29120,7 +29121,7 @@ const GMT = 'GMT';
 const offsetFormatRegexp = /^GMT(?:[+-]\d{2}:\d{2})?$/;
 const createUTCDateWithLocalOffset = date => {
   if (!date) {
-    return null;
+    return date;
   }
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
 };
@@ -29154,10 +29155,14 @@ const calculateTimezoneByValue = function (timeZone) {
     _errors.default.log('W0009', timeZone);
     return undefined;
   }
-  if (!_date.dateUtilsTs.isValidDate(date)) {
+  const dateObj = new Date(date);
+  if (!_date.dateUtilsTs.isValidDate(dateObj)) {
     return undefined;
   }
-  return calculateTimezoneByValueCore(timeZone, date);
+  if (isEqualLocalTimeZone(timeZone)) {
+    return -dateObj.getTimezoneOffset() / MINUTES_IN_HOUR;
+  }
+  return calculateTimezoneByValueCore(timeZone, dateObj);
 };
 // 'GMT±XX:YY' or 'GMT' format
 const getStringOffset = function (timeZone) {
@@ -30099,7 +30104,6 @@ class LoadIndicator extends _widget.default {
       }
     }]);
   }
-  // eslint-disable-next-line class-methods-use-this
   _useTemplates() {
     return false;
   }
@@ -30267,7 +30271,9 @@ var _deferred = __webpack_require__(87739);
 var _load_indicator = _interopRequireDefault(__webpack_require__(11979));
 var _themes = __webpack_require__(52071);
 var _overlay = _interopRequireDefault(__webpack_require__(79384));
+const _excluded = ["src"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE loadPanel
 const LOADPANEL_CLASS = 'dx-loadpanel';
@@ -30338,6 +30344,16 @@ class LoadPanel extends _overlay.default {
     this.$element().addClass(LOADPANEL_CLASS);
     this.$wrapper().addClass(LOADPANEL_WRAPPER_CLASS);
     this._updateWrapperAria();
+  }
+  _setDeprecatedOptions() {
+    super._setDeprecatedOptions();
+    this._deprecatedOptions = _extends({}, this._deprecatedOptions, {
+      // @ts-expect-error ts-error
+      indicatorSrc: {
+        since: '25.2',
+        alias: 'indicatorOptions.src'
+      }
+    });
   }
   _updateWrapperAria() {
     this.$wrapper().removeAttr('aria-label').removeAttr('role');
@@ -30417,10 +30433,18 @@ class LoadPanel extends _overlay.default {
     if (!this._$indicator) {
       this._$indicator = (0, _renderer.default)('<div>').addClass(LOADPANEL_INDICATOR_CLASS).appendTo(this._$loadPanelContentWrapper);
     }
-    this._createComponent(this._$indicator, _load_indicator.default, {
+    const {
+      indicatorOptions = {},
+      indicatorSrc
+    } = this.option();
+    const {
+        src
+      } = indicatorOptions,
+      restIndicatorOptions = _objectWithoutPropertiesLoose(indicatorOptions, _excluded);
+    this._createComponent(this._$indicator, _load_indicator.default, _extends({
       elementAttr: this._getAriaAttributes(),
-      indicatorSrc: this.option('indicatorSrc')
-    });
+      indicatorSrc: src ?? indicatorSrc
+    }, restIndicatorOptions));
   }
   _cleanPreviousContent() {
     this.$content().find(`.${LOADPANEL_MESSAGE_CLASS}`).remove();
@@ -30445,6 +30469,7 @@ class LoadPanel extends _overlay.default {
         this._togglePaneVisible();
         break;
       case 'indicatorSrc':
+      case 'indicatorOptions':
         this._renderLoadIndicator();
         break;
       default:
@@ -72630,7 +72655,7 @@ var _default = exports["default"] = _sankey.default;
 
 /***/ }),
 
-/***/ 56295:
+/***/ 78676:
 /***/ (function(__unused_webpack_module, exports) {
 
 
@@ -73185,7 +73210,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports["default"] = void 0;
 var _type = __webpack_require__(11528);
-var _constants = __webpack_require__(56295);
+var _constants = __webpack_require__(78676);
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @stylistic/max-len */
@@ -73485,7 +73510,7 @@ var _common = __webpack_require__(17781);
 var _type = __webpack_require__(11528);
 var _data_source = __webpack_require__(98972);
 var _m_base_widget = _interopRequireDefault(__webpack_require__(34506));
-var _constants = __webpack_require__(56295);
+var _constants = __webpack_require__(78676);
 var _layout = __webpack_require__(48342);
 var _link_item = _interopRequireDefault(__webpack_require__(15768));
 var _node_item = _interopRequireDefault(__webpack_require__(3444));
@@ -103861,6 +103886,8 @@ const defaultMessages = exports.defaultMessages = {
     "dxScheduler-appointmentAriaLabel-group": "Group: {0}",
     "dxScheduler-appointmentAriaLabel-recurring": "Recurring appointment",
     "dxScheduler-appointmentListAriaLabel": "Appointment list",
+    "dxScheduler-editPopupTitle": "Edit Appointment",
+    "dxScheduler-editPopupSaveButtonText": "Save",
     "dxScheduler-editorLabelTitle": "Subject",
     "dxScheduler-editorLabelStartDate": "Start Date",
     "dxScheduler-editorLabelEndDate": "End Date",
@@ -114044,6 +114071,10 @@ var _default = exports["default"] = (0, _error.default)(_errors.default.ERROR_ME
   * @name ErrorsUIWidgets.E1066
   */
   E1066: 'All AI columns must have names.',
+  /**
+  * @name ErrorsUIWidgets.E1067
+  */
+  E1067: '\'aiIntegration\' is not configured in the {0} column.',
   /**
   * @name ErrorsUIWidgets.W1001
   */

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/__tests__/__mock__/model/scheduler.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -38,6 +38,10 @@ class SchedulerModel {
   }
   getAppointments() {
     return [...this.container.querySelectorAll('.dx-scheduler-appointment')].map(element => (0, _appointment.createAppointmentModel)(element));
+  }
+  getCollectorTexts() {
+    const collectors = this.container.querySelectorAll('.dx-scheduler-appointment-collector');
+    return getTexts(collectors);
   }
   getDateTableContent() {
     const cells = this.container.querySelectorAll('.dx-scheduler-date-table-cell');

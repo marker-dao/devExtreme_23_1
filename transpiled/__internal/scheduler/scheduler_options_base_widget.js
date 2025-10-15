@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.SchedulerOptionsBaseWidget = void 0;
 var _ui = _interopRequireDefault(require("../../ui/widget/ui.widget"));
 var _m_extend = require("../core/utils/m_extend");
+var _m_utils_time_zone = _interopRequireDefault(require("./m_utils_time_zone"));
 var _constants = require("./utils/options/constants");
 var _utils = require("./utils/options/utils");
 var _index = require("./utils/options_validator/index");
@@ -66,6 +67,9 @@ class SchedulerOptionsBaseWidget extends _ui.default {
     });
     const validationResult = this.optionsValidator.validate(currentViewOptions);
     this.optionsValidatorErrorHandler.handleValidationResult(validationResult);
+  }
+  getTimeZone() {
+    return (this.option('timeZone') || _m_utils_time_zone.default.getMachineTimezoneName()) ?? 'Etc/UTC';
   }
   getViewOption(optionName) {
     var _this$currentView;

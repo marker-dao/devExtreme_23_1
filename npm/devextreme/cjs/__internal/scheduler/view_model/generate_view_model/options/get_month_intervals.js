@@ -1,0 +1,63 @@
+/**
+* DevExtreme (cjs/__internal/scheduler/view_model/generate_view_model/options/get_month_intervals.js)
+* Version: 25.2.0
+* Build date: Wed Oct 15 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getMonthIntervals = void 0;
+var _shift_intervals = require("../../common/shift_intervals");
+var _trim_interval = require("../../common/trim_interval");
+var _get_one_day_cell_intervals = require("./get_one_day_cell_intervals");
+const _excluded = ["startDayHour", "endDayHour", "skippedDays"];
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const MONTH_INTERVAL_DAYS_COUNT = 7;
+const splitBy7Days = intervals => {
+  const result = [];
+  const date = new Date(intervals.min);
+  while (date.getTime() < intervals.max) {
+    const min = date.getTime();
+    date.setUTCDate(date.getUTCDate() + MONTH_INTERVAL_DAYS_COUNT);
+    result.push({
+      min,
+      max: date.getTime()
+    });
+  }
+  return result;
+};
+const cropIntervalsByDayHours = (intervals, startDayHour, endDayHour) => intervals.map(item => _extends({}, item, {
+  min: new Date(item.min).setUTCHours(startDayHour, 0, 0, 0),
+  max: new Date(item.max - 1).setUTCHours(endDayHour, 0, 0, 0)
+}));
+const getMonthIntervals = (_ref, viewOffset, isTimeline) => {
+  let {
+      startDayHour,
+      endDayHour,
+      skippedDays
+    } = _ref,
+    dateInterval = _objectWithoutPropertiesLoose(_ref, _excluded);
+  const trimmedInterval = (0, _trim_interval.trimInterval)(dateInterval);
+  const intervals = isTimeline ? [trimmedInterval] : splitBy7Days(trimmedInterval);
+  const croppedIntervals = cropIntervalsByDayHours(intervals, startDayHour, endDayHour);
+  const shiftedIntervals = (0, _shift_intervals.shiftIntervals)(croppedIntervals, viewOffset);
+  const cells = (0, _get_one_day_cell_intervals.getOneDayCellIntervals)({
+    intervals,
+    startDayHour,
+    endDayHour,
+    skippedDays
+  });
+  const shiftedCells = (0, _shift_intervals.shiftIntervals)(cells, viewOffset);
+  return {
+    cells: shiftedCells,
+    dayIntervals: shiftedCells,
+    intervals: shiftedIntervals
+  };
+};
+exports.getMonthIntervals = getMonthIntervals;

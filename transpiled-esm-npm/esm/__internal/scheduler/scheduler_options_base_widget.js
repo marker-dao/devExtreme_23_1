@@ -1,6 +1,7 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import Widget from '../../ui/widget/ui.widget';
 import { extend } from '../core/utils/m_extend';
+import timeZoneUtils from './m_utils_time_zone';
 import { DEFAULT_SCHEDULER_INTEGRATION_OPTIONS, DEFAULT_SCHEDULER_INTERNAL_OPTIONS, DEFAULT_SCHEDULER_OPTIONS, DEFAULT_SCHEDULER_OPTIONS_RULES } from './utils/options/constants';
 import { getCurrentView, getViewOption, getViews } from './utils/options/utils';
 import { SchedulerOptionsValidator, SchedulerOptionsValidatorErrorsHandler } from './utils/options_validator/index';
@@ -59,6 +60,9 @@ export class SchedulerOptionsBaseWidget extends Widget {
     });
     const validationResult = this.optionsValidator.validate(currentViewOptions);
     this.optionsValidatorErrorHandler.handleValidationResult(validationResult);
+  }
+  getTimeZone() {
+    return (this.option('timeZone') || timeZoneUtils.getMachineTimezoneName()) ?? 'Etc/UTC';
   }
   getViewOption(optionName) {
     var _this$currentView;

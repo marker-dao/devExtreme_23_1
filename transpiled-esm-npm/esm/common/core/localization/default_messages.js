@@ -247,6 +247,8 @@ export const defaultMessages = {
     "dxScheduler-appointmentAriaLabel-group": "Group: {0}",
     "dxScheduler-appointmentAriaLabel-recurring": "Recurring appointment",
     "dxScheduler-appointmentListAriaLabel": "Appointment list",
+    "dxScheduler-editPopupTitle": "Edit Appointment",
+    "dxScheduler-editPopupSaveButtonText": "Save",
     "dxScheduler-editorLabelTitle": "Subject",
     "dxScheduler-editorLabelStartDate": "Start Date",
     "dxScheduler-editorLabelEndDate": "End Date",

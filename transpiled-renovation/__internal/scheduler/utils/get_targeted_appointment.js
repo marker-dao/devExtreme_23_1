@@ -18,20 +18,22 @@ const setTargetedAppointmentResources = (rawAppointment, settings, resourceManag
     (0, _appointment_groups_utils.setAppointmentGroupValues)(rawAppointment, resourceById, cellGroups);
   }
 };
-const getTargetedAppointmentFromInfo = (rawAppointment, settings, dataAccessor, resourceManager) => {
+const getTargetedAppointmentFromInfo = function (rawAppointment, settings, dataAccessor, resourceManager) {
+  let usePartialDates = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
   const {
     info
   } = settings;
   const rawTargetedAppointment = _extends({}, rawAppointment);
   dataAccessor.set('startDate', rawTargetedAppointment, new Date(info.sourceAppointment.startDate));
   dataAccessor.set('endDate', rawTargetedAppointment, new Date(info.sourceAppointment.endDate));
-  rawTargetedAppointment.displayStartDate = new Date(info.appointment.startDate);
-  rawTargetedAppointment.displayEndDate = new Date(info.appointment.endDate);
+  const displayDates = usePartialDates && 'partialDates' in info ? info.partialDates : info.appointment;
+  rawTargetedAppointment.displayStartDate = new Date(displayDates.startDate);
+  rawTargetedAppointment.displayEndDate = new Date(displayDates.endDate);
   setTargetedAppointmentResources(rawTargetedAppointment, settings, resourceManager);
   return rawTargetedAppointment;
 };
 exports.getTargetedAppointmentFromInfo = getTargetedAppointmentFromInfo;
-const getTargetedAppointment = (rawAppointment, settings, dataAccessor, timeZoneCalculator, resourceManager) => {
+const getTargetedAppointment = (rawAppointment, settings, dataAccessor, resourceManager) => {
   const startDate = dataAccessor.get('startDate', rawAppointment);
   const endDate = dataAccessor.get('endDate', rawAppointment);
   if (!('info' in settings)) {
@@ -39,14 +41,6 @@ const getTargetedAppointment = (rawAppointment, settings, dataAccessor, timeZone
       displayStartDate: startDate,
       displayEndDate: endDate
     });
-  }
-  if ('isAgendaModel' in settings && !dataAccessor.isRecurrent(rawAppointment)) {
-    const rawTargetedAppointment = _extends({}, rawAppointment, {
-      displayStartDate: timeZoneCalculator.createDate(startDate, 'toGrid'),
-      displayEndDate: timeZoneCalculator.createDate(endDate, 'toGrid')
-    });
-    setTargetedAppointmentResources(rawTargetedAppointment, settings, resourceManager);
-    return rawTargetedAppointment;
   }
   return getTargetedAppointmentFromInfo(rawAppointment, settings, dataAccessor, resourceManager);
 };

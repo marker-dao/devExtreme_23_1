@@ -1,0 +1,20 @@
+/**
+* DevExtreme (cjs/__internal/scheduler/view_model/generate_view_model/steps/sorting.js)
+* Version: 25.2.0
+* Build date: Wed Oct 15 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.sortByStartDate = exports.sortByGroupIndex = exports.sortByDuration = void 0;
+const sortByGroupIndex = entities => entities.sort((a, b) => a.groupIndex - b.groupIndex);
+exports.sortByGroupIndex = sortByGroupIndex;
+const sortByDuration = entities => entities.sort((a, b) => b.duration - a.duration);
+exports.sortByDuration = sortByDuration;
+const sortByStartDate = entities => entities.sort((a, b) => a.startDateUTC - b.startDateUTC);
+exports.sortByStartDate = sortByStartDate;

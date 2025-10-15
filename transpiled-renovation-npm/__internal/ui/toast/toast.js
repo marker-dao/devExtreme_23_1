@@ -235,7 +235,6 @@ class Toast extends _ui.default {
     return promise;
   }
   // @ts-expect-error Violation of the Principle of Liskov Substitutability
-  // eslint-disable-next-line class-methods-use-this
   _overlayStack() {
     return TOAST_STACK;
   }

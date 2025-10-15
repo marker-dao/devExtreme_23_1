@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/calendar.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,7 +16,8 @@ import {
     EventInfo,
     InitializedEventInfo,
     NativeEventInfo,
-} from '../common/core/events';
+    InteractionEvent,
+} from '../events';
 
 import {
     template,
@@ -82,7 +83,7 @@ export type OptionChangedEvent = EventInfo<dxCalendar> & ChangedOptionInfo;
  * @type object
  * @inherits NativeEventInfo,ValueChangedInfo
  */
-export type ValueChangedEvent = NativeEventInfo<dxCalendar, KeyboardEvent | MouseEvent | PointerEvent | TouchEvent | Event> & ValueChangedInfo;
+export type ValueChangedEvent = NativeEventInfo<dxCalendar, InteractionEvent | Event> & ValueChangedInfo;
 
 /** @public */
 export type CellTemplateData = {

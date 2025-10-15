@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/m_subscribes.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,12 +15,10 @@ exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _date = _interopRequireDefault(require("../../core/utils/date"));
 var _extend = require("../../core/utils/extend");
-var _iterator = require("../../core/utils/iterator");
 var _type = require("../../core/utils/type");
 var _m_text_utils = require("./appointments/m_text_utils");
 var _get_delta_time = require("./appointments/resizing/get_delta_time");
 var _constants = require("./constants");
-var _m_classes = require("./m_classes");
 var _m_utils = require("./m_utils");
 var _base = require("./r1/utils/base");
 var _appointment_adapter = require("./utils/appointment_adapter/appointment_adapter");
@@ -172,7 +170,7 @@ const subscribes = {
       },
       cellDurationInMinutes: this.getWorkSpace().option('cellDuration'),
       resizableStep: this.getWorkSpace().positionHelper.getResizableStep(),
-      isAllDay: isAllDay(this, itemData)
+      isAllDayPanel: isAllDay(this, itemData)
     });
   },
   getCellWidth() {
@@ -244,18 +242,6 @@ const subscribes = {
   },
   forceMaxAppointmentPerCell() {
     return this.forceMaxAppointmentPerCell();
-  },
-  onAgendaReady(rows) {
-    const $appts = this.getAppointmentsInstance()._itemElements();
-    let total = 0;
-    const applyClass = function (_, count) {
-      const index = count + total - 1;
-      $appts.eq(index).addClass(_m_classes.AGENDA_LAST_IN_DATE_APPOINTMENT_CLASS);
-      total += count;
-    };
-    for (let i = 0; i < rows.length; i++) {
-      (0, _iterator.each)(rows[i], applyClass);
-    }
   },
   getTargetedAppointmentData(appointment, element) {
     return this.getTargetedAppointment(appointment, element);

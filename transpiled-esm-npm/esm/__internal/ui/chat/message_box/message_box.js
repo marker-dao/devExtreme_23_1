@@ -1,12 +1,11 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../../core/renderer';
 import DOMComponent from '../../../core/widget/dom_component';
-import TextAreaOnSteroids from '../../../ui/chat/message_box/chat_text_area';
+import ChatTextArea from '../../../ui/chat/message_box/chat_text_area';
 import EditingPreview from '../../../ui/chat/message_box/editing_preview';
 export const CHAT_MESSAGEBOX_CLASS = 'dx-chat-messagebox';
 export const CHAT_MESSAGEBOX_TEXTAREA_CONTAINER_CLASS = 'dx-chat-messagebox-textarea-container';
 export const CHAT_MESSAGEBOX_TEXTAREA_CLASS = 'dx-chat-messagebox-textarea';
-export const CHAT_MESSAGEBOX_BUTTON_CLASS = 'dx-chat-messagebox-button';
 export const TYPING_END_DELAY = 2000;
 const ESCAPE_KEY = 'escape';
 class MessageBox extends DOMComponent {
@@ -15,6 +14,7 @@ class MessageBox extends DOMComponent {
       activeStateEnabled: true,
       focusStateEnabled: true,
       hoverStateEnabled: true,
+      fileUploaderOptions: undefined,
       text: '',
       onMessageEntered: undefined,
       onMessageEditCanceled: undefined,
@@ -69,7 +69,7 @@ class MessageBox extends DOMComponent {
     const $textArea = $('<div>').addClass(CHAT_MESSAGEBOX_TEXTAREA_CLASS);
     const textAreaOptions = this._getTextAreaOptions();
     $parent.append($textArea);
-    this._textArea = this._createComponent($textArea, TextAreaOnSteroids, textAreaOptions);
+    this._textArea = this._createComponent($textArea, ChatTextArea, textAreaOptions);
     this._textArea.registerKeyHandler(ESCAPE_KEY, () => {
       if (this.option('text')) {
         this._cancelMessageEdit();
@@ -79,13 +79,17 @@ class MessageBox extends DOMComponent {
   _getTextAreaOptions() {
     const {
       activeStateEnabled,
+      fileUploaderOptions,
       focusStateEnabled,
-      hoverStateEnabled
+      hoverStateEnabled,
+      text
     } = this.option();
     const options = {
       activeStateEnabled,
+      fileUploaderOptions,
       focusStateEnabled,
       hoverStateEnabled,
+      value: text,
       onInput: e => {
         this._triggerTypingStartAction(e);
         this._updateTypingEndTimeout();
@@ -157,6 +161,7 @@ class MessageBox extends DOMComponent {
     });
   }
   _optionChanged(args) {
+    var _this$_editingPreview;
     const {
       name,
       value
@@ -165,12 +170,12 @@ class MessageBox extends DOMComponent {
       case 'activeStateEnabled':
       case 'focusStateEnabled':
       case 'hoverStateEnabled':
-        {
-          var _this$_editingPreview;
-          this._textArea.option(name, value);
-          (_this$_editingPreview = this._editingPreview) === null || _this$_editingPreview === void 0 || _this$_editingPreview.option(name, value);
-          break;
-        }
+        this._textArea.option(name, value);
+        (_this$_editingPreview = this._editingPreview) === null || _this$_editingPreview === void 0 || _this$_editingPreview.option(name, value);
+        break;
+      case 'fileUploaderOptions':
+        this._textArea.option(name, value);
+        break;
       case 'onMessageEntered':
         this._createMessageEnteredAction();
         break;

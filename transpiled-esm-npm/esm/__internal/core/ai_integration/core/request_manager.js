@@ -9,10 +9,11 @@ export class RequestManager {
       throw errors.Error('E0122');
     }
   }
-  sendRequest(prompt, callbacks) {
+  sendRequest(prompt, callbacks, data) {
     let aborted = false;
     const params = {
       prompt,
+      data,
       onChunk: chunk => {
         if (!aborted) {
           var _callbacks$onChunk;

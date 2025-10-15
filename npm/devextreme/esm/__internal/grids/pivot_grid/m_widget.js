@@ -1,11 +1,12 @@
 /**
 * DevExtreme (esm/__internal/grids/pivot_grid/m_widget.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import _extends from "@babel/runtime/helpers/esm/extends";
 import { name as clickEventName } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace } from '../../../common/core/events/utils/index';
@@ -157,7 +158,6 @@ class PivotGrid extends Widget {
         width: 200,
         height: 70,
         showIndicator: true,
-        indicatorSrc: '',
         showPane: true
       },
       texts: {
@@ -203,6 +203,16 @@ class PivotGrid extends Widget {
           ok: localizationMessage.format('dxDataGrid-headerFilterOK'),
           cancel: localizationMessage.format('dxDataGrid-headerFilterCancel')
         }
+      }
+    });
+  }
+  _setDeprecatedOptions() {
+    super._setDeprecatedOptions();
+    this._deprecatedOptions = _extends({}, this._deprecatedOptions, {
+      // @ts-expect-error ts-error
+      'loadPanel.indicatorSrc': {
+        since: '25.2',
+        alias: 'loadPanel.indicatorOptions.src'
       }
     });
   }

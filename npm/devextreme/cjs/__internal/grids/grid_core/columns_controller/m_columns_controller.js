@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/columns_controller/m_columns_controller.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -40,12 +40,23 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable prefer-destructuring */
 class ColumnsController extends _m_modules.default.Controller {
   getCommonColumnSettings(column) {
-    if (!(column !== null && column !== void 0 && column.type)) {
-      return this.option('commonColumnSettings');
+    switch (true) {
+      case !(column !== null && column !== void 0 && column.type):
+        return this.option('commonColumnSettings');
+      case (column === null || column === void 0 ? void 0 : column.type) === _const.AI_COLUMN_NAME:
+        return this.getAiColumnSettings();
+      default:
+        return {};
     }
-    return column.type === _const.AI_COLUMN_NAME ? {
-      allowHiding: true
-    } : {};
+  }
+  getAiColumnSettings() {
+    return {
+      allowHiding: true,
+      ai: {
+        mode: 'auto',
+        showHeaderMenu: true
+      }
+    };
   }
   init(isApplyingUserState) {
     this._dataController = this.getController('data');

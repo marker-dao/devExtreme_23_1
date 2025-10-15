@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/workspaces/m_work_space.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,16 +26,17 @@ import { getBoundingRect } from '../../../core/utils/position';
 import { getHeight, getOuterHeight, getOuterWidth, getWidth, setOuterHeight, setWidth } from '../../../core/utils/size';
 import { isDefined } from '../../../core/utils/type';
 import { getWindow, hasWindow } from '../../../core/utils/window';
-import Scrollable from '../../../ui/scroll_view/ui.scrollable';
 import errors from '../../../ui/widget/ui.errors';
 import Widget from '../../../ui/widget/ui.widget';
 import { getMemoizeScrollTo } from '../../core/utils/scroll';
 import { AllDayPanelTitleComponent, AllDayTableComponent, DateTableComponent, GroupPanelComponent, HeaderPanelComponent, TimePanelComponent } from '../../scheduler/r1/components/index';
 import { calculateIsGroupedAllDayPanel, calculateViewStartDate, getCellDuration, getStartViewDateTimeOffset, getViewStartByOptions, isDateAndTimeView } from '../../scheduler/r1/utils/index';
+import Scrollable from '../../ui/scroll_view/scrollable';
 import { APPOINTMENT_SETTINGS_KEY } from '../constants';
 import { Cache } from '../global_cache';
 import AppointmentDragBehavior from '../m_appointment_drag_behavior';
 import { APPOINTMENT_DRAG_SOURCE_CLASS, DATE_TABLE_CLASS, DATE_TABLE_ROW_CLASS, FIXED_CONTAINER_CLASS, GROUP_HEADER_CONTENT_CLASS, GROUP_ROW_CLASS, TIME_PANEL_CLASS, VERTICAL_GROUP_COUNT_CLASSES, VIRTUAL_CELL_CLASS } from '../m_classes';
+import { CompactAppointmentsHelper } from '../m_compact_appointments_helper';
 import tableCreatorModule from '../m_table_creator';
 import { utils } from '../m_utils';
 import VerticalShader from '../shaders/m_current_time_shader_vertical';
@@ -551,8 +552,6 @@ class SchedulerWorkSpace extends Widget {
     this.virtualScrollingDispatcher.attachScrollableEvents();
     this.renderer = new VirtualScrollingRenderer(this);
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onDataSourceChanged(argument) {}
   isGroupedAllDayPanel() {
     return calculateIsGroupedAllDayPanel(this.option('groups'), this.option('groupOrientation'), this.isAllDayPanelVisible);
   }
@@ -601,6 +600,17 @@ class SchedulerWorkSpace extends Widget {
       const groupPanelWidth = this.getGroupTableWidth();
       this._$headerPanelEmptyCell.css('width', timePanelWidth + groupPanelWidth);
     }
+  }
+  updateHeaderPanelScrollbarPadding() {
+    if (hasWindow() && this._$headerPanelContainer) {
+      const scrollbarWidth = this._getScrollbarWidth();
+      this._$headerPanelContainer.css('paddingRight', `${scrollbarWidth}px`);
+    }
+  }
+  _getScrollbarWidth() {
+    const containerElement = $(this._dateTableScrollable.container()).get(0);
+    const scrollbarWidth = containerElement.offsetWidth - containerElement.clientWidth;
+    return scrollbarWidth;
   }
   _isGroupsSpecified(groupValues) {
     var _this$option3;
@@ -739,6 +749,7 @@ class SchedulerWorkSpace extends Widget {
     this._dateTableScrollable.update();
     (_this$_headerScrollab = this._headerScrollable) === null || _this$_headerScrollab === void 0 || _this$_headerScrollab.update();
     (_this$_sidebarScrolla = this._sidebarScrollable) === null || _this$_sidebarScrolla === void 0 || _this$_sidebarScrolla.update();
+    this.updateHeaderPanelScrollbarPadding();
   }
   _getTimePanelRowCount() {
     return this._getCellCountInDay();
@@ -1403,6 +1414,12 @@ class SchedulerWorkSpace extends Widget {
       dateTableCellsMeta: this._getDateTableDOMElementsInfo(),
       allDayPanelCellsMeta: this._getAllDayPanelDOMElementsInfo()
     }));
+  }
+  getPanelDOMSize(panelName) {
+    return panelName === 'allDayPanel' ? this.cache.memo('allDayPanelSize', () => getBoundingRect(this._$allDayPanel.get(0))) : this.cache.memo('regularPanelSize', () => getBoundingRect(this._getDateTable().get(0)));
+  }
+  getCollectorDimension(isCollectorCompact, panelName) {
+    return this.cache.memo(`collectorSize-${panelName}`, () => CompactAppointmentsHelper.measureCollectorDimensions(panelName === 'allDayPanel' ? this.getAllDayContainer() : this.getFixedContainer(), isCollectorCompact));
   }
   _getDateTableDOMElementsInfo() {
     const dateTableCells = this._getAllCells(false);

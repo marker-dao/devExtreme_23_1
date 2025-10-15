@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/overlay.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,9 +26,9 @@ import {
 import {
     Cancelable,
     EventInfo,
-} from '../common/core/events';
-
-import { DxEvent } from '../events';
+    DxEvent,
+    PointerInteractionEvent,
+} from '../events';
 
 import Widget, {
     WidgetOptions,
@@ -74,7 +74,7 @@ export interface dxOverlayOptions<TComponent> extends WidgetOptions<TComponent> 
      * @type_function_param1 event:event
      * @public
      */
-    hideOnOutsideClick?: boolean | ((event: DxEvent<MouseEvent | PointerEvent | TouchEvent>) => boolean);
+    hideOnOutsideClick?: boolean | ((event: DxEvent<PointerInteractionEvent>) => boolean);
     /**
      * @docid
      * @default false

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/core/ai_integration/templates/index.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -40,5 +40,9 @@ const templates = exports.templates = {
   smartPaste: {
     system: 'You are a helpful assistant that helps to fill fields based on the text provided. You will get a text and a list of fields that should be filled using info from the text. It can include the name of field, suitable format, optionally some additional instruction about what it should include. You need to return data for all the fields in the following format without any preamble, introduction, or explanatory text: {fieldName}:::{fieldValue};;;{fieldName}:::{fieldValue} and so on, where {fieldName} - is a variable for a field name and {fieldValue} - is a variable for a string to fill. If there is no info to fill, field value should be empty (like Name:::;;;)- do not use placeholders like (empty), N/A, null, or similar. Only fill in date fields if a complete date is explicitly present. If the date is missing or incomplete, leave the field empty.',
     user: 'Text: {{text}}. Fields: {{fields}}.'
+  },
+  generateGridColumn: {
+    system: 'You are a helpful assistant that generates column data based on the provided text and existing data context. Generate appropriate column values that match the request and are consistent with the existing data structure.',
+    user: 'Text: {{text}}. Data: {{data}}.'
   }
 };

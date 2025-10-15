@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/__tests__/__mock__/m_mock_scheduler.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -32,16 +32,46 @@ const setupSchedulerTestEnvironment = function () {
     onScroll: _globals.jest.fn(),
     onEnd: _globals.jest.fn()
   });
-  Element.prototype.getBoundingClientRect = _globals.jest.fn(() => ({
-    width,
-    height,
-    top: 0,
-    left: 0,
-    bottom: height,
-    right: width,
-    x: 0,
-    y: 0,
-    toJSON: () => {}
-  }));
+  const {
+    getComputedStyle
+  } = window;
+  window.getComputedStyle = _globals.jest.fn(function (element, pseudoElement) {
+    const styles = getComputedStyle.call(this, element, pseudoElement);
+    if (element.classList.contains('dx-scheduler-appointment-collector')) {
+      styles.setProperty('width', '24px');
+      styles.setProperty('height', '20px');
+      styles.setProperty('margin', '3px');
+    }
+    return styles;
+  });
+  Element.prototype.getBoundingClientRect = _globals.jest.fn(function () {
+    const classList = Array.from(this.classList);
+    switch (true) {
+      case classList.includes('dx-scheduler-date-table-cell') || classList.includes('dx-scheduler-all-day-table-cell'):
+        return {
+          width,
+          height,
+          top: 0,
+          left: 0,
+          bottom: height,
+          right: width,
+          x: 0,
+          y: 0,
+          toJSON: () => {}
+        };
+      default:
+        return {
+          width: 0,
+          height: 0,
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          x: 0,
+          y: 0,
+          toJSON: () => {}
+        };
+    }
+  });
 };
 exports.setupSchedulerTestEnvironment = setupSchedulerTestEnvironment;

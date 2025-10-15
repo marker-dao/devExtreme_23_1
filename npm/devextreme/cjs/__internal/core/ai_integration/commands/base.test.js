@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/core/ai_integration/commands/base.test.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -88,7 +88,7 @@ class TestCommand extends _base.BaseCommand {
       command.execute(params, {});
       await new Promise(process.nextTick);
       (0, _globals.expect)(spy).toHaveBeenCalledTimes(1);
-      (0, _globals.expect)(spy).toHaveBeenCalledWith('AI response');
+      (0, _globals.expect)(spy).toHaveBeenCalledWith('AI response', params);
       (0, _globals.expect)(spy).toHaveReturnedWith('Parsed result: AI response');
     });
     (0, _globals.it)('callbacks should be called a specified number of times', async () => {

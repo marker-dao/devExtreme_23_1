@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.da.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -266,6 +266,8 @@
             "dxScheduler-appointmentAriaLabel-group": "Gruppe: {0}",
             "dxScheduler-appointmentAriaLabel-recurring": "Tilbagevendende aftale",
             "dxScheduler-appointmentListAriaLabel": "Aftaleliste",
+            "dxScheduler-editPopupTitle": "Edit Appointment",
+            "dxScheduler-editPopupSaveButtonText": "Save",
             "dxScheduler-editorLabelTitle": "Emne",
             "dxScheduler-editorLabelStartDate": "Startdato",
             "dxScheduler-editorLabelEndDate": "Slutdato",

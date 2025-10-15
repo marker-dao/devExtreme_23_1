@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.ai-integration.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -37,7 +37,7 @@ class BaseCommand {
       },
       onComplete: result => {
         var _callbacks$onComplete;
-        const finalResponse = this.parseResult(result);
+        const finalResponse = this.parseResult(result, params);
         callbacks === null || callbacks === void 0 || (_callbacks$onComplete = callbacks.onComplete) === null || _callbacks$onComplete === void 0 || _callbacks$onComplete.call(callbacks, finalResponse);
       },
       onError: error => {
@@ -45,7 +45,7 @@ class BaseCommand {
         callbacks === null || callbacks === void 0 || (_callbacks$onError = callbacks.onError) === null || _callbacks$onError === void 0 || _callbacks$onError.call(callbacks, error);
       }
     };
-    const abort = this.requestManager.sendRequest(prompt, requestManagerCallbacks);
+    const abort = this.requestManager.sendRequest(prompt, requestManagerCallbacks, params);
     return abort;
   }
 }
@@ -172,6 +172,42 @@ class ExpandCommand extends _base.BaseCommand {
   }
 }
 exports.ExpandCommand = ExpandCommand;
+
+/***/ }),
+
+/***/ 88890:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.GenerateGridColumnCommand = void 0;
+var _base = __webpack_require__(55390);
+class GenerateGridColumnCommand extends _base.BaseCommand {
+  getTemplateName() {
+    return 'generateGridColumn';
+  }
+  buildPromptData(params) {
+    const dataDescription = this.generateDataDescription(params.data);
+    return {
+      user: {
+        text: params.text,
+        data: dataDescription
+      }
+    };
+  }
+  parseResult(response) {
+    const result = JSON.parse(response);
+    return result;
+  }
+  generateDataDescription(data) {
+    const result = JSON.stringify(data);
+    return result;
+  }
+}
+exports.GenerateGridColumnCommand = GenerateGridColumnCommand;
 
 /***/ }),
 
@@ -323,8 +359,83 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.SmartPasteCommand = void 0;
+var _color = _interopRequireDefault(__webpack_require__(43101));
+var _ui = _interopRequireDefault(__webpack_require__(35185));
 var _base = __webpack_require__(55390);
+var _date = __webpack_require__(55594);
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class SmartPasteCommand extends _base.BaseCommand {
+  static toTyped(values, desiredType, fieldName) {
+    const errorValue = JSON.stringify(values);
+    const single = values.length <= 1 ? values[0] : undefined;
+    const arr = values.length > 1 ? values : undefined;
+    if (!single && !arr) {
+      return undefined;
+    }
+    switch (desiredType) {
+      case 'color':
+        {
+          if (new _color.default(single).colorIsInvalid) {
+            throw _ui.default.Error('E1064', fieldName, errorValue, 'color');
+          }
+          return single;
+        }
+      case 'boolean':
+        {
+          if (single === 'true') return true;
+          if (single === 'false') return false;
+          throw _ui.default.Error('E1064', fieldName, errorValue, 'boolean');
+        }
+      case 'string':
+        {
+          if (!single) {
+            throw _ui.default.Error('E1064', fieldName, errorValue, 'string');
+          }
+          return single;
+        }
+      case 'stringArray':
+        {
+          if (!arr) {
+            throw _ui.default.Error('E1064', fieldName, errorValue, 'string array');
+          }
+          return arr;
+        }
+      case 'number':
+        {
+          if (single === undefined || !Number.isFinite(parseFloat(single))) {
+            throw _ui.default.Error('E1064', fieldName, errorValue, 'number');
+          }
+          return parseFloat(single);
+        }
+      case 'numberRange':
+        {
+          if (!arr || arr.length > 2) {
+            throw _ui.default.Error('E1064', fieldName, errorValue, 'number range');
+          }
+          const numbers = arr.map(v => parseFloat(v));
+          if (!numbers.every(Number.isFinite)) {
+            throw _ui.default.Error('E1064', fieldName, errorValue, 'number range');
+          }
+          return [numbers[0], numbers[1]];
+        }
+      case 'date':
+        {
+          if (!_date.dateUtilsTs.isValidDate(single)) {
+            throw _ui.default.Error('E1064', fieldName, errorValue, 'date');
+          }
+          return new Date(single);
+        }
+      case 'dateRange':
+        {
+          if (!arr || arr.length > 2 || !arr.every(_date.dateUtilsTs.isValidDate)) {
+            throw _ui.default.Error('E1064', fieldName, errorValue, 'date range');
+          }
+          return arr.map(v => new Date(v));
+        }
+      default:
+        return arr ?? single;
+    }
+  }
   getTemplateName() {
     return 'smartPaste';
   }
@@ -337,7 +448,7 @@ class SmartPasteCommand extends _base.BaseCommand {
       }
     };
   }
-  parseResult(response) {
+  parseResult(response, params) {
     const result = [];
     response.split(';;;').forEach(data => {
       if (!data) {
@@ -345,7 +456,8 @@ class SmartPasteCommand extends _base.BaseCommand {
       }
       const [name, ...rawValues] = data.split(':::');
       const values = rawValues.map(value => value.trim());
-      const value = values.length <= 1 ? values[0] : values;
+      const fieldParams = params.fields.find(v => v.name === name);
+      const value = SmartPasteCommand.toTyped(values, fieldParams === null || fieldParams === void 0 ? void 0 : fieldParams.type, fieldParams === null || fieldParams === void 0 ? void 0 : fieldParams.name);
       if (value) {
         result.push({
           name,
@@ -440,6 +552,7 @@ exports.CommandNames = exports.COMMANDS = exports.AIIntegration = void 0;
 var _index = __webpack_require__(39171);
 var _prompt_manager = __webpack_require__(76542);
 var _request_manager = __webpack_require__(17083);
+var _generateGridColumn = __webpack_require__(88890);
 var CommandNames;
 (function (CommandNames) {
   CommandNames["ChangeStyle"] = "changeStyle";
@@ -451,6 +564,7 @@ var CommandNames;
   CommandNames["Summarize"] = "summarize";
   CommandNames["Translate"] = "translate";
   CommandNames["SmartPaste"] = "smartPaste";
+  CommandNames["GenerateGridColumn"] = "generateGridColumn";
 })(CommandNames || (exports.CommandNames = CommandNames = {}));
 const COMMANDS = exports.COMMANDS = {
   [CommandNames.ChangeStyle]: _index.ChangeStyleCommand,
@@ -461,7 +575,8 @@ const COMMANDS = exports.COMMANDS = {
   [CommandNames.Shorten]: _index.ShortenCommand,
   [CommandNames.Summarize]: _index.SummarizeCommand,
   [CommandNames.Translate]: _index.TranslateCommand,
-  [CommandNames.SmartPaste]: _index.SmartPasteCommand
+  [CommandNames.SmartPaste]: _index.SmartPasteCommand,
+  [CommandNames.GenerateGridColumn]: _generateGridColumn.GenerateGridColumnCommand
 };
 class AIIntegration {
   constructor(provider) {
@@ -504,6 +619,9 @@ class AIIntegration {
   }
   smartPaste(params, callbacks) {
     return this.executeCommand(CommandNames.SmartPaste, params, callbacks);
+  }
+  generateGridColumn(params, callbacks) {
+    return this.executeCommand(CommandNames.GenerateGridColumn, params, callbacks);
   }
 }
 exports.AIIntegration = AIIntegration;
@@ -589,10 +707,11 @@ class RequestManager {
       throw _errors.default.Error('E0122');
     }
   }
-  sendRequest(prompt, callbacks) {
+  sendRequest(prompt, callbacks, data) {
     let aborted = false;
     const params = {
       prompt,
+      data,
       onChunk: chunk => {
         if (!aborted) {
           var _callbacks$onChunk;
@@ -663,6 +782,10 @@ const templates = exports.templates = {
   smartPaste: {
     system: 'You are a helpful assistant that helps to fill fields based on the text provided. You will get a text and a list of fields that should be filled using info from the text. It can include the name of field, suitable format, optionally some additional instruction about what it should include. You need to return data for all the fields in the following format without any preamble, introduction, or explanatory text: {fieldName}:::{fieldValue};;;{fieldName}:::{fieldValue} and so on, where {fieldName} - is a variable for a field name and {fieldValue} - is a variable for a string to fill. If there is no info to fill, field value should be empty (like Name:::;;;)- do not use placeholders like (empty), N/A, null, or similar. Only fill in date fields if a complete date is explicitly present. If the date is missing or incomplete, leave the field empty.',
     user: 'Text: {{text}}. Fields: {{fields}}.'
+  },
+  generateGridColumn: {
+    system: 'You are a helpful assistant that generates column data based on the provided text and existing data context. Generate appropriate column values that match the request and are consistent with the existing data structure.',
+    user: 'Text: {{text}}. Data: {{data}}.'
   }
 };
 
@@ -737,6 +860,30 @@ var _default = exports["default"] = (0, _error.default)({
   W0023: 'DevExtreme: the following \'devextreme\' package version does not match versions of other DevExpress products used in this application:\n\n' + '{0}\n\n' + 'Interoperability between different versions of the products listed herein cannot be guaranteed.\n\n',
   W0024: 'DevExtreme: Use Your DevExtreme License Key - Not Your DevExpress .NET License Key\n\n' + 'Invalid/incorrect license key. You used your DevExpress .NET license key instead of your DevExtreme (React, Angular, Vue, JS) license key. Please copy your DevExtreme license key and try again. \n\n' + 'Go to https://www.devexpress.com/ClientCenter/DownloadManager (navigate to the DevExtreme Subscription section) to obtain a valid DevExtreme license key. To validate your license, specify the correct key within GlobalConfig.\n\n' + 'For detailed license/registration information, visit https://js.devexpress.com/Documentation/Licensing/.\n\n' + 'If you have a valid license and the issue persists, submit a support ticket via the DevExpress Support Center. We will be happy to follow-up: https://supportcenter.devexpress.com/ticket/create.\n\n'
 });
+
+/***/ }),
+
+/***/ 55594:
+/***/ (function(__unused_webpack_module, exports) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.dateUtilsTs = void 0;
+const addOffsets = function (date) {
+  for (var _len = arguments.length, offsets = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    offsets[_key - 1] = arguments[_key];
+  }
+  const newDateMs = offsets.reduce((result, offset) => result + offset, date.getTime());
+  return new Date(newDateMs);
+};
+const isValidDate = date => Boolean(date && !isNaN(new Date(date).valueOf()));
+const dateUtilsTs = exports.dateUtilsTs = {
+  addOffsets,
+  isValidDate
+};
 
 /***/ }),
 
@@ -1131,6 +1278,531 @@ var _default = exports["default"] = {
 
 /***/ }),
 
+/***/ 54699:
+/***/ (function(__unused_webpack_module, exports) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+/* eslint-disable spellcheck/spell-checker */
+const standardColorNames = {
+  aliceblue: 'f0f8ff',
+  antiquewhite: 'faebd7',
+  aqua: '00ffff',
+  aquamarine: '7fffd4',
+  azure: 'f0ffff',
+  beige: 'f5f5dc',
+  bisque: 'ffe4c4',
+  black: '000000',
+  blanchedalmond: 'ffebcd',
+  blue: '0000ff',
+  blueviolet: '8a2be2',
+  brown: 'a52a2a',
+  burlywood: 'deb887',
+  cadetblue: '5f9ea0',
+  chartreuse: '7fff00',
+  chocolate: 'd2691e',
+  coral: 'ff7f50',
+  cornflowerblue: '6495ed',
+  cornsilk: 'fff8dc',
+  crimson: 'dc143c',
+  cyan: '00ffff',
+  darkblue: '00008b',
+  darkcyan: '008b8b',
+  darkgoldenrod: 'b8860b',
+  darkgray: 'a9a9a9',
+  darkgreen: '006400',
+  darkgrey: 'a9a9a9',
+  darkkhaki: 'bdb76b',
+  darkmagenta: '8b008b',
+  darkolivegreen: '556b2f',
+  darkorange: 'ff8c00',
+  darkorchid: '9932cc',
+  darkred: '8b0000',
+  darksalmon: 'e9967a',
+  darkseagreen: '8fbc8f',
+  darkslateblue: '483d8b',
+  darkslategray: '2f4f4f',
+  darkslategrey: '2f4f4f',
+  darkturquoise: '00ced1',
+  darkviolet: '9400d3',
+  deeppink: 'ff1493',
+  deepskyblue: '00bfff',
+  dimgray: '696969',
+  dimgrey: '696969',
+  dodgerblue: '1e90ff',
+  feldspar: 'd19275',
+  firebrick: 'b22222',
+  floralwhite: 'fffaf0',
+  forestgreen: '228b22',
+  fuchsia: 'ff00ff',
+  gainsboro: 'dcdcdc',
+  ghostwhite: 'f8f8ff',
+  gold: 'ffd700',
+  goldenrod: 'daa520',
+  gray: '808080',
+  green: '008000',
+  greenyellow: 'adff2f',
+  grey: '808080',
+  honeydew: 'f0fff0',
+  hotpink: 'ff69b4',
+  indianred: 'cd5c5c',
+  indigo: '4b0082',
+  ivory: 'fffff0',
+  khaki: 'f0e68c',
+  lavender: 'e6e6fa',
+  lavenderblush: 'fff0f5',
+  lawngreen: '7cfc00',
+  lemonchiffon: 'fffacd',
+  lightblue: 'add8e6',
+  lightcoral: 'f08080',
+  lightcyan: 'e0ffff',
+  lightgoldenrodyellow: 'fafad2',
+  lightgray: 'd3d3d3',
+  lightgreen: '90ee90',
+  lightgrey: 'd3d3d3',
+  lightpink: 'ffb6c1',
+  lightsalmon: 'ffa07a',
+  lightseagreen: '20b2aa',
+  lightskyblue: '87cefa',
+  lightslateblue: '8470ff',
+  lightslategray: '778899',
+  lightslategrey: '778899',
+  lightsteelblue: 'b0c4de',
+  lightyellow: 'ffffe0',
+  lime: '00ff00',
+  limegreen: '32cd32',
+  linen: 'faf0e6',
+  magenta: 'ff00ff',
+  maroon: '800000',
+  mediumaquamarine: '66cdaa',
+  mediumblue: '0000cd',
+  mediumorchid: 'ba55d3',
+  mediumpurple: '9370d8',
+  mediumseagreen: '3cb371',
+  mediumslateblue: '7b68ee',
+  mediumspringgreen: '00fa9a',
+  mediumturquoise: '48d1cc',
+  mediumvioletred: 'c71585',
+  midnightblue: '191970',
+  mintcream: 'f5fffa',
+  mistyrose: 'ffe4e1',
+  moccasin: 'ffe4b5',
+  navajowhite: 'ffdead',
+  navy: '000080',
+  oldlace: 'fdf5e6',
+  olive: '808000',
+  olivedrab: '6b8e23',
+  orange: 'ffa500',
+  orangered: 'ff4500',
+  orchid: 'da70d6',
+  palegoldenrod: 'eee8aa',
+  palegreen: '98fb98',
+  paleturquoise: 'afeeee',
+  palevioletred: 'd87093',
+  papayawhip: 'ffefd5',
+  peachpuff: 'ffdab9',
+  peru: 'cd853f',
+  pink: 'ffc0cb',
+  plum: 'dda0dd',
+  powderblue: 'b0e0e6',
+  purple: '800080',
+  rebeccapurple: '663399',
+  red: 'ff0000',
+  rosybrown: 'bc8f8f',
+  royalblue: '4169e1',
+  saddlebrown: '8b4513',
+  salmon: 'fa8072',
+  sandybrown: 'f4a460',
+  seagreen: '2e8b57',
+  seashell: 'fff5ee',
+  sienna: 'a0522d',
+  silver: 'c0c0c0',
+  skyblue: '87ceeb',
+  slateblue: '6a5acd',
+  slategray: '708090',
+  slategrey: '708090',
+  snow: 'fffafa',
+  springgreen: '00ff7f',
+  steelblue: '4682b4',
+  tan: 'd2b48c',
+  teal: '008080',
+  thistle: 'd8bfd8',
+  tomato: 'ff6347',
+  turquoise: '40e0d0',
+  violet: 'ee82ee',
+  violetred: 'd02090',
+  wheat: 'f5deb3',
+  white: 'ffffff',
+  whitesmoke: 'f5f5f5',
+  yellow: 'ffff00',
+  yellowgreen: '9acd32'
+};
+// array of color definition objects
+const standardColorTypes = [{
+  re: /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/,
+  process(colorString) {
+    return [parseInt(colorString[1], 10), parseInt(colorString[2], 10), parseInt(colorString[3], 10)];
+  }
+}, {
+  re: /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d*\.*\d+)\)$/,
+  process(colorString) {
+    return [parseInt(colorString[1], 10), parseInt(colorString[2], 10), parseInt(colorString[3], 10), parseFloat(colorString[4])];
+  }
+}, {
+  re: /^#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/,
+  process(colorString) {
+    return [parseInt(colorString[1], 16), parseInt(colorString[2], 16), parseInt(colorString[3], 16)];
+  }
+}, {
+  re: /^#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/,
+  process(colorString) {
+    return [parseInt(colorString[1], 16), parseInt(colorString[2], 16), parseInt(colorString[3], 16), Number((parseInt(colorString[4], 16) / 255).toFixed(2))];
+  }
+}, {
+  re: /^#([a-f0-9]{1})([a-f0-9]{1})([a-f0-9]{1})([a-f0-9]{1})$/,
+  process(colorString) {
+    return [parseInt(colorString[1] + colorString[1], 16), parseInt(colorString[2] + colorString[2], 16), parseInt(colorString[3] + colorString[3], 16), Number((parseInt(colorString[4] + colorString[4], 16) / 255).toFixed(2))];
+  }
+}, {
+  re: /^#([a-f0-9]{1})([a-f0-9]{1})([a-f0-9]{1})$/,
+  process(colorString) {
+    return [parseInt(colorString[1] + colorString[1], 16), parseInt(colorString[2] + colorString[2], 16), parseInt(colorString[3] + colorString[3], 16)];
+  }
+}, {
+  re: /^hsv\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/,
+  process(colorString) {
+    const h = parseInt(colorString[1], 10);
+    const s = parseInt(colorString[2], 10);
+    const v = parseInt(colorString[3], 10);
+    const rgb = hsvToRgb(h, s, v);
+    return [rgb[0], rgb[1], rgb[2], 1, [h, s, v]];
+  }
+}, {
+  re: /^hsl\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/,
+  process(colorString) {
+    const h = parseInt(colorString[1], 10);
+    const s = parseInt(colorString[2], 10);
+    const l = parseInt(colorString[3], 10);
+    const rgb = hslToRgb(h, s, l);
+    return [rgb[0], rgb[1], rgb[2], 1, null, [h, s, l]];
+  }
+}];
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const _round = Math.round;
+function Color(value) {
+  this.baseColor = value;
+  let color;
+  if (value) {
+    color = String(value).toLowerCase().replace(/ /g, '');
+    color = standardColorNames[color] ? `#${standardColorNames[color]}` : color;
+    color = parseColor(color);
+  }
+  if (!color) {
+    this.colorIsInvalid = true;
+  }
+  color = color || {};
+  this.r = normalize(color[0]);
+  this.g = normalize(color[1]);
+  this.b = normalize(color[2]);
+  this.a = normalize(color[3], 1, 1);
+  if (color[4]) {
+    this.hsv = {
+      h: color[4][0],
+      s: color[4][1],
+      v: color[4][2]
+    };
+  } else {
+    this.hsv = toHsvFromRgb(this.r, this.g, this.b);
+  }
+  if (color[5]) {
+    this.hsl = {
+      h: color[5][0],
+      s: color[5][1],
+      l: color[5][2]
+    };
+  } else {
+    this.hsl = toHslFromRgb(this.r, this.g, this.b);
+  }
+}
+function parseColor(color) {
+  if (color === 'transparent') {
+    return [0, 0, 0, 0];
+  }
+  let i = 0;
+  const ii = standardColorTypes.length;
+  let str;
+  for (; i < ii; ++i) {
+    str = standardColorTypes[i].re.exec(color);
+    if (str) {
+      return standardColorTypes[i].process(str);
+    }
+  }
+  return null;
+}
+function normalize(colorComponent, def, max) {
+  def = def || 0;
+  max = max || 255;
+  return colorComponent < 0 || isNaN(colorComponent) ? def : colorComponent > max ? max : colorComponent;
+}
+function toHexFromRgb(r, g, b) {
+  return `#${(0X01000000 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+}
+function toHsvFromRgb(r, g, b) {
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const delta = max - min;
+  let H;
+  let S;
+  let V = max;
+  S = max === 0 ? 0 : 1 - min / max;
+  if (max === min) {
+    H = 0;
+  } else {
+    switch (max) {
+      case r:
+        H = 60 * ((g - b) / delta);
+        if (g < b) {
+          H += 360;
+        }
+        break;
+      case g:
+        H = 60 * ((b - r) / delta) + 120;
+        break;
+      case b:
+        H = 60 * ((r - g) / delta) + 240;
+        break;
+      default:
+        break;
+    }
+  }
+  S *= 100;
+  V *= 100 / 255;
+  return {
+    h: Math.round(H),
+    s: Math.round(S),
+    v: Math.round(V)
+  };
+}
+function hsvToRgb(h, s, v) {
+  const index = Math.floor(h % 360 / 60);
+  const vMin = (100 - s) * v / 100;
+  const a = (v - vMin) * (h % 60 / 60);
+  const vInc = vMin + a;
+  const vDec = v - a;
+  let r;
+  let g;
+  let b;
+  switch (index) {
+    case 0:
+      r = v;
+      g = vInc;
+      b = vMin;
+      break;
+    case 1:
+      r = vDec;
+      g = v;
+      b = vMin;
+      break;
+    case 2:
+      r = vMin;
+      g = v;
+      b = vInc;
+      break;
+    case 3:
+      r = vMin;
+      g = vDec;
+      b = v;
+      break;
+    case 4:
+      r = vInc;
+      g = vMin;
+      b = v;
+      break;
+    case 5:
+      r = v;
+      g = vMin;
+      b = vDec;
+      break;
+    default:
+      break;
+  }
+  return [Math.round(r * 2.55), Math.round(g * 2.55), Math.round(b * 2.55)];
+}
+function calculateHue(r, g, b, delta) {
+  const max = Math.max(r, g, b);
+  switch (max) {
+    case r:
+      return (g - b) / delta + (g < b ? 6 : 0);
+    case g:
+      return (b - r) / delta + 2;
+    case b:
+      return (r - g) / delta + 4;
+    default:
+      return undefined;
+    // should never happen
+  }
+}
+function toHslFromRgb(r, g, b) {
+  r = convertTo01Bounds(r, 255);
+  g = convertTo01Bounds(g, 255);
+  b = convertTo01Bounds(b, 255);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const maxMinSum = max + min;
+  let h;
+  let s;
+  const l = maxMinSum / 2;
+  if (max === min) {
+    h = s = 0;
+  } else {
+    const delta = max - min;
+    if (l > 0.5) {
+      s = delta / (2 - maxMinSum);
+    } else {
+      s = delta / maxMinSum;
+    }
+    h = calculateHue(r, g, b, delta);
+    h /= 6;
+  }
+  return {
+    h: _round(h * 360),
+    s: _round(s * 100),
+    l: _round(l * 100)
+  };
+}
+function makeColorTint(colorPart, h) {
+  let colorTint = h;
+  if (colorPart === 'r') {
+    colorTint = h + 1 / 3;
+  }
+  if (colorPart === 'b') {
+    colorTint = h - 1 / 3;
+  }
+  return colorTint;
+}
+function modifyColorTint(colorTint) {
+  if (colorTint < 0) {
+    colorTint += 1;
+  }
+  if (colorTint > 1) {
+    colorTint -= 1;
+  }
+  return colorTint;
+}
+function hueToRgb(p, q, colorTint) {
+  colorTint = modifyColorTint(colorTint);
+  if (colorTint < 1 / 6) {
+    return p + (q - p) * 6 * colorTint;
+  }
+  if (colorTint < 1 / 2) {
+    return q;
+  }
+  if (colorTint < 2 / 3) {
+    return p + (q - p) * (2 / 3 - colorTint) * 6;
+  }
+  return p;
+}
+function hslToRgb(h, s, l) {
+  let r;
+  let g;
+  let b;
+  h = convertTo01Bounds(h, 360);
+  s = convertTo01Bounds(s, 100);
+  l = convertTo01Bounds(l, 100);
+  if (s === 0) {
+    r = g = b = l;
+  } else {
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hueToRgb(p, q, makeColorTint('r', h));
+    g = hueToRgb(p, q, makeColorTint('g', h));
+    b = hueToRgb(p, q, makeColorTint('b', h));
+  }
+  return [_round(r * 255), _round(g * 255), _round(b * 255)];
+}
+function convertTo01Bounds(n, max) {
+  n = Math.min(max, Math.max(0, parseFloat(n)));
+  if (Math.abs(n - max) < 0.000001) {
+    return 1;
+  }
+  return n % max / parseFloat(max);
+}
+function isIntegerBetweenMinAndMax(number, min, max) {
+  min = min || 0;
+  max = max || 255;
+  if (number % 1 !== 0 || number < min || number > max || typeof number !== 'number' || isNaN(number)) {
+    return false;
+  }
+  return true;
+}
+Color.prototype = {
+  constructor: Color,
+  highlight(step) {
+    step = step || 10;
+    return this.alter(step).toHex();
+  },
+  darken(step) {
+    step = step || 10;
+    return this.alter(-step).toHex();
+  },
+  alter(step) {
+    const result = new Color();
+    result.r = normalize(this.r + step);
+    result.g = normalize(this.g + step);
+    result.b = normalize(this.b + step);
+    return result;
+  },
+  blend(blendColor, opacity) {
+    const other = blendColor instanceof Color ? blendColor : new Color(blendColor);
+    const result = new Color();
+    result.r = normalize(_round(this.r * (1 - opacity) + other.r * opacity));
+    result.g = normalize(_round(this.g * (1 - opacity) + other.g * opacity));
+    result.b = normalize(_round(this.b * (1 - opacity) + other.b * opacity));
+    return result;
+  },
+  toHex() {
+    return toHexFromRgb(this.r, this.g, this.b);
+  },
+  getPureColor() {
+    const rgb = hsvToRgb(this.hsv.h, 100, 100);
+    return new Color(`rgb(${rgb.join(',')})`);
+  },
+  isValidHex(hex) {
+    return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hex);
+  },
+  isValidRGB(r, g, b) {
+    if (!isIntegerBetweenMinAndMax(r) || !isIntegerBetweenMinAndMax(g) || !isIntegerBetweenMinAndMax(b)) {
+      return false;
+    }
+    return true;
+  },
+  isValidAlpha(a) {
+    if (isNaN(a) || a < 0 || a > 1 || typeof a !== 'number') {
+      return false;
+    }
+    return true;
+  },
+  colorIsInvalid: false,
+  fromHSL(hsl) {
+    const color = new Color();
+    const rgb = hslToRgb(hsl.h, hsl.s, hsl.l);
+    // eslint-disable-next-line prefer-destructuring
+    color.r = rgb[0];
+    // eslint-disable-next-line prefer-destructuring
+    color.g = rgb[1];
+    // eslint-disable-next-line prefer-destructuring
+    color.b = rgb[2];
+    return color;
+  }
+};
+var _default = exports["default"] = Color;
+
+/***/ }),
+
 /***/ 63223:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
@@ -1141,6 +1813,21 @@ var _aiIntegration = __webpack_require__(94977);
 /* eslint-disable import/no-commonjs */
 
 module.exports = DevExpress.aiIntegration = _aiIntegration.AIIntegration;
+
+/***/ }),
+
+/***/ 43101:
+/***/ (function(module, exports, __webpack_require__) {
+
+
+
+exports["default"] = void 0;
+var _m_color = _interopRequireDefault(__webpack_require__(54699));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+// deprecated
+var _default = exports["default"] = _m_color.default;
+module.exports = exports.default;
+module.exports["default"] = exports.default;
 
 /***/ }),
 
@@ -1533,6 +2220,342 @@ var _m_type = __webpack_require__(39918);
 exports.version = exports.fullVersion = void 0;
 const version = exports.version = '25.2.0';
 const fullVersion = exports.fullVersion = '25.2.0';
+
+/***/ }),
+
+/***/ 35185:
+/***/ (function(module, exports, __webpack_require__) {
+
+
+
+exports["default"] = void 0;
+var _error = _interopRequireDefault(__webpack_require__(67264));
+var _errors = _interopRequireDefault(__webpack_require__(87129));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+/**
+* @docid
+* @name ErrorsUIWidgets
+*/
+var _default = exports["default"] = (0, _error.default)(_errors.default.ERROR_MESSAGES, {
+  /**
+  * @name ErrorsUIWidgets.E1001
+  */
+  E1001: 'Module \'{0}\'. Controller \'{1}\' is already registered',
+  /**
+  * @name ErrorsUIWidgets.E1002
+  */
+  E1002: 'Module \'{0}\'. Controller \'{1}\' does not inherit from DevExpress.ui.dxDataGrid.Controller',
+  /**
+  * @name ErrorsUIWidgets.E1003
+  */
+  E1003: 'Module \'{0}\'. View \'{1}\' is already registered',
+  /**
+  * @name ErrorsUIWidgets.E1004
+  */
+  E1004: 'Module \'{0}\'. View \'{1}\' does not inherit from DevExpress.ui.dxDataGrid.View',
+  /**
+  * @name ErrorsUIWidgets.E1005
+  */
+  E1005: 'Public method \'{0}\' is already registered',
+  /**
+  * @name ErrorsUIWidgets.E1006
+  */
+  E1006: 'Public method \'{0}.{1}\' does not exist',
+  /**
+  * @name ErrorsUIWidgets.E1007
+  */
+  E1007: 'State storing cannot be provided due to the restrictions of the browser',
+  /**
+  * @name ErrorsUIWidgets.E1010
+  */
+  E1010: 'The template does not contain the TextBox widget',
+  /**
+  * @name ErrorsUIWidgets.E1011
+  */
+  E1011: 'Items cannot be deleted from the List. Implement the "remove" function in the data store',
+  /**
+  * @name ErrorsUIWidgets.E1012
+  */
+  E1012: 'Editing type \'{0}\' with the name \'{1}\' is unsupported',
+  /**
+  * @name ErrorsUIWidgets.E1016
+  */
+  E1016: 'Unexpected type of data source is provided for a lookup column',
+  /**
+  * @name ErrorsUIWidgets.E1018
+  */
+  E1018: 'The \'collapseAll\' method cannot be called if you use a remote data source',
+  /**
+  * @name ErrorsUIWidgets.E1019
+  */
+  E1019: 'Search mode \'{0}\' is unavailable',
+  /**
+  * @name ErrorsUIWidgets.E1020
+  */
+  E1020: 'The type cannot be changed after initialization',
+  /**
+  * @name ErrorsUIWidgets.E1021
+  */
+  E1021: '{0} \'{1}\' you are trying to remove does not exist',
+  /**
+  * @name ErrorsUIWidgets.E1022
+  */
+  E1022: 'The "markers" option is given an invalid value. Assign an array instead',
+  /**
+  * @name ErrorsUIWidgets.E1023
+  */
+  E1023: 'The "routes" option is given an invalid value. Assign an array instead',
+  /**
+  * @name ErrorsUIWidgets.E1025
+  */
+  E1025: 'This layout is too complex to render',
+  /**
+  * @name ErrorsUIWidgets.E1026
+  */
+  E1026: 'The "calculateCustomSummary" function is missing from a field whose "summaryType" option is set to "custom"',
+  /**
+  * @name ErrorsUIWidgets.E1031
+  */
+  E1031: 'Unknown subscription in the Scheduler widget: \'{0}\'',
+  /**
+  * @name ErrorsUIWidgets.E1032
+  */
+  E1032: 'Unknown start date in an appointment: \'{0}\'',
+  /**
+  * @name ErrorsUIWidgets.E1033
+  */
+  E1033: 'Unknown step in the date navigator: \'{0}\'',
+  /**
+  * @name ErrorsUIWidgets.E1034
+  */
+  E1034: 'The browser does not implement an API for saving files',
+  /**
+   * @name ErrorsUIWidgets.E1035
+   */
+  E1035: 'The editor cannot be created: {0}',
+  /**
+   * @name ErrorsUIWidgets.E1037
+   */
+  E1037: 'Invalid structure of grouped data',
+  /**
+   * @name ErrorsUIWidgets.E1038
+   */
+  E1038: 'The browser does not support local storages for local web pages',
+  /**
+  * @name ErrorsUIWidgets.E1039
+  */
+  E1039: 'A cell\'s position cannot be calculated',
+  /**
+   * @name ErrorsUIWidgets.E1040
+   */
+  E1040: 'The \'{0}\' key value is not unique within the data array',
+  /**
+   * @name ErrorsUIWidgets.E1041
+   */
+  E1041: 'The \'{0}\' script is referenced after the DevExtreme scripts or not referenced at all',
+  /**
+  * @name ErrorsUIWidgets.E1042
+  */
+  E1042: '{0} requires the key field to be specified',
+  /**
+  * @name ErrorsUIWidgets.E1043
+  */
+  E1043: 'Changes cannot be processed due to the incorrectly set key',
+  /**
+  * @name ErrorsUIWidgets.E1044
+  */
+  E1044: 'The key field specified by the keyExpr option does not match the key field specified in the data store',
+  /**
+  * @name ErrorsUIWidgets.E1045
+  */
+  E1045: 'Editing requires the key field to be specified in the data store',
+  /**
+  * @name ErrorsUIWidgets.E1046
+  */
+  E1046: 'The \'{0}\' key field is not found in data objects',
+  /**
+  * @name ErrorsUIWidgets.E1047
+  */
+  E1047: 'The "{0}" field is not found in the fields array',
+  /**
+  * @name ErrorsUIWidgets.E1048
+  */
+  E1048: 'The "{0}" operation is not found in the filterOperations array',
+  /**
+  * @name ErrorsUIWidgets.E1049
+  */
+  E1049: 'Column \'{0}\': filtering is allowed but the \'dataField\' or \'name\' option is not specified',
+  /**
+  * @name ErrorsUIWidgets.E1050
+  */
+  E1050: 'The validationRules option does not apply to third-party editors defined in the editCellTemplate',
+  /**
+  * @name ErrorsUIWidgets.E1052
+  */
+  E1052: '{0} should have the "dataSource" option specified',
+  /**
+  * @name ErrorsUIWidgets.E1053
+  */
+  E1053: 'The "buttons" option accepts an array that contains only objects or string values',
+  /**
+  * @name ErrorsUIWidgets.E1054
+  */
+  E1054: 'All text editor buttons must have names',
+  /**
+  * @name ErrorsUIWidgets.E1055
+  */
+  E1055: 'One or several text editor buttons have invalid or non-unique "name" values',
+  /**
+  * @name ErrorsUIWidgets.E1056
+  */
+  E1056: 'The {0} widget does not support buttons of the "{1}" type',
+  // NOTE:
+  // E1057 is reserved. See https://js.devexpress.com/Documentation/19_2/ApiReference/UI_Widgets/Errors_and_Warnings/#E1057
+
+  /**
+  * @name ErrorsUIWidgets.E1058
+  */
+  E1058: 'The "startDayHour" and "endDayHour" options must be integers in the [0, 24] range, with "endDayHour" being greater than "startDayHour".',
+  /**
+  * @name ErrorsUIWidgets.E1059
+  */
+  E1059: 'The following column names are not unique: {0}',
+  /**
+  * @name ErrorsUIWidgets.E1060
+  */
+  E1060: 'All editable columns must have names',
+  /**
+   * @name ErrorsUIWidgets.E1061
+   */
+  E1061: 'The "offset" option must be an integer in the [-1440, 1440] range, divisible by 5 without a remainder.',
+  /**
+   * @name ErrorsUIWidgets.E1062
+   */
+  E1062: 'The "cellDuration" must be a positive integer, evenly dividing the ("endDayHour" - "startDayHour") interval into minutes.',
+  /**
+   * @name ErrorsUIWidgets.E1063
+   */
+  E1063: 'The \'smartPaste(text)\' method was called, but \'aiIntegration\' is not configured.',
+  /**
+   * @name ErrorsUIWidgets.E1064
+   */
+  E1064: 'AI returned {1} for the {0} field, but this field only accepts {2} values. Update the \'instruction\' for this field.',
+  /**
+   * @name ErrorsUIWidgets.E1065
+   */
+  E1065: 'The browser does not support Web Speech API (SpeechRecognition)',
+  /**
+  * @name ErrorsUIWidgets.E1066
+  */
+  E1066: 'All AI columns must have names.',
+  /**
+  * @name ErrorsUIWidgets.E1067
+  */
+  E1067: '\'aiIntegration\' is not configured in the {0} column.',
+  /**
+  * @name ErrorsUIWidgets.W1001
+  */
+  W1001: 'The "key" option cannot be modified after initialization',
+  /**
+  * @name ErrorsUIWidgets.W1002
+  */
+  W1002: 'An item with the key \'{0}\' does not exist',
+  /**
+  * @name ErrorsUIWidgets.W1003
+  */
+  W1003: 'A group with the key \'{0}\' in which you are trying to select items does not exist',
+  /**
+  * @name ErrorsUIWidgets.W1004
+  */
+  W1004: 'The item \'{0}\' you are trying to select in the group \'{1}\' does not exist',
+  /**
+  * @name ErrorsUIWidgets.W1005
+  */
+  W1005: 'Due to column data types being unspecified, data has been loaded twice in order to apply initial filter settings. To resolve this issue, specify data types for all grid columns.',
+  /**
+  * @name ErrorsUIWidgets.W1006
+  */
+  W1006: 'The map service returned the following error: \'{0}\'',
+  /**
+   * @name ErrorsUIWidgets.W1007
+   */
+  W1007: 'No item with key {0} was found in the data source, but this key was used as the parent key for item {1}',
+  /**
+   * @name ErrorsUIWidgets.W1008
+   */
+  W1008: 'Cannot scroll to the \'{0}\' date because it does not exist on the current view',
+  /**
+   * @name ErrorsUIWidgets.W1009
+   */
+  W1009: 'Searching works only if data is specified using the dataSource option',
+  /**
+   * @name ErrorsUIWidgets.W1010
+   */
+  W1010: 'The capability to select all items works with source data of plain structure only',
+  /**
+   * @name ErrorsUIWidgets.W1011
+   */
+  W1011: 'The "keyExpr" option is not applied when dataSource is not an array',
+  W1012: 'The \'{0}\' key field is not found in data objects',
+  /**
+  * @name ErrorsUIWidgets.W1013
+  */
+  W1013: 'The "message" field in the dialog component was renamed to "messageHtml". Change your code correspondingly. In addition, if you used HTML code in the message, make sure that it is secure',
+  /**
+  * @name ErrorsUIWidgets.W1014
+  */
+  W1014: 'The Floating Action Button exceeds the recommended speed dial action count. If you need to display more speed dial actions, increase the maxSpeedDialActionCount option value in the global config.',
+  /**
+  * @name ErrorsUIWidgets.W1017
+  */
+  W1017: 'The \'key\' property is not specified for a lookup data source. Please specify it to prevent requests for the entire dataset when users filter data.',
+  /**
+  * @name ErrorsUIWidgets.W1018
+  */
+  W1018: 'Infinite scrolling may not work properly with multiple selection. To use these features together, set \'selection.deferred\' to true or set \'selection.selectAllMode\' to \'page\'.',
+  /**
+  * @name ErrorsUIWidgets.W1019
+  */
+  W1019: 'Filter query string exceeds maximum length limit of {0} characters.',
+  /**
+  * @name ErrorsUIWidgets.W1020
+  */
+  W1020: 'hideEvent is ignored when the shading property is true',
+  /**
+  * @name ErrorsUIWidgets.W1021
+  */
+  W1021: 'The \'{0}\' is not rendered because none of the DOM elements match the value of the "container" property.',
+  /**
+   * @name ErrorsUIWidgets.W1022
+   */
+  W1022: '{0} JSON parsing error: \'{1}\'',
+  /**
+   * @name ErrorsUIWidgets.W1023
+   */
+  W1023: 'Appointments require unique keys. Otherwise, the agenda view may not work correctly.',
+  /**
+   * @name ErrorsUIWidgets.W1024
+   */
+  W1024: 'The client-side export is enabled. Implement the \'onExporting\' function.',
+  /**
+   * @name ErrorsUIWidgets.W1025
+   */
+  W1025: '\'scrolling.mode\' is set to \'virtual\' or \'infinite\'. Specify the height of the component.',
+  /**
+   * @name ErrorsUIWidgets.W1026
+   */
+  W1026: 'The \'ai\' toolbar item is defined, but aiIntegration is missing.',
+  /**
+   * @name ErrorsUIWidgets.W1027
+   */
+  W1027: 'A prompt should be specified for a custom command.',
+  /**
+   * @name ErrorsUIWidgets.W1028
+   */
+  W1028: 'Nested/banded columns do not support the following properties: {0}.'
+});
+module.exports = exports.default;
+module.exports["default"] = exports.default;
 
 /***/ })
 

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/m_compact_appointments_helper.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -94,6 +94,21 @@ export class CompactAppointmentsHelper {
       onClick: e => this._onButtonClick(e, options),
       template: this._renderTemplate(template, options.items, options.isCompact)
     });
+  }
+  static measureCollectorDimensions($container, isCompact) {
+    const $collector = $('<div>').addClass(APPOINTMENT_COLLECTOR_CLASS).toggleClass(COMPACT_APPOINTMENT_COLLECTOR_CLASS, isCompact).appendTo($container);
+    const styles = getComputedStyle($collector.get(0));
+    const geometry = {
+      width: styles.width,
+      height: styles.height,
+      marginLeft: styles.marginLeft,
+      marginRight: styles.marginRight,
+      marginTop: styles.marginTop,
+      marginBottom: styles.marginBottom
+    };
+    $collector.detach();
+    $collector.remove();
+    return geometry;
   }
   _createCompactButtonElement(_ref) {
     let {

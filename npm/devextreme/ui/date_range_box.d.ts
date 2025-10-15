@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/date_range_box.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,7 @@ import {
   NativeEventInfo,
   InitializedEventInfo,
   ChangedOptionInfo,
-} from '../common/core/events';
+} from '../events';
 
 import {
   DxElement,

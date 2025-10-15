@@ -3,12 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.parseResultForEditorType = exports.getItemFormatInfo = void 0;
-var _color = _interopRequireDefault(require("../../../color"));
+exports.getItemFormatInfo = exports.getFieldType = void 0;
 var _type = require("../../../core/utils/type");
-var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
-var _date = require("../../core/utils/date");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const getEditorTypeInfo = editorType => {
   switch (editorType) {
     case 'dxDateBox':
@@ -30,55 +26,28 @@ const getEditorTypeInfo = editorType => {
       return 'text';
   }
 };
-const parseResultForEditorType = (dataField, editorType, value) => {
-  const errorValue = JSON.stringify(value);
+const getFieldType = editorType => {
   switch (editorType) {
     case 'dxDateBox':
     case 'dxCalendar':
-      if (!_date.dateUtilsTs.isValidDate(value)) {
-        throw _ui.default.Error('E1064', dataField, errorValue, 'date');
-      }
-      return value;
+      return 'date';
     case 'dxDateRangeBox':
-      if (!Array.isArray(value) || value.length > 2 || value.some(item => !_date.dateUtilsTs.isValidDate(item))) {
-        throw _ui.default.Error('E1064', dataField, errorValue, 'date range');
-      }
-      return value;
-    case 'dxColorBox':
-      if (new _color.default(value).colorIsInvalid) {
-        throw _ui.default.Error('E1064', dataField, errorValue, 'color');
-      }
-      return value;
+      return 'dateRange';
     case 'dxCheckBox':
     case 'dxSwitch':
-      if (value === 'false') {
-        return false;
-      }
-      if (value === 'true') {
-        return true;
-      }
-      throw _ui.default.Error('E1064', dataField, errorValue, 'boolean');
+      return 'boolean';
     case 'dxNumberBox':
     case 'dxSlider':
-      if (Array.isArray(value) || isNaN(parseFloat(value))) {
-        throw _ui.default.Error('E1064', dataField, errorValue, 'number');
-      }
-      return value;
+      return 'number';
     case 'dxRangeSlider':
-      if (!Array.isArray(value) || value.length > 2 || value.some(item => isNaN(parseFloat(item)))) {
-        throw _ui.default.Error('E1064', dataField, errorValue, 'number range');
-      }
-      return value;
-    case 'dxHtmlEditor':
-      if (Array.isArray(value)) {
-        throw _ui.default.Error('E1064', dataField, errorValue, 'string');
-      }
-      return value;
+      return 'numberRange';
+    case 'dxColorBox':
+      return 'color';
     default:
-      return value;
+      return 'string';
   }
 };
-exports.parseResultForEditorType = parseResultForEditorType;
+exports.getFieldType = getFieldType;
 const getItemsAcceptedValuesInfo = editorOptions => {
   if (!(editorOptions !== null && editorOptions !== void 0 && editorOptions.items)) {
     return '';

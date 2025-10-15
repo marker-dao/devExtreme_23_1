@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/m_subscribes.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,12 +10,10 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../core/renderer';
 import dateUtils from '../../core/utils/date';
 import { extend } from '../../core/utils/extend';
-import { each } from '../../core/utils/iterator';
 import { isPlainObject } from '../../core/utils/type';
 import { formatDates, getFormatType } from './appointments/m_text_utils';
 import { getDeltaTime } from './appointments/resizing/get_delta_time';
 import { VERTICAL_VIEW_TYPES } from './constants';
-import { AGENDA_LAST_IN_DATE_APPOINTMENT_CLASS } from './m_classes';
 import { utils } from './m_utils';
 import { isAppointmentTakesAllDay } from './r1/utils/base';
 import { AppointmentAdapter } from './utils/appointment_adapter/appointment_adapter';
@@ -165,7 +163,7 @@ const subscribes = {
       },
       cellDurationInMinutes: this.getWorkSpace().option('cellDuration'),
       resizableStep: this.getWorkSpace().positionHelper.getResizableStep(),
-      isAllDay: isAllDay(this, itemData)
+      isAllDayPanel: isAllDay(this, itemData)
     });
   },
   getCellWidth() {
@@ -237,18 +235,6 @@ const subscribes = {
   },
   forceMaxAppointmentPerCell() {
     return this.forceMaxAppointmentPerCell();
-  },
-  onAgendaReady(rows) {
-    const $appts = this.getAppointmentsInstance()._itemElements();
-    let total = 0;
-    const applyClass = function (_, count) {
-      const index = count + total - 1;
-      $appts.eq(index).addClass(AGENDA_LAST_IN_DATE_APPOINTMENT_CLASS);
-      total += count;
-    };
-    for (let i = 0; i < rows.length; i++) {
-      each(rows[i], applyClass);
-    }
   },
   getTargetedAppointmentData(appointment, element) {
     return this.getTargetedAppointment(appointment, element);

@@ -12,7 +12,9 @@ var _deferred = require("../../core/utils/deferred");
 var _load_indicator = _interopRequireDefault(require("../../ui/load_indicator"));
 var _themes = require("../../ui/themes");
 var _overlay = _interopRequireDefault(require("../ui/overlay/overlay"));
+const _excluded = ["src"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE loadPanel
 const LOADPANEL_CLASS = 'dx-loadpanel';
@@ -83,6 +85,16 @@ class LoadPanel extends _overlay.default {
     this.$element().addClass(LOADPANEL_CLASS);
     this.$wrapper().addClass(LOADPANEL_WRAPPER_CLASS);
     this._updateWrapperAria();
+  }
+  _setDeprecatedOptions() {
+    super._setDeprecatedOptions();
+    this._deprecatedOptions = _extends({}, this._deprecatedOptions, {
+      // @ts-expect-error ts-error
+      indicatorSrc: {
+        since: '25.2',
+        alias: 'indicatorOptions.src'
+      }
+    });
   }
   _updateWrapperAria() {
     this.$wrapper().removeAttr('aria-label').removeAttr('role');
@@ -162,10 +174,18 @@ class LoadPanel extends _overlay.default {
     if (!this._$indicator) {
       this._$indicator = (0, _renderer.default)('<div>').addClass(LOADPANEL_INDICATOR_CLASS).appendTo(this._$loadPanelContentWrapper);
     }
-    this._createComponent(this._$indicator, _load_indicator.default, {
+    const {
+      indicatorOptions = {},
+      indicatorSrc
+    } = this.option();
+    const {
+        src
+      } = indicatorOptions,
+      restIndicatorOptions = _objectWithoutPropertiesLoose(indicatorOptions, _excluded);
+    this._createComponent(this._$indicator, _load_indicator.default, _extends({
       elementAttr: this._getAriaAttributes(),
-      indicatorSrc: this.option('indicatorSrc')
-    });
+      indicatorSrc: src ?? indicatorSrc
+    }, restIndicatorOptions));
   }
   _cleanPreviousContent() {
     this.$content().find(`.${LOADPANEL_MESSAGE_CLASS}`).remove();
@@ -190,6 +210,7 @@ class LoadPanel extends _overlay.default {
         this._togglePaneVisible();
         break;
       case 'indicatorSrc':
+      case 'indicatorOptions':
         this._renderLoadIndicator();
         break;
       default:

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/widget/ui.errors.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -226,6 +226,10 @@ export default errorUtils(errors.ERROR_MESSAGES, {
   * @name ErrorsUIWidgets.E1066
   */
   E1066: 'All AI columns must have names.',
+  /**
+  * @name ErrorsUIWidgets.E1067
+  */
+  E1067: '\'aiIntegration\' is not configured in the {0} column.',
   /**
   * @name ErrorsUIWidgets.W1001
   */

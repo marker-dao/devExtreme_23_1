@@ -13,7 +13,7 @@ const GMT = 'GMT';
 const offsetFormatRegexp = /^GMT(?:[+-]\d{2}:\d{2})?$/;
 const createUTCDateWithLocalOffset = date => {
   if (!date) {
-    return null;
+    return date;
   }
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
 };
@@ -47,10 +47,14 @@ const calculateTimezoneByValue = function (timeZone) {
     errors.log('W0009', timeZone);
     return undefined;
   }
-  if (!dateUtilsTs.isValidDate(date)) {
+  const dateObj = new Date(date);
+  if (!dateUtilsTs.isValidDate(dateObj)) {
     return undefined;
   }
-  return calculateTimezoneByValueCore(timeZone, date);
+  if (isEqualLocalTimeZone(timeZone)) {
+    return -dateObj.getTimezoneOffset() / MINUTES_IN_HOUR;
+  }
+  return calculateTimezoneByValueCore(timeZone, dateObj);
 };
 // 'GMT±XX:YY' or 'GMT' format
 const getStringOffset = function (timeZone) {

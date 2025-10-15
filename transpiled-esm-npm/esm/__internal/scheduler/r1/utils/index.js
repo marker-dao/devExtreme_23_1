@@ -1,5 +1,5 @@
 import { getThemeType } from '../../../scheduler/r1/utils/themes';
-import { calculateStartViewDate } from './agenda';
+import { calculateRows, calculateStartViewDate } from './agenda';
 import { calculateStartViewDate as dayCalculateStartViewDate } from './day';
 import { calculateCellIndex, calculateStartViewDate as monthCalculateStartViewDate, getCellText, getViewStartByOptions } from './month';
 import { addHeightToStyle, addToStyles, addWidthToStyle, getCellSizeHorizontalClass, getCellSizeVerticalClass, getGroupCellClasses } from './render';
@@ -11,7 +11,8 @@ export { calculateCellIndex, calculateDayDuration, calculateIsGroupedAllDayPanel
 export { excludeFromRecurrence } from './exclude_from_recurrence';
 export { formatWeekday, formatWeekdayAndDay } from './format_weekday';
 export const agendaUtils = {
-  calculateStartViewDate
+  calculateStartViewDate,
+  calculateRows
 };
 export const dayUtils = {
   calculateStartViewDate: dayCalculateStartViewDate

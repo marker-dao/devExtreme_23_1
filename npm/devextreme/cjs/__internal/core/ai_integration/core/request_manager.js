@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/core/ai_integration/core/request_manager.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,10 +24,11 @@ class RequestManager {
       throw _errors.default.Error('E0122');
     }
   }
-  sendRequest(prompt, callbacks) {
+  sendRequest(prompt, callbacks, data) {
     let aborted = false;
     const params = {
       prompt,
+      data,
       onChunk: chunk => {
         if (!aborted) {
           var _callbacks$onChunk;

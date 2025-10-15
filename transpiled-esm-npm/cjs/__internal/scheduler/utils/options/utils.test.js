@@ -1,8 +1,8 @@
 "use strict";
 
 var _globals = require("@jest/globals");
-var _constants_view = require("./constants_view");
 var _utils = require("./utils");
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 (0, _globals.describe)('views utils', () => {
   (0, _globals.describe)('getViews', () => {
     (0, _globals.it)('should filter view with incorrect name', () => {
@@ -21,7 +21,9 @@ var _utils = require("./utils");
         name: 'MyDay',
         groups: ['a', 'b']
       };
-      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([input]);
+      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([_extends({}, input, {
+        skippedDays: []
+      })]);
     });
     _globals.it.each([{
       input: {
@@ -52,62 +54,99 @@ var _utils = require("./utils");
         input,
         output
       } = _ref;
-      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([output]);
+      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([_extends({}, output, {
+        skippedDays: []
+      })]);
     });
-    _globals.it.each(Object.values(_constants_view.VIEWS).map((view, index) => ({
-      input: view,
-      output: [{
+    _globals.it.each([{
+      input: 'day',
+      output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
         name: 'Day',
         type: 'day'
-      }, {
+      }
+    }, {
+      input: 'week',
+      output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
         name: 'Week',
         type: 'week'
-      }, {
-        groupOrientation: 'horizontal',
-        intervalCount: 1,
-        name: 'Work Week',
-        type: 'workWeek'
-      }, {
+      }
+    }, {
+      input: 'month',
+      output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
         name: 'Month',
         type: 'month'
-      }, {
+      }
+    }, {
+      input: 'timelineDay',
+      output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
         name: 'Timeline Day',
         type: 'timelineDay'
-      }, {
+      }
+    }, {
+      input: 'timelineWeek',
+      output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
         name: 'Timeline Week',
         type: 'timelineWeek'
-      }, {
-        groupOrientation: 'vertical',
-        intervalCount: 1,
-        name: 'Timeline Work Week',
-        type: 'timelineWorkWeek'
-      }, {
+      }
+    }, {
+      input: 'timelineMonth',
+      output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
         name: 'Timeline Month',
         type: 'timelineMonth'
-      }, {
+      }
+    }, {
+      input: 'agenda',
+      output: {
         agendaDuration: 7,
         intervalCount: 1,
         name: 'Agenda',
         type: 'agenda'
-      }][index]
-    })))('should return normalized $input.type view', _ref2 => {
+      }
+    }])('should return normalized $input.type view', _ref2 => {
       let {
         input,
         output
       } = _ref2;
-      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([output]);
+      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([_extends({}, output, {
+        skippedDays: []
+      })]);
+    });
+    _globals.it.each([{
+      input: 'workWeek',
+      output: {
+        groupOrientation: 'horizontal',
+        intervalCount: 1,
+        name: 'Work Week',
+        type: 'workWeek'
+      }
+    }, {
+      input: 'timelineWorkWeek',
+      output: {
+        groupOrientation: 'vertical',
+        intervalCount: 1,
+        name: 'Timeline Work Week',
+        type: 'timelineWorkWeek'
+      }
+    }])('should return normalized $input.type view', _ref3 => {
+      let {
+        input,
+        output
+      } = _ref3;
+      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([_extends({}, output, {
+        skippedDays: [0, 6]
+      })]);
     });
   });
   (0, _globals.describe)('getCurrentView', () => {
@@ -116,7 +155,8 @@ var _utils = require("./utils");
         agendaDuration: 7,
         intervalCount: 1,
         name: 'Agenda',
-        type: 'agenda'
+        type: 'agenda',
+        skippedDays: []
       });
     });
     (0, _globals.it)('should return view by type', () => {
@@ -126,7 +166,8 @@ var _utils = require("./utils");
         agendaDuration: 7,
         intervalCount: 1,
         name: 'Agenda',
-        type: 'agenda'
+        type: 'agenda',
+        skippedDays: []
       });
     });
     (0, _globals.it)('should return view by name', () => {
@@ -137,7 +178,8 @@ var _utils = require("./utils");
         agendaDuration: 7,
         intervalCount: 1,
         name: 'SuperAgenda',
-        type: 'agenda'
+        type: 'agenda',
+        skippedDays: []
       });
     });
     (0, _globals.it)('should return default view out of the views list', () => {
@@ -145,7 +187,8 @@ var _utils = require("./utils");
         agendaDuration: 7,
         intervalCount: 1,
         name: 'Agenda',
-        type: 'agenda'
+        type: 'agenda',
+        skippedDays: []
       });
     });
     (0, _globals.it)('should return first view if nothing found', () => {
@@ -153,7 +196,8 @@ var _utils = require("./utils");
         groupOrientation: 'horizontal',
         intervalCount: 1,
         name: 'Month',
-        type: 'month'
+        type: 'month',
+        skippedDays: []
       });
     });
     (0, _globals.it)('should return first known view if wrong current view requested', () => {
@@ -165,7 +209,8 @@ var _utils = require("./utils");
         groupOrientation: 'horizontal',
         intervalCount: 1,
         name: 'Day',
-        type: 'day'
+        type: 'day',
+        skippedDays: []
       });
     });
   });

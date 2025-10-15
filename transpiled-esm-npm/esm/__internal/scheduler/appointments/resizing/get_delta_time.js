@@ -29,14 +29,14 @@ export const getDeltaTime = (args, initialSize, options) => {
   const {
     viewType,
     resizableStep,
-    isAllDay
+    isAllDayPanel
   } = options;
   switch (true) {
-    case ['timelineMonth', 'month'].includes(viewType) || Boolean(isAllDay):
+    case ['timelineMonth', 'month'].includes(viewType) || Boolean(isAllDayPanel):
       return getAllDayDeltaWidth(args, initialSize, resizableStep) * toMs('day');
     case viewType === 'agenda':
       return 0;
-    case VERTICAL_VIEW_TYPES.includes(viewType) && !isAllDay:
+    case VERTICAL_VIEW_TYPES.includes(viewType) && !isAllDayPanel:
       return getVerticalDeltaTime(args, initialSize, options);
     default:
       return getHorizontalDeltaTime(args, initialSize, options);

@@ -1,3 +1,4 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import { name as clickEventName } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace } from '../../../common/core/events/utils/index';
@@ -149,7 +150,6 @@ class PivotGrid extends Widget {
         width: 200,
         height: 70,
         showIndicator: true,
-        indicatorSrc: '',
         showPane: true
       },
       texts: {
@@ -195,6 +195,16 @@ class PivotGrid extends Widget {
           ok: localizationMessage.format('dxDataGrid-headerFilterOK'),
           cancel: localizationMessage.format('dxDataGrid-headerFilterCancel')
         }
+      }
+    });
+  }
+  _setDeprecatedOptions() {
+    super._setDeprecatedOptions();
+    this._deprecatedOptions = _extends({}, this._deprecatedOptions, {
+      // @ts-expect-error ts-error
+      'loadPanel.indicatorSrc': {
+        since: '25.2',
+        alias: 'loadPanel.indicatorOptions.src'
       }
     });
   }

@@ -26,7 +26,7 @@ import { DROP_DOWN_EDITOR_CLASS } from '../../ui/drop_down_editor/m_drop_down_ed
 import Editor from '../../ui/editor/editor';
 import { setLabelWidthByMaxLabelWidth } from '../../ui/form/components/label';
 import { FIELD_ITEM_CLASS, FIELD_ITEM_CONTENT_CLASS, FIELD_ITEM_CONTENT_HAS_GROUP_CLASS, FIELD_ITEM_CONTENT_HAS_TABS_CLASS, FIELD_ITEM_TAB_CLASS, FORM_CLASS, FORM_FIELD_ITEM_COL_CLASS, FORM_GROUP_CAPTION_CLASS, FORM_GROUP_CLASS, FORM_GROUP_CONTENT_CLASS, FORM_GROUP_CUSTOM_CAPTION_CLASS, FORM_GROUP_WITH_CAPTION_CLASS, FORM_UNDERLINED_CLASS, FORM_VALIDATION_SUMMARY, GROUP_COL_COUNT_ATTR, GROUP_COL_COUNT_CLASS, ROOT_SIMPLE_ITEM_CLASS } from '../../ui/form/constants';
-import { getItemFormatInfo, parseResultForEditorType } from '../../ui/form/form.ai.utils';
+import { getFieldType, getItemFormatInfo } from '../../ui/form/form.ai.utils';
 import tryCreateItemOptionAction from '../../ui/form/form.item_options_actions';
 import FormItemsRunTimeInfo from '../../ui/form/form.items_runtime_info';
 import LayoutManager from '../../ui/form/form.layout_manager';
@@ -1387,24 +1387,13 @@ class Form extends Widget {
     };
     this._abort = aiIntegration[command](params, callbacks);
   }
-  _updateFieldWithSmartPasteValue(dataField, value, item) {
+  _updateFieldWithSmartPasteValue(dataField, value) {
     const {
       formData
     } = this.option();
     if (isDefined(formData)) {
-      let resultValue = value;
-      resultValue = parseResultForEditorType(dataField, item === null || item === void 0 ? void 0 : item.editorType, value);
-      if (typeof resultValue !== undefined) {
-        this._updateFieldValue(dataField, resultValue);
-      }
+      this._updateFieldValue(dataField, value);
     }
-  }
-  _getEditorItemsMap() {
-    const dataItems = this._itemsRunTimeInfo.getItemsForDataExtraction();
-    return dataItems.reduce((itemsMap, item) => {
-      itemsMap[item.dataField] = item;
-      return itemsMap;
-    }, {});
   }
   _getSmartPasteCommandCallbacks() {
     return {
@@ -1420,15 +1409,13 @@ class Form extends Widget {
           var _this$_smartPastedAct;
           this._hideLoadPanel();
           this.beginUpdate();
-          const editorTypesMap = this._getEditorItemsMap();
           fieldsData.forEach(_ref => {
             let {
               name,
               value
             } = _ref;
             try {
-              const currentItem = editorTypesMap[name];
-              this._updateFieldWithSmartPasteValue(name, value, currentItem);
+              this._updateFieldWithSmartPasteValue(name, value);
             } catch (error) {
               logger.error(error);
             }
@@ -1471,6 +1458,7 @@ class Form extends Widget {
       return {
         name: item.dataField,
         format: getItemFormatInfo(item),
+        type: getFieldType(item.editorType),
         instruction: (_item$aiOptions = item.aiOptions) === null || _item$aiOptions === void 0 ? void 0 : _item$aiOptions.instruction
       };
     });

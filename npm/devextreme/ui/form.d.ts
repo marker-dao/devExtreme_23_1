@@ -1,12 +1,12 @@
 /**
 * DevExtreme (ui/form.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import { AIIntegration } from '../common/ai-integration';
+import { AIIntegration, SmartPasteResultFieldType } from '../common/ai-integration';
 import {
     UserDefinedElement,
     DxElement,
@@ -37,7 +37,7 @@ import {
   EventInfo,
   InitializedEventInfo,
   ChangedOptionInfo,
-} from '../common/core/events';
+} from '../events';
 
 import dxButton, {
     dxButtonOptions,
@@ -75,7 +75,7 @@ export type FormLabelMode = 'static' | 'floating' | 'hidden' | 'outside';
 export type FormPredefinedButtonItem = 'reset' | 'submit' | 'smartPaste';
 
 /** @public */
-export type AIResult = Record<string, string | string[]>;
+export type AIResult = Record<string, SmartPasteResultFieldType>;
 
 /**
  * @docid

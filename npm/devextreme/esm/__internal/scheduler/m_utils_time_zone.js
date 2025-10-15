@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/m_utils_time_zone.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -21,7 +21,7 @@ const GMT = 'GMT';
 const offsetFormatRegexp = /^GMT(?:[+-]\d{2}:\d{2})?$/;
 const createUTCDateWithLocalOffset = date => {
   if (!date) {
-    return null;
+    return date;
   }
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
 };
@@ -55,10 +55,14 @@ const calculateTimezoneByValue = function (timeZone) {
     errors.log('W0009', timeZone);
     return undefined;
   }
-  if (!dateUtilsTs.isValidDate(date)) {
+  const dateObj = new Date(date);
+  if (!dateUtilsTs.isValidDate(dateObj)) {
     return undefined;
   }
-  return calculateTimezoneByValueCore(timeZone, date);
+  if (isEqualLocalTimeZone(timeZone)) {
+    return -dateObj.getTimezoneOffset() / MINUTES_IN_HOUR;
+  }
+  return calculateTimezoneByValueCore(timeZone, dateObj);
 };
 // 'GMT±XX:YY' or 'GMT' format
 const getStringOffset = function (timeZone) {

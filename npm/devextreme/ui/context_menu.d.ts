@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/context_menu.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,9 +26,9 @@ import {
     InitializedEventInfo,
     ChangedOptionInfo,
     ItemInfo,
-} from '../common/core/events';
-
-import { DxEvent } from '../events';
+    DxEvent,
+    PointerInteractionEvent,
+} from '../events';
 
 import dxMenuBase, {
     dxMenuBaseOptions,
@@ -101,7 +101,7 @@ export type ItemClickEvent<TItem extends ItemLike = any, TKey = any> = NativeEve
  * @type object
  * @inherits NativeEventInfo,ItemInfo
  */
-export type ItemContextMenuEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<dxContextMenu<TItem, TKey>, MouseEvent | PointerEvent | TouchEvent> & ItemInfo<TItem>;
+export type ItemContextMenuEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<dxContextMenu<TItem, TKey>, PointerInteractionEvent> & ItemInfo<TItem>;
 
 /**
  * @docid _ui_context_menu_ItemRenderedEvent
@@ -125,7 +125,7 @@ export type OptionChangedEvent<TItem extends ItemLike = any, TKey = any> = Event
  * @type object
  * @inherits NativeEventInfo
  */
-export type PositioningEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<dxContextMenu<TItem, TKey>, MouseEvent | PointerEvent | TouchEvent> & {
+export type PositioningEvent<TItem extends ItemLike = any, TKey = any> = NativeEventInfo<dxContextMenu<TItem, TKey>, PointerInteractionEvent> & {
     /** @docid _ui_context_menu_PositioningEvent.position */
     readonly position: PositionConfig;
 };
@@ -178,7 +178,7 @@ export interface dxContextMenuOptions<
      * @type_function_param1 event:event
      * @public
      */
-    hideOnOutsideClick?: boolean | ((event: DxEvent<MouseEvent | PointerEvent | TouchEvent>) => boolean);
+    hideOnOutsideClick?: boolean | ((event: DxEvent<PointerInteractionEvent>) => boolean);
     /**
      * @docid
      * @type Array<dxContextMenuItem | any>

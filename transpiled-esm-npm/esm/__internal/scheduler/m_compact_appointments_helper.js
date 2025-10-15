@@ -87,6 +87,21 @@ export class CompactAppointmentsHelper {
       template: this._renderTemplate(template, options.items, options.isCompact)
     });
   }
+  static measureCollectorDimensions($container, isCompact) {
+    const $collector = $('<div>').addClass(APPOINTMENT_COLLECTOR_CLASS).toggleClass(COMPACT_APPOINTMENT_COLLECTOR_CLASS, isCompact).appendTo($container);
+    const styles = getComputedStyle($collector.get(0));
+    const geometry = {
+      width: styles.width,
+      height: styles.height,
+      marginLeft: styles.marginLeft,
+      marginRight: styles.marginRight,
+      marginTop: styles.marginTop,
+      marginBottom: styles.marginBottom
+    };
+    $collector.detach();
+    $collector.remove();
+    return geometry;
+  }
   _createCompactButtonElement(_ref) {
     let {
       isCompact,

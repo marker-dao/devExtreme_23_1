@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/speech_to_text.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,8 @@ import {
   NativeEventInfo,
   InitializedEventInfo,
   ChangedOptionInfo,
-} from '../common/core/events';
+  InteractionEvent,
+} from '../events';
 
 import Widget, { WidgetOptions } from './widget/ui.widget';
 import type { ButtonStyle, ButtonType } from './button';
@@ -80,7 +81,7 @@ export type CustomSpeechRecognizer = {
  * @type object
  * @inherits NativeEventInfo
  */
-export type StartClickEvent = NativeEventInfo<dxSpeechToText, KeyboardEvent | MouseEvent | PointerEvent | TouchEvent>;
+export type StartClickEvent = NativeEventInfo<dxSpeechToText, InteractionEvent>;
 
 /**
  * @docid _ui_speech_to_text_StopClickEvent
@@ -88,7 +89,7 @@ export type StartClickEvent = NativeEventInfo<dxSpeechToText, KeyboardEvent | Mo
  * @type object
  * @inherits NativeEventInfo
  */
-export type StopClickEvent = NativeEventInfo<dxSpeechToText, KeyboardEvent | MouseEvent | PointerEvent | TouchEvent>;
+export type StopClickEvent = NativeEventInfo<dxSpeechToText, InteractionEvent>;
 
 /**
  * @docid _ui_speech_to_text_ResultEvent

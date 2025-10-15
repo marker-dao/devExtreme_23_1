@@ -21,8 +21,8 @@ const SATURDAY_INDEX = 6;
 const SUNDAY_INDEX = 0;
 const getDurationInHours = (startDate, endDate) => Math.floor((endDate.getTime() - startDate.getTime()) / toMs('hour'));
 const getDatesWithoutTime = (min, max) => {
-  const newMin = _date2.default.trimTime(min);
-  const newMax = _date2.default.trimTime(max);
+  const newMin = _date2.default.trimTime(new Date(min));
+  const newMax = _date2.default.trimTime(new Date(max));
   newMax.setDate(newMax.getDate() + 1);
   return [newMin, newMax];
 };

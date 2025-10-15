@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/load_panel.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,7 @@ import {
     EventInfo,
     InitializedEventInfo,
     ChangedOptionInfo,
-} from '../common/core/events';
+} from '../events';
 
 import {
     AnimationConfig,
@@ -30,6 +30,41 @@ import dxOverlay, {
 import {
     PositionAlignment,
 } from '../common';
+
+import { LoadingAnimationType } from './load_indicator';
+
+export { LoadingAnimationType };
+
+/**
+ * @docid
+ * @public
+ */
+export type LoadPanelIndicatorProperties = {
+    /**
+     * @docid
+     * @default 'circle'
+     * @public
+     */
+    animationType?: LoadingAnimationType;
+    /**
+     * @docid
+     * @default ''
+     * @public
+     */
+    src?: string;
+    /**
+     * @docid
+     * @default undefined
+     * @public
+     */
+    height?: number | string | undefined;
+    /**
+     * @docid
+     * @default undefined
+     * @public
+     */
+    width?: number | string | undefined;
+};
 
 /**
  * @docid _ui_load_panel_ContentReadyEvent
@@ -138,8 +173,14 @@ export interface dxLoadPanelOptions extends dxOverlayOptions<dxLoadPanel> {
      * @docid
      * @default ""
      * @public
+     * @deprecated dxLoadPanelOptions.indicatorOptions
      */
     indicatorSrc?: string;
+    /**
+     * @docid
+     * @public
+     */
+    indicatorOptions?: LoadPanelIndicatorProperties;
     /**
      * @docid
      * @default 60 &for(Material)

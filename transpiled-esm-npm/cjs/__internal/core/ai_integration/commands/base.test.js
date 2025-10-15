@@ -80,7 +80,7 @@ class TestCommand extends _base.BaseCommand {
       command.execute(params, {});
       await new Promise(process.nextTick);
       (0, _globals.expect)(spy).toHaveBeenCalledTimes(1);
-      (0, _globals.expect)(spy).toHaveBeenCalledWith('AI response');
+      (0, _globals.expect)(spy).toHaveBeenCalledWith('AI response', params);
       (0, _globals.expect)(spy).toHaveReturnedWith('Parsed result: AI response');
     });
     (0, _globals.it)('callbacks should be called a specified number of times', async () => {

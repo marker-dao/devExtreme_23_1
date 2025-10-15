@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/a11y_status/a11y_status_text.test.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,7 +18,8 @@ var _a11y_status_text = require("./a11y_status_text");
       intervalCount: 2,
       groupOrientation: 'horizontal',
       maxAppointmentsPerCell: 'auto',
-      allDayPanelMode: 'all'
+      allDayPanelMode: 'all',
+      skippedDays: []
     }, new Date(2021, 10, 17, 1), new Date(2021, 10, 27, 12), 20)).toEqual('Scheduler. Two Weeks view: from November 17, 2021 to November 27, 2021 with 20 appointments');
   });
   (0, _globals.it)('should return text month view', () => {
@@ -28,7 +29,8 @@ var _a11y_status_text = require("./a11y_status_text");
       intervalCount: 1,
       groupOrientation: 'horizontal',
       maxAppointmentsPerCell: 'auto',
-      allDayPanelMode: 'all'
+      allDayPanelMode: 'all',
+      skippedDays: []
     }, new Date(2021, 9, 27, 1), new Date(2021, 11, 3, 12), 20)).toEqual('Scheduler. Month view: from October 2021 to December 2021 with 20 appointments');
   });
   (0, _globals.it)('should return text week view', () => {
@@ -38,7 +40,8 @@ var _a11y_status_text = require("./a11y_status_text");
       intervalCount: 1,
       groupOrientation: 'horizontal',
       maxAppointmentsPerCell: 'auto',
-      allDayPanelMode: 'all'
+      allDayPanelMode: 'all',
+      skippedDays: []
     }, new Date(2021, 10, 21, 1), new Date(2021, 10, 27, 12), 20)).toEqual('Scheduler. Week view: from November 21, 2021 to November 27, 2021 with 20 appointments');
   });
   (0, _globals.it)('should return text day view', () => {
@@ -48,7 +51,8 @@ var _a11y_status_text = require("./a11y_status_text");
       intervalCount: 1,
       groupOrientation: 'horizontal',
       maxAppointmentsPerCell: 'auto',
-      allDayPanelMode: 'all'
+      allDayPanelMode: 'all',
+      skippedDays: []
     }, new Date(2021, 10, 24, 1), new Date(2021, 10, 24, 12), 20)).toEqual('Scheduler. Day view: November 24, 2021 with 20 appointments');
   });
   (0, _globals.it)('should return text with indicator on the view', () => {
@@ -58,7 +62,8 @@ var _a11y_status_text = require("./a11y_status_text");
       intervalCount: 1,
       groupOrientation: 'horizontal',
       maxAppointmentsPerCell: 'auto',
-      allDayPanelMode: 'all'
+      allDayPanelMode: 'all',
+      skippedDays: []
     }, new Date(2021, 10, 24, 1), new Date(2021, 10, 24, 12), 20, new Date(2021, 10, 24, 10))).toEqual('Scheduler. Day view: November 24, 2021 with 20 appointments. The current time indicator is visible in the view');
   });
   (0, _globals.it)('should return text with indicator out of the view', () => {
@@ -68,7 +73,8 @@ var _a11y_status_text = require("./a11y_status_text");
       intervalCount: 1,
       groupOrientation: 'horizontal',
       maxAppointmentsPerCell: 'auto',
-      allDayPanelMode: 'all'
+      allDayPanelMode: 'all',
+      skippedDays: []
     }, new Date(2021, 10, 24, 1), new Date(2021, 10, 24, 12), 20, new Date(2021, 10, 12, 10))).toEqual('Scheduler. Day view: November 24, 2021 with 20 appointments. The current time indicator is not visible on the screen');
   });
 });

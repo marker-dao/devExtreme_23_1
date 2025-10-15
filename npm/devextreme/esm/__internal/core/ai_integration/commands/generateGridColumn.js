@@ -1,0 +1,31 @@
+/**
+* DevExtreme (esm/__internal/core/ai_integration/commands/generateGridColumn.js)
+* Version: 25.2.0
+* Build date: Wed Oct 15 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { BaseCommand } from '../../../core/ai_integration/commands/base';
+export class GenerateGridColumnCommand extends BaseCommand {
+  getTemplateName() {
+    return 'generateGridColumn';
+  }
+  buildPromptData(params) {
+    const dataDescription = this.generateDataDescription(params.data);
+    return {
+      user: {
+        text: params.text,
+        data: dataDescription
+      }
+    };
+  }
+  parseResult(response) {
+    const result = JSON.parse(response);
+    return result;
+  }
+  generateDataDescription(data) {
+    const result = JSON.stringify(data);
+    return result;
+  }
+}

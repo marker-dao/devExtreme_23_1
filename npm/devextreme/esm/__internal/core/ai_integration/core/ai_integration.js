@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/core/ai_integration/core/ai_integration.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,6 +9,7 @@
 import { ChangeStyleCommand, ChangeToneCommand, ExecuteCommand, ExpandCommand, ProofreadCommand, ShortenCommand, SmartPasteCommand, SummarizeCommand, TranslateCommand } from '../../../core/ai_integration/commands/index';
 import { PromptManager } from '../../../core/ai_integration/core/prompt_manager';
 import { RequestManager } from '../../../core/ai_integration/core/request_manager';
+import { GenerateGridColumnCommand } from '../commands/generateGridColumn';
 export var CommandNames;
 (function (CommandNames) {
   CommandNames["ChangeStyle"] = "changeStyle";
@@ -20,6 +21,7 @@ export var CommandNames;
   CommandNames["Summarize"] = "summarize";
   CommandNames["Translate"] = "translate";
   CommandNames["SmartPaste"] = "smartPaste";
+  CommandNames["GenerateGridColumn"] = "generateGridColumn";
 })(CommandNames || (CommandNames = {}));
 export const COMMANDS = {
   [CommandNames.ChangeStyle]: ChangeStyleCommand,
@@ -30,7 +32,8 @@ export const COMMANDS = {
   [CommandNames.Shorten]: ShortenCommand,
   [CommandNames.Summarize]: SummarizeCommand,
   [CommandNames.Translate]: TranslateCommand,
-  [CommandNames.SmartPaste]: SmartPasteCommand
+  [CommandNames.SmartPaste]: SmartPasteCommand,
+  [CommandNames.GenerateGridColumn]: GenerateGridColumnCommand
 };
 export class AIIntegration {
   constructor(provider) {
@@ -73,5 +76,8 @@ export class AIIntegration {
   }
   smartPaste(params, callbacks) {
     return this.executeCommand(CommandNames.SmartPaste, params, callbacks);
+  }
+  generateGridColumn(params, callbacks) {
+    return this.executeCommand(CommandNames.GenerateGridColumn, params, callbacks);
   }
 }

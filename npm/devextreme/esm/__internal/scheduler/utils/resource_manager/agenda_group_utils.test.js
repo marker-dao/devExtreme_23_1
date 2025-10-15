@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/utils/resource_manager/agenda_group_utils.test.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,14 +15,18 @@ describe('agenda group utils', () => {
       const manager = getResourceManagerMock();
       await manager.loadGroupResources(['roomId', 'nested.priorityId']);
       expect(reduceResourcesTree(manager.resourceById, manager.groupsTree, [{
-        roomId: 0,
-        nested: {
-          priorityId: [1, 2]
+        itemData: {
+          roomId: 0,
+          nested: {
+            priorityId: [1, 2]
+          }
         }
       }, {
-        roomId: 1,
-        nested: {
-          priorityId: 2
+        itemData: {
+          roomId: 1,
+          nested: {
+            priorityId: 2
+          }
         }
       }])).toEqual([{
         children: [{

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/ai_column/ai_column.integration.test.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,6 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 import $ from '../../../../core/renderer';
 import DataGrid from '../../../../ui/data_grid';
 import errors from '../../../../ui/widget/ui.errors';
+import { AIIntegration } from '../../../core/ai_integration/core/ai_integration';
 import { DataGridModel } from '../../../grids/data_grid/__tests__/__mock__/model/data_grid';
 const SELECTORS = {
   gridContainer: '#gridContainer'
@@ -20,17 +21,17 @@ const createDataGrid = async function () {
   return new Promise(resolve => {
     const $container = $('<div>').attr('id', GRID_CONTAINER_ID).appendTo(document.body);
     const instance = new DataGrid($container.get(0), options);
-    const contentReadyHandler = () => {
-      resolve({
-        $container,
-        component: new DataGridModel($container.get(0))
-      });
-      instance.off('contentReady', contentReadyHandler);
-    };
-    instance.on('contentReady', contentReadyHandler);
+    const component = new DataGridModel($container.get(0));
+    jest.runOnlyPendingTimers();
+    resolve({
+      $container,
+      component,
+      instance
+    });
   });
 };
 const beforeTest = () => {
+  jest.useFakeTimers();
   jest.spyOn(errors, 'log').mockImplementation(jest.fn());
 };
 const afterTest = () => {
@@ -39,6 +40,7 @@ const afterTest = () => {
   dataGrid.dispose();
   $container.remove();
   jest.clearAllMocks();
+  jest.useRealTimers();
 };
 describe('Options', () => {
   beforeEach(beforeTest);
@@ -574,5 +576,449 @@ describe('columnOption', () => {
       component.apiColumnOption('myColumn2', 'name', 'myColumn1');
       expect(errors.log).toHaveBeenCalledWith('E1059', '"myColumn1"');
     });
+  });
+});
+describe('aiIntegration', () => {
+  const rootSendRequestSpy = jest.fn();
+  const columnSendRequestSpy = jest.fn();
+  beforeEach(() => {
+    beforeTest();
+    rootSendRequestSpy.mockClear();
+    columnSendRequestSpy.mockClear();
+  });
+  afterEach(afterTest);
+  const aiIntegrationResult = () => ({
+    promise: new Promise(resolve => {
+      resolve('1');
+    }),
+    abort: () => {}
+  });
+  const rootAiIntegration = new AIIntegration({
+    sendRequest() {
+      rootSendRequestSpy();
+      return aiIntegrationResult();
+    }
+  });
+  const columnAiIntegration = new AIIntegration({
+    sendRequest() {
+      columnSendRequestSpy();
+      return aiIntegrationResult();
+    }
+  });
+  it('should be taken from grid level if it set up (first load)', async () => {
+    const {
+      instance
+    } = await createDataGrid({
+      dataSource: [{
+        id: 1,
+        name: 'Name 1',
+        value: 10
+      }],
+      keyExpr: 'id',
+      aiIntegration: rootAiIntegration,
+      columns: [{
+        dataField: 'id',
+        caption: 'ID'
+      }, {
+        dataField: 'name',
+        caption: 'Name'
+      }, {
+        dataField: 'value',
+        caption: 'Value'
+      }, {
+        type: 'ai',
+        caption: 'AI Column',
+        name: 'myColumn'
+      }]
+    });
+    instance.sendAIColumnRequest('myColumn');
+    expect(rootSendRequestSpy).toHaveBeenCalled();
+    expect(columnSendRequestSpy).not.toHaveBeenCalled();
+  });
+  it('should be taken from grid level if it set up (dynamic update)', async () => {
+    const {
+      instance
+    } = await createDataGrid({
+      dataSource: [{
+        id: 1,
+        name: 'Name 1',
+        value: 10
+      }],
+      keyExpr: 'id',
+      columns: [{
+        dataField: 'id',
+        caption: 'ID'
+      }, {
+        dataField: 'name',
+        caption: 'Name'
+      }, {
+        dataField: 'value',
+        caption: 'Value'
+      }, {
+        type: 'ai',
+        caption: 'AI Column',
+        name: 'myColumn'
+      }]
+    });
+    instance.option('aiIntegration', rootAiIntegration);
+    instance.sendAIColumnRequest('myColumn');
+    expect(rootSendRequestSpy).toHaveBeenCalled();
+    expect(columnSendRequestSpy).not.toHaveBeenCalled();
+  });
+  it('should be taken from column level if it set up (first load)', async () => {
+    const {
+      instance
+    } = await createDataGrid({
+      dataSource: [{
+        id: 1,
+        name: 'Name 1',
+        value: 10
+      }],
+      keyExpr: 'id',
+      aiIntegration: rootAiIntegration,
+      columns: [{
+        dataField: 'id',
+        caption: 'ID'
+      }, {
+        dataField: 'name',
+        caption: 'Name'
+      }, {
+        dataField: 'value',
+        caption: 'Value'
+      }, {
+        type: 'ai',
+        caption: 'AI Column',
+        name: 'myColumn',
+        ai: {
+          aiIntegration: columnAiIntegration
+        }
+      }]
+    });
+    instance.sendAIColumnRequest('myColumn');
+    expect(columnSendRequestSpy).toHaveBeenCalled();
+    expect(rootSendRequestSpy).not.toHaveBeenCalled();
+  });
+  it('should be taken from column level if it set up (dynamic update)', async () => {
+    const {
+      instance
+    } = await createDataGrid({
+      dataSource: [{
+        id: 1,
+        name: 'Name 1',
+        value: 10
+      }],
+      keyExpr: 'id',
+      columns: [{
+        dataField: 'id',
+        caption: 'ID'
+      }, {
+        dataField: 'name',
+        caption: 'Name'
+      }, {
+        dataField: 'value',
+        caption: 'Value'
+      }, {
+        type: 'ai',
+        caption: 'AI Column',
+        name: 'myColumn'
+      }]
+    });
+    instance.columnOption('myColumn', 'ai', {
+      aiIntegration: columnAiIntegration
+    });
+    instance.option('aiIntegration', rootAiIntegration);
+    instance.sendAIColumnRequest('myColumn');
+    expect(columnSendRequestSpy).toHaveBeenCalled();
+    expect(rootSendRequestSpy).not.toHaveBeenCalled();
+  });
+});
+describe('prompt', () => {
+  const columnSendRequestSpy = jest.fn();
+  const prompt = 'Test prompt';
+  beforeEach(() => {
+    beforeTest();
+    columnSendRequestSpy.mockClear();
+  });
+  afterEach(afterTest);
+  const aiIntegrationResult = () => ({
+    promise: new Promise(resolve => {
+      resolve('1');
+    }),
+    abort: () => {}
+  });
+  const columnAiIntegration = new AIIntegration({
+    sendRequest(params) {
+      var _params$prompt$user;
+      columnSendRequestSpy((_params$prompt$user = params.prompt.user) === null || _params$prompt$user === void 0 ? void 0 : _params$prompt$user.includes(prompt));
+      return aiIntegrationResult();
+    }
+  });
+  it('should be passed to aiIntegration.sendRequest (first load)', async () => {
+    const {
+      instance
+    } = await createDataGrid({
+      dataSource: [{
+        id: 1,
+        name: 'Name 1',
+        value: 10
+      }, {
+        id: 2,
+        name: 'Name 2',
+        value: 20
+      }],
+      keyExpr: 'id',
+      columns: [{
+        dataField: 'id',
+        caption: 'ID'
+      }, {
+        dataField: 'name',
+        caption: 'Name'
+      }, {
+        dataField: 'value',
+        caption: 'Value'
+      }, {
+        type: 'ai',
+        caption: 'AI Column',
+        name: 'myColumn',
+        ai: {
+          aiIntegration: columnAiIntegration,
+          prompt
+        }
+      }]
+    });
+    instance.sendAIColumnRequest('myColumn');
+    expect(columnSendRequestSpy).toHaveBeenCalledWith(true);
+  });
+  it('should be passed to aiIntegration.sendRequest (dynamic update)', async () => {
+    const {
+      instance
+    } = await createDataGrid({
+      dataSource: [{
+        id: 1,
+        name: 'Name 1',
+        value: 10
+      }, {
+        id: 2,
+        name: 'Name 2',
+        value: 20
+      }],
+      keyExpr: 'id',
+      columns: [{
+        dataField: 'id',
+        caption: 'ID'
+      }, {
+        dataField: 'name',
+        caption: 'Name'
+      }, {
+        dataField: 'value',
+        caption: 'Value'
+      }, {
+        type: 'ai',
+        caption: 'AI Column',
+        name: 'myColumn',
+        ai: {
+          aiIntegration: columnAiIntegration
+        }
+      }]
+    });
+    instance.columnOption('myColumn', 'ai.prompt', prompt);
+    instance.sendAIColumnRequest('myColumn');
+    expect(columnSendRequestSpy).toHaveBeenCalledWith(true);
+  });
+  describe('when aiIntegration is not set', () => {
+    it('should throw E1067', async () => {
+      await createDataGrid({
+        dataSource: [{
+          id: 1,
+          name: 'Name 1',
+          value: 10
+        }],
+        columns: [{
+          dataField: 'id',
+          caption: 'ID'
+        }, {
+          dataField: 'name',
+          caption: 'Name'
+        }, {
+          dataField: 'value',
+          caption: 'Value'
+        }, {
+          type: 'ai',
+          caption: 'AI Column',
+          name: 'myColumn'
+        }]
+      });
+      expect(errors.log).toHaveBeenCalledWith('E1067', 'myColumn');
+    });
+  });
+});
+describe('aiMode', () => {
+  const columnSendRequestSpy = jest.fn();
+  beforeEach(() => {
+    beforeTest();
+    columnSendRequestSpy.mockClear();
+  });
+  afterEach(afterTest);
+  const aiIntegrationResult = () => ({
+    promise: new Promise(resolve => {
+      resolve('1');
+    }),
+    abort: () => {}
+  });
+  const columnAiIntegration = new AIIntegration({
+    sendRequest() {
+      columnSendRequestSpy();
+      return aiIntegrationResult();
+    }
+  });
+  it('should be auto by default', async () => {
+    const {
+      instance
+    } = await createDataGrid({
+      dataSource: [{
+        id: 1,
+        name: 'Name 1',
+        value: 10
+      }, {
+        id: 2,
+        name: 'Name 2',
+        value: 20
+      }],
+      keyExpr: 'id',
+      columns: [{
+        dataField: 'id',
+        caption: 'ID'
+      }, {
+        dataField: 'name',
+        caption: 'Name'
+      }, {
+        dataField: 'value',
+        caption: 'Value'
+      }, {
+        type: 'ai',
+        caption: 'AI Column',
+        name: 'myColumn',
+        ai: {
+          aiIntegration: columnAiIntegration
+        }
+      }]
+    });
+    const aiMode = instance.columnOption('myColumn', 'ai.mode');
+    expect(aiMode).toBe('auto');
+  });
+  it('should call aiIntegration.sendRequest with every visible rows change', async () => {
+    const dataSource = Array.from({
+      length: 100
+    }, (_, i) => ({
+      id: i + 1,
+      name: `Name ${i + 1}`,
+      value: (i + 1) * 10
+    }));
+    const {
+      instance
+    } = await createDataGrid({
+      dataSource,
+      keyExpr: 'id',
+      paging: {
+        pageSize: 5
+      },
+      pager: {
+        visible: true
+      },
+      columns: [{
+        dataField: 'id',
+        caption: 'ID'
+      }, {
+        dataField: 'name',
+        caption: 'Name'
+      }, {
+        dataField: 'value',
+        caption: 'Value'
+      }, {
+        type: 'ai',
+        caption: 'AI Column',
+        name: 'myColumn',
+        ai: {
+          aiIntegration: columnAiIntegration
+        }
+      }]
+    });
+    expect(columnSendRequestSpy).toBeCalledTimes(1);
+    instance.option('paging.pageIndex', 2);
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(2);
+    instance.option('paging.pageIndex', 3);
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(3);
+    instance.option('filterValue', ['id', '>', 50]);
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(4);
+    instance.option('filterValue', undefined);
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(5);
+    instance.columnOption('name', 'groupIndex', 0);
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(6);
+    instance.clearGrouping();
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(7);
+  });
+  it('should NOT call aiIntegration.sendRequest with manual mode', async () => {
+    const dataSource = Array.from({
+      length: 100
+    }, (_, i) => ({
+      id: i + 1,
+      name: `Name ${i + 1}`,
+      value: (i + 1) * 10
+    }));
+    const {
+      instance
+    } = await createDataGrid({
+      dataSource,
+      keyExpr: 'id',
+      paging: {
+        pageSize: 5
+      },
+      pager: {
+        visible: true
+      },
+      columns: [{
+        dataField: 'id',
+        caption: 'ID'
+      }, {
+        dataField: 'name',
+        caption: 'Name'
+      }, {
+        dataField: 'value',
+        caption: 'Value'
+      }, {
+        type: 'ai',
+        caption: 'AI Column',
+        name: 'myColumn',
+        ai: {
+          aiIntegration: columnAiIntegration,
+          mode: 'manual'
+        }
+      }]
+    });
+    expect(columnSendRequestSpy).toBeCalledTimes(0);
+    instance.option('paging.pageIndex', 2);
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(0);
+    instance.option('paging.pageIndex', 3);
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(0);
+    instance.option('filterValue', ['id', '>', 50]);
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(0);
+    instance.option('filterValue', undefined);
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(0);
+    instance.columnOption('name', 'groupIndex', 0);
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(0);
+    instance.clearGrouping();
+    jest.runOnlyPendingTimers();
+    expect(columnSendRequestSpy).toBeCalledTimes(0);
   });
 });

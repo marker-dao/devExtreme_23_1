@@ -30,7 +30,9 @@ const options = {
         data: {
           text: 'Appointment name',
           startDate: Date.UTC(2025, 2, 10, 10),
-          endDate: Date.UTC(2025, 2, 10, 10, 30)
+          endDate: Date.UTC(2025, 2, 10, 10, 30),
+          partIndex: 0,
+          partTotalCount: 0
         }
       }))).toBe('Appointment name: March 10, 2025, 10:00 AM - 10:30 AM');
     });

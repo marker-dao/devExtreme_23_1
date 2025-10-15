@@ -28,15 +28,16 @@ const LAST_ROW_CLASS = 'dx-scheduler-date-table-last-row';
 const INNER_CELL_MARGIN = 5;
 const OUTER_CELL_MARGIN = 20;
 class SchedulerAgenda extends WorkSpace {
+  constructor() {
+    super(...arguments);
+    this._rows = [];
+  }
   // eslint-disable-next-line class-methods-use-this
   _activeStateUnit() {
     return EMPTY_ACTIVE_STATE_UNIT;
   }
   get type() {
     return VIEWS.AGENDA;
-  }
-  get renderingStrategy() {
-    return this.invoke('getLayoutManager').getRenderingStrategyInstance();
   }
   getStartViewDate() {
     return this._startViewDate;
@@ -101,9 +102,6 @@ class SchedulerAgenda extends WorkSpace {
   _getElementClass() {
     return AGENDA_CLASS;
   }
-  _calculateStartViewDate() {
-    return agendaUtils.calculateStartViewDate(this.option('currentDate'), this.option('startDayHour'));
-  }
   _getRowCount() {
     return this.option('agendaDuration');
   }
@@ -136,9 +134,8 @@ class SchedulerAgenda extends WorkSpace {
     }
   }
   _renderView() {
-    this._startViewDate = this._calculateStartViewDate();
+    this._startViewDate = agendaUtils.calculateStartViewDate(this.option('currentDate'), this.option('startDayHour'));
     this._rows = [];
-    this._initPositionHelper();
   }
   _recalculateAgenda(rows) {
     let cellTemplates = [];
@@ -154,7 +151,6 @@ class SchedulerAgenda extends WorkSpace {
     }
     this._renderTimePanel();
     this._renderDateTable();
-    this.invoke('onAgendaReady', rows);
     this._applyCellTemplates(cellTemplates);
     this._dateTableScrollable.update();
   }
@@ -394,13 +390,9 @@ class SchedulerAgenda extends WorkSpace {
     }
     return result;
   }
-  _calculateRows(appointments) {
-    return this.renderingStrategy.calculateRows(appointments, this.option('agendaDuration'), this.option('currentDate'));
-  }
-  onDataSourceChanged(appointments) {
-    super.onDataSourceChanged();
+  renderAgendaLayout(appointments) {
     this._renderView();
-    const rows = this._calculateRows(appointments);
+    const rows = agendaUtils.calculateRows(appointments, this.option('agendaDuration'), this.getStartViewDate(), this.resourceManager.groupCount());
     this._recalculateAgenda(rows);
   }
   getAgendaVerticalStepHeight() {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/gantt.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,9 +18,9 @@ import {
     NativeEventInfo,
     InitializedEventInfo,
     ChangedOptionInfo,
-} from '../common/core/events';
-
-import { DxEvent } from '../events';
+    DxEvent,
+    PointerInteractionEvent,
+} from '../events';
 
 import {
     Column as TreeListColumn,
@@ -89,7 +89,7 @@ export type ContextMenuPreparingEvent = Cancelable & {
      * @docid _ui_gantt_ContextMenuPreparingEvent.event
      * @type event
      */
-    readonly event?: DxEvent<PointerEvent | MouseEvent | TouchEvent>;
+    readonly event?: DxEvent<PointerInteractionEvent>;
     /** @docid _ui_gantt_ContextMenuPreparingEvent.targetKey */
     readonly targetKey?: any;
     /** @docid _ui_gantt_ContextMenuPreparingEvent.targetType */

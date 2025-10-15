@@ -1,0 +1,22 @@
+/**
+* DevExtreme (esm/__internal/scheduler/view_model/generate_view_model/steps/split_by_parts/get_prev_interval_end_date.js)
+* Version: 25.2.0
+* Build date: Wed Oct 15 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+export const getPrevIntervalEndDate = intervals => {
+  const minDate = new Date(intervals[0].min);
+  const maxDate = new Date(intervals[0].max);
+  const isTheSameHours = maxDate.getUTCHours() === minDate.getUTCHours() && maxDate.getUTCMinutes() === minDate.getUTCMinutes() && maxDate.getUTCSeconds() === minDate.getUTCSeconds() && maxDate.getUTCMilliseconds() === minDate.getUTCMilliseconds();
+  if (isTheSameHours) {
+    return minDate.getTime();
+  }
+  const prevDate = new Date(minDate.getTime());
+  prevDate.setUTCHours(maxDate.getUTCHours(), maxDate.getUTCMinutes(), maxDate.getUTCSeconds(), maxDate.getUTCMilliseconds());
+  if (prevDate < minDate) {
+    return prevDate.getTime();
+  }
+  return prevDate.setUTCDate(prevDate.getUTCDate() - 1);
+};

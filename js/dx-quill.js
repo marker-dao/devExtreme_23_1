@@ -1,5 +1,5 @@
 /*!
- * DevExtreme-Quill Editor v.1.7.5
+ * DevExtreme-Quill Editor v.1.7.6
  * https://js.devexpress.com/
  * Copyright (c) 2020, Developer Express Inc.
  * Copyright (c) 2017, Slab
@@ -11678,15 +11678,16 @@ function sanitizeNode(node) {
   _toConsumableArray(node.attributes).forEach(function (attr) {
     var name = attr.name,
       value = attr.value;
-    if (!allowedAttributes.includes(name)) {
+    var normalizedName = name.toLowerCase();
+    if (!allowedAttributes.includes(normalizedName)) {
       node.removeAttribute(name);
       return;
     }
-    if (name.startsWith('on')) {
+    if (normalizedName.startsWith('on')) {
       node.removeAttribute(name);
       return;
     }
-    if ((name === 'href' || name === 'xlink:href') && !isSafeUrl(value)) {
+    if ((normalizedName === 'href' || normalizedName === 'xlink:href') && !isSafeUrl(value)) {
       node.removeAttribute(name);
     }
   });
@@ -12283,7 +12284,7 @@ Quill.DEFAULTS = {
 Quill.events = _emitter__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .A.events;
 Quill.sources = _emitter__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .A.sources;
 // eslint-disable-next-line no-undef
-Quill.version =  false ? 0 : "1.7.5";
+Quill.version =  false ? 0 : "1.7.6";
 Quill.MS_LIST_DATA_KEY = 'mso-list-data';
 Quill.replaceStyleAttribute = function (html) {
   var tagAttrsRegex = /(?:(<[a-z0-9]+\s*))([\s\S]*?)(>|\/>)/gi;

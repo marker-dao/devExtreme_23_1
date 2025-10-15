@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/form/form.load_panel.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,9 +14,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.FormLoadPanel = exports.FORM_LOAD_INDICATOR_SIZE = void 0;
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _constants = require("../../ui/form/constants");
-var _load_indicator = _interopRequireWildcard(require("../../ui/load_indicator"));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+var _load_indicator = require("../../ui/load_indicator");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const FORM_LOAD_INDICATOR_SIZE = exports.FORM_LOAD_INDICATOR_SIZE = 120;
 class FormLoadPanel {
@@ -64,6 +62,11 @@ class FormLoadPanel {
       },
       visible: false,
       showIndicator: true,
+      indicatorOptions: {
+        animationType: _load_indicator.AnimationType.Sparkle,
+        width: FORM_LOAD_INDICATOR_SIZE,
+        height: FORM_LOAD_INDICATOR_SIZE
+      },
       showPane: false,
       shading: false,
       hideOnOutsideClick: false,
@@ -75,19 +78,6 @@ class FormLoadPanel {
         class: _constants.FORM_LOAD_PANEL_WRAPPER_CLASS
       }
     });
-    this._configureLoadIndicator();
-  }
-  _configureLoadIndicator() {
-    var _this$_loadPanel4;
-    const $loadIndicator = (_this$_loadPanel4 = this._loadPanel) === null || _this$_loadPanel4 === void 0 ? void 0 : _this$_loadPanel4._$indicator;
-    if ($loadIndicator !== null && $loadIndicator !== void 0 && $loadIndicator.length) {
-      const loadIndicator = _load_indicator.default.getInstance($loadIndicator.get(0));
-      loadIndicator.option({
-        animationType: _load_indicator.AnimationType.Sparkle,
-        width: FORM_LOAD_INDICATOR_SIZE,
-        height: FORM_LOAD_INDICATOR_SIZE
-      });
-    }
   }
 }
 exports.FormLoadPanel = FormLoadPanel;

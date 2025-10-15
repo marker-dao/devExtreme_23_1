@@ -1,0 +1,33 @@
+/**
+* DevExtreme (esm/__internal/scheduler/view_model/filtration/utils/get_filter_options/get_filter_options.js)
+* Version: 25.2.0
+* Build date: Wed Oct 15 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { getCompareOptions } from '../../../common/get_compare_options';
+import { shiftIntervals } from '../../../common/shift_intervals';
+import { getVisibleDateTimeIntervals } from './get_visible_date_time_intervals';
+const VIEWS_WITH_ALL_DAY_PANEL = ['day', 'week', 'workWeek'];
+const DATE_TIME_VIEWS = ['day', 'week', 'workWeek', 'timelineDay', 'timelineWeek', 'timelineWorkWeek'];
+export const getFilterOptions = schedulerStore => {
+  const compareOptions = getCompareOptions(schedulerStore);
+  const viewOffset = schedulerStore.getViewOffsetMs();
+  const viewType = schedulerStore.currentView.type;
+  const supportAllDayPanel = VIEWS_WITH_ALL_DAY_PANEL.includes(viewType);
+  const isDateTimeView = DATE_TIME_VIEWS.includes(viewType);
+  return {
+    allDayPanelMode: schedulerStore.getViewOption('allDayPanelMode'),
+    supportAllDayPanel,
+    isDateTimeView,
+    showAllDayPanel: schedulerStore.option('showAllDayPanel'),
+    resourceManager: schedulerStore.resourceManager,
+    timeZone: schedulerStore.getTimeZone(),
+    dataAccessor: schedulerStore._dataAccessors,
+    viewOffset,
+    firstDayOfWeek: schedulerStore.option('firstDayOfWeek'),
+    allDayIntervals: shiftIntervals(getVisibleDateTimeIntervals(compareOptions, true), viewOffset),
+    regularIntervals: shiftIntervals(getVisibleDateTimeIntervals(compareOptions, false), viewOffset)
+  };
+};

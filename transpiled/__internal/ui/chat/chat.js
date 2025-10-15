@@ -23,36 +23,37 @@ const TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
 class Chat extends _widget.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
-      showDayHeaders: true,
       activeStateEnabled: true,
+      alerts: [],
+      dataSource: null,
+      dayHeaderFormat: 'shortdate',
       editing: {
         allowUpdating: false,
         allowDeleting: false
       },
+      emptyViewTemplate: null,
+      fileUploaderOptions: undefined,
       focusStateEnabled: true,
       hoverStateEnabled: true,
       items: [],
-      dataSource: null,
+      messageTemplate: null,
+      messageTimestampFormat: 'shorttime',
+      reloadOnChange: true,
+      showAvatar: true,
+      showDayHeaders: true,
+      showMessageTimestamp: true,
+      showUserName: true,
+      typingUsers: [],
       user: {
         id: new _common.Guid().toString()
       },
-      dayHeaderFormat: 'shortdate',
-      messageTemplate: null,
-      messageTimestampFormat: 'shorttime',
-      emptyViewTemplate: null,
-      alerts: [],
-      showAvatar: true,
-      showUserName: true,
-      showMessageTimestamp: true,
-      typingUsers: [],
-      onMessageEntered: undefined,
-      reloadOnChange: true,
-      onTypingStart: undefined,
-      onTypingEnd: undefined,
-      onMessageEditingStart: undefined,
-      onMessageEditCanceled: undefined,
+      onMessageDeleted: undefined,
       onMessageDeleting: undefined,
-      onMessageDeleted: undefined
+      onMessageEditCanceled: undefined,
+      onMessageEditingStart: undefined,
+      onMessageEntered: undefined,
+      onTypingEnd: undefined,
+      onTypingStart: undefined
     });
   }
   _init() {
@@ -312,6 +313,7 @@ class Chat extends _widget.default {
   _renderMessageBox() {
     const {
       activeStateEnabled,
+      fileUploaderOptions,
       focusStateEnabled,
       hoverStateEnabled
     } = this.option();
@@ -319,6 +321,7 @@ class Chat extends _widget.default {
     this.$element().append($messageBox);
     const configuration = {
       activeStateEnabled,
+      fileUploaderOptions,
       focusStateEnabled,
       hoverStateEnabled,
       onMessageEntered: e => {
@@ -461,6 +464,7 @@ class Chat extends _widget.default {
       case 'activeStateEnabled':
       case 'focusStateEnabled':
       case 'hoverStateEnabled':
+      case 'fileUploaderOptions':
         this._messageBox.option(name, value);
         break;
       case 'user':

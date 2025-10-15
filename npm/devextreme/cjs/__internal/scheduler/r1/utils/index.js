@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/r1/utils/index.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -280,7 +280,8 @@ var _base = require("./base");
 var _exclude_from_recurrence = require("./exclude_from_recurrence");
 var _format_weekday = require("./format_weekday");
 const agendaUtils = exports.agendaUtils = {
-  calculateStartViewDate: _agenda.calculateStartViewDate
+  calculateStartViewDate: _agenda.calculateStartViewDate,
+  calculateRows: _agenda.calculateRows
 };
 const dayUtils = exports.dayUtils = {
   calculateStartViewDate: _day.calculateStartViewDate

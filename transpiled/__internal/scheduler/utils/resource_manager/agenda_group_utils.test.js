@@ -9,14 +9,18 @@ var _agenda_group_utils = require("./agenda_group_utils");
       const manager = (0, _resource_manager.getResourceManagerMock)();
       await manager.loadGroupResources(['roomId', 'nested.priorityId']);
       (0, _globals.expect)((0, _agenda_group_utils.reduceResourcesTree)(manager.resourceById, manager.groupsTree, [{
-        roomId: 0,
-        nested: {
-          priorityId: [1, 2]
+        itemData: {
+          roomId: 0,
+          nested: {
+            priorityId: [1, 2]
+          }
         }
       }, {
-        roomId: 1,
-        nested: {
-          priorityId: 2
+        itemData: {
+          roomId: 1,
+          nested: {
+            priorityId: 2
+          }
         }
       }])).toEqual([{
         children: [{

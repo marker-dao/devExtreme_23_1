@@ -67,10 +67,19 @@ const PROCESSED_USER_FIELDS_WITH_INSTRUCTION = 'fieldName: description, format: 
     });
   });
   (0, _globals.describe)('parseResult', () => {
+    const fields = {
+      fields: [{
+        name: 'Field1',
+        format: 'text'
+      }, {
+        name: 'Field2',
+        format: 'text'
+      }]
+    };
     (0, _globals.it)('should return the parsed result', () => {
       const response = 'Field1:::value1;;;Field2:::value2';
       // @ts-expect-error Access to protected property for a test
-      const result = command.parseResult(response);
+      const result = command.parseResult(response, fields);
       const expectedResult = [{
         name: 'Field1',
         value: 'value1'
@@ -83,7 +92,7 @@ const PROCESSED_USER_FIELDS_WITH_INSTRUCTION = 'fieldName: description, format: 
     (0, _globals.it)('should parse array values correctly', () => {
       const response = 'Field1:::value1:::value2;;;Field2:::value3:::value4:::value5';
       // @ts-expect-error Access to protected property for a test
-      const result = command.parseResult(response);
+      const result = command.parseResult(response, fields);
       const expectedResult = [{
         name: 'Field1',
         value: ['value1', 'value2']
@@ -96,7 +105,7 @@ const PROCESSED_USER_FIELDS_WITH_INSTRUCTION = 'fieldName: description, format: 
     (0, _globals.it)('should not include an empty fields into parsed result', () => {
       const response = 'Field1:::value1;;;Field2:::';
       // @ts-expect-error Access to protected property for a test
-      const result = command.parseResult(response);
+      const result = command.parseResult(response, fields);
       const expectedResult = [{
         name: 'Field1',
         value: 'value1'
@@ -106,7 +115,7 @@ const PROCESSED_USER_FIELDS_WITH_INSTRUCTION = 'fieldName: description, format: 
     (0, _globals.it)('should process multiple delimiters and malformed field data correctly', () => {
       const response = 'Field1:::value1;;;;;;Field2';
       // @ts-expect-error Access to protected property for a test
-      const result = command.parseResult(response);
+      const result = command.parseResult(response, fields);
       const expectedResult = [{
         name: 'Field1',
         value: 'value1'
@@ -116,7 +125,7 @@ const PROCESSED_USER_FIELDS_WITH_INSTRUCTION = 'fieldName: description, format: 
     (0, _globals.it)('should trim string and array values in parseResult', () => {
       const response = 'Field1:::  value1  ;;;Field2:::  value2  ::: value3 ';
       // @ts-expect-error Access to protected property for a test
-      const result = command.parseResult(response);
+      const result = command.parseResult(response, fields);
       const expectedResult = [{
         name: 'Field1',
         value: 'value1'
@@ -157,6 +166,121 @@ const PROCESSED_USER_FIELDS_WITH_INSTRUCTION = 'fieldName: description, format: 
       const abort = command.execute(params, callbacks);
       (0, _globals.expect)(typeof abort).toBe('function');
       (0, _globals.expect)(sendRequestSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+  (0, _globals.describe)('toTyped', () => {
+    const callToTyped = (values, type, fieldName) => _smartPaste.SmartPasteCommand.toTyped(values, type, fieldName);
+    (0, _globals.describe)('Happy Path', () => {
+      (0, _globals.it)('should convert valid color', () => {
+        const result = callToTyped(['#ff0000'], 'color');
+        (0, _globals.expect)(result).toBe('#ff0000');
+      });
+      (0, _globals.it)('should convert valid boolean true', () => {
+        const result = callToTyped(['true'], 'boolean');
+        (0, _globals.expect)(result).toBe(true);
+      });
+      (0, _globals.it)('should convert valid boolean false', () => {
+        const result = callToTyped(['false'], 'boolean');
+        (0, _globals.expect)(result).toBe(false);
+      });
+      (0, _globals.it)('should convert valid string', () => {
+        const result = callToTyped(['test string'], 'string');
+        (0, _globals.expect)(result).toBe('test string');
+      });
+      (0, _globals.it)('should convert valid string array', () => {
+        const result = callToTyped(['item1', 'item2', 'item3'], 'stringArray');
+        (0, _globals.expect)(result).toEqual(['item1', 'item2', 'item3']);
+      });
+      (0, _globals.it)('should convert valid number', () => {
+        const result = callToTyped(['42.5'], 'number');
+        (0, _globals.expect)(result).toBe(42.5);
+      });
+      (0, _globals.it)('should convert valid number range', () => {
+        const result = callToTyped(['10', '20'], 'numberRange');
+        (0, _globals.expect)(result).toEqual([10, 20]);
+      });
+      (0, _globals.it)('should convert valid date', () => {
+        const result = callToTyped(['2024-01-15'], 'date');
+        (0, _globals.expect)(result).toEqual(new Date('2024-01-15'));
+      });
+      (0, _globals.it)('should convert valid date range', () => {
+        const result = callToTyped(['2024-01-15', '2024-01-20'], 'dateRange');
+        (0, _globals.expect)(result).toEqual([new Date('2024-01-15'), new Date('2024-01-20')]);
+      });
+    });
+    (0, _globals.describe)('Empty results', () => {
+      _globals.it.each(['string', 'stringArray', 'color', 'boolean', 'number', 'numberRange', 'date', 'dateRange'])('should not throw for empty array when type=%s', type => {
+        (0, _globals.expect)(() => callToTyped([], type, 'testField')).not.toThrow();
+        (0, _globals.expect)(() => callToTyped([''], type, 'testField')).not.toThrow();
+        (0, _globals.expect)(callToTyped([], type, 'testField')).toBeUndefined();
+        (0, _globals.expect)(callToTyped([''], type, 'testField')).toBeUndefined();
+      });
+      (0, _globals.it)('should not throw for empty array when type is undefined', () => {
+        (0, _globals.expect)(() => callToTyped([], undefined, 'testField')).not.toThrow();
+      });
+    });
+    (0, _globals.describe)('Default values', () => {
+      (0, _globals.it)('should return default for undefined type with single value', () => {
+        const result = callToTyped(['single value']);
+        (0, _globals.expect)(result).toBe('single value');
+      });
+      (0, _globals.it)('should return default for undefined type with multiple values', () => {
+        const result = callToTyped(['value1', 'value2', 'value3']);
+        (0, _globals.expect)(result).toEqual(['value1', 'value2', 'value3']);
+      });
+      (0, _globals.it)('should return single value when single item in array for default type', () => {
+        const result = callToTyped(['single']);
+        (0, _globals.expect)(result).toBe('single');
+      });
+    });
+    (0, _globals.describe)('Exception handling', () => {
+      function buildErrorRegExp(value, field, type) {
+        function escapeRegExp(str) {
+          return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        return new RegExp(`E1064.*${escapeRegExp(JSON.stringify(value))}.*${escapeRegExp(field)}.*${escapeRegExp(type)}.*`);
+      }
+      const field = 'testField';
+      (0, _globals.it)('should throw error for invalid color', () => {
+        const value = ['invalid-color'];
+        (0, _globals.expect)(() => callToTyped(value, 'color', field)).toThrow(buildErrorRegExp(value, field, 'color'));
+      });
+      (0, _globals.it)('should throw error for invalid boolean', () => {
+        const value = ['not-a-boolean'];
+        (0, _globals.expect)(() => callToTyped(value, 'boolean', field)).toThrow(buildErrorRegExp(value, field, 'boolean'));
+      });
+      (0, _globals.it)('should throw error for invalid number', () => {
+        const value = ['not-a-number'];
+        (0, _globals.expect)(() => callToTyped(value, 'number', field)).toThrow(buildErrorRegExp(value, field, 'number'));
+      });
+      (0, _globals.it)('should throw error when number range has single value', () => {
+        const value = ['10'];
+        (0, _globals.expect)(() => callToTyped(value, 'numberRange', field)).toThrow(buildErrorRegExp(value, field, 'number range'));
+      });
+      (0, _globals.it)('should throw error when number range has more than 2 values', () => {
+        const value = ['10', '20', '30'];
+        (0, _globals.expect)(() => callToTyped(value, 'numberRange', field)).toThrow(buildErrorRegExp(value, field, 'number range'));
+      });
+      (0, _globals.it)('should throw error when number range has invalid numbers', () => {
+        const value = ['10', 'invalid'];
+        (0, _globals.expect)(() => callToTyped(value, 'numberRange', field)).toThrow(buildErrorRegExp(value, field, 'number range'));
+      });
+      (0, _globals.it)('should throw error for invalid date', () => {
+        const value = ['invalid-date'];
+        (0, _globals.expect)(() => callToTyped(value, 'date', field)).toThrow(buildErrorRegExp(value, field, 'date'));
+      });
+      (0, _globals.it)('should throw error when date range has single value', () => {
+        const value = ['2024-01-15'];
+        (0, _globals.expect)(() => callToTyped(value, 'dateRange', field)).toThrow(buildErrorRegExp(value, field, 'date range'));
+      });
+      (0, _globals.it)('should throw error when date range has more than 2 values', () => {
+        const value = ['2024-01-15', '2024-01-20', '2024-01-25'];
+        (0, _globals.expect)(() => callToTyped(value, 'dateRange', field)).toThrow(buildErrorRegExp(value, field, 'date range'));
+      });
+      (0, _globals.it)('should throw error when date range has invalid dates', () => {
+        const value = ['2024-01-15', 'invalid-date'];
+        (0, _globals.expect)(() => callToTyped(value, 'dateRange', field)).toThrow(buildErrorRegExp(value, field, 'date range'));
+      });
     });
   });
 });

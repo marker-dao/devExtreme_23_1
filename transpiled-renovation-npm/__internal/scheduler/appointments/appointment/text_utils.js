@@ -39,7 +39,7 @@ const getPartsText = _ref => {
     partIndex,
     partTotalCount
   } = _ref;
-  return (0, _type.isDefined)(partIndex) ? ` (${partIndex + 1}/${partTotalCount})` : '';
+  return (0, _type.isDefined)(partIndex) && partTotalCount > 0 ? ` (${partIndex + 1}/${partTotalCount})` : '';
 };
 const getAriaLabel = options => {
   const name = options.dataAccessors.get('text', options.data) ?? '';

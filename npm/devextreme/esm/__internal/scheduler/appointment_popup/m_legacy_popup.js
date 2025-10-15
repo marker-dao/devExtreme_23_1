@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointment_popup/m_legacy_popup.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,7 +19,7 @@ import { hide as hideLoading, show as showLoading } from '../m_loading';
 import { AppointmentAdapter } from '../utils/appointment_adapter/appointment_adapter';
 import { getAppointmentGroupValues, getRawAppointmentGroupValues } from '../utils/resource_manager/appointment_groups_utils';
 const toMs = dateUtils.dateToMilliseconds;
-export const APPOINTMENT_POPUP_CLASS = 'dx-scheduler-appointment-popup';
+export const APPOINTMENT_POPUP_CLASS = 'dx-scheduler-legacy-appointment-popup';
 const DAY_IN_MS = toMs('day');
 const POPUP_CONFIG = {
   height: 'auto',

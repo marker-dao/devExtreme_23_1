@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/toast.d.ts)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,9 +16,9 @@ import {
     EventInfo,
     InitializedEventInfo,
     ChangedOptionInfo,
-} from '../common/core/events';
-
-import { DxEvent } from '../events';
+    DxEvent,
+    PointerInteractionEvent,
+} from '../events';
 
 import dxOverlay, {
     dxOverlayAnimation,
@@ -131,7 +131,7 @@ export interface dxToastOptions extends dxOverlayOptions<dxToast> {
      * @default true &for(Android)
      * @public
      */
-    hideOnOutsideClick?: boolean | ((event: DxEvent<MouseEvent | PointerEvent | TouchEvent>) => boolean);
+    hideOnOutsideClick?: boolean | ((event: DxEvent<PointerInteractionEvent>) => boolean);
     /**
      * @docid
      * @default 'auto'

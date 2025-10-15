@@ -1,0 +1,121 @@
+/**
+* DevExtreme (cjs/__internal/scheduler/view_model/generate_view_model/steps/expand_all_day.test.js)
+* Version: 25.2.0
+* Build date: Wed Oct 15 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+var _globals = require("@jest/globals");
+var _expand_all_day = require("./expand_all_day");
+(0, _globals.describe)('expandAllDay', () => {
+  (0, _globals.describe)('expandAllDayAllDayPanel', () => {
+    (0, _globals.it)('should not expand regular appointment', () => {
+      (0, _globals.expect)((0, _expand_all_day.expandAllDayAllDayPanel)([{
+        allDay: false,
+        startDateUTC: Date.UTC(2020, 0, 10, 0),
+        endDateUTC: Date.UTC(2020, 0, 10, 1)
+      }], 24, 0)).toEqual([{
+        allDay: false,
+        startDateUTC: Date.UTC(2020, 0, 10, 0),
+        endDateUTC: Date.UTC(2020, 0, 10, 1)
+      }]);
+    });
+    (0, _globals.it)('should set end date to all day appointment without offset', () => {
+      (0, _globals.expect)((0, _expand_all_day.expandAllDayAllDayPanel)([{
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10),
+        endDateUTC: Date.UTC(2020, 0, 10)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10, 4),
+        endDateUTC: Date.UTC(2020, 0, 11, 5)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 11),
+        endDateUTC: Date.UTC(2020, 0, 12)
+      }], 24, 0)).toEqual([{
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10),
+        endDateUTC: Date.UTC(2020, 0, 10, 23, 59)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10, 4),
+        endDateUTC: Date.UTC(2020, 0, 11, 23, 59)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 11),
+        endDateUTC: Date.UTC(2020, 0, 12, 23, 59)
+      }]);
+    });
+    (0, _globals.it)('should set end date for all day appointment with offset', () => {
+      (0, _globals.expect)((0, _expand_all_day.expandAllDayAllDayPanel)([{
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10),
+        endDateUTC: Date.UTC(2020, 0, 10)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10, 4),
+        endDateUTC: Date.UTC(2020, 0, 11, 5)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 11),
+        endDateUTC: Date.UTC(2020, 0, 12)
+      }], 24, 180 * 60000)).toEqual([{
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 9, 3),
+        endDateUTC: Date.UTC(2020, 0, 10, 2, 59)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10, 3),
+        endDateUTC: Date.UTC(2020, 0, 12, 2, 59)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10, 3),
+        endDateUTC: Date.UTC(2020, 0, 12, 2, 59)
+      }]);
+    });
+  });
+  (0, _globals.describe)('expandAllDayRegularPanel', () => {
+    (0, _globals.it)('should not expand regular appointment', () => {
+      (0, _globals.expect)((0, _expand_all_day.expandAllDayRegularPanel)([{
+        allDay: false,
+        startDateUTC: Date.UTC(2020, 0, 10, 0),
+        endDateUTC: Date.UTC(2020, 0, 10, 1)
+      }])).toEqual([{
+        allDay: false,
+        startDateUTC: Date.UTC(2020, 0, 10, 0),
+        endDateUTC: Date.UTC(2020, 0, 10, 1)
+      }]);
+    });
+    (0, _globals.it)('should set +1 day from end date to all day appointment', () => {
+      (0, _globals.expect)((0, _expand_all_day.expandAllDayRegularPanel)([{
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10),
+        endDateUTC: Date.UTC(2020, 0, 10)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10, 4),
+        endDateUTC: Date.UTC(2020, 0, 11, 5)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 11, 23),
+        endDateUTC: Date.UTC(2020, 0, 12)
+      }])).toEqual([{
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10),
+        endDateUTC: Date.UTC(2020, 0, 11)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 10, 4),
+        endDateUTC: Date.UTC(2020, 0, 12, 4)
+      }, {
+        allDay: true,
+        startDateUTC: Date.UTC(2020, 0, 11, 23),
+        endDateUTC: Date.UTC(2020, 0, 13, 23)
+      }]);
+    });
+  });
+});

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/chat/message_box/chat_text_area.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,38 +11,60 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.TEXT_AREA_TOOLBAR = void 0;
+var _index = require("../../../../common/core/events/utils/index");
 var _message = _interopRequireDefault(require("../../../../common/core/localization/message"));
 var _devices = _interopRequireDefault(require("../../../../core/devices"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _size = require("../../../../core/utils/size");
+var _themes = require("../../../../ui/themes");
 var _toolbar = _interopRequireDefault(require("../../../../ui/toolbar"));
-var _message_box = require("../../../ui/chat/message_box/message_box");
 var _m_text_area = _interopRequireDefault(require("../../../ui/m_text_area"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const TEXT_AREA_TOOLBAR = 'dx-textarea-toolbar';
-const TEXT_AREA_WITH_TOOLBAR = 'dx-textarea-with-toolbar';
+const TEXT_AREA_TOOLBAR = exports.TEXT_AREA_TOOLBAR = 'dx-textarea-toolbar';
 const isMobile = () => _devices.default.current().deviceType !== 'desktop';
-class TextAreaOnSteroids extends _m_text_area.default {
+class ChatTextArea extends _m_text_area.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
       stylingMode: 'outlined',
       placeholder: _message.default.format('dxChat-textareaPlaceholder'),
       autoResizeEnabled: true,
       valueChangeEvent: 'input',
-      maxHeight: '8em'
+      maxHeight: '8em',
+      fileUploaderOptions: undefined
     });
+  }
+  _defaultOptionsRules() {
+    const rules = [...super._defaultOptionsRules(), {
+      device: () => (0, _themes.isMaterial)((0, _themes.current)()),
+      options: {
+        stylingMode: 'outlined'
+      }
+    }];
+    return rules;
   }
   _supportedKeys() {
     return _extends({}, super._supportedKeys(), {
       enter: e => {
-        if (!(e !== null && e !== void 0 && e.shiftKey) && this._isValuableTextEntered() && !isMobile()) {
+        if (this._shouldSendMessageOnEnter(e)) {
           e.preventDefault();
-          this._processSendPress(e);
         }
       }
     });
+  }
+  _enterKeyHandlerUp(e) {
+    super._enterKeyHandlerUp(e);
+    if ((0, _index.normalizeKeyName)(e) !== 'enter') {
+      return;
+    }
+    if (this._shouldSendMessageOnEnter(e)) {
+      this._processSendButtonActivation({
+        component: this,
+        element: this.element(),
+        event: e
+      });
+    }
   }
   _init() {
     super._init();
@@ -54,7 +76,6 @@ class TextAreaOnSteroids extends _m_text_area.default {
     });
   }
   _initMarkup() {
-    this.$element().addClass(TEXT_AREA_WITH_TOOLBAR);
     super._initMarkup();
     this._renderToolbar();
   }
@@ -67,51 +88,40 @@ class TextAreaOnSteroids extends _m_text_area.default {
     this._toolbar = this._createComponent(this._$toolbar, _toolbar.default, toolbarOptions);
   }
   _getToolbarItems() {
-    const items = [...(this._getDefaultBeforeToolbarItems() ?? []), ...(this._getDefaultAfterToolbarItems() ?? [])];
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    const {
+      fileUploaderOptions
+    } = this.option();
+    const items = [this._getSendButtonConfig()];
+    if (fileUploaderOptions) {
+      items.push(this._getFileUploaderButtonConfig());
+    }
     return items;
   }
-  _getDefaultBeforeToolbarItems() {
+  _getFileUploaderButtonConfig() {
     const {
       activeStateEnabled,
       focusStateEnabled,
       hoverStateEnabled
     } = this.option();
-    const items = [{
+    const configuration = {
       widget: 'dxButton',
       location: 'before',
       options: {
         activeStateEnabled,
         focusStateEnabled,
         hoverStateEnabled,
-        icon: 'attach',
-        onClick: () => {
-          // eslint-disable-next-line no-alert
-          alert('FileUpploader integration');
-        }
+        icon: 'attach'
       }
-    }];
-    return items;
+    };
+    return configuration;
   }
-  _getDefaultAfterToolbarItems() {
+  _getSendButtonConfig() {
     const {
       activeStateEnabled,
       focusStateEnabled,
       hoverStateEnabled
-      /** Filter items if unavailable */
-      // speechToTextEnabled,
-      // attachmentsEnabled,
     } = this.option();
-    const items = [{
-      widget: 'dxSpeechToText',
-      location: 'after',
-      options: {
-        activeStateEnabled,
-        focusStateEnabled,
-        hoverStateEnabled,
-        stylingMode: 'text'
-      }
-    }, {
+    const configuration = {
       widget: 'dxButton',
       location: 'after',
       options: {
@@ -123,18 +133,17 @@ class TextAreaOnSteroids extends _m_text_area.default {
         stylingMode: 'contained',
         disabled: true,
         elementAttr: {
-          class: _message_box.CHAT_MESSAGEBOX_BUTTON_CLASS,
           'aria-label': _message.default.format('dxChat-sendButtonAriaLabel')
         },
         onClick: e => {
-          this._processSendPress(e);
+          this._processSendButtonActivation(e);
         },
         onInitialized: e => {
           this._sendButton = e.component;
         }
       }
-    }];
-    return items;
+    };
+    return configuration;
   }
   _toggleButtonDisableState(state) {
     var _this$_sendButton;
@@ -147,17 +156,19 @@ class TextAreaOnSteroids extends _m_text_area.default {
     const sum = superResult + toolbarHeight;
     return sum;
   }
-  /** Trigger of onInput-action */
   _keyPressHandler(e) {
     super._keyPressHandler(e);
     const shouldButtonBeDisabled = !this._isValuableTextEntered();
     this._toggleButtonDisableState(shouldButtonBeDisabled);
   }
-  _processSendPress(e) {
+  _processSendButtonActivation(e) {
     var _this$_sendAction;
     (_this$_sendAction = this._sendAction) === null || _this$_sendAction === void 0 || _this$_sendAction.call(this, e);
     this.reset();
     this._toggleButtonDisableState(true);
+  }
+  _shouldSendMessageOnEnter(e) {
+    return !(e !== null && e !== void 0 && e.shiftKey) && this._isValuableTextEntered() && !isMobile();
   }
   _optionChanged(args) {
     var _this$_sendButton2;
@@ -180,6 +191,7 @@ class TextAreaOnSteroids extends _m_text_area.default {
       case 'onSend':
         this._createSendAction();
         break;
+      case 'fileUploaderOptions':
       default:
         super._optionChanged(args);
     }
@@ -190,9 +202,6 @@ class TextAreaOnSteroids extends _m_text_area.default {
     } = this.option();
     return Boolean(text === null || text === void 0 ? void 0 : text.trim());
   }
-  isValuableTextEntered() {
-    return this._isValuableTextEntered();
-  }
   _dispose() {
     var _this$_toolbar, _this$_$toolbar;
     (_this$_toolbar = this._toolbar) === null || _this$_toolbar === void 0 || _this$_toolbar.dispose();
@@ -202,4 +211,4 @@ class TextAreaOnSteroids extends _m_text_area.default {
     super._dispose();
   }
 }
-var _default = exports.default = TextAreaOnSteroids;
+var _default = exports.default = ChatTextArea;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/pivot_grid/m_widget.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -43,6 +43,7 @@ var _m_fields_area = require("./fields_area/m_fields_area");
 var _m_headers_area = _interopRequireDefault(require("./headers_area/m_headers_area"));
 var _m_widget_utils = require("./m_widget_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = (0, _window.getWindow)();
 const DATA_AREA_CELL_CLASS = 'dx-area-data-cell';
 const ROW_AREA_CELL_CLASS = 'dx-area-row-cell';
@@ -164,7 +165,6 @@ class PivotGrid extends _widget.default {
         width: 200,
         height: 70,
         showIndicator: true,
-        indicatorSrc: '',
         showPane: true
       },
       texts: {
@@ -210,6 +210,16 @@ class PivotGrid extends _widget.default {
           ok: _message.default.format('dxDataGrid-headerFilterOK'),
           cancel: _message.default.format('dxDataGrid-headerFilterCancel')
         }
+      }
+    });
+  }
+  _setDeprecatedOptions() {
+    super._setDeprecatedOptions();
+    this._deprecatedOptions = _extends({}, this._deprecatedOptions, {
+      // @ts-expect-error ts-error
+      'loadPanel.indicatorSrc': {
+        since: '25.2',
+        alias: 'loadPanel.indicatorOptions.src'
       }
     });
   }

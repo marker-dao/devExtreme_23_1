@@ -102,11 +102,9 @@ export const DEFAULT_SCHEDULER_INTERNAL_OPTIONS = {
     x: 0,
     y: 0
   },
-  _appointmentCountPerCell: 2,
-  _collectorOffset: 0,
-  _appointmentOffset: 26,
   appointmentPopupTemplate: 'appointmentPopup',
   disabledExpr: 'disabled',
+  visibleExpr: 'visible',
   allowMultipleCellSelection: true
 };
 export const DEFAULT_SCHEDULER_INTEGRATION_OPTIONS = {
@@ -148,10 +146,7 @@ export const DEFAULT_SCHEDULER_OPTIONS_RULES = [{
         $(element).append(span);
         if (!wordIndex) $(element).append(' ');
       });
-    },
-    _appointmentCountPerCell: 1,
-    _collectorOffset: 20,
-    _appointmentOffset: 30
+    }
   }
 }, {
   device() {

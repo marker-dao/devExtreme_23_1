@@ -1,13 +1,13 @@
 /**
 * DevExtreme (esm/__internal/scheduler/r1/utils/index.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { getThemeType } from '../../../scheduler/r1/utils/themes';
-import { calculateStartViewDate } from './agenda';
+import { calculateRows, calculateStartViewDate } from './agenda';
 import { calculateStartViewDate as dayCalculateStartViewDate } from './day';
 import { calculateCellIndex, calculateStartViewDate as monthCalculateStartViewDate, getCellText, getViewStartByOptions } from './month';
 import { addHeightToStyle, addToStyles, addWidthToStyle, getCellSizeHorizontalClass, getCellSizeVerticalClass, getGroupCellClasses } from './render';
@@ -19,7 +19,8 @@ export { calculateCellIndex, calculateDayDuration, calculateIsGroupedAllDayPanel
 export { excludeFromRecurrence } from './exclude_from_recurrence';
 export { formatWeekday, formatWeekdayAndDay } from './format_weekday';
 export const agendaUtils = {
-  calculateStartViewDate
+  calculateStartViewDate,
+  calculateRows
 };
 export const dayUtils = {
   calculateStartViewDate: dayCalculateStartViewDate

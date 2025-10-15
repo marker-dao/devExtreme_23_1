@@ -22,8 +22,7 @@ var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _const = require("./const");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-/* eslint-disable max-classes-per-file */
-
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
 const COLUMNS_SEPARATOR_CLASS = 'columns-separator';
 const COLUMNS_SEPARATOR_TRANSPARENT = 'columns-separator-transparent';
 const DRAGGING_HEADER_CLASS = 'drag-header';
@@ -1197,7 +1196,7 @@ class DraggingHeaderViewController extends _m_modules.default.ViewController {
     type !== 'block' && columnsSeparator && columnsSeparator.hide();
   }
   allowDrop(parameters) {
-    return this._columnsController.allowMoveColumn(parameters.sourceColumnIndex, parameters.targetColumnIndex, parameters.sourceLocation, parameters.targetLocation);
+    return this._columnsController.allowMoveColumn(this.addColumnIndexOffset(parameters.sourceColumnIndex), this.addColumnIndexOffset(parameters.targetColumnIndex), parameters.sourceLocation, parameters.targetLocation);
   }
   drag(parameters) {
     const {
@@ -1255,6 +1254,15 @@ class DraggingHeaderViewController extends _m_modules.default.ViewController {
       }
     }
   }
+  addColumnIndexOffset(columnIndex) {
+    const offset = this._columnsController.getColumnIndexOffset();
+    if ((0, _type.isObject)(columnIndex)) {
+      return _extends({}, columnIndex, {
+        columnIndex: columnIndex.columnIndex + offset
+      });
+    }
+    return columnIndex + offset;
+  }
   drop(parameters) {
     const {
       sourceColumnElement
@@ -1270,7 +1278,7 @@ class DraggingHeaderViewController extends _m_modules.default.ViewController {
       if (separator) {
         separator.hide();
       }
-      this._columnsController.moveColumn(parameters.sourceColumnIndex, parameters.targetColumnIndex, parameters.sourceLocation, parameters.targetLocation);
+      this._columnsController.moveColumn(this.addColumnIndexOffset(parameters.sourceColumnIndex), this.addColumnIndexOffset(parameters.targetColumnIndex), parameters.sourceLocation, parameters.targetLocation);
     }
   }
 }

@@ -18,7 +18,7 @@ describe('getDeltaTime', () => {
         },
         resizableStep: 50,
         cellDurationInMinutes: 30,
-        isAllDay: true
+        isAllDayPanel: true
       })).toBe(0);
     });
   });
@@ -38,7 +38,7 @@ describe('getDeltaTime', () => {
         },
         resizableStep: 50,
         cellDurationInMinutes: 30,
-        isAllDay: false
+        isAllDayPanel: false
       })).toBe(-30 * 60000);
     });
     it(`should return correct delta in px for resized all day appointment in vertical ${view} view`, () => {
@@ -56,7 +56,7 @@ describe('getDeltaTime', () => {
         },
         resizableStep: 50,
         cellDurationInMinutes: 30,
-        isAllDay: true
+        isAllDayPanel: true
       })).toBe(-24 * 3600000);
     });
   });
@@ -76,7 +76,7 @@ describe('getDeltaTime', () => {
         },
         resizableStep: 50,
         cellDurationInMinutes: 30,
-        isAllDay: false
+        isAllDayPanel: false
       })).toBe(-24 * 3600000);
     });
   });
@@ -96,7 +96,7 @@ describe('getDeltaTime', () => {
         },
         resizableStep: 50,
         cellDurationInMinutes: 30,
-        isAllDay: false
+        isAllDayPanel: false
       })).toBe(-30 * 60000);
     });
   });

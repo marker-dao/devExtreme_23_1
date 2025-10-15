@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/scheduler_options_base_widget.js)
 * Version: 25.2.0
-* Build date: Tue Oct 07 2025
+* Build date: Wed Oct 15 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.SchedulerOptionsBaseWidget = void 0;
 var _ui = _interopRequireDefault(require("../../ui/widget/ui.widget"));
 var _m_extend = require("../core/utils/m_extend");
+var _m_utils_time_zone = _interopRequireDefault(require("./m_utils_time_zone"));
 var _constants = require("./utils/options/constants");
 var _utils = require("./utils/options/utils");
 var _index = require("./utils/options_validator/index");
@@ -74,6 +75,9 @@ class SchedulerOptionsBaseWidget extends _ui.default {
     });
     const validationResult = this.optionsValidator.validate(currentViewOptions);
     this.optionsValidatorErrorHandler.handleValidationResult(validationResult);
+  }
+  getTimeZone() {
+    return (this.option('timeZone') || _m_utils_time_zone.default.getMachineTimezoneName()) ?? 'Etc/UTC';
   }
   getViewOption(optionName) {
     var _this$currentView;
