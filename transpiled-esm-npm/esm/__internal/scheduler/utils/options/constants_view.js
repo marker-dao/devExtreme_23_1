@@ -1,5 +1,3 @@
-import messageLocalization from '../../../../common/core/localization/message';
-import { camelize } from '../../../core/utils/m_inflector';
 export const VIEWS = {
   DAY: 'day',
   WEEK: 'week',
@@ -13,13 +11,11 @@ export const VIEWS = {
 };
 export const VIEW_TYPES = Object.values(VIEWS);
 const WEEKENDS = [0, 6];
-const getName = type => messageLocalization.format(`dxScheduler-switcher${camelize(type, true)}`);
 const getView = function (type, groupOrientation) {
   let skippedDays = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
   return {
     groupOrientation,
     intervalCount: 1,
-    name: getName(type),
     type,
     skippedDays
   };
@@ -37,7 +33,6 @@ export const DEFAULT_VIEW_OPTIONS = {
     agendaDuration: 7,
     intervalCount: 1,
     skippedDays: [],
-    name: getName('agenda'),
     type: 'agenda'
   }
 };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/data_grid/module_not_extended/ai_column.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,9 +14,9 @@ var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 _m_core.default.registerModule('aiColumn', {
   controllers: {
-    aiColumn: _m_ai_column_controller.AiColumnController
+    aiColumn: _m_ai_column_controller.AIColumnController
   },
   views: {
-    aiColumnView: _m_ai_column_view.AiColumnView
+    aiColumnView: _m_ai_column_view.AIColumnView
   }
 });

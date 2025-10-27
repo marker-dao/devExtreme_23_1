@@ -1,0 +1,79 @@
+import $ from '../../../core/renderer';
+import dateUtils from '../../../core/utils/date';
+import { isDefined } from '../../../core/utils/type';
+import { getRecurrenceString, parseRecurrenceRule } from '../recurrence/base';
+import { daysFromByDayRule } from '../recurrence/days_from_by_day_rule';
+// eslint-disable-next-line arrow-body-style
+export const createFormIconTemplate = iconName => {
+  return () => $('<i>').addClass('dx-icon').addClass(`dx-icon-${iconName}`);
+};
+export const getStartDateCommonConfig = firstDayOfWeek => ({
+  colSpan: 1,
+  itemType: 'simple',
+  editorType: 'dxDateBox',
+  validationRules: [{
+    type: 'required'
+  }],
+  editorOptions: {
+    type: 'date',
+    useMaskBehavior: true,
+    calendarOptions: {
+      firstDayOfWeek
+    }
+  }
+});
+export class RecurrenceRule {
+  constructor(rule, startDate) {
+    var _recurrenceRule$freq, _this$startDate;
+    this.startDate = null;
+    this.frequency = null;
+    const recurrenceRule = parseRecurrenceRule(rule);
+    const todayEnd = dateUtils.setToDayEnd(new Date());
+    this.startDate = startDate;
+    this.frequency = ((_recurrenceRule$freq = recurrenceRule.freq) === null || _recurrenceRule$freq === void 0 ? void 0 : _recurrenceRule$freq.toLowerCase()) ?? null;
+    this.interval = recurrenceRule.interval ?? 1;
+    this.until = recurrenceRule.until ?? todayEnd;
+    this.count = recurrenceRule.count ?? 1;
+    this.byDay = daysFromByDayRule(recurrenceRule);
+    this.byMonthDay = recurrenceRule.bymonthday ? Number(recurrenceRule.bymonthday) : (startDate === null || startDate === void 0 ? void 0 : startDate.getDate()) ?? 1;
+    this.byMonth = recurrenceRule.bymonth ? Number(recurrenceRule.bymonth) : (((_this$startDate = this.startDate) === null || _this$startDate === void 0 ? void 0 : _this$startDate.getMonth()) ?? 0) + 1;
+    this.repeatEnd = 'never';
+    if (isDefined(recurrenceRule.count)) {
+      this.repeatEnd = 'count';
+    } else if (isDefined(recurrenceRule.until)) {
+      this.repeatEnd = 'until';
+    }
+  }
+  toString() {
+    if (!this.frequency) {
+      return undefined;
+    }
+    const rule = {
+      freq: this.frequency,
+      interval: this.interval
+    };
+    if (this.repeatEnd === 'until' && this.until) {
+      rule.until = this.until;
+    } else if (this.repeatEnd === 'count' && this.count) {
+      rule.count = this.count;
+    }
+    switch (this.frequency) {
+      case 'weekly':
+        rule.byday = this.byDay.join(',');
+        break;
+      case 'monthly':
+        if (this.byMonthDay) {
+          rule.bymonthday = String(this.byMonthDay);
+        }
+        break;
+      case 'yearly':
+        if (this.byMonthDay && this.byMonth) {
+          rule.bymonthday = String(this.byMonthDay);
+          rule.bymonth = String(this.byMonth);
+        }
+        break;
+      default:
+    }
+    return getRecurrenceString(rule);
+  }
+}

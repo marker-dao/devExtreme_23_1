@@ -1,7 +1,7 @@
 "use strict";
 
 exports.default = void 0;
-var _file_uploader = _interopRequireDefault(require("../__internal/ui/file_uploader"));
+var _file_uploader = _interopRequireDefault(require("../__internal/ui/file_uploader/file_uploader"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var _default = exports.default = _file_uploader.default; // STYLE fileUploader
 /**

@@ -3,6 +3,7 @@ import dateLocalization from '../../../common/core/localization/date';
 import dateUtils from '../../../core/utils/date';
 import { isFunction, isObject } from '../../../core/utils/type';
 import messageLocalization from '../../../localization/message';
+import { camelize } from '../../core/utils/m_inflector';
 const DAY_FORMAT = 'd';
 const DAYS_IN_WORK_WEEK = 5;
 const {
@@ -271,15 +272,9 @@ export const getViewName = view => {
   }
   return view;
 };
-export const getViewText = view => {
-  const viewName = getViewName(view);
-  const viewText = messageLocalization.format(`dxScheduler-switcher${viewName}`);
-  if (!viewText) {
-    return viewName ?? '';
-  }
-  return viewText;
-};
+export const getViewText = view => view.name || messageLocalization.format(`dxScheduler-switcher${camelize(view.type, true)}`);
 export const formatViews = views => views.map(view => _extends({}, view, {
+  name: getViewName(view),
   text: getViewText(view)
 }));
 export const getStep = type => STEP_MAP[type];

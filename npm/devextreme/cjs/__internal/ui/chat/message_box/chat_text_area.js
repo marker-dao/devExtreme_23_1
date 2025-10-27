@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/chat/message_box/chat_text_area.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,6 +19,7 @@ var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _size = require("../../../../core/utils/size");
 var _themes = require("../../../../ui/themes");
 var _toolbar = _interopRequireDefault(require("../../../../ui/toolbar"));
+var _informer = _interopRequireDefault(require("../../../ui/informer/informer"));
 var _m_text_area = _interopRequireDefault(require("../../../ui/m_text_area"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
@@ -31,7 +32,7 @@ class ChatTextArea extends _m_text_area.default {
       placeholder: _message.default.format('dxChat-textareaPlaceholder'),
       autoResizeEnabled: true,
       valueChangeEvent: 'input',
-      maxHeight: '8em',
+      maxHeight: '24em',
       fileUploaderOptions: undefined
     });
   }
@@ -77,7 +78,16 @@ class ChatTextArea extends _m_text_area.default {
   }
   _initMarkup() {
     super._initMarkup();
+    this._renderInformer();
     this._renderToolbar();
+  }
+  _renderInformer() {
+    const $informer = (0, _renderer.default)('<div>').addClass('dx-chat-informer').prependTo(this.$element());
+    this._informer = this._createComponent($informer, _informer.default, {
+      contentAlignment: 'start',
+      icon: 'errorcircle',
+      text: 'You selected too many files. Select no more than 3 files and retry.'
+    });
   }
   _renderToolbar() {
     const toolbarItems = this._getToolbarItems();

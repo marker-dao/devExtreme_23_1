@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/text_box/m_utils.caret.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,17 +12,20 @@ import $ from '../../../core/renderer';
 import { isDefined } from '../../../core/utils/type';
 const {
   ios,
-  // @ts-expect-error
+  // @ts-expect-error Device type doesn't contain mac
   mac
 } = devices.real();
 // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 const isFocusingOnCaretChange = ios || mac;
 const getCaret = input => {
-  let range;
+  let range = {
+    start: 0,
+    end: 0
+  };
   try {
     range = {
-      start: input.selectionStart,
-      end: input.selectionEnd
+      start: input.selectionStart ?? 0,
+      end: input.selectionEnd ?? 0
     };
   } catch (e) {
     range = {
@@ -32,28 +35,23 @@ const getCaret = input => {
   }
   return range;
 };
-const setCaret = (input, position) => {
-  const body = domAdapter.getBody();
-  if (!body.contains(input) && !body.contains(input.getRootNode().host)) {
-    return;
-  }
+export const setCaret = (input, selection) => {
   try {
-    input.selectionStart = position.start;
-    input.selectionEnd = position.end;
-  } catch (e) {/* empty */}
+    input.selectionStart = selection.start;
+    input.selectionEnd = selection.end;
+  } catch {/** empty */}
 };
-// @ts-expect-error
-// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-const caret = function (input, position) {
+const caret = function (input, selection) {
   let force = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-  input = $(input).get(0);
-  if (!isDefined(position)) {
-    return getCaret(input);
+  const inputElement = $(input).get(0);
+  if (!isDefined(selection)) {
+    return getCaret(inputElement);
   }
   // NOTE: AppleWebKit-based browsers focuses element input after caret position has changed
-  if (!force && isFocusingOnCaretChange && domAdapter.getActiveElement(input) !== input) {
-    return;
+  if (!force && isFocusingOnCaretChange && domAdapter.getActiveElement(inputElement) !== inputElement) {
+    return undefined;
   }
-  setCaret(input, position);
+  setCaret(inputElement, selection);
+  return undefined;
 };
 export default caret;

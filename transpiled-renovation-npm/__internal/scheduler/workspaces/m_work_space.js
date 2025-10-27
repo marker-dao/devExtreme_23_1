@@ -552,7 +552,7 @@ class SchedulerWorkSpace extends _ui2.default {
     this.renderer = new _m_virtual_scrolling.VirtualScrollingRenderer(this);
   }
   isGroupedAllDayPanel() {
-    return (0, _index3.calculateIsGroupedAllDayPanel)(this.option('groups'), this.option('groupOrientation'), this.isAllDayPanelVisible);
+    return (0, _index3.calculateIsGroupedAllDayPanel)(this.option('groups').length, this.option('groupOrientation'), this.isAllDayPanelVisible);
   }
   generateRenderOptions(isProvideVirtualCellsWidth) {
     var _this$_getToday;

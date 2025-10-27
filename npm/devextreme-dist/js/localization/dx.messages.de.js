@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.de.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -100,6 +100,9 @@
             "dxFileUploader-invalidFileExtension": "Unzulässiger Dateityp",
             "dxFileUploader-invalidMaxFileSize": "Datei ist zu groß",
             "dxFileUploader-invalidMinFileSize": "Datei ist zu klein",
+            "dxFileUploader-fileListLabel": "File list",
+            "dxFileUploader-removeFileButtonLabel": "Remove file {0}",
+            "dxFileUploader-uploadFileButtonLabel": "Upload file {0}",
             "dxRangeSlider-ariaFrom": "Von",
             "dxRangeSlider-ariaTill": "Bis",
             "dxSwitch-switchedOnText": "EIN",
@@ -111,6 +114,11 @@
             "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Der Wert muss eine Zahl sein",
             "dxNumberBox-noDataText": "Keine Daten",
+            "dxDataGrid-aiPromptEditorTitle": "AI Prompt Editor",
+            "dxDataGrid-aiPromptEditorPlaceholder": "Prompt AI to generate the column's values",
+            "dxDataGrid-aiPromptEditorApplyButton": "Apply",
+            "dxDataGrid-aiPromptEditorRegenerateButton": "Regenerate Data",
+            "dxDataGrid-aiPromptEditorStopButton": "Stop",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Verwenden Sie die {0}, um Spalten anzuzeigen",
             "dxDataGrid-emptyHeaderWithGroupPanelText": "Ziehen Sie eine Spalte aus dem Gruppenpanel hierher",
             "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "Verwenden Sie die {0} oder ziehen Sie eine Spalte aus dem Gruppenpanel",
@@ -384,6 +392,8 @@
             "dxChat-editingDeleteConfirmText": "Sind Sie sicher, dass Sie diese Nachricht löschen möchten?",
             "dxChat-deletedMessageText": "Diese Nachricht wurde gelöscht",
             "dxChat-defaultImageAlt": "Im Chat geteiltes Bild",
+            "dxChat-fileViewLabel": "File list",
+            "dxChat-downloadButtonLabel": "Download file {0}",
             "dxColorView-ariaRed": "Rot",
             "dxColorView-ariaGreen": "Grün",
             "dxColorView-ariaBlue": "Blau",

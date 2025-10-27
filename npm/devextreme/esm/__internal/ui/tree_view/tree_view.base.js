@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/tree_view/tree_view.base.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1535,7 +1535,8 @@ class TreeViewBase extends HierarchicalCollectionWidget {
   }
   _moveFocus(location, e) {
     const {
-      rtlEnabled
+      rtlEnabled,
+      selectByClick
     } = this.option();
     const FOCUS_UP = 'up';
     const FOCUS_DOWN = 'down';
@@ -1551,6 +1552,7 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     if (!($items !== null && $items !== void 0 && $items.length)) {
       return;
     }
+    const isSelectionByShiftAllowed = this._showCheckboxes() || selectByClick;
     switch (location) {
       case FOCUS_UP:
         {
@@ -1558,7 +1560,7 @@ class TreeViewBase extends HierarchicalCollectionWidget {
           this.option('focusedElement', getPublicElement($prevItem));
           const prevItemElement = this._getNodeItemElement($prevItem);
           this.getScrollable().scrollToElement(prevItemElement);
-          if (e.shiftKey && this._showCheckboxes()) {
+          if (e.shiftKey && isSelectionByShiftAllowed) {
             this._updateItemSelection(true, prevItemElement);
           }
           break;
@@ -1569,7 +1571,7 @@ class TreeViewBase extends HierarchicalCollectionWidget {
           this.option('focusedElement', getPublicElement($nextItem));
           const nextItemElement = this._getNodeItemElement($nextItem);
           this.getScrollable().scrollToElement(nextItemElement);
-          if (e.shiftKey && this._showCheckboxes()) {
+          if (e.shiftKey && isSelectionByShiftAllowed) {
             this._updateItemSelection(true, nextItemElement);
           }
           break;
@@ -1577,7 +1579,7 @@ class TreeViewBase extends HierarchicalCollectionWidget {
       case FOCUS_FIRST:
         {
           const $firstItem = $items.first();
-          if (e.shiftKey && this._showCheckboxes()) {
+          if (e.shiftKey && isSelectionByShiftAllowed) {
             this._updateSelectionToFirstItem($items, $items.index(this._prevItem($items)));
           }
           this.option('focusedElement', getPublicElement($firstItem));
@@ -1587,7 +1589,7 @@ class TreeViewBase extends HierarchicalCollectionWidget {
       case FOCUS_LAST:
         {
           const $lastItem = $items.last();
-          if (e.shiftKey && this._showCheckboxes()) {
+          if (e.shiftKey && isSelectionByShiftAllowed) {
             this._updateSelectionToLastItem($items, $items.index(this._nextItem($items)));
           }
           this.option('focusedElement', getPublicElement($lastItem));

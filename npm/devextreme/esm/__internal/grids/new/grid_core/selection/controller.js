@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/new/grid_core/selection/controller.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -116,6 +116,13 @@ export class SelectionController {
       }
     });
     effect(() => {
+      /*
+      TODO: subscription to selectionHelper to update keys if it is reinitialized.
+      Need to get rid of `selectionHelper.peek()` inside of selectCards()
+      and pass selectionHelper from here
+      */
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this.selectionHelper.value;
       const isLoaded = this.dataController.isLoaded.value;
       if (isLoaded) {
         const selectedCardKeys = this.selectedCardKeys.peek();

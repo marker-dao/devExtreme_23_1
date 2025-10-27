@@ -31,7 +31,7 @@ export class TimelineDateHeaderLayout extends BaseInfernoComponent {
       weekDayRightVirtualCellCount,
       weekDayRightVirtualCellWidth
     } = dateHeaderData;
-    const isHorizontalGrouping = isHorizontalGroupingApplied(groups, groupOrientation) && !groupByDate;
+    const isHorizontalGrouping = isHorizontalGroupingApplied(groups.length, groupOrientation) && !groupByDate;
     return createFragment(dataMap.map((dateHeaderRow, rowIndex) => {
       const rowsCount = dataMap.length;
       const isTimeCellTemplate = rowsCount - 1 === rowIndex;

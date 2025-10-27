@@ -545,7 +545,7 @@ class SchedulerWorkSpace extends Widget {
     this.renderer = new VirtualScrollingRenderer(this);
   }
   isGroupedAllDayPanel() {
-    return calculateIsGroupedAllDayPanel(this.option('groups'), this.option('groupOrientation'), this.isAllDayPanelVisible);
+    return calculateIsGroupedAllDayPanel(this.option('groups').length, this.option('groupOrientation'), this.isAllDayPanelVisible);
   }
   generateRenderOptions(isProvideVirtualCellsWidth) {
     var _this$_getToday;

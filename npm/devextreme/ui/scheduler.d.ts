@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/scheduler.d.ts)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -85,6 +85,8 @@ export type AllDayPanelMode = 'all' | 'allDay' | 'hidden';
 export type CellAppointmentsLimit = 'auto' | 'unlimited';
 /** @public */
 export type RecurrenceEditMode = 'dialog' | 'occurrence' | 'series';
+/** @public */
+export type AppointmentFormIconsShowMode = 'both' | 'main' | 'recurrence' | 'none';
 /** @public */
 export type ViewType = 'agenda' | 'day' | 'month' | 'timelineDay' | 'timelineMonth' | 'timelineWeek' | 'timelineWorkWeek' | 'week' | 'workWeek';
 /** @public */
@@ -664,6 +666,12 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
          * @public
          */
         onCanceled?: ((formData: any) => void);
+        /**
+         * @docid
+         * @default "main"
+         * @public
+         */
+        iconsShowMode?: AppointmentFormIconsShowMode;
       } | undefined;
     };
     /**
@@ -920,6 +928,11 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
        * @default ""
        */
       fieldExpr?: string;
+      /**
+       * @docid
+       * @default ""
+       */
+      icon?: string;
       /**
        * @docid
        * @default ""

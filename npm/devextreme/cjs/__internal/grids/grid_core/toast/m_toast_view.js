@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/toast/m_toast_view.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,36 +13,32 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ToastView = void 0;
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
+var _toast = _interopRequireDefault(require("../../../../ui/toast"));
 var _m_modules = require("../m_modules");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const DEFAULT_POSITION = {
-  my: 'center bottom',
-  at: 'center bottom'
-};
 class ToastView extends _m_modules.View {
   constructor() {
     super(...arguments);
     this._toastInstance = null;
     this._$toastContainer = null;
   }
-  _ensureToastContainer() {
-    if (!this._$toastContainer) {
-      this._$toastContainer = (0, _renderer.default)('<div>').appendTo(this.component.$element());
-    }
-  }
   _createToastInstance(options) {
-    this._ensureToastContainer();
     if (this._toastInstance) {
       return this._toastInstance;
     }
-    this._toastInstance = this._$toastContainer.dxToast(_extends({
-      position: _extends({}, DEFAULT_POSITION, {
-        of: this.component.$element()
-      })
+    if (!this._$toastContainer) {
+      this._$toastContainer = (0, _renderer.default)('<div>').appendTo(this.component.$element());
+    }
+    this._toastInstance = this._createComponent(this._$toastContainer, _toast.default, _extends({
+      position: {
+        my: 'bottom',
+        at: 'bottom',
+        of: this.component.$element().get(0)
+      }
     }, options, {
       visible: false
-    })).dxToast('instance');
+    }));
     return this._toastInstance;
   }
   showToast(message) {

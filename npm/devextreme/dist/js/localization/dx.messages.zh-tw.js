@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.zh-tw.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -100,6 +100,9 @@
             "dxFileUploader-invalidFileExtension": "文件類型錯誤",
             "dxFileUploader-invalidMaxFileSize": "文件過大",
             "dxFileUploader-invalidMinFileSize": "文件過小",
+            "dxFileUploader-fileListLabel": "File list",
+            "dxFileUploader-removeFileButtonLabel": "Remove file {0}",
+            "dxFileUploader-uploadFileButtonLabel": "Upload file {0}",
             "dxRangeSlider-ariaFrom": "從",
             "dxRangeSlider-ariaTill": "至",
             "dxSwitch-switchedOnText": "開",
@@ -111,6 +114,11 @@
             "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "值必須是一個數字",
             "dxNumberBox-noDataText": "無資料",
+            "dxDataGrid-aiPromptEditorTitle": "AI Prompt Editor",
+            "dxDataGrid-aiPromptEditorPlaceholder": "Prompt AI to generate the column's values",
+            "dxDataGrid-aiPromptEditorApplyButton": "Apply",
+            "dxDataGrid-aiPromptEditorRegenerateButton": "Regenerate Data",
+            "dxDataGrid-aiPromptEditorStopButton": "Stop",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",
             "dxDataGrid-emptyHeaderWithGroupPanelText": "Drag a column from the group panel here",
             "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "Use {0} or drag a column from the group panel",
@@ -384,6 +392,8 @@
             "dxChat-editingDeleteConfirmText": "Are you sure you want to delete this message?",
             "dxChat-deletedMessageText": "This message was deleted",
             "dxChat-defaultImageAlt": "Image shared in chat",
+            "dxChat-fileViewLabel": "File list",
+            "dxChat-downloadButtonLabel": "Download file {0}",
             "dxColorView-ariaRed": "紅色",
             "dxColorView-ariaGreen": "綠色",
             "dxColorView-ariaBlue": "藍色",

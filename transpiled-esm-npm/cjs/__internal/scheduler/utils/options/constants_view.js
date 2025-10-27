@@ -4,9 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.VIEW_TYPES = exports.VIEWS = exports.DEFAULT_VIEW_OPTIONS = void 0;
-var _message = _interopRequireDefault(require("../../../../common/core/localization/message"));
-var _m_inflector = require("../../../core/utils/m_inflector");
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const VIEWS = exports.VIEWS = {
   DAY: 'day',
   WEEK: 'week',
@@ -20,13 +17,11 @@ const VIEWS = exports.VIEWS = {
 };
 const VIEW_TYPES = exports.VIEW_TYPES = Object.values(VIEWS);
 const WEEKENDS = [0, 6];
-const getName = type => _message.default.format(`dxScheduler-switcher${(0, _m_inflector.camelize)(type, true)}`);
 const getView = function (type, groupOrientation) {
   let skippedDays = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
   return {
     groupOrientation,
     intervalCount: 1,
-    name: getName(type),
     type,
     skippedDays
   };
@@ -44,7 +39,6 @@ const DEFAULT_VIEW_OPTIONS = exports.DEFAULT_VIEW_OPTIONS = {
     agendaDuration: 7,
     intervalCount: 1,
     skippedDays: [],
-    name: getName('agenda'),
     type: 'agenda'
   }
 };

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/r1/utils/base.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -133,12 +133,11 @@ const getHeaderCellText = (headerIndex, date, headerCellTextFormat, getDateForHe
   return _date.default.format(validDate, headerCellTextFormat);
 };
 exports.getHeaderCellText = getHeaderCellText;
-const isVerticalGroupingApplied = (groups, groupOrientation) => groupOrientation === _constants.VERTICAL_GROUP_ORIENTATION && Boolean(groups.length);
-// TODO(9): Get rid of it as soon as you can. More parameters then needed
+const isVerticalGroupingApplied = (groupCount, groupOrientation) => groupOrientation === _constants.VERTICAL_GROUP_ORIENTATION && groupCount > 0;
 exports.isVerticalGroupingApplied = isVerticalGroupingApplied;
-const getHorizontalGroupCount = (groupLeafs, groupOrientation) => {
-  const isVerticalGrouping = isVerticalGroupingApplied(groupLeafs, groupOrientation);
-  return isVerticalGrouping ? 1 : groupLeafs.length;
+const getHorizontalGroupCount = (groupCount, groupOrientation) => {
+  const isVerticalGrouping = isVerticalGroupingApplied(groupCount, groupOrientation);
+  return isVerticalGrouping ? 1 : groupCount;
 };
 exports.getHorizontalGroupCount = getHorizontalGroupCount;
 const TIMELINE_VIEWS = [_constants_view.VIEWS.TIMELINE_DAY, _constants_view.VIEWS.TIMELINE_WEEK, _constants_view.VIEWS.TIMELINE_WORK_WEEK, _constants_view.VIEWS.TIMELINE_MONTH];
@@ -177,7 +176,7 @@ const getViewStartByOptions = (startDate, currentDate, intervalDuration, startVi
   return diff > 0 ? currentStartDate : endDate;
 };
 exports.getViewStartByOptions = getViewStartByOptions;
-const calculateIsGroupedAllDayPanel = (groups, groupOrientation, isAllDayPanelVisible) => isVerticalGroupingApplied(groups, groupOrientation) && isAllDayPanelVisible;
+const calculateIsGroupedAllDayPanel = (groupCount, groupOrientation, isAllDayPanelVisible) => isVerticalGroupingApplied(groupCount, groupOrientation) && isAllDayPanelVisible;
 exports.calculateIsGroupedAllDayPanel = calculateIsGroupedAllDayPanel;
 const calculateViewStartDate = startDateOption => startDateOption;
 exports.calculateViewStartDate = calculateViewStartDate;
@@ -220,10 +219,10 @@ const getToday = (indicatorTime, timeZoneCalculator) => {
 exports.getToday = getToday;
 const getCalculatedFirstDayOfWeek = firstDayOfWeekOption => (0, _type.isDefined)(firstDayOfWeekOption) ? firstDayOfWeekOption : _date.default.firstDayOfWeekIndex();
 exports.getCalculatedFirstDayOfWeek = getCalculatedFirstDayOfWeek;
-const isHorizontalGroupingApplied = (groups, groupOrientation) => groupOrientation === _constants.HORIZONTAL_GROUP_ORIENTATION && Boolean(groups.length);
+const isHorizontalGroupingApplied = (groupCount, groupOrientation) => groupOrientation === _constants.HORIZONTAL_GROUP_ORIENTATION && groupCount > 0;
 exports.isHorizontalGroupingApplied = isHorizontalGroupingApplied;
-const isGroupingByDate = (groups, groupOrientation, groupByDate) => {
-  const isHorizontalGrouping = isHorizontalGroupingApplied(groups, groupOrientation);
+const isGroupingByDate = (groupCount, groupOrientation, groupByDate) => {
+  const isHorizontalGrouping = isHorizontalGroupingApplied(groupCount, groupOrientation);
   return groupByDate && isHorizontalGrouping;
 };
 exports.isGroupingByDate = isGroupingByDate;

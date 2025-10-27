@@ -1,0 +1,23 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.STOP_BUTTON_INDEX = exports.REGENERATE_DATA_BUTTON_INDEX = exports.DEFAULT_POPUP_OPTIONS = exports.CLASSES = exports.APPLY_BUTTON_INDEX = void 0;
+const DEFAULT_POPUP_OPTIONS = exports.DEFAULT_POPUP_OPTIONS = {
+  width: 360,
+  height: 'auto',
+  visible: false
+};
+const CLASSES = exports.CLASSES = {
+  aiDialog: 'dx-aidialog',
+  aiPromptEditor: 'dx-ai-prompt-editor',
+  aiPromptEditorTextArea: 'dx-ai-prompt-editor__text-area',
+  aiPromptEditorRefreshButton: 'dx-ai-prompt-editor__refresh-button',
+  aiPromptEditorApplyButton: 'dx-ai-prompt-editor__apply-button',
+  aiPromptEditorStopButton: 'dx-ai-prompt-editor__stop-button',
+  aiPromptEditorProgressBar: 'dx-ai-prompt-editor__progressbar'
+};
+const REGENERATE_DATA_BUTTON_INDEX = exports.REGENERATE_DATA_BUTTON_INDEX = 0;
+const APPLY_BUTTON_INDEX = exports.APPLY_BUTTON_INDEX = 1;
+const STOP_BUTTON_INDEX = exports.STOP_BUTTON_INDEX = 2;

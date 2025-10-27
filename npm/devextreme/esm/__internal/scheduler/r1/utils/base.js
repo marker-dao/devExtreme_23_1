@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/r1/utils/base.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -114,11 +114,10 @@ export const getHeaderCellText = (headerIndex, date, headerCellTextFormat, getDa
   const validDate = getDateForHeaderText(headerIndex, date, additionalOptions);
   return dateLocalization.format(validDate, headerCellTextFormat);
 };
-export const isVerticalGroupingApplied = (groups, groupOrientation) => groupOrientation === VERTICAL_GROUP_ORIENTATION && Boolean(groups.length);
-// TODO(9): Get rid of it as soon as you can. More parameters then needed
-export const getHorizontalGroupCount = (groupLeafs, groupOrientation) => {
-  const isVerticalGrouping = isVerticalGroupingApplied(groupLeafs, groupOrientation);
-  return isVerticalGrouping ? 1 : groupLeafs.length;
+export const isVerticalGroupingApplied = (groupCount, groupOrientation) => groupOrientation === VERTICAL_GROUP_ORIENTATION && groupCount > 0;
+export const getHorizontalGroupCount = (groupCount, groupOrientation) => {
+  const isVerticalGrouping = isVerticalGroupingApplied(groupCount, groupOrientation);
+  return isVerticalGrouping ? 1 : groupCount;
 };
 const TIMELINE_VIEWS = [VIEWS.TIMELINE_DAY, VIEWS.TIMELINE_WEEK, VIEWS.TIMELINE_WORK_WEEK, VIEWS.TIMELINE_MONTH];
 export const isTimelineView = viewType => Boolean(viewType && TIMELINE_VIEWS.includes(viewType));
@@ -150,7 +149,7 @@ export const getViewStartByOptions = (startDate, currentDate, intervalDuration, 
   }
   return diff > 0 ? currentStartDate : endDate;
 };
-export const calculateIsGroupedAllDayPanel = (groups, groupOrientation, isAllDayPanelVisible) => isVerticalGroupingApplied(groups, groupOrientation) && isAllDayPanelVisible;
+export const calculateIsGroupedAllDayPanel = (groupCount, groupOrientation, isAllDayPanelVisible) => isVerticalGroupingApplied(groupCount, groupOrientation) && isAllDayPanelVisible;
 export const calculateViewStartDate = startDateOption => startDateOption;
 export const getCellDuration = (viewType, startDayHour, endDayHour, hoursInterval) => {
   switch (viewType) {
@@ -182,9 +181,9 @@ export const getToday = (indicatorTime, timeZoneCalculator) => {
   return (timeZoneCalculator === null || timeZoneCalculator === void 0 ? void 0 : timeZoneCalculator.createDate(todayDate, 'toGrid')) || todayDate;
 };
 export const getCalculatedFirstDayOfWeek = firstDayOfWeekOption => isDefined(firstDayOfWeekOption) ? firstDayOfWeekOption : dateLocalization.firstDayOfWeekIndex();
-export const isHorizontalGroupingApplied = (groups, groupOrientation) => groupOrientation === HORIZONTAL_GROUP_ORIENTATION && Boolean(groups.length);
-export const isGroupingByDate = (groups, groupOrientation, groupByDate) => {
-  const isHorizontalGrouping = isHorizontalGroupingApplied(groups, groupOrientation);
+export const isHorizontalGroupingApplied = (groupCount, groupOrientation) => groupOrientation === HORIZONTAL_GROUP_ORIENTATION && groupCount > 0;
+export const isGroupingByDate = (groupCount, groupOrientation, groupByDate) => {
+  const isHorizontalGrouping = isHorizontalGroupingApplied(groupCount, groupOrientation);
   return groupByDate && isHorizontalGrouping;
 };
 export const getSkippedHoursInRange = (startDate, endDate, allDay, viewDataProvider) => {

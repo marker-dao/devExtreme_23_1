@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/r1/components/base/date_header.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -41,7 +41,7 @@ class DateHeader extends _index.BaseInfernoComponent {
       groupOrientation,
       groups
     } = this.props;
-    const isHorizontalGrouping = (0, _index2.isHorizontalGroupingApplied)(groups, groupOrientation) && !groupByDate;
+    const isHorizontalGrouping = (0, _index2.isHorizontalGroupingApplied)(groups.length, groupOrientation) && !groupByDate;
     return (0, _inferno.createFragment)(dataMap.map((dateHeaderRow, rowIndex) => (0, _inferno.createComponentVNode)(2, _row.Row, {
       "className": "dx-scheduler-header-row",
       "leftVirtualCellWidth": leftVirtualCellWidth,

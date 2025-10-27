@@ -16,6 +16,7 @@
     "../../esm/ui/toolbar/ui.toolbar.base.js",
     "../../esm/__internal/grids/tree_list/m_state_storing.js",
     "../../esm/__internal/grids/tree_list/module_not_extended/ai_column.js",
+    "../../esm/ui/toolbar.js",
     "../../esm/__internal/grids/tree_list/module_not_extended/column_chooser.js",
     "../../esm/ui/themes.js",
     "../../esm/__internal/grids/tree_list/m_master_detail.js",

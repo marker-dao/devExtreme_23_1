@@ -386,6 +386,10 @@ class SelectionController extends _m_modules.default.Controller {
             this.selectRows(selectedRowKeys).always(() => {
               this._fireSelectionChanged();
             });
+          } else {
+            this.refresh().always(() => {
+              this._fireSelectionChanged();
+            });
           }
           this._columnsController.updateColumns();
           args.handled = true;

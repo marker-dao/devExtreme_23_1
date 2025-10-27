@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/core/license/trial_panel.client.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -66,9 +66,9 @@ const textStyles = _extends({}, commonStyles, {
   padding: '0px',
   margin: '0px',
   color: 'white',
-  'font-family': '\'Segoe UI\',\'Open Sans Condensed\',-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica neue,helvetica,Cantarell,Ubuntu,roboto,noto,arial,sans-serif',
+  'font-family': '-apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, adwaita sans, cantarell, ubuntu, roboto, noto, helvetica, arial, sans-serif',
   'font-size': '0.875rem',
-  'font-wight': '600'
+  'font-weight': '600'
 });
 function createImportantStyles(defaultStyles, customStyles) {
   const styles = customStyles ? _extends({}, defaultStyles, customStyles) : defaultStyles;

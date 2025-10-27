@@ -27,7 +27,7 @@ export class HeaderPanel extends InfernoWrapperComponent {
       resourceCellTemplate,
       timeCellTemplate
     } = this.props;
-    const isHorizontalGrouping = isHorizontalGroupingApplied(groups, groupOrientation);
+    const isHorizontalGrouping = isHorizontalGroupingApplied(groups.length, groupOrientation);
     return createVNode(1, "thead", null, [isHorizontalGrouping && !groupByDate && createComponentVNode(2, GroupPanel, {
       "viewContext": viewContext,
       "groupPanelData": groupPanelData,

@@ -30,12 +30,12 @@ export class ColumnsController extends modules.Controller {
       case !(column !== null && column !== void 0 && column.type):
         return this.option('commonColumnSettings');
       case (column === null || column === void 0 ? void 0 : column.type) === AI_COLUMN_NAME:
-        return this.getAiColumnSettings();
+        return this.getAIColumnSettings();
       default:
         return {};
     }
   }
-  getAiColumnSettings() {
+  getAIColumnSettings() {
     return {
       allowHiding: true,
       ai: {
@@ -184,7 +184,7 @@ export class ColumnsController extends modules.Controller {
   _columnOptionChanged(args) {
     let columnOptionValue = {};
     const column = this.getColumnByPath(args.fullName);
-    const columnOptionName = args.fullName.replace(COLUMN_OPTION_REGEXP, '');
+    const columnOptionName = this.getColumnOptionNameByFullName(args.fullName);
     if (column) {
       if (columnOptionName) {
         columnOptionValue[columnOptionName] = args.value;
@@ -304,14 +304,16 @@ export class ColumnsController extends modules.Controller {
   getColumns() {
     return this._columns;
   }
+  getColumnByName(columnName) {
+    return this.getColumns().find(column => column.name === columnName);
+  }
   isBandColumnsUsed() {
     return this.getColumns().some(column => column.isBand);
   }
   getGroupColumns() {
     const result = [];
-    each(this._columns, function () {
-      const column = this;
-      if (isDefined(column.groupIndex)) {
+    this._columns.forEach(column => {
+      if (isDefined(column.groupIndex) && !column.type) {
         result[column.groupIndex] = column;
       }
     });
@@ -1550,6 +1552,9 @@ export class ColumnsController extends modules.Controller {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isNeedToRenderVirtualColumns(scrollPosition) {
     return false;
+  }
+  getColumnOptionNameByFullName(fullName) {
+    return fullName.replace(COLUMN_OPTION_REGEXP, '');
   }
 }
 export const columnsControllerModule = {

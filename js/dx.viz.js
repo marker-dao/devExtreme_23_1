@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -3781,9 +3781,9 @@ const textStyles = _extends({}, commonStyles, {
   padding: '0px',
   margin: '0px',
   color: 'white',
-  'font-family': '\'Segoe UI\',\'Open Sans Condensed\',-apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica neue,helvetica,Cantarell,Ubuntu,roboto,noto,arial,sans-serif',
+  'font-family': '-apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, adwaita sans, cantarell, ubuntu, roboto, noto, helvetica, arial, sans-serif',
   'font-size': '0.875rem',
-  'font-wight': '600'
+  'font-weight': '600'
 });
 function createImportantStyles(defaultStyles, customStyles) {
   const styles = customStyles ? _extends({}, defaultStyles, customStyles) : defaultStyles;
@@ -46459,7 +46459,7 @@ const POINT_CLICK = 'pointClick';
 const POINT_DATA = 'chart-data-point';
 const SERIES_DATA = 'chart-data-series';
 const ARG_DATA = 'chart-data-argument';
-const DELAY = 100;
+const DELAY = 10;
 const HOLD_TIMEOUT = 300;
 const NONE_MODE = 'none';
 const ALL_ARGUMENT_POINTS_MODE = 'allargumentpoints';
@@ -103720,6 +103720,9 @@ const defaultMessages = exports.defaultMessages = {
     "dxFileUploader-invalidFileExtension": "File type is not allowed",
     "dxFileUploader-invalidMaxFileSize": "File is too large",
     "dxFileUploader-invalidMinFileSize": "File is too small",
+    "dxFileUploader-fileListLabel": "File list",
+    "dxFileUploader-removeFileButtonLabel": "Remove file {0}",
+    "dxFileUploader-uploadFileButtonLabel": "Upload file {0}",
     "dxRangeSlider-ariaFrom": "From",
     "dxRangeSlider-ariaTill": "Till",
     "dxSwitch-switchedOnText": "ON",
@@ -103731,6 +103734,11 @@ const defaultMessages = exports.defaultMessages = {
     "dxForm-submitButtonText": "Submit",
     "dxNumberBox-invalidValueMessage": "Value must be a number",
     "dxNumberBox-noDataText": "No data",
+    "dxDataGrid-aiPromptEditorTitle": "AI Prompt Editor",
+    "dxDataGrid-aiPromptEditorPlaceholder": "Prompt AI to generate column values...",
+    "dxDataGrid-aiPromptEditorApplyButton": "Apply",
+    "dxDataGrid-aiPromptEditorRegenerateButton": "Regenerate Data",
+    "dxDataGrid-aiPromptEditorStopButton": "Stop",
     "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",
     "dxDataGrid-emptyHeaderWithGroupPanelText": "Drag a column from the group panel here",
     "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "Use {0} or drag a column from the group panel",
@@ -104004,6 +104012,8 @@ const defaultMessages = exports.defaultMessages = {
     "dxChat-editingDeleteConfirmText": "Are you sure you want to delete this message?",
     "dxChat-deletedMessageText": "This message was deleted",
     "dxChat-defaultImageAlt": "Image shared in chat",
+    "dxChat-fileViewLabel": "File list",
+    "dxChat-downloadButtonLabel": "Download file {0}",
     "dxColorView-ariaRed": "Red",
     "dxColorView-ariaGreen": "Green",
     "dxColorView-ariaBlue": "Blue",

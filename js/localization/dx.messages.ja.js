@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.ja.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -100,6 +100,9 @@
             "dxFileUploader-invalidFileExtension": "このファイルの種類を使用できません",
             "dxFileUploader-invalidMaxFileSize": "ファイルが大きすぎます",
             "dxFileUploader-invalidMinFileSize": "ファイルが小さすぎます",
+            "dxFileUploader-fileListLabel": "File list",
+            "dxFileUploader-removeFileButtonLabel": "Remove file {0}",
+            "dxFileUploader-uploadFileButtonLabel": "Upload file {0}",
             "dxRangeSlider-ariaFrom": "から",
             "dxRangeSlider-ariaTill": "まで",
             "dxSwitch-switchedOnText": "オン",
@@ -111,6 +114,11 @@
             "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "数値を指定してください。",
             "dxNumberBox-noDataText": "データがありません",
+            "dxDataGrid-aiPromptEditorTitle": "AI Prompt Editor",
+            "dxDataGrid-aiPromptEditorPlaceholder": "Prompt AI to generate the column's values",
+            "dxDataGrid-aiPromptEditorApplyButton": "Apply",
+            "dxDataGrid-aiPromptEditorRegenerateButton": "Regenerate Data",
+            "dxDataGrid-aiPromptEditorStopButton": "Stop",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "{0} を使用して列を表示してください",
             "dxDataGrid-emptyHeaderWithGroupPanelText": "グループパネルからここに列をドラッグしてください",
             "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "{0} を使用するか、グループ パネルから列をドラッグしてください",
@@ -384,6 +392,8 @@
             "dxChat-editingDeleteConfirmText": "Are you sure you want to delete this message?",
             "dxChat-deletedMessageText": "This message was deleted",
             "dxChat-defaultImageAlt": "Image shared in chat",
+            "dxChat-fileViewLabel": "File list",
+            "dxChat-downloadButtonLabel": "Download file {0}",
             "dxColorView-ariaRed": "赤",
             "dxColorView-ariaGreen": "緑",
             "dxColorView-ariaBlue": "青",

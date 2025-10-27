@@ -1,51 +1,53 @@
 import { Controller } from '../m_modules';
-import { AiColumnCacheController } from './m_ai_column_cache_controller';
-import { AiColumnIntegrationController } from './m_ai_column_integration_controller';
-export class AiColumnController extends Controller {
+import { AIColumnIntegrationController } from './m_ai_column_integration_controller';
+import { isAIColumnAutoMode } from './utils';
+export class AIColumnController extends Controller {
+  callbackNames() {
+    return ['aiRequestCompleted', 'aiRequestRejected'];
+  }
   init() {
     this.columnsController = this.getController('columns');
     this.dataController = this.getController('data');
-    this.aiColumnCacheController = new AiColumnCacheController(this.component);
-    this.aiColumnIntegrationController = new AiColumnIntegrationController(this.component);
+    this.aiColumnIntegrationController = new AIColumnIntegrationController(this.component);
     this.aiColumnIntegrationController.init();
-    this.aiColumnCacheController.init();
     this.dataChangedHandler = this.handleDataChanged.bind(this);
     this.dataController.changed.add(this.dataChangedHandler);
-    this.createAction('onAIColumnRequestCreating');
-    this.createAction('onAIColumnResponseReceived');
   }
-  createAIColumnRequest() {
-    const options = {};
-    this.executeAction('onAIColumnRequestCreating', options);
-  }
-  receiveAIColumnResponse() {
-    const options = {};
-    this.executeAction('onAIColumnResponseReceived', options);
-  }
-  refreshAIColumnInternal(columnName) {
-    this.aiColumnIntegrationController.sendRequest(columnName);
+  showResults(columnName, result, cachedData) {
+    // Update the results in the UI or internal state
   }
   handleDataChanged(e) {
-    const aiColumns = this.columnsController.getColumns().filter(col => col.type === 'ai' && col.ai.mode === 'auto');
+    const aiColumns = this.columnsController.getColumns().filter(col => col.type === 'ai' && isAIColumnAutoMode(col));
     for (const col of aiColumns) {
-      this.refreshAIColumnInternal(col.name);
+      this.refreshAIColumn(col.name);
     }
-  }
-  showResult(columnName, data) {
-    // TODO
   }
   // API methods
   publicMethods() {
     return ['abortAIColumnRequest', 'sendAIColumnRequest', 'refreshAIColumn', 'clearAIColumn', 'getAIColumnText'];
   }
-  abortAIColumnRequest(columnName) {}
+  abortAIColumnRequest(columnName) {
+    this.aiColumnIntegrationController.abortRequest(columnName);
+  }
   sendAIColumnRequest(columnName) {
-    this.aiColumnIntegrationController.sendRequest(columnName);
+    this.aiColumnIntegrationController.sendRequest(columnName, true, this.getRequestCallbacks());
   }
   refreshAIColumn(columnName) {
-    this.refreshAIColumnInternal(columnName);
+    this.sendAIColumnRequest(columnName);
   }
-  clearAIColumn(columnName) {}
+  getRequestCallbacks() {
+    return {
+      onComplete: data => {
+        this.aiRequestCompleted.fire(data);
+      },
+      onError: error => {
+        this.aiRequestRejected.fire(error);
+      }
+    };
+  }
+  clearAIColumn(columnName) {
+    this.aiColumnIntegrationController.abortRequest(columnName);
+  }
   getAIColumnText(columnName, key) {}
   dispose() {
     this.dataController.changed.remove(this.dataChangedHandler);

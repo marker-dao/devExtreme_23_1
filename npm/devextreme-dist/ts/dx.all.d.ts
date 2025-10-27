@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.all.d.ts)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -998,11 +998,15 @@ declare module DevExpress.aiIntegration {
   export type GenerateGridColumnCommandParams = {
     text: string;
     data: Record<PropertyKey, unknown>;
+    additionalInfo?: Record<PropertyKey, unknown>;
   };
   /**
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
    */
-  export type GenerateGridColumnCommandResult = Record<PropertyKey, unknown>;
+  export type GenerateGridColumnCommandResult = {
+    data: Record<PropertyKey, string>;
+    additionalInfo?: Record<PropertyKey, unknown>;
+  };
   /**
    * [descr:Prompt]
    */
@@ -11156,6 +11160,16 @@ declare module DevExpress.ui {
   }
   module dxChat {
     /**
+     * [descr:_ui_chat_AttachmentDownloadEvent]
+     */
+    export type AttachmentDownloadEvent =
+      DevExpress.common.core.events.EventInfo<dxChat> & {
+        /**
+         * [descr:_ui_chat_AttachmentDownloadEvent.attachment]
+         */
+        readonly attachment?: Attachment;
+      };
+    /**
      * [descr:_ui_chat_DisposingEvent]
      */
     export type DisposingEvent =
@@ -11307,6 +11321,13 @@ declare module DevExpress.ui {
      */
     activeStateEnabled?: boolean;
     /**
+     * [descr:dxChatOptions.fileUploaderOptions]
+     */
+    fileUploaderOptions?: Omit<
+      DevExpress.ui.dxFileUploader.Properties,
+      'dialogTrigger' | 'showFileList' | 'uploadMode'
+    >;
+    /**
      * [descr:dxChatOptions.focusStateEnabled]
      */
     focusStateEnabled?: boolean;
@@ -11406,6 +11427,12 @@ declare module DevExpress.ui {
      */
     showMessageTimestamp?: boolean;
     /**
+     * [descr:dxChatOptions.onAttachmentDownload]
+     */
+    onAttachmentDownload?:
+      | ((e: DevExpress.ui.dxChat.AttachmentDownloadEvent) => void)
+      | undefined;
+    /**
      * [descr:dxChatOptions.onMessageEntered]
      */
     onMessageEntered?:
@@ -11415,7 +11442,7 @@ declare module DevExpress.ui {
      * [descr:dxChatOptions.onTypingStart]
      */
     onTypingStart?:
-      | ((e: DevExpress.ui.dxChat.TypingEndEvent) => void)
+      | ((e: DevExpress.ui.dxChat.TypingStartEvent) => void)
       | undefined;
     /**
      * [descr:dxChatOptions.onTypingEnd]
@@ -26021,6 +26048,11 @@ declare module DevExpress.ui {
         Omit<AppointmentDraggingEvent, 'itemData'> & {
           itemData?: any;
         };
+    export type AppointmentFormIconsShowMode =
+      | 'both'
+      | 'main'
+      | 'recurrence'
+      | 'none';
     /**
      * [descr:_ui_scheduler_AppointmentFormOpeningEvent]
      */
@@ -26472,6 +26504,10 @@ declare module DevExpress.ui {
                  * [descr:dxSchedulerOptions.editing.form.onCanceled]
                  */
                 onCanceled?: (formData: any) => void;
+                /**
+                 * [descr:dxSchedulerOptions.editing.form.iconsShowMode]
+                 */
+                iconsShowMode?: DevExpress.ui.dxScheduler.AppointmentFormIconsShowMode;
               }
             | undefined;
         };
@@ -26660,6 +26696,10 @@ declare module DevExpress.ui {
        * [descr:dxSchedulerOptions.resources.fieldExpr]
        */
       fieldExpr?: string;
+      /**
+       * [descr:dxSchedulerOptions.resources.icon]
+       */
+      icon?: string;
       /**
        * [descr:dxSchedulerOptions.resources.label]
        */
@@ -33955,6 +33995,19 @@ declare module DevExpress.ui.dxChat {
     message?: string;
   };
   /**
+   * [descr:Attachment]
+   */
+  export type Attachment = {
+    /**
+     * [descr:Attachment.name]
+     */
+    name: string;
+    /**
+     * [descr:Attachment.size]
+     */
+    size: number;
+  };
+  /**
    * [descr:ImageMessage]
    */
   export type ImageMessage = MessageBase & {
@@ -34004,6 +34057,10 @@ declare module DevExpress.ui.dxChat {
    */
   export type TextMessage = MessageBase & {
     /**
+     * [descr:TextMessage.attachments]
+     */
+    attachments?: Attachment[];
+    /**
      * [descr:TextMessage.text]
      */
     text?: string;
@@ -34011,6 +34068,8 @@ declare module DevExpress.ui.dxChat {
      * [descr:TextMessage.isEdited]
      */
     isEdited?: boolean;
+
+    [key: string]: any;
   };
   /**
    * [descr:User]

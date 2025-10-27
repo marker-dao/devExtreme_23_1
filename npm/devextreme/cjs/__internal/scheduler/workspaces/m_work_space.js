@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/workspaces/m_work_space.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -560,7 +560,7 @@ class SchedulerWorkSpace extends _ui2.default {
     this.renderer = new _m_virtual_scrolling.VirtualScrollingRenderer(this);
   }
   isGroupedAllDayPanel() {
-    return (0, _index3.calculateIsGroupedAllDayPanel)(this.option('groups'), this.option('groupOrientation'), this.isAllDayPanelVisible);
+    return (0, _index3.calculateIsGroupedAllDayPanel)(this.option('groups').length, this.option('groupOrientation'), this.isAllDayPanelVisible);
   }
   generateRenderOptions(isProvideVirtualCellsWidth) {
     var _this$_getToday;

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.ai-integration.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -199,8 +199,17 @@ class GenerateGridColumnCommand extends _base.BaseCommand {
     };
   }
   parseResult(response) {
-    const result = JSON.parse(response);
-    return result;
+    if (typeof response === 'string') {
+      return {
+        data: JSON.parse(response),
+        additionalInfo: undefined
+      };
+    }
+    const data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+    return {
+      data,
+      additionalInfo: response.additionalInfo
+    };
   }
   generateDataDescription(data) {
     const result = JSON.stringify(data);

@@ -162,6 +162,7 @@ class Scheduler extends SchedulerOptionsBaseWidget {
       case 'firstDayOfWeek':
         this._updateOption('workSpace', name, value);
         this._updateOption('header', name, value);
+        this._cleanPopup();
         break;
       case 'currentDate':
         {

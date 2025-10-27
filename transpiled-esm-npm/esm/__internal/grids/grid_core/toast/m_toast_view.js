@@ -1,33 +1,29 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../../core/renderer';
+import dxToast from '../../../../ui/toast';
 import { View } from '../m_modules';
-const DEFAULT_POSITION = {
-  my: 'center bottom',
-  at: 'center bottom'
-};
 export class ToastView extends View {
   constructor() {
     super(...arguments);
     this._toastInstance = null;
     this._$toastContainer = null;
   }
-  _ensureToastContainer() {
-    if (!this._$toastContainer) {
-      this._$toastContainer = $('<div>').appendTo(this.component.$element());
-    }
-  }
   _createToastInstance(options) {
-    this._ensureToastContainer();
     if (this._toastInstance) {
       return this._toastInstance;
     }
-    this._toastInstance = this._$toastContainer.dxToast(_extends({
-      position: _extends({}, DEFAULT_POSITION, {
-        of: this.component.$element()
-      })
+    if (!this._$toastContainer) {
+      this._$toastContainer = $('<div>').appendTo(this.component.$element());
+    }
+    this._toastInstance = this._createComponent(this._$toastContainer, dxToast, _extends({
+      position: {
+        my: 'bottom',
+        at: 'bottom',
+        of: this.component.$element().get(0)
+      }
     }, options, {
       visible: false
-    })).dxToast('instance');
+    }));
     return this._toastInstance;
   }
   showToast(message) {

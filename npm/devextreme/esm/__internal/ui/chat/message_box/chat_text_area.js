@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/chat/message_box/chat_text_area.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,6 +14,7 @@ import $ from '../../../../core/renderer';
 import { getOuterHeight } from '../../../../core/utils/size';
 import { current, isMaterial } from '../../../../ui/themes';
 import Toolbar from '../../../../ui/toolbar';
+import Informer from '../../../ui/informer/informer';
 import TextArea from '../../../ui/m_text_area';
 export const TEXT_AREA_TOOLBAR = 'dx-textarea-toolbar';
 const isMobile = () => devices.current().deviceType !== 'desktop';
@@ -24,7 +25,7 @@ class ChatTextArea extends TextArea {
       placeholder: messageLocalization.format('dxChat-textareaPlaceholder'),
       autoResizeEnabled: true,
       valueChangeEvent: 'input',
-      maxHeight: '8em',
+      maxHeight: '24em',
       fileUploaderOptions: undefined
     });
   }
@@ -70,7 +71,16 @@ class ChatTextArea extends TextArea {
   }
   _initMarkup() {
     super._initMarkup();
+    this._renderInformer();
     this._renderToolbar();
+  }
+  _renderInformer() {
+    const $informer = $('<div>').addClass('dx-chat-informer').prependTo(this.$element());
+    this._informer = this._createComponent($informer, Informer, {
+      contentAlignment: 'start',
+      icon: 'errorcircle',
+      text: 'You selected too many files. Select no more than 3 files and retry.'
+    });
   }
   _renderToolbar() {
     const toolbarItems = this._getToolbarItems();

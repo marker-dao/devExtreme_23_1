@@ -113,6 +113,13 @@ class SelectionController {
       }
     });
     (0, _index.effect)(() => {
+      /*
+      TODO: subscription to selectionHelper to update keys if it is reinitialized.
+      Need to get rid of `selectionHelper.peek()` inside of selectCards()
+      and pass selectionHelper from here
+      */
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this.selectionHelper.value;
       const isLoaded = this.dataController.isLoaded.value;
       if (isLoaded) {
         const selectedCardKeys = this.selectedCardKeys.peek();

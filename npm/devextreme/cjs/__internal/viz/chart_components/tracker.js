@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/viz/chart_components/tracker.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -62,7 +62,7 @@ const POINT_CLICK = 'pointClick';
 const POINT_DATA = 'chart-data-point';
 const SERIES_DATA = 'chart-data-series';
 const ARG_DATA = 'chart-data-argument';
-const DELAY = 100;
+const DELAY = 10;
 const HOLD_TIMEOUT = 300;
 const NONE_MODE = 'none';
 const ALL_ARGUMENT_POINTS_MODE = 'allargumentpoints';

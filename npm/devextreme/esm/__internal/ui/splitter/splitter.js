@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/splitter/splitter.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -442,7 +442,7 @@ class Splitter extends CollectionWidgetLiveUpdate {
       case 'maxSize':
       case 'minSize':
       case 'collapsedSize':
-        this._layout = this._getDefaultLayoutBasedOnSize();
+        this._layout = this._getDefaultLayoutBasedOnSize(property === 'size' ? item : undefined);
         this._applyStylesFromLayout(this.getLayout());
         this._updateItemSizes();
         break;
@@ -642,11 +642,11 @@ class Splitter extends CollectionWidgetLiveUpdate {
     };
     this._itemEventHandler($item, eventName, actionArgs);
   }
-  _getDefaultLayoutBasedOnSize() {
-    this._updateItemsRestrictions();
+  _getDefaultLayoutBasedOnSize(item) {
+    this._updateItemsRestrictions(item);
     return getDefaultLayout(this._itemRestrictions);
   }
-  _updateItemsRestrictions() {
+  _updateItemsRestrictions(currentItem) {
     const {
       orientation,
       items = []
@@ -656,7 +656,7 @@ class Splitter extends CollectionWidgetLiveUpdate {
     this._itemRestrictions = [];
     items.forEach(item => {
       this._itemRestrictions.push({
-        resizable: item.resizable !== false,
+        resizable: item === currentItem ? false : item.resizable !== false,
         visible: item.visible !== false,
         collapsed: item.collapsed === true,
         collapsedSize: convertSizeToRatio(item.collapsedSize, elementSize, handlesSizeSum),

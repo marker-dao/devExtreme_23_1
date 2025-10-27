@@ -1,0 +1,83 @@
+"use strict";
+
+var _nodeTest = require("node:test");
+var _globals = require("@jest/globals");
+var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
+var _data_grid = _interopRequireDefault(require("../../../../ui/data_grid"));
+var _data_grid2 = require("../../../grids/data_grid/__tests__/__mock__/model/data_grid");
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const UNSUPPORTED_GROUPING_COLUMN_TYPES = ['adaptive', 'buttons', 'detailExpand', 'groupExpand', 'selection', 'drag', 'ai'];
+const GRID_CONTAINER_ID = 'gridContainer';
+const createDataGrid = async function () {
+  let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  return new Promise(resolve => {
+    const $container = (0, _renderer.default)('<div>').attr('id', GRID_CONTAINER_ID).appendTo(document.body);
+    const instance = new _data_grid.default($container.get(0), _extends({}, options));
+    const contentReadyHandler = () => {
+      resolve({
+        $container,
+        instance: new _data_grid2.DataGridModel($container.get(0))
+      });
+      instance.off('contentReady', contentReadyHandler);
+    };
+    instance.on('contentReady', contentReadyHandler);
+  });
+};
+const getGrid = () => {
+  const $container = (0, _renderer.default)(`#${GRID_CONTAINER_ID}`);
+  return $container.dxDataGrid('instance');
+};
+const dataSource = [{
+  id: 1,
+  name: 'Item 1'
+}, {
+  id: 2,
+  name: 'Item 2'
+}, {
+  id: 3,
+  name: 'Item 3'
+}];
+(0, _globals.describe)('Column Controller', () => {
+  (0, _nodeTest.beforeEach)(async () => {});
+  (0, _globals.afterEach)(() => {
+    const dataGrid = getGrid();
+    dataGrid.dispose();
+    (0, _renderer.default)(`#${GRID_CONTAINER_ID}`).remove();
+  });
+  (0, _globals.describe)('Grouping for unsupported column types', () => {
+    _globals.describe.each(UNSUPPORTED_GROUPING_COLUMN_TYPES)('unsupported grouping column types', columnType => {
+      (0, _globals.it)(`Should have no group rows after put type property = ${columnType} (first load)`, async () => {
+        const {
+          instance
+        } = await createDataGrid({
+          dataSource,
+          showBorders: true,
+          columns: ['id', {
+            caption: 'Test',
+            type: columnType,
+            name: 'test',
+            groupIndex: 0
+          }]
+        });
+        const groupRow = instance.getGroupRows();
+        (0, _globals.expect)(groupRow.length).toBe(0);
+      });
+      (0, _globals.it)(`Should have no group rows after put type property = ${columnType} (dynamic update)`, async () => {
+        const {
+          instance
+        } = await createDataGrid({
+          dataSource,
+          showBorders: true,
+          columns: ['id', {
+            caption: 'Test',
+            name: 'AItest'
+          }]
+        });
+        instance.apiColumnOption('AItest', 'type', columnType);
+        const groupRow = instance.getGroupRows();
+        (0, _globals.expect)(groupRow.length).toBe(0);
+      });
+    });
+  });
+});

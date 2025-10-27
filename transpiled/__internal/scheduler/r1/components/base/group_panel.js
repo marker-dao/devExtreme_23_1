@@ -32,7 +32,7 @@ class GroupPanel extends _index.InfernoWrapperComponent {
       groups,
       styles
     } = this.props;
-    const isVerticalLayout = (0, _index2.isVerticalGroupingApplied)(groups, groupOrientation);
+    const isVerticalLayout = (0, _index2.isVerticalGroupingApplied)(groups.length, groupOrientation);
     const Layout = isVerticalLayout ? _group_panel_vertical.GroupPanelVertical : _group_panel_horizontal.GroupPanelHorizontal;
     return (0, _inferno.createComponentVNode)(2, Layout, {
       "viewContext": viewContext,

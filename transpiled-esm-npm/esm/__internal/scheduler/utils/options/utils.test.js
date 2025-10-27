@@ -32,7 +32,6 @@ describe('views utils', () => {
       output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Day',
         type: 'day'
       }
     }, {
@@ -44,7 +43,6 @@ describe('views utils', () => {
       output: {
         agendaDuration: 7,
         intervalCount: 1,
-        name: 'Agenda',
         type: 'agenda'
       }
     }])('should set default for undefined props ($input.type)', _ref => {
@@ -61,7 +59,6 @@ describe('views utils', () => {
       output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Day',
         type: 'day'
       }
     }, {
@@ -69,7 +66,6 @@ describe('views utils', () => {
       output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Week',
         type: 'week'
       }
     }, {
@@ -77,7 +73,6 @@ describe('views utils', () => {
       output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Month',
         type: 'month'
       }
     }, {
@@ -85,7 +80,6 @@ describe('views utils', () => {
       output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
-        name: 'Timeline Day',
         type: 'timelineDay'
       }
     }, {
@@ -93,7 +87,6 @@ describe('views utils', () => {
       output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
-        name: 'Timeline Week',
         type: 'timelineWeek'
       }
     }, {
@@ -101,7 +94,6 @@ describe('views utils', () => {
       output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
-        name: 'Timeline Month',
         type: 'timelineMonth'
       }
     }, {
@@ -109,7 +101,6 @@ describe('views utils', () => {
       output: {
         agendaDuration: 7,
         intervalCount: 1,
-        name: 'Agenda',
         type: 'agenda'
       }
     }])('should return normalized $input.type view', _ref2 => {
@@ -126,7 +117,6 @@ describe('views utils', () => {
       output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Work Week',
         type: 'workWeek'
       }
     }, {
@@ -134,7 +124,6 @@ describe('views utils', () => {
       output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
-        name: 'Timeline Work Week',
         type: 'timelineWorkWeek'
       }
     }])('should return normalized $input.type view', _ref3 => {
@@ -152,7 +141,6 @@ describe('views utils', () => {
       expect(getCurrentView('agenda', ['agenda'])).toEqual({
         agendaDuration: 7,
         intervalCount: 1,
-        name: 'Agenda',
         type: 'agenda',
         skippedDays: []
       });
@@ -163,7 +151,6 @@ describe('views utils', () => {
       }])).toEqual({
         agendaDuration: 7,
         intervalCount: 1,
-        name: 'Agenda',
         type: 'agenda',
         skippedDays: []
       });
@@ -184,7 +171,6 @@ describe('views utils', () => {
       expect(getCurrentView('agenda', ['month'])).toEqual({
         agendaDuration: 7,
         intervalCount: 1,
-        name: 'Agenda',
         type: 'agenda',
         skippedDays: []
       });
@@ -193,7 +179,6 @@ describe('views utils', () => {
       expect(getCurrentView('agendaShort', ['month', 'agenda'])).toEqual({
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Month',
         type: 'month',
         skippedDays: []
       });
@@ -206,7 +191,6 @@ describe('views utils', () => {
       }])).toEqual({
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Day',
         type: 'day',
         skippedDays: []
       });

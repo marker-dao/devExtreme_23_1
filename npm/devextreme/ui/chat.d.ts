@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/chat.d.ts)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,6 +18,10 @@ import {
 import {
     template,
 } from '../common';
+
+import {
+    Properties as FileUploaderOptions,
+} from './file_uploader';
 
 import Widget, { WidgetOptions } from './widget/ui.widget';
 import {
@@ -159,6 +163,17 @@ export type MessageUpdatedEvent = EventInfo<dxChat> & {
 };
 
 /**
+ * @docid _ui_chat_AttachmentDownloadEvent
+ * @public
+ * @type object
+ * @inherits EventInfo
+ */
+export type AttachmentDownloadEvent = EventInfo<dxChat> & {
+  /** @docid _ui_chat_AttachmentDownloadEvent.attachment */
+  readonly attachment?: Attachment;
+};
+
+/**
  * @docid
  * @namespace DevExpress.ui.dxChat
  * @public
@@ -202,6 +217,24 @@ export type Alert = {
      * @public
      */
     message?: string;
+};
+
+/**
+ * @docid
+ * @namespace DevExpress.ui.dxChat
+ * @public
+ */
+export type Attachment = {
+    /**
+     * @docid
+     * @public
+     */
+    name: string;
+    /**
+     * @docid
+     * @public
+     */
+    size: number;
 };
 
 /**
@@ -252,6 +285,12 @@ export type TextMessage = MessageBase & {
     /**
      * @docid
      * @public
+     * @type Array<Attachment>
+     */
+    attachments?: Attachment[];
+    /**
+     * @docid
+     * @public
      */
     text?: string;
     /**
@@ -259,6 +298,8 @@ export type TextMessage = MessageBase & {
      * @public
      */
     isEdited?: boolean;
+
+    [key: string]: any;
 };
 
 /**
@@ -316,6 +357,13 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
      * @public
      */
     activeStateEnabled?: boolean;
+    /**
+     * @docid
+     * @default null
+     * @type dxFileUploaderOptions
+     * @public
+     */
+    fileUploaderOptions?: Omit<FileUploaderOptions, 'dialogTrigger' | 'showFileList' | 'uploadMode'>;
     /**
      * @docid
      * @default true
@@ -436,6 +484,14 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
     /**
      * @docid
      * @default undefined
+     * @type_function_param1 e:{ui/chat:AttachmentDownloadEvent}
+     * @action
+     * @public
+     */
+    onAttachmentDownload?: ((e: AttachmentDownloadEvent) => void) | undefined;
+    /**
+     * @docid
+     * @default undefined
      * @type_function_param1 e:{ui/chat:MessageEnteredEvent}
      * @action
      * @public
@@ -448,7 +504,7 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
      * @action
      * @public
      */
-    onTypingStart?: ((e: TypingEndEvent) => void) | undefined ;
+    onTypingStart?: ((e: TypingStartEvent) => void) | undefined ;
     /**
      * @docid
      * @default undefined

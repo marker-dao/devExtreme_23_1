@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/r1/components/base/header_panel.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -41,7 +41,7 @@ class HeaderPanel extends _index.InfernoWrapperComponent {
       resourceCellTemplate,
       timeCellTemplate
     } = this.props;
-    const isHorizontalGrouping = (0, _index3.isHorizontalGroupingApplied)(groups, groupOrientation);
+    const isHorizontalGrouping = (0, _index3.isHorizontalGroupingApplied)(groups.length, groupOrientation);
     return (0, _inferno.createVNode)(1, "thead", null, [isHorizontalGrouping && !groupByDate && (0, _inferno.createComponentVNode)(2, _group_panel.GroupPanel, {
       "viewContext": viewContext,
       "groupPanelData": groupPanelData,

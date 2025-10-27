@@ -27,7 +27,7 @@ export class DateHeader extends BaseInfernoComponent {
       groupOrientation,
       groups
     } = this.props;
-    const isHorizontalGrouping = isHorizontalGroupingApplied(groups, groupOrientation) && !groupByDate;
+    const isHorizontalGrouping = isHorizontalGroupingApplied(groups.length, groupOrientation) && !groupByDate;
     return createFragment(dataMap.map((dateHeaderRow, rowIndex) => createComponentVNode(2, Row, {
       "className": "dx-scheduler-header-row",
       "leftVirtualCellWidth": leftVirtualCellWidth,

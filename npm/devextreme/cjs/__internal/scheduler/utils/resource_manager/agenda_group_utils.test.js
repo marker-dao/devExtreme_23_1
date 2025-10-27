@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/utils/resource_manager/agenda_group_utils.test.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 "use strict";
 
 var _globals = require("@jest/globals");
-var _resource_manager = require("../../../scheduler/__mock__/resource_manager.mock");
+var _resource_manager = require("../../__mock__/resource_manager.mock");
 var _agenda_group_utils = require("./agenda_group_utils");
 (0, _globals.describe)('agenda group utils', () => {
   (0, _globals.describe)('reduceResourcesTree', () => {
@@ -82,76 +82,6 @@ var _agenda_group_utils = require("./agenda_group_utils");
       const manager = (0, _resource_manager.getResourceManagerMock)();
       await manager.loadGroupResources(['roomId', 'nested.priorityId']);
       (0, _globals.expect)((0, _agenda_group_utils.reduceResourcesTree)(manager.resourceById, manager.groupsTree, [])).toEqual([]);
-    });
-  });
-  (0, _globals.describe)('convertToOldTree', () => {
-    (0, _globals.it)('should convert to old tree structure', async () => {
-      const manager = (0, _resource_manager.getResourceManagerMock)();
-      await manager.loadGroupResources(['roomId', 'nested.priorityId']);
-      (0, _globals.expect)((0, _agenda_group_utils.convertToOldTree)(manager.resourceById, manager.groupsTree)).toEqual([{
-        children: [{
-          children: [],
-          name: 'nested.priorityId',
-          title: 'Low Priority',
-          color: '#1e90ff',
-          data: _resource_manager.resourceItemsByIdMock['nested.priorityId'][0],
-          value: 1
-        }, {
-          children: [],
-          name: 'nested.priorityId',
-          title: 'High Priority',
-          color: '#ff9747',
-          data: _resource_manager.resourceItemsByIdMock['nested.priorityId'][1],
-          value: 2
-        }],
-        name: 'roomId',
-        title: 'Room 1',
-        color: '#aaa',
-        data: _resource_manager.resourceItemsByIdMock.roomId[0],
-        value: 0
-      }, {
-        children: [{
-          children: [],
-          name: 'nested.priorityId',
-          title: 'Low Priority',
-          color: '#1e90ff',
-          data: _resource_manager.resourceItemsByIdMock['nested.priorityId'][0],
-          value: 1
-        }, {
-          children: [],
-          name: 'nested.priorityId',
-          title: 'High Priority',
-          color: '#ff9747',
-          data: _resource_manager.resourceItemsByIdMock['nested.priorityId'][1],
-          value: 2
-        }],
-        name: 'roomId',
-        title: 'Room 2',
-        color: '#ccc',
-        data: _resource_manager.resourceItemsByIdMock.roomId[1],
-        value: 1
-      }, {
-        children: [{
-          children: [],
-          name: 'nested.priorityId',
-          title: 'Low Priority',
-          color: '#1e90ff',
-          data: _resource_manager.resourceItemsByIdMock['nested.priorityId'][0],
-          value: 1
-        }, {
-          children: [],
-          name: 'nested.priorityId',
-          title: 'High Priority',
-          color: '#ff9747',
-          data: _resource_manager.resourceItemsByIdMock['nested.priorityId'][1],
-          value: 2
-        }],
-        name: 'roomId',
-        title: 'Room 3',
-        color: '#777',
-        data: _resource_manager.resourceItemsByIdMock.roomId[2],
-        value: 2
-      }]);
     });
   });
 });

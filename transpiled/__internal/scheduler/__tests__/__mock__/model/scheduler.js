@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.createSchedulerModel = exports.SchedulerModel = void 0;
+var _toolbar = require("../../../../scheduler/__tests__/__mock__/model/toolbar");
 var _m_popup = require("../../../appointment_popup/m_popup");
 var _m_scheduler = require("../../../m_scheduler");
 var _appointment = require("./appointment");
@@ -21,6 +22,13 @@ class SchedulerModel {
   }
   get popup() {
     return this.getPopup();
+  }
+  get toolbar() {
+    return new _toolbar.ToolbarModel(this.container.querySelector('.dx-scheduler-header'));
+  }
+  getStatusContent() {
+    var _this$container$query;
+    return ((_this$container$query = this.container.querySelector('.dx-scheduler-a11y-status-container')) === null || _this$container$query === void 0 ? void 0 : _this$container$query.textContent) ?? '';
   }
   getAppointment(text) {
     if (!text) {

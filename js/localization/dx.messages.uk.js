@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.uk.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -100,6 +100,9 @@
             "dxFileUploader-invalidFileExtension": "Недопустимий тип файлу",
             "dxFileUploader-invalidMaxFileSize": "Файл завеликий",
             "dxFileUploader-invalidMinFileSize": "Файл замалий",
+            "dxFileUploader-fileListLabel": "File list",
+            "dxFileUploader-removeFileButtonLabel": "Remove file {0}",
+            "dxFileUploader-uploadFileButtonLabel": "Upload file {0}",
             "dxRangeSlider-ariaFrom": "Від",
             "dxRangeSlider-ariaTill": "До",
             "dxSwitch-switchedOnText": "УВІМК.",
@@ -111,6 +114,11 @@
             "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Значення має бути числом",
             "dxNumberBox-noDataText": "Немає даних",
+            "dxDataGrid-aiPromptEditorTitle": "AI Prompt Editor",
+            "dxDataGrid-aiPromptEditorPlaceholder": "Prompt AI to generate the column's values",
+            "dxDataGrid-aiPromptEditorApplyButton": "Apply",
+            "dxDataGrid-aiPromptEditorRegenerateButton": "Regenerate Data",
+            "dxDataGrid-aiPromptEditorStopButton": "Stop",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Використовуйте {0}, щоб відобразити стовпці",
             "dxDataGrid-emptyHeaderWithGroupPanelText": "Перетягніть сюди стовпець з панелі групування",
             "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "Використовуйте {0} або перетягніть стовпець з панелі групування",
@@ -384,6 +392,8 @@
             "dxChat-editingDeleteConfirmText": "Ви впевнені, що хочете видалити це повідомлення?",
             "dxChat-deletedMessageText": "Це повідомлення було видалено",
             "dxChat-defaultImageAlt": "Зображення, надіслане в чаті",
+            "dxChat-fileViewLabel": "File list",
+            "dxChat-downloadButtonLabel": "Download file {0}",
             "dxColorView-ariaRed": "Червоний",
             "dxColorView-ariaGreen": "Зелений",
             "dxColorView-ariaBlue": "Синій",

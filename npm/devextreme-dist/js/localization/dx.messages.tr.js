@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.tr.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -100,6 +100,9 @@
             "dxFileUploader-invalidFileExtension": "Dosya türüne izin verilmiyor",
             "dxFileUploader-invalidMaxFileSize": "Dosya çok büyük",
             "dxFileUploader-invalidMinFileSize": "Dosya çok küçük",
+            "dxFileUploader-fileListLabel": "File list",
+            "dxFileUploader-removeFileButtonLabel": "Remove file {0}",
+            "dxFileUploader-uploadFileButtonLabel": "Upload file {0}",
             "dxRangeSlider-ariaFrom": "İtibaren",
             "dxRangeSlider-ariaTill": "Kadar",
             "dxSwitch-switchedOnText": "Açık",
@@ -111,6 +114,11 @@
             "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Değer bir sayı olmalı",
             "dxNumberBox-noDataText": "Veri yok",
+            "dxDataGrid-aiPromptEditorTitle": "AI Prompt Editor",
+            "dxDataGrid-aiPromptEditorPlaceholder": "Prompt AI to generate the column's values",
+            "dxDataGrid-aiPromptEditorApplyButton": "Apply",
+            "dxDataGrid-aiPromptEditorRegenerateButton": "Regenerate Data",
+            "dxDataGrid-aiPromptEditorStopButton": "Stop",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",
             "dxDataGrid-emptyHeaderWithGroupPanelText": "Drag a column from the group panel here",
             "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "Use {0} or drag a column from the group panel",
@@ -384,6 +392,8 @@
             "dxChat-editingDeleteConfirmText": "Are you sure you want to delete this message?",
             "dxChat-deletedMessageText": "This message was deleted",
             "dxChat-defaultImageAlt": "Image shared in chat",
+            "dxChat-fileViewLabel": "File list",
+            "dxChat-downloadButtonLabel": "Download file {0}",
             "dxColorView-ariaRed": "Kırmızı",
             "dxColorView-ariaGreen": "Yeşil",
             "dxColorView-ariaBlue": "Mavi",

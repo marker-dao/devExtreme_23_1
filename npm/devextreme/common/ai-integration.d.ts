@@ -1,7 +1,7 @@
 /**
 * DevExtreme (common/ai-integration.d.ts)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -171,6 +171,7 @@ export type SmartPasteCommandParams = {
 export type GenerateGridColumnCommandParams = {
   text: string;
   data: Record<PropertyKey, unknown>;
+  additionalInfo?: Record<PropertyKey, unknown>;
 };
 
 /**
@@ -229,7 +230,18 @@ export type SmartPasteCommandResult = Array<{
 /**
  * @namespace DevExpress.aiIntegration
  */
-export type GenerateGridColumnCommandResult = Record<PropertyKey, unknown>;
+export type GenerateGridColumnCommandResult = {
+  data: Record<PropertyKey, string>;
+  additionalInfo?: Record<PropertyKey, unknown>;
+};
+
+/**
+ * @namespace DevExpress.aiIntegration
+ */
+export type GenerateGridColumnCommandResponse = string | {
+  data: string | Record<PropertyKey, string>;
+  additionalInfo?: Record<PropertyKey, unknown>;
+};
 
 /**
  * @namespace DevExpress.aiIntegration

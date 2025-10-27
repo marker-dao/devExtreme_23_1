@@ -1,57 +1,129 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/ai_column/m_ai_column_integration_controller.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import _extends from "@babel/runtime/helpers/esm/extends";
 import errors from '../../../../ui/widget/ui.errors';
 import { Controller } from '../m_modules';
-export class AiColumnIntegrationController extends Controller {
+import { AIColumnCacheController } from './m_ai_column_cache_controller';
+import { getDataFromRowItems, reduceDataCachedKeys } from './utils';
+export class AIColumnIntegrationController extends Controller {
+  constructor() {
+    super(...arguments);
+    this.aborts = {};
+  }
   init() {
     this.columnsController = this.getController('columns');
     this.dataController = this.getController('data');
+    this.errorHandlingController = this.getController('errorHandling');
+    this.aiColumnCacheController = new AIColumnCacheController(this.component);
+    this.aiColumnCacheController.init();
+    this.createAction('onAIColumnRequestCreating');
+    this.createAction('onAIColumnResponseReceived');
   }
-  sendRequest(columnName) {
-    const aiIntegration = this.getAiIntegration(columnName);
+  sendRequest(columnName, useCache, callbacks) {
+    const aiIntegration = this.getAIIntegration(columnName);
     if (!aiIntegration) {
       return;
     }
-    const data = this.dataController.items().filter(row => row.rowType === 'data').reduce((acc, row) => {
-      acc[JSON.stringify(row.key)] = row.data;
-      return acc;
-    }, {});
-    const prompt = this.columnsController.columnOption(columnName, 'ai.prompt');
+    const column = this.columnsController.getColumnByName(columnName);
+    if (!(column !== null && column !== void 0 && column.ai)) {
+      return;
+    }
+    const {
+      prompt
+    } = column.ai;
+    if (!prompt) {
+      return;
+    }
+    if (this.isRequestAwaitingCompletion(columnName)) {
+      this.abortRequest(columnName);
+    }
+    const rowItems = this.dataController.items();
+    const data = getDataFromRowItems(rowItems);
+    const args = {
+      column,
+      useCache,
+      cancel: false,
+      additionalInfo: {},
+      data
+    };
+    this.executeAction('onAIColumnRequestCreating', args);
+    if (args.cancel) {
+      return;
+    }
+    const keys = Object.keys(data);
+    const cachedResponse = useCache ? this.aiColumnCacheController.getCachedResponse(columnName, keys) : {};
+    const keyField = this.dataController.key();
+    const reducedData = reduceDataCachedKeys(data, cachedResponse, keyField);
+    const areAllDataCached = Object.keys(reducedData).length === 0;
+    if (areAllDataCached) {
+      this.showResult(columnName, {}, cachedResponse);
+      return;
+    }
     const abort = aiIntegration.generateGridColumn({
       text: prompt,
-      data
-    }, this.getAICommandCallbacks());
-    this.abort = abort;
+      data: reducedData,
+      additionalInfo: args.additionalInfo
+    }, this.getAICommandCallbacks(columnName, cachedResponse, callbacks));
+    this.aborts[columnName] = abort;
   }
-  processCommandCompletion() {
-    var _this$abort;
-    (_this$abort = this.abort) === null || _this$abort === void 0 || _this$abort.call(this);
-    this.abort = undefined;
+  processCommandCompletion(columnName) {
+    this.abortRequest(columnName);
   }
-  updateResults(result) {
-    // Update the results in the UI or internal state
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  showResult(columnName, response, cachedData) {
+    // TODO: Implement result display logic
+    const mergedData = _extends({}, cachedData, response);
   }
-  getAICommandCallbacks() {
+  getAICommandCallbacks(columnName, cachedResponse, callBacks) {
+    const column = this.columnsController.getColumnByName(columnName);
     const callbacks = {
       onComplete: finalResponse => {
-        this.updateResults(String(finalResponse));
-        this.processCommandCompletion();
+        if (this.isRequestAwaitingCompletion(columnName)) {
+          var _callBacks$onComplete;
+          const args = {
+            column,
+            error: null,
+            data: finalResponse.data,
+            additionalInfo: finalResponse.additionalInfo
+          };
+          this.executeAction('onAIColumnResponseReceived', args);
+          this.showResult(columnName, finalResponse, cachedResponse);
+          this.processCommandCompletion(columnName);
+          callBacks === null || callBacks === void 0 || (_callBacks$onComplete = callBacks.onComplete) === null || _callBacks$onComplete === void 0 || _callBacks$onComplete.call(callBacks, finalResponse);
+        }
       },
-      onError: () => {
-        this.processCommandCompletion();
+      onError: error => {
+        var _callBacks$onError;
+        const message = (error === null || error === void 0 ? void 0 : error.message) ?? error;
+        this.executeAction('onAIColumnResponseReceived', {
+          column,
+          error: message,
+          data: null,
+          additionalInfo: undefined
+        });
+        this.showError(message);
+        this.processCommandCompletion(columnName);
+        callBacks === null || callBacks === void 0 || (_callBacks$onError = callBacks.onError) === null || _callBacks$onError === void 0 || _callBacks$onError.call(callBacks, error);
       }
     };
     return callbacks;
   }
-  abortRequest() {}
-  showError(message) {}
-  getAiIntegration(columnName) {
+  abortRequest(columnName) {
+    var _this$aborts$columnNa, _this$aborts;
+    (_this$aborts$columnNa = (_this$aborts = this.aborts)[columnName]) === null || _this$aborts$columnNa === void 0 || _this$aborts$columnNa.call(_this$aborts);
+    this.aborts[columnName] = undefined;
+  }
+  showError(message) {
+    var _this$errorHandlingCo;
+    (_this$errorHandlingCo = this.errorHandlingController) === null || _this$errorHandlingCo === void 0 || _this$errorHandlingCo.showToastError(message);
+  }
+  getAIIntegration(columnName) {
     if (!columnName) {
       errors.log('E1066');
     }
@@ -59,11 +131,18 @@ export class AiColumnIntegrationController extends Controller {
     if (aiIntegration) {
       return aiIntegration;
     }
-    const gridAiIntegration = this.option('aiIntegration');
-    if (gridAiIntegration) {
-      return gridAiIntegration;
+    const gridAIIntegration = this.option('aiIntegration');
+    if (gridAIIntegration) {
+      return gridAIIntegration;
     }
     errors.log('E1067', columnName);
     return null;
+  }
+  isRequestAwaitingCompletion(columnName) {
+    return !!this.aborts[columnName];
+  }
+  dispose() {
+    super.dispose();
+    Object.keys(this.aborts).forEach(columnName => this.abortRequest(columnName));
   }
 }

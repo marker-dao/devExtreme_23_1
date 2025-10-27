@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/r1/components/timeline/date_header_timeline.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -45,7 +45,7 @@ class TimelineDateHeaderLayout extends _index.BaseInfernoComponent {
       weekDayRightVirtualCellCount,
       weekDayRightVirtualCellWidth
     } = dateHeaderData;
-    const isHorizontalGrouping = (0, _index2.isHorizontalGroupingApplied)(groups, groupOrientation) && !groupByDate;
+    const isHorizontalGrouping = (0, _index2.isHorizontalGroupingApplied)(groups.length, groupOrientation) && !groupByDate;
     return (0, _inferno.createFragment)(dataMap.map((dateHeaderRow, rowIndex) => {
       const rowsCount = dataMap.length;
       const isTimeCellTemplate = rowsCount - 1 === rowIndex;

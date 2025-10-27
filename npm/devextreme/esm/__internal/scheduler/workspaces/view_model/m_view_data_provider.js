@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/workspaces/view_model/m_view_data_provider.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -89,13 +89,14 @@ export default class ViewDataProvider {
       } = renderOptions,
       restOptions = _objectWithoutPropertiesLoose(renderOptions, _excluded);
     const resourceManager = getResourceManager();
+    const groupCount = resourceManager.groupCount();
     const interval = this.viewDataGenerator.getInterval(renderOptions.hoursInterval);
     return _extends({}, restOptions, {
       startViewDate: this.viewDataGenerator.getStartViewDate(renderOptions),
-      isVerticalGrouping: isVerticalGroupingApplied(resourceManager.groups, groupOrientation),
-      isHorizontalGrouping: isHorizontalGroupingApplied(resourceManager.groups, groupOrientation),
-      isGroupedByDate: isGroupingByDate(resourceManager.groups, groupOrientation, groupByDate),
-      isGroupedAllDayPanel: calculateIsGroupedAllDayPanel(resourceManager.groups, groupOrientation, isAllDayPanelVisible),
+      isVerticalGrouping: isVerticalGroupingApplied(groupCount, groupOrientation),
+      isHorizontalGrouping: isHorizontalGroupingApplied(groupCount, groupOrientation),
+      isGroupedByDate: isGroupingByDate(groupCount, groupOrientation, groupByDate),
+      isGroupedAllDayPanel: calculateIsGroupedAllDayPanel(groupCount, groupOrientation, isAllDayPanelVisible),
       getResourceManager,
       groupOrientation,
       isAllDayPanelVisible,

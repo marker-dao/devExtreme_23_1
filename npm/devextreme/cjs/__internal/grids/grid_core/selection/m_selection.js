@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/selection/m_selection.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -392,6 +392,10 @@ class SelectionController extends _m_modules.default.Controller {
               }
             }
             this.selectRows(selectedRowKeys).always(() => {
+              this._fireSelectionChanged();
+            });
+          } else {
+            this.refresh().always(() => {
               this._fireSelectionChanged();
             });
           }

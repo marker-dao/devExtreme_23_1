@@ -1532,7 +1532,8 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
   }
   _moveFocus(location, e) {
     const {
-      rtlEnabled
+      rtlEnabled,
+      selectByClick
     } = this.option();
     const FOCUS_UP = 'up';
     const FOCUS_DOWN = 'down';
@@ -1548,6 +1549,7 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
     if (!($items !== null && $items !== void 0 && $items.length)) {
       return;
     }
+    const isSelectionByShiftAllowed = this._showCheckboxes() || selectByClick;
     switch (location) {
       case FOCUS_UP:
         {
@@ -1555,7 +1557,7 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
           this.option('focusedElement', (0, _element.getPublicElement)($prevItem));
           const prevItemElement = this._getNodeItemElement($prevItem);
           this.getScrollable().scrollToElement(prevItemElement);
-          if (e.shiftKey && this._showCheckboxes()) {
+          if (e.shiftKey && isSelectionByShiftAllowed) {
             this._updateItemSelection(true, prevItemElement);
           }
           break;
@@ -1566,7 +1568,7 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
           this.option('focusedElement', (0, _element.getPublicElement)($nextItem));
           const nextItemElement = this._getNodeItemElement($nextItem);
           this.getScrollable().scrollToElement(nextItemElement);
-          if (e.shiftKey && this._showCheckboxes()) {
+          if (e.shiftKey && isSelectionByShiftAllowed) {
             this._updateItemSelection(true, nextItemElement);
           }
           break;
@@ -1574,7 +1576,7 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
       case FOCUS_FIRST:
         {
           const $firstItem = $items.first();
-          if (e.shiftKey && this._showCheckboxes()) {
+          if (e.shiftKey && isSelectionByShiftAllowed) {
             this._updateSelectionToFirstItem($items, $items.index(this._prevItem($items)));
           }
           this.option('focusedElement', (0, _element.getPublicElement)($firstItem));
@@ -1584,7 +1586,7 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
       case FOCUS_LAST:
         {
           const $lastItem = $items.last();
-          if (e.shiftKey && this._showCheckboxes()) {
+          if (e.shiftKey && isSelectionByShiftAllowed) {
             this._updateSelectionToLastItem($items, $items.index(this._nextItem($items)));
           }
           this.option('focusedElement', (0, _element.getPublicElement)($lastItem));

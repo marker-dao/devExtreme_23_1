@@ -34,7 +34,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Day',
         type: 'day'
       }
     }, {
@@ -46,7 +45,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       output: {
         agendaDuration: 7,
         intervalCount: 1,
-        name: 'Agenda',
         type: 'agenda'
       }
     }])('should set default for undefined props ($input.type)', _ref => {
@@ -63,7 +61,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Day',
         type: 'day'
       }
     }, {
@@ -71,7 +68,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Week',
         type: 'week'
       }
     }, {
@@ -79,7 +75,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Month',
         type: 'month'
       }
     }, {
@@ -87,7 +82,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
-        name: 'Timeline Day',
         type: 'timelineDay'
       }
     }, {
@@ -95,7 +89,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
-        name: 'Timeline Week',
         type: 'timelineWeek'
       }
     }, {
@@ -103,7 +96,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
-        name: 'Timeline Month',
         type: 'timelineMonth'
       }
     }, {
@@ -111,7 +103,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       output: {
         agendaDuration: 7,
         intervalCount: 1,
-        name: 'Agenda',
         type: 'agenda'
       }
     }])('should return normalized $input.type view', _ref2 => {
@@ -128,7 +119,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       output: {
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Work Week',
         type: 'workWeek'
       }
     }, {
@@ -136,7 +126,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       output: {
         groupOrientation: 'vertical',
         intervalCount: 1,
-        name: 'Timeline Work Week',
         type: 'timelineWorkWeek'
       }
     }])('should return normalized $input.type view', _ref3 => {
@@ -154,7 +143,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       (0, _globals.expect)((0, _utils.getCurrentView)('agenda', ['agenda'])).toEqual({
         agendaDuration: 7,
         intervalCount: 1,
-        name: 'Agenda',
         type: 'agenda',
         skippedDays: []
       });
@@ -165,7 +153,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       }])).toEqual({
         agendaDuration: 7,
         intervalCount: 1,
-        name: 'Agenda',
         type: 'agenda',
         skippedDays: []
       });
@@ -186,7 +173,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       (0, _globals.expect)((0, _utils.getCurrentView)('agenda', ['month'])).toEqual({
         agendaDuration: 7,
         intervalCount: 1,
-        name: 'Agenda',
         type: 'agenda',
         skippedDays: []
       });
@@ -195,7 +181,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       (0, _globals.expect)((0, _utils.getCurrentView)('agendaShort', ['month', 'agenda'])).toEqual({
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Month',
         type: 'month',
         skippedDays: []
       });
@@ -208,7 +193,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       }])).toEqual({
         groupOrientation: 'horizontal',
         intervalCount: 1,
-        name: 'Day',
         type: 'day',
         skippedDays: []
       });

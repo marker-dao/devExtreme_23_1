@@ -1,0 +1,89 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getStartDateCommonConfig = exports.createFormIconTemplate = exports.RecurrenceRule = void 0;
+var _renderer = _interopRequireDefault(require("../../../core/renderer"));
+var _date = _interopRequireDefault(require("../../../core/utils/date"));
+var _type = require("../../../core/utils/type");
+var _base = require("../recurrence/base");
+var _days_from_by_day_rule = require("../recurrence/days_from_by_day_rule");
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+// eslint-disable-next-line arrow-body-style
+const createFormIconTemplate = iconName => {
+  return () => (0, _renderer.default)('<i>').addClass('dx-icon').addClass(`dx-icon-${iconName}`);
+};
+exports.createFormIconTemplate = createFormIconTemplate;
+const getStartDateCommonConfig = firstDayOfWeek => ({
+  colSpan: 1,
+  itemType: 'simple',
+  editorType: 'dxDateBox',
+  validationRules: [{
+    type: 'required'
+  }],
+  editorOptions: {
+    type: 'date',
+    useMaskBehavior: true,
+    calendarOptions: {
+      firstDayOfWeek
+    }
+  }
+});
+exports.getStartDateCommonConfig = getStartDateCommonConfig;
+class RecurrenceRule {
+  constructor(rule, startDate) {
+    var _recurrenceRule$freq, _this$startDate;
+    this.startDate = null;
+    this.frequency = null;
+    const recurrenceRule = (0, _base.parseRecurrenceRule)(rule);
+    const todayEnd = _date.default.setToDayEnd(new Date());
+    this.startDate = startDate;
+    this.frequency = ((_recurrenceRule$freq = recurrenceRule.freq) === null || _recurrenceRule$freq === void 0 ? void 0 : _recurrenceRule$freq.toLowerCase()) ?? null;
+    this.interval = recurrenceRule.interval ?? 1;
+    this.until = recurrenceRule.until ?? todayEnd;
+    this.count = recurrenceRule.count ?? 1;
+    this.byDay = (0, _days_from_by_day_rule.daysFromByDayRule)(recurrenceRule);
+    this.byMonthDay = recurrenceRule.bymonthday ? Number(recurrenceRule.bymonthday) : (startDate === null || startDate === void 0 ? void 0 : startDate.getDate()) ?? 1;
+    this.byMonth = recurrenceRule.bymonth ? Number(recurrenceRule.bymonth) : (((_this$startDate = this.startDate) === null || _this$startDate === void 0 ? void 0 : _this$startDate.getMonth()) ?? 0) + 1;
+    this.repeatEnd = 'never';
+    if ((0, _type.isDefined)(recurrenceRule.count)) {
+      this.repeatEnd = 'count';
+    } else if ((0, _type.isDefined)(recurrenceRule.until)) {
+      this.repeatEnd = 'until';
+    }
+  }
+  toString() {
+    if (!this.frequency) {
+      return undefined;
+    }
+    const rule = {
+      freq: this.frequency,
+      interval: this.interval
+    };
+    if (this.repeatEnd === 'until' && this.until) {
+      rule.until = this.until;
+    } else if (this.repeatEnd === 'count' && this.count) {
+      rule.count = this.count;
+    }
+    switch (this.frequency) {
+      case 'weekly':
+        rule.byday = this.byDay.join(',');
+        break;
+      case 'monthly':
+        if (this.byMonthDay) {
+          rule.bymonthday = String(this.byMonthDay);
+        }
+        break;
+      case 'yearly':
+        if (this.byMonthDay && this.byMonth) {
+          rule.bymonthday = String(this.byMonthDay);
+          rule.bymonth = String(this.byMonth);
+        }
+        break;
+      default:
+    }
+    return (0, _base.getRecurrenceString)(rule);
+  }
+}
+exports.RecurrenceRule = RecurrenceRule;

@@ -222,24 +222,27 @@ class SchedulerAgenda extends _m_work_space.default {
     const resourceManager = this.option('getResourceManager')();
     const allAppointments = this.option('getFilteredItems')();
     const tree = (0, _agenda_group_utils.reduceResourcesTree)(resourceManager.resourceById, resourceManager.groupsTree, allAppointments);
-    const oldTree = (0, _agenda_group_utils.convertToOldTree)(resourceManager.resourceById, tree);
     const cellTemplate = this.option('resourceCellTemplate');
     const getGroupHeaderContentClass = _m_classes.GROUP_HEADER_CONTENT_CLASS;
     const cellTemplates = [];
-    const table = tableCreator.makeGroupedTableFromJSON(tableCreator.VERTICAL, oldTree, {
+    const table = tableCreator.makeGroupedTableFromJSON(tree, {
       cellTag: 'th',
       groupTableClass: GROUP_TABLE_CLASS,
       groupRowClass: _m_classes.GROUP_ROW_CLASS,
       groupCellClass: this._getGroupHeaderClass(),
-      groupCellCustomContent(cell, cellTextElement, index, data) {
+      groupCellCustomContent(cell, cellTextElement, index, node) {
         const container = _dom_adapter.default.createElement('div');
         container.className = getGroupHeaderContentClass;
+        const value = node.grouped[node.resourceIndex];
+        const resource = resourceManager.resourceById[node.resourceIndex];
+        const resourceData = resource === null || resource === void 0 ? void 0 : resource.data.find(rItem => resource.dataAccessor.get('id', rItem) === value);
+        const resourceItem = resource === null || resource === void 0 ? void 0 : resource.items.find(rItem => rItem.id === value);
         if (cellTemplate !== null && cellTemplate !== void 0 && cellTemplate.render) {
           cellTemplates.push(cellTemplate.render.bind(cellTemplate, {
             model: {
-              data: data.data,
-              id: data.value,
-              color: data.color,
+              data: resourceData,
+              id: value,
+              color: resourceItem === null || resourceItem === void 0 ? void 0 : resourceItem.color,
               text: cellTextElement.textContent
             },
             container: (0, _element.getPublicElement)((0, _renderer.default)(container)),

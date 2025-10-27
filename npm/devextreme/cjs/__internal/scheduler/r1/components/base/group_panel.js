@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/r1/components/base/group_panel.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -40,7 +40,7 @@ class GroupPanel extends _index.InfernoWrapperComponent {
       groups,
       styles
     } = this.props;
-    const isVerticalLayout = (0, _index2.isVerticalGroupingApplied)(groups, groupOrientation);
+    const isVerticalLayout = (0, _index2.isVerticalGroupingApplied)(groups.length, groupOrientation);
     const Layout = isVerticalLayout ? _group_panel_vertical.GroupPanelVertical : _group_panel_horizontal.GroupPanelHorizontal;
     return (0, _inferno.createComponentVNode)(2, Layout, {
       "viewContext": viewContext,

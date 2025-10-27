@@ -33,7 +33,7 @@ class DateHeader extends _index.BaseInfernoComponent {
       groupOrientation,
       groups
     } = this.props;
-    const isHorizontalGrouping = (0, _index2.isHorizontalGroupingApplied)(groups, groupOrientation) && !groupByDate;
+    const isHorizontalGrouping = (0, _index2.isHorizontalGroupingApplied)(groups.length, groupOrientation) && !groupByDate;
     return (0, _inferno.createFragment)(dataMap.map((dateHeaderRow, rowIndex) => (0, _inferno.createComponentVNode)(2, _row.Row, {
       "className": "dx-scheduler-header-row",
       "leftVirtualCellWidth": leftVirtualCellWidth,

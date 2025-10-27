@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/header/m_view_switcher.integration.test.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,8 +18,10 @@ const SELECTORS = {
   schedulerContainer: '#schedulerContainer',
   invisibleState: '.dx-state-invisible',
   viewSwitcher: '.dx-scheduler-view-switcher',
-  viewSwitcherButton: '.dx-scheduler-view-switcher .dx-button'
+  viewSwitcherButton: '.dx-scheduler-view-switcher .dx-button',
+  viewButtonInDropdown: '.dx-scheduler-view-switcher-dropdown-button-content .dx-list-item'
 };
+const defaultViews = ['day', 'week', 'workWeek', 'month', 'timelineDay', 'timelineWeek', 'timelineWorkWeek', 'timelineMonth', 'agenda'];
 const createScheduler = options => new Promise(resolve => {
   const $container = $('<div>').attr('id', SCHEDULER_CONTAINER_ID).appendTo(document.body);
   const instance = new Scheduler($container.get(0), _extends({}, options, {
@@ -145,5 +147,55 @@ describe('ViewSwitcher', () => {
       const buttonText = dropdown.find('.dx-button-text');
       expect(buttonText.text()).toBe('День');
     });
+  });
+  it('currentView should equal type or name if it is set by config on switch, useDropDownViewSwitcher=false', async () => {
+    const changes = [];
+    await createScheduler({
+      dataSource: [],
+      views: [...defaultViews, {
+        name: 'Week 2',
+        type: 'week'
+      }],
+      currentView: 'timelineDay',
+      width: 10000,
+      useDropDownViewSwitcher: false,
+      onOptionChanged: e => {
+        if (e.name === 'currentView') {
+          const currentView = e.component.option('currentView');
+          changes.push(currentView ?? '');
+        }
+      }
+    });
+    const buttons = document.querySelectorAll(SELECTORS.viewSwitcherButton);
+    buttons.forEach(button => {
+      button.click();
+    });
+    expect(changes).toEqual([...defaultViews, 'Week 2']);
+  });
+  it('currentView should equal type or name if it is set by config on switch, useDropDownViewSwitcher=true', async () => {
+    const changes = [];
+    await createScheduler({
+      dataSource: [],
+      views: [...defaultViews, {
+        name: 'Week 2',
+        type: 'week'
+      }],
+      currentView: 'timelineDay',
+      useDropDownViewSwitcher: true,
+      onOptionChanged: e => {
+        if (e.name === 'currentView') {
+          const currentView = e.component.option('currentView');
+          changes.push(currentView ?? '');
+        }
+      }
+    });
+    const dropdown = document.querySelector(SELECTORS.viewSwitcherButton);
+    dropdown.click();
+    const buttons = document.querySelectorAll(SELECTORS.viewButtonInDropdown);
+    buttons.forEach(button => {
+      button.click();
+      dropdown.click();
+    });
+    expect(changes).toEqual([...defaultViews, 'Week 2']);
   });
 });

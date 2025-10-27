@@ -1,0 +1,194 @@
+"use strict";
+
+var _globals = require("@jest/globals");
+var _utils = require("./utils");
+(0, _globals.describe)('reduceDataCachedKeys', () => {
+  (0, _globals.it)('should remove keys from data that are present in cachedKeys', () => {
+    const data = [{
+      key: 'a',
+      value: '1'
+    }, {
+      key: 'b',
+      value: '2'
+    }, {
+      key: 'c',
+      value: '3'
+    }];
+    const cachedData = {
+      b: 'test b',
+      c: 'test c'
+    };
+    const result = (0, _utils.reduceDataCachedKeys)(data, cachedData, 'key');
+    (0, _globals.expect)(result).toEqual({
+      a: {
+        key: 'a',
+        value: '1'
+      }
+    });
+  });
+  (0, _globals.it)('should return the original data if no keys are cached', () => {
+    const data = [{
+      key: 'a',
+      value: '1'
+    }, {
+      key: 'b',
+      value: '2'
+    }, {
+      key: 'c',
+      value: '3'
+    }];
+    const cachedKeys = {};
+    const result = (0, _utils.reduceDataCachedKeys)(data, cachedKeys, 'key');
+    (0, _globals.expect)(result).toEqual({
+      a: {
+        key: 'a',
+        value: '1'
+      },
+      b: {
+        key: 'b',
+        value: '2'
+      },
+      c: {
+        key: 'c',
+        value: '3'
+      }
+    });
+  });
+  (0, _globals.it)('should return empty object if all keys are cached', () => {
+    const data = [{
+      key: 'a',
+      value: '1'
+    }, {
+      key: 'b',
+      value: '2'
+    }, {
+      key: 'c',
+      value: '3'
+    }];
+    const cachedData = {
+      a: 'test a',
+      b: 'test b',
+      c: 'test c'
+    };
+    const result = (0, _utils.reduceDataCachedKeys)(data, cachedData, 'key');
+    (0, _globals.expect)(result).toEqual({});
+  });
+  (0, _globals.it)('should handle number keys', () => {
+    const data = [{
+      key: 1,
+      value: '1'
+    }, {
+      key: 2,
+      value: '2'
+    }, {
+      key: 3,
+      value: '3'
+    }];
+    const cachedKeys = {
+      2: 'two',
+      3: 'three'
+    };
+    const result = (0, _utils.reduceDataCachedKeys)(data, cachedKeys, 'key');
+    (0, _globals.expect)(result).toEqual({
+      1: {
+        key: 1,
+        value: '1'
+      }
+    });
+  });
+});
+(0, _globals.describe)('getDataFromRowItems', () => {
+  (0, _globals.it)('should extract data rows correctly', () => {
+    const items = [{
+      data: {
+        id: 1,
+        value: 'one'
+      },
+      key: 'id',
+      rowType: 'data'
+    }, {
+      data: {
+        id: 2,
+        value: 'two'
+      },
+      key: 'id',
+      rowType: 'data'
+    }, {
+      data: {
+        id: 3,
+        value: 'three'
+      },
+      key: 'id',
+      rowType: 'data'
+    }];
+    const result = (0, _utils.getDataFromRowItems)(items);
+    (0, _globals.expect)(result).toEqual([{
+      id: 1,
+      value: 'one'
+    }, {
+      id: 2,
+      value: 'two'
+    }, {
+      id: 3,
+      value: 'three'
+    }]);
+  });
+  (0, _globals.it)('should ignore non-data rows', () => {
+    const items = [{
+      data: {
+        id: 1,
+        value: 'one'
+      },
+      key: 'id',
+      rowType: 'data'
+    }, {
+      data: {
+        id: 4,
+        value: 'four'
+      },
+      key: 'id',
+      rowType: 'group'
+    }];
+    const result = (0, _utils.getDataFromRowItems)(items);
+    (0, _globals.expect)(result).toEqual([{
+      id: 1,
+      value: 'one'
+    }]);
+  });
+});
+(0, _globals.describe)('isAIColumnAutoMode', () => {
+  (0, _globals.it)('should return true for AI columns in auto mode', () => {
+    const column = {
+      type: 'ai',
+      ai: {
+        mode: 'auto'
+      }
+    };
+    const result = (0, _utils.isAIColumnAutoMode)(column);
+    (0, _globals.expect)(result).toBe(true);
+  });
+  (0, _globals.it)('should return false for AI columns in manual mode', () => {
+    const column = {
+      type: 'ai',
+      ai: {
+        mode: 'manual'
+      }
+    };
+    const result = (0, _utils.isAIColumnAutoMode)(column);
+    (0, _globals.expect)(result).toBe(false);
+  });
+  (0, _globals.it)('should return false for non-AI columns', () => {
+    const column = {
+      type: 'buttons'
+    };
+    const result = (0, _utils.isAIColumnAutoMode)(column);
+    (0, _globals.expect)(result).toBe(false);
+  });
+  (0, _globals.it)('should return true by default', () => {
+    const column = {
+      type: 'ai'
+    };
+    const result = (0, _utils.isAIColumnAutoMode)(column);
+    (0, _globals.expect)(result).toBe(true);
+  });
+});

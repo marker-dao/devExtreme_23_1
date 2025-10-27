@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/workspaces/view_model/m_date_header_data_generator.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -52,7 +52,7 @@ class DateHeaderDataGenerator {
     const resourceManager = getResourceManager();
     const groupCount = resourceManager.groupCount();
     const cellCountInDay = this._viewDataGenerator.getCellCountInDay(startDayHour, endDayHour, hoursInterval);
-    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(resourceManager.groupsLeafs, groupOrientation);
+    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(groupCount, groupOrientation);
     const index = completeViewDataMap[0][0].allDay ? 1 : 0;
     const colSpan = isGroupedByDate ? horizontalGroupCount * cellCountInDay : cellCountInDay;
     const datesRepeatCount = isHorizontalGrouping && !isGroupedByDate ? groupCount : 1;
@@ -89,7 +89,7 @@ class DateHeaderDataGenerator {
       viewType,
       viewOffset
     } = options;
-    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(getResourceManager().groupsLeafs, groupOrientation);
+    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(getResourceManager().groupCount(), groupOrientation);
     const index = completeViewDataMap[0][0].allDay ? 1 : 0;
     const colSpan = isGroupedByDate ? horizontalGroupCount : 1;
     const isVerticalGrouping = groupOrientation === 'vertical';
@@ -172,7 +172,7 @@ class DateHeaderDataGenerator {
       groupOrientation,
       isGroupedByDate
     } = options;
-    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(getResourceManager().groupsLeafs, groupOrientation);
+    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(getResourceManager().groupCount(), groupOrientation);
     const colSpan = isGroupedByDate ? horizontalGroupCount * baseColSpan : baseColSpan;
     const leftVirtualCellCount = Math.floor(startCellIndex / colSpan);
     const displayedCellCount = (0, _index.getDisplayedCellCount)(cellCount, completeViewDataMap);

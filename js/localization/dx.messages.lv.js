@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.lv.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -100,6 +100,9 @@
             "dxFileUploader-invalidFileExtension": "Faila tips nav atļauts",
             "dxFileUploader-invalidMaxFileSize": "Fails ir pārāk liels",
             "dxFileUploader-invalidMinFileSize": "Fails ir pārāk mazs",
+            "dxFileUploader-fileListLabel": "File list",
+            "dxFileUploader-removeFileButtonLabel": "Remove file {0}",
+            "dxFileUploader-uploadFileButtonLabel": "Upload file {0}",
             "dxRangeSlider-ariaFrom": "No",
             "dxRangeSlider-ariaTill": "Līdz",
             "dxSwitch-switchedOnText": "ON",
@@ -111,6 +114,11 @@
             "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Vērtībai jābūt skaitlim",
             "dxNumberBox-noDataText": "Nav datu",
+            "dxDataGrid-aiPromptEditorTitle": "AI Prompt Editor",
+            "dxDataGrid-aiPromptEditorPlaceholder": "Prompt AI to generate the column's values",
+            "dxDataGrid-aiPromptEditorApplyButton": "Apply",
+            "dxDataGrid-aiPromptEditorRegenerateButton": "Regenerate Data",
+            "dxDataGrid-aiPromptEditorStopButton": "Stop",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Izmanto {0} lai attēlotu kolonnas",
             "dxDataGrid-emptyHeaderWithGroupPanelText": "Nomest kolonu no grupēšanas paneļa šeit",
             "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "Izmanto {0} vai nomet kolonnu no grupēšanas paneļa",
@@ -384,6 +392,8 @@
             "dxChat-editingDeleteConfirmText": "Are you sure you want to delete this message?",
             "dxChat-deletedMessageText": "This message was deleted",
             "dxChat-defaultImageAlt": "Image shared in chat",
+            "dxChat-fileViewLabel": "File list",
+            "dxChat-downloadButtonLabel": "Download file {0}",
             "dxColorView-ariaRed": "Sarkans",
             "dxColorView-ariaGreen": "Zaļš",
             "dxColorView-ariaBlue": "Zils",

@@ -13,7 +13,7 @@ import { DATE_TABLE_CLASS, DATE_TABLE_ROW_CLASS, GROUP_HEADER_CONTENT_CLASS, GRO
 import tableCreatorModule from '../m_table_creator';
 import { agendaUtils, formatWeekday, getVerticalGroupCountClass } from '../r1/utils/index';
 import { VIEWS } from '../utils/options/constants_view';
-import { convertToOldTree, reduceResourcesTree } from '../utils/resource_manager/agenda_group_utils';
+import { reduceResourcesTree } from '../utils/resource_manager/agenda_group_utils';
 import WorkSpace from './m_work_space';
 const {
   tableCreator
@@ -215,24 +215,27 @@ class SchedulerAgenda extends WorkSpace {
     const resourceManager = this.option('getResourceManager')();
     const allAppointments = this.option('getFilteredItems')();
     const tree = reduceResourcesTree(resourceManager.resourceById, resourceManager.groupsTree, allAppointments);
-    const oldTree = convertToOldTree(resourceManager.resourceById, tree);
     const cellTemplate = this.option('resourceCellTemplate');
     const getGroupHeaderContentClass = GROUP_HEADER_CONTENT_CLASS;
     const cellTemplates = [];
-    const table = tableCreator.makeGroupedTableFromJSON(tableCreator.VERTICAL, oldTree, {
+    const table = tableCreator.makeGroupedTableFromJSON(tree, {
       cellTag: 'th',
       groupTableClass: GROUP_TABLE_CLASS,
       groupRowClass: GROUP_ROW_CLASS,
       groupCellClass: this._getGroupHeaderClass(),
-      groupCellCustomContent(cell, cellTextElement, index, data) {
+      groupCellCustomContent(cell, cellTextElement, index, node) {
         const container = domAdapter.createElement('div');
         container.className = getGroupHeaderContentClass;
+        const value = node.grouped[node.resourceIndex];
+        const resource = resourceManager.resourceById[node.resourceIndex];
+        const resourceData = resource === null || resource === void 0 ? void 0 : resource.data.find(rItem => resource.dataAccessor.get('id', rItem) === value);
+        const resourceItem = resource === null || resource === void 0 ? void 0 : resource.items.find(rItem => rItem.id === value);
         if (cellTemplate !== null && cellTemplate !== void 0 && cellTemplate.render) {
           cellTemplates.push(cellTemplate.render.bind(cellTemplate, {
             model: {
-              data: data.data,
-              id: data.value,
-              color: data.color,
+              data: resourceData,
+              id: value,
+              color: resourceItem === null || resourceItem === void 0 ? void 0 : resourceItem.color,
               text: cellTextElement.textContent
             },
             container: getPublicElement($(container)),

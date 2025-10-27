@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/r1/components/base/header_panel.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -35,7 +35,7 @@ export class HeaderPanel extends InfernoWrapperComponent {
       resourceCellTemplate,
       timeCellTemplate
     } = this.props;
-    const isHorizontalGrouping = isHorizontalGroupingApplied(groups, groupOrientation);
+    const isHorizontalGrouping = isHorizontalGroupingApplied(groups.length, groupOrientation);
     return createVNode(1, "thead", null, [isHorizontalGrouping && !groupByDate && createComponentVNode(2, GroupPanel, {
       "viewContext": viewContext,
       "groupPanelData": groupPanelData,

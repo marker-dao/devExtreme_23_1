@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.da.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -100,6 +100,9 @@
             "dxFileUploader-invalidFileExtension": "Filtype er ikke tilladt",
             "dxFileUploader-invalidMaxFileSize": "Filen er for stor",
             "dxFileUploader-invalidMinFileSize": "Filen er for lille",
+            "dxFileUploader-fileListLabel": "File list",
+            "dxFileUploader-removeFileButtonLabel": "Remove file {0}",
+            "dxFileUploader-uploadFileButtonLabel": "Upload file {0}",
             "dxRangeSlider-ariaFrom": "Fra",
             "dxRangeSlider-ariaTill": "Indtil",
             "dxSwitch-switchedOnText": "TÆNDT",
@@ -111,6 +114,11 @@
             "dxForm-submitButtonText": "Submit",
             "dxNumberBox-invalidValueMessage": "Værdien skal være et tal",
             "dxNumberBox-noDataText": "Ingen data",
+            "dxDataGrid-aiPromptEditorTitle": "AI Prompt Editor",
+            "dxDataGrid-aiPromptEditorPlaceholder": "Prompt AI to generate the column's values",
+            "dxDataGrid-aiPromptEditorApplyButton": "Apply",
+            "dxDataGrid-aiPromptEditorRegenerateButton": "Regenerate Data",
+            "dxDataGrid-aiPromptEditorStopButton": "Stop",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Brug {0} til at vise kolonner",
             "dxDataGrid-emptyHeaderWithGroupPanelText": "Træk en kolonne fra gruppepanelet hertil",
             "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "Brug {0}, eller træk en kolonne fra gruppepanelet",
@@ -384,6 +392,8 @@
             "dxChat-editingDeleteConfirmText": "Are you sure you want to delete this message?",
             "dxChat-deletedMessageText": "This message was deleted",
             "dxChat-defaultImageAlt": "Image shared in chat",
+            "dxChat-fileViewLabel": "File list",
+            "dxChat-downloadButtonLabel": "Download file {0}",
             "dxColorView-ariaRed": "Rød",
             "dxColorView-ariaGreen": "Grøn",
             "dxColorView-ariaBlue": "Blå",

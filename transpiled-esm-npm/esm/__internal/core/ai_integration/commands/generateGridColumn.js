@@ -13,8 +13,17 @@ export class GenerateGridColumnCommand extends BaseCommand {
     };
   }
   parseResult(response) {
-    const result = JSON.parse(response);
-    return result;
+    if (typeof response === 'string') {
+      return {
+        data: JSON.parse(response),
+        additionalInfo: undefined
+      };
+    }
+    const data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+    return {
+      data,
+      additionalInfo: response.additionalInfo
+    };
   }
   generateDataDescription(data) {
     const result = JSON.stringify(data);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/workspaces/view_model/m_view_data_provider.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -96,13 +96,14 @@ class ViewDataProvider {
       } = renderOptions,
       restOptions = _objectWithoutPropertiesLoose(renderOptions, _excluded);
     const resourceManager = getResourceManager();
+    const groupCount = resourceManager.groupCount();
     const interval = this.viewDataGenerator.getInterval(renderOptions.hoursInterval);
     return _extends({}, restOptions, {
       startViewDate: this.viewDataGenerator.getStartViewDate(renderOptions),
-      isVerticalGrouping: (0, _index.isVerticalGroupingApplied)(resourceManager.groups, groupOrientation),
-      isHorizontalGrouping: (0, _index.isHorizontalGroupingApplied)(resourceManager.groups, groupOrientation),
-      isGroupedByDate: (0, _index.isGroupingByDate)(resourceManager.groups, groupOrientation, groupByDate),
-      isGroupedAllDayPanel: (0, _index.calculateIsGroupedAllDayPanel)(resourceManager.groups, groupOrientation, isAllDayPanelVisible),
+      isVerticalGrouping: (0, _index.isVerticalGroupingApplied)(groupCount, groupOrientation),
+      isHorizontalGrouping: (0, _index.isHorizontalGroupingApplied)(groupCount, groupOrientation),
+      isGroupedByDate: (0, _index.isGroupingByDate)(groupCount, groupOrientation, groupByDate),
+      isGroupedAllDayPanel: (0, _index.calculateIsGroupedAllDayPanel)(groupCount, groupOrientation, isAllDayPanelVisible),
       getResourceManager,
       groupOrientation,
       isAllDayPanelVisible,

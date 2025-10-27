@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.setCaret = exports.default = void 0;
 var _devices = _interopRequireDefault(require("../../../core/devices"));
 var _dom_adapter = _interopRequireDefault(require("../../../core/dom_adapter"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
@@ -11,17 +11,20 @@ var _type = require("../../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const {
   ios,
-  // @ts-expect-error
+  // @ts-expect-error Device type doesn't contain mac
   mac
 } = _devices.default.real();
 // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 const isFocusingOnCaretChange = ios || mac;
 const getCaret = input => {
-  let range;
+  let range = {
+    start: 0,
+    end: 0
+  };
   try {
     range = {
-      start: input.selectionStart,
-      end: input.selectionEnd
+      start: input.selectionStart ?? 0,
+      end: input.selectionEnd ?? 0
     };
   } catch (e) {
     range = {
@@ -31,28 +34,24 @@ const getCaret = input => {
   }
   return range;
 };
-const setCaret = (input, position) => {
-  const body = _dom_adapter.default.getBody();
-  if (!body.contains(input) && !body.contains(input.getRootNode().host)) {
-    return;
-  }
+const setCaret = (input, selection) => {
   try {
-    input.selectionStart = position.start;
-    input.selectionEnd = position.end;
-  } catch (e) {/* empty */}
+    input.selectionStart = selection.start;
+    input.selectionEnd = selection.end;
+  } catch {/** empty */}
 };
-// @ts-expect-error
-// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-const caret = function (input, position) {
+exports.setCaret = setCaret;
+const caret = function (input, selection) {
   let force = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-  input = (0, _renderer.default)(input).get(0);
-  if (!(0, _type.isDefined)(position)) {
-    return getCaret(input);
+  const inputElement = (0, _renderer.default)(input).get(0);
+  if (!(0, _type.isDefined)(selection)) {
+    return getCaret(inputElement);
   }
   // NOTE: AppleWebKit-based browsers focuses element input after caret position has changed
-  if (!force && isFocusingOnCaretChange && _dom_adapter.default.getActiveElement(input) !== input) {
-    return;
+  if (!force && isFocusingOnCaretChange && _dom_adapter.default.getActiveElement(inputElement) !== inputElement) {
+    return undefined;
   }
-  setCaret(input, position);
+  setCaret(inputElement, selection);
+  return undefined;
 };
 var _default = exports.default = caret;

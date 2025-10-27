@@ -36,12 +36,12 @@ class ColumnsController extends _m_modules.default.Controller {
       case !(column !== null && column !== void 0 && column.type):
         return this.option('commonColumnSettings');
       case (column === null || column === void 0 ? void 0 : column.type) === _const.AI_COLUMN_NAME:
-        return this.getAiColumnSettings();
+        return this.getAIColumnSettings();
       default:
         return {};
     }
   }
-  getAiColumnSettings() {
+  getAIColumnSettings() {
     return {
       allowHiding: true,
       ai: {
@@ -190,7 +190,7 @@ class ColumnsController extends _m_modules.default.Controller {
   _columnOptionChanged(args) {
     let columnOptionValue = {};
     const column = this.getColumnByPath(args.fullName);
-    const columnOptionName = args.fullName.replace(_const3.COLUMN_OPTION_REGEXP, '');
+    const columnOptionName = this.getColumnOptionNameByFullName(args.fullName);
     if (column) {
       if (columnOptionName) {
         columnOptionValue[columnOptionName] = args.value;
@@ -310,14 +310,16 @@ class ColumnsController extends _m_modules.default.Controller {
   getColumns() {
     return this._columns;
   }
+  getColumnByName(columnName) {
+    return this.getColumns().find(column => column.name === columnName);
+  }
   isBandColumnsUsed() {
     return this.getColumns().some(column => column.isBand);
   }
   getGroupColumns() {
     const result = [];
-    (0, _iterator.each)(this._columns, function () {
-      const column = this;
-      if ((0, _type.isDefined)(column.groupIndex)) {
+    this._columns.forEach(column => {
+      if ((0, _type.isDefined)(column.groupIndex) && !column.type) {
         result[column.groupIndex] = column;
       }
     });
@@ -1562,6 +1564,9 @@ class ColumnsController extends _m_modules.default.Controller {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isNeedToRenderVirtualColumns(scrollPosition) {
     return false;
+  }
+  getColumnOptionNameByFullName(fullName) {
+    return fullName.replace(_const3.COLUMN_OPTION_REGEXP, '');
   }
 }
 exports.ColumnsController = ColumnsController;

@@ -14,7 +14,7 @@ const ClASS = {
 };
 const getViewsAndSelectedView = header => {
   const views = (0, _m_utils.formatViews)(header.option('views'));
-  const selectedView = header.option('currentView').name;
+  const selectedView = (0, _m_utils.getViewName)(header.option('currentView'));
   const isSelectedViewInViews = views.some(view => view.name === selectedView);
   return {
     selectedView: isSelectedViewInViews ? selectedView : undefined,

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/file_uploader.js)
 * Version: 25.2.0
-* Build date: Wed Oct 15 2025
+* Build date: Mon Oct 27 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,7 +9,7 @@
 "use strict";
 
 exports.default = void 0;
-var _file_uploader = _interopRequireDefault(require("../__internal/ui/file_uploader"));
+var _file_uploader = _interopRequireDefault(require("../__internal/ui/file_uploader/file_uploader"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var _default = exports.default = _file_uploader.default; // STYLE fileUploader
 /**

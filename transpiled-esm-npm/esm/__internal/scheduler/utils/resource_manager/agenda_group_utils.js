@@ -11,21 +11,3 @@ const filterGroupTree = (resourceById, appointments, node) => {
   });
 };
 export const reduceResourcesTree = (resourceById, groupsTree, appointments) => groupsTree.map(node => filterGroupTree(resourceById, appointments, node)).filter(Boolean);
-// TODO(9): Get rid of it as soon as you can
-export const convertToOldTree = (resourceById, tree) => {
-  const convert = item => {
-    const value = item.grouped[item.resourceIndex];
-    const resource = resourceById[item.resourceIndex];
-    const resourceData = resource === null || resource === void 0 ? void 0 : resource.data.find(rItem => resource.dataAccessor.get('id', rItem) === value);
-    const resourceItem = resource === null || resource === void 0 ? void 0 : resource.items.find(rItem => rItem.id === value);
-    return {
-      data: resourceData,
-      name: item.resourceIndex,
-      title: item.resourceText,
-      value,
-      color: resourceItem === null || resourceItem === void 0 ? void 0 : resourceItem.color,
-      children: item.children.length ? item.children.map(convert) : []
-    };
-  };
-  return tree.map(convert);
-};

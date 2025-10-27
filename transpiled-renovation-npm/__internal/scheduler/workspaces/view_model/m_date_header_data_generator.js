@@ -44,7 +44,7 @@ class DateHeaderDataGenerator {
     const resourceManager = getResourceManager();
     const groupCount = resourceManager.groupCount();
     const cellCountInDay = this._viewDataGenerator.getCellCountInDay(startDayHour, endDayHour, hoursInterval);
-    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(resourceManager.groupsLeafs, groupOrientation);
+    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(groupCount, groupOrientation);
     const index = completeViewDataMap[0][0].allDay ? 1 : 0;
     const colSpan = isGroupedByDate ? horizontalGroupCount * cellCountInDay : cellCountInDay;
     const datesRepeatCount = isHorizontalGrouping && !isGroupedByDate ? groupCount : 1;
@@ -81,7 +81,7 @@ class DateHeaderDataGenerator {
       viewType,
       viewOffset
     } = options;
-    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(getResourceManager().groupsLeafs, groupOrientation);
+    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(getResourceManager().groupCount(), groupOrientation);
     const index = completeViewDataMap[0][0].allDay ? 1 : 0;
     const colSpan = isGroupedByDate ? horizontalGroupCount : 1;
     const isVerticalGrouping = groupOrientation === 'vertical';
@@ -164,7 +164,7 @@ class DateHeaderDataGenerator {
       groupOrientation,
       isGroupedByDate
     } = options;
-    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(getResourceManager().groupsLeafs, groupOrientation);
+    const horizontalGroupCount = (0, _index.getHorizontalGroupCount)(getResourceManager().groupCount(), groupOrientation);
     const colSpan = isGroupedByDate ? horizontalGroupCount * baseColSpan : baseColSpan;
     const leftVirtualCellCount = Math.floor(startCellIndex / colSpan);
     const displayedCellCount = (0, _index.getDisplayedCellCount)(cellCount, completeViewDataMap);
