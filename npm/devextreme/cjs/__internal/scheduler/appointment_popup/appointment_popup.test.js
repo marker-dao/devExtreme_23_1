@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointment_popup/appointment_popup.test.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,6 +16,12 @@ var _create_scheduler = require("../__tests__/__mock__/create_scheduler");
 var _m_mock_scheduler = require("../__tests__/__mock__/m_mock_scheduler");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const CLASSES = {
+  icon: 'dx-scheduler-form-icon',
+  hidden: 'dx-hidden',
+  mainGroupHidden: 'dx-scheduler-form-main-group-hidden',
+  recurrenceGroupHidden: 'dx-scheduler-form-recurrence-group-hidden'
+};
 const getDefaultData = () => [{
   text: 'recurrent-app',
   startDate: new Date(2017, 4, 1, 9, 30),
@@ -121,7 +127,6 @@ const getDefaultConfig = () => ({
     const toolbarWithSaveButton = [{
       toolbar: 'top',
       location: 'before',
-      text: 'Edit Appointment',
       cssClass: 'dx-toolbar-label'
     }, {
       toolbar: 'top',
@@ -144,7 +149,6 @@ const getDefaultConfig = () => ({
     const toolbarWithCancelButton = [{
       toolbar: 'top',
       location: 'before',
-      text: 'Edit Appointment',
       cssClass: 'dx-toolbar-label'
     }, {
       toolbar: 'top',
@@ -154,6 +158,38 @@ const getDefaultConfig = () => ({
         stylingMode: 'outlined'
       }
     }];
+    (0, _globals.describe)('Popup Title', () => {
+      (0, _globals.it)('should display "New Appointment" when creating new appointment', async () => {
+        const {
+          scheduler,
+          POM
+        } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+          editing: {
+            allowAdding: true
+          }
+        }));
+        scheduler.showAppointmentPopup();
+        const toolbarItems = POM.popup.component.option('toolbarItems');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const titleItem = toolbarItems === null || toolbarItems === void 0 ? void 0 : toolbarItems.find(item => item.cssClass === 'dx-toolbar-label');
+        (0, _globals.expect)(titleItem === null || titleItem === void 0 ? void 0 : titleItem.text).toBe('New Appointment');
+      });
+      (0, _globals.it)('should display "Edit Appointment" when editing existing appointment', async () => {
+        const {
+          scheduler,
+          POM
+        } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+          editing: {
+            allowUpdating: true
+          }
+        }));
+        scheduler.showAppointmentPopup(commonAppointment);
+        const toolbarItems = POM.popup.component.option('toolbarItems');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const titleItem = toolbarItems === null || toolbarItems === void 0 ? void 0 : toolbarItems.find(item => item.cssClass === 'dx-toolbar-label');
+        (0, _globals.expect)(titleItem === null || titleItem === void 0 ? void 0 : titleItem.text).toBe('Edit Appointment');
+      });
+    });
     _globals.it.each([{
       allowUpdating: false,
       disabled: false
@@ -404,21 +440,27 @@ const getDefaultConfig = () => ({
     });
   });
   (0, _globals.describe)('Recurrence', () => {
-    (0, _globals.it)('Recurrence editor container should be visible after changing its visibility value', async () => {
-      const appointment = {
-        text: 'Test Appointment',
-        startDate: new Date(2017, 4, 1, 9, 30),
-        endDate: new Date(2017, 4, 1, 11)
-      };
+    (0, _globals.it)('changes visibility of groups when opening recurrence form', async () => {
       const {
-        POM,
-        scheduler
+        scheduler,
+        POM
       } = await (0, _create_scheduler.createScheduler)(getDefaultConfig());
-      scheduler.showAppointmentPopup(appointment);
+      scheduler.showAppointmentPopup();
+      const mainGroup = (0, _renderer.default)(POM.popup.mainGroup);
       const recurrenceGroup = (0, _renderer.default)(POM.popup.recurrenceGroup);
-      (0, _globals.expect)(recurrenceGroup.hasClass('dx-scheduler-form-recurrence-hidden')).toBe(true);
+      (0, _globals.expect)(mainGroup.hasClass(CLASSES.mainGroupHidden)).toBe(false);
+      (0, _globals.expect)(recurrenceGroup.hasClass(CLASSES.recurrenceGroupHidden)).toBe(true);
       POM.popup.selectRepeatValue('weekly');
-      (0, _globals.expect)(recurrenceGroup.hasClass('dx-scheduler-form-recurrence-hidden')).toBe(false);
+      await new Promise(process.nextTick);
+      const popupHeight = POM.popup.component.option('height');
+      (0, _globals.expect)(popupHeight).toBeDefined();
+      (0, _globals.expect)(typeof popupHeight).toBe('number');
+      (0, _globals.expect)(mainGroup.hasClass(CLASSES.mainGroupHidden)).toBe(true);
+      (0, _globals.expect)(recurrenceGroup.hasClass(CLASSES.recurrenceGroupHidden)).toBe(false);
+      POM.popup.getBackButton().click();
+      (0, _globals.expect)(POM.popup.component.option('height')).toBe('auto');
+      (0, _globals.expect)(mainGroup.hasClass(CLASSES.mainGroupHidden)).toBe(false);
+      (0, _globals.expect)(recurrenceGroup.hasClass(CLASSES.recurrenceGroupHidden)).toBe(true);
     });
     (0, _globals.it)('Check that after opening recurrence appointment current form is main form', async () => {
       const appointment = {
@@ -434,7 +476,7 @@ const getDefaultConfig = () => ({
       scheduler.showAppointmentPopup(appointment);
       POM.popup.getEditSeriesButton().click();
       const recurrenceGroup = (0, _renderer.default)(POM.popup.recurrenceGroup);
-      (0, _globals.expect)(recurrenceGroup.hasClass('dx-scheduler-form-recurrence-hidden')).toBe(true);
+      (0, _globals.expect)(recurrenceGroup.hasClass(CLASSES.recurrenceGroupHidden)).toBe(true);
     });
     (0, _globals.it)('Should discard recurrence changes when clicking \'cancel\' button in recurrence form', async () => {
       var _scheduler$option3;
@@ -724,6 +766,110 @@ const getDefaultConfig = () => ({
           endDate: new Date(2017, 4, 15, 11, 0),
           recurrenceRule: 'FREQ=WEEKLY;BYDAY=MO,FR'
         });
+      });
+    });
+  });
+  (0, _globals.describe)('Icons', () => {
+    (0, _globals.describe)('Subject icon', () => {
+      (0, _globals.it)('has default color when appointment has no resources', async () => {
+        const {
+          scheduler,
+          POM
+        } = await (0, _create_scheduler.createScheduler)(getDefaultConfig());
+        scheduler.showAppointmentPopup(commonAppointment);
+        const $icon = (0, _renderer.default)(POM.popup.subjectIcon);
+        (0, _globals.expect)($icon.css('color')).toBe('');
+      });
+      (0, _globals.it)('has default color when showAppointmentPopup is called without data', async () => {
+        const {
+          scheduler,
+          POM
+        } = await (0, _create_scheduler.createScheduler)(getDefaultConfig());
+        scheduler.showAppointmentPopup();
+        const $icon = (0, _renderer.default)(POM.popup.subjectIcon);
+        (0, _globals.expect)($icon.css('color')).toBe('');
+      });
+      (0, _globals.it)('has resource color when appointment has resource', async () => {
+        var _POM$popup$form$getEd;
+        const resourceColor1 = 'rgb(255, 0, 0)';
+        const resourceColor2 = 'rgb(0, 0, 255)';
+        const {
+          scheduler,
+          POM
+        } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+          resources: [{
+            fieldExpr: 'roomId',
+            dataSource: [{
+              id: 1,
+              text: 'Room 1',
+              color: resourceColor1
+            }, {
+              id: 2,
+              text: 'Room 2',
+              color: resourceColor2
+            }]
+          }]
+        }));
+        scheduler.showAppointmentPopup(_extends({}, commonAppointment, {
+          roomId: 1
+        }));
+        await new Promise(process.nextTick);
+        const $icon = (0, _renderer.default)(POM.popup.subjectIcon);
+        (0, _globals.expect)($icon.css('color')).toBe(resourceColor1);
+        (_POM$popup$form$getEd = POM.popup.form.getEditor('roomId')) === null || _POM$popup$form$getEd === void 0 || _POM$popup$form$getEd.option('value', 2);
+        await new Promise(process.nextTick);
+        (0, _globals.expect)($icon.css('color')).toBe(resourceColor2);
+      });
+    });
+    (0, _globals.describe)('Resource icons', () => {
+      _globals.it.each([{
+        iconsShowMode: 'both',
+        visibleMain: true,
+        visibleRecurrence: true
+      }, {
+        iconsShowMode: 'main',
+        visibleMain: true,
+        visibleRecurrence: false
+      }, {
+        iconsShowMode: 'recurrence',
+        visibleMain: false,
+        visibleRecurrence: true
+      }, {
+        iconsShowMode: 'none',
+        visibleMain: false,
+        visibleRecurrence: false
+      }])('should shown icons correctly when iconsShowMode is \'$iconsShowMode\'', async _ref2 => {
+        var _POM$popup$mainGroup, _POM$popup$recurrence;
+        let {
+          iconsShowMode,
+          visibleMain,
+          visibleRecurrence
+        } = _ref2;
+        const {
+          scheduler,
+          POM
+        } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+          editing: {
+            form: {
+              iconsShowMode
+            }
+          }
+        }));
+        scheduler.showAppointmentPopup(commonAppointment);
+        const mainFormIcons = ((_POM$popup$mainGroup = POM.popup.mainGroup) === null || _POM$popup$mainGroup === void 0 ? void 0 : _POM$popup$mainGroup.querySelectorAll(`.${CLASSES.icon}`)) ?? [];
+        const recurrenceFormIcons = ((_POM$popup$recurrence = POM.popup.recurrenceGroup) === null || _POM$popup$recurrence === void 0 ? void 0 : _POM$popup$recurrence.querySelectorAll(`.${CLASSES.icon}`)) ?? [];
+        (0, _globals.expect)(mainFormIcons.length).toBe(4);
+        (0, _globals.expect)(recurrenceFormIcons.length).toBe(3);
+        const mainIconsCorrect = Array.from(mainFormIcons).every(icon => {
+          const isVisible = !icon.classList.contains(CLASSES.hidden);
+          return isVisible === visibleMain;
+        });
+        const recurrenceIconsCorrect = Array.from(recurrenceFormIcons).every(icon => {
+          const isVisible = !icon.classList.contains(CLASSES.hidden);
+          return isVisible === visibleRecurrence;
+        });
+        (0, _globals.expect)(mainIconsCorrect).toBe(true);
+        (0, _globals.expect)(recurrenceIconsCorrect).toBe(true);
       });
     });
   });
@@ -1164,10 +1310,10 @@ const getDefaultConfig = () => ({
       currentView: 'week',
       currentDate: new Date(2021, 4, 27),
       textExpr: textExpValue,
-      onAppointmentAdded: _ref2 => {
+      onAppointmentAdded: _ref3 => {
         let {
           appointmentData
-        } = _ref2;
+        } = _ref3;
         newAppointment = appointmentData;
       },
       height: 600
@@ -1179,6 +1325,149 @@ const getDefaultConfig = () => ({
     (0, _globals.expect)((_newAppointment2 = newAppointment) === null || _newAppointment2 === void 0 ? void 0 : _newAppointment2.text).toBeUndefined();
     (0, _globals.expect)(data[0].Subject).toBe('qwerty');
     (0, _globals.expect)(data[0].text).toBeUndefined();
+  });
+  (0, _globals.describe)('Popup options', () => {
+    (0, _globals.it)('should pass custom popup options from editing.popup to appointment popup', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          popup: {
+            showTitle: true,
+            title: 'Custom Appointment Form',
+            maxHeight: '80%',
+            dragEnabled: true
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      (0, _globals.expect)(POM.popup.component.option('showTitle')).toBe(true);
+      (0, _globals.expect)(POM.popup.component.option('title')).toBe('Custom Appointment Form');
+      (0, _globals.expect)(POM.popup.component.option('maxHeight')).toBe('80%');
+      (0, _globals.expect)(POM.popup.component.option('dragEnabled')).toBe(true);
+    });
+    (0, _globals.it)('should use default popup options when editing.popup is not specified', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      (0, _globals.expect)(POM.popup.component.option('showTitle')).toBe(false);
+      (0, _globals.expect)(POM.popup.component.option('height')).toBe('auto');
+      (0, _globals.expect)(POM.popup.component.option('maxHeight')).toBe('90%');
+    });
+    (0, _globals.it)('should merge custom popup options with default options', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          popup: {
+            showTitle: true,
+            title: 'My Form'
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      (0, _globals.expect)(POM.popup.component.option('showTitle')).toBe(true);
+      (0, _globals.expect)(POM.popup.component.option('title')).toBe('My Form');
+      (0, _globals.expect)(POM.popup.component.option('showCloseButton')).toBe(false);
+      (0, _globals.expect)(POM.popup.component.option('enableBodyScroll')).toBe(false);
+      (0, _globals.expect)(POM.popup.component.option('preventScrollEvents')).toBe(false);
+    });
+    (0, _globals.it)('should allow overriding default popup options', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          popup: {
+            showCloseButton: true,
+            enableBodyScroll: true
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      (0, _globals.expect)(POM.popup.component.option('showCloseButton')).toBe(true);
+      (0, _globals.expect)(POM.popup.component.option('enableBodyScroll')).toBe(true);
+    });
+    (0, _globals.it)('should apply wrapperAttr configuration to popup', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          popup: {
+            wrapperAttr: {
+              id: 'test'
+            }
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const wrapperAttr = POM.popup.component.option('wrapperAttr');
+      (0, _globals.expect)(wrapperAttr.id).toBe('test');
+      (0, _globals.expect)(wrapperAttr.class).toBeDefined();
+    });
+    (0, _globals.it)('should call onShowing callback when popup is shown', async () => {
+      const onShowing = _globals.jest.fn();
+      const onAppointmentFormOpening = _globals.jest.fn();
+      const {
+        scheduler
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          popup: {
+            onShowing
+          }
+        },
+        onAppointmentFormOpening
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      (0, _globals.expect)(onShowing).toHaveBeenCalled();
+      (0, _globals.expect)(onShowing).toHaveBeenCalledTimes(1);
+      (0, _globals.expect)(onAppointmentFormOpening).toHaveBeenCalled();
+      (0, _globals.expect)(onAppointmentFormOpening).toHaveBeenCalledTimes(1);
+    });
+    (0, _globals.it)('should call onHiding callback when popup is hidden', async () => {
+      const onHiding = _globals.jest.fn();
+      const {
+        scheduler
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          popup: {
+            onHiding
+          }
+        }
+      }));
+      const focusSpy = _globals.jest.spyOn(scheduler, 'focus');
+      scheduler.showAppointmentPopup(commonAppointment);
+      (0, _globals.expect)(onHiding).not.toHaveBeenCalled();
+      (0, _globals.expect)(focusSpy).not.toHaveBeenCalled();
+      scheduler.hideAppointmentPopup();
+      (0, _globals.expect)(onHiding).toHaveBeenCalled();
+      (0, _globals.expect)(onHiding).toHaveBeenCalledTimes(1);
+      (0, _globals.expect)(focusSpy).toHaveBeenCalled();
+      (0, _globals.expect)(focusSpy).toHaveBeenCalledTimes(1);
+      focusSpy.mockRestore();
+    });
   });
 });
 (0, _globals.describe)('Appointment Popup Content', () => {
@@ -1235,4 +1524,363 @@ const getDefaultConfig = () => ({
   _globals.it.todo('timeZone editors should have correct options');
   _globals.it.todo('timeZone editor should have correct display value for timezones with different offsets');
   _globals.it.todo('dataSource of timezoneEditor should be filtered');
+});
+(0, _globals.describe)('Customize form items', () => {
+  (0, _globals.beforeEach)(() => {
+    _fx.default.off = true;
+    (0, _m_mock_scheduler.setupSchedulerTestEnvironment)();
+  });
+  (0, _globals.afterEach)(() => {
+    _fx.default.off = false;
+    document.body.innerHTML = '';
+    _globals.jest.useRealTimers();
+  });
+  (0, _globals.describe)('Basic form customization', () => {
+    (0, _globals.it)('should use default form when editing.items is not set', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)(formItems).toBeDefined();
+      (0, _globals.expect)(formItems === null || formItems === void 0 ? void 0 : formItems.length).toBeGreaterThan(0);
+    });
+    (0, _globals.it)('should show empty form when editing.items is empty array', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: []
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)((formItems === null || formItems === void 0 ? void 0 : formItems.length) ?? 0).toBe(0);
+    });
+    (0, _globals.it)('should show mainGroup when specified in string array', async () => {
+      var _formItems$;
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: ['mainGroup']
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)(formItems === null || formItems === void 0 ? void 0 : formItems.length).toBe(1);
+      (0, _globals.expect)(formItems === null || formItems === void 0 || (_formItems$ = formItems[0]) === null || _formItems$ === void 0 ? void 0 : _formItems$.name).toBe('mainGroup');
+    });
+    (0, _globals.it)('should hide group when visible is false', async () => {
+      var _formItems$2;
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: [{
+              name: 'mainGroup',
+              visible: false
+            }]
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)(formItems === null || formItems === void 0 ? void 0 : formItems.length).toBe(1);
+      (0, _globals.expect)(formItems === null || formItems === void 0 || (_formItems$2 = formItems[0]) === null || _formItems$2 === void 0 ? void 0 : _formItems$2.visible).toBe(false);
+    });
+    (0, _globals.it)('should show group when visible is true', async () => {
+      var _formItems$3;
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: [{
+              name: 'mainGroup',
+              visible: true
+            }]
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)(formItems === null || formItems === void 0 ? void 0 : formItems.length).toBe(1);
+      (0, _globals.expect)(formItems === null || formItems === void 0 || (_formItems$3 = formItems[0]) === null || _formItems$3 === void 0 ? void 0 : _formItems$3.visible).toBe(true);
+    });
+    (0, _globals.it)('should filter children when items array is specified', async () => {
+      var _mainGroup$items, _mainGroup$items2;
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: [{
+              name: 'mainGroup',
+              visible: true,
+              items: ['subjectGroup']
+            }]
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      const mainGroup = formItems === null || formItems === void 0 ? void 0 : formItems[0];
+      (0, _globals.expect)(formItems === null || formItems === void 0 ? void 0 : formItems.length).toBe(1);
+      (0, _globals.expect)(mainGroup === null || mainGroup === void 0 || (_mainGroup$items = mainGroup.items) === null || _mainGroup$items === void 0 ? void 0 : _mainGroup$items.length).toBe(1);
+      (0, _globals.expect)(mainGroup === null || mainGroup === void 0 || (_mainGroup$items2 = mainGroup.items) === null || _mainGroup$items2 === void 0 || (_mainGroup$items2 = _mainGroup$items2[0]) === null || _mainGroup$items2 === void 0 ? void 0 : _mainGroup$items2.name).toBe('subjectGroup');
+    });
+    (0, _globals.it)('should handle non-existent groups gracefully', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: ['nonExistentGroup']
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)((formItems === null || formItems === void 0 ? void 0 : formItems.length) ?? 0).toBe(1);
+    });
+  });
+  (0, _globals.describe)('Form customization with editing.items', () => {
+    (0, _globals.it)('should handle empty items array', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: []
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)(formItems === null || formItems === void 0 ? void 0 : formItems.length).toBe(0);
+    });
+    (0, _globals.it)('should handle string array configuration', async () => {
+      var _formItems$4;
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: ['mainGroup']
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)(formItems === null || formItems === void 0 ? void 0 : formItems.length).toBe(1);
+      (0, _globals.expect)(formItems === null || formItems === void 0 || (_formItems$4 = formItems[0]) === null || _formItems$4 === void 0 ? void 0 : _formItems$4.name).toBe('mainGroup');
+    });
+    (0, _globals.it)('should handle object configuration with visible false', async () => {
+      var _formItems$5;
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: [{
+              name: 'mainGroup',
+              visible: false
+            }]
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)(formItems === null || formItems === void 0 ? void 0 : formItems.length).toBe(1);
+      (0, _globals.expect)(formItems === null || formItems === void 0 || (_formItems$5 = formItems[0]) === null || _formItems$5 === void 0 ? void 0 : _formItems$5.visible).toBe(false);
+    });
+    (0, _globals.it)('should handle object configuration with custom items', async () => {
+      var _mainGroup$items3, _mainGroup$items4, _mainGroup$items5;
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: [{
+              name: 'mainGroup',
+              items: ['subjectGroup', 'dateGroup']
+            }]
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      const mainGroup = formItems === null || formItems === void 0 ? void 0 : formItems[0];
+      (0, _globals.expect)(mainGroup === null || mainGroup === void 0 || (_mainGroup$items3 = mainGroup.items) === null || _mainGroup$items3 === void 0 ? void 0 : _mainGroup$items3.length).toBe(2);
+      (0, _globals.expect)(mainGroup === null || mainGroup === void 0 || (_mainGroup$items4 = mainGroup.items) === null || _mainGroup$items4 === void 0 || (_mainGroup$items4 = _mainGroup$items4[0]) === null || _mainGroup$items4 === void 0 ? void 0 : _mainGroup$items4.name).toBe('subjectGroup');
+      (0, _globals.expect)(mainGroup === null || mainGroup === void 0 || (_mainGroup$items5 = mainGroup.items) === null || _mainGroup$items5 === void 0 || (_mainGroup$items5 = _mainGroup$items5[1]) === null || _mainGroup$items5 === void 0 ? void 0 : _mainGroup$items5.name).toBe('dateGroup');
+    });
+    (0, _globals.it)('should handle non-existent group names', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: ['nonExistentGroup']
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)(formItems === null || formItems === void 0 ? void 0 : formItems.length).toBe(1);
+    });
+    (0, _globals.it)('should handle undefined items', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: undefined
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)(formItems === null || formItems === void 0 ? void 0 : formItems.length).toBeGreaterThan(0);
+    });
+    (0, _globals.it)('should handle mixed configurations', async () => {
+      var _formItems$6, _formItems$7, _formItems$8;
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: ['mainGroup', {
+              name: 'mainGroup',
+              visible: false
+            }]
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      (0, _globals.expect)(formItems === null || formItems === void 0 ? void 0 : formItems.length).toBe(2);
+      (0, _globals.expect)(formItems === null || formItems === void 0 || (_formItems$6 = formItems[0]) === null || _formItems$6 === void 0 ? void 0 : _formItems$6.name).toBe('mainGroup');
+      (0, _globals.expect)(formItems === null || formItems === void 0 || (_formItems$7 = formItems[1]) === null || _formItems$7 === void 0 ? void 0 : _formItems$7.name).toBe('mainGroup');
+      (0, _globals.expect)(formItems === null || formItems === void 0 || (_formItems$8 = formItems[1]) === null || _formItems$8 === void 0 ? void 0 : _formItems$8.visible).toBe(false);
+    });
+    (0, _globals.it)('should handle empty items array in object config', async () => {
+      var _mainGroup$items6;
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          form: {
+            items: [{
+              name: 'mainGroup',
+              items: []
+            }]
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const {
+        form
+      } = POM.popup;
+      const formItems = form.option('items');
+      const mainGroup = formItems === null || formItems === void 0 ? void 0 : formItems[0];
+      (0, _globals.expect)(mainGroup === null || mainGroup === void 0 || (_mainGroup$items6 = mainGroup.items) === null || _mainGroup$items6 === void 0 ? void 0 : _mainGroup$items6.length).toBe(0);
+    });
+  });
 });

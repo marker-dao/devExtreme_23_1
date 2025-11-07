@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/chat/file_view/file_view.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,6 @@ import $ from '../../../../core/renderer';
 import DOMComponent from '../../../core/widget/dom_component';
 import File from '../../../ui/chat/file_view/file';
 export const CHAT_FILE_VIEW_CLASS = 'dx-chat-file-view';
-export const CHAT_FILE_VIEW_ITEM_CLASS = 'dx-chat-file-view-item';
 class FileView extends DOMComponent {
   constructor() {
     super(...arguments);
@@ -24,15 +23,6 @@ class FileView extends DOMComponent {
       activeStateEnabled: true,
       focusStateEnabled: true,
       hoverStateEnabled: true
-    });
-  }
-  _init() {
-    super._init();
-    this._createDownloadAction();
-  }
-  _createDownloadAction() {
-    this._downloadAction = this._createActionByOption('onDownload', {
-      excludeValidators: ['disabled']
     });
   }
   _initMarkup() {
@@ -60,17 +50,15 @@ class FileView extends DOMComponent {
     const {
       activeStateEnabled,
       focusStateEnabled,
-      hoverStateEnabled
+      hoverStateEnabled,
+      onDownload
     } = this.option();
     const configuration = {
       data,
       activeStateEnabled,
       focusStateEnabled,
       hoverStateEnabled,
-      onDownload: event => {
-        var _this$_downloadAction;
-        (_this$_downloadAction = this._downloadAction) === null || _this$_downloadAction === void 0 || _this$_downloadAction.call(this, event);
-      }
+      onDownload
     };
     return configuration;
   }
@@ -106,14 +94,12 @@ class FileView extends DOMComponent {
       case 'activeStateEnabled':
       case 'focusStateEnabled':
       case 'hoverStateEnabled':
+      case 'onDownload':
         this._renderItems();
         break;
       case 'files':
         this._renderItems();
         this._toggleAria();
-        break;
-      case 'onDownload':
-        this._createDownloadAction();
         break;
       default:
         super._optionChanged(args);

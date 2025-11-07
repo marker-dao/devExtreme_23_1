@@ -1185,5 +1185,8 @@ class ColumnsView extends (0, _m_column_state_mixin.ColumnStateMixin)(_m_modules
     var _this$component;
     return (_this$component = this.component) === null || _this$component === void 0 ? void 0 : _this$component._disposed;
   }
+  renderDragCellContent($dragContainer, column) {
+    $dragContainer.text(column.caption ?? '');
+  }
 }
 exports.ColumnsView = ColumnsView;

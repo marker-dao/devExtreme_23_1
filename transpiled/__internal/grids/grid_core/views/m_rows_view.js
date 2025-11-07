@@ -26,6 +26,7 @@ var _const = require("../columns_resizing_reordering/const");
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _const2 = require("../sticky_columns/const");
 var _m_columns_view = require("./m_columns_view");
+var _utils = require("./utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */ /* eslint-disable @typescript-eslint/no-unused-vars */
 const ROWS_VIEW_CLASS = 'rowsview';
@@ -790,7 +791,7 @@ class RowsView extends _m_columns_view.ColumnsView {
     parameters.data = data;
     parameters.rowType = row.rowType;
     parameters.values = row.values;
-    parameters.text = !column.command ? _m_utils.default.formatValue(displayValue, column) : '';
+    parameters.text = (0, _utils.getCellText)(column, displayValue);
     parameters.rowIndex = row.rowIndex;
     parameters.summaryItems = summaryCells && summaryCells[options.columnIndex];
     parameters.resized = column.resizedCallbacks;

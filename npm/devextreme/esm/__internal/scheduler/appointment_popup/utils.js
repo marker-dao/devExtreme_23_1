@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointment_popup/utils.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,8 +11,10 @@ import dateUtils from '../../../core/utils/date';
 import { isDefined } from '../../../core/utils/type';
 import { getRecurrenceString, parseRecurrenceRule } from '../recurrence/base';
 import { daysFromByDayRule } from '../recurrence/days_from_by_day_rule';
-// eslint-disable-next-line arrow-body-style
 export const createFormIconTemplate = iconName => {
+  if (iconName.length === 0) {
+    return () => $('<div>').addClass('dx-scheduler-form-icon-sized-gap');
+  }
   return () => $('<i>').addClass('dx-icon').addClass(`dx-icon-${iconName}`);
 };
 export const getStartDateCommonConfig = firstDayOfWeek => ({

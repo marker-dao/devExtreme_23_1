@@ -1,0 +1,27 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _diagram = _interopRequireDefault(require("../../ui/diagram/diagram.commands_manager"));
+var _uiDiagram = _interopRequireDefault(require("../../ui/diagram/ui.diagram.toolbar"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+class DiagramHistoryToolbar extends _uiDiagram.default {
+  _getCommands() {
+    return _diagram.default.getHistoryToolbarCommands(this.option('commands'), this._getExcludeCommands());
+  }
+  _getExcludeCommands() {
+    // @ts-expect-error ts-error
+    const {
+      excludeCommands
+    } = this.option();
+    const commands = [].concat(excludeCommands);
+    if (!this.option('isMobileView')) {
+      // @ts-expect-error ts-error
+      commands.push(_diagram.default.SHOW_TOOLBOX_COMMAND_NAME);
+    }
+    return commands;
+  }
+}
+var _default = exports.default = DiagramHistoryToolbar;

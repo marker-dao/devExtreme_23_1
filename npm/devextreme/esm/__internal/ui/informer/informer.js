@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/informer/informer.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -18,7 +18,7 @@ const INFORMER_ALIGNMENT_START_CLASS = 'dx-informer-alignment-start';
 const INFORMER_ALIGNMENT_CENTER_CLASS = 'dx-informer-alignment-center';
 const INFORMER_ALIGNMENT_END_CLASS = 'dx-informer-alignment-end';
 const INFORMER_BG_CLASS = 'dx-informer-bg';
-const INFORMER_TEXT_CLASS = 'dx-informer-text';
+export const INFORMER_TEXT_CLASS = 'dx-informer-text';
 const INFORMER_ICON_CLASS = 'dx-informer-icon';
 class Informer extends Widget {
   _getDefaultOptions() {

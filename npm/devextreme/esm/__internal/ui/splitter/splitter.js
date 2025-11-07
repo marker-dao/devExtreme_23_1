@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/splitter/splitter.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -778,6 +778,10 @@ class Splitter extends CollectionWidgetLiveUpdate {
   }
   getLayout() {
     return this._layout ?? [];
+  }
+  _clean() {
+    resizeObserverSingleton.unobserve(this.$element().get(0));
+    super._clean();
   }
 }
 Splitter.ItemClass = SplitterItem;

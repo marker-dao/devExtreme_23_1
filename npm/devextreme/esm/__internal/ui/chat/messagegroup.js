@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/chat/messagegroup.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -82,14 +82,22 @@ class MessageGroup extends Widget {
     this._createComponent($bubble, MessageBubble, this._getMessageBubbleOptions(message));
   }
   _getMessageBubbleOptions(message) {
-    const options = {
-      isDeleted: message.isDeleted,
-      type: message.type
-    };
     const {
-      messageTemplate
+      messageTemplate,
+      onAttachmentDownloadClick
     } = this.option();
-    if (message.type === 'image') {
+    const {
+      isDeleted,
+      type,
+      attachments
+    } = message;
+    const options = {
+      isDeleted,
+      type,
+      attachments,
+      onAttachmentDownloadClick
+    };
+    if (type === 'image') {
       options.alt = message.alt;
       options.src = message.src;
     } else {
@@ -223,6 +231,7 @@ class MessageGroup extends Widget {
       case 'showMessageTimestamp':
       case 'messageTemplate':
       case 'messageTimestampFormat':
+      case 'onAttachmentDownloadClick':
         this._invalidate();
         break;
       default:

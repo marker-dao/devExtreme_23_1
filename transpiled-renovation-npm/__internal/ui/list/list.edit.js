@@ -63,6 +63,8 @@ class ListEdit extends _list.ListBase {
           } else {
             parent.downArrow(e);
           }
+        } else {
+          e.preventDefault(); // to prevent extra scrolling
         }
       }
     };

@@ -1,5 +1,6 @@
 import { cancelAnimationFrame, requestAnimationFrame } from '../../../common/core/animation/frame';
 import Class from '../../../core/class';
+import { isDefined } from '../../../core/utils/type';
 class Animator {
   constructor() {
     this._finished = true;
@@ -13,7 +14,9 @@ class Animator {
   }
   stop() {
     this._stopped = true;
-    cancelAnimationFrame(this._stepAnimationFrame);
+    if (isDefined(this._stepAnimationFrame)) {
+      cancelAnimationFrame(this._stepAnimationFrame);
+    }
   }
   _stepCore() {
     if (this._isStopped()) {

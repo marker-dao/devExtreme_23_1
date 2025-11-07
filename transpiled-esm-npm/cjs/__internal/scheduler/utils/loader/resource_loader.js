@@ -20,6 +20,7 @@ class ResourceLoader extends _loader.Loader {
     this.useColorAsDefault = Boolean(config.useColorAsDefault);
     this.resourceIndex = String((0, _appointment_resource_data_accessor.getResourceIndex)(config));
     this.resourceName = config.label;
+    this.icon = config.icon;
     this.onInit();
   }
   onLoadTransform(items) {

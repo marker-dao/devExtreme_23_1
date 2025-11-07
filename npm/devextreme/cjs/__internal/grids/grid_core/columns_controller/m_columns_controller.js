@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/columns_controller/m_columns_controller.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -118,7 +118,7 @@ class ColumnsController extends _m_modules.default.Controller {
     !this._skipProcessingColumnsChange && (0, _m_columns_controller_utils.fireColumnsChanged)(this);
   }
   callbackNames() {
-    return ['columnsChanged'];
+    return ['columnsChanged', 'aiColumnOptionChanged'];
   }
   getColumnByPath(path, columns) {
     const that = this;
@@ -1155,8 +1155,8 @@ class ColumnsController extends _m_modules.default.Controller {
         }
         (0, _m_columns_controller_utils.columnOptionCore)(that, column, option, value, notFireEvent);
       } else if ((0, _type.isObject)(option)) {
-        (0, _iterator.each)(option, (optionName, value) => {
-          (0, _m_columns_controller_utils.columnOptionCore)(that, column, optionName, value, notFireEvent);
+        (0, _iterator.each)(option, (optionName, optionValue) => {
+          (0, _m_columns_controller_utils.columnOptionCore)(that, column, optionName, optionValue, notFireEvent);
         });
       }
       (0, _m_columns_controller_utils.fireColumnsChanged)(that);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (dx.all.d.ts)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10645,12 +10645,12 @@ declare module DevExpress.ui {
   }
   module dxChat {
     /**
-     * [descr:_ui_chat_AttachmentDownloadEvent]
+     * [descr:_ui_chat_AttachmentDownloadClickEvent]
      */
-    export type AttachmentDownloadEvent =
+    export type AttachmentDownloadClickEvent =
       DevExpress.common.core.events.EventInfo<dxChat> & {
         /**
-         * [descr:_ui_chat_AttachmentDownloadEvent.attachment]
+         * [descr:_ui_chat_AttachmentDownloadClickEvent.attachment]
          */
         readonly attachment?: Attachment;
       };
@@ -10810,7 +10810,7 @@ declare module DevExpress.ui {
      */
     fileUploaderOptions?: Omit<
       DevExpress.ui.dxFileUploader.Properties,
-      'dialogTrigger' | 'showFileList' | 'uploadMode'
+      'dialogTrigger' | 'showFileList' | 'uploadMode' | 'value'
     >;
     /**
      * [descr:dxChatOptions.focusStateEnabled]
@@ -10912,10 +10912,10 @@ declare module DevExpress.ui {
      */
     showMessageTimestamp?: boolean;
     /**
-     * [descr:dxChatOptions.onAttachmentDownload]
+     * [descr:dxChatOptions.onAttachmentDownloadClick]
      */
-    onAttachmentDownload?:
-      | ((e: DevExpress.ui.dxChat.AttachmentDownloadEvent) => void)
+    onAttachmentDownloadClick?:
+      | ((e: DevExpress.ui.dxChat.AttachmentDownloadClickEvent) => void)
       | undefined;
     /**
      * [descr:dxChatOptions.onMessageEntered]
@@ -25995,6 +25995,10 @@ declare module DevExpress.ui {
                 iconsShowMode?: DevExpress.ui.dxScheduler.AppointmentFormIconsShowMode;
               }
             | undefined;
+          /**
+           * [descr:dxSchedulerOptions.editing.popup]
+           */
+          popup?: DevExpress.ui.dxPopup.Properties;
         };
     /**
      * [descr:dxSchedulerOptions.endDateExpr]
@@ -33491,6 +33495,8 @@ declare module DevExpress.ui.dxChat {
      * [descr:Attachment.size]
      */
     size: number;
+
+    [key: string]: any;
   };
   /**
    * [descr:ImageMessage]
@@ -41009,15 +41015,15 @@ declare module DevExpress.viz {
      */
     export type PointInfo = BasePointInfo<piePointObject> & {
       /**
-       * [descr:PointInfo.percent]
+       * [descr:dxPieChartPointInfo.percent]
        */
       percent?: number;
       /**
-       * [descr:PointInfo.percentText]
+       * [descr:dxPieChartPointInfo.percentText]
        */
       percentText?: string;
       /**
-       * [descr:PointInfo.points]
+       * [descr:dxPieChartPointInfo.points]
        */
       points?: PointInfo;
     };

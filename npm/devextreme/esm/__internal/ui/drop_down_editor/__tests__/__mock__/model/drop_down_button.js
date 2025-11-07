@@ -1,0 +1,43 @@
+/**
+* DevExtreme (esm/__internal/ui/drop_down_editor/__tests__/__mock__/model/drop_down_button.js)
+* Version: 25.2.0
+* Build date: Fri Nov 07 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { ListModel } from '../../../../../ui/list/__tests__/__mock__/model/list';
+const CLASSES = {
+  button: 'dx-button',
+  list: 'dx-list',
+  stateInvisible: 'dx-state-invisible'
+};
+const ATTR = {
+  popupId: 'aria-owns'
+};
+export class DropDownButtonModel {
+  constructor(root) {
+    this.root = root;
+  }
+  getElement() {
+    return this.root;
+  }
+  getButtonElement() {
+    var _this$root;
+    return ((_this$root = this.root) === null || _this$root === void 0 ? void 0 : _this$root.querySelector(`.${CLASSES.button}`)) ?? null;
+  }
+  getPopupContent() {
+    var _this$root2;
+    const popupId = (_this$root2 = this.root) === null || _this$root2 === void 0 ? void 0 : _this$root2.getAttribute(ATTR.popupId);
+    return document.body.querySelector(`#${popupId}`);
+  }
+  getList() {
+    var _this$getPopupContent;
+    return new ListModel(((_this$getPopupContent = this.getPopupContent()) === null || _this$getPopupContent === void 0 ? void 0 : _this$getPopupContent.querySelector(`.${CLASSES.list}`)) ?? null);
+  }
+  isOpened() {
+    const popupContent = this.getPopupContent();
+    const overlayContent = popupContent === null || popupContent === void 0 ? void 0 : popupContent.parentElement;
+    return !(overlayContent !== null && overlayContent !== void 0 && overlayContent.classList.contains(CLASSES.stateInvisible));
+  }
+}

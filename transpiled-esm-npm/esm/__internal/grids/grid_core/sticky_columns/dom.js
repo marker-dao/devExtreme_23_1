@@ -101,7 +101,8 @@ const noNeedToCreateResizingPoint = (that, _ref, addWidgetPrefix) => {
   let {
     point,
     column,
-    nextColumn
+    nextColumn,
+    cells
   } = _ref;
   const {
     item,
@@ -112,7 +113,7 @@ const noNeedToCreateResizingPoint = (that, _ref, addWidgetPrefix) => {
   const offsetX = Math.round(point.x);
   const rtlEnabled = that.option('rtlEnabled');
   const isSplitPoint = isDefined(isLeftBoundary) || isDefined(isRightBoundary);
-  const $cells = $(that.getColumnElements() ?? '');
+  const $cells = $(cells ?? '');
   const $container = $(that.getContent());
   const isFixedPoint = (column === null || column === void 0 ? void 0 : column.fixed) && (nextColumn === null || nextColumn === void 0 ? void 0 : nextColumn.fixed);
   const nonFixedAreaBoundingRect = getNonFixedAreaBoundingRect($cells, $container, addWidgetPrefix);

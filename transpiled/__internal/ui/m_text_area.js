@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.TEXTAREA_CLASS = void 0;
+exports.default = exports.TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE = exports.TEXTAREA_CLASS = void 0;
 var _events_engine = _interopRequireDefault(require("../../common/core/events/core/events_engine"));
 var _emitterGesture = _interopRequireDefault(require("../../common/core/events/gesture/emitter.gesture.scroll"));
 var _pointer = _interopRequireDefault(require("../../common/core/events/pointer"));
@@ -19,7 +19,7 @@ var _m_utils = require("../ui/text_box/m_utils.scroll");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const TEXTAREA_CLASS = exports.TEXTAREA_CLASS = 'dx-textarea';
-const TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE = 'dx-texteditor-input-auto-resize';
+const TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE = exports.TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE = 'dx-texteditor-input-auto-resize';
 class TextArea extends _m_text_box.default {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -140,13 +140,13 @@ class TextArea extends _m_text_box.default {
     const heightDifference = this._getHeightDifference($input);
     this._renderDimensions();
     const minHeight = this._getBoundaryHeight('minHeight');
-    const maxHeight = this._getBoundaryHeight('maxHeight');
+    const maxHeight = this._getMaxHeight();
     let inputHeight = $input[0].scrollHeight;
     if (minHeight !== undefined) {
       inputHeight = Math.max(inputHeight, minHeight - heightDifference);
     }
     if (maxHeight !== undefined) {
-      const adjustedMaxHeight = maxHeight - heightDifference;
+      const adjustedMaxHeight = this._getAdjustedMaxHeight(maxHeight, heightDifference);
       const needScroll = inputHeight > adjustedMaxHeight;
       inputHeight = Math.min(inputHeight, adjustedMaxHeight);
       this._updateInputAutoResizeAppearance($input, !needScroll);
@@ -155,6 +155,14 @@ class TextArea extends _m_text_box.default {
     if (autoHeightResizing) {
       this.$element().css('height', 'auto');
     }
+  }
+  // eslint-disable-next-line class-methods-use-this
+  _getAdjustedMaxHeight(maxHeight, heightDifference) {
+    const adjustedMaxHeight = maxHeight - heightDifference;
+    return adjustedMaxHeight;
+  }
+  _getMaxHeight() {
+    return this._getBoundaryHeight('maxHeight');
   }
   _getBoundaryHeight(optionName) {
     const boundaryValue = this.option(optionName);

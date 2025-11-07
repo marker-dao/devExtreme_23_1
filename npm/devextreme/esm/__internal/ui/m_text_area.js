@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/m_text_area.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,7 +20,7 @@ import { getWindow, hasWindow } from '../../core/utils/window';
 import TextBox from '../ui/text_box/m_text_box';
 import { allowScroll, prepareScrollData } from '../ui/text_box/m_utils.scroll';
 export const TEXTAREA_CLASS = 'dx-textarea';
-const TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE = 'dx-texteditor-input-auto-resize';
+export const TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE = 'dx-texteditor-input-auto-resize';
 class TextArea extends TextBox {
   _getDefaultOptions() {
     return _extends({}, super._getDefaultOptions(), {
@@ -141,13 +141,13 @@ class TextArea extends TextBox {
     const heightDifference = this._getHeightDifference($input);
     this._renderDimensions();
     const minHeight = this._getBoundaryHeight('minHeight');
-    const maxHeight = this._getBoundaryHeight('maxHeight');
+    const maxHeight = this._getMaxHeight();
     let inputHeight = $input[0].scrollHeight;
     if (minHeight !== undefined) {
       inputHeight = Math.max(inputHeight, minHeight - heightDifference);
     }
     if (maxHeight !== undefined) {
-      const adjustedMaxHeight = maxHeight - heightDifference;
+      const adjustedMaxHeight = this._getAdjustedMaxHeight(maxHeight, heightDifference);
       const needScroll = inputHeight > adjustedMaxHeight;
       inputHeight = Math.min(inputHeight, adjustedMaxHeight);
       this._updateInputAutoResizeAppearance($input, !needScroll);
@@ -156,6 +156,14 @@ class TextArea extends TextBox {
     if (autoHeightResizing) {
       this.$element().css('height', 'auto');
     }
+  }
+  // eslint-disable-next-line class-methods-use-this
+  _getAdjustedMaxHeight(maxHeight, heightDifference) {
+    const adjustedMaxHeight = maxHeight - heightDifference;
+    return adjustedMaxHeight;
+  }
+  _getMaxHeight() {
+    return this._getBoundaryHeight('maxHeight');
   }
   _getBoundaryHeight(optionName) {
     const boundaryValue = this.option(optionName);

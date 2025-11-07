@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.viz.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -2419,6 +2419,947 @@ if (false) {}
 
 /***/ }),
 
+/***/ 11610:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.convertTransitionTimingFuncToEasing = void 0;
+exports.getEasing = getEasing;
+exports.setEasing = setEasing;
+var _type = __webpack_require__(11528);
+const CSS_TRANSITION_EASING_REGEX = /cubic-bezier\((\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\)/;
+const TransitionTimingFuncMap = {
+  linear: 'cubic-bezier(0, 0, 1, 1)',
+  swing: 'cubic-bezier(0.445, 0.05, 0.55, 0.95)',
+  ease: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+  'ease-in': 'cubic-bezier(0.42, 0, 1, 1)',
+  'ease-out': 'cubic-bezier(0, 0, 0.58, 1)',
+  'ease-in-out': 'cubic-bezier(0.42, 0, 0.58, 1)'
+};
+const polynomBezier = (x1, y1, x2, y2) => {
+  const Cx = 3 * x1;
+  const Bx = 3 * (x2 - x1) - Cx;
+  const Ax = 1 - Cx - Bx;
+  const Cy = 3 * y1;
+  const By = 3 * (y2 - y1) - Cy;
+  const Ay = 1 - Cy - By;
+  const bezierX = t => t * (Cx + t * (Bx + t * Ax));
+  const bezierY = t => t * (Cy + t * (By + t * Ay));
+  const derivativeX = t => Cx + t * (2 * Bx + t * 3 * Ax);
+  const findXFor = t => {
+    let x = t;
+    let i = 0;
+    // eslint-disable-next-line no-undef-init
+    let z = undefined;
+    while (i < 14) {
+      z = bezierX(x) - t;
+      if (Math.abs(z) < 1e-3) {
+        break;
+      }
+      x -= z / derivativeX(x);
+      i += 1;
+    }
+    return x;
+  };
+  return t => bezierY(findXFor(t));
+};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let easing = {};
+const convertTransitionTimingFuncToEasing = cssTransitionEasing => {
+  // eslint-disable-next-line no-param-reassign
+  cssTransitionEasing = TransitionTimingFuncMap[cssTransitionEasing] || cssTransitionEasing;
+  // eslint-disable-next-line @stylistic/max-len
+  let coeffs = CSS_TRANSITION_EASING_REGEX.exec(cssTransitionEasing);
+  const numCoeffs = [];
+  let forceName = null;
+  if (!coeffs) {
+    forceName = 'linear';
+    coeffs = TransitionTimingFuncMap[forceName].match(CSS_TRANSITION_EASING_REGEX);
+  }
+  // @ts-expect-error
+  coeffs = coeffs.slice(1, 5);
+  for (let i = 0; i < coeffs.length; i += 1) {
+    numCoeffs[i] = parseFloat(coeffs[i]);
+  }
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const easingName = forceName || `cubicbezier_${numCoeffs.join('_').replace(/\./g, 'p')}`;
+  if (!(0, _type.isFunction)(easing[easingName])) {
+    easing[easingName] = function (x, t, b, c, d) {
+      return c * polynomBezier(numCoeffs[0], numCoeffs[1], numCoeffs[2], numCoeffs[3])(t / d) + b;
+    };
+  }
+  return easingName;
+};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+exports.convertTransitionTimingFuncToEasing = convertTransitionTimingFuncToEasing;
+function setEasing(value) {
+  easing = value;
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getEasing(name) {
+  return easing[name];
+}
+
+/***/ }),
+
+/***/ 26106:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.cancelAnimationFrame = cancelAnimationFrame;
+exports.requestAnimationFrame = requestAnimationFrame;
+var _call_once = _interopRequireDefault(__webpack_require__(13630));
+var _window = __webpack_require__(3104);
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const window = (0, _window.hasWindow)() ? (0, _window.getWindow)() : {};
+const FRAME_ANIMATION_STEP_TIME = 1000 / 60;
+let request = function (callback) {
+  /* eslint-disable no-restricted-globals */
+  return setTimeout(callback, FRAME_ANIMATION_STEP_TIME);
+};
+let cancel = function (requestID) {
+  clearTimeout(requestID);
+};
+const setAnimationFrameMethods = (0, _call_once.default)(() => {
+  const nativeRequest = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame;
+  const nativeCancel = window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.oCancelAnimationFrame || window.msCancelAnimationFrame;
+  if (nativeRequest && nativeCancel) {
+    request = nativeRequest;
+    cancel = nativeCancel;
+  }
+});
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function requestAnimationFrame() {
+  setAnimationFrameMethods();
+  // @ts-ignore
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+  return request.apply(window, args);
+}
+function cancelAnimationFrame(requestID) {
+  setAnimationFrameMethods();
+  cancel.apply(window, [requestID]);
+}
+
+/***/ }),
+
+/***/ 28885:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _frame = __webpack_require__(84096);
+var _position = _interopRequireDefault(__webpack_require__(3030));
+var _translator = __webpack_require__(88603);
+var _element = __webpack_require__(61404);
+var _errors = _interopRequireDefault(__webpack_require__(87129));
+var _renderer = _interopRequireDefault(__webpack_require__(64553));
+var _common = __webpack_require__(17781);
+var _deferred = __webpack_require__(87739);
+var _extend = __webpack_require__(52576);
+var _iterator = __webpack_require__(21274);
+var _type = __webpack_require__(11528);
+var _window = __webpack_require__(3104);
+var _events_engine = _interopRequireDefault(__webpack_require__(76772));
+var _remove = __webpack_require__(92492);
+var _index = __webpack_require__(34356);
+var _easing = __webpack_require__(11610);
+var _m_support = _interopRequireDefault(__webpack_require__(85991));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const window = (0, _window.getWindow)();
+const removeEventName = (0, _index.addNamespace)(_remove.removeEvent, 'dxFX');
+const RELATIVE_VALUE_REGEX = /^([+-])=(.*)/i;
+const ANIM_DATA_KEY = 'dxAnimData';
+const ANIM_QUEUE_KEY = 'dxAnimQueue';
+const TRANSFORM_PROP = 'transform';
+const TransitionAnimationStrategy = {
+  initAnimation($element, config) {
+    $element.css({
+      transitionProperty: 'none'
+    });
+    if (typeof config.from === 'string') {
+      $element.addClass(config.from);
+    } else {
+      setProps($element, config.from);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const that = this;
+    // @ts-expect-error
+    const deferred = new _deferred.Deferred();
+    const {
+      cleanupWhen
+    } = config;
+    config.transitionAnimation = {
+      deferred,
+      finish() {
+        that._finishTransition($element);
+        if (cleanupWhen) {
+          (0, _deferred.when)(deferred, cleanupWhen).always(() => {
+            that._cleanup($element, config);
+          });
+        } else {
+          that._cleanup($element, config);
+        }
+        deferred.resolveWith($element, [config, $element]);
+      }
+    };
+    this._completeAnimationCallback($element, config).done(() => {
+      config.transitionAnimation.finish();
+    }).fail(() => {
+      deferred.rejectWith($element, [config, $element]);
+    });
+    if (!config.duration) {
+      config.transitionAnimation.finish();
+    }
+    // NOTE: Hack for setting 'from' css by browser before run animation
+    //       Do not move this hack to initAnimation since
+    //       some css props can be changed in the 'start' callback (T231434)
+    //       Unfortunately this can't be unit tested
+    // TODO: find better way if possible
+    $element.css('transform');
+  },
+  animate($element, config) {
+    this._startAnimation($element, config);
+    return config.transitionAnimation.deferred.promise();
+  },
+  _completeAnimationCallback($element, config) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const that = this;
+    // @ts-expect-error
+    const startTime = Date.now() + config.delay;
+    // @ts-expect-error
+    const deferred = new _deferred.Deferred();
+    // @ts-expect-error
+    const transitionEndFired = new _deferred.Deferred();
+    // @ts-expect-error
+    const simulatedTransitionEndFired = new _deferred.Deferred();
+    // eslint-disable-next-line @typescript-eslint/init-declarations
+    let simulatedEndEventTimer;
+    const transitionEndEventFullName = `${_m_support.default.transitionEndEventName()}.dxFX`;
+    config.transitionAnimation.cleanup = function () {
+      clearTimeout(simulatedEndEventTimer);
+      clearTimeout(waitForJSCompleteTimer);
+      _events_engine.default.off($element, transitionEndEventFullName);
+      _events_engine.default.off($element, removeEventName);
+    };
+    _events_engine.default.one($element, transitionEndEventFullName, () => {
+      // NOTE: prevent native transitionEnd event from previous animation in queue (Chrome)
+      // @ts-expect-error
+      if (Date.now() - startTime >= config.duration) {
+        transitionEndFired.reject();
+      }
+    });
+    _events_engine.default.off($element, removeEventName);
+    _events_engine.default.on($element, removeEventName, () => {
+      that.stop($element, config);
+      deferred.reject();
+    });
+    // Fix for a visual bug (T244514): do not setup the timer until all js code has finished working
+    // eslint-disable-next-line no-restricted-globals
+    const waitForJSCompleteTimer = setTimeout(() => {
+      // eslint-disable-next-line no-restricted-globals
+      simulatedEndEventTimer = setTimeout(() => {
+        simulatedTransitionEndFired.reject();
+      },
+      // @ts-expect-error
+      config.duration + config.delay + fx._simulatedTransitionEndDelay);
+      (0, _deferred.when)(transitionEndFired, simulatedTransitionEndFired).fail(() => {
+        deferred.resolve();
+      });
+    });
+    return deferred.promise();
+  },
+  _startAnimation($element, config) {
+    $element.css({
+      transitionProperty: 'all',
+      transitionDelay: `${config.delay}ms`,
+      transitionDuration: `${config.duration}ms`,
+      transitionTimingFunction: config.easing
+    });
+    if (typeof config.to === 'string') {
+      $element[0].className += ` ${config.to}`;
+      // Do not uncomment: performance critical
+      // $element.addClass(config.to);
+    } else if (config.to) {
+      setProps($element, config.to);
+    }
+  },
+  _finishTransition($element) {
+    $element.css('transition', 'none');
+  },
+  _cleanup($element, config) {
+    // @ts-expect-error
+    config.transitionAnimation.cleanup();
+    if (typeof config.from === 'string') {
+      $element.removeClass(config.from);
+      // @ts-expect-error
+      $element.removeClass(config.to);
+    }
+  },
+  stop($element, config, jumpToEnd) {
+    if (!config) {
+      return;
+    }
+    if (jumpToEnd) {
+      config.transitionAnimation.finish();
+    } else {
+      if ((0, _type.isPlainObject)(config.to)) {
+        (0, _iterator.each)(config.to, key => {
+          // @ts-expect-error
+          $element.css(key, $element.css(key));
+        });
+      }
+      this._finishTransition($element);
+      this._cleanup($element, config);
+    }
+  }
+};
+const FrameAnimationStrategy = {
+  initAnimation($element, config) {
+    setProps($element, config.from);
+  },
+  animate($element, config) {
+    // @ts-expect-error
+    const deferred = new _deferred.Deferred();
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const that = this;
+    if (!config) {
+      return deferred.reject().promise();
+    }
+    (0, _iterator.each)(config.to, prop => {
+      // @ts-expect-error
+      if (config.from[prop] === undefined) {
+        // @ts-expect-error
+        config.from[prop] = that._normalizeValue($element.css(prop));
+      }
+    });
+    // @ts-expect-error
+    if (config.to[TRANSFORM_PROP]) {
+      // @ts-expect-error
+      config.from[TRANSFORM_PROP] = that._parseTransform(config.from[TRANSFORM_PROP]);
+      // @ts-expect-error
+      config.to[TRANSFORM_PROP] = that._parseTransform(config.to[TRANSFORM_PROP]);
+    }
+    config.frameAnimation = {
+      to: config.to,
+      from: config.from,
+      currentValue: config.from,
+      // @ts-expect-error
+      easing: (0, _easing.convertTransitionTimingFuncToEasing)(config.easing),
+      duration: config.duration,
+      startTime: new Date().valueOf(),
+      finish() {
+        this.currentValue = this.to;
+        this.draw();
+        // @ts-expect-error
+        (0, _frame.cancelAnimationFrame)(config.frameAnimation.animationFrameId);
+        deferred.resolve();
+      },
+      draw() {
+        if (config.draw) {
+          config.draw(this.currentValue);
+          return;
+        }
+        const currentValue = (0, _extend.extend)({}, this.currentValue);
+        if (currentValue[TRANSFORM_PROP]) {
+          // @ts-expect-error
+          // eslint-disable-next-line consistent-return
+          currentValue[TRANSFORM_PROP] = (0, _iterator.map)(currentValue[TRANSFORM_PROP], (value, prop) => {
+            if (prop === 'translate') {
+              return (0, _translator.getTranslateCss)(value);
+            }
+            if (prop === 'scale') {
+              return `scale(${value})`;
+            }
+            if (prop.substr(0, prop.length - 1) === 'rotate') {
+              return `${prop}(${value}deg)`;
+            }
+          }).join(' ');
+        }
+        $element.css(currentValue);
+      }
+    };
+    if (config.delay) {
+      config.frameAnimation.startTime += config.delay;
+      // eslint-disable-next-line no-restricted-globals
+      config.frameAnimation.delayTimeout = setTimeout(() => {
+        that._startAnimation($element, config);
+      }, config.delay);
+    } else {
+      that._startAnimation($element, config);
+    }
+    return deferred.promise();
+  },
+  _startAnimation($element, config) {
+    _events_engine.default.off($element, removeEventName);
+    _events_engine.default.on($element, removeEventName, () => {
+      if (config.frameAnimation) {
+        // @ts-expect-error
+        (0, _frame.cancelAnimationFrame)(config.frameAnimation.animationFrameId);
+      }
+    });
+    this._animationStep($element, config);
+  },
+  _parseTransform(transformString) {
+    const result = {};
+    (0, _iterator.each)(transformString.match(/\w+\d*\w*\([^)]*\)\s*/g), (i, part) => {
+      const translateData = (0, _translator.parseTranslate)(part);
+      const scaleData = part.match(/scale\((.+?)\)/);
+      const rotateData = part.match(/(rotate.)\((.+)deg\)/);
+      if (translateData) {
+        result.translate = translateData;
+      }
+      if (scaleData && scaleData[1]) {
+        result.scale = parseFloat(scaleData[1]);
+      }
+      if (rotateData && rotateData[1]) {
+        result[rotateData[1]] = parseFloat(rotateData[2]);
+      }
+    });
+    return result;
+  },
+  stop($element, config, jumpToEnd) {
+    const frameAnimation = config && config.frameAnimation;
+    if (!frameAnimation) {
+      return;
+    }
+    // @ts-expect-error
+    (0, _frame.cancelAnimationFrame)(frameAnimation.animationFrameId);
+    clearTimeout(frameAnimation.delayTimeout);
+    if (jumpToEnd) {
+      frameAnimation.finish();
+    }
+    delete config.frameAnimation;
+  },
+  _animationStep($element, config) {
+    const frameAnimation = config && config.frameAnimation;
+    if (!frameAnimation) {
+      return;
+    }
+    const now = new Date().valueOf();
+    // @ts-expect-error
+    if (now >= frameAnimation.startTime + frameAnimation.duration) {
+      frameAnimation.finish();
+      return;
+    }
+    // eslint-disable-next-line @stylistic/max-len
+    frameAnimation.currentValue = this._calcStepValue(frameAnimation, now - frameAnimation.startTime);
+    frameAnimation.draw();
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const that = this;
+    frameAnimation.animationFrameId = (0, _frame.requestAnimationFrame)(() => {
+      that._animationStep($element, config);
+    });
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  _calcStepValue(frameAnimation, currentDuration) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const calcValueRecursively = function (from, to) {
+      const result = Array.isArray(to) ? [] : {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const calcEasedValue = function (propName) {
+        // @ts-expect-error
+        const x = currentDuration / frameAnimation.duration;
+        const t = currentDuration;
+        // @ts-expect-error
+        const b = 1 * from[propName];
+        // @ts-expect-error
+        const c = to[propName] - from[propName];
+        const d = frameAnimation.duration;
+        // @ts-expect-error
+        return (0, _easing.getEasing)(frameAnimation.easing)(x, t, b, c, d);
+      };
+      // @ts-expect-error
+      // eslint-disable-next-line consistent-return
+      (0, _iterator.each)(to, (propName, endPropValue) => {
+        // @ts-expect-error
+        if (typeof endPropValue === 'string' && parseFloat(endPropValue) === false) {
+          return true;
+        }
+        result[propName] = typeof endPropValue === 'object'
+        // @ts-expect-error
+        ? calcValueRecursively(from[propName], endPropValue) : calcEasedValue(propName);
+      });
+      return result;
+    };
+    return calcValueRecursively(frameAnimation.from, frameAnimation.to);
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  _normalizeValue(value) {
+    const numericValue = parseFloat(value);
+    // @ts-expect-error
+    if (numericValue === false) {
+      return value;
+    }
+    return numericValue;
+  }
+};
+const FallbackToNoAnimationStrategy = {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  initAnimation() {},
+  animate() {
+    // @ts-expect-error
+    return new _deferred.Deferred().resolve().promise();
+  },
+  stop: _common.noop,
+  isSynchronous: true
+};
+const getAnimationStrategy = function (config) {
+  // eslint-disable-next-line no-param-reassign
+  config = config || {};
+  const animationStrategies = {
+    transition: _m_support.default.transition() ? TransitionAnimationStrategy : FrameAnimationStrategy,
+    frame: FrameAnimationStrategy,
+    noAnimation: FallbackToNoAnimationStrategy
+  };
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  let strategy = config.strategy || 'transition';
+  if (config.type === 'css' && !_m_support.default.transition()) {
+    strategy = 'noAnimation';
+  }
+  return animationStrategies[strategy];
+};
+const baseConfigValidator = function (config, animationType, validate, typeMessage) {
+  (0, _iterator.each)(['from', 'to'], function () {
+    if (!validate(config[this])) {
+      throw _errors.default.Error('E0010', animationType, this, typeMessage);
+    }
+  });
+};
+const isObjectConfigValidator = function (config, animationType) {
+  return baseConfigValidator(config, animationType, target => (0, _type.isPlainObject)(target), 'a plain object');
+};
+const isStringConfigValidator = function (config, animationType) {
+  return baseConfigValidator(config, animationType, target => typeof target === 'string', 'a string');
+};
+const CustomAnimationConfigurator = {
+  setup() {}
+};
+const CssAnimationConfigurator = {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  validateConfig(config) {
+    isStringConfigValidator(config, 'css');
+  },
+  setup() {}
+};
+const positionAliases = {
+  top: {
+    my: 'bottom center',
+    at: 'top center'
+  },
+  bottom: {
+    my: 'top center',
+    at: 'bottom center'
+  },
+  right: {
+    my: 'left center',
+    at: 'right center'
+  },
+  left: {
+    my: 'right center',
+    at: 'left center'
+  }
+};
+const SlideAnimationConfigurator = {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  validateConfig(config) {
+    isObjectConfigValidator(config, 'slide');
+  },
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  setup($element, config) {
+    const location = (0, _translator.locate)($element);
+    if (config.type !== 'slide') {
+      const positioningConfig = config.type === 'slideIn' ? config.from : config.to;
+      positioningConfig.position = (0, _extend.extend)({
+        of: window
+      }, positionAliases[config.direction]);
+      setupPosition($element, positioningConfig);
+    }
+    this._setUpConfig(location, config.from);
+    this._setUpConfig(location, config.to);
+    (0, _translator.clearCache)($element);
+  },
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  _setUpConfig(location, config) {
+    config.left = 'left' in config ? config.left : '+=0';
+    config.top = 'top' in config ? config.top : '+=0';
+    this._initNewPosition(location, config);
+  },
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  _initNewPosition(location, config) {
+    const position = {
+      left: config.left,
+      top: config.top
+    };
+    delete config.left;
+    delete config.top;
+    let relativeValue = this._getRelativeValue(position.left);
+    if (relativeValue !== undefined) {
+      position.left = relativeValue + location.left;
+    } else {
+      config.left = 0;
+    }
+    relativeValue = this._getRelativeValue(position.top);
+    if (relativeValue !== undefined) {
+      position.top = relativeValue + location.top;
+    } else {
+      config.top = 0;
+    }
+    config[TRANSFORM_PROP] = (0, _translator.getTranslateCss)({
+      x: position.left,
+      y: position.top
+    });
+  },
+  // @ts-ignore
+  // eslint-disable-next-line consistent-return, @typescript-eslint/explicit-module-boundary-types
+  _getRelativeValue(value) {
+    // eslint-disable-next-line @typescript-eslint/init-declarations
+    let relativeValue;
+    // eslint-disable-next-line no-cond-assign
+    if (typeof value === 'string' && (relativeValue = RELATIVE_VALUE_REGEX.exec(value))) {
+      // @ts-expect-error
+      return parseInt(`${relativeValue[1]}1`, 10) * relativeValue[2];
+    }
+  }
+};
+const FadeAnimationConfigurator = {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  setup($element, config) {
+    const {
+      from,
+      to
+    } = config;
+    const defaultFromOpacity = config.type === 'fadeOut' ? 1 : 0;
+    const defaultToOpacity = config.type === 'fadeOut' ? 0 : 1;
+    let fromOpacity = (0, _type.isPlainObject)(from) ? String(from.opacity ?? defaultFromOpacity) : String(from);
+    let toOpacity = (0, _type.isPlainObject)(to) ? String(to.opacity ?? defaultToOpacity) : String(to);
+    if (!config.skipElementInitialStyles) {
+      fromOpacity = $element.css('opacity');
+    }
+    switch (config.type) {
+      case 'fadeIn':
+        toOpacity = 1;
+        break;
+      case 'fadeOut':
+        toOpacity = 0;
+        break;
+      default:
+        break;
+    }
+    config.from = {
+      visibility: 'visible',
+      opacity: fromOpacity
+    };
+    config.to = {
+      opacity: toOpacity
+    };
+  }
+};
+const PopAnimationConfigurator = {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  validateConfig(config) {
+    isObjectConfigValidator(config, 'pop');
+  },
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  setup($element, config) {
+    const {
+      from,
+      to
+    } = config;
+    const fromOpacity = 'opacity' in from ? from.opacity : $element.css('opacity');
+    const toOpacity = 'opacity' in to ? to.opacity : 1;
+    const fromScale = 'scale' in from ? from.scale : 0;
+    const toScale = 'scale' in to ? to.scale : 1;
+    config.from = {
+      opacity: fromOpacity
+    };
+    const translate = (0, _translator.getTranslate)($element);
+    config.from[TRANSFORM_PROP] = this._getCssTransform(translate, fromScale);
+    config.to = {
+      opacity: toOpacity
+    };
+    config.to[TRANSFORM_PROP] = this._getCssTransform(translate, toScale);
+  },
+  _getCssTransform(translate, scale) {
+    return `${(0, _translator.getTranslateCss)(translate)}scale(${scale})`;
+  }
+};
+const animationConfigurators = {
+  custom: CustomAnimationConfigurator,
+  slide: SlideAnimationConfigurator,
+  slideIn: SlideAnimationConfigurator,
+  slideOut: SlideAnimationConfigurator,
+  fade: FadeAnimationConfigurator,
+  fadeIn: FadeAnimationConfigurator,
+  fadeOut: FadeAnimationConfigurator,
+  pop: PopAnimationConfigurator,
+  css: CssAnimationConfigurator
+};
+const getAnimationConfigurator = function (config) {
+  const result = animationConfigurators[config.type];
+  if (!result) {
+    throw _errors.default.Error('E0011', config.type);
+  }
+  return result;
+};
+const defaultJSConfig = {
+  type: 'custom',
+  from: {},
+  to: {},
+  duration: 400,
+  start: _common.noop,
+  complete: _common.noop,
+  easing: 'ease',
+  delay: 0
+};
+const defaultCssConfig = {
+  duration: 400,
+  easing: 'ease',
+  delay: 0
+};
+function setupAnimationOnElement() {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const animation = this;
+  const $element = animation.element;
+  const {
+    config
+  } = animation;
+  setupPosition($element, config.from);
+  setupPosition($element, config.to);
+  animation.configurator.setup($element, config);
+  $element.data(ANIM_DATA_KEY, animation);
+  if (fx.off) {
+    config.duration = 0;
+    config.delay = 0;
+  }
+  animation.strategy.initAnimation($element, config);
+  if (config.start) {
+    const element = (0, _element.getPublicElement)($element);
+    config.start.apply(this, [element, config]);
+  }
+}
+const onElementAnimationComplete = function (animation) {
+  const $element = animation.element;
+  const {
+    config
+  } = animation;
+  $element.removeData(ANIM_DATA_KEY);
+  if (config.complete) {
+    const element = (0, _element.getPublicElement)($element);
+    config.complete.apply(this, [element, config]);
+  }
+  animation.deferred.resolveWith(this, [$element, config]);
+};
+const startAnimationOnElement = function () {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const animation = this;
+  const $element = animation.element;
+  const {
+    config
+  } = animation;
+  animation.isStarted = true;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return animation.strategy.animate($element, config)
+  // @ts-expect-error
+  .done(() => {
+    onElementAnimationComplete(animation);
+  }).fail(function () {
+    animation.deferred.rejectWith(this, [$element, config]);
+  });
+};
+const stopAnimationOnElement = function (jumpToEnd) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const animation = this;
+  const $element = animation.element;
+  const {
+    config
+  } = animation;
+  clearTimeout(animation.startTimeout);
+  if (!animation.isStarted) {
+    animation.start();
+  }
+  animation.strategy.stop($element, config, jumpToEnd);
+};
+const scopedRemoveEvent = (0, _index.addNamespace)(_remove.removeEvent, 'dxFXStartAnimation');
+const subscribeToRemoveEvent = function (animation) {
+  _events_engine.default.off(animation.element, scopedRemoveEvent);
+  _events_engine.default.on(animation.element, scopedRemoveEvent, () => {
+    fx.stop(animation.element);
+  });
+  animation.deferred.always(() => {
+    _events_engine.default.off(animation.element, scopedRemoveEvent);
+  });
+};
+const createAnimation = function (element,
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+initialConfig) {
+  const defaultConfig = initialConfig.type === 'css' ? defaultCssConfig : defaultJSConfig;
+  const config = (0, _extend.extend)(true, {}, defaultConfig, initialConfig);
+  const configurator = getAnimationConfigurator(config);
+  const strategy = getAnimationStrategy(config);
+  const animation = {
+    element: (0, _renderer.default)(element),
+    config,
+    configurator,
+    strategy,
+    // @ts-expect-error
+    isSynchronous: strategy.isSynchronous,
+    setup: setupAnimationOnElement,
+    start: startAnimationOnElement,
+    stop: stopAnimationOnElement,
+    // @ts-expect-error
+    deferred: new _deferred.Deferred()
+  };
+  if ('validateConfig' in configurator && (0, _type.isFunction)(configurator.validateConfig)) {
+    configurator.validateConfig(config);
+  }
+  subscribeToRemoveEvent(animation);
+  return animation;
+};
+const animate = function (element,
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+config) {
+  const $element = (0, _renderer.default)(element);
+  if (!$element.length) {
+    // @ts-expect-error
+    return new _deferred.Deferred().resolve().promise();
+  }
+  const animation = createAnimation($element, config);
+  pushInAnimationQueue($element, animation);
+  return animation.deferred.promise();
+};
+function pushInAnimationQueue($element, animation) {
+  const queueData = getAnimQueueData($element);
+  writeAnimQueueData($element, queueData);
+  queueData.push(animation);
+  if (!isAnimating($element)) {
+    shiftFromAnimationQueue($element, queueData);
+  }
+}
+function getAnimQueueData($element) {
+  // @ts-expect-error
+  return $element.data(ANIM_QUEUE_KEY) || [];
+}
+function writeAnimQueueData($element, queueData) {
+  $element.data(ANIM_QUEUE_KEY, queueData);
+}
+const destroyAnimQueueData = function ($element) {
+  $element.removeData(ANIM_QUEUE_KEY);
+};
+function isAnimating(element) {
+  const $element = (0, _renderer.default)(element);
+  return !!$element.data(ANIM_DATA_KEY);
+}
+function shiftFromAnimationQueue($element, queueData) {
+  // eslint-disable-next-line no-param-reassign
+  queueData = getAnimQueueData($element);
+  if (!queueData.length) {
+    return;
+  }
+  const animation = queueData.shift();
+  if (queueData.length === 0) {
+    destroyAnimQueueData($element);
+  }
+  // @ts-expect-error
+  executeAnimation(animation).done(() => {
+    if (!isAnimating($element)) {
+      shiftFromAnimationQueue($element);
+    }
+  });
+}
+function executeAnimation(animation) {
+  animation.setup();
+  if (fx.off || animation.isSynchronous) {
+    animation.start();
+  } else {
+    // eslint-disable-next-line no-restricted-globals
+    animation.startTimeout = setTimeout(() => {
+      animation.start();
+    });
+  }
+  return animation.deferred.promise();
+}
+function setupPosition($element, config) {
+  if (!config || !config.position) {
+    return;
+  }
+  const win = (0, _renderer.default)(window);
+  let left = 0;
+  let top = 0;
+  const position = _position.default.calculate($element, config.position);
+  const offset = $element.offset();
+  const currentPosition = $element.position();
+  // @ts-expect-error
+  if (currentPosition.top > offset.top) {
+    // @ts-expect-error
+    top = win.scrollTop();
+  }
+  // @ts-expect-error
+  if (currentPosition.left > offset.left) {
+    // @ts-expect-error
+    left = win.scrollLeft();
+  }
+  (0, _extend.extend)(config, {
+    // @ts-expect-error
+    left: position.h.location - offset.left + currentPosition.left - left,
+    // @ts-expect-error
+    top: position.v.location - offset.top + currentPosition.top - top
+  });
+  delete config.position;
+}
+function setProps($element, props) {
+  (0, _iterator.each)(props, (key, value) => {
+    try {
+      $element.css(key, (0, _type.isFunction)(value) ? value() : value);
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
+  });
+}
+const stop = function (element, jumpToEnd) {
+  const $element = (0, _renderer.default)(element);
+  const queueData = getAnimQueueData($element);
+  // TODO: think about complete all animation in queue
+  (0, _iterator.each)(queueData, (_, animation) => {
+    animation.config.delay = 0;
+    animation.config.duration = 0;
+    animation.isSynchronous = true;
+  });
+  if (!isAnimating($element)) {
+    shiftFromAnimationQueue($element, queueData);
+  }
+  const animation = $element.data(ANIM_DATA_KEY);
+  if (animation) {
+    animation.stop(jumpToEnd);
+  }
+  $element.removeData(ANIM_DATA_KEY);
+  destroyAnimQueueData($element);
+};
+const fx = {
+  off: false,
+  animationTypes: animationConfigurators,
+  animate,
+  createAnimation,
+  isAnimating,
+  stop,
+  _simulatedTransitionEndDelay: 100
+};
+var _default = exports["default"] = fx;
+
+/***/ }),
+
 /***/ 36972:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -3214,6 +4155,341 @@ const animationPresets = exports.presets = new AnimationPresetCollection();
 
 /***/ }),
 
+/***/ 33100:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.TransitionExecutor = void 0;
+var _fx = _interopRequireDefault(__webpack_require__(27075));
+var _class = _interopRequireDefault(__webpack_require__(55620));
+var _renderer = _interopRequireDefault(__webpack_require__(64553));
+var _deferred = __webpack_require__(87739);
+var _extend = __webpack_require__(52576);
+var _iterator = __webpack_require__(21274);
+var _type = __webpack_require__(11528);
+var _m_presets = __webpack_require__(50084);
+var _m_common = _interopRequireDefault(__webpack_require__(39315));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const directionPostfixes = {
+  forward: ' dx-forward',
+  backward: ' dx-backward',
+  none: ' dx-no-direction',
+  undefined: ' dx-no-direction'
+};
+const DX_ANIMATING_CLASS = 'dx-animating';
+const TransitionExecutor = exports.TransitionExecutor = _class.default.inherit({
+  ctor() {
+    this._accumulatedDelays = {
+      enter: 0,
+      leave: 0
+    };
+    this._animations = [];
+    this.reset();
+  },
+  _createAnimations($elements, initialConfig, configModifier, type) {
+    // eslint-disable-next-line no-param-reassign
+    $elements = (0, _renderer.default)($elements);
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const that = this;
+    const result = [];
+    // eslint-disable-next-line no-param-reassign
+    configModifier = configModifier || {};
+    const animationConfig = this._prepareElementAnimationConfig(initialConfig, configModifier, type);
+    if (animationConfig) {
+      $elements.each(function () {
+        const animation = that._createAnimation((0, _renderer.default)(this), animationConfig, configModifier);
+        if (animation) {
+          animation.element.addClass(DX_ANIMATING_CLASS);
+          animation.setup();
+          result.push(animation);
+        }
+      });
+    }
+    return result;
+  },
+  _prepareElementAnimationConfig(config, configModifier, type) {
+    // eslint-disable-next-line no-undef-init, @typescript-eslint/no-explicit-any
+    let result = undefined;
+    if (typeof config === 'string') {
+      const presetName = config;
+      // eslint-disable-next-line no-param-reassign
+      config = _m_presets.presets.getPreset(presetName);
+    }
+    if (!config) {
+      result = undefined;
+    } else if ((0, _type.isFunction)(config[type])) {
+      result = config[type];
+    } else {
+      result = (0, _extend.extend)({
+        skipElementInitialStyles: true,
+        cleanupWhen: this._completePromise
+      }, config, configModifier);
+      if (!result.type || result.type === 'css') {
+        const cssClass = `dx-${type}`;
+        const extraCssClasses = (result.extraCssClasses ? ` ${result.extraCssClasses}` : '') + directionPostfixes[result.direction];
+        result.type = 'css';
+        result.from = (result.from || cssClass) + extraCssClasses;
+        result.to = result.to || `${cssClass}-active`;
+      }
+      result.staggerDelay = result.staggerDelay || 0;
+      result.delay = result.delay || 0;
+      if (result.staggerDelay) {
+        result.delay += this._accumulatedDelays[type];
+        this._accumulatedDelays[type] += result.staggerDelay;
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return result;
+  },
+  _createAnimation($element, animationConfig, configModifier) {
+    // eslint-disable-next-line no-undef-init
+    let result = undefined;
+    if ((0, _type.isPlainObject)(animationConfig)) {
+      result = _fx.default.createAnimation($element, animationConfig);
+    } else if ((0, _type.isFunction)(animationConfig)) {
+      result = animationConfig($element, configModifier);
+    }
+    return result;
+  },
+  _startAnimations() {
+    const animations = this._animations;
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i = 0; i < animations.length; i += 1) {
+      animations[i].start();
+    }
+  },
+  _stopAnimations(jumpToEnd) {
+    const animations = this._animations;
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i = 0; i < animations.length; i += 1) {
+      animations[i].stop(jumpToEnd);
+    }
+  },
+  _clearAnimations() {
+    const animations = this._animations;
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i = 0; i < animations.length; i += 1) {
+      animations[i].element.removeClass(DX_ANIMATING_CLASS);
+    }
+    this._animations.length = 0;
+  },
+  reset() {
+    this._accumulatedDelays.enter = 0;
+    this._accumulatedDelays.leave = 0;
+    this._clearAnimations();
+    // @ts-expect-error
+    this._completeDeferred = new _deferred.Deferred();
+    this._completePromise = this._completeDeferred.promise();
+  },
+  enter($elements, animationConfig, configModifier) {
+    const animations = this._createAnimations($elements, animationConfig, configModifier, 'enter');
+    // eslint-disable-next-line prefer-spread
+    this._animations.push.apply(this._animations, animations);
+  },
+  leave($elements, animationConfig, configModifier) {
+    const animations = this._createAnimations($elements, animationConfig, configModifier, 'leave');
+    // eslint-disable-next-line prefer-spread
+    this._animations.push.apply(this._animations, animations);
+  },
+  start() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const that = this;
+    // eslint-disable-next-line no-undef-init
+    let result = undefined;
+    if (!this._animations.length) {
+      that.reset();
+      // @ts-expect-error
+      result = new _deferred.Deferred().resolve().promise();
+    } else {
+      const animationDeferreds = (0, _iterator.map)(this._animations, animation => {
+        // @ts-expect-error
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const result = new _deferred.Deferred();
+        animation.deferred.always(() => {
+          result.resolve();
+        });
+        return result.promise();
+      });
+      result = _deferred.when.apply(_renderer.default, animationDeferreds).always(() => {
+        that._completeDeferred.resolve();
+        that.reset();
+      });
+      _m_common.default.executeAsync(() => {
+        that._startAnimations();
+      });
+    }
+    return result;
+  },
+  stop(jumpToEnd) {
+    this._stopAnimations(jumpToEnd);
+  }
+});
+
+/***/ }),
+
+/***/ 10469:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.resetPosition = exports.parseTranslate = exports.move = exports.locate = exports.getTranslateCss = exports.getTranslate = exports.clearCache = void 0;
+var _element_data = __webpack_require__(74663);
+var _renderer = _interopRequireDefault(__webpack_require__(64553));
+var _type = __webpack_require__(11528);
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+/* eslint-disable func-names */
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
+/* eslint-disable @typescript-eslint/no-use-before-define */
+
+const TRANSLATOR_DATA_KEY = 'dxTranslator';
+const TRANSFORM_MATRIX_REGEX = /matrix(3d)?\((.+?)\)/;
+const TRANSLATE_REGEX = /translate(?:3d)?\((.+?)\)/;
+const locate = function ($element) {
+  // eslint-disable-next-line no-param-reassign
+  $element = (0, _renderer.default)($element);
+  const translate = getTranslate($element);
+  return {
+    left: translate.x,
+    top: translate.y
+  };
+};
+exports.locate = locate;
+function isPercentValue(value) {
+  return (0, _type.type)(value) === 'string' && value[value.length - 1] === '%';
+}
+function cacheTranslate($element, translate) {
+  if ($element.length) {
+    (0, _element_data.data)($element.get(0), TRANSLATOR_DATA_KEY, translate);
+  }
+}
+const clearCache = function ($element) {
+  if ($element.length) {
+    (0, _element_data.removeData)($element.get(0), TRANSLATOR_DATA_KEY);
+  }
+};
+exports.clearCache = clearCache;
+const getTranslateCss = function (translate) {
+  translate.x = translate.x || 0;
+  translate.y = translate.y || 0;
+  const xValueString = isPercentValue(translate.x) ? translate.x : `${translate.x}px`;
+  const yValueString = isPercentValue(translate.y) ? translate.y : `${translate.y}px`;
+  return `translate(${xValueString}, ${yValueString})`;
+};
+exports.getTranslateCss = getTranslateCss;
+const getTranslate = function ($element) {
+  let result = $element.length ? (0, _element_data.data)($element.get(0), TRANSLATOR_DATA_KEY) : null;
+  if (!result) {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const transformValue = $element.css('transform') || getTranslateCss({
+      x: 0,
+      y: 0
+    });
+    // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
+    let matrix = transformValue.match(TRANSFORM_MATRIX_REGEX);
+    const is3D = matrix && matrix[1];
+    if (matrix) {
+      matrix = matrix[2].split(',');
+      if (is3D === '3d') {
+        matrix = matrix.slice(12, 15);
+      } else {
+        matrix.push('0');
+        matrix = matrix.slice(4, 7);
+      }
+    } else {
+      matrix = ['0', '0', '0'];
+    }
+    result = {
+      x: parseFloat(matrix[0]),
+      y: parseFloat(matrix[1]),
+      z: parseFloat(matrix[2])
+    };
+    cacheTranslate($element, result);
+  }
+  return result;
+};
+exports.getTranslate = getTranslate;
+const move = function ($element,
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+position) {
+  // eslint-disable-next-line no-param-reassign
+  $element = (0, _renderer.default)($element);
+  const {
+    left,
+    top
+  } = position;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let translate;
+  if (left === undefined) {
+    translate = getTranslate($element);
+    translate.y = top || 0;
+  } else if (top === undefined) {
+    translate = getTranslate($element);
+    translate.x = left || 0;
+  } else {
+    translate = {
+      x: left || 0,
+      y: top || 0,
+      z: 0
+    };
+    cacheTranslate($element, translate);
+  }
+  $element.css({
+    transform: getTranslateCss(translate)
+  });
+  if (isPercentValue(left) || isPercentValue(top)) {
+    clearCache($element);
+  }
+};
+exports.move = move;
+const resetPosition = function ($element, finishTransition) {
+  // eslint-disable-next-line no-param-reassign
+  $element = (0, _renderer.default)($element);
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let originalTransition;
+  const stylesConfig = {
+    left: 0,
+    top: 0,
+    transform: 'none'
+  };
+  if (finishTransition) {
+    originalTransition = $element.css('transition');
+    // @ts-expect-error
+    stylesConfig.transition = 'none';
+  }
+  $element.css(stylesConfig);
+  clearCache($element);
+  if (finishTransition) {
+    // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    $element.get(0).offsetHeight;
+    $element.css('transition', originalTransition);
+  }
+};
+exports.resetPosition = resetPosition;
+const parseTranslate = function (translateString) {
+  // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
+  let result = translateString.match(TRANSLATE_REGEX);
+  if (!result || !result[1]) {
+    return undefined;
+  }
+  result = result[1].split(',');
+  return {
+    x: parseFloat(result[0]),
+    y: parseFloat(result[1]),
+    z: parseFloat(result[2])
+  };
+};
+exports.parseTranslate = parseTranslate;
+
+/***/ }),
+
 /***/ 55351:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -3936,7 +5212,10 @@ class DxLicenseTrigger extends SafeHTMLElement {
     if (!licensePanel.length) {
       const license = document.createElement(componentNames.panel);
       Object.values(attributeNames).forEach(attrName => {
-        license.setAttribute(attrName, this.getAttribute(attrName));
+        const attrValue = this.getAttribute(attrName);
+        if (attrValue) {
+          license.setAttribute(attrName, attrValue);
+        }
       });
       license.setAttribute(DATA_PERMANENT_ATTRIBUTE, '');
       document.body.prepend(license);
@@ -3953,15 +5232,13 @@ function registerCustomComponents(customStyles) {
     customElements.define(componentNames.trigger, DxLicenseTrigger);
   }
 }
-function renderTrialPanel(buyNowUrl, licensingDocUrl, version) {
-  let subscriptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
-  let customStyles = arguments.length > 4 ? arguments[4] : undefined;
+function renderTrialPanel(buyNowUrl, licensingDocUrl, version, subscriptions, customStyles) {
   registerCustomComponents(customStyles);
   const trialPanelTrigger = document.createElement(componentNames.trigger);
   trialPanelTrigger.setAttribute(attributeNames.buyNow, buyNowUrl);
   trialPanelTrigger.setAttribute(attributeNames.licensingDoc, licensingDocUrl);
   trialPanelTrigger.setAttribute(attributeNames.version, version);
-  trialPanelTrigger.setAttribute(attributeNames.subscriptions, subscriptions);
+  trialPanelTrigger.setAttribute(attributeNames.subscriptions, subscriptions ?? '');
   document.body.appendChild(trialPanelTrigger);
 }
 
@@ -33114,6 +34391,7 @@ Object.defineProperty(exports, "__esModule", ({
 exports["default"] = void 0;
 var _frame = __webpack_require__(84096);
 var _class = _interopRequireDefault(__webpack_require__(55620));
+var _type = __webpack_require__(11528);
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class Animator {
   constructor() {
@@ -33128,7 +34406,9 @@ class Animator {
   }
   stop() {
     this._stopped = true;
-    (0, _frame.cancelAnimationFrame)(this._stepAnimationFrame);
+    if ((0, _type.isDefined)(this._stepAnimationFrame)) {
+      (0, _frame.cancelAnimationFrame)(this._stepAnimationFrame);
+    }
   }
   _stepCore() {
     if (this._isStopped()) {
@@ -92166,10 +93446,10 @@ viz.registerTheme = (__webpack_require__(84560).registerTheme);
 viz.exportFromMarkup = (__webpack_require__(88168).exportFromMarkup);
 viz.getMarkup = (__webpack_require__(88168).getMarkup);
 viz.exportWidgets = (__webpack_require__(88168).exportWidgets);
-viz.currentPalette = (__webpack_require__(9735).currentPalette);
-viz.getPalette = (__webpack_require__(9735).getPalette);
-viz.generateColors = (__webpack_require__(9735).generateColors);
-viz.registerPalette = (__webpack_require__(9735).registerPalette);
+viz.currentPalette = (__webpack_require__(9735)/* .currentPalette */ .pq);
+viz.getPalette = (__webpack_require__(9735)/* .getPalette */ .Sf);
+viz.generateColors = (__webpack_require__(9735)/* .generateColors */ .oC);
+viz.registerPalette = (__webpack_require__(9735)/* .registerPalette */ .hr);
 viz.refreshTheme = (__webpack_require__(84560).refreshTheme);
 
 /* Charts (dx.module-viz-charts.js) */
@@ -92364,123 +93644,24 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 
 /***/ }),
 
-/***/ 88424:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-
-exports.convertTransitionTimingFuncToEasing = void 0;
-exports.getEasing = getEasing;
-exports.setEasing = setEasing;
-var _type = __webpack_require__(11528);
-const CSS_TRANSITION_EASING_REGEX = /cubic-bezier\((\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\)/;
-const TransitionTimingFuncMap = {
-  'linear': 'cubic-bezier(0, 0, 1, 1)',
-  'swing': 'cubic-bezier(0.445, 0.05, 0.55, 0.95)',
-  'ease': 'cubic-bezier(0.25, 0.1, 0.25, 1)',
-  'ease-in': 'cubic-bezier(0.42, 0, 1, 1)',
-  'ease-out': 'cubic-bezier(0, 0, 0.58, 1)',
-  'ease-in-out': 'cubic-bezier(0.42, 0, 0.58, 1)'
-};
-const polynomBezier = function (x1, y1, x2, y2) {
-  const Cx = 3 * x1;
-  const Bx = 3 * (x2 - x1) - Cx;
-  const Ax = 1 - Cx - Bx;
-  const Cy = 3 * y1;
-  const By = 3 * (y2 - y1) - Cy;
-  const Ay = 1 - Cy - By;
-  const bezierX = function (t) {
-    return t * (Cx + t * (Bx + t * Ax));
-  };
-  const bezierY = function (t) {
-    return t * (Cy + t * (By + t * Ay));
-  };
-  const derivativeX = function (t) {
-    return Cx + t * (2 * Bx + t * 3 * Ax);
-  };
-  const findXFor = function (t) {
-    let x = t;
-    let i = 0;
-    let z;
-    while (i < 14) {
-      z = bezierX(x) - t;
-      if (Math.abs(z) < 1e-3) {
-        break;
-      }
-      x = x - z / derivativeX(x);
-      i++;
-    }
-    return x;
-  };
-  return function (t) {
-    return bezierY(findXFor(t));
-  };
-};
-let easing = {};
-const convertTransitionTimingFuncToEasing = function (cssTransitionEasing) {
-  cssTransitionEasing = TransitionTimingFuncMap[cssTransitionEasing] || cssTransitionEasing;
-  let coeffs = cssTransitionEasing.match(CSS_TRANSITION_EASING_REGEX);
-  let forceName;
-  if (!coeffs) {
-    forceName = 'linear';
-    coeffs = TransitionTimingFuncMap[forceName].match(CSS_TRANSITION_EASING_REGEX);
-  }
-  coeffs = coeffs.slice(1, 5);
-  for (let i = 0; i < coeffs.length; i++) {
-    coeffs[i] = parseFloat(coeffs[i]);
-  }
-  const easingName = forceName || 'cubicbezier_' + coeffs.join('_').replace(/\./g, 'p');
-  if (!(0, _type.isFunction)(easing[easingName])) {
-    easing[easingName] = function (x, t, b, c, d) {
-      return c * polynomBezier(coeffs[0], coeffs[1], coeffs[2], coeffs[3])(t / d) + b;
-    };
-  }
-  return easingName;
-};
-exports.convertTransitionTimingFuncToEasing = convertTransitionTimingFuncToEasing;
-function setEasing(value) {
-  easing = value;
-}
-function getEasing(name) {
-  return easing[name];
-}
-
-/***/ }),
-
 /***/ 84096:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
 
-exports.cancelAnimationFrame = cancelAnimationFrame;
-exports.requestAnimationFrame = requestAnimationFrame;
-var _window = __webpack_require__(3104);
-var _call_once = _interopRequireDefault(__webpack_require__(13630));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-const window = (0, _window.hasWindow)() ? (0, _window.getWindow)() : {};
-const FRAME_ANIMATION_STEP_TIME = 1000 / 60;
-let request = function (callback) {
-  return setTimeout(callback, FRAME_ANIMATION_STEP_TIME);
-};
-let cancel = function (requestID) {
-  clearTimeout(requestID);
-};
-const setAnimationFrameMethods = (0, _call_once.default)(function () {
-  const nativeRequest = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame;
-  const nativeCancel = window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.oCancelAnimationFrame || window.msCancelAnimationFrame;
-  if (nativeRequest && nativeCancel) {
-    request = nativeRequest;
-    cancel = nativeCancel;
+Object.defineProperty(exports, "cancelAnimationFrame", ({
+  enumerable: true,
+  get: function () {
+    return _frame.cancelAnimationFrame;
   }
-});
-function requestAnimationFrame() {
-  setAnimationFrameMethods();
-  return request.apply(window, arguments);
-}
-function cancelAnimationFrame() {
-  setAnimationFrameMethods();
-  cancel.apply(window, arguments);
-}
+}));
+Object.defineProperty(exports, "requestAnimationFrame", ({
+  enumerable: true,
+  get: function () {
+    return _frame.requestAnimationFrame;
+  }
+}));
+var _frame = __webpack_require__(26106);
 
 /***/ }),
 
@@ -92490,701 +93671,9 @@ function cancelAnimationFrame() {
 
 
 exports["default"] = void 0;
-var _renderer = _interopRequireDefault(__webpack_require__(64553));
-var _window = __webpack_require__(3104);
-var _events_engine = _interopRequireDefault(__webpack_require__(92774));
-var _errors = _interopRequireDefault(__webpack_require__(87129));
-var _element = __webpack_require__(61404);
-var _extend = __webpack_require__(52576);
-var _type = __webpack_require__(11528);
-var _iterator = __webpack_require__(21274);
-var _translator = __webpack_require__(88603);
-var _easing = __webpack_require__(88424);
-var _frame = __webpack_require__(84096);
-var _m_support = _interopRequireDefault(__webpack_require__(85991));
-var _position = _interopRequireDefault(__webpack_require__(3030));
-var _remove = __webpack_require__(28630);
-var _index = __webpack_require__(98834);
-var _deferred = __webpack_require__(87739);
-var _common = __webpack_require__(17781);
+var _fx = _interopRequireDefault(__webpack_require__(28885));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-const window = (0, _window.getWindow)();
-const removeEventName = (0, _index.addNamespace)(_remove.removeEvent, 'dxFX');
-const RELATIVE_VALUE_REGEX = /^([+-])=(.*)/i;
-const ANIM_DATA_KEY = 'dxAnimData';
-const ANIM_QUEUE_KEY = 'dxAnimQueue';
-const TRANSFORM_PROP = 'transform';
-const TransitionAnimationStrategy = {
-  initAnimation: function ($element, config) {
-    $element.css({
-      'transitionProperty': 'none'
-    });
-    if (typeof config.from === 'string') {
-      $element.addClass(config.from);
-    } else {
-      setProps($element, config.from);
-    }
-    const that = this;
-    const deferred = new _deferred.Deferred();
-    const cleanupWhen = config.cleanupWhen;
-    config.transitionAnimation = {
-      deferred: deferred,
-      finish: function () {
-        that._finishTransition($element);
-        if (cleanupWhen) {
-          (0, _deferred.when)(deferred, cleanupWhen).always(function () {
-            that._cleanup($element, config);
-          });
-        } else {
-          that._cleanup($element, config);
-        }
-        deferred.resolveWith($element, [config, $element]);
-      }
-    };
-    this._completeAnimationCallback($element, config).done(function () {
-      config.transitionAnimation.finish();
-    }).fail(function () {
-      deferred.rejectWith($element, [config, $element]);
-    });
-    if (!config.duration) {
-      config.transitionAnimation.finish();
-    }
-
-    // NOTE: Hack for setting 'from' css by browser before run animation
-    //       Do not move this hack to initAnimation since some css props can be changed in the 'start' callback (T231434)
-    //       Unfortunately this can't be unit tested
-    // TODO: find better way if possible
-    $element.css('transform');
-  },
-  animate: function ($element, config) {
-    this._startAnimation($element, config);
-    return config.transitionAnimation.deferred.promise();
-  },
-  _completeAnimationCallback: function ($element, config) {
-    const that = this;
-    const startTime = Date.now() + config.delay;
-    const deferred = new _deferred.Deferred();
-    const transitionEndFired = new _deferred.Deferred();
-    const simulatedTransitionEndFired = new _deferred.Deferred();
-    let simulatedEndEventTimer;
-    const transitionEndEventFullName = _m_support.default.transitionEndEventName() + '.dxFX';
-    config.transitionAnimation.cleanup = function () {
-      clearTimeout(simulatedEndEventTimer);
-      clearTimeout(waitForJSCompleteTimer);
-      _events_engine.default.off($element, transitionEndEventFullName);
-      _events_engine.default.off($element, removeEventName);
-    };
-    _events_engine.default.one($element, transitionEndEventFullName, function () {
-      // NOTE: prevent native transitionEnd event from previous animation in queue (Chrome)
-      if (Date.now() - startTime >= config.duration) {
-        transitionEndFired.reject();
-      }
-    });
-    _events_engine.default.off($element, removeEventName);
-    _events_engine.default.on($element, removeEventName, function () {
-      that.stop($element, config);
-      deferred.reject();
-    });
-    const waitForJSCompleteTimer = setTimeout(function () {
-      // Fix for a visual bug (T244514): do not setup the timer until all js code has finished working
-      simulatedEndEventTimer = setTimeout(function () {
-        simulatedTransitionEndFired.reject();
-      }, config.duration + config.delay + fx._simulatedTransitionEndDelay /* T255863 */);
-      (0, _deferred.when)(transitionEndFired, simulatedTransitionEndFired).fail(function () {
-        deferred.resolve();
-      }.bind(this));
-    });
-    return deferred.promise();
-  },
-  _startAnimation: function ($element, config) {
-    $element.css({
-      'transitionProperty': 'all',
-      'transitionDelay': config.delay + 'ms',
-      'transitionDuration': config.duration + 'ms',
-      'transitionTimingFunction': config.easing
-    });
-    if (typeof config.to === 'string') {
-      $element[0].className += ' ' + config.to;
-      // Do not uncomment: performance critical
-      // $element.addClass(config.to);
-    } else if (config.to) {
-      setProps($element, config.to);
-    }
-  },
-  _finishTransition: function ($element) {
-    $element.css('transition', 'none');
-  },
-  _cleanup: function ($element, config) {
-    config.transitionAnimation.cleanup();
-    if (typeof config.from === 'string') {
-      $element.removeClass(config.from);
-      $element.removeClass(config.to);
-    }
-  },
-  stop: function ($element, config, jumpToEnd) {
-    if (!config) {
-      return;
-    }
-    if (jumpToEnd) {
-      config.transitionAnimation.finish();
-    } else {
-      if ((0, _type.isPlainObject)(config.to)) {
-        (0, _iterator.each)(config.to, function (key) {
-          $element.css(key, $element.css(key));
-        });
-      }
-      this._finishTransition($element);
-      this._cleanup($element, config);
-    }
-  }
-};
-const FrameAnimationStrategy = {
-  initAnimation: function ($element, config) {
-    setProps($element, config.from);
-  },
-  animate: function ($element, config) {
-    const deferred = new _deferred.Deferred();
-    const that = this;
-    if (!config) {
-      return deferred.reject().promise();
-    }
-    (0, _iterator.each)(config.to, function (prop) {
-      if (config.from[prop] === undefined) {
-        config.from[prop] = that._normalizeValue($element.css(prop));
-      }
-    });
-    if (config.to[TRANSFORM_PROP]) {
-      config.from[TRANSFORM_PROP] = that._parseTransform(config.from[TRANSFORM_PROP]);
-      config.to[TRANSFORM_PROP] = that._parseTransform(config.to[TRANSFORM_PROP]);
-    }
-    config.frameAnimation = {
-      to: config.to,
-      from: config.from,
-      currentValue: config.from,
-      easing: (0, _easing.convertTransitionTimingFuncToEasing)(config.easing),
-      duration: config.duration,
-      startTime: new Date().valueOf(),
-      finish: function () {
-        this.currentValue = this.to;
-        this.draw();
-        (0, _frame.cancelAnimationFrame)(config.frameAnimation.animationFrameId);
-        deferred.resolve();
-      },
-      draw: function () {
-        if (config.draw) {
-          config.draw(this.currentValue);
-          return;
-        }
-        const currentValue = (0, _extend.extend)({}, this.currentValue);
-        if (currentValue[TRANSFORM_PROP]) {
-          currentValue[TRANSFORM_PROP] = (0, _iterator.map)(currentValue[TRANSFORM_PROP], function (value, prop) {
-            if (prop === 'translate') {
-              return (0, _translator.getTranslateCss)(value);
-            } else if (prop === 'scale') {
-              return 'scale(' + value + ')';
-            } else if (prop.substr(0, prop.length - 1) === 'rotate') {
-              return prop + '(' + value + 'deg)';
-            }
-          }).join(' ');
-        }
-        $element.css(currentValue);
-      }
-    };
-    if (config.delay) {
-      config.frameAnimation.startTime += config.delay;
-      config.frameAnimation.delayTimeout = setTimeout(function () {
-        that._startAnimation($element, config);
-      }, config.delay);
-    } else {
-      that._startAnimation($element, config);
-    }
-    return deferred.promise();
-  },
-  _startAnimation: function ($element, config) {
-    _events_engine.default.off($element, removeEventName);
-    _events_engine.default.on($element, removeEventName, function () {
-      if (config.frameAnimation) {
-        (0, _frame.cancelAnimationFrame)(config.frameAnimation.animationFrameId);
-      }
-    });
-    this._animationStep($element, config);
-  },
-  _parseTransform: function (transformString) {
-    const result = {};
-    (0, _iterator.each)(transformString.match(/\w+\d*\w*\([^)]*\)\s*/g), function (i, part) {
-      const translateData = (0, _translator.parseTranslate)(part);
-      const scaleData = part.match(/scale\((.+?)\)/);
-      const rotateData = part.match(/(rotate.)\((.+)deg\)/);
-      if (translateData) {
-        result.translate = translateData;
-      }
-      if (scaleData && scaleData[1]) {
-        result.scale = parseFloat(scaleData[1]);
-      }
-      if (rotateData && rotateData[1]) {
-        result[rotateData[1]] = parseFloat(rotateData[2]);
-      }
-    });
-    return result;
-  },
-  stop: function ($element, config, jumpToEnd) {
-    const frameAnimation = config && config.frameAnimation;
-    if (!frameAnimation) {
-      return;
-    }
-    (0, _frame.cancelAnimationFrame)(frameAnimation.animationFrameId);
-    clearTimeout(frameAnimation.delayTimeout);
-    if (jumpToEnd) {
-      frameAnimation.finish();
-    }
-    delete config.frameAnimation;
-  },
-  _animationStep: function ($element, config) {
-    const frameAnimation = config && config.frameAnimation;
-    if (!frameAnimation) {
-      return;
-    }
-    const now = new Date().valueOf();
-    if (now >= frameAnimation.startTime + frameAnimation.duration) {
-      frameAnimation.finish();
-      return;
-    }
-    frameAnimation.currentValue = this._calcStepValue(frameAnimation, now - frameAnimation.startTime);
-    frameAnimation.draw();
-    const that = this;
-    frameAnimation.animationFrameId = (0, _frame.requestAnimationFrame)(function () {
-      that._animationStep($element, config);
-    });
-  },
-  _calcStepValue: function (frameAnimation, currentDuration) {
-    const calcValueRecursively = function (from, to) {
-      const result = Array.isArray(to) ? [] : {};
-      const calcEasedValue = function (propName) {
-        const x = currentDuration / frameAnimation.duration;
-        const t = currentDuration;
-        const b = 1 * from[propName];
-        const c = to[propName] - from[propName];
-        const d = frameAnimation.duration;
-        return (0, _easing.getEasing)(frameAnimation.easing)(x, t, b, c, d);
-      };
-      (0, _iterator.each)(to, function (propName, endPropValue) {
-        if (typeof endPropValue === 'string' && parseFloat(endPropValue) === false) {
-          return true;
-        }
-        result[propName] = typeof endPropValue === 'object' ? calcValueRecursively(from[propName], endPropValue) : calcEasedValue(propName);
-      });
-      return result;
-    };
-    return calcValueRecursively(frameAnimation.from, frameAnimation.to);
-  },
-  _normalizeValue: function (value) {
-    const numericValue = parseFloat(value);
-    if (numericValue === false) {
-      return value;
-    }
-    return numericValue;
-  }
-};
-const FallbackToNoAnimationStrategy = {
-  initAnimation: function () {},
-  animate: function () {
-    return new _deferred.Deferred().resolve().promise();
-  },
-  stop: _common.noop,
-  isSynchronous: true
-};
-const getAnimationStrategy = function (config) {
-  config = config || {};
-  const animationStrategies = {
-    'transition': _m_support.default.transition() ? TransitionAnimationStrategy : FrameAnimationStrategy,
-    'frame': FrameAnimationStrategy,
-    'noAnimation': FallbackToNoAnimationStrategy
-  };
-  let strategy = config.strategy || 'transition';
-  if (config.type === 'css' && !_m_support.default.transition()) {
-    strategy = 'noAnimation';
-  }
-  return animationStrategies[strategy];
-};
-const baseConfigValidator = function (config, animationType, validate, typeMessage) {
-  (0, _iterator.each)(['from', 'to'], function () {
-    if (!validate(config[this])) {
-      throw _errors.default.Error('E0010', animationType, this, typeMessage);
-    }
-  });
-};
-const isObjectConfigValidator = function (config, animationType) {
-  return baseConfigValidator(config, animationType, function (target) {
-    return (0, _type.isPlainObject)(target);
-  }, 'a plain object');
-};
-const isStringConfigValidator = function (config, animationType) {
-  return baseConfigValidator(config, animationType, function (target) {
-    return typeof target === 'string';
-  }, 'a string');
-};
-const CustomAnimationConfigurator = {
-  setup: function () {}
-};
-const CssAnimationConfigurator = {
-  validateConfig: function (config) {
-    isStringConfigValidator(config, 'css');
-  },
-  setup: function () {}
-};
-const positionAliases = {
-  'top': {
-    my: 'bottom center',
-    at: 'top center'
-  },
-  'bottom': {
-    my: 'top center',
-    at: 'bottom center'
-  },
-  'right': {
-    my: 'left center',
-    at: 'right center'
-  },
-  'left': {
-    my: 'right center',
-    at: 'left center'
-  }
-};
-const SlideAnimationConfigurator = {
-  validateConfig: function (config) {
-    isObjectConfigValidator(config, 'slide');
-  },
-  setup: function ($element, config) {
-    const location = (0, _translator.locate)($element);
-    if (config.type !== 'slide') {
-      const positioningConfig = config.type === 'slideIn' ? config.from : config.to;
-      positioningConfig.position = (0, _extend.extend)({
-        of: window
-      }, positionAliases[config.direction]);
-      setupPosition($element, positioningConfig);
-    }
-    this._setUpConfig(location, config.from);
-    this._setUpConfig(location, config.to);
-    (0, _translator.clearCache)($element);
-  },
-  _setUpConfig: function (location, config) {
-    config.left = 'left' in config ? config.left : '+=0';
-    config.top = 'top' in config ? config.top : '+=0';
-    this._initNewPosition(location, config);
-  },
-  _initNewPosition: function (location, config) {
-    const position = {
-      left: config.left,
-      top: config.top
-    };
-    delete config.left;
-    delete config.top;
-    let relativeValue = this._getRelativeValue(position.left);
-    if (relativeValue !== undefined) {
-      position.left = relativeValue + location.left;
-    } else {
-      config.left = 0;
-    }
-    relativeValue = this._getRelativeValue(position.top);
-    if (relativeValue !== undefined) {
-      position.top = relativeValue + location.top;
-    } else {
-      config.top = 0;
-    }
-    config[TRANSFORM_PROP] = (0, _translator.getTranslateCss)({
-      x: position.left,
-      y: position.top
-    });
-  },
-  _getRelativeValue: function (value) {
-    let relativeValue;
-    if (typeof value === 'string' && (relativeValue = RELATIVE_VALUE_REGEX.exec(value))) {
-      return parseInt(relativeValue[1] + '1') * relativeValue[2];
-    }
-  }
-};
-const FadeAnimationConfigurator = {
-  setup: function ($element, config) {
-    const from = config.from;
-    const to = config.to;
-    const defaultFromOpacity = config.type === 'fadeOut' ? 1 : 0;
-    const defaultToOpacity = config.type === 'fadeOut' ? 0 : 1;
-    let fromOpacity = (0, _type.isPlainObject)(from) ? String(from.opacity ?? defaultFromOpacity) : String(from);
-    let toOpacity = (0, _type.isPlainObject)(to) ? String(to.opacity ?? defaultToOpacity) : String(to);
-    if (!config.skipElementInitialStyles) {
-      fromOpacity = $element.css('opacity');
-    }
-    switch (config.type) {
-      case 'fadeIn':
-        toOpacity = 1;
-        break;
-      case 'fadeOut':
-        toOpacity = 0;
-        break;
-    }
-    config.from = {
-      visibility: 'visible',
-      opacity: fromOpacity
-    };
-    config.to = {
-      opacity: toOpacity
-    };
-  }
-};
-const PopAnimationConfigurator = {
-  validateConfig: function (config) {
-    isObjectConfigValidator(config, 'pop');
-  },
-  setup: function ($element, config) {
-    const from = config.from;
-    const to = config.to;
-    const fromOpacity = 'opacity' in from ? from.opacity : $element.css('opacity');
-    const toOpacity = 'opacity' in to ? to.opacity : 1;
-    const fromScale = 'scale' in from ? from.scale : 0;
-    const toScale = 'scale' in to ? to.scale : 1;
-    config.from = {
-      opacity: fromOpacity
-    };
-    const translate = (0, _translator.getTranslate)($element);
-    config.from[TRANSFORM_PROP] = this._getCssTransform(translate, fromScale);
-    config.to = {
-      opacity: toOpacity
-    };
-    config.to[TRANSFORM_PROP] = this._getCssTransform(translate, toScale);
-  },
-  _getCssTransform: function (translate, scale) {
-    return (0, _translator.getTranslateCss)(translate) + 'scale(' + scale + ')';
-  }
-};
-const animationConfigurators = {
-  'custom': CustomAnimationConfigurator,
-  'slide': SlideAnimationConfigurator,
-  'slideIn': SlideAnimationConfigurator,
-  'slideOut': SlideAnimationConfigurator,
-  'fade': FadeAnimationConfigurator,
-  'fadeIn': FadeAnimationConfigurator,
-  'fadeOut': FadeAnimationConfigurator,
-  'pop': PopAnimationConfigurator,
-  'css': CssAnimationConfigurator
-};
-const getAnimationConfigurator = function (config) {
-  const result = animationConfigurators[config.type];
-  if (!result) {
-    throw _errors.default.Error('E0011', config.type);
-  }
-  return result;
-};
-const defaultJSConfig = {
-  type: 'custom',
-  from: {},
-  to: {},
-  duration: 400,
-  start: _common.noop,
-  complete: _common.noop,
-  easing: 'ease',
-  delay: 0
-};
-const defaultCssConfig = {
-  duration: 400,
-  easing: 'ease',
-  delay: 0
-};
-function setupAnimationOnElement() {
-  const animation = this;
-  const $element = animation.element;
-  const config = animation.config;
-  setupPosition($element, config.from);
-  setupPosition($element, config.to);
-  animation.configurator.setup($element, config);
-  $element.data(ANIM_DATA_KEY, animation);
-  if (fx.off) {
-    config.duration = 0;
-    config.delay = 0;
-  }
-  animation.strategy.initAnimation($element, config);
-  if (config.start) {
-    const element = (0, _element.getPublicElement)($element);
-    config.start.apply(this, [element, config]);
-  }
-}
-const onElementAnimationComplete = function (animation) {
-  const $element = animation.element;
-  const config = animation.config;
-  $element.removeData(ANIM_DATA_KEY);
-  if (config.complete) {
-    const element = (0, _element.getPublicElement)($element);
-    config.complete.apply(this, [element, config]);
-  }
-  animation.deferred.resolveWith(this, [$element, config]);
-};
-const startAnimationOnElement = function () {
-  const animation = this;
-  const $element = animation.element;
-  const config = animation.config;
-  animation.isStarted = true;
-  return animation.strategy.animate($element, config).done(function () {
-    onElementAnimationComplete(animation);
-  }).fail(function () {
-    animation.deferred.rejectWith(this, [$element, config]);
-  });
-};
-const stopAnimationOnElement = function (jumpToEnd) {
-  const animation = this;
-  const $element = animation.element;
-  const config = animation.config;
-  clearTimeout(animation.startTimeout);
-  if (!animation.isStarted) {
-    animation.start();
-  }
-  animation.strategy.stop($element, config, jumpToEnd);
-};
-const scopedRemoveEvent = (0, _index.addNamespace)(_remove.removeEvent, 'dxFXStartAnimation');
-const subscribeToRemoveEvent = function (animation) {
-  _events_engine.default.off(animation.element, scopedRemoveEvent);
-  _events_engine.default.on(animation.element, scopedRemoveEvent, function () {
-    fx.stop(animation.element);
-  });
-  animation.deferred.always(function () {
-    _events_engine.default.off(animation.element, scopedRemoveEvent);
-  });
-};
-const createAnimation = function (element, initialConfig) {
-  const defaultConfig = initialConfig.type === 'css' ? defaultCssConfig : defaultJSConfig;
-  const config = (0, _extend.extend)(true, {}, defaultConfig, initialConfig);
-  const configurator = getAnimationConfigurator(config);
-  const strategy = getAnimationStrategy(config);
-  const animation = {
-    element: (0, _renderer.default)(element),
-    config: config,
-    configurator: configurator,
-    strategy: strategy,
-    isSynchronous: strategy.isSynchronous,
-    setup: setupAnimationOnElement,
-    start: startAnimationOnElement,
-    stop: stopAnimationOnElement,
-    deferred: new _deferred.Deferred()
-  };
-  if ((0, _type.isFunction)(configurator.validateConfig)) {
-    configurator.validateConfig(config);
-  }
-  subscribeToRemoveEvent(animation);
-  return animation;
-};
-const animate = function (element, config) {
-  const $element = (0, _renderer.default)(element);
-  if (!$element.length) {
-    return new _deferred.Deferred().resolve().promise();
-  }
-  const animation = createAnimation($element, config);
-  pushInAnimationQueue($element, animation);
-  return animation.deferred.promise();
-};
-function pushInAnimationQueue($element, animation) {
-  const queueData = getAnimQueueData($element);
-  writeAnimQueueData($element, queueData);
-  queueData.push(animation);
-  if (!isAnimating($element)) {
-    shiftFromAnimationQueue($element, queueData);
-  }
-}
-function getAnimQueueData($element) {
-  return $element.data(ANIM_QUEUE_KEY) || [];
-}
-function writeAnimQueueData($element, queueData) {
-  $element.data(ANIM_QUEUE_KEY, queueData);
-}
-const destroyAnimQueueData = function ($element) {
-  $element.removeData(ANIM_QUEUE_KEY);
-};
-function isAnimating(element) {
-  const $element = (0, _renderer.default)(element);
-  return !!$element.data(ANIM_DATA_KEY);
-}
-function shiftFromAnimationQueue($element, queueData) {
-  queueData = getAnimQueueData($element);
-  if (!queueData.length) {
-    return;
-  }
-  const animation = queueData.shift();
-  if (queueData.length === 0) {
-    destroyAnimQueueData($element);
-  }
-  executeAnimation(animation).done(function () {
-    if (!isAnimating($element)) {
-      shiftFromAnimationQueue($element);
-    }
-  });
-}
-function executeAnimation(animation) {
-  animation.setup();
-  if (fx.off || animation.isSynchronous) {
-    animation.start();
-  } else {
-    animation.startTimeout = setTimeout(function () {
-      animation.start();
-    });
-  }
-  return animation.deferred.promise();
-}
-function setupPosition($element, config) {
-  if (!config || !config.position) {
-    return;
-  }
-  const win = (0, _renderer.default)(window);
-  let left = 0;
-  let top = 0;
-  const position = _position.default.calculate($element, config.position);
-  const offset = $element.offset();
-  const currentPosition = $element.position();
-  if (currentPosition.top > offset.top) {
-    top = win.scrollTop();
-  }
-  if (currentPosition.left > offset.left) {
-    left = win.scrollLeft();
-  }
-  (0, _extend.extend)(config, {
-    left: position.h.location - offset.left + currentPosition.left - left,
-    top: position.v.location - offset.top + currentPosition.top - top
-  });
-  delete config.position;
-}
-function setProps($element, props) {
-  (0, _iterator.each)(props, function (key, value) {
-    try {
-      $element.css(key, (0, _type.isFunction)(value) ? value() : value);
-    } catch (e) {}
-  });
-}
-const stop = function (element, jumpToEnd) {
-  const $element = (0, _renderer.default)(element);
-  const queueData = getAnimQueueData($element);
-
-  // TODO: think about complete all animation in queue
-  (0, _iterator.each)(queueData, function (_, animation) {
-    animation.config.delay = 0;
-    animation.config.duration = 0;
-    animation.isSynchronous = true;
-  });
-  if (!isAnimating($element)) {
-    shiftFromAnimationQueue($element, queueData);
-  }
-  const animation = $element.data(ANIM_DATA_KEY);
-  if (animation) {
-    animation.stop(jumpToEnd);
-  }
-  $element.removeData(ANIM_DATA_KEY);
-  destroyAnimQueueData($element);
-};
-const fx = {
-  off: false,
-  animationTypes: animationConfigurators,
-  animate: animate,
-  createAnimation: createAnimation,
-  isAnimating: isAnimating,
-  stop: stop,
-  _simulatedTransitionEndDelay: 100
-};
-var _default = exports["default"] = fx;
+var _default = exports["default"] = _fx.default;
 module.exports = exports.default;
 module.exports["default"] = exports.default;
 
@@ -93254,152 +93743,16 @@ module.exports["default"] = exports.default;
 
 
 
-exports.TransitionExecutor = void 0;
-var _renderer = _interopRequireDefault(__webpack_require__(64553));
-var _class = _interopRequireDefault(__webpack_require__(55620));
-var _extend = __webpack_require__(52576);
-var _m_common = _interopRequireDefault(__webpack_require__(39315));
-var _type = __webpack_require__(11528);
-var _iterator = __webpack_require__(21274);
-var _fx = _interopRequireDefault(__webpack_require__(27075));
-var _presets = __webpack_require__(61310);
-var _deferred = __webpack_require__(87739);
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-const directionPostfixes = {
-  forward: ' dx-forward',
-  backward: ' dx-backward',
-  none: ' dx-no-direction',
-  undefined: ' dx-no-direction'
-};
-const DX_ANIMATING_CLASS = 'dx-animating';
-const TransitionExecutor = exports.TransitionExecutor = _class.default.inherit({
-  ctor: function () {
-    this._accumulatedDelays = {
-      enter: 0,
-      leave: 0
-    };
-    this._animations = [];
-    this.reset();
-  },
-  _createAnimations: function ($elements, initialConfig, configModifier, type) {
-    $elements = (0, _renderer.default)($elements);
-    const that = this;
-    const result = [];
-    configModifier = configModifier || {};
-    const animationConfig = this._prepareElementAnimationConfig(initialConfig, configModifier, type);
-    if (animationConfig) {
-      $elements.each(function () {
-        const animation = that._createAnimation((0, _renderer.default)(this), animationConfig, configModifier);
-        if (animation) {
-          animation.element.addClass(DX_ANIMATING_CLASS);
-          animation.setup();
-          result.push(animation);
-        }
-      });
+var _transition_executor = __webpack_require__(33100);
+Object.keys(_transition_executor).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (key in exports && exports[key] === _transition_executor[key]) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _transition_executor[key];
     }
-    return result;
-  },
-  _prepareElementAnimationConfig: function (config, configModifier, type) {
-    let result;
-    if (typeof config === 'string') {
-      const presetName = config;
-      config = _presets.presets.getPreset(presetName);
-    }
-    if (!config) {
-      result = undefined;
-    } else if ((0, _type.isFunction)(config[type])) {
-      result = config[type];
-    } else {
-      result = (0, _extend.extend)({
-        skipElementInitialStyles: true,
-        cleanupWhen: this._completePromise
-      }, config, configModifier);
-      if (!result.type || result.type === 'css') {
-        const cssClass = 'dx-' + type;
-        const extraCssClasses = (result.extraCssClasses ? ' ' + result.extraCssClasses : '') + directionPostfixes[result.direction];
-        result.type = 'css';
-        result.from = (result.from || cssClass) + extraCssClasses;
-        result.to = result.to || cssClass + '-active';
-      }
-      result.staggerDelay = result.staggerDelay || 0;
-      result.delay = result.delay || 0;
-      if (result.staggerDelay) {
-        result.delay += this._accumulatedDelays[type];
-        this._accumulatedDelays[type] += result.staggerDelay;
-      }
-    }
-    return result;
-  },
-  _createAnimation: function ($element, animationConfig, configModifier) {
-    let result;
-    if ((0, _type.isPlainObject)(animationConfig)) {
-      result = _fx.default.createAnimation($element, animationConfig);
-    } else if ((0, _type.isFunction)(animationConfig)) {
-      result = animationConfig($element, configModifier);
-    }
-    return result;
-  },
-  _startAnimations: function () {
-    const animations = this._animations;
-    for (let i = 0; i < animations.length; i++) {
-      animations[i].start();
-    }
-  },
-  _stopAnimations: function (jumpToEnd) {
-    const animations = this._animations;
-    for (let i = 0; i < animations.length; i++) {
-      animations[i].stop(jumpToEnd);
-    }
-  },
-  _clearAnimations: function () {
-    const animations = this._animations;
-    for (let i = 0; i < animations.length; i++) {
-      animations[i].element.removeClass(DX_ANIMATING_CLASS);
-    }
-    this._animations.length = 0;
-  },
-  reset: function () {
-    this._accumulatedDelays.enter = 0;
-    this._accumulatedDelays.leave = 0;
-    this._clearAnimations();
-    this._completeDeferred = new _deferred.Deferred();
-    this._completePromise = this._completeDeferred.promise();
-  },
-  enter: function ($elements, animationConfig, configModifier) {
-    const animations = this._createAnimations($elements, animationConfig, configModifier, 'enter');
-    this._animations.push.apply(this._animations, animations);
-  },
-  leave: function ($elements, animationConfig, configModifier) {
-    const animations = this._createAnimations($elements, animationConfig, configModifier, 'leave');
-    this._animations.push.apply(this._animations, animations);
-  },
-  start: function () {
-    const that = this;
-    let result;
-    if (!this._animations.length) {
-      that.reset();
-      result = new _deferred.Deferred().resolve().promise();
-    } else {
-      const animationDeferreds = (0, _iterator.map)(this._animations, function (animation) {
-        const result = new _deferred.Deferred();
-        animation.deferred.always(function () {
-          result.resolve();
-        });
-        return result.promise();
-      });
-      result = _deferred.when.apply(_renderer.default, animationDeferreds).always(function () {
-        that._completeDeferred.resolve();
-        that.reset();
-      });
-      _m_common.default.executeAsync(function () {
-        that._startAnimations();
-      });
-    }
-    return result;
-  },
-  stop: function (jumpToEnd) {
-    this._stopAnimations(jumpToEnd);
-  }
+  });
 });
 
 /***/ }),
@@ -93409,136 +93762,49 @@ const TransitionExecutor = exports.TransitionExecutor = _class.default.inherit({
 
 
 
-exports.resetPosition = exports.parseTranslate = exports.move = exports.locate = exports.getTranslateCss = exports.getTranslate = exports.clearCache = void 0;
-var _renderer = _interopRequireDefault(__webpack_require__(64553));
-var _element_data = __webpack_require__(74663);
-var _type = __webpack_require__(11528);
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-const TRANSLATOR_DATA_KEY = 'dxTranslator';
-const TRANSFORM_MATRIX_REGEX = /matrix(3d)?\((.+?)\)/;
-const TRANSLATE_REGEX = /translate(?:3d)?\((.+?)\)/;
-const locate = function ($element) {
-  $element = (0, _renderer.default)($element);
-  const translate = getTranslate($element);
-  return {
-    left: translate.x,
-    top: translate.y
-  };
-};
-exports.locate = locate;
-function isPercentValue(value) {
-  return (0, _type.type)(value) === 'string' && value[value.length - 1] === '%';
-}
-function cacheTranslate($element, translate) {
-  if ($element.length) {
-    (0, _element_data.data)($element.get(0), TRANSLATOR_DATA_KEY, translate);
+Object.defineProperty(exports, "clearCache", ({
+  enumerable: true,
+  get: function () {
+    return _translator.clearCache;
   }
-}
-const clearCache = function ($element) {
-  if ($element.length) {
-    (0, _element_data.removeData)($element.get(0), TRANSLATOR_DATA_KEY);
+}));
+Object.defineProperty(exports, "getTranslate", ({
+  enumerable: true,
+  get: function () {
+    return _translator.getTranslate;
   }
-};
-exports.clearCache = clearCache;
-const getTranslateCss = function (translate) {
-  translate.x = translate.x || 0;
-  translate.y = translate.y || 0;
-  const xValueString = isPercentValue(translate.x) ? translate.x : translate.x + 'px';
-  const yValueString = isPercentValue(translate.y) ? translate.y : translate.y + 'px';
-  return 'translate(' + xValueString + ', ' + yValueString + ')';
-};
-exports.getTranslateCss = getTranslateCss;
-const getTranslate = function ($element) {
-  let result = $element.length ? (0, _element_data.data)($element.get(0), TRANSLATOR_DATA_KEY) : null;
-  if (!result) {
-    const transformValue = $element.css('transform') || getTranslateCss({
-      x: 0,
-      y: 0
-    });
-    let matrix = transformValue.match(TRANSFORM_MATRIX_REGEX);
-    const is3D = matrix && matrix[1];
-    if (matrix) {
-      matrix = matrix[2].split(',');
-      if (is3D === '3d') {
-        matrix = matrix.slice(12, 15);
-      } else {
-        matrix.push(0);
-        matrix = matrix.slice(4, 7);
-      }
-    } else {
-      matrix = [0, 0, 0];
-    }
-    result = {
-      x: parseFloat(matrix[0]),
-      y: parseFloat(matrix[1]),
-      z: parseFloat(matrix[2])
-    };
-    cacheTranslate($element, result);
+}));
+Object.defineProperty(exports, "getTranslateCss", ({
+  enumerable: true,
+  get: function () {
+    return _translator.getTranslateCss;
   }
-  return result;
-};
-exports.getTranslate = getTranslate;
-const move = function ($element, position) {
-  $element = (0, _renderer.default)($element);
-  const left = position.left;
-  const top = position.top;
-  let translate;
-  if (left === undefined) {
-    translate = getTranslate($element);
-    translate.y = top || 0;
-  } else if (top === undefined) {
-    translate = getTranslate($element);
-    translate.x = left || 0;
-  } else {
-    translate = {
-      x: left || 0,
-      y: top || 0,
-      z: 0
-    };
-    cacheTranslate($element, translate);
+}));
+Object.defineProperty(exports, "locate", ({
+  enumerable: true,
+  get: function () {
+    return _translator.locate;
   }
-  $element.css({
-    transform: getTranslateCss(translate)
-  });
-  if (isPercentValue(left) || isPercentValue(top)) {
-    clearCache($element);
+}));
+Object.defineProperty(exports, "move", ({
+  enumerable: true,
+  get: function () {
+    return _translator.move;
   }
-};
-exports.move = move;
-const resetPosition = function ($element, finishTransition) {
-  $element = (0, _renderer.default)($element);
-  let originalTransition;
-  const stylesConfig = {
-    left: 0,
-    top: 0,
-    transform: 'none'
-  };
-  if (finishTransition) {
-    originalTransition = $element.css('transition');
-    stylesConfig.transition = 'none';
+}));
+Object.defineProperty(exports, "parseTranslate", ({
+  enumerable: true,
+  get: function () {
+    return _translator.parseTranslate;
   }
-  $element.css(stylesConfig);
-  clearCache($element);
-  if (finishTransition) {
-    $element.get(0).offsetHeight;
-    $element.css('transition', originalTransition);
+}));
+Object.defineProperty(exports, "resetPosition", ({
+  enumerable: true,
+  get: function () {
+    return _translator.resetPosition;
   }
-};
-exports.resetPosition = resetPosition;
-const parseTranslate = function (translateString) {
-  let result = translateString.match(TRANSLATE_REGEX);
-  if (!result || !result[1]) {
-    return;
-  }
-  result = result[1].split(',');
-  result = {
-    x: parseFloat(result[0]),
-    y: parseFloat(result[1]),
-    z: parseFloat(result[2])
-  };
-  return result;
-};
-exports.parseTranslate = parseTranslate;
+}));
+var _translator = __webpack_require__(10469);
 
 /***/ }),
 
@@ -103739,6 +104005,8 @@ const defaultMessages = exports.defaultMessages = {
     "dxDataGrid-aiPromptEditorApplyButton": "Apply",
     "dxDataGrid-aiPromptEditorRegenerateButton": "Regenerate Data",
     "dxDataGrid-aiPromptEditorStopButton": "Stop",
+    "dxDataGrid-aiDropDownAutofill": "Autofill with AI",
+    "dxDataGrid-aiDropDownClear": "Clear Data",
     "dxDataGrid-emptyHeaderWithColumnChooserText": "Use {0} to display columns",
     "dxDataGrid-emptyHeaderWithGroupPanelText": "Drag a column from the group panel here",
     "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "Use {0} or drag a column from the group panel",
@@ -103894,6 +104162,7 @@ const defaultMessages = exports.defaultMessages = {
     "dxScheduler-appointmentAriaLabel-group": "Group: {0}",
     "dxScheduler-appointmentAriaLabel-recurring": "Recurring appointment",
     "dxScheduler-appointmentListAriaLabel": "Appointment list",
+    "dxScheduler-newPopupTitle": "New Appointment",
     "dxScheduler-editPopupTitle": "Edit Appointment",
     "dxScheduler-editPopupSaveButtonText": "Save",
     "dxScheduler-editorLabelTitle": "Subject",
@@ -104014,6 +104283,7 @@ const defaultMessages = exports.defaultMessages = {
     "dxChat-defaultImageAlt": "Image shared in chat",
     "dxChat-fileViewLabel": "File list",
     "dxChat-downloadButtonLabel": "Download file {0}",
+    "dxChat-fileLimitReachedWarning": "You selected too many files. Select no more than {0} files and retry.",
     "dxColorView-ariaRed": "Red",
     "dxColorView-ariaGreen": "Green",
     "dxColorView-ariaBlue": "Blue",
@@ -110416,6 +110686,24 @@ module.exports["default"] = exports.default;
 
 /***/ }),
 
+/***/ 76772:
+/***/ (function(module, exports, __webpack_require__) {
+
+
+
+Object.defineProperty(exports, "default", ({
+  enumerable: true,
+  get: function () {
+    return _events_engine.default;
+  }
+}));
+var _events_engine = _interopRequireDefault(__webpack_require__(92774));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+module.exports = exports.default;
+module.exports["default"] = exports.default;
+
+/***/ }),
+
 /***/ 10714:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -110465,6 +110753,44 @@ Object.defineProperty(exports, "triggerHandler", ({
 }));
 var _events = __webpack_require__(52391);
 var _events2 = __webpack_require__(10714);
+
+/***/ }),
+
+/***/ 92492:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var _remove = __webpack_require__(28630);
+Object.keys(_remove).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (key in exports && exports[key] === _remove[key]) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _remove[key];
+    }
+  });
+});
+
+/***/ }),
+
+/***/ 34356:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var _index = __webpack_require__(98834);
+Object.keys(_index).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (key in exports && exports[key] === _index[key]) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _index[key];
+    }
+  });
+});
 
 /***/ }),
 
@@ -111943,7 +112269,7 @@ if (useJQuery) {
 
 
 var _jquery = _interopRequireDefault(__webpack_require__(10561));
-var _easing = __webpack_require__(88424);
+var _easing = __webpack_require__(11610);
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 // eslint-disable-next-line no-restricted-imports
 
@@ -114430,17 +114756,47 @@ module.exports["default"] = exports.default;
 /***/ }),
 
 /***/ 74754:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
 
-exports["default"] = void 0;
-var Export = _interopRequireWildcard(__webpack_require__(43452));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
-var _default = exports["default"] = Export;
-module.exports = exports.default;
-module.exports["default"] = exports.default;
+Object.defineProperty(exports, "ExportMenu", ({
+  enumerable: true,
+  get: function () {
+    return _export.ExportMenu;
+  }
+}));
+Object.defineProperty(exports, "combineMarkups", ({
+  enumerable: true,
+  get: function () {
+    return _export.combineMarkups;
+  }
+}));
+Object.defineProperty(exports, "exportFromMarkup", ({
+  enumerable: true,
+  get: function () {
+    return _export.exportFromMarkup;
+  }
+}));
+Object.defineProperty(exports, "exportWidgets", ({
+  enumerable: true,
+  get: function () {
+    return _export.exportWidgets;
+  }
+}));
+Object.defineProperty(exports, "getMarkup", ({
+  enumerable: true,
+  get: function () {
+    return _export.getMarkup;
+  }
+}));
+Object.defineProperty(exports, "plugin", ({
+  enumerable: true,
+  get: function () {
+    return _export.plugin;
+  }
+}));
+var _export = __webpack_require__(43452);
 
 /***/ }),
 
@@ -114853,17 +115209,60 @@ module.exports["default"] = exports.default;
 /***/ }),
 
 /***/ 9735:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+var __webpack_unused_export__;
 
 
-
-exports["default"] = void 0;
-var PaletteModule = _interopRequireWildcard(__webpack_require__(79121));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
-var _default = exports["default"] = PaletteModule;
-module.exports = exports.default;
-module.exports["default"] = exports.default;
+__webpack_unused_export__ = ({
+  enumerable: true,
+  get: function () {
+    return _palette.createPalette;
+  }
+});
+Object.defineProperty(exports, "pq", ({
+  enumerable: true,
+  get: function () {
+    return _palette.currentPalette;
+  }
+}));
+Object.defineProperty(exports, "oC", ({
+  enumerable: true,
+  get: function () {
+    return _palette.generateColors;
+  }
+}));
+__webpack_unused_export__ = ({
+  enumerable: true,
+  get: function () {
+    return _palette.getAccentColor;
+  }
+});
+__webpack_unused_export__ = ({
+  enumerable: true,
+  get: function () {
+    return _palette.getDiscretePalette;
+  }
+});
+__webpack_unused_export__ = ({
+  enumerable: true,
+  get: function () {
+    return _palette.getGradientPalette;
+  }
+});
+Object.defineProperty(exports, "Sf", ({
+  enumerable: true,
+  get: function () {
+    return _palette.getPalette;
+  }
+}));
+Object.defineProperty(exports, "hr", ({
+  enumerable: true,
+  get: function () {
+    return _palette.registerPalette;
+  }
+}));
+var _palette = __webpack_require__(79121);
 
 /***/ }),
 

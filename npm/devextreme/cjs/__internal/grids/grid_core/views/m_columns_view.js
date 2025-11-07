@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/views/m_columns_view.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1192,6 +1192,9 @@ class ColumnsView extends (0, _m_column_state_mixin.ColumnStateMixin)(_m_modules
   isDisposed() {
     var _this$component;
     return (_this$component = this.component) === null || _this$component === void 0 ? void 0 : _this$component._disposed;
+  }
+  renderDragCellContent($dragContainer, column) {
+    $dragContainer.text(column.caption ?? '');
   }
 }
 exports.ColumnsView = ColumnsView;

@@ -3,8 +3,10 @@ import dateUtils from '../../../core/utils/date';
 import { isDefined } from '../../../core/utils/type';
 import { getRecurrenceString, parseRecurrenceRule } from '../recurrence/base';
 import { daysFromByDayRule } from '../recurrence/days_from_by_day_rule';
-// eslint-disable-next-line arrow-body-style
 export const createFormIconTemplate = iconName => {
+  if (iconName.length === 0) {
+    return () => $('<div>').addClass('dx-scheduler-form-icon-sized-gap');
+  }
   return () => $('<i>').addClass('dx-icon').addClass(`dx-icon-${iconName}`);
 };
 export const getStartDateCommonConfig = firstDayOfWeek => ({

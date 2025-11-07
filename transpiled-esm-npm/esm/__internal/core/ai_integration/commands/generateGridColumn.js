@@ -14,15 +14,18 @@ export class GenerateGridColumnCommand extends BaseCommand {
   }
   parseResult(response) {
     if (typeof response === 'string') {
+      if (response === '') {
+        return {
+          data: {}
+        };
+      }
       return {
-        data: JSON.parse(response),
-        additionalInfo: undefined
+        data: JSON.parse(response)
       };
     }
     const data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
     return {
-      data,
-      additionalInfo: response.additionalInfo
+      data
     };
   }
   generateDataDescription(data) {

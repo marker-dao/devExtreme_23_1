@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/utils/options/constants.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,7 +11,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DEFAULT_SCHEDULER_OPTIONS_RULES = exports.DEFAULT_SCHEDULER_OPTIONS = exports.DEFAULT_SCHEDULER_INTERNAL_OPTIONS = exports.DEFAULT_SCHEDULER_INTEGRATION_OPTIONS = void 0;
+exports.DEFAULT_SCHEDULER_OPTIONS_RULES = exports.DEFAULT_SCHEDULER_OPTIONS = exports.DEFAULT_SCHEDULER_INTERNAL_OPTIONS = exports.DEFAULT_SCHEDULER_INTEGRATION_OPTIONS = exports.DEFAULT_ICONS_SHOW_MODE = void 0;
 var _message = _interopRequireDefault(require("../../../../common/core/localization/message"));
 var _devices = _interopRequireDefault(require("../../../../core/devices"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
@@ -21,6 +21,7 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DEFAULT_APPOINTMENT_TEMPLATE_NAME = 'item';
 const DEFAULT_APPOINTMENT_COLLECTOR_TEMPLATE_NAME = 'appointmentCollector';
+const DEFAULT_ICONS_SHOW_MODE = exports.DEFAULT_ICONS_SHOW_MODE = 'main';
 const DEFAULT_SCHEDULER_OPTIONS = exports.DEFAULT_SCHEDULER_OPTIONS = {
   views: ['day', 'week'],
   currentView: 'day',
@@ -48,7 +49,11 @@ const DEFAULT_SCHEDULER_OPTIONS = exports.DEFAULT_SCHEDULER_OPTIONS = {
     allowDragging: true,
     allowResizing: true,
     allowUpdating: true,
-    allowTimeZoneEditing: false
+    allowTimeZoneEditing: false,
+    form: {
+      iconsShowMode: DEFAULT_ICONS_SHOW_MODE
+    },
+    popup: {}
   },
   showAllDayPanel: true,
   showCurrentTimeIndicator: true,
@@ -111,7 +116,9 @@ const DEFAULT_SCHEDULER_INTERNAL_OPTIONS = exports.DEFAULT_SCHEDULER_INTERNAL_OP
   renovateRender: true,
   editing: _extends({
     legacyForm: false
-  }, DEFAULT_SCHEDULER_OPTIONS.editing),
+  }, DEFAULT_SCHEDULER_OPTIONS.editing, {
+    popup: {}
+  }),
   _draggingMode: 'outlook',
   _appointmentTooltipOffset: {
     x: 0,

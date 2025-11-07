@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/chat.d.ts)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -163,13 +163,13 @@ export type MessageUpdatedEvent = EventInfo<dxChat> & {
 };
 
 /**
- * @docid _ui_chat_AttachmentDownloadEvent
+ * @docid _ui_chat_AttachmentDownloadClickEvent
  * @public
  * @type object
  * @inherits EventInfo
  */
-export type AttachmentDownloadEvent = EventInfo<dxChat> & {
-  /** @docid _ui_chat_AttachmentDownloadEvent.attachment */
+export type AttachmentDownloadClickEvent = EventInfo<dxChat> & {
+  /** @docid _ui_chat_AttachmentDownloadClickEvent.attachment */
   readonly attachment?: Attachment;
 };
 
@@ -235,6 +235,8 @@ export type Attachment = {
      * @public
      */
     size: number;
+
+    [key: string]: any;
 };
 
 /**
@@ -363,7 +365,7 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
      * @type dxFileUploaderOptions
      * @public
      */
-    fileUploaderOptions?: Omit<FileUploaderOptions, 'dialogTrigger' | 'showFileList' | 'uploadMode'>;
+    fileUploaderOptions?: Omit<FileUploaderOptions, 'dialogTrigger' | 'showFileList' | 'uploadMode' | 'value'>;
     /**
      * @docid
      * @default true
@@ -484,11 +486,11 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
     /**
      * @docid
      * @default undefined
-     * @type_function_param1 e:{ui/chat:AttachmentDownloadEvent}
+     * @type_function_param1 e:{ui/chat:AttachmentDownloadClickEvent}
      * @action
      * @public
      */
-    onAttachmentDownload?: ((e: AttachmentDownloadEvent) => void) | undefined;
+    onAttachmentDownloadClick?: ((e: AttachmentDownloadClickEvent) => void) | undefined;
     /**
      * @docid
      * @default undefined

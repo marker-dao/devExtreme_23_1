@@ -771,6 +771,10 @@ class Splitter extends CollectionWidgetLiveUpdate {
   getLayout() {
     return this._layout ?? [];
   }
+  _clean() {
+    resizeObserverSingleton.unobserve(this.$element().get(0));
+    super._clean();
+  }
 }
 Splitter.ItemClass = SplitterItem;
 registerComponent('dxSplitter', Splitter);

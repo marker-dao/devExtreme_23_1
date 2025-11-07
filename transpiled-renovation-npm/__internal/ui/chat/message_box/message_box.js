@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.TYPING_END_DELAY = exports.CHAT_MESSAGEBOX_TEXTAREA_CONTAINER_CLASS = exports.CHAT_MESSAGEBOX_TEXTAREA_CLASS = exports.CHAT_MESSAGEBOX_CLASS = void 0;
+exports.default = exports.TYPING_END_DELAY = exports.CHAT_MESSAGEBOX_TEXTAREA_CONTAINER_CLASS = exports.CHAT_MESSAGEBOX_CLASS = void 0;
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _dom_component = _interopRequireDefault(require("../../../core/widget/dom_component"));
 var _chat_text_area = _interopRequireDefault(require("../../../ui/chat/message_box/chat_text_area"));
@@ -12,7 +12,6 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CHAT_MESSAGEBOX_CLASS = exports.CHAT_MESSAGEBOX_CLASS = 'dx-chat-messagebox';
 const CHAT_MESSAGEBOX_TEXTAREA_CONTAINER_CLASS = exports.CHAT_MESSAGEBOX_TEXTAREA_CONTAINER_CLASS = 'dx-chat-messagebox-textarea-container';
-const CHAT_MESSAGEBOX_TEXTAREA_CLASS = exports.CHAT_MESSAGEBOX_TEXTAREA_CLASS = 'dx-chat-messagebox-textarea';
 const TYPING_END_DELAY = exports.TYPING_END_DELAY = 2000;
 const ESCAPE_KEY = 'escape';
 class MessageBox extends _dom_component.default {
@@ -73,7 +72,7 @@ class MessageBox extends _dom_component.default {
     });
   }
   _renderTextArea($parent) {
-    const $textArea = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGEBOX_TEXTAREA_CLASS);
+    const $textArea = (0, _renderer.default)('<div>');
     const textAreaOptions = this._getTextAreaOptions();
     $parent.append($textArea);
     this._textArea = this._createComponent($textArea, _chat_text_area.default, textAreaOptions);
@@ -162,15 +161,21 @@ class MessageBox extends _dom_component.default {
       });
       return;
     }
-    (_this$_messageEntered = this._messageEnteredAction) === null || _this$_messageEntered === void 0 || _this$_messageEntered.call(this, {
+    const messageEnteredArgs = {
       text,
       event: e.event
-    });
+    };
+    const attachments = this._textArea.getAttachments();
+    if (attachments) {
+      messageEnteredArgs.attachments = attachments;
+    }
+    (_this$_messageEntered = this._messageEnteredAction) === null || _this$_messageEntered === void 0 || _this$_messageEntered.call(this, messageEnteredArgs);
   }
   _optionChanged(args) {
     var _this$_editingPreview;
     const {
       name,
+      fullName,
       value
     } = args;
     switch (name) {
@@ -181,7 +186,7 @@ class MessageBox extends _dom_component.default {
         (_this$_editingPreview = this._editingPreview) === null || _this$_editingPreview === void 0 || _this$_editingPreview.option(name, value);
         break;
       case 'fileUploaderOptions':
-        this._textArea.option(name, value);
+        this._textArea.option(fullName, value);
         break;
       case 'onMessageEntered':
         this._createMessageEnteredAction();
@@ -210,6 +215,12 @@ class MessageBox extends _dom_component.default {
         'aria-labelledby': emptyViewId
       }
     });
+  }
+  resetFileUploader() {
+    this._textArea.resetFileUploader();
+  }
+  toggleAttachButtonVisibleState(state) {
+    this._textArea.toggleAttachButtonVisibleState(state);
   }
   _updateEditingPreview(text) {
     if (this._editingPreview) {

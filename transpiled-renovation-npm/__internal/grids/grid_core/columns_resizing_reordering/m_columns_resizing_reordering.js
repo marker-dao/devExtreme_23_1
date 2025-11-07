@@ -18,6 +18,7 @@ var _position = require("../../../../core/utils/position");
 var _size = require("../../../../core/utils/size");
 var _type = require("../../../../core/utils/type");
 var _swatch_container = _interopRequireDefault(require("../../../core/utils/swatch_container"));
+var _utils = require("../../../grids/grid_core/columns_resizing_reordering/utils");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _const = require("./const");
@@ -308,6 +309,28 @@ class BlockSeparatorView extends SeparatorView {
 exports.BlockSeparatorView = BlockSeparatorView;
 class DraggingHeaderView extends _m_modules.default.View {
   /// #ENDDEBUG
+  getSourceDraggingPanel() {
+    const {
+      sourceLocation,
+      draggingPanels
+    } = this._dragOptions;
+    return draggingPanels.find(draggingPanel => draggingPanel.getName() === sourceLocation);
+  }
+  updateDragElement() {
+    const {
+      columnElement,
+      sourceColumn
+    } = this._dragOptions;
+    const sourceDraggingPanel = this.getSourceDraggingPanel();
+    const dragElement = this.element();
+    dragElement.empty().css({
+      textAlign: columnElement === null || columnElement === void 0 ? void 0 : columnElement.css('textAlign'),
+      height: columnElement && (0, _size.getHeight)(columnElement),
+      width: columnElement && (0, _size.getWidth)(columnElement),
+      whiteSpace: columnElement === null || columnElement === void 0 ? void 0 : columnElement.css('whiteSpace')
+    }).addClass(this.addWidgetPrefix(HEADERS_DRAG_ACTION_CLASS));
+    sourceDraggingPanel.renderDragCellContent(dragElement, sourceColumn);
+  }
   init() {
     super.init();
     const dataController = this.getController('data');
@@ -328,13 +351,14 @@ class DraggingHeaderView extends _m_modules.default.View {
   _getDraggingPanelByPos(pos) {
     const that = this;
     let result;
-    (0, _iterator.each)(that._dragOptions.draggingPanels, (index, draggingPanel) => {
-      if (draggingPanel) {
-        const boundingRect = draggingPanel.getBoundingRect();
-        if (boundingRect && (boundingRect.bottom === undefined || pos.y < boundingRect.bottom) && (boundingRect.top === undefined || pos.y > boundingRect.top) && (boundingRect.left === undefined || pos.x > boundingRect.left) && (boundingRect.right === undefined || pos.x < boundingRect.right)) {
-          result = draggingPanel;
-          return false;
-        }
+    (0, _iterator.each)(that._dragOptions.draggingPanelBoundingRects, (_, _ref) => {
+      let {
+        draggingPanel,
+        boundingRect
+      } = _ref;
+      if (boundingRect && (boundingRect.bottom === undefined || pos.y < boundingRect.bottom) && (boundingRect.top === undefined || pos.y > boundingRect.top) && (boundingRect.left === undefined || pos.x > boundingRect.left) && (boundingRect.right === undefined || pos.x < boundingRect.right)) {
+        result = draggingPanel;
+        return false;
       }
       return undefined;
     });
@@ -370,33 +394,30 @@ class DraggingHeaderView extends _m_modules.default.View {
     return this.option('showColumnHeaders') && (allowReordering(this) || commonColumnSettings.allowGrouping || commonColumnSettings.allowHiding);
   }
   dragHeader(options) {
-    const that = this;
     const {
       columnElement
     } = options;
-    that._isDragging = true;
-    that._dragOptions = options;
-    that._dropOptions = {
+    const dragOptions = _extends({}, options, {
+      draggingPanelBoundingRects: (0, _utils.getDraggingPanelBoundingRects)(options.draggingPanels)
+    });
+    this._isDragging = true;
+    this._dragOptions = dragOptions;
+    this._dropOptions = {
       sourceIndex: options.index,
-      sourceColumnIndex: that._getVisibleIndexObject(options.rowIndex, options.columnIndex),
-      sourceColumnElement: options.columnElement,
+      sourceColumnIndex: this._getVisibleIndexObject(options.rowIndex, options.columnIndex),
+      sourceColumnElement: columnElement,
       sourceLocation: options.sourceLocation
     };
     const document = _dom_adapter.default.getDocument();
     // eslint-disable-next-line spellcheck/spell-checker
-    that._onSelectStart = document.onselectstart;
+    this._onSelectStart = document.onselectstart;
     // eslint-disable-next-line spellcheck/spell-checker
     document.onselectstart = function () {
       return false;
     };
-    that._controller.drag(that._dropOptions);
-    that.element().css({
-      textAlign: columnElement === null || columnElement === void 0 ? void 0 : columnElement.css('textAlign'),
-      height: columnElement && (0, _size.getHeight)(columnElement),
-      width: columnElement && (0, _size.getWidth)(columnElement),
-      whiteSpace: columnElement === null || columnElement === void 0 ? void 0 : columnElement.css('whiteSpace')
-    }).addClass(that.addWidgetPrefix(HEADERS_DRAG_ACTION_CLASS)).text(options.sourceColumn.caption);
-    that.element().appendTo(_swatch_container.default.getSwatchContainer(columnElement));
+    this._controller.drag(this._dropOptions);
+    this.updateDragElement();
+    this.element().appendTo(_swatch_container.default.getSwatchContainer(columnElement));
   }
   moveHeader(args) {
     const e = args.event;
@@ -496,6 +517,9 @@ const isNextColumnResizingMode = function (that) {
   return that.option('columnResizingMode') !== 'widget';
 };
 class ColumnsResizerViewController extends _m_modules.default.ViewController {
+  callbackNames() {
+    return ['resizeStarted'];
+  }
   init() {
     this._subscribesToCallbacks = [];
     if (allowResizing(this)) {
@@ -540,11 +564,12 @@ class ColumnsResizerViewController extends _m_modules.default.ViewController {
   /**
    * @extended: adaptivity
    */
-  _pointCreated(point, cellsLength, columns) {
+  _pointCreated(point, columns, cells) {
     const isNextColumnMode = isNextColumnResizingMode(this);
     const rtlEnabled = this.option('rtlEnabled');
     const isRtlParentStyle = this._isRtlParentStyle();
     const firstPointColumnIndex = !isNextColumnMode && rtlEnabled && !isRtlParentStyle ? 0 : 1;
+    const cellsLength = (cells === null || cells === void 0 ? void 0 : cells.length) ?? columns.length;
     if (point.index >= firstPointColumnIndex && point.index < cellsLength + (!isNextColumnMode && (!rtlEnabled || isRtlParentStyle) ? 1 : 0)) {
       this._correctColumnIndexForPoint(point, firstPointColumnIndex, columns);
       const currentColumn = columns[point.columnIndex] || {};
@@ -694,6 +719,7 @@ class ColumnsResizerViewController extends _m_modules.default.ViewController {
       if (scrollable && that._isRtlParentStyle()) {
         that._scrollRight = (0, _size.getWidth)(scrollable.$content()) - (0, _size.getWidth)(scrollable.container()) - scrollable.scrollLeft();
       }
+      this.resizeStarted.fire();
       e.preventDefault();
       e.stopPropagation();
     }
@@ -740,7 +766,7 @@ class ColumnsResizerViewController extends _m_modules.default.ViewController {
     };
     that._pointsByColumns = [];
     if (cells && cells.length > 0) {
-      that._pointsByColumns = _m_utils.default.getPointsByColumns(cells, point => that._pointCreated(correctColumnY(point), cells.length, columns), false, 0, needToCheckPrevPoint);
+      that._pointsByColumns = _m_utils.default.getPointsByColumns(cells, point => that._pointCreated(correctColumnY(point), columns, cells), false, 0, needToCheckPrevPoint);
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1051,8 +1077,15 @@ class DraggingHeaderViewController extends _m_modules.default.ViewController {
    */
   _generatePointsByColumns(options) {
     let needToCheckPrevPoint = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    const cells = this._columnHeadersView.getColumnElements();
     this.isCustomGroupColumnPosition = this.checkIsCustomGroupColumnPosition(options);
-    const points = _m_utils.default.getPointsByColumns(options.columnElements, point => this._pointCreated(point, options.columns, options.targetDraggingPanel.getName(), options.sourceColumn), options.isVerticalOrientation, options.startColumnIndex, needToCheckPrevPoint);
+    const points = _m_utils.default.getPointsByColumns(options.columnElements, point => this._pointCreated({
+      point,
+      columns: options.columns,
+      location: options.targetDraggingPanel.getName(),
+      sourceColumn: options.sourceColumn,
+      cells
+    }), options.isVerticalOrientation, options.startColumnIndex, needToCheckPrevPoint);
     return points;
   }
   checkIsCustomGroupColumnPosition(options) {
@@ -1070,14 +1103,21 @@ class DraggingHeaderViewController extends _m_modules.default.ViewController {
   }
   /**
    * @extended: adaptivity, column_fixing
-   * Function that is used to filter column points, it's called for each point
+   * @description Function used to filter column points, it's called for each point
    * @param point Point that we are checking
    * @param columns All columns in the given location
-   * @param location Location where we move column (headers, group, column chooser etc)
+   * @param location Location where we move column (headers, group, column chooser, etc.)
    * @param sourceColumn Column that is dragging
+   * @param cells JQuery-wrapped collection of header cell elements
    * @returns whether to filter current point (true - remove point, false - keep it)
    */
-  _pointCreated(point, columns, location, sourceColumn) {
+  _pointCreated(_ref2) {
+    let {
+      point,
+      columns,
+      location,
+      sourceColumn
+    } = _ref2;
     const targetColumn = columns[point.columnIndex];
     const prevColumn = columns[point.columnIndex - 1];
     const isColumnAfterExpandColumn = (prevColumn === null || prevColumn === void 0 ? void 0 : prevColumn.command) === 'expand';

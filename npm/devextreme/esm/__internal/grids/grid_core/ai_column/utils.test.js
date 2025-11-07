@@ -1,13 +1,13 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/ai_column/utils.test.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { describe, expect, it } from '@jest/globals';
-import { getDataFromRowItems, isAIColumnAutoMode, reduceDataCachedKeys } from './utils';
+import { getDataFromRowItems, isAIColumnAutoMode, isEditorOptions, isPopupOptions, isPromptOption, isRefreshOption, reduceDataCachedKeys } from './utils';
 describe('reduceDataCachedKeys', () => {
   it('should remove keys from data that are present in cachedKeys', () => {
     const data = [{
@@ -196,5 +196,139 @@ describe('isAIColumnAutoMode', () => {
     };
     const result = isAIColumnAutoMode(column);
     expect(result).toBe(true);
+  });
+});
+describe('isPopupOptions', () => {
+  it('should return true for popup option names', () => {
+    expect(isPopupOptions('ai.popup.width', 200)).toBe(true);
+    expect(isPopupOptions('ai.popup', {
+      width: 200
+    })).toBe(true);
+    expect(isPopupOptions('ai', {
+      popup: {
+        width: 300
+      }
+    })).toBe(true);
+    expect(isPopupOptions('ai', {
+      popup: {
+        width: 300
+      },
+      prompt: 'Test'
+    })).toBe(true);
+  });
+  it('should return false for non-popup option names', () => {
+    expect(isPopupOptions('ai.editorOptions.width', {})).toBe(false);
+    expect(isPopupOptions('ai.prompt', {})).toBe(false);
+    expect(isPopupOptions('ai', {
+      editorOptions: {
+        width: 300
+      }
+    })).toBe(false);
+    expect(isPopupOptions('ai', {
+      editorOptions: {
+        width: 300
+      },
+      prompt: 'Test'
+    })).toBe(false);
+  });
+});
+describe('isEditorOptions', () => {
+  it('should return true for editorOptions option names', () => {
+    expect(isEditorOptions('ai.editorOptions.width', 200)).toBe(true);
+    expect(isEditorOptions('ai.editorOptions', {
+      width: 200
+    })).toBe(true);
+    expect(isEditorOptions('ai', {
+      editorOptions: {
+        width: 300
+      }
+    })).toBe(true);
+    expect(isEditorOptions('ai', {
+      editorOptions: {
+        width: 300
+      },
+      prompt: 'Test'
+    })).toBe(true);
+  });
+  it('should return false for non-editorOptions option names', () => {
+    expect(isEditorOptions('ai.popup.width', {})).toBe(false);
+    expect(isEditorOptions('ai.prompt', {})).toBe(false);
+    expect(isEditorOptions('ai', {
+      popup: {
+        width: 300
+      }
+    })).toBe(false);
+    expect(isEditorOptions('ai', {
+      popup: {
+        width: 300
+      },
+      prompt: 'Test'
+    })).toBe(false);
+  });
+});
+describe('isPromptOption', () => {
+  it('should return true for prompt option names', () => {
+    expect(isPromptOption('ai.prompt', 'Test prompt')).toBe(true);
+    expect(isPromptOption('ai', {
+      prompt: 'Test prompt'
+    })).toBe(true);
+    expect(isPromptOption('ai', {
+      prompt: 'Test prompt',
+      popup: {
+        width: 300
+      }
+    })).toBe(true);
+  });
+  it('should return false for non-prompt option names', () => {
+    expect(isPromptOption('ai.popup.width', {})).toBe(false);
+    expect(isPromptOption('ai.editorOptions', {})).toBe(false);
+    expect(isPromptOption('ai', {
+      editorOptions: {
+        width: 300
+      }
+    })).toBe(false);
+    expect(isPromptOption('ai', {
+      popup: {
+        width: 300
+      }
+    })).toBe(false);
+  });
+});
+describe('isRefreshOption', () => {
+  it('should return true for refresh option names', () => {
+    expect(isRefreshOption('ai.showHeaderMenu', true)).toBe(true);
+    expect(isRefreshOption('ai.noDataText', 'No data')).toBe(true);
+    expect(isRefreshOption('ai.emptyText', 'Empty')).toBe(true);
+    expect(isRefreshOption('ai', {
+      showHeaderMenu: true
+    })).toBe(true);
+    expect(isRefreshOption('ai', {
+      noDataText: 'No data'
+    })).toBe(true);
+    expect(isRefreshOption('ai', {
+      emptyText: 'Empty'
+    })).toBe(true);
+    expect(isRefreshOption('ai', {
+      showHeaderMenu: true,
+      prompt: 'Test'
+    })).toBe(true);
+  });
+  it('should return false for non-refresh option names', () => {
+    expect(isRefreshOption('ai.popup.width', {})).toBe(false);
+    expect(isRefreshOption('ai.prompt', {})).toBe(false);
+    expect(isRefreshOption('ai.editorOptions', {})).toBe(false);
+    expect(isRefreshOption('ai', {
+      popup: {
+        width: 300
+      }
+    })).toBe(false);
+    expect(isRefreshOption('ai', {
+      editorOptions: {
+        width: 300
+      }
+    })).toBe(false);
+    expect(isRefreshOption('ai', {
+      prompt: 'Test'
+    })).toBe(false);
   });
 });

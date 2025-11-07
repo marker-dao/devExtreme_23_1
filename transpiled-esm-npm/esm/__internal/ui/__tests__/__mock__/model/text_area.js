@@ -1,3 +1,4 @@
+import TextArea from '../../../../ui/m_text_area';
 const CLASSES = {
   textArea: 'dx-texteditor-input'
 };
@@ -17,5 +18,8 @@ export class TextAreaModel {
     input.dispatchEvent(new Event('input', {
       bubbles: true
     }));
+  }
+  getInstance() {
+    return TextArea.getInstance(this.root);
   }
 }

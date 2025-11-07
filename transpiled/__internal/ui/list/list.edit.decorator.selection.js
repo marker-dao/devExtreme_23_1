@@ -189,6 +189,7 @@ class EditDecoratorSelection extends _listEdit.default {
   _selectAllHandler(event) {
     var _this$_selectAllCheck4;
     event.stopPropagation();
+    event.preventDefault(); // to prevent scrolling on space key press
     this._list._saveSelectionChangeEvent(event);
     const {
       value

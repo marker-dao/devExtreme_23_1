@@ -337,7 +337,6 @@ const baseFixedColumns = Base => class BaseFixedColumnsExtender extends Base {
     }
     return cellElements;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getColumnWidths(fixedTableElement, rowIndex) {
     const result = super.getColumnWidths(fixedTableElement, rowIndex);
     const fixedColumns = this.getFixedColumns();
@@ -876,8 +875,21 @@ const draggingHeader = Base => class DraggingHeaderColumnFixingExtender extends 
     }
     return super._generatePointsByColumns(options, needToCheckPrevPoint);
   }
-  _pointCreated(point, columns, location, sourceColumn) {
-    const result = super._pointCreated.apply(this, arguments);
+  _pointCreated(_ref2) {
+    let {
+      point,
+      columns,
+      location,
+      sourceColumn,
+      cells
+    } = _ref2;
+    const result = super._pointCreated({
+      point,
+      columns,
+      location,
+      sourceColumn,
+      cells
+    });
     const targetColumn = columns[point.columnIndex];
     // @ts-expect-error
     const $transparentColumn = this._columnHeadersView.getTransparentColumnElement();
@@ -911,7 +923,7 @@ const columnsResizer = Base => class ColumnResizerColumnFixingExtender extends B
           point.columnIndex += correctIndex;
           point.index += correctIndex;
         }
-        return that._pointCreated(point, columns.length, columns);
+        return that._pointCreated(point, columns);
       });
     }
   }

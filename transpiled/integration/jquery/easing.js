@@ -1,7 +1,7 @@
 "use strict";
 
 var _jquery = _interopRequireDefault(require("jquery"));
-var _easing = require("../../common/core/animation/easing");
+var _easing = require("../../__internal/common/core/animation/easing");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 // eslint-disable-next-line no-restricted-imports
 

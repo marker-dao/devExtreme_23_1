@@ -1,0 +1,275 @@
+/**
+* DevExtreme (cjs/__internal/ui/diagram/diagram.items_option.js)
+* Version: 25.2.0
+* Build date: Fri Nov 07 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _data = require("../../../common/data");
+var _component = require("../../../core/component");
+var _extend = require("../../../core/utils/extend");
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+// @ts-expect-error ts-error
+
+// @ts-expect-error ts-error
+const ItemsOptionBase = _component.Component.inherit({}).include(_data.DataHelperMixin);
+class ItemsOption extends ItemsOptionBase {
+  constructor(diagramWidget) {
+    super();
+    this._diagramWidget = diagramWidget;
+    this._resetCache();
+  }
+  _dataSourceChangedHandler(newItems, e) {
+    this._resetCache();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    this._items = newItems.map(item => (0, _extend.extend)(true, {}, item));
+    this._dataSourceItems = newItems.slice();
+    if (e !== null && e !== void 0 && e.changes) {
+      const internalChanges = e.changes.filter(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      change => change.internalChange);
+      const externalChanges = e.changes.filter(change => !change.internalChange);
+      if (internalChanges.length) {
+        this._reloadContentByChanges(internalChanges, false);
+      }
+      if (externalChanges.length) {
+        this._reloadContentByChanges(externalChanges, true);
+      }
+    } else {
+      this._diagramWidget._onDataSourceChanged();
+    }
+  }
+  _dataSourceLoadingChangedHandler(isLoading) {
+    // @ts-expect-error ts-error
+    if (isLoading && !this._dataSource.isLoaded()) {
+      this._diagramWidget._showLoadingIndicator();
+    } else {
+      this._diagramWidget._hideLoadingIndicator();
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _prepareData(dataObj) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key in dataObj) {
+      // eslint-disable-next-line no-continue
+      if (!Object.prototype.hasOwnProperty.call(dataObj, key)) continue;
+      if (dataObj[key] === undefined) {
+        dataObj[key] = null;
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return dataObj;
+  }
+  insert(data, callback, errorCallback) {
+    this._resetCache();
+    const store = this._getStore();
+    store.insert(this._prepareData(data))
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    .done((data, key) => {
+      store.push([{
+        type: 'insert',
+        key,
+        data,
+        internalChange: true
+      }]);
+      if (callback) {
+        callback(data);
+      }
+      this._resetCache();
+    }).fail(error => {
+      if (errorCallback) {
+        errorCallback(error);
+      }
+      this._resetCache();
+    });
+  }
+  update(key, data, callback, errorCallback) {
+    const store = this._getStore();
+    const storeKey = this._getStoreKey(store, key, data);
+    store.update(storeKey, this._prepareData(data))
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    .done((data, key) => {
+      store.push([{
+        type: 'update',
+        key,
+        data,
+        internalChange: true
+      }]);
+      if (callback) {
+        callback(key, data);
+      }
+    }).fail(error => {
+      if (errorCallback) {
+        errorCallback(error);
+      }
+    });
+  }
+  remove(key, data, callback, errorCallback) {
+    this._resetCache();
+    const store = this._getStore();
+    const storeKey = this._getStoreKey(store, key, data);
+    store.remove(storeKey)
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    .done(key => {
+      store.push([{
+        type: 'remove',
+        key,
+        internalChange: true
+      }]);
+      if (callback) {
+        callback(key);
+      }
+      this._resetCache();
+    }).fail(error => {
+      if (errorCallback) {
+        errorCallback(error);
+      }
+      this._resetCache();
+    });
+  }
+  findItem(itemKey) {
+    if (!this._items) {
+      return null;
+    }
+    return this._getItemByKey(itemKey);
+  }
+  getItems() {
+    return this._items;
+  }
+  hasItems() {
+    return !!this._items;
+  }
+  _reloadContentByChanges(changes, isExternalChanges) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return,no-param-reassign
+    changes = changes.map(change => (0, _extend.extend)(change, {
+      internalKey: this._getInternalKey(change.key)
+    }));
+    this._diagramWidget._reloadContentByChanges(changes, isExternalChanges);
+  }
+  _getItemByKey(key) {
+    this._ensureCache();
+    const cache = this._cache;
+    const index = this._getIndexByKey(key);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return cache.items[index];
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _getIndexByKey(key) {
+    this._ensureCache();
+    const cache = this._cache;
+    if (typeof key === 'object') {
+      for (let i = 0, {
+          length
+        } = cache.keys; i < length; i += 1) {
+        if (cache.keys[i] === key) return i;
+      }
+    } else {
+      const keySet = cache.keySet
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      || cache.keys.reduce((accumulator, key, index) => {
+        accumulator[key] = index;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return accumulator;
+      }, {});
+      if (!cache.keySet) {
+        cache.keySet = keySet;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return keySet[key];
+    }
+    return -1;
+  }
+  _ensureCache() {
+    const cache = this._cache;
+    if (!cache.keys) {
+      cache.keys = [];
+      cache.items = [];
+      this._fillCache(cache, this._items);
+    }
+  }
+  _fillCache(cache, items) {
+    if (!(items !== null && items !== void 0 && items.length)) return;
+    const keyExpr = this._getKeyExpr();
+    // @ts-expect-error ts-error
+    if (keyExpr) {
+      items.forEach(item => {
+        // @ts-expect-error ts-error
+        cache.keys.push(keyExpr(item));
+        cache.items.push(item);
+      });
+    }
+    const itemsExpr = this._getItemsExpr();
+    // @ts-expect-error ts-error
+    if (itemsExpr) {
+      // @ts-expect-error ts-error
+      items.forEach(item => this._fillCache(cache, itemsExpr(item)));
+    }
+    const containerChildrenExpr = this._getContainerChildrenExpr();
+    // @ts-expect-error ts-error
+    if (containerChildrenExpr) {
+      // @ts-expect-error ts-error
+      items.forEach(item => this._fillCache(cache, containerChildrenExpr(item)));
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _getKeyExpr() {
+    throw 'Not Implemented';
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _getItemsExpr() {}
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _getContainerChildrenExpr() {}
+  _initDataSource() {
+    var _this$_dataSource;
+    super._initDataSource();
+    // @ts-expect-error ts-error
+    (_this$_dataSource = this._dataSource) === null || _this$_dataSource === void 0 || _this$_dataSource.paginate(false);
+  }
+  _dataSourceOptions() {
+    return {
+      paginate: false
+    };
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _getStore() {
+    var _this$_dataSource2;
+    // @ts-expect-error ts-error
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return (_this$_dataSource2 = this._dataSource) === null || _this$_dataSource2 === void 0 ? void 0 : _this$_dataSource2.store();
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _getStoreKey(store, internalKey, data) {
+    let storeKey = store.keyOf(data);
+    if (storeKey === data) {
+      const keyExpr = this._getKeyExpr();
+      this._dataSourceItems.forEach(item => {
+        // @ts-expect-error ts-error
+        if (keyExpr(item) === internalKey) storeKey = item;
+      });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return storeKey;
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _getInternalKey(storeKey) {
+    if (typeof storeKey === 'object') {
+      const keyExpr = this._getKeyExpr();
+      // @ts-expect-error ts-error
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return keyExpr(storeKey);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return storeKey;
+  }
+  _resetCache() {
+    this._cache = {};
+  }
+}
+var _default = exports.default = ItemsOption;

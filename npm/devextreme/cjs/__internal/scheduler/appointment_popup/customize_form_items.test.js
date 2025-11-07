@@ -1,0 +1,235 @@
+/**
+* DevExtreme (cjs/__internal/scheduler/appointment_popup/customize_form_items.test.js)
+* Version: 25.2.0
+* Build date: Fri Nov 07 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+var _globals = require("@jest/globals");
+var _m_customize_form_items = require("./m_customize_form_items");
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const subjectGroup = {
+  name: 'subjectGroup',
+  itemType: 'group',
+  cssClass: 'dx-scheduler-form-subject-group dx-scheduler-form-group-with-icon'
+};
+const dateGroup = {
+  name: 'dateGroup',
+  itemType: 'group',
+  cssClass: 'dx-scheduler-form-date-range-group dx-scheduler-form-group-with-icon'
+};
+const repeatGroup = {
+  name: 'repeatGroup',
+  itemType: 'group',
+  cssClass: 'dx-scheduler-form-repeat-group dx-scheduler-form-group-with-icon'
+};
+const resourcesGroup = {
+  name: 'resourcesGroup',
+  itemType: 'group',
+  cssClass: 'dx-scheduler-form-resources-group dx-scheduler-form-group-with-icon'
+};
+const descriptionGroup = {
+  name: 'descriptionGroup',
+  itemType: 'group',
+  cssClass: 'dx-scheduler-form-description-group dx-scheduler-form-group-with-icon'
+};
+const mainGroup = {
+  items: [subjectGroup, dateGroup, repeatGroup, resourcesGroup, descriptionGroup],
+  name: 'mainGroup',
+  itemType: 'group',
+  cssClass: 'dx-scheduler-form-main-group',
+  colSpan: 1
+};
+const recurrenceGroup = {
+  name: 'recurrenceGroup',
+  itemType: 'group',
+  cssClass: 'dx-scheduler-form-recurrence-group dx-scheduler-form-recurrence-hidden',
+  colSpan: 1
+};
+const mainTestCase = [mainGroup, recurrenceGroup];
+(0, _globals.describe)('customizeFormItems', () => {
+  (0, _globals.it)('should return original items when no customization provided', () => {
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase);
+    (0, _globals.expect)(result).toEqual(mainTestCase);
+  });
+  (0, _globals.it)('should not mutate original data', () => {
+    var _mainGroup$items, _mainGroup$items2;
+    const originalMainTestCase = JSON.parse(JSON.stringify(mainTestCase));
+    const originalMainGroup = JSON.parse(JSON.stringify(mainGroup));
+    const originalSubjectGroup = JSON.parse(JSON.stringify(subjectGroup));
+    (0, _globals.expect)(mainGroup.items).toBe(mainGroup.items);
+    (0, _m_customize_form_items.customizeFormItems)(mainTestCase, ['mainGroup']);
+    (0, _m_customize_form_items.customizeFormItems)(mainTestCase, ['subjectGroup', 'dateGroup']);
+    (0, _m_customize_form_items.customizeFormItems)(mainTestCase, [{
+      name: 'mainGroup',
+      items: []
+    }]);
+    (0, _m_customize_form_items.customizeFormItems)(mainTestCase, [{
+      name: 'mainGroup',
+      items: ['subjectGroup']
+    }]);
+    (0, _globals.expect)(mainTestCase).toEqual(originalMainTestCase);
+    (0, _globals.expect)(mainGroup).toEqual(originalMainGroup);
+    (0, _globals.expect)(subjectGroup).toEqual(originalSubjectGroup);
+    (0, _globals.expect)(mainGroup.items).toHaveLength(5);
+    (0, _globals.expect)((_mainGroup$items = mainGroup.items) === null || _mainGroup$items === void 0 ? void 0 : _mainGroup$items[0]).toBe(subjectGroup);
+    (0, _globals.expect)((_mainGroup$items2 = mainGroup.items) === null || _mainGroup$items2 === void 0 ? void 0 : _mainGroup$items2[1]).toBe(dateGroup);
+  });
+  (0, _globals.it)('should show only mainGroup when specified by object', () => {
+    const customizeItems = [{
+      name: 'mainGroup'
+    }];
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, customizeItems);
+    (0, _globals.expect)(result).toEqual([mainGroup]);
+  });
+  (0, _globals.it)('should show only mainGroup when specified by string', () => {
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, ['mainGroup']);
+    (0, _globals.expect)(result).toEqual([mainGroup]);
+  });
+  (0, _globals.it)('should extract specific items from parent group', () => {
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, ['subjectGroup', 'dateGroup']);
+    (0, _globals.expect)(result).toEqual([subjectGroup, dateGroup]);
+  });
+  (0, _globals.it)('should create empty mainGroup when items array is empty', () => {
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, [{
+      name: 'mainGroup',
+      items: [],
+      visible: false
+    }]);
+    (0, _globals.expect)(result).toEqual([_extends({}, mainGroup, {
+      items: [],
+      visible: false
+    })]);
+  });
+  (0, _globals.it)('should change order of top-level groups', () => {
+    const customizeItems = ['recurrenceGroup', 'mainGroup'];
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, customizeItems);
+    (0, _globals.expect)(result).toEqual([recurrenceGroup, mainGroup]);
+  });
+  (0, _globals.it)('should extract item from group and change order', () => {
+    const customizeItems = ['subjectGroup', 'recurrenceGroup', 'mainGroup'];
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, customizeItems);
+    const expectedMainGroup = _extends({}, mainGroup, {
+      items: [dateGroup, repeatGroup, resourcesGroup, descriptionGroup]
+    });
+    (0, _globals.expect)(result).toEqual([subjectGroup, recurrenceGroup, expectedMainGroup]);
+  });
+  (0, _globals.it)('should extract multiple items from parent group', () => {
+    const customizeItems = ['subjectGroup', 'repeatGroup', 'mainGroup'];
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, customizeItems);
+    const expectedMainGroup = _extends({}, mainGroup, {
+      items: [dateGroup, resourcesGroup, descriptionGroup]
+    });
+    (0, _globals.expect)(result).toEqual([subjectGroup, repeatGroup, expectedMainGroup]);
+  });
+  (0, _globals.it)('should create custom form item when name not found', () => {
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, ['customItem']);
+    (0, _globals.expect)(result).toEqual([{
+      name: 'customItem',
+      itemType: 'simple',
+      dataField: 'customItem',
+      editorType: 'dxTextBox'
+    }]);
+  });
+  (0, _globals.it)('should create custom group with children', () => {
+    const customizeItems = [{
+      name: 'customGroup',
+      itemType: 'group',
+      items: ['child1', 'child2']
+    }];
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, customizeItems);
+    (0, _globals.expect)(result).toEqual([{
+      name: 'customGroup',
+      itemType: 'group',
+      items: [{
+        name: 'child1',
+        itemType: 'simple',
+        dataField: 'child1',
+        editorType: 'dxTextBox'
+      }, {
+        name: 'child2',
+        itemType: 'simple',
+        dataField: 'child2',
+        editorType: 'dxTextBox'
+      }]
+    }]);
+  });
+  (0, _globals.it)('should create custom group with visibility control', () => {
+    const customizeItems = [{
+      name: 'hiddenGroup',
+      itemType: 'group',
+      visible: false,
+      items: ['field1']
+    }];
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, customizeItems);
+    (0, _globals.expect)(result).toEqual([{
+      name: 'hiddenGroup',
+      itemType: 'group',
+      visible: false,
+      items: [{
+        name: 'field1',
+        itemType: 'simple',
+        dataField: 'field1',
+        editorType: 'dxTextBox'
+      }]
+    }]);
+  });
+  (0, _globals.it)('should customize mainGroup with specific items as array', () => {
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, [{
+      name: 'mainGroup',
+      items: ['subjectGroup', 'dateGroup']
+    }]);
+    (0, _globals.expect)(result).toEqual([_extends({}, mainGroup, {
+      items: [subjectGroup, dateGroup]
+    })]);
+  });
+  (0, _globals.it)('should customize mainGroup with specific items as objects', () => {
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, [{
+      name: 'mainGroup',
+      items: [{
+        name: 'subjectGroup'
+      }, {
+        name: 'dateGroup'
+      }]
+    }]);
+    (0, _globals.expect)(result).toEqual([_extends({}, mainGroup, {
+      items: [subjectGroup, dateGroup]
+    })]);
+  });
+  (0, _globals.it)('should create nested custom groups', () => {
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, [{
+      name: 'mainGroup',
+      items: [{
+        name: 'several',
+        itemType: 'group',
+        items: ['subjectGroup']
+      }, 'dateGroup']
+    }]);
+    (0, _globals.expect)(result).toEqual([_extends({}, mainGroup, {
+      items: [{
+        name: 'several',
+        itemType: 'group',
+        items: [subjectGroup]
+      }, dateGroup]
+    })]);
+  });
+  (0, _globals.it)('should set item visibility property', () => {
+    const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, [{
+      name: 'mainGroup',
+      items: [{
+        name: 'subjectGroup',
+        visible: false
+      }, {
+        name: 'dateGroup'
+      }]
+    }]);
+    (0, _globals.expect)(result).toEqual([_extends({}, mainGroup, {
+      items: [_extends({}, subjectGroup, {
+        visible: false
+      }), dateGroup]
+    })]);
+  });
+});

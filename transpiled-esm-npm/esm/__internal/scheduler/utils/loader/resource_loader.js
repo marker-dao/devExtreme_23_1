@@ -14,6 +14,7 @@ export class ResourceLoader extends Loader {
     this.useColorAsDefault = Boolean(config.useColorAsDefault);
     this.resourceIndex = String(getResourceIndex(config));
     this.resourceName = config.label;
+    this.icon = config.icon;
     this.onInit();
   }
   onLoadTransform(items) {

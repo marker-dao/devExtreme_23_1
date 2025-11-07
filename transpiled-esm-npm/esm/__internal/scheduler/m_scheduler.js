@@ -713,7 +713,10 @@ class Scheduler extends SchedulerOptionsBaseWidget {
     }
     this._editing.allowDragging = this._editing.allowDragging && this._editing.allowUpdating;
     this._editing.allowResizing = this._editing.allowResizing && this._editing.allowUpdating;
-    const isReadOnly = Object.values(this._editing).every(value => !value);
+    const isReadOnly = Object.values(_extends({}, this._editing, {
+      form: undefined,
+      popup: undefined
+    })).every(value => !value);
     this.$element().toggleClass(WIDGET_READONLY_CLASS, isReadOnly);
   }
   _dispose() {
@@ -821,6 +824,7 @@ class Scheduler extends SchedulerOptionsBaseWidget {
       // @ts-expect-error
       createComponent: (element, component, options) => this._createComponent(element, component, options),
       getEditingConfig: () => this._editing,
+      getResourceManager: () => this.resourceManager,
       getFirstDayOfWeek: () => this.option('firstDayOfWeek'),
       getStartDayHour: () => this.option('startDayHour'),
       getCalculatedEndDate: startDateWithStartHour => this._workSpace.calculateEndDate(startDateWithStartHour),

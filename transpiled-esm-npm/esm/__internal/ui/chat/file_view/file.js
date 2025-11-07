@@ -7,8 +7,8 @@ import DOMComponent from '../../../core/widget/dom_component';
 import { getFileIconName, getFileSize } from '../../../ui/file_uploader/file_uploader.utils';
 export const CHAT_FILE_CLASS = 'dx-chat-file';
 const CHAT_FILE_ICON_CONTAINER_CLASS = 'dx-chat-file-icon-container';
-const CHAT_FILE_NAME_CLASS = 'dx-chat-file-name';
-const CHAT_FILE_SIZE_CLASS = 'dx-chat-file-size';
+export const CHAT_FILE_NAME_CLASS = 'dx-chat-file-name';
+export const CHAT_FILE_SIZE_CLASS = 'dx-chat-file-size';
 const CHAT_FILE_DOWNLOAD_BUTTON_CLASS = 'dx-chat-file-download-button';
 class File extends DOMComponent {
   _getDefaultOptions() {
@@ -74,6 +74,12 @@ class File extends DOMComponent {
     this.$element().append($size);
   }
   _renderButton() {
+    const {
+      onDownload
+    } = this.option();
+    if (!onDownload) {
+      return;
+    }
     const $button = $('<div>').addClass(CHAT_FILE_DOWNLOAD_BUTTON_CLASS);
     this._downloadButton = this._createComponent($button, Button, this._getButtonConfig());
     this.$element().append($button);
@@ -97,18 +103,41 @@ class File extends DOMComponent {
       icon: 'download',
       stylingMode: 'text',
       onClick: e => {
-        var _this$_downloadAction;
-        const event = {
-          event: e.event,
-          attachment: data
-        };
-        (_this$_downloadAction = this._downloadAction) === null || _this$_downloadAction === void 0 || _this$_downloadAction.call(this, event);
+        this._downloadHandler(e);
       }
     };
     return configuration;
   }
+  _downloadHandler(e) {
+    var _this$_downloadAction;
+    const {
+      data
+    } = this.option();
+    const event = {
+      event: e.event,
+      attachment: data
+    };
+    (_this$_downloadAction = this._downloadAction) === null || _this$_downloadAction === void 0 || _this$_downloadAction.call(this, event);
+  }
+  _handleOnDownloadOptionChange() {
+    const {
+      onDownload
+    } = this.option();
+    if (!onDownload) {
+      this._cleanDownloadButton();
+      return;
+    }
+    if (this._downloadButton) {
+      var _this$_downloadButton;
+      (_this$_downloadButton = this._downloadButton) === null || _this$_downloadButton === void 0 || _this$_downloadButton.option({
+        onClick: e => this._downloadHandler(e)
+      });
+    } else {
+      this._renderButton();
+    }
+  }
   _optionChanged(args) {
-    var _this$_downloadButton;
+    var _this$_downloadButton2;
     const {
       name,
       value
@@ -117,13 +146,14 @@ class File extends DOMComponent {
       case 'activeStateEnabled':
       case 'focusStateEnabled':
       case 'hoverStateEnabled':
-        (_this$_downloadButton = this._downloadButton) === null || _this$_downloadButton === void 0 || _this$_downloadButton.option(name, value);
+        (_this$_downloadButton2 = this._downloadButton) === null || _this$_downloadButton2 === void 0 || _this$_downloadButton2.option(name, value);
         break;
       case 'data':
         this._invalidate();
         break;
       case 'onDownload':
         this._createDownloadAction();
+        this._handleOnDownloadOptionChange();
         break;
       default:
         super._optionChanged(args);
@@ -135,8 +165,8 @@ class File extends DOMComponent {
     super._clean();
   }
   _cleanDownloadButton() {
-    var _this$_downloadButton2;
-    (_this$_downloadButton2 = this._downloadButton) === null || _this$_downloadButton2 === void 0 || _this$_downloadButton2.dispose();
+    var _this$_downloadButton3;
+    (_this$_downloadButton3 = this._downloadButton) === null || _this$_downloadButton3 === void 0 || _this$_downloadButton3.dispose();
     this._downloadButton = null;
   }
 }

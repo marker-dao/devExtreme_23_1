@@ -1,7 +1,42 @@
+import _extends from "@babel/runtime/helpers/esm/extends";
 import { Controller } from '../m_modules';
 import { AIColumnIntegrationController } from './m_ai_column_integration_controller';
-import { isAIColumnAutoMode } from './utils';
+import { getAICommandColumnDefaultOptions, isAIColumnAutoMode, isPromptOption } from './utils';
 export class AIColumnController extends Controller {
+  getDefaultCellValue(column, cellValue) {
+    var _column$ai2;
+    if (cellValue === undefined) {
+      var _column$ai;
+      return ((_column$ai = column.ai) === null || _column$ai === void 0 ? void 0 : _column$ai.emptyText) ?? null;
+    }
+    return ((_column$ai2 = column.ai) === null || _column$ai2 === void 0 ? void 0 : _column$ai2.noDataText) ?? null;
+  }
+  addAICommandColumn() {
+    const that = this;
+    const {
+      dataController,
+      aiColumnIntegrationController
+    } = this;
+    this.columnsController.addCommandColumn(_extends({}, getAICommandColumnDefaultOptions(), {
+      calculateCellValue(data) {
+        const key = dataController.keyOf(data);
+        const cellValue = aiColumnIntegrationController.getAIColumnText(this.name, key);
+        const defaultValue = that.getDefaultCellValue(this, cellValue);
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        return cellValue || defaultValue;
+      }
+    }));
+  }
+  subscribeToDataSourceChanged() {
+    var _this$dataController$;
+    this.dataSourceChangedHandler = this.handleDataSourceChanged.bind(this);
+    (_this$dataController$ = this.dataController.dataSource()) === null || _this$dataController$ === void 0 || _this$dataController$.changed.add(this.dataSourceChangedHandler);
+  }
+  updateAICells() {
+    this.dataController.updateItems({
+      repaintChangesOnly: this.option('repaintChangesOnly')
+    });
+  }
   callbackNames() {
     return ['aiRequestCompleted', 'aiRequestRejected'];
   }
@@ -10,16 +45,26 @@ export class AIColumnController extends Controller {
     this.dataController = this.getController('data');
     this.aiColumnIntegrationController = new AIColumnIntegrationController(this.component);
     this.aiColumnIntegrationController.init();
-    this.dataChangedHandler = this.handleDataChanged.bind(this);
-    this.dataController.changed.add(this.dataChangedHandler);
+    this.aiColumnOptionChangedHandler = this.aiColumnOptionChanged.bind(this);
+    this.columnsController.aiColumnOptionChanged.add(this.aiColumnOptionChangedHandler);
+    this.subscribeToDataSourceChanged();
+    this.addAICommandColumn();
   }
   showResults(columnName, result, cachedData) {
     // Update the results in the UI or internal state
   }
-  handleDataChanged(e) {
-    const aiColumns = this.columnsController.getColumns().filter(col => col.type === 'ai' && isAIColumnAutoMode(col));
+  getAIColumns() {
+    return this.columnsController.getColumns().filter(col => col.type === 'ai');
+  }
+  handleDataSourceChanged(args) {
+    const aiColumns = this.getAIColumns();
+    if ((args === null || args === void 0 ? void 0 : args.changeType) === 'loadError') {
+      return;
+    }
     for (const col of aiColumns) {
-      this.refreshAIColumn(col.name);
+      if (isAIColumnAutoMode(col)) {
+        this.sendRequest(col.name, true);
+      }
     }
   }
   // API methods
@@ -28,28 +73,57 @@ export class AIColumnController extends Controller {
   }
   abortAIColumnRequest(columnName) {
     this.aiColumnIntegrationController.abortRequest(columnName);
+    if (!this.aiColumnIntegrationController.isAnyRequestAwaitingCompletion()) {
+      this.dataController.endCustomLoading();
+    }
+  }
+  sendRequest(columnName, useCache) {
+    var _column$ai3;
+    let needToShowLoadPanel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+    const callbacks = this.getRequestCallbacks();
+    const column = this.columnsController.columnOption(columnName);
+    if (needToShowLoadPanel && !!(column !== null && column !== void 0 && (_column$ai3 = column.ai) !== null && _column$ai3 !== void 0 && _column$ai3.prompt)) {
+      this.dataController.beginCustomLoading();
+    }
+    this.aiColumnIntegrationController.sendRequest(columnName, useCache, callbacks);
   }
   sendAIColumnRequest(columnName) {
-    this.aiColumnIntegrationController.sendRequest(columnName, true, this.getRequestCallbacks());
+    this.sendRequest(columnName, false);
   }
   refreshAIColumn(columnName) {
-    this.sendAIColumnRequest(columnName);
+    this.sendRequest(columnName, false);
   }
   getRequestCallbacks() {
     return {
       onComplete: data => {
+        this.dataController.endCustomLoading();
         this.aiRequestCompleted.fire(data);
+        this.updateAICells();
       },
       onError: error => {
+        this.dataController.endCustomLoading();
         this.aiRequestRejected.fire(error);
       }
     };
   }
   clearAIColumn(columnName) {
     this.aiColumnIntegrationController.abortRequest(columnName);
+    this.aiColumnIntegrationController.clearAIColumn(columnName);
+    this.columnsController.columnOption(columnName, 'ai.prompt', '');
+    this.updateAICells();
   }
-  getAIColumnText(columnName, key) {}
+  getAIColumnText(columnName, key) {
+    return this.aiColumnIntegrationController.getAIColumnText(columnName, key);
+  }
+  aiColumnOptionChanged(column, optionName, value) {
+    const isPromptOptionName = isPromptOption(optionName, value);
+    if (isPromptOptionName && column.name) {
+      this.aiColumnIntegrationController.clearAIColumn(column.name);
+    }
+  }
   dispose() {
-    this.dataController.changed.remove(this.dataChangedHandler);
+    var _this$dataController$2;
+    super.dispose();
+    (_this$dataController$2 = this.dataController.dataSource()) === null || _this$dataController$2 === void 0 || _this$dataController$2.changed.remove(this.dataSourceChangedHandler);
   }
 }

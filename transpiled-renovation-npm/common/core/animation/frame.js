@@ -1,31 +1,15 @@
 "use strict";
 
-exports.cancelAnimationFrame = cancelAnimationFrame;
-exports.requestAnimationFrame = requestAnimationFrame;
-var _window = require("../../../core/utils/window");
-var _call_once = _interopRequireDefault(require("../../../core/utils/call_once"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-const window = (0, _window.hasWindow)() ? (0, _window.getWindow)() : {};
-const FRAME_ANIMATION_STEP_TIME = 1000 / 60;
-let request = function (callback) {
-  return setTimeout(callback, FRAME_ANIMATION_STEP_TIME);
-};
-let cancel = function (requestID) {
-  clearTimeout(requestID);
-};
-const setAnimationFrameMethods = (0, _call_once.default)(function () {
-  const nativeRequest = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame;
-  const nativeCancel = window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.oCancelAnimationFrame || window.msCancelAnimationFrame;
-  if (nativeRequest && nativeCancel) {
-    request = nativeRequest;
-    cancel = nativeCancel;
+Object.defineProperty(exports, "cancelAnimationFrame", {
+  enumerable: true,
+  get: function () {
+    return _frame.cancelAnimationFrame;
   }
 });
-function requestAnimationFrame() {
-  setAnimationFrameMethods();
-  return request.apply(window, arguments);
-}
-function cancelAnimationFrame() {
-  setAnimationFrameMethods();
-  cancel.apply(window, arguments);
-}
+Object.defineProperty(exports, "requestAnimationFrame", {
+  enumerable: true,
+  get: function () {
+    return _frame.requestAnimationFrame;
+  }
+});
+var _frame = require("../../../__internal/common/core/animation/frame");

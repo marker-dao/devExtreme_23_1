@@ -9,7 +9,6 @@ var _m_modules = require("../m_modules");
 var _m_ai_column_cache_controller = require("./m_ai_column_cache_controller");
 var _utils = require("./utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class AIColumnIntegrationController extends _m_modules.Controller {
   constructor() {
     super(...arguments);
@@ -55,13 +54,15 @@ class AIColumnIntegrationController extends _m_modules.Controller {
     if (args.cancel) {
       return;
     }
-    const keys = Object.keys(data);
-    const cachedResponse = useCache ? this.aiColumnCacheController.getCachedResponse(columnName, keys) : {};
     const keyField = this.dataController.key();
+    let cachedResponse = {};
+    if (args.useCache) {
+      const keys = data.map(item => item[keyField]);
+      cachedResponse = this.aiColumnCacheController.getCachedResponse(columnName, keys);
+    }
     const reducedData = (0, _utils.reduceDataCachedKeys)(data, cachedResponse, keyField);
     const areAllDataCached = Object.keys(reducedData).length === 0;
     if (areAllDataCached) {
-      this.showResult(columnName, {}, cachedResponse);
       return;
     }
     const abort = aiIntegration.generateGridColumn({
@@ -74,11 +75,6 @@ class AIColumnIntegrationController extends _m_modules.Controller {
   processCommandCompletion(columnName) {
     this.abortRequest(columnName);
   }
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  showResult(columnName, response, cachedData) {
-    // TODO: Implement result display logic
-    const mergedData = _extends({}, cachedData, response);
-  }
   getAICommandCallbacks(columnName, cachedResponse, callBacks) {
     const column = this.columnsController.getColumnByName(columnName);
     const callbacks = {
@@ -88,11 +84,10 @@ class AIColumnIntegrationController extends _m_modules.Controller {
           const args = {
             column,
             error: null,
-            data: finalResponse.data,
-            additionalInfo: finalResponse.additionalInfo
+            data: finalResponse.data
           };
           this.executeAction('onAIColumnResponseReceived', args);
-          this.showResult(columnName, finalResponse, cachedResponse);
+          this.aiColumnCacheController.setCachedResponse(columnName, finalResponse.data);
           this.processCommandCompletion(columnName);
           callBacks === null || callBacks === void 0 || (_callBacks$onComplete = callBacks.onComplete) === null || _callBacks$onComplete === void 0 || _callBacks$onComplete.call(callBacks, finalResponse);
         }
@@ -103,8 +98,7 @@ class AIColumnIntegrationController extends _m_modules.Controller {
         this.executeAction('onAIColumnResponseReceived', {
           column,
           error: message,
-          data: null,
-          additionalInfo: undefined
+          data: null
         });
         this.showError(message);
         this.processCommandCompletion(columnName);
@@ -112,6 +106,9 @@ class AIColumnIntegrationController extends _m_modules.Controller {
       }
     };
     return callbacks;
+  }
+  isAnyRequestAwaitingCompletion() {
+    return Object.values(this.aborts).some(abort => !!abort);
   }
   abortRequest(columnName) {
     var _this$aborts$columnNa, _this$aborts;
@@ -121,6 +118,12 @@ class AIColumnIntegrationController extends _m_modules.Controller {
   showError(message) {
     var _this$errorHandlingCo;
     (_this$errorHandlingCo = this.errorHandlingController) === null || _this$errorHandlingCo === void 0 || _this$errorHandlingCo.showToastError(message);
+  }
+  getAIColumnText(columnName, key) {
+    return this.aiColumnCacheController.getCachedString(columnName, key);
+  }
+  clearAIColumn(columnName) {
+    this.aiColumnCacheController.clearCache(columnName);
   }
   getAIIntegration(columnName) {
     if (!columnName) {

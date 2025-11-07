@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/column_headers/m_column_headers.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,8 +25,8 @@ var _m_column_context_menu_mixin = require("../../../grids/grid_core/context_men
 var _const = require("../columns_resizing_reordering/const");
 var _m_accessibility = require("../m_accessibility");
 var _m_columns_view = require("../views/m_columns_view");
+var _const2 = require("./const");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-const CELL_CONTENT_CLASS = 'text-content';
 const HEADERS_CLASS = 'headers';
 const NOWRAP_CLASS = 'nowrap';
 const ROW_CLASS_SELECTOR = '.dx-row';
@@ -44,28 +44,33 @@ const HEADER_FILTER_CLASS_SELECTOR = '.dx-header-filter';
 const HEADER_FILTER_INDICATOR_CLASS = 'dx-header-filter-indicator';
 const MULTI_ROW_HEADER_CLASS = 'dx-header-multi-row';
 const LINK = 'dx-link';
-const createCellContent = function (that, $cell, options) {
-  const $cellContent = (0, _renderer.default)('<div>').addClass(that.addWidgetPrefix(CELL_CONTENT_CLASS));
-  that.setAria('role', 'presentation', $cellContent);
-  addCssClassesToCellContent(that, $cell, options.column, $cellContent);
-  const showColumnLines = that.option('showColumnLines');
-  // TODO getController
-  const contentAlignment = that.getController('columns').getHeaderContentAlignment(options.column.alignment);
-  return $cellContent[showColumnLines || contentAlignment === 'right' ? 'appendTo' : 'prependTo']($cell);
-};
-function addCssClassesToCellContent(that, $cell, column, $cellContent) {
-  const $indicatorElements = that._getIndicatorElements($cell, true);
-  const $visibleIndicatorElements = that._getIndicatorElements($cell);
-  const indicatorCount = $indicatorElements === null || $indicatorElements === void 0 ? void 0 : $indicatorElements.length;
-  const columnAlignment = that._getColumnAlignment(column.alignment);
-  const sortIndicatorClassName = `.${that._getIndicatorClassName('sort')}`;
-  const sortIndexIndicatorClassName = `.${that._getIndicatorClassName('sortIndex')}`;
-  const $sortIndicator = $visibleIndicatorElements.filter(sortIndicatorClassName);
-  const $sortIndexIndicator = $visibleIndicatorElements.children().filter(sortIndexIndicatorClassName);
-  $cellContent = $cellContent || $cell.children(`.${that.addWidgetPrefix(CELL_CONTENT_CLASS)}`);
-  $cellContent.toggleClass(TEXT_CONTENT_ALIGNMENT_CLASS_PREFIX + columnAlignment, indicatorCount > 0).toggleClass(TEXT_CONTENT_ALIGNMENT_CLASS_PREFIX + (columnAlignment === 'left' ? 'right' : 'left'), indicatorCount > 0 && column.alignment === 'center').toggleClass(SORT_INDICATOR_CLASS, !!$sortIndicator.length).toggleClass(SORT_INDEX_INDICATOR_CLASS, !!$sortIndexIndicator.length).toggleClass(HEADER_FILTER_INDICATOR_CLASS, !!$visibleIndicatorElements.filter(`.${that._getIndicatorClassName('headerFilter')}`).length);
-}
 class ColumnHeadersView extends (0, _m_column_context_menu_mixin.ColumnContextMenuMixin)(_m_columns_view.ColumnsView) {
+  addCssClassesToCellContent($cell, column, $cellContent) {
+    const $indicatorElements = this._getIndicatorElements($cell, true);
+    const $visibleIndicatorElements = this._getIndicatorElements($cell);
+    const indicatorCount = $indicatorElements === null || $indicatorElements === void 0 ? void 0 : $indicatorElements.length;
+    const columnAlignment = this._getColumnAlignment(column.alignment ?? '');
+    const sortIndicatorClassName = `.${this._getIndicatorClassName('sort')}`;
+    const sortIndexIndicatorClassName = `.${this._getIndicatorClassName('sortIndex')}`;
+    const $sortIndicator = $visibleIndicatorElements.filter(sortIndicatorClassName);
+    const $sortIndexIndicator = $visibleIndicatorElements.children().filter(sortIndexIndicatorClassName);
+    const $content = $cellContent ?? $cell.children(`.${this.addWidgetPrefix(_const2.CLASSES.cellContent)}`);
+    $content.toggleClass(TEXT_CONTENT_ALIGNMENT_CLASS_PREFIX + columnAlignment, indicatorCount > 0).toggleClass(TEXT_CONTENT_ALIGNMENT_CLASS_PREFIX + (columnAlignment === 'left' ? 'right' : 'left'), indicatorCount > 0 && column.alignment === 'center').toggleClass(SORT_INDICATOR_CLASS, !!$sortIndicator.length).toggleClass(SORT_INDEX_INDICATOR_CLASS, !!$sortIndexIndicator.length).toggleClass(HEADER_FILTER_INDICATOR_CLASS, !!$visibleIndicatorElements.filter(`.${this._getIndicatorClassName('headerFilter')}`).length);
+  }
+  createCellContent($cell, column) {
+    const $cellContent = (0, _renderer.default)('<div>').addClass(this.addWidgetPrefix(_const2.CLASSES.cellContent));
+    this.setAria('role', 'presentation', $cellContent);
+    this.addCssClassesToCellContent($cell, column, $cellContent);
+    const showColumnLines = this.option('showColumnLines');
+    // TODO getController
+    const contentAlignment = this.getController('columns').getHeaderContentAlignment(column.alignment);
+    if (showColumnLines || contentAlignment === 'right') {
+      $cellContent.appendTo($cell);
+    } else {
+      $cellContent.prependTo($cell);
+    }
+    return $cellContent;
+  }
   init() {
     super.init();
     this._headerPanelView = this.getView('headerPanel');
@@ -89,22 +94,22 @@ class ColumnHeadersView extends (0, _m_column_context_menu_mixin.ColumnContextMe
   _isLegacyKeyboardNavigation() {
     return this.option('useLegacyKeyboardNavigation');
   }
-  _getDefaultTemplate(column) {
-    const that = this;
-    return function ($container, options) {
-      const {
-        caption
-      } = column;
-      const needCellContent = !column.command || caption && column.command !== 'expand';
-      if (column.command === 'empty') {
-        that._renderEmptyMessage($container, options);
-      } else if (needCellContent) {
-        const $content = createCellContent(that, $container, options);
-        $content.text(caption);
-      } else if (column.command) {
-        $container.html('&nbsp;');
-      }
-    };
+  getHeaderDefaultTemplate($container, options) {
+    const {
+      column
+    } = options;
+    const {
+      caption
+    } = column;
+    const needCellContent = !column.command || caption && column.command !== 'expand';
+    if (column.command === 'empty') {
+      this._renderEmptyMessage($container, options);
+    } else if (needCellContent) {
+      const $content = this.createCellContent($container, column);
+      $content.text(caption);
+    } else if (column.command) {
+      $container.html('&nbsp;');
+    }
   }
   _renderEmptyMessage($container, options) {
     const textEmpty = this._getEmptyHeaderText();
@@ -112,7 +117,7 @@ class ColumnHeadersView extends (0, _m_column_context_menu_mixin.ColumnContextMe
       $container.html('&nbsp;');
       return;
     }
-    const $cellContent = createCellContent(this, $container, options);
+    const $cellContent = this.createCellContent($container, options.column);
     const needSplit = textEmpty.includes('{0}');
     if (needSplit) {
       const [leftPart, rightPart] = textEmpty.split('{0}');
@@ -142,7 +147,7 @@ class ColumnHeadersView extends (0, _m_column_context_menu_mixin.ColumnContextMe
   _getHeaderTemplate(column) {
     return column.headerCellTemplate || {
       allowRenderToDetachedContainer: true,
-      render: this._getDefaultTemplate(column)
+      render: this.getHeaderDefaultTemplate.bind(this)
     };
   }
   _processTemplate(template, options) {
@@ -155,7 +160,7 @@ class ColumnHeadersView extends (0, _m_column_context_menu_mixin.ColumnContextMe
     if (options.rowType === 'header' && renderingTemplate && column.headerCellTemplate && !column.command) {
       resultTemplate = {
         render(options) {
-          const $content = createCellContent(that, options.container, options.model);
+          const $content = that.createCellContent(options.container, options.model);
           renderingTemplate.render((0, _extend.extend)({}, options, {
             container: $content
           }));
@@ -337,7 +342,7 @@ class ColumnHeadersView extends (0, _m_column_context_menu_mixin.ColumnContextMe
     if ((_$indicatorsContainer = $indicatorsContainer) !== null && _$indicatorsContainer !== void 0 && _$indicatorsContainer.length) {
       $indicatorsContainer.filter(`.${VISIBILITY_HIDDEN_CLASS}`).remove();
       $indicatorsContainer = this._getIndicatorContainer($cell);
-      $indicatorsContainer.clone().addClass(VISIBILITY_HIDDEN_CLASS).css('float', '').insertBefore($cell.children(`.${this.addWidgetPrefix(CELL_CONTENT_CLASS)}`));
+      $indicatorsContainer.clone().addClass(VISIBILITY_HIDDEN_CLASS).css('float', '').insertBefore($cell.children(`.${this.addWidgetPrefix(_const2.CLASSES.cellContent)}`));
     }
   }
   _updateCell($cell, options) {
@@ -354,7 +359,7 @@ class ColumnHeadersView extends (0, _m_column_context_menu_mixin.ColumnContextMe
     if (column.alignment === 'center') {
       this._alignCaptionByCenter($cell);
     }
-    addCssClassesToCellContent(this, $cell, column);
+    this.addCssClassesToCellContent($cell, column);
     return $indicatorElement;
   }
   _getIndicatorContainer($cell, returnAll) {
@@ -558,6 +563,9 @@ class ColumnHeadersView extends (0, _m_column_context_menu_mixin.ColumnContextMe
   }
   getKeyboardNavigationController() {
     return this._headersKeyboardNavigation;
+  }
+  renderDragCellContent($dragContainer, column) {
+    $dragContainer.text(column.caption ?? '');
   }
 }
 exports.ColumnHeadersView = ColumnHeadersView;

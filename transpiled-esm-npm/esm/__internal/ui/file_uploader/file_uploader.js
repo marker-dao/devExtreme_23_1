@@ -9,7 +9,7 @@ import Guid from '../../../core/guid';
 import $ from '../../../core/renderer';
 import Callbacks from '../../../core/utils/callbacks';
 import { extend } from '../../../core/utils/extend';
-import { getOffset, getWidth } from '../../../core/utils/size';
+import { getOffset, getOuterWidth, getWidth } from '../../../core/utils/size';
 import { isDefined, isFunction, isNumeric } from '../../../core/utils/type';
 import { getWindow } from '../../../core/utils/window';
 import Button from '../../../ui/button';
@@ -23,7 +23,7 @@ import { CustomWholeFileUploadStrategy } from '../../ui/file_uploader/file_uploa
 import { DefaultWholeFileUploadStrategy } from '../../ui/file_uploader/file_upload_strategy.whole.default';
 import { getFileIconName, getFileSize } from '../../ui/file_uploader/file_uploader.utils';
 const window = getWindow();
-const FILEUPLOADER_CLASS = 'dx-fileuploader';
+export const FILEUPLOADER_CLASS = 'dx-fileuploader';
 const FILEUPLOADER_EMPTY_CLASS = 'dx-fileuploader-empty';
 const FILEUPLOADER_SHOW_FILE_LIST_CLASS = 'dx-fileuploader-show-file-list';
 const FILEUPLOADER_DRAGOVER_CLASS = 'dx-fileuploader-dragover';
@@ -44,11 +44,13 @@ const FILEUPLOADER_FILE_SIZE_CLASS = 'dx-fileuploader-file-size';
 const FILEUPLOADER_FILE_ICON_CLASS = 'dx-fileuploader-file-icon';
 const FILEUPLOADER_BUTTON_CLASS = 'dx-fileuploader-button';
 const FILEUPLOADER_BUTTON_CONTAINER_CLASS = 'dx-fileuploader-button-container';
-const FILEUPLOADER_CANCEL_BUTTON_CLASS = 'dx-fileuploader-cancel-button';
+export const FILEUPLOADER_CANCEL_BUTTON_CLASS = 'dx-fileuploader-cancel-button';
 const FILEUPLOADER_UPLOAD_BUTTON_CLASS = 'dx-fileuploader-upload-button';
 const FILEUPLOADER_INVALID_CLASS = 'dx-fileuploader-invalid';
 const FILEUPLOADER_AFTER_LOAD_DELAY = 400;
 const DRAG_EVENT_DELTA = 1;
+const GAP = 10;
+const REFERENCE_TEXT = '1023 bytes';
 const DIALOG_TRIGGER_EVENT_NAMESPACE = 'dxFileUploaderDialogTrigger';
 const keyUpEventName = 'keyup';
 const nativeClickEvent = 'click';
@@ -106,12 +108,14 @@ class FileUploader extends Editor {
       onUploadStarted: null,
       onUploaded: null,
       onFilesUploaded: null,
+      onFileValidationError: null,
       onProgress: null,
       onUploadError: null,
       onUploadAborted: null,
       onDropZoneEnter: null,
       onDropZoneLeave: null,
       onCancelButtonClick: null,
+      onFileLimitReached: undefined,
       allowedFileExtensions: [],
       maxFileSize: 0,
       minFileSize: 0,
@@ -136,7 +140,8 @@ class FileUploader extends Editor {
       _buttonStylingMode: 'contained',
       _hideCancelButtonOnUpload: true,
       _showFileIcon: false,
-      _cancelButtonPosition: 'start'
+      _cancelButtonPosition: 'start',
+      _maxFileCount: undefined
     });
   }
   _defaultOptionsRules() {
@@ -192,11 +197,13 @@ class FileUploader extends Editor {
     this._initFileInput();
     this._initLabel();
     this._setUploadStrategy();
+    this._createFileLimitReachedAction();
     this._createFiles();
     this._createBeforeSendAction();
     this._createUploadStartedAction();
     this._createUploadedAction();
     this._createFilesUploadedAction();
+    this._createFileValidationErrorAction();
     this._createProgressAction();
     this._createUploadErrorAction();
     this._createUploadAbortedAction();
@@ -229,7 +236,9 @@ class FileUploader extends Editor {
     } = this.option();
     if (!this._$fileInput) {
       this._$fileInput = renderFileUploaderInput();
-      eventsEngine.on(this._$fileInput, 'change', this._inputChangeHandler.bind(this));
+      eventsEngine.on(this._$fileInput, 'change', () => {
+        this._inputChangeHandler();
+      });
       eventsEngine.on(this._$fileInput, 'click', e => {
         e.stopPropagation();
         this._resetInputValue();
@@ -265,6 +274,11 @@ class FileUploader extends Editor {
     if (files && !files.length && uploadMode !== 'useForm') {
       return;
     }
+    if (this._isFileLimitReached(files)) {
+      var _this$_fileLimitReach;
+      (_this$_fileLimitReach = this._fileLimitReachedAction) === null || _this$_fileLimitReach === void 0 || _this$_fileLimitReach.call(this);
+      return;
+    }
     // @ts-expect-error dxElementWrapper should be extdened
     const value = files ? this._getFiles(files) : [{
       name: fileName
@@ -273,6 +287,20 @@ class FileUploader extends Editor {
     if (uploadMode === 'instantly') {
       this._uploadFiles();
     }
+  }
+  _isFileLimitReached() {
+    let files = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const {
+      _maxFileCount,
+      value
+    } = this.option();
+    if (_maxFileCount === undefined) {
+      return false;
+    }
+    const totalCount = files.length + ((value === null || value === void 0 ? void 0 : value.length) ?? 0);
+    const isFileLimitReached = totalCount > _maxFileCount;
+    return isFileLimitReached;
   }
   _shouldFileListBeExtended() {
     const {
@@ -379,6 +407,10 @@ class FileUploader extends Editor {
     const {
       value: files
     } = this.option();
+    if (this._isFileLimitReached()) {
+      var _this$_fileLimitReach2;
+      (_this$_fileLimitReach2 = this._fileLimitReachedAction) === null || _this$_fileLimitReach2 === void 0 || _this$_fileLimitReach2.call(this);
+    }
     if (this._files && ((files === null || files === void 0 ? void 0 : files.length) === 0 || !this._shouldFileListBeExtended())) {
       this._preventFilesUploading(this._files);
       this._files = null;
@@ -461,6 +493,11 @@ class FileUploader extends Editor {
       excludeValidators: ['readOnly']
     });
   }
+  _createFileValidationErrorAction() {
+    this._fileValidationErrorAction = this._createActionByOption('onFileValidationError', {
+      excludeValidators: ['readOnly']
+    });
+  }
   _createProgressAction() {
     this._progressAction = this._createActionByOption('onProgress', {
       excludeValidators: ['readOnly']
@@ -484,6 +521,11 @@ class FileUploader extends Editor {
   }
   _createCancelButtonClickAction() {
     this._cancelButtonClickAction = this._createActionByOption('onCancelButtonClick', {
+      excludeValidators: ['readOnly']
+    });
+  }
+  _createFileLimitReachedAction() {
+    this._fileLimitReachedAction = this._createActionByOption('onFileLimitReached', {
       excludeValidators: ['readOnly']
     });
   }
@@ -570,6 +612,7 @@ class FileUploader extends Editor {
       } = this.option();
       file.$statusMessage.text(readyToUploadMessage ?? '');
     } else {
+      var _this$_fileValidation;
       if (!file.isValidFileExtension) {
         file.$statusMessage.append(this._createValidationElement('invalidFileExtensionMessage'));
       }
@@ -579,6 +622,9 @@ class FileUploader extends Editor {
       if (!file.isValidMinSize) {
         file.$statusMessage.append(this._createValidationElement('invalidMinFileSizeMessage'));
       }
+      (_this$_fileValidation = this._fileValidationErrorAction) === null || _this$_fileValidation === void 0 || _this$_fileValidation.call(this, {
+        file: file.value
+      });
       $fileContainer.addClass(FILEUPLOADER_INVALID_CLASS);
     }
   }
@@ -586,10 +632,12 @@ class FileUploader extends Editor {
     return $('<span>').text(this.option()[key]);
   }
   _updateFileNameMaxWidth() {
-    var _this$_$filesContaine2, _this$_$filesContaine3, _this$_$filesContaine4, _this$_$filesContaine5;
+    var _this$_$filesContaine2, _this$_$filesContaine3, _this$_$filesContaine4, _this$_$filesContaine5, _this$_$filesContaine6;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const {
       allowCanceling,
-      uploadMode
+      uploadMode,
+      _showFileIcon
     } = this.option();
     const cancelButtonsCount = allowCanceling && uploadMode !== 'useForm' ? 1 : 0;
     const uploadButtonsCount = uploadMode === 'useButtons' ? 1 : 0;
@@ -597,11 +645,14 @@ class FileUploader extends Editor {
     const $buttonContainer = (_this$_$filesContaine3 = this._$filesContainer) === null || _this$_$filesContaine3 === void 0 ? void 0 : _this$_$filesContaine3.find(`.${FILEUPLOADER_BUTTON_CONTAINER_CLASS}`).eq(0);
     const buttonsWidth = getWidth($buttonContainer) * (cancelButtonsCount + uploadButtonsCount);
     const $fileSize = (_this$_$filesContaine4 = this._$filesContainer) === null || _this$_$filesContaine4 === void 0 ? void 0 : _this$_$filesContaine4.find(`.${FILEUPLOADER_FILE_SIZE_CLASS}`).eq(0);
+    const $icon = (_this$_$filesContaine5 = this._$filesContainer) === null || _this$_$filesContaine5 === void 0 ? void 0 : _this$_$filesContaine5.find(`.${FILEUPLOADER_FILE_ICON_CLASS}`).eq(0);
+    const iconWidth = _showFileIcon ? getOuterWidth($icon) : 0;
     const prevFileSize = $fileSize === null || $fileSize === void 0 ? void 0 : $fileSize.text();
-    $fileSize === null || $fileSize === void 0 || $fileSize.text('1000 Mb');
+    $fileSize === null || $fileSize === void 0 || $fileSize.text(REFERENCE_TEXT);
     const fileSizeWidth = getWidth($fileSize);
     $fileSize === null || $fileSize === void 0 || $fileSize.text(prevFileSize ?? '');
-    (_this$_$filesContaine5 = this._$filesContainer) === null || _this$_$filesContaine5 === void 0 || _this$_$filesContaine5.find(`.${FILEUPLOADER_FILE_NAME_CLASS}`).css('maxWidth', filesContainerWidth - buttonsWidth - fileSizeWidth);
+    const maxWidth = filesContainerWidth - buttonsWidth - fileSizeWidth - iconWidth - GAP;
+    (_this$_$filesContaine6 = this._$filesContainer) === null || _this$_$filesContaine6 === void 0 || _this$_$filesContaine6.find(`.${FILEUPLOADER_FILE_NAME_CLASS}`).css('maxWidth', maxWidth);
   }
   _renderFileButtons(file, $container) {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -1001,15 +1052,18 @@ class FileUploader extends Editor {
     const fileList = e.originalEvent.dataTransfer.files;
     const files = this._getFiles(fileList);
     const {
-      multiple
+      multiple,
+      uploadMode
     } = this.option();
     if (!multiple && files.length > 1 || files.length === 0) {
       return;
     }
+    if (this._isFileLimitReached(files)) {
+      var _this$_fileLimitReach3;
+      (_this$_fileLimitReach3 = this._fileLimitReachedAction) === null || _this$_fileLimitReach3 === void 0 || _this$_fileLimitReach3.call(this);
+      return;
+    }
     this._changeValue(files);
-    const {
-      uploadMode
-    } = this.option();
     if (uploadMode === 'instantly') {
       this._uploadFiles();
     }
@@ -1379,6 +1433,8 @@ class FileUploader extends Editor {
       case '_showFileIcon':
         this._invalidate();
         break;
+      case '_maxFileCount':
+        break;
       case 'labelText':
         this._updateInputLabelText();
         break;
@@ -1421,6 +1477,9 @@ class FileUploader extends Editor {
       case 'onFilesUploaded':
         this._createFilesUploadedAction();
         break;
+      case 'onFileValidationError':
+        this._createFileValidationErrorAction();
+        break;
       case 'onProgress':
         this._createProgressAction();
         break;
@@ -1439,6 +1498,9 @@ class FileUploader extends Editor {
       case 'onCancelButtonClick':
         this._createCancelButtonClickAction();
         break;
+      case 'onFileLimitReached':
+        this._createFileLimitReachedAction();
+        break;
       case 'useNativeInputClick':
         this._renderInput();
         break;
@@ -1454,6 +1516,10 @@ class FileUploader extends Editor {
       case 'hint':
         this._initFileInput();
         super._optionChanged(args);
+        break;
+      case 'visible':
+        super._optionChanged(args);
+        this._updateFileNameMaxWidth();
         break;
       default:
         super._optionChanged(args);

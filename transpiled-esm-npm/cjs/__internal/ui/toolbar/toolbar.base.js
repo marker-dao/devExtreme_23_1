@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.TOOLBAR_BEFORE_CLASS = exports.TOOLBAR_AFTER_CLASS = void 0;
 var _animation = require("../../../common/core/animation");
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
@@ -17,9 +17,9 @@ var _collection_widget = _interopRequireDefault(require("../../ui/collection/col
 var _constants = require("./constants");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const TOOLBAR_BEFORE_CLASS = 'dx-toolbar-before';
+const TOOLBAR_BEFORE_CLASS = exports.TOOLBAR_BEFORE_CLASS = 'dx-toolbar-before';
 const TOOLBAR_CENTER_CLASS = 'dx-toolbar-center';
-const TOOLBAR_AFTER_CLASS = 'dx-toolbar-after';
+const TOOLBAR_AFTER_CLASS = exports.TOOLBAR_AFTER_CLASS = 'dx-toolbar-after';
 const TOOLBAR_MINI_CLASS = 'dx-toolbar-mini';
 const TOOLBAR_ITEM_CLASS = 'dx-toolbar-item';
 const TOOLBAR_LABEL_CLASS = 'dx-toolbar-label';

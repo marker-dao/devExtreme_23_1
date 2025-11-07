@@ -1,9 +1,13 @@
 "use strict";
 
 exports.default = void 0;
-var _ui = _interopRequireDefault(require("./gantt/ui.gantt"));
+var _ui = _interopRequireDefault(require("../__internal/ui/gantt/ui.gantt"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-var _default = exports.default = _ui.default;
+var _default = exports.default = _ui.default; // STYLE gantt
+/**
+ * @name dxGanttOptions.rtlEnabled
+ * @hidden
+ */
 /**
  * @name dxGanttToolbarItem
  * @inherits dxToolbarItem

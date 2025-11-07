@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.INFORMER_CLASS = void 0;
+exports.default = exports.INFORMER_TEXT_CLASS = exports.INFORMER_CLASS = void 0;
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _m_icon = require("../../core/utils/m_icon");
@@ -17,7 +17,7 @@ const INFORMER_ALIGNMENT_START_CLASS = 'dx-informer-alignment-start';
 const INFORMER_ALIGNMENT_CENTER_CLASS = 'dx-informer-alignment-center';
 const INFORMER_ALIGNMENT_END_CLASS = 'dx-informer-alignment-end';
 const INFORMER_BG_CLASS = 'dx-informer-bg';
-const INFORMER_TEXT_CLASS = 'dx-informer-text';
+const INFORMER_TEXT_CLASS = exports.INFORMER_TEXT_CLASS = 'dx-informer-text';
 const INFORMER_ICON_CLASS = 'dx-informer-icon';
 class Informer extends _widget.default {
   _getDefaultOptions() {

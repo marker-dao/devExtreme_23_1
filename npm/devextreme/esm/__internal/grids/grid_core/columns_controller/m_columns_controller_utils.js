@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/columns_controller/m_columns_controller_utils.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,6 +20,7 @@ import { isDefined, isFunction, isNumeric, isObject, isString, type } from '../.
 import variableWrapper from '../../../../core/utils/variable_wrapper';
 import errors from '../../../../ui/widget/ui.errors';
 import { HIDDEN_COLUMNS_WIDTH } from '../adaptivity/const';
+import { AI_COLUMN_NAME } from '../ai_column/const';
 import gridCoreUtils from '../m_utils';
 import { StickyPosition } from '../sticky_columns/const';
 import { getColumnFixedPosition } from '../sticky_columns/utils';
@@ -654,6 +655,9 @@ export const columnOptionCore = function (that, column, optionName, value, notFi
       value,
       prevValue
     });
+    if (column.type === AI_COLUMN_NAME) {
+      that.aiColumnOptionChanged.fire(column, optionName, value);
+    }
   }
 };
 export function isSortOrderValid(sortOrder) {
@@ -770,7 +774,9 @@ export const mergeColumns = (that, columns, commandColumns, needToExtend) => {
       if (needToExtend) {
         result[i] = extend({
           fixed: isColumnFixing
-        }, commandColumns[commandColumnIndex], column);
+        }, commandColumns[commandColumnIndex], column, {
+          calculateCellValue: commandColumns[commandColumnIndex].calculateCellValue
+        });
         if (column.type !== GROUP_COMMAND_COLUMN_NAME) {
           defaultCommandColumns = defaultCommandColumns.filter(callbackFilter);
         }
@@ -888,3 +894,4 @@ export const isColumnNameRequired = function (_ref) {
   } = _ref;
   return COMMAND_COLUMNS_WITH_REQUIRED_NAMES.includes(type);
 };
+export const getColumnHeaderCellSelector = visibleIndex => `.dx-header-row td[aria-colindex="${visibleIndex + 1}"]`;

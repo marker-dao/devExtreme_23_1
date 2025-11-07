@@ -1,0 +1,188 @@
+// eslint-disable-next-line @stylistic/max-len
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type */
+import dateLocalization from '../../../common/core/localization/date';
+import numberLocalization from '../../../common/core/localization/number';
+import { isDate, isDefined, isNumeric } from '../../../core/utils/type';
+import { getWindow } from '../../../core/utils/window';
+import gridCoreUtils from '../../grids/grid_core/m_utils';
+const window = getWindow();
+const TREELIST_EMPTY_SPACE = 'dx-treelist-empty-space';
+const TREELIST_TABLE = 'dx-treelist-table';
+export class GanttExportHelper {
+  constructor(gantt) {
+    this._gantt = gantt;
+    this._treeList = gantt._treeList;
+    this._cache = {};
+  }
+  reset() {
+    this._cache = {};
+  }
+  getTreeListTableStyle() {
+    const table = this._getTreeListTable();
+    // @ts-expect-error ts-error
+    const style = window.getComputedStyle(table);
+    return {
+      color: style.color,
+      backgroundColor: style.backgroundColor,
+      fontSize: style.fontSize,
+      fontFamily: style.fontFamily,
+      fontWeight: style.fontWeight,
+      fontStyle: style.fontStyle,
+      textAlign: 'left',
+      verticalAlign: 'middle'
+    };
+  }
+  getTreeListColCount() {
+    const headerView = this._getHeaderView();
+    const widths = headerView.getColumnWidths().filter(w => w > 0);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return widths.length;
+  }
+  getTreeListHeaderInfo(colIndex) {
+    const element = this._getHeaderElement(colIndex);
+    if (!element) return null;
+    const style = window.getComputedStyle(element);
+    const styleForExport = {
+      color: style.color,
+      padding: style.padding,
+      paddingLeft: style.paddingLeft,
+      paddingTop: style.paddingTop,
+      paddingRight: style.paddingRight,
+      paddingBottom: style.paddingBottom,
+      verticalAlign: style.verticalAlign,
+      width: this._getColumnWidth(colIndex)
+    };
+    return {
+      content: element.textContent,
+      styles: styleForExport
+    };
+  }
+  getTreeListCellInfo(key, colIndex) {
+    var _this$_treeList, _this$_treeList2;
+    // @ts-expect-error ts-error
+    const node = (_this$_treeList = this._treeList) === null || _this$_treeList === void 0 ? void 0 : _this$_treeList.getNodeByKey(key);
+    // @ts-expect-error ts-error
+    const visibleRowIndex = (_this$_treeList2 = this._treeList) === null || _this$_treeList2 === void 0 ? void 0 : _this$_treeList2.getRowIndexByKey(key);
+    const cell = visibleRowIndex > -1 ? this._getDataCell(visibleRowIndex, colIndex) : null;
+    const style = cell ? window.getComputedStyle(cell) : this._getColumnCellStyle(colIndex);
+    const styleForExport = {
+      color: style.color,
+      padding: style.padding,
+      paddingLeft: style.paddingLeft,
+      paddingTop: style.paddingTop,
+      paddingRight: style.paddingRight,
+      paddingBottom: style.paddingBottom,
+      width: this._getColumnWidth(colIndex)
+    };
+    if (colIndex === 0) {
+      // @ts-expect-error ts-error
+      styleForExport.extraLeftPadding = this._getEmptySpaceWidth(node.level);
+    }
+    return {
+      content: (cell === null || cell === void 0 ? void 0 : cell.textContent) ?? this._getDisplayText(key, colIndex),
+      styles: styleForExport
+    };
+  }
+  getTreeListEmptyDataCellInfo() {
+    var _this$_treeList3;
+    return {
+      content: (_this$_treeList3 = this._treeList) === null || _this$_treeList3 === void 0 ? void 0 : _this$_treeList3.option('noDataText')
+    };
+  }
+  _ensureColumnWidthCache(colIndex) {
+    var _a;
+    (_a = this._cache).columnWidths ?? (_a.columnWidths = {});
+    if (!this._cache.columnWidths[colIndex]) {
+      const header = this._getHeaderElement(colIndex);
+      this._cache.columnWidths[colIndex] = (header === null || header === void 0 ? void 0 : header.clientWidth) ?? 0;
+    }
+  }
+  _getColumnWidth(colIndex) {
+    this._ensureColumnWidthCache(colIndex);
+    const widths = this._cache.columnWidths;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return widths === null || widths === void 0 ? void 0 : widths[colIndex];
+  }
+  _getEmptySpaceWidth(level) {
+    var _a;
+    if (!this._cache.emptyWidth) {
+      const element = this._getTreeListElement(TREELIST_EMPTY_SPACE);
+      // @ts-expect-error ts-error
+      (_a = this._cache).emptyWidth ?? (_a.emptyWidth = (element === null || element === void 0 ? void 0 : element.offsetWidth) ?? 0);
+    }
+    return this._cache.emptyWidth * (level + 1);
+  }
+  _getColumnCellStyle(colIndex) {
+    this._ensureColumnCellStyleCache(colIndex);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this._cache.columnStyles[colIndex];
+  }
+  _ensureColumnCellStyleCache(colIndex) {
+    var _a;
+    (_a = this._cache).columnStyles ?? (_a.columnStyles = {});
+    if (!this._cache.columnStyles[colIndex]) {
+      const cell = this._getDataCell(0, colIndex);
+      this._cache.columnStyles[colIndex] = window.getComputedStyle(cell);
+    }
+  }
+  _getTask(key) {
+    this._ensureTaskCache(key);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this._cache.tasks[key];
+  }
+  _ensureTaskCache(key) {
+    var _a, _b;
+    (_a = this._cache).tasks ?? (_a.tasks = {});
+    (_b = this._cache.tasks)[key] ?? (_b[key] = this._gantt._findTaskByKey(key));
+  }
+  _getTreeListTable() {
+    return this._getTreeListElement(TREELIST_TABLE);
+  }
+  _getTreeListElement(className) {
+    var _this$_treeList4;
+    return (_this$_treeList4 = this._treeList) === null || _this$_treeList4 === void 0 ? void 0 : _this$_treeList4.$element().find(`.${className}`).get(0);
+  }
+  _getDataCell(rowIndex, colIndex) {
+    const treeList = this._treeList;
+    // @ts-expect-error ts-error
+    const cellElement = treeList === null || treeList === void 0 ? void 0 : treeList.getCellElement(rowIndex, colIndex);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return cellElement !== null && cellElement !== void 0 && cellElement.length ? cellElement[0] : cellElement;
+  }
+  _getHeaderElement(index) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this._getHeaderView().getHeaderElement(index).get(0);
+  }
+  _getHeaderView() {
+    var _this$_treeList5;
+    // @ts-expect-error ts-error
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return (_this$_treeList5 = this._treeList) === null || _this$_treeList5 === void 0 ? void 0 : _this$_treeList5._views.columnHeadersView;
+  }
+  _getDisplayText(key, colIndex) {
+    const task = this._getTask(key);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return task && this._getGridDisplayText(colIndex, task);
+  }
+  _getGridDisplayText(colIndex, data) {
+    var _this$_treeList6;
+    // @ts-expect-error ts-error
+    const columns = (_this$_treeList6 = this._treeList) === null || _this$_treeList6 === void 0 ? void 0 : _this$_treeList6.getController('columns').getVisibleColumns();
+    const column = columns[colIndex];
+    const field = column === null || column === void 0 ? void 0 : column.dataField;
+    const format = column === null || column === void 0 ? void 0 : column.format;
+    const value = gridCoreUtils.getDisplayValue(column, data[field], data, 'data');
+    if (isDefined(format)) {
+      if ((column === null || column === void 0 ? void 0 : column.dataType) === 'date' || (column === null || column === void 0 ? void 0 : column.dataType) === 'datetime') {
+        const date = isDate(value) ? value : new Date(value);
+        return dateLocalization.format(date, format);
+      }
+      if (isNumeric(value)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return numberLocalization.format(value, format);
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return typeof value === 'string' ? value : value === null || value === void 0 ? void 0 : value.toString();
+  }
+}

@@ -1174,4 +1174,7 @@ export class ColumnsView extends ColumnStateMixin(modules.View) {
     var _this$component;
     return (_this$component = this.component) === null || _this$component === void 0 ? void 0 : _this$component._disposed;
   }
+  renderDragCellContent($dragContainer, column) {
+    $dragContainer.text(column.caption ?? '');
+  }
 }

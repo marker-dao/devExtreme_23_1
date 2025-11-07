@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/filter_builder/m_filter_builder.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -775,6 +775,9 @@ class FilterBuilder extends _ui3.default {
     treeViewPopup === null || treeViewPopup === void 0 || treeViewPopup.removeAttr('role');
     const treeViewNode = treeViewPopup === null || treeViewPopup === void 0 || (_treeViewPopup$find = treeViewPopup.find) === null || _treeViewPopup$find === void 0 ? void 0 : _treeViewPopup$find.call(treeViewPopup, `.${TREEVIEW_NODE_CONTAINER}`);
     treeViewNode === null || treeViewNode === void 0 || treeViewNode.attr('role', 'presentation');
+  }
+  addWidgetPrefix(className) {
+    return `${FILTER_BUILDER_CLASS}-${className}`;
   }
 }
 (0, _component_registrator.default)('dxFilterBuilder', FilterBuilder);

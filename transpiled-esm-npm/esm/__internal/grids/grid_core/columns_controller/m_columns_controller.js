@@ -104,7 +104,7 @@ export class ColumnsController extends modules.Controller {
     !this._skipProcessingColumnsChange && fireColumnsChanged(this);
   }
   callbackNames() {
-    return ['columnsChanged'];
+    return ['columnsChanged', 'aiColumnOptionChanged'];
   }
   getColumnByPath(path, columns) {
     const that = this;
@@ -1141,8 +1141,8 @@ export class ColumnsController extends modules.Controller {
         }
         columnOptionCore(that, column, option, value, notFireEvent);
       } else if (isObject(option)) {
-        each(option, (optionName, value) => {
-          columnOptionCore(that, column, optionName, value, notFireEvent);
+        each(option, (optionName, optionValue) => {
+          columnOptionCore(that, column, optionName, optionValue, notFireEvent);
         });
       }
       fireColumnsChanged(that);

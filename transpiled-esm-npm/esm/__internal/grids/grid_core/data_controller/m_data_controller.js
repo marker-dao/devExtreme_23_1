@@ -8,6 +8,7 @@ import { extend } from '../../../../core/utils/extend';
 import { each } from '../../../../core/utils/iterator';
 import { isDefined, isObject } from '../../../../core/utils/type';
 import errors from '../../../../ui/widget/ui.errors';
+import { AI_COLUMN_NAME } from '../ai_column/const';
 import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
 import { DataHelperMixin } from './m_data_helper_mixin';
@@ -305,7 +306,8 @@ export class DataController extends DataHelperMixin(modules.Controller) {
           filterApplied = true;
         }
       }
-      if (!that._needApplyFilter && !gridCoreUtils.checkChanges(optionNames, ['width', 'visibleWidth', 'filterValue', 'bufferedFilterValue', 'selectedFilterOperation', 'filterValues', 'filterType'])) {
+      const excludedOptionNames = ['ai', 'width', 'visibleWidth', 'filterValue', 'bufferedFilterValue', 'selectedFilterOperation', 'filterValues', 'filterType'];
+      if (!that._needApplyFilter && !gridCoreUtils.checkChanges(optionNames, excludedOptionNames)) {
         // TODO remove resubscribing
         that._columnsController.columnsChanged.add(updateItemsHandler);
       }
@@ -540,7 +542,7 @@ export class DataController extends DataHelperMixin(modules.Controller) {
     for (let i = 0; i < columns.length; i++) {
       const column = columns[i];
       value = isModified ? undefined : null;
-      if (!column.command) {
+      if (!column.command || column.type === AI_COLUMN_NAME) {
         if (column.calculateCellValue) {
           value = column.calculateCellValue(data);
         } else if (column.dataField) {
@@ -1266,7 +1268,7 @@ export class DataController extends DataHelperMixin(modules.Controller) {
   }
   beginCustomLoading(messageText) {
     this._isCustomLoading = true;
-    this._loadingText = messageText || '';
+    this._loadingText = messageText ?? '';
     this._fireLoadingChanged();
   }
   endCustomLoading() {

@@ -1,14 +1,36 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Controller } from '../m_modules';
 export class AIColumnCacheController extends Controller {
-  clearCache(columnName) {}
+  constructor() {
+    super(...arguments);
+    this.cache = {};
+  }
+  clearCache(columnName) {
+    this.cache[columnName] = undefined;
+  }
   getCachedResponse(columnName, keys) {
-    return {};
+    const columnCache = this.cache[columnName];
+    if (!columnCache) return {};
+    return keys.reduce((acc, key) => {
+      const value = columnCache[key];
+      if (value !== undefined && value !== '') {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+  }
+  setCachedResponse(columnName, data) {
+    const columnCache = this.cache[columnName] ?? {};
+    this.cache[columnName] = columnCache;
+    Object.entries(data).forEach(_ref => {
+      let [key, value] = _ref;
+      columnCache[key] = value;
+    });
   }
   getCachedString(columnName, key) {
-    return null;
+    var _this$cache$columnNam;
+    return (_this$cache$columnNam = this.cache[columnName]) === null || _this$cache$columnNam === void 0 ? void 0 : _this$cache$columnNam[key];
   }
   isEmptyCache(columnName) {
-    return true;
+    return Object.keys(this.cache[columnName] ?? {}).length === 0;
   }
 }

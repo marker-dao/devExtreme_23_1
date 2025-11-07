@@ -110,7 +110,7 @@ class ColumnsController extends _m_modules.default.Controller {
     !this._skipProcessingColumnsChange && (0, _m_columns_controller_utils.fireColumnsChanged)(this);
   }
   callbackNames() {
-    return ['columnsChanged'];
+    return ['columnsChanged', 'aiColumnOptionChanged'];
   }
   getColumnByPath(path, columns) {
     const that = this;
@@ -1153,8 +1153,8 @@ class ColumnsController extends _m_modules.default.Controller {
         }
         (0, _m_columns_controller_utils.columnOptionCore)(that, column, option, value, notFireEvent);
       } else if ((0, _type.isObject)(option)) {
-        (0, _iterator.each)(option, (optionName, value) => {
-          (0, _m_columns_controller_utils.columnOptionCore)(that, column, optionName, value, notFireEvent);
+        (0, _iterator.each)(option, (optionName, optionValue) => {
+          (0, _m_columns_controller_utils.columnOptionCore)(that, column, optionName, optionValue, notFireEvent);
         });
       }
       (0, _m_columns_controller_utils.fireColumnsChanged)(that);

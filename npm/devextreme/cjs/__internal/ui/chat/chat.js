@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/chat/chat.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -61,7 +61,8 @@ class Chat extends _widget.default {
       onMessageEditingStart: undefined,
       onMessageEntered: undefined,
       onTypingEnd: undefined,
-      onTypingStart: undefined
+      onTypingStart: undefined,
+      onAttachmentDownloadClick: undefined
     });
   }
   _init() {
@@ -79,6 +80,7 @@ class Chat extends _widget.default {
     this._createMessageUpdatedAction();
     this._createTypingStartAction();
     this._createTypingEndAction();
+    this._createAttachmentDownloadAction();
   }
   _dataSourceLoadErrorHandler() {
     this.option('items', []);
@@ -131,6 +133,7 @@ class Chat extends _widget.default {
     // @ts-expect-error
     const isLoading = this._dataController.isLoading();
     const currentUserId = user === null || user === void 0 ? void 0 : user.id;
+    const onAttachmentDownloadClick = this._getAttachmentDownloadHandler();
     const options = {
       items,
       currentUserId,
@@ -156,9 +159,23 @@ class Chat extends _widget.default {
       },
       onEscapeKeyPressed: () => {
         this.focus();
-      }
+      },
+      onAttachmentDownloadClick
     };
     return options;
+  }
+  _getAttachmentDownloadHandler() {
+    const {
+      onAttachmentDownloadClick
+    } = this.option();
+    if (!onAttachmentDownloadClick) {
+      return;
+    }
+    // eslint-disable-next-line consistent-return
+    return e => {
+      var _this$_attachmentDown;
+      (_this$_attachmentDown = this._attachmentDownloadAction) === null || _this$_attachmentDown === void 0 || _this$_attachmentDown.call(this, e);
+    };
   }
   _allowEditAction(message) {
     const {
@@ -236,6 +253,8 @@ class Chat extends _widget.default {
     (_this$_messageEditing = this._messageEditingStartAction) === null || _this$_messageEditing === void 0 || _this$_messageEditing.call(this, messageEditingStartArgs);
     (0, _conditional_invoke.invokeConditionally)(messageEditingStartArgs.cancel, () => {
       this._messageBox.option('text', e.message.text);
+      this._messageBox.resetFileUploader();
+      this._messageBox.toggleAttachButtonVisibleState(false);
       this._messageToEdit = e.message;
     });
   }
@@ -247,6 +266,7 @@ class Chat extends _widget.default {
       });
       this._messageToEdit = undefined;
     }
+    this._messageBox.toggleAttachButtonVisibleState(true);
   }
   _showDeleteConfirmationPopup(e) {
     this._messageToDelete = e.message;
@@ -304,6 +324,7 @@ class Chat extends _widget.default {
     (0, _conditional_invoke.invokeConditionally)(eventArgs.cancel, () => {
       var _this$_messageUpdated;
       this._messageBox.option('text', '');
+      this._messageBox.toggleAttachButtonVisibleState(true);
       (_this$_messageUpdated = this._messageUpdatedAction) === null || _this$_messageUpdated === void 0 || _this$_messageUpdated.call(this, eventArgs);
       this._messageToEdit = undefined;
     });
@@ -406,11 +427,17 @@ class Chat extends _widget.default {
       excludeValidators: ['disabled']
     });
   }
+  _createAttachmentDownloadAction() {
+    this._attachmentDownloadAction = this._createActionByOption('onAttachmentDownloadClick', {
+      excludeValidators: ['disabled']
+    });
+  }
   _messageEnteredHandler(e) {
     var _this$_messageEntered;
     const {
       text,
-      event
+      event,
+      attachments
     } = e;
     const {
       user
@@ -420,6 +447,9 @@ class Chat extends _widget.default {
       author: user,
       text
     };
+    if (attachments) {
+      message.attachments = attachments;
+    }
     // @ts-expect-error
     const dataSource = this.getDataSource();
     if ((0, _type.isDefined)(dataSource)) {
@@ -466,14 +496,17 @@ class Chat extends _widget.default {
   _optionChanged(args) {
     const {
       name,
+      fullName,
       value
     } = args;
     switch (name) {
       case 'activeStateEnabled':
       case 'focusStateEnabled':
       case 'hoverStateEnabled':
-      case 'fileUploaderOptions':
         this._messageBox.option(name, value);
+        break;
+      case 'fileUploaderOptions':
+        this._messageBox.option(fullName, value);
         break;
       case 'user':
         {
@@ -520,6 +553,12 @@ class Chat extends _widget.default {
         break;
       case 'onTypingEnd':
         this._createTypingEndAction();
+        break;
+      case 'onAttachmentDownloadClick':
+        this._createAttachmentDownloadAction();
+        this._messageList.option({
+          onAttachmentDownloadClick: this._getAttachmentDownloadHandler()
+        });
         break;
       case 'showDayHeaders':
       case 'showAvatar':

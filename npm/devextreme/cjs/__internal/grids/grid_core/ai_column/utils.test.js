@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/ai_column/utils.test.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -198,5 +198,139 @@ var _utils = require("./utils");
     };
     const result = (0, _utils.isAIColumnAutoMode)(column);
     (0, _globals.expect)(result).toBe(true);
+  });
+});
+(0, _globals.describe)('isPopupOptions', () => {
+  (0, _globals.it)('should return true for popup option names', () => {
+    (0, _globals.expect)((0, _utils.isPopupOptions)('ai.popup.width', 200)).toBe(true);
+    (0, _globals.expect)((0, _utils.isPopupOptions)('ai.popup', {
+      width: 200
+    })).toBe(true);
+    (0, _globals.expect)((0, _utils.isPopupOptions)('ai', {
+      popup: {
+        width: 300
+      }
+    })).toBe(true);
+    (0, _globals.expect)((0, _utils.isPopupOptions)('ai', {
+      popup: {
+        width: 300
+      },
+      prompt: 'Test'
+    })).toBe(true);
+  });
+  (0, _globals.it)('should return false for non-popup option names', () => {
+    (0, _globals.expect)((0, _utils.isPopupOptions)('ai.editorOptions.width', {})).toBe(false);
+    (0, _globals.expect)((0, _utils.isPopupOptions)('ai.prompt', {})).toBe(false);
+    (0, _globals.expect)((0, _utils.isPopupOptions)('ai', {
+      editorOptions: {
+        width: 300
+      }
+    })).toBe(false);
+    (0, _globals.expect)((0, _utils.isPopupOptions)('ai', {
+      editorOptions: {
+        width: 300
+      },
+      prompt: 'Test'
+    })).toBe(false);
+  });
+});
+(0, _globals.describe)('isEditorOptions', () => {
+  (0, _globals.it)('should return true for editorOptions option names', () => {
+    (0, _globals.expect)((0, _utils.isEditorOptions)('ai.editorOptions.width', 200)).toBe(true);
+    (0, _globals.expect)((0, _utils.isEditorOptions)('ai.editorOptions', {
+      width: 200
+    })).toBe(true);
+    (0, _globals.expect)((0, _utils.isEditorOptions)('ai', {
+      editorOptions: {
+        width: 300
+      }
+    })).toBe(true);
+    (0, _globals.expect)((0, _utils.isEditorOptions)('ai', {
+      editorOptions: {
+        width: 300
+      },
+      prompt: 'Test'
+    })).toBe(true);
+  });
+  (0, _globals.it)('should return false for non-editorOptions option names', () => {
+    (0, _globals.expect)((0, _utils.isEditorOptions)('ai.popup.width', {})).toBe(false);
+    (0, _globals.expect)((0, _utils.isEditorOptions)('ai.prompt', {})).toBe(false);
+    (0, _globals.expect)((0, _utils.isEditorOptions)('ai', {
+      popup: {
+        width: 300
+      }
+    })).toBe(false);
+    (0, _globals.expect)((0, _utils.isEditorOptions)('ai', {
+      popup: {
+        width: 300
+      },
+      prompt: 'Test'
+    })).toBe(false);
+  });
+});
+(0, _globals.describe)('isPromptOption', () => {
+  (0, _globals.it)('should return true for prompt option names', () => {
+    (0, _globals.expect)((0, _utils.isPromptOption)('ai.prompt', 'Test prompt')).toBe(true);
+    (0, _globals.expect)((0, _utils.isPromptOption)('ai', {
+      prompt: 'Test prompt'
+    })).toBe(true);
+    (0, _globals.expect)((0, _utils.isPromptOption)('ai', {
+      prompt: 'Test prompt',
+      popup: {
+        width: 300
+      }
+    })).toBe(true);
+  });
+  (0, _globals.it)('should return false for non-prompt option names', () => {
+    (0, _globals.expect)((0, _utils.isPromptOption)('ai.popup.width', {})).toBe(false);
+    (0, _globals.expect)((0, _utils.isPromptOption)('ai.editorOptions', {})).toBe(false);
+    (0, _globals.expect)((0, _utils.isPromptOption)('ai', {
+      editorOptions: {
+        width: 300
+      }
+    })).toBe(false);
+    (0, _globals.expect)((0, _utils.isPromptOption)('ai', {
+      popup: {
+        width: 300
+      }
+    })).toBe(false);
+  });
+});
+(0, _globals.describe)('isRefreshOption', () => {
+  (0, _globals.it)('should return true for refresh option names', () => {
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai.showHeaderMenu', true)).toBe(true);
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai.noDataText', 'No data')).toBe(true);
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai.emptyText', 'Empty')).toBe(true);
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai', {
+      showHeaderMenu: true
+    })).toBe(true);
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai', {
+      noDataText: 'No data'
+    })).toBe(true);
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai', {
+      emptyText: 'Empty'
+    })).toBe(true);
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai', {
+      showHeaderMenu: true,
+      prompt: 'Test'
+    })).toBe(true);
+  });
+  (0, _globals.it)('should return false for non-refresh option names', () => {
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai.popup.width', {})).toBe(false);
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai.prompt', {})).toBe(false);
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai.editorOptions', {})).toBe(false);
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai', {
+      popup: {
+        width: 300
+      }
+    })).toBe(false);
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai', {
+      editorOptions: {
+        width: 300
+      }
+    })).toBe(false);
+    (0, _globals.expect)((0, _utils.isRefreshOption)('ai', {
+      prompt: 'Test'
+    })).toBe(false);
   });
 });

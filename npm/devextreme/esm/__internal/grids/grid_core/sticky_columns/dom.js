@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/sticky_columns/dom.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -109,7 +109,8 @@ const noNeedToCreateResizingPoint = (that, _ref, addWidgetPrefix) => {
   let {
     point,
     column,
-    nextColumn
+    nextColumn,
+    cells
   } = _ref;
   const {
     item,
@@ -120,7 +121,7 @@ const noNeedToCreateResizingPoint = (that, _ref, addWidgetPrefix) => {
   const offsetX = Math.round(point.x);
   const rtlEnabled = that.option('rtlEnabled');
   const isSplitPoint = isDefined(isLeftBoundary) || isDefined(isRightBoundary);
-  const $cells = $(that.getColumnElements() ?? '');
+  const $cells = $(cells ?? '');
   const $container = $(that.getContent());
   const isFixedPoint = (column === null || column === void 0 ? void 0 : column.fixed) && (nextColumn === null || nextColumn === void 0 ? void 0 : nextColumn.fixed);
   const nonFixedAreaBoundingRect = getNonFixedAreaBoundingRect($cells, $container, addWidgetPrefix);

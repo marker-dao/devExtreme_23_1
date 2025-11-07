@@ -10,8 +10,10 @@ var _type = require("../../../core/utils/type");
 var _base = require("../recurrence/base");
 var _days_from_by_day_rule = require("../recurrence/days_from_by_day_rule");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-// eslint-disable-next-line arrow-body-style
 const createFormIconTemplate = iconName => {
+  if (iconName.length === 0) {
+    return () => (0, _renderer.default)('<div>').addClass('dx-scheduler-form-icon-sized-gap');
+  }
   return () => (0, _renderer.default)('<i>').addClass('dx-icon').addClass(`dx-icon-${iconName}`);
 };
 exports.createFormIconTemplate = createFormIconTemplate;

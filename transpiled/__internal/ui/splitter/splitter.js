@@ -778,6 +778,10 @@ class Splitter extends _collection_widget.default {
   getLayout() {
     return this._layout ?? [];
   }
+  _clean() {
+    _resize_observer.default.unobserve(this.$element().get(0));
+    super._clean();
+  }
 }
 Splitter.ItemClass = _splitter_item.default;
 (0, _component_registrator.default)('dxSplitter', Splitter);

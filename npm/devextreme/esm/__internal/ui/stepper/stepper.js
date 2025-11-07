@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/stepper/stepper.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -186,18 +186,21 @@ class Stepper extends CollectionWidgetAsync {
     this._setAriaOrientation();
     super._initMarkup();
   }
+  _getConnectorOptions() {
+    const {
+      orientation
+    } = this.option();
+    return {
+      orientation,
+      size: this._getConnectorSize(),
+      value: this._getConnectorValue()
+    };
+  }
   _renderConnector() {
     if (this._connector) {
       return;
     }
-    const {
-      orientation
-    } = this.option();
-    this._connector = this._createComponent($('<div>'), Connector, {
-      orientation,
-      size: this._getConnectorSize(),
-      value: this._getConnectorValue()
-    });
+    this._connector = this._createComponent($('<div>'), Connector, this._getConnectorOptions());
     $(this.element()).prepend(this._connector.$element());
   }
   _getConnectorSize() {
@@ -331,6 +334,10 @@ class Stepper extends CollectionWidgetAsync {
         break;
       case 'hintExpr':
         this._invalidate();
+        break;
+      case 'items':
+        super._optionChanged(args);
+        this._connector.option(this._getConnectorOptions());
         break;
       default:
         super._optionChanged(args);

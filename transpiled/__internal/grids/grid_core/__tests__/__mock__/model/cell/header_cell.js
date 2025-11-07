@@ -1,0 +1,27 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.HeaderCellModel = void 0;
+const SELECTORS = {
+  headerContent: 'text-content'
+};
+class HeaderCellModel {
+  constructor(root, addWidgetPrefix) {
+    this.root = root;
+    this.addWidgetPrefix = addWidgetPrefix;
+  }
+  getElement() {
+    return this.root;
+  }
+  getText() {
+    var _this$getHeaderConten;
+    return ((_this$getHeaderConten = this.getHeaderContent()) === null || _this$getHeaderConten === void 0 ? void 0 : _this$getHeaderConten.textContent) ?? '';
+  }
+  getHeaderContent() {
+    var _this$root;
+    return ((_this$root = this.root) === null || _this$root === void 0 ? void 0 : _this$root.querySelector(this.addWidgetPrefix(`.${SELECTORS.headerContent}`))) ?? null;
+  }
+}
+exports.HeaderCellModel = HeaderCellModel;

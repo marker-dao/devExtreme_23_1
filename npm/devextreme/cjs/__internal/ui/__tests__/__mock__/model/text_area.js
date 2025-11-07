@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/__tests__/__mock__/model/text_area.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.TextAreaModel = void 0;
+var _m_text_area = _interopRequireDefault(require("../../../../ui/m_text_area"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const CLASSES = {
   textArea: 'dx-texteditor-input'
 };
@@ -31,6 +33,9 @@ class TextAreaModel {
     input.dispatchEvent(new Event('input', {
       bubbles: true
     }));
+  }
+  getInstance() {
+    return _m_text_area.default.getInstance(this.root);
   }
 }
 exports.TextAreaModel = TextAreaModel;

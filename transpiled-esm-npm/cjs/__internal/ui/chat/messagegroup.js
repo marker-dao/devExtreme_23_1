@@ -83,14 +83,22 @@ class MessageGroup extends _widget.default {
     this._createComponent($bubble, _messagebubble.default, this._getMessageBubbleOptions(message));
   }
   _getMessageBubbleOptions(message) {
-    const options = {
-      isDeleted: message.isDeleted,
-      type: message.type
-    };
     const {
-      messageTemplate
+      messageTemplate,
+      onAttachmentDownloadClick
     } = this.option();
-    if (message.type === 'image') {
+    const {
+      isDeleted,
+      type,
+      attachments
+    } = message;
+    const options = {
+      isDeleted,
+      type,
+      attachments,
+      onAttachmentDownloadClick
+    };
+    if (type === 'image') {
       options.alt = message.alt;
       options.src = message.src;
     } else {
@@ -224,6 +232,7 @@ class MessageGroup extends _widget.default {
       case 'showMessageTimestamp':
       case 'messageTemplate':
       case 'messageTimestampFormat':
+      case 'onAttachmentDownloadClick':
         this._invalidate();
         break;
       default:

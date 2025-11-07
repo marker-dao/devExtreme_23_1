@@ -1,13 +1,14 @@
 /**
 * DevExtreme (esm/__internal/ui/scroll_view/animator.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { cancelAnimationFrame, requestAnimationFrame } from '../../../common/core/animation/frame';
 import Class from '../../../core/class';
+import { isDefined } from '../../../core/utils/type';
 class Animator {
   constructor() {
     this._finished = true;
@@ -21,7 +22,9 @@ class Animator {
   }
   stop() {
     this._stopped = true;
-    cancelAnimationFrame(this._stepAnimationFrame);
+    if (isDefined(this._stepAnimationFrame)) {
+      cancelAnimationFrame(this._stepAnimationFrame);
+    }
   }
   _stepCore() {
     if (this._isStopped()) {

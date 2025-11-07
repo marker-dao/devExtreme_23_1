@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/toolbar/toolbar.base.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,9 +20,9 @@ import { current, isMaterial, isMaterialBased,
 waitWebFont } from '../../../ui/themes';
 import CollectionWidgetAsync from '../../ui/collection/collection_widget.async';
 import { TOOLBAR_CLASS } from './constants';
-const TOOLBAR_BEFORE_CLASS = 'dx-toolbar-before';
+export const TOOLBAR_BEFORE_CLASS = 'dx-toolbar-before';
 const TOOLBAR_CENTER_CLASS = 'dx-toolbar-center';
-const TOOLBAR_AFTER_CLASS = 'dx-toolbar-after';
+export const TOOLBAR_AFTER_CLASS = 'dx-toolbar-after';
 const TOOLBAR_MINI_CLASS = 'dx-toolbar-mini';
 const TOOLBAR_ITEM_CLASS = 'dx-toolbar-item';
 const TOOLBAR_LABEL_CLASS = 'dx-toolbar-label';

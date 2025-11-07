@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.fr.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -119,6 +119,8 @@
             "dxDataGrid-aiPromptEditorApplyButton": "Apply",
             "dxDataGrid-aiPromptEditorRegenerateButton": "Regenerate Data",
             "dxDataGrid-aiPromptEditorStopButton": "Stop",
+            "dxDataGrid-aiDropDownAutofill": "Autofill with AI",
+            "dxDataGrid-aiDropDownClear": "Clear Data",
             "dxDataGrid-emptyHeaderWithColumnChooserText": "Utilisez {0} pour voir les colonnes",
             "dxDataGrid-emptyHeaderWithGroupPanelText": "Faites glisser une colonne depuis le panneau de groupe",
             "dxDataGrid-emptyHeaderWithColumnChooserAndGroupPanelText": "Utilisez {0} ou glisser une colonne depuis le panneau de groupe",
@@ -274,6 +276,7 @@
             "dxScheduler-appointmentAriaLabel-group": "Groupe : {0}",
             "dxScheduler-appointmentAriaLabel-recurring": "Rendez-vous récurrent",
             "dxScheduler-appointmentListAriaLabel": "Liste des rendez-vous ",
+            "dxScheduler-newPopupTitle": "New Appointment",
             "dxScheduler-editPopupTitle": "Edit Appointment",
             "dxScheduler-editPopupSaveButtonText": "Save",
             "dxScheduler-editorLabelTitle": "Titre",
@@ -394,6 +397,7 @@
             "dxChat-defaultImageAlt": "Image partagée dans le chat",
             "dxChat-fileViewLabel": "File list",
             "dxChat-downloadButtonLabel": "Download file {0}",
+            "dxChat-fileLimitReachedWarning": "You selected too many files. Select no more than {0} files and retry.",
             "dxColorView-ariaRed": "Rouge",
             "dxColorView-ariaGreen": "Vert",
             "dxColorView-ariaBlue": "Bleu",

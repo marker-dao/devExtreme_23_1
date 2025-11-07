@@ -178,18 +178,21 @@ class Stepper extends CollectionWidgetAsync {
     this._setAriaOrientation();
     super._initMarkup();
   }
+  _getConnectorOptions() {
+    const {
+      orientation
+    } = this.option();
+    return {
+      orientation,
+      size: this._getConnectorSize(),
+      value: this._getConnectorValue()
+    };
+  }
   _renderConnector() {
     if (this._connector) {
       return;
     }
-    const {
-      orientation
-    } = this.option();
-    this._connector = this._createComponent($('<div>'), Connector, {
-      orientation,
-      size: this._getConnectorSize(),
-      value: this._getConnectorValue()
-    });
+    this._connector = this._createComponent($('<div>'), Connector, this._getConnectorOptions());
     $(this.element()).prepend(this._connector.$element());
   }
   _getConnectorSize() {
@@ -323,6 +326,10 @@ class Stepper extends CollectionWidgetAsync {
         break;
       case 'hintExpr':
         this._invalidate();
+        break;
+      case 'items':
+        super._optionChanged(args);
+        this._connector.option(this._getConnectorOptions());
         break;
       default:
         super._optionChanged(args);

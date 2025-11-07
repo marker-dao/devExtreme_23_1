@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/views/m_rows_view.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,6 +29,7 @@ import { CLASSES as REORDERING_CLASSES } from '../columns_resizing_reordering/co
 import gridCoreUtils from '../m_utils';
 import { CLASSES } from '../sticky_columns/const';
 import { ColumnsView } from './m_columns_view';
+import { getCellText } from './utils';
 const ROWS_VIEW_CLASS = 'rowsview';
 const CONTENT_CLASS = 'content';
 const NOWRAP_CLASS = 'nowrap';
@@ -791,7 +792,7 @@ export class RowsView extends ColumnsView {
     parameters.data = data;
     parameters.rowType = row.rowType;
     parameters.values = row.values;
-    parameters.text = !column.command ? gridCoreUtils.formatValue(displayValue, column) : '';
+    parameters.text = getCellText(column, displayValue);
     parameters.rowIndex = row.rowIndex;
     parameters.summaryItems = summaryCells && summaryCells[options.columnIndex];
     parameters.resized = column.resizedCallbacks;

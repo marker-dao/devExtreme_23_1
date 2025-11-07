@@ -1042,7 +1042,7 @@ class Form extends _widget.default {
     const {
       fieldPath
     } = fieldParts;
-    let resultItem = false;
+    let resultItem = null;
     if (items.length) {
       (0, _iterator.each)(items, (_index, item) => {
         const {
@@ -1073,19 +1073,10 @@ class Form extends _widget.default {
     return resultItem;
   }
   _getFieldParts(field) {
-    const fieldSeparator = '.';
-    let fieldName = field;
-    let separatorIndex = fieldName.indexOf(fieldSeparator);
-    const resultPath = [];
-    while (separatorIndex !== -1) {
-      // @ts-expect-error ts-error
-      resultPath.push(fieldName.substr(0, separatorIndex));
-      fieldName = fieldName.substr(separatorIndex + 1);
-      separatorIndex = fieldName.indexOf(fieldSeparator);
-    }
+    const [fieldName, ...fieldPath] = field.split('.').reverse();
     return {
       fieldName,
-      fieldPath: resultPath.reverse()
+      fieldPath
     };
   }
   _getItemByFieldPath(path, fieldName, item) {
@@ -1094,7 +1085,7 @@ class Form extends _widget.default {
     } = item;
     const subItemsField = this._getSubItemField(itemType);
     const isItemWithSubItems = itemType === 'group' || itemType === 'tabbed' || item.title;
-    let result = false;
+    let result = null;
     do {
       if (isItemWithSubItems) {
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -1106,17 +1097,19 @@ class Form extends _widget.default {
         if (isGroupWithName) {
           pathNode = path.pop();
         }
-        if (!path.length) {
+        if (!path.length && nameWithoutSpaces === pathNode) {
           result = this._getItemByField(fieldName, item[subItemsField]);
           // eslint-disable-next-line max-depth
           if (result) {
             break;
           }
         }
-        if (!isGroupWithName || isGroupWithName && nameWithoutSpaces === pathNode) {
+        const isGroupPathNodeOrUnnamed = !isGroupWithName || isGroupWithName && nameWithoutSpaces === pathNode;
+        if (isGroupPathNodeOrUnnamed && path.length) {
+          result = this._searchItemInEverySubItem(path, fieldName, item[subItemsField]);
           // eslint-disable-next-line max-depth
-          if (path.length) {
-            result = this._searchItemInEverySubItem(path, fieldName, item[subItemsField]);
+          if (!result) {
+            break;
           }
         }
       } else {
@@ -1129,7 +1122,7 @@ class Form extends _widget.default {
     return itemType === 'tabbed' ? 'tabs' : 'items';
   }
   _searchItemInEverySubItem(path, fieldName, items) {
-    let result = false;
+    let result = null;
     (0, _iterator.each)(items, (_index, groupItem) => {
       result = this._getItemByFieldPath(path.slice(), fieldName, groupItem);
       if (result) {
@@ -1137,9 +1130,6 @@ class Form extends _widget.default {
       }
       return true;
     });
-    if (!result) {
-      return false;
-    }
     return result;
   }
   _changeItemOption(item, option, value) {

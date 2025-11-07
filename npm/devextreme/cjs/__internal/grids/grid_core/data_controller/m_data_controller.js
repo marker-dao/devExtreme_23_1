@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/data_controller/m_data_controller.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,6 +22,7 @@ var _extend = require("../../../../core/utils/extend");
 var _iterator = require("../../../../core/utils/iterator");
 var _type = require("../../../../core/utils/type");
 var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
+var _const = require("../ai_column/const");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _m_data_helper_mixin = require("./m_data_helper_mixin");
@@ -320,7 +321,8 @@ class DataController extends (0, _m_data_helper_mixin.DataHelperMixin)(_m_module
           filterApplied = true;
         }
       }
-      if (!that._needApplyFilter && !_m_utils.default.checkChanges(optionNames, ['width', 'visibleWidth', 'filterValue', 'bufferedFilterValue', 'selectedFilterOperation', 'filterValues', 'filterType'])) {
+      const excludedOptionNames = ['ai', 'width', 'visibleWidth', 'filterValue', 'bufferedFilterValue', 'selectedFilterOperation', 'filterValues', 'filterType'];
+      if (!that._needApplyFilter && !_m_utils.default.checkChanges(optionNames, excludedOptionNames)) {
         // TODO remove resubscribing
         that._columnsController.columnsChanged.add(updateItemsHandler);
       }
@@ -555,7 +557,7 @@ class DataController extends (0, _m_data_helper_mixin.DataHelperMixin)(_m_module
     for (let i = 0; i < columns.length; i++) {
       const column = columns[i];
       value = isModified ? undefined : null;
-      if (!column.command) {
+      if (!column.command || column.type === _const.AI_COLUMN_NAME) {
         if (column.calculateCellValue) {
           value = column.calculateCellValue(data);
         } else if (column.dataField) {
@@ -1281,7 +1283,7 @@ class DataController extends (0, _m_data_helper_mixin.DataHelperMixin)(_m_module
   }
   beginCustomLoading(messageText) {
     this._isCustomLoading = true;
-    this._loadingText = messageText || '';
+    this._loadingText = messageText ?? '';
     this._fireLoadingChanged();
   }
   endCustomLoading() {

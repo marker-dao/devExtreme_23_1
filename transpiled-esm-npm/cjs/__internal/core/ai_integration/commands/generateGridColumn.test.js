@@ -1,0 +1,134 @@
+"use strict";
+
+var _globals = require("@jest/globals");
+var _prompt_manager = require("../../../core/ai_integration/core/prompt_manager");
+var _request_manager = require("../../../core/ai_integration/core/request_manager");
+var _templates = require("../../../core/ai_integration/templates");
+var _provider_mock = require("../../../core/ai_integration/test_utils/provider_mock");
+var _generateGridColumn = require("./generateGridColumn");
+const COMMAND_NAME = 'generateGridColumn';
+const USER_TEXT = 'user text';
+const PROCESSED_DATA = '{"1":{"id":1,"name":"Test 1"},"2":{"id":2,"name":"Test 2"}}';
+(0, _globals.describe)('GenerateGridColumnCommand', () => {
+  const params = {
+    text: USER_TEXT,
+    data: {
+      1: {
+        id: 1,
+        name: 'Test 1'
+      },
+      2: {
+        id: 2,
+        name: 'Test 2'
+      }
+    }
+  };
+  let promptManager = null;
+  let requestManager = null;
+  let command = null;
+  (0, _globals.beforeEach)(() => {
+    const provider = new _provider_mock.Provider();
+    requestManager = new _request_manager.RequestManager(provider);
+    promptManager = new _prompt_manager.PromptManager();
+    command = new _generateGridColumn.GenerateGridColumnCommand(promptManager, requestManager);
+  });
+  (0, _globals.describe)('getTemplateName', () => {
+    (0, _globals.it)('should return the name of the corresponding template', () => {
+      // @ts-expect-error Access to protected property for a test
+      const templateName = command.getTemplateName();
+      (0, _globals.expect)(templateName).toStrictEqual(COMMAND_NAME);
+    });
+  });
+  (0, _globals.describe)('buildPromptData', () => {
+    (0, _globals.it)('should form PromptData with text and fields info', () => {
+      // @ts-expect-error Access to protected property for a test
+      const promptData = command.buildPromptData(params);
+      (0, _globals.expect)(promptData).toStrictEqual({
+        user: {
+          text: USER_TEXT,
+          data: PROCESSED_DATA
+        }
+      });
+    });
+  });
+  (0, _globals.describe)('parseResult', () => {
+    (0, _globals.it)('should return the parsed result', () => {
+      const response = '{ "1": "Item with the name Item 1.", "10": "Item with the name Item 10." }';
+      // @ts-expect-error Access to protected property for a test
+      const result = command.parseResult(response);
+      const expectedResult = {
+        data: {
+          1: 'Item with the name Item 1.',
+          10: 'Item with the name Item 10.'
+        }
+      };
+      (0, _globals.expect)(result).toStrictEqual(expectedResult);
+    });
+    (0, _globals.it)('should return empty data object when response is an empty string', () => {
+      const response = '';
+      // @ts-expect-error Access to protected property for a test
+      const result = command.parseResult(response);
+      const expectedResult = {
+        data: {}
+      };
+      (0, _globals.expect)(result).toStrictEqual(expectedResult);
+    });
+    (0, _globals.it)('should parse result when response data is a stringified object', () => {
+      const response = {
+        data: '{ "1": "Item with the name Item 1.", "10": "Item with the name Item 10." }'
+      };
+      // @ts-expect-error Access to protected property for a test
+      const result = command.parseResult(response);
+      const expectedResult = {
+        data: {
+          1: 'Item with the name Item 1.',
+          10: 'Item with the name Item 10.'
+        }
+      };
+      (0, _globals.expect)(result).toStrictEqual(expectedResult);
+    });
+    (0, _globals.it)('should not parse result when response data is an object', () => {
+      const response = {
+        data: {
+          1: 'Item with the name Item 1.',
+          10: 'Item with the name Item 10.'
+        }
+      };
+      // @ts-expect-error Access to protected property for a test
+      const result = command.parseResult(response);
+      (0, _globals.expect)(result).toStrictEqual(response);
+    });
+  });
+  (0, _globals.describe)('execute', () => {
+    const callbacks = {
+      onComplete: () => {}
+    };
+    (0, _globals.it)('promptManager.buildPrompt should be called with the passed data', () => {
+      const buildPromptSpy = _globals.jest.spyOn(promptManager, 'buildPrompt');
+      command.execute(params, callbacks);
+      (0, _globals.expect)(buildPromptSpy).toHaveBeenCalledTimes(1);
+      (0, _globals.expect)(promptManager.buildPrompt).toHaveBeenCalledWith(COMMAND_NAME, {
+        user: {
+          text: USER_TEXT,
+          data: PROCESSED_DATA
+        }
+      });
+    });
+    (0, _globals.it)('promptManager.buildPrompt should should return prompt with passed values', () => {
+      var _templates$generateGr;
+      _globals.jest.spyOn(promptManager, 'buildPrompt');
+      command.execute(params, callbacks);
+      const expectedUserPrompt = (_templates$generateGr = _templates.templates.generateGridColumn.user) === null || _templates$generateGr === void 0 ? void 0 : _templates$generateGr.replace('{{text}}', USER_TEXT).replace('{{data}}', PROCESSED_DATA);
+      (0, _globals.expect)(promptManager.buildPrompt).toHaveReturnedWith({
+        system: _templates.templates.generateGridColumn.system,
+        user: expectedUserPrompt
+      });
+    });
+    (0, _globals.it)('should call provider.sendRequest once and return the abort function', () => {
+      const sendRequestSpy = _globals.jest.spyOn(requestManager, 'sendRequest');
+      const abort = command.execute(params, callbacks);
+      (0, _globals.expect)(typeof abort).toBe('function');
+      (0, _globals.expect)(sendRequestSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+});

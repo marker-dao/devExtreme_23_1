@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/utils/options/constants.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,6 +14,7 @@ import dateUtils from '../../../../core/utils/date';
 import { isMaterial, isMaterialBased } from '../../../../ui/themes';
 const DEFAULT_APPOINTMENT_TEMPLATE_NAME = 'item';
 const DEFAULT_APPOINTMENT_COLLECTOR_TEMPLATE_NAME = 'appointmentCollector';
+export const DEFAULT_ICONS_SHOW_MODE = 'main';
 export const DEFAULT_SCHEDULER_OPTIONS = {
   views: ['day', 'week'],
   currentView: 'day',
@@ -41,7 +42,11 @@ export const DEFAULT_SCHEDULER_OPTIONS = {
     allowDragging: true,
     allowResizing: true,
     allowUpdating: true,
-    allowTimeZoneEditing: false
+    allowTimeZoneEditing: false,
+    form: {
+      iconsShowMode: DEFAULT_ICONS_SHOW_MODE
+    },
+    popup: {}
   },
   showAllDayPanel: true,
   showCurrentTimeIndicator: true,
@@ -104,7 +109,9 @@ export const DEFAULT_SCHEDULER_INTERNAL_OPTIONS = {
   renovateRender: true,
   editing: _extends({
     legacyForm: false
-  }, DEFAULT_SCHEDULER_OPTIONS.editing),
+  }, DEFAULT_SCHEDULER_OPTIONS.editing, {
+    popup: {}
+  }),
   _draggingMode: 'outlook',
   _appointmentTooltipOffset: {
     x: 0,

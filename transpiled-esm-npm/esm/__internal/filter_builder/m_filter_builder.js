@@ -760,6 +760,9 @@ class FilterBuilder extends Widget {
     const treeViewNode = treeViewPopup === null || treeViewPopup === void 0 || (_treeViewPopup$find = treeViewPopup.find) === null || _treeViewPopup$find === void 0 ? void 0 : _treeViewPopup$find.call(treeViewPopup, `.${TREEVIEW_NODE_CONTAINER}`);
     treeViewNode === null || treeViewNode === void 0 || treeViewNode.attr('role', 'presentation');
   }
+  addWidgetPrefix(className) {
+    return `${FILTER_BUILDER_CLASS}-${className}`;
+  }
 }
 registerComponent('dxFilterBuilder', FilterBuilder);
 export default FilterBuilder;

@@ -1,2 +1,1 @@
-import * as Export from '../../__internal/viz/core/export';
-export default Export;
+export { exportFromMarkup, getMarkup, exportWidgets, combineMarkups, ExportMenu, plugin } from '../../__internal/viz/core/export';

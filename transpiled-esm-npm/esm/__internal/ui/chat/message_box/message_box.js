@@ -5,7 +5,6 @@ import ChatTextArea from '../../../ui/chat/message_box/chat_text_area';
 import EditingPreview from '../../../ui/chat/message_box/editing_preview';
 export const CHAT_MESSAGEBOX_CLASS = 'dx-chat-messagebox';
 export const CHAT_MESSAGEBOX_TEXTAREA_CONTAINER_CLASS = 'dx-chat-messagebox-textarea-container';
-export const CHAT_MESSAGEBOX_TEXTAREA_CLASS = 'dx-chat-messagebox-textarea';
 export const TYPING_END_DELAY = 2000;
 const ESCAPE_KEY = 'escape';
 class MessageBox extends DOMComponent {
@@ -66,7 +65,7 @@ class MessageBox extends DOMComponent {
     });
   }
   _renderTextArea($parent) {
-    const $textArea = $('<div>').addClass(CHAT_MESSAGEBOX_TEXTAREA_CLASS);
+    const $textArea = $('<div>');
     const textAreaOptions = this._getTextAreaOptions();
     $parent.append($textArea);
     this._textArea = this._createComponent($textArea, ChatTextArea, textAreaOptions);
@@ -155,15 +154,21 @@ class MessageBox extends DOMComponent {
       });
       return;
     }
-    (_this$_messageEntered = this._messageEnteredAction) === null || _this$_messageEntered === void 0 || _this$_messageEntered.call(this, {
+    const messageEnteredArgs = {
       text,
       event: e.event
-    });
+    };
+    const attachments = this._textArea.getAttachments();
+    if (attachments) {
+      messageEnteredArgs.attachments = attachments;
+    }
+    (_this$_messageEntered = this._messageEnteredAction) === null || _this$_messageEntered === void 0 || _this$_messageEntered.call(this, messageEnteredArgs);
   }
   _optionChanged(args) {
     var _this$_editingPreview;
     const {
       name,
+      fullName,
       value
     } = args;
     switch (name) {
@@ -174,7 +179,7 @@ class MessageBox extends DOMComponent {
         (_this$_editingPreview = this._editingPreview) === null || _this$_editingPreview === void 0 || _this$_editingPreview.option(name, value);
         break;
       case 'fileUploaderOptions':
-        this._textArea.option(name, value);
+        this._textArea.option(fullName, value);
         break;
       case 'onMessageEntered':
         this._createMessageEnteredAction();
@@ -203,6 +208,12 @@ class MessageBox extends DOMComponent {
         'aria-labelledby': emptyViewId
       }
     });
+  }
+  resetFileUploader() {
+    this._textArea.resetFileUploader();
+  }
+  toggleAttachButtonVisibleState(state) {
+    this._textArea.toggleAttachButtonVisibleState(state);
   }
   _updateEditingPreview(text) {
     if (this._editingPreview) {

@@ -109,7 +109,7 @@ class PopupModel {
       return saveButton;
     };
     this.getBackButton = () => {
-      const backButton = this.element.querySelector('.dx-toolbar-button  .dx-button[aria-label="Back"]');
+      const backButton = this.element.querySelector('.dx-toolbar-button  .dx-button[aria-label="arrowleft"]');
       if (!backButton) {
         throw new Error('Back button not found');
       }
@@ -314,6 +314,15 @@ class PopupModel {
     // @ts-expect-error
     return (0, _renderer.default)(this.element.querySelector('.dx-form')).dxForm('instance');
   }
+  get mainGroup() {
+    return this.element.querySelector('.dx-scheduler-form-main-group');
+  }
+  get recurrenceGroup() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-group');
+  }
+  get subjectIcon() {
+    return this.element.querySelector('.dx-scheduler-form-subject-group .dx-scheduler-form-icon .dx-icon');
+  }
   get startDate() {
     return this.element.querySelector('.dx-scheduler-form-start-date-editor .dx-datebox.dx-widget');
   }
@@ -352,9 +361,6 @@ class PopupModel {
   }
   get repeatEndEditors() {
     return this.element.querySelector('.dx-scheduler-form-recurrence-end-editors .dx-radiogroup.dx-widget');
-  }
-  get recurrenceGroup() {
-    return this.element.querySelector('.dx-scheduler-form-recurrence-group');
   }
   get recurrenceSettingsButton() {
     return this.element.querySelector('.dx-scheduler-form-recurrence-settings-button');

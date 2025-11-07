@@ -1,0 +1,28 @@
+/**
+* DevExtreme (esm/__internal/grids/grid_core/__tests__/__mock__/model/cell/header_cell.js)
+* Version: 25.2.0
+* Build date: Fri Nov 07 2025
+*
+* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+const SELECTORS = {
+  headerContent: 'text-content'
+};
+export class HeaderCellModel {
+  constructor(root, addWidgetPrefix) {
+    this.root = root;
+    this.addWidgetPrefix = addWidgetPrefix;
+  }
+  getElement() {
+    return this.root;
+  }
+  getText() {
+    var _this$getHeaderConten;
+    return ((_this$getHeaderConten = this.getHeaderContent()) === null || _this$getHeaderConten === void 0 ? void 0 : _this$getHeaderConten.textContent) ?? '';
+  }
+  getHeaderContent() {
+    var _this$root;
+    return ((_this$root = this.root) === null || _this$root === void 0 ? void 0 : _this$root.querySelector(this.addWidgetPrefix(`.${SELECTORS.headerContent}`))) ?? null;
+  }
+}

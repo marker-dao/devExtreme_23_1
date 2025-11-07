@@ -401,11 +401,12 @@ const columnsResizer = Base => class ColumnResizerStickyColumnsExtender extends 
     const hasStickyColumns = (_this$_columnHeadersV2 = this._columnHeadersView) === null || _this$_columnHeadersV2 === void 0 ? void 0 : _this$_columnHeadersV2.hasStickyColumns();
     super._generatePointsByColumns(hasStickyColumns);
   }
-  _pointCreated(point, cellsLength, columns) {
+  _pointCreated(point, columns, cells) {
     var _this$_columnHeadersV3;
     // @ts-expect-error
     const hasStickyColumns = (_this$_columnHeadersV3 = this._columnHeadersView) === null || _this$_columnHeadersV3 === void 0 ? void 0 : _this$_columnHeadersV3.hasStickyColumns();
-    const result = super._pointCreated(point, cellsLength, columns);
+    const result = super._pointCreated(point, columns, cells);
+    const cellsLength = (cells === null || cells === void 0 ? void 0 : cells.length) ?? columns.length;
     const needToCheckPoint = hasStickyColumns && cellsLength > 0;
     if (needToCheckPoint && !result) {
       const column = columns[point.index - 1];
@@ -414,7 +415,8 @@ const columnsResizer = Base => class ColumnResizerStickyColumnsExtender extends 
       return _dom.GridCoreStickyColumnsDom.noNeedToCreateResizingPoint(this._columnHeadersView, {
         point,
         column,
-        nextColumn
+        nextColumn,
+        cells
       }, this.addWidgetPrefix.bind(this));
     }
     return result;
@@ -449,14 +451,25 @@ const draggingHeader = Base => class DraggingHeaderStickyColumnsExtender extends
     }
     return super._generatePointsByColumns(options, hasStickyColumns);
   }
-  _pointCreated(point, columns, location, sourceColumn) {
+  _pointCreated(_ref) {
+    let {
+      point,
+      columns,
+      location,
+      sourceColumn,
+      cells
+    } = _ref;
     // @ts-expect-error
     const hasStickyColumns = this._columnHeadersView.hasStickyColumns();
-    const $cells = this._columnHeadersView.getColumnElements();
-    const needToCheckPoint = hasStickyColumns && location === 'headers' && ($cells === null || $cells === void 0 ? void 0 : $cells.length) && (!sourceColumn.fixed || sourceColumn.fixedPosition === _const3.StickyPosition.Sticky);
-    const result = super._pointCreated(point, columns, location, sourceColumn);
+    const needToCheckPoint = hasStickyColumns && location === 'headers' && (cells === null || cells === void 0 ? void 0 : cells.length) && (!sourceColumn.fixed || sourceColumn.fixedPosition === _const3.StickyPosition.Sticky);
+    const result = super._pointCreated({
+      point,
+      columns,
+      location,
+      sourceColumn
+    });
     if (needToCheckPoint && !result) {
-      return _dom.GridCoreStickyColumnsDom.noNeedToCreateReorderingPoint(point, $cells, (0, _renderer.default)(this._columnHeadersView.getContent()), this.addWidgetPrefix.bind(this));
+      return _dom.GridCoreStickyColumnsDom.noNeedToCreateReorderingPoint(point, cells, (0, _renderer.default)(this._columnHeadersView.getContent()), this.addWidgetPrefix.bind(this));
     }
     return result;
   }
@@ -563,12 +576,12 @@ const headersKeyboardNavigation = Base => class HeadersKeyboardNavigationStickyC
   // for headers after we implement sticky headers (pqKdLLL1).
   // Perhaps the headers will be rendered in the same table with data cells.
   // And this code will no longer be needed.
-  tabKeyHandler(_ref) {
+  tabKeyHandler(_ref2) {
     var _this$_columnHeadersV6, _this$getView;
     let {
       originalEvent,
       shift
-    } = _ref;
+    } = _ref2;
     // @ts-expect-error columnHeadersView's method
     const hasStickyColumns = (_this$_columnHeadersV6 = this._columnHeadersView) === null || _this$_columnHeadersV6 === void 0 ? void 0 : _this$_columnHeadersV6.hasStickyColumns();
     const scrollable = (_this$getView = this.getView('rowsView')) === null || _this$getView === void 0 ? void 0 : _this$getView.getScrollable();

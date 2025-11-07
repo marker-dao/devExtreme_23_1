@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/adaptivity/m_adaptivity.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -847,8 +847,8 @@ const exportExtender = Base => class AdaptivityExportExtender extends Base {
   }
 };
 const columnsResizer = Base => class AdaptivityColumnsResizerExtender extends Base {
-  _pointCreated(point, cellsLength, columns) {
-    const result = super._pointCreated(point, cellsLength, columns);
+  _pointCreated(point, columns, cells) {
+    const result = super._pointCreated(point, columns, cells);
     const currentColumn = columns[point.columnIndex] || {};
     const nextColumnIndex = this._getNextColumnIndex(point.columnIndex);
     const nextColumn = columns[nextColumnIndex] || {};
@@ -866,8 +866,21 @@ const columnsResizer = Base => class AdaptivityColumnsResizerExtender extends Ba
   }
 };
 const draggingHeader = Base => class AdaptivityDraggingHeaderExtender extends Base {
-  _pointCreated(point, columns, location, sourceColumn) {
-    const result = super._pointCreated(point, columns, location, sourceColumn);
+  _pointCreated(_ref5) {
+    let {
+      point,
+      columns,
+      location,
+      sourceColumn,
+      cells
+    } = _ref5;
+    const result = super._pointCreated({
+      point,
+      columns,
+      location,
+      sourceColumn,
+      cells
+    });
     const column = columns[point.columnIndex - 1] || {};
     const hasAdaptiveHiddenWidth = column.visibleWidth === HIDDEN_COLUMNS_WIDTH;
     return result || hasAdaptiveHiddenWidth;

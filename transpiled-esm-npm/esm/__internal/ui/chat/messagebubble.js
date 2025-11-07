@@ -4,6 +4,7 @@ import { getPublicElement } from '../../../core/element';
 import $ from '../../../core/renderer';
 import { ICON_CLASS } from '../../core/utils/m_icon';
 import Widget from '../../core/widget/widget';
+import FileView from '../../ui/chat/file_view/file_view';
 export const CHAT_MESSAGEBUBBLE_CLASS = 'dx-chat-messagebubble';
 export const CHAT_MESSAGEBUBBLE_DELETED_CLASS = 'dx-chat-messagebubble-deleted';
 export const CHAT_MESSAGEBUBBLE_CONTENT_CLASS = 'dx-chat-messagebubble-content';
@@ -23,9 +24,26 @@ class MessageBubble extends Widget {
   _initMarkup() {
     const $element = $(this.element());
     $element.addClass(CHAT_MESSAGEBUBBLE_CLASS);
-    $('<div>').addClass(CHAT_MESSAGEBUBBLE_CONTENT_CLASS).appendTo($element);
     super._initMarkup();
+    this._renderContentContainer();
+    this._renderAttachmentsElement();
     this._updateContent();
+    this._renderAttachments();
+  }
+  _renderContentContainer() {
+    this._$content = $('<div>').addClass(CHAT_MESSAGEBUBBLE_CONTENT_CLASS).appendTo(this.$element());
+  }
+  _renderAttachmentsElement() {
+    var _this$_$attachments;
+    const {
+      attachments,
+      isDeleted
+    } = this.option();
+    (_this$_$attachments = this._$attachments) === null || _this$_$attachments === void 0 || _this$_$attachments.remove();
+    this._$attachments = undefined;
+    if (attachments !== null && attachments !== void 0 && attachments.length && !isDeleted) {
+      this._$attachments = $('<div>').appendTo(this.$element());
+    }
   }
   _updateContent() {
     const {
@@ -36,33 +54,54 @@ class MessageBubble extends Widget {
       alt,
       isDeleted = false
     } = this.option();
-    this.$element().removeClass(CHAT_MESSAGEBUBBLE_DELETED_CLASS);
-    const $bubbleContainer = $(this.element()).find(`.${CHAT_MESSAGEBUBBLE_CONTENT_CLASS}`);
-    $bubbleContainer.empty();
+    this.$element().removeClass(CHAT_MESSAGEBUBBLE_DELETED_CLASS).removeClass(CHAT_MESSAGEBUBBLE_HAS_IMAGE_CLASS);
+    this._$content.empty();
     if (template) {
       template({
         type,
         text,
         src,
         alt
-      }, getPublicElement($bubbleContainer));
+      }, getPublicElement(this._$content));
       return;
     }
     if (isDeleted) {
       this.$element().addClass(CHAT_MESSAGEBUBBLE_DELETED_CLASS);
       const icon = $('<div>').addClass(ICON_CLASS).addClass(CHAT_MESSAGEBUBBLE_ICON_PROHIBITION_CLASS);
       const deletedMessage = $('<div>').text(messageLocalization.format('dxChat-deletedMessageText'));
-      $bubbleContainer.append(icon).append(deletedMessage);
+      this._$content.append(icon).append(deletedMessage);
       return;
     }
     switch (type) {
       case 'image':
         this.$element().addClass(CHAT_MESSAGEBUBBLE_HAS_IMAGE_CLASS);
-        $('<img>').attr('src', src ?? '').attr('alt', alt ?? messageLocalization.format('dxChat-defaultImageAlt')).addClass(CHAT_MESSAGEBUBBLE_IMAGE_CLASS).appendTo($bubbleContainer);
+        $('<img>').attr('src', src ?? '').attr('alt', alt ?? messageLocalization.format('dxChat-defaultImageAlt')).addClass(CHAT_MESSAGEBUBBLE_IMAGE_CLASS).appendTo(this._$content);
         break;
       case 'text':
       default:
-        $bubbleContainer.text(text ?? '');
+        this._$content.text(text ?? '');
+    }
+  }
+  _renderAttachments() {
+    const {
+      attachments,
+      activeStateEnabled,
+      focusStateEnabled,
+      hoverStateEnabled,
+      onAttachmentDownloadClick
+    } = this.option();
+    if (!this._$attachments) {
+      return;
+    }
+    this._$attachments.empty();
+    if (attachments !== null && attachments !== void 0 && attachments.length) {
+      this._createComponent(this._$attachments, FileView, {
+        activeStateEnabled,
+        focusStateEnabled,
+        hoverStateEnabled,
+        files: attachments,
+        onDownload: onAttachmentDownloadClick
+      });
     }
   }
   _updateMessageData(property, value) {
@@ -82,12 +121,24 @@ class MessageBubble extends Widget {
       case 'isDeleted':
         this._updateMessageData(name, value);
         this._updateContent();
+        this._renderAttachmentsElement();
+        this._renderAttachments();
+        break;
+      case 'type':
+        this._updateContent();
+        this._renderAttachmentsElement();
+        this._renderAttachments();
         break;
       case 'template':
         this._updateContent();
         break;
       case 'isEdited':
         this._updateMessageData(name, value);
+        break;
+      case 'onAttachmentDownloadClick':
+      case 'attachments':
+        this._renderAttachmentsElement();
+        this._renderAttachments();
         break;
       default:
         super._optionChanged(args);

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/column_state_mixin/m_column_state_mixin.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -41,8 +41,9 @@ export const ColumnStateMixin = Base => class extends Base {
   // @ts-expect-error
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _getIndicatorClassName(name) {}
-  _getColumnAlignment(alignment, rtlEnabled) {
-    rtlEnabled = rtlEnabled || this.option('rtlEnabled');
+  _getColumnAlignment(alignment) {
+    let rtl = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    const rtlEnabled = rtl || this.option('rtlEnabled');
     return alignment && alignment !== 'center' ? alignment : getDefaultAlignment(rtlEnabled);
   }
   _createIndicatorContainer(options, ignoreIndicatorAlignment) {
@@ -58,8 +59,9 @@ export const ColumnStateMixin = Base => class extends Base {
     return $cell && $cell.find(`.${COLUMN_INDICATORS_CLASS}`);
   }
   _getIndicatorElements($cell) {
+    let returnAll = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     const $indicatorContainer = this._getIndicatorContainer($cell);
-    return $indicatorContainer && $indicatorContainer.children();
+    return $indicatorContainer === null || $indicatorContainer === void 0 ? void 0 : $indicatorContainer.children();
   }
   /**
    * @extended header_filter_core

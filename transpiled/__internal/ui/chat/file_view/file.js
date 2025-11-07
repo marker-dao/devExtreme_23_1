@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.CHAT_FILE_CLASS = void 0;
+exports.default = exports.CHAT_FILE_SIZE_CLASS = exports.CHAT_FILE_NAME_CLASS = exports.CHAT_FILE_CLASS = void 0;
 var _message = _interopRequireDefault(require("../../../../common/core/localization/message"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _button = _interopRequireDefault(require("../../../../ui/button"));
@@ -14,8 +14,8 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CHAT_FILE_CLASS = exports.CHAT_FILE_CLASS = 'dx-chat-file';
 const CHAT_FILE_ICON_CONTAINER_CLASS = 'dx-chat-file-icon-container';
-const CHAT_FILE_NAME_CLASS = 'dx-chat-file-name';
-const CHAT_FILE_SIZE_CLASS = 'dx-chat-file-size';
+const CHAT_FILE_NAME_CLASS = exports.CHAT_FILE_NAME_CLASS = 'dx-chat-file-name';
+const CHAT_FILE_SIZE_CLASS = exports.CHAT_FILE_SIZE_CLASS = 'dx-chat-file-size';
 const CHAT_FILE_DOWNLOAD_BUTTON_CLASS = 'dx-chat-file-download-button';
 class File extends _dom_component.default {
   _getDefaultOptions() {
@@ -81,6 +81,12 @@ class File extends _dom_component.default {
     this.$element().append($size);
   }
   _renderButton() {
+    const {
+      onDownload
+    } = this.option();
+    if (!onDownload) {
+      return;
+    }
     const $button = (0, _renderer.default)('<div>').addClass(CHAT_FILE_DOWNLOAD_BUTTON_CLASS);
     this._downloadButton = this._createComponent($button, _button.default, this._getButtonConfig());
     this.$element().append($button);
@@ -104,18 +110,41 @@ class File extends _dom_component.default {
       icon: 'download',
       stylingMode: 'text',
       onClick: e => {
-        var _this$_downloadAction;
-        const event = {
-          event: e.event,
-          attachment: data
-        };
-        (_this$_downloadAction = this._downloadAction) === null || _this$_downloadAction === void 0 || _this$_downloadAction.call(this, event);
+        this._downloadHandler(e);
       }
     };
     return configuration;
   }
+  _downloadHandler(e) {
+    var _this$_downloadAction;
+    const {
+      data
+    } = this.option();
+    const event = {
+      event: e.event,
+      attachment: data
+    };
+    (_this$_downloadAction = this._downloadAction) === null || _this$_downloadAction === void 0 || _this$_downloadAction.call(this, event);
+  }
+  _handleOnDownloadOptionChange() {
+    const {
+      onDownload
+    } = this.option();
+    if (!onDownload) {
+      this._cleanDownloadButton();
+      return;
+    }
+    if (this._downloadButton) {
+      var _this$_downloadButton;
+      (_this$_downloadButton = this._downloadButton) === null || _this$_downloadButton === void 0 || _this$_downloadButton.option({
+        onClick: e => this._downloadHandler(e)
+      });
+    } else {
+      this._renderButton();
+    }
+  }
   _optionChanged(args) {
-    var _this$_downloadButton;
+    var _this$_downloadButton2;
     const {
       name,
       value
@@ -124,13 +153,14 @@ class File extends _dom_component.default {
       case 'activeStateEnabled':
       case 'focusStateEnabled':
       case 'hoverStateEnabled':
-        (_this$_downloadButton = this._downloadButton) === null || _this$_downloadButton === void 0 || _this$_downloadButton.option(name, value);
+        (_this$_downloadButton2 = this._downloadButton) === null || _this$_downloadButton2 === void 0 || _this$_downloadButton2.option(name, value);
         break;
       case 'data':
         this._invalidate();
         break;
       case 'onDownload':
         this._createDownloadAction();
+        this._handleOnDownloadOptionChange();
         break;
       default:
         super._optionChanged(args);
@@ -142,8 +172,8 @@ class File extends _dom_component.default {
     super._clean();
   }
   _cleanDownloadButton() {
-    var _this$_downloadButton2;
-    (_this$_downloadButton2 = this._downloadButton) === null || _this$_downloadButton2 === void 0 || _this$_downloadButton2.dispose();
+    var _this$_downloadButton3;
+    (_this$_downloadButton3 = this._downloadButton) === null || _this$_downloadButton3 === void 0 || _this$_downloadButton3.dispose();
     this._downloadButton = null;
   }
 }

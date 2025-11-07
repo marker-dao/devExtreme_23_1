@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _frame = require("../../../common/core/animation/frame");
 var _class = _interopRequireDefault(require("../../../core/class"));
+var _type = require("../../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class Animator {
   constructor() {
@@ -20,7 +21,9 @@ class Animator {
   }
   stop() {
     this._stopped = true;
-    (0, _frame.cancelAnimationFrame)(this._stepAnimationFrame);
+    if ((0, _type.isDefined)(this._stepAnimationFrame)) {
+      (0, _frame.cancelAnimationFrame)(this._stepAnimationFrame);
+    }
   }
   _stepCore() {
     if (this._isStopped()) {

@@ -157,8 +157,9 @@ class MessageList extends Widget {
       showAvatar,
       showUserName,
       showMessageTimestamp,
+      messageTimestampFormat,
       messageTemplate,
-      messageTimestampFormat
+      onAttachmentDownloadClick
     } = this.option();
     const $messageGroup = $('<div>').appendTo(this._$content);
     this._createComponent($messageGroup, MessageGroup, {
@@ -167,8 +168,9 @@ class MessageList extends Widget {
       showAvatar,
       showUserName,
       showMessageTimestamp,
+      messageTimestampFormat,
       messageTemplate,
-      messageTimestampFormat
+      onAttachmentDownloadClick
     });
   }
   _getContextMenuButtons(message) {
@@ -573,6 +575,7 @@ class MessageList extends Widget {
   }
   _clean() {
     this._lastMessageDate = null;
+    resizeObserverSingleton.unobserve(this.$element().get(0));
     super._clean();
   }
   _modifyByChanges(changes) {
@@ -613,6 +616,7 @@ class MessageList extends Widget {
       case 'emptyViewTemplate':
       case 'dayHeaderFormat':
       case 'messageTimestampFormat':
+      case 'onAttachmentDownloadClick':
         this._invalidate();
         break;
       case 'items':

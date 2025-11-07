@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/appointment_popup/m_recurrence_form.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,9 +15,9 @@ import { capitalize } from '../../core/utils/capitalize';
 import { createFormIconTemplate, getStartDateCommonConfig, RecurrenceRule } from './utils';
 const CLASSES = {
   groupWithIcon: 'dx-scheduler-form-group-with-icon',
-  icon: 'dx-scheduler-form-icon',
+  formIcon: 'dx-scheduler-form-icon',
   recurrenceGroup: 'dx-scheduler-form-recurrence-group',
-  recurrenceHidden: 'dx-scheduler-form-recurrence-hidden',
+  recurrenceHidden: 'dx-scheduler-form-recurrence-group-hidden',
   frequencyEditor: 'dx-scheduler-form-recurrence-frequency-editor',
   byMonthEditor: 'dx-scheduler-form-recurrence-by-month-editor',
   dayOfMonthEditor: 'dx-scheduler-form-day-of-month-editor',
@@ -156,7 +156,7 @@ export class RecurrenceForm {
       cssClass: CLASSES.groupWithIcon,
       items: [{
         colSpan: 1,
-        cssClass: CLASSES.icon,
+        cssClass: CLASSES.formIcon,
         template: createFormIconTemplate('clock')
       }, extend(true, getStartDateCommonConfig(this.scheduler.getFirstDayOfWeek()), {
         name: EDITOR_NAMES.recurrenceStartDate,
@@ -184,7 +184,7 @@ export class RecurrenceForm {
       },
       items: [{
         colSpan: 1,
-        cssClass: CLASSES.icon,
+        cssClass: CLASSES.formIcon,
         template: createFormIconTemplate('repeat')
       }, {
         itemType: 'group',
@@ -334,7 +334,7 @@ export class RecurrenceForm {
       cssClass: `${CLASSES.groupWithIcon} ${CLASSES.recurrenceEndGroup}`,
       items: [{
         colSpan: 1,
-        cssClass: CLASSES.icon,
+        cssClass: CLASSES.formIcon,
         template: createFormIconTemplate('description')
       }, {
         itemType: 'group',

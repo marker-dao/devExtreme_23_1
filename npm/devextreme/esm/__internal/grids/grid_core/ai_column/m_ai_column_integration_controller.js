@@ -1,12 +1,11 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/ai_column/m_ai_column_integration_controller.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
-import _extends from "@babel/runtime/helpers/esm/extends";
 import errors from '../../../../ui/widget/ui.errors';
 import { Controller } from '../m_modules';
 import { AIColumnCacheController } from './m_ai_column_cache_controller';
@@ -56,13 +55,15 @@ export class AIColumnIntegrationController extends Controller {
     if (args.cancel) {
       return;
     }
-    const keys = Object.keys(data);
-    const cachedResponse = useCache ? this.aiColumnCacheController.getCachedResponse(columnName, keys) : {};
     const keyField = this.dataController.key();
+    let cachedResponse = {};
+    if (args.useCache) {
+      const keys = data.map(item => item[keyField]);
+      cachedResponse = this.aiColumnCacheController.getCachedResponse(columnName, keys);
+    }
     const reducedData = reduceDataCachedKeys(data, cachedResponse, keyField);
     const areAllDataCached = Object.keys(reducedData).length === 0;
     if (areAllDataCached) {
-      this.showResult(columnName, {}, cachedResponse);
       return;
     }
     const abort = aiIntegration.generateGridColumn({
@@ -75,11 +76,6 @@ export class AIColumnIntegrationController extends Controller {
   processCommandCompletion(columnName) {
     this.abortRequest(columnName);
   }
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  showResult(columnName, response, cachedData) {
-    // TODO: Implement result display logic
-    const mergedData = _extends({}, cachedData, response);
-  }
   getAICommandCallbacks(columnName, cachedResponse, callBacks) {
     const column = this.columnsController.getColumnByName(columnName);
     const callbacks = {
@@ -89,11 +85,10 @@ export class AIColumnIntegrationController extends Controller {
           const args = {
             column,
             error: null,
-            data: finalResponse.data,
-            additionalInfo: finalResponse.additionalInfo
+            data: finalResponse.data
           };
           this.executeAction('onAIColumnResponseReceived', args);
-          this.showResult(columnName, finalResponse, cachedResponse);
+          this.aiColumnCacheController.setCachedResponse(columnName, finalResponse.data);
           this.processCommandCompletion(columnName);
           callBacks === null || callBacks === void 0 || (_callBacks$onComplete = callBacks.onComplete) === null || _callBacks$onComplete === void 0 || _callBacks$onComplete.call(callBacks, finalResponse);
         }
@@ -104,8 +99,7 @@ export class AIColumnIntegrationController extends Controller {
         this.executeAction('onAIColumnResponseReceived', {
           column,
           error: message,
-          data: null,
-          additionalInfo: undefined
+          data: null
         });
         this.showError(message);
         this.processCommandCompletion(columnName);
@@ -113,6 +107,9 @@ export class AIColumnIntegrationController extends Controller {
       }
     };
     return callbacks;
+  }
+  isAnyRequestAwaitingCompletion() {
+    return Object.values(this.aborts).some(abort => !!abort);
   }
   abortRequest(columnName) {
     var _this$aborts$columnNa, _this$aborts;
@@ -122,6 +119,12 @@ export class AIColumnIntegrationController extends Controller {
   showError(message) {
     var _this$errorHandlingCo;
     (_this$errorHandlingCo = this.errorHandlingController) === null || _this$errorHandlingCo === void 0 || _this$errorHandlingCo.showToastError(message);
+  }
+  getAIColumnText(columnName, key) {
+    return this.aiColumnCacheController.getCachedString(columnName, key);
+  }
+  clearAIColumn(columnName) {
+    this.aiColumnCacheController.clearCache(columnName);
   }
   getAIIntegration(columnName) {
     if (!columnName) {

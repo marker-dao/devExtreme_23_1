@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/list/list.edit.decorator.selection.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -197,6 +197,7 @@ class EditDecoratorSelection extends _listEdit.default {
   _selectAllHandler(event) {
     var _this$_selectAllCheck4;
     event.stopPropagation();
+    event.preventDefault(); // to prevent scrolling on space key press
     this._list._saveSelectionChangeEvent(event);
     const {
       value

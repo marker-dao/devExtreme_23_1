@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointment_popup/m_recurrence_form.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,9 +22,9 @@ var _utils = require("./utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const CLASSES = {
   groupWithIcon: 'dx-scheduler-form-group-with-icon',
-  icon: 'dx-scheduler-form-icon',
+  formIcon: 'dx-scheduler-form-icon',
   recurrenceGroup: 'dx-scheduler-form-recurrence-group',
-  recurrenceHidden: 'dx-scheduler-form-recurrence-hidden',
+  recurrenceHidden: 'dx-scheduler-form-recurrence-group-hidden',
   frequencyEditor: 'dx-scheduler-form-recurrence-frequency-editor',
   byMonthEditor: 'dx-scheduler-form-recurrence-by-month-editor',
   dayOfMonthEditor: 'dx-scheduler-form-day-of-month-editor',
@@ -163,7 +163,7 @@ class RecurrenceForm {
       cssClass: CLASSES.groupWithIcon,
       items: [{
         colSpan: 1,
-        cssClass: CLASSES.icon,
+        cssClass: CLASSES.formIcon,
         template: (0, _utils.createFormIconTemplate)('clock')
       }, (0, _extend.extend)(true, (0, _utils.getStartDateCommonConfig)(this.scheduler.getFirstDayOfWeek()), {
         name: EDITOR_NAMES.recurrenceStartDate,
@@ -191,7 +191,7 @@ class RecurrenceForm {
       },
       items: [{
         colSpan: 1,
-        cssClass: CLASSES.icon,
+        cssClass: CLASSES.formIcon,
         template: (0, _utils.createFormIconTemplate)('repeat')
       }, {
         itemType: 'group',
@@ -341,7 +341,7 @@ class RecurrenceForm {
       cssClass: `${CLASSES.groupWithIcon} ${CLASSES.recurrenceEndGroup}`,
       items: [{
         colSpan: 1,
-        cssClass: CLASSES.icon,
+        cssClass: CLASSES.formIcon,
         template: (0, _utils.createFormIconTemplate)('description')
       }, {
         itemType: 'group',

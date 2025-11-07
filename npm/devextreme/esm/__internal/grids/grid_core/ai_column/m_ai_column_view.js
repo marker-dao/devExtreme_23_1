@@ -1,104 +1,152 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/ai_column/m_ai_column_view.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
+import messageLocalization from '../../../../common/core/localization/message';
 import $ from '../../../../core/renderer';
-import domAdapter from '../../../core/m_dom_adapter';
-import { View } from '../m_modules';
-import { AIPromptEditor } from './ai_prompt_editor/ai_prompt_editor';
-import { AI_COLUMN_NAME } from './const';
-import { getAICommandColumnOptions, isAIColumnAutoMode } from './utils';
-export class AIColumnView extends View {
-  addAICommandColumn() {
-    this.columnsController.addCommandColumn(getAICommandColumnOptions());
+import DropDownButton from '../../../../ui/drop_down_button';
+import { AI_COLUMN_NAME, CLASSES, ICON_NAMES } from './const';
+import { createAIHeaderContainer, createChatSparkleOutlineIcon } from './dom';
+import { isAIColumnHeader, isHeaderDropDownButtonVisible, isPromptOption } from './utils';
+export const columnHeadersViewExtender = Base => class AIColumnHeadersViewExtender extends Base {
+  getDropDownButtonItems(column) {
+    var _column$ai, _column$ai2;
+    return [{
+      key: 'autoFill',
+      icon: ICON_NAMES.autoFill,
+      text: messageLocalization.format('dxDataGrid-aiDropDownAutofill')
+    }, {
+      key: 'regenerate',
+      icon: ICON_NAMES.regenerate,
+      text: messageLocalization.format('dxDataGrid-aiPromptEditorRegenerateButton'),
+      disabled: !((_column$ai = column.ai) !== null && _column$ai !== void 0 && _column$ai.prompt)
+    }, {
+      key: 'clear',
+      icon: ICON_NAMES.clear,
+      text: messageLocalization.format('dxDataGrid-aiDropDownClear'),
+      disabled: !((_column$ai2 = column.ai) !== null && _column$ai2 !== void 0 && _column$ai2.prompt)
+    }];
   }
-  getAIPromptEditorConfig($cellElement, column) {
-    var _column$ai;
+  getDropDownButtonInstance($container) {
+    return DropDownButton.getInstance($container.find(`.${CLASSES.aiColumnHeaderButton}`)[0]);
+  }
+  getDropDownButtonConfig(column, $container) {
     const alignment = column.alignment === 'right' ? 'left' : 'right';
-    const visibleIndex = this.columnsController.getVisibleIndex(column.index);
     return {
-      prompt: ((_column$ai = column.ai) === null || _column$ai === void 0 ? void 0 : _column$ai.prompt) ?? '',
-      container: this.element(),
-      createComponent: this._createComponent.bind(this),
-      onSubmit: () => {
-        this.promptEditorInstance.updateStateOnAction('apply');
-        this.columnsController.columnOption(column.index, 'ai.prompt', this.promptEditorInstance.getEditorValue(), true);
+      showArrowIcon: false,
+      icon: 'overflow',
+      stylingMode: 'text',
+      items: this.getDropDownButtonItems(column),
+      onItemClick: e => {
+        const {
+          key: actionName
+        } = e.itemData;
+        // eslint-disable-next-line default-case
+        switch (actionName) {
+          case 'autoFill':
+            this.aiPromptEditorController.show($container[0], column);
+            break;
+          case 'regenerate':
+            this.aiColumnController.sendRequest(column.name, false);
+            break;
+          case 'clear':
+            this.aiColumnController.clearAIColumn(column.name);
+            break;
+        }
       },
-      onStop: () => {
-        this.promptEditorInstance.updateStateOnAction('stop');
-        this.aiColumnController.abortAIColumnRequest(column.name);
-      },
-      onRefresh: () => {
-        this.promptEditorInstance.updateStateOnAction('regenerate');
-        this.aiColumnController.refreshAIColumn(column.name);
-      },
-      popupOptions: {
-        container: domAdapter.getBody(),
-        onHiding: () => {
-          this.promptEditorInstance.updateStateOnAction('stop');
-          this.aiColumnController.abortAIColumnRequest(column.name);
-        },
+      dropDownOptions: {
+        width: 180,
         position: {
-          my: `${alignment} top`,
+          of: $container[0],
           at: `${alignment} bottom`,
-          of: `.dx-header-row td[aria-colindex="${visibleIndex + 1}"]`,
-          collision: 'fit',
-          boundary: this.component.element()
+          my: `${alignment} top`
+        },
+        onShown: () => {
+          this.activeDropDownButtonInstance = this.getDropDownButtonInstance($container);
+        },
+        onHidden: () => {
+          this.activeDropDownButtonInstance = null;
+        },
+        onDisposing: () => {
+          this.activeDropDownButtonInstance = null;
         }
       }
     };
   }
-  // TODO: support changing all columns and the entire column
-  optionChanged(args) {
-    super.optionChanged(args);
-    if (args.name !== 'columns') {
+  renderHeaderDropDownButton(column, $container) {
+    const $dropDownButton = $('<div>').addClass(CLASSES.aiColumnHeaderButton).appendTo($container);
+    this._createComponent($dropDownButton, DropDownButton, this.getDropDownButtonConfig(column, $container));
+  }
+  renderAIHeader($container, column) {
+    const $iconElement = createChatSparkleOutlineIcon();
+    const $aiHeaderContainer = createAIHeaderContainer();
+    const $cellContent = this.createCellContent($container, column);
+    $cellContent.text(column.caption ?? '');
+    $aiHeaderContainer.append($iconElement).append($cellContent).appendTo($container);
+  }
+  getHeaderDefaultTemplate($container, options) {
+    if (isAIColumnHeader(options.column)) {
+      this.renderAIHeader($container, options.column);
       return;
     }
-    const column = this.columnsController.getColumnByPath(args.fullName);
-    if ((column === null || column === void 0 ? void 0 : column.type) !== AI_COLUMN_NAME) {
-      return;
+    super.getHeaderDefaultTemplate($container, options);
+  }
+  _processTemplate(template, options) {
+    const renderingTemplate = super._processTemplate(template, options);
+    const needToRenderHeaderDropDownButton = isAIColumnHeader(options.column, options.rowType) && isHeaderDropDownButtonVisible(options.column);
+    if (renderingTemplate && needToRenderHeaderDropDownButton) {
+      return {
+        render: args => {
+          renderingTemplate.render(args);
+          this.renderHeaderDropDownButton(args.model.column, $(args.container));
+        }
+      };
     }
-    const columnOptionName = this.columnsController.getColumnOptionNameByFullName(args.fullName);
-    if (columnOptionName === 'ai.prompt' && isAIColumnAutoMode(column)) {
-      this.aiColumnController.sendAIColumnRequest(column.name);
+    return renderingTemplate;
+  }
+  aiColumnOptionChanged(column, optionName, value) {
+    const isPromptOptionName = isPromptOption(optionName, value);
+    if (isPromptOptionName) {
+      const visibleIndex = this._columnsController.getVisibleIndex(column.index);
+      const $headerElement = this.getHeaderElement(visibleIndex);
+      const dropDownButtonInstance = this.getDropDownButtonInstance($headerElement);
+      dropDownButtonInstance === null || dropDownButtonInstance === void 0 || dropDownButtonInstance.option('items', this.getDropDownButtonItems(column));
     }
   }
   init() {
-    this.columnsController = this.getController('columns');
+    super.init();
     this.aiColumnController = this.getController('aiColumn');
-    this.addAICommandColumn();
-    this.aiColumnController.aiRequestCompleted.add(() => {
-      var _this$promptEditorIns, _this$promptEditorIns2;
-      (_this$promptEditorIns = this.promptEditorInstance) === null || _this$promptEditorIns === void 0 || _this$promptEditorIns.updatePrompt(this.promptEditorInstance.getEditorValue());
-      (_this$promptEditorIns2 = this.promptEditorInstance) === null || _this$promptEditorIns2 === void 0 || _this$promptEditorIns2.updateStateOnAction('stop');
+    this.aiPromptEditorController = this.getController('aiPromptEditor');
+    this.columnsResizer = this.getController('columnsResizer');
+    this.columnsResizer.resizeStarted.add(() => {
+      var _this$activeDropDownB;
+      /**
+       * We need to manually close the DropDownMenu button
+       * because the stopPropagation method is called
+       * when the cell resize is initiated.
+       * Calling this method is necessary to fix bug T252661.
+       */
+      (_this$activeDropDownB = this.activeDropDownButtonInstance) === null || _this$activeDropDownB === void 0 || _this$activeDropDownB.close();
     });
-    this.aiColumnController.aiRequestRejected.add(() => {
-      var _this$promptEditorIns3;
-      (_this$promptEditorIns3 = this.promptEditorInstance) === null || _this$promptEditorIns3 === void 0 || _this$promptEditorIns3.updateStateOnAction('stop');
-    });
+    this.aiColumnOptionChangedHandler = this.aiColumnOptionChanged.bind(this);
+    this._columnsController.aiColumnOptionChanged.add(this.aiColumnOptionChangedHandler);
   }
-  showPromptEditor(cellElement, column) {
-    const $cellElement = $(cellElement);
-    if (!($cellElement !== null && $cellElement !== void 0 && $cellElement.length) || (column === null || column === void 0 ? void 0 : column.type) !== AI_COLUMN_NAME) {
-      return Promise.resolve(false);
+  renderDragCellContent($dragContainer, column) {
+    if (column.type === AI_COLUMN_NAME) {
+      this.renderAIHeader($dragContainer, column);
+      return;
     }
-    const config = this.getAIPromptEditorConfig($cellElement, column);
-    if (!this.promptEditorInstance) {
-      this.promptEditorInstance = new AIPromptEditor(config);
-    } else {
-      this.promptEditorInstance.updateOptions(config);
+    super.renderDragCellContent($dragContainer, column);
+  }
+  dispose() {
+    super.dispose();
+    this.activeDropDownButtonInstance = null;
+    if (this.aiColumnOptionChangedHandler) {
+      this._columnsController.aiColumnOptionChanged.remove(this.aiColumnOptionChangedHandler);
     }
-    return this.promptEditorInstance.show();
   }
-  hidePromptEditor() {
-    var _this$promptEditorIns4;
-    return (_this$promptEditorIns4 = this.promptEditorInstance) === null || _this$promptEditorIns4 === void 0 ? void 0 : _this$promptEditorIns4.hide();
-  }
-  getPromptEditorInstance() {
-    return this.promptEditorInstance;
-  }
-}
+};

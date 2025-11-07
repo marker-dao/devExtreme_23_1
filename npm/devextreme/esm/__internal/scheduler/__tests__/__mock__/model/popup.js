@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/__tests__/__mock__/model/popup.js)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -110,7 +110,7 @@ export class PopupModel {
       return saveButton;
     };
     this.getBackButton = () => {
-      const backButton = this.element.querySelector('.dx-toolbar-button  .dx-button[aria-label="Back"]');
+      const backButton = this.element.querySelector('.dx-toolbar-button  .dx-button[aria-label="arrowleft"]');
       if (!backButton) {
         throw new Error('Back button not found');
       }
@@ -315,6 +315,15 @@ export class PopupModel {
     // @ts-expect-error
     return $(this.element.querySelector('.dx-form')).dxForm('instance');
   }
+  get mainGroup() {
+    return this.element.querySelector('.dx-scheduler-form-main-group');
+  }
+  get recurrenceGroup() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-group');
+  }
+  get subjectIcon() {
+    return this.element.querySelector('.dx-scheduler-form-subject-group .dx-scheduler-form-icon .dx-icon');
+  }
   get startDate() {
     return this.element.querySelector('.dx-scheduler-form-start-date-editor .dx-datebox.dx-widget');
   }
@@ -353,9 +362,6 @@ export class PopupModel {
   }
   get repeatEndEditors() {
     return this.element.querySelector('.dx-scheduler-form-recurrence-end-editors .dx-radiogroup.dx-widget');
-  }
-  get recurrenceGroup() {
-    return this.element.querySelector('.dx-scheduler-form-recurrence-group');
   }
   get recurrenceSettingsButton() {
     return this.element.querySelector('.dx-scheduler-form-recurrence-settings-button');

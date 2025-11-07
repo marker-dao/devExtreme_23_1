@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/scheduler.d.ts)
 * Version: 25.2.0
-* Build date: Mon Oct 27 2025
+* Build date: Fri Nov 07 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -39,7 +39,7 @@ import {
 import dxDraggable from './draggable';
 
 import dxForm, { Item as FormItem } from './form';
-import dxPopup from './popup';
+import dxPopup, { Properties as PopupProperties } from './popup';
 
 import dxSortable from './sortable';
 import { dxToolbarItem } from './toolbar';
@@ -673,6 +673,12 @@ export interface dxSchedulerOptions extends WidgetOptions<dxScheduler> {
          */
         iconsShowMode?: AppointmentFormIconsShowMode;
       } | undefined;
+      /**
+       * @docid
+       * @public
+       * @type dxPopupOptions
+       */
+      popup?: PopupProperties;
     };
     /**
      * @docid

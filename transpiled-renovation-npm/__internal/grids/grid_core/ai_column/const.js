@@ -3,8 +3,17 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CLASSES = exports.AI_COLUMN_NAME = void 0;
+exports.ICON_NAMES = exports.CLASSES = exports.AI_COLUMN_NAME = exports.AI_CHAT_SPARKLE_OUTLINE = void 0;
 const AI_COLUMN_NAME = exports.AI_COLUMN_NAME = 'ai';
+const AI_CHAT_SPARKLE_OUTLINE = exports.AI_CHAT_SPARKLE_OUTLINE = 'chatsparkleoutline';
 const CLASSES = exports.CLASSES = {
-  aiColumn: 'dx-command-ai'
+  aiColumn: 'dx-command-ai',
+  aiColumnHeaderContent: 'dx-command-ai-header-content',
+  aiColumnHeaderButton: 'dx-command-ai-header-button',
+  aiChatSparkleOutlineIcon: 'dx-icon-chatsparkleoutline'
+};
+const ICON_NAMES = exports.ICON_NAMES = {
+  autoFill: AI_CHAT_SPARKLE_OUTLINE,
+  regenerate: 'refresh',
+  clear: 'trash'
 };
