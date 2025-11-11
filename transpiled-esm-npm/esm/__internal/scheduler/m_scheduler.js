@@ -125,6 +125,10 @@ const RECURRENCE_EDITING_MODE = {
   CANCEL: 'cancel'
 };
 class Scheduler extends SchedulerOptionsBaseWidget {
+  constructor() {
+    super(...arguments);
+    this._updatingAppointments = new Set();
+  }
   get timeZoneCalculator() {
     if (!this._timeZoneCalculator) {
       this._timeZoneCalculator = createTimeZoneCalculator(this.option('timeZone'));
@@ -1374,6 +1378,9 @@ class Scheduler extends SchedulerOptionsBaseWidget {
       // @ts-expect-error
       dragEvent.cancel = new Deferred();
     }
+    if (isPromise(updatingOptions.cancel) && dragEvent) {
+      this._updatingAppointments.add(target);
+    }
     return this._processActionResult(updatingOptions, function (canceled) {
       // @ts-expect-error
       let deferred = new Deferred();
@@ -1382,13 +1389,18 @@ class Scheduler extends SchedulerOptionsBaseWidget {
         try {
           deferred = this.appointmentDataSource.update(target, rawAppointment).done(() => {
             dragEvent === null || dragEvent === void 0 || dragEvent.cancel.resolve(false);
-          }).always(storeAppointment => this._onDataPromiseCompleted(StoreEventNames.UPDATED, storeAppointment)).fail(() => performFailAction());
+          }).always(storeAppointment => {
+            this._updatingAppointments.delete(target);
+            this._onDataPromiseCompleted(StoreEventNames.UPDATED, storeAppointment);
+          }).fail(() => performFailAction());
         } catch (err) {
           performFailAction(err);
+          this._updatingAppointments.delete(target);
           deferred.resolve();
         }
       } else {
         performFailAction();
+        this._updatingAppointments.delete(target);
         deferred.resolve();
       }
       return deferred.promise();
@@ -1646,6 +1658,9 @@ class Scheduler extends SchedulerOptionsBaseWidget {
   }
   _getDragBehavior() {
     return this._workSpace.dragBehavior;
+  }
+  _isAppointmentBeingUpdated(appointmentData) {
+    return this._updatingAppointments.has(appointmentData);
   }
   getViewOffsetMs() {
     const offsetFromOptions = this.getViewOption('offset');

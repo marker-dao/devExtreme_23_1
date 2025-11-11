@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/ui/chat/messagebubble.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -100,9 +100,6 @@ class MessageBubble extends _widget.default {
   _renderAttachments() {
     const {
       attachments,
-      activeStateEnabled,
-      focusStateEnabled,
-      hoverStateEnabled,
       onAttachmentDownloadClick
     } = this.option();
     if (!this._$attachments) {
@@ -111,9 +108,6 @@ class MessageBubble extends _widget.default {
     this._$attachments.empty();
     if (attachments !== null && attachments !== void 0 && attachments.length) {
       this._createComponent(this._$attachments, _file_view.default, {
-        activeStateEnabled,
-        focusStateEnabled,
-        hoverStateEnabled,
         files: attachments,
         onDownload: onAttachmentDownloadClick
       });

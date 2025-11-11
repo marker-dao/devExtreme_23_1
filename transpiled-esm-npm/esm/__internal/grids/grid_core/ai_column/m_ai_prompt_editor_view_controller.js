@@ -6,4 +6,7 @@ export class AIPromptEditorViewController extends ViewController {
   show(cellElement, column) {
     return this.aiPromptEditorView.show(cellElement, column);
   }
+  hide() {
+    return this.aiPromptEditorView.hide();
+  }
 }

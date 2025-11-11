@@ -26,7 +26,7 @@ const indexExists = index => index !== NOT_EXISTING_INDEX;
 exports.indexExists = indexExists;
 class CollectionWidget extends _collection_widget.default {
   constructor(element, options) {
-    CollectionWidget._userOptions = options ?? {};
+    CollectionWidget._initUserOptions = options ?? {};
     // @ts-expect-error
     super(element, options);
   }
@@ -55,6 +55,8 @@ class CollectionWidget extends _collection_widget.default {
     });
   }
   _init() {
+    this._userOptions = _extends({}, CollectionWidget._initUserOptions);
+    CollectionWidget._initUserOptions = undefined;
     this._initEditStrategy();
     super._init();
     this._initKeyGetter();
@@ -323,7 +325,7 @@ class CollectionWidget extends _collection_widget.default {
         [name]: optionValue
       } = this.option();
       const length = (0, _type.isDefined)(optionValue) && Array.isArray(optionValue) && optionValue.length;
-      return !!length || name in CollectionWidget._userOptions;
+      return !!length || name in (this._userOptions ?? {});
     };
     if (isOptionDefined('selectedItems')) {
       optionName = 'selectedItems';
@@ -788,5 +790,5 @@ class CollectionWidget extends _collection_widget.default {
     });
   }
 }
-CollectionWidget._userOptions = {};
+CollectionWidget._initUserOptions = {};
 var _default = exports.default = CollectionWidget;

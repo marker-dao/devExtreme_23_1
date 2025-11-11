@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/file_uploader/file_uploader.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -53,6 +53,7 @@ const FILEUPLOADER_FILE_ICON_CLASS = 'dx-fileuploader-file-icon';
 const FILEUPLOADER_BUTTON_CLASS = 'dx-fileuploader-button';
 const FILEUPLOADER_BUTTON_CONTAINER_CLASS = 'dx-fileuploader-button-container';
 export const FILEUPLOADER_CANCEL_BUTTON_CLASS = 'dx-fileuploader-cancel-button';
+export const FILEUPLOADER_CANCEL_BUTTON_POSITION_END_CLASS = 'dx-fileuploader-cancel-button-position-end';
 const FILEUPLOADER_UPLOAD_BUTTON_CLASS = 'dx-fileuploader-upload-button';
 const FILEUPLOADER_INVALID_CLASS = 'dx-fileuploader-invalid';
 const FILEUPLOADER_AFTER_LOAD_DELAY = 400;
@@ -609,7 +610,7 @@ class FileUploader extends Editor {
     file.$file = $('<div>').addClass(FILEUPLOADER_FILE_CLASS).appendTo($fileContainer);
     const $fileInfo = $('<div>').addClass(FILEUPLOADER_FILE_INFO_CLASS).appendTo(file.$file);
     file.$statusMessage = $('<div>').addClass(FILEUPLOADER_FILE_STATUS_MESSAGE_CLASS).appendTo(file.$file);
-    $('<div>').addClass(FILEUPLOADER_FILE_NAME_CLASS).text(value.name).appendTo($fileInfo);
+    $('<div>').addClass(FILEUPLOADER_FILE_NAME_CLASS).text(value.name).attr('title', value.name).appendTo($fileInfo);
     if (isDefined(value.size)) {
       $('<div>').addClass(FILEUPLOADER_FILE_SIZE_CLASS).text(getFileSize(value.size)).appendTo($fileInfo);
     }
@@ -692,8 +693,10 @@ class FileUploader extends Editor {
   }
   _getCancelButton(file) {
     var _file$value;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const {
-      uploadMode
+      uploadMode,
+      _cancelButtonPosition
     } = this.option();
     if (uploadMode === 'useForm') {
       return null;
@@ -724,6 +727,9 @@ class FileUploader extends Editor {
         'aria-label': messageLocalization.format('dxFileUploader-removeFileButtonLabel', (file === null || file === void 0 || (_file$value = file.value) === null || _file$value === void 0 ? void 0 : _file$value.name) ?? '')
       }
     });
+    if (_cancelButtonPosition === 'end') {
+      file.cancelButton.$element().addClass(FILEUPLOADER_CANCEL_BUTTON_POSITION_END_CLASS);
+    }
     return $('<div>').addClass(FILEUPLOADER_BUTTON_CONTAINER_CLASS).append(file.cancelButton.$element());
   }
   _getUploadButton(file) {

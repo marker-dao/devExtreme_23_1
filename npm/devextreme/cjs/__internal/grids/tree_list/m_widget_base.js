@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/tree_list/m_widget_base.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,7 +28,7 @@ var _m_widget_base = _interopRequireDefault(require("../../grids/grid_core/m_wid
 var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const TREELIST_CLASS = 'dx-treelist';
-_m_core.default.registerModulesOrder(['stateStoring', 'columns', 'aiColumn', 'selection', 'editorFactory', 'columnChooser', 'editingRowBased', 'editingFormBased', 'editingCellBased', 'editing', 'grouping', 'masterDetail', 'validating', 'adaptivity', 'data', 'virtualScrolling', 'columnHeaders', 'filterRow', 'headerPanel', 'headerFilter', 'sorting', 'search', 'rows', 'pager', 'columnsResizingReordering', 'contextMenu', 'keyboardNavigation', 'headersKeyboardNavigation', 'errorHandling', 'summary', 'columnFixing', 'export', 'toast', 'gridView']);
+_m_core.default.registerModulesOrder(['stateStoring', 'columns', 'selection', 'editorFactory', 'columnChooser', 'editingRowBased', 'editingFormBased', 'editingCellBased', 'editing', 'grouping', 'masterDetail', 'validating', 'adaptivity', 'data', 'virtualScrolling', 'aiColumn', 'columnHeaders', 'filterRow', 'headerPanel', 'headerFilter', 'sorting', 'search', 'rows', 'pager', 'columnsResizingReordering', 'contextMenu', 'keyboardNavigation', 'headersKeyboardNavigation', 'errorHandling', 'summary', 'columnFixing', 'export', 'toast', 'gridView']);
 class TreeList extends _m_widget_base.default {
   _initMarkup() {
     // @ts-expect-error

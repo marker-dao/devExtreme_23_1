@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/ai_column/m_ai_column_view.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -40,6 +40,7 @@ export const columnHeadersViewExtender = Base => class AIColumnHeadersViewExtend
       showArrowIcon: false,
       icon: 'overflow',
       stylingMode: 'text',
+      useItemTextAsTitle: false,
       items: this.getDropDownButtonItems(column),
       onItemClick: e => {
         const {
@@ -125,12 +126,13 @@ export const columnHeadersViewExtender = Base => class AIColumnHeadersViewExtend
     this.columnsResizer.resizeStarted.add(() => {
       var _this$activeDropDownB;
       /**
-       * We need to manually close the DropDownMenu button
+       * We need to manually close the DropDownMenu button and AIPromptEditor
        * because the stopPropagation method is called
        * when the cell resize is initiated.
        * Calling this method is necessary to fix bug T252661.
        */
       (_this$activeDropDownB = this.activeDropDownButtonInstance) === null || _this$activeDropDownB === void 0 || _this$activeDropDownB.close();
+      this.aiPromptEditorController.hide();
     });
     this.aiColumnOptionChangedHandler = this.aiColumnOptionChanged.bind(this);
     this._columnsController.aiColumnOptionChanged.add(this.aiColumnOptionChangedHandler);

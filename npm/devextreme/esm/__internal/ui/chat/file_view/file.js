@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/chat/file_view/file.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -99,14 +99,16 @@ class File extends DOMComponent {
       focusStateEnabled,
       hoverStateEnabled
     } = this.option();
+    // @ts-expect-error format params should be extended
+    const ariaLabel = messageLocalization.format('dxChat-downloadButtonLabel', (data === null || data === void 0 ? void 0 : data.name) ?? '');
     // @ts-expect-error useInkRipple should be optional
     const configuration = {
       activeStateEnabled,
       focusStateEnabled,
       hoverStateEnabled,
+      hint: ariaLabel,
       elementAttr: {
-        // @ts-expect-error format params should be extended
-        'aria-label': messageLocalization.format('dxChat-downloadButtonLabel', (data === null || data === void 0 ? void 0 : data.name) ?? '')
+        'aria-label': ariaLabel
       },
       icon: 'download',
       stylingMode: 'text',

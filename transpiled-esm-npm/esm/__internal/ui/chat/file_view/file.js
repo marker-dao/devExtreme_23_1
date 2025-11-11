@@ -91,14 +91,16 @@ class File extends DOMComponent {
       focusStateEnabled,
       hoverStateEnabled
     } = this.option();
+    // @ts-expect-error format params should be extended
+    const ariaLabel = messageLocalization.format('dxChat-downloadButtonLabel', (data === null || data === void 0 ? void 0 : data.name) ?? '');
     // @ts-expect-error useInkRipple should be optional
     const configuration = {
       activeStateEnabled,
       focusStateEnabled,
       hoverStateEnabled,
+      hint: ariaLabel,
       elementAttr: {
-        // @ts-expect-error format params should be extended
-        'aria-label': messageLocalization.format('dxChat-downloadButtonLabel', (data === null || data === void 0 ? void 0 : data.name) ?? '')
+        'aria-label': ariaLabel
       },
       icon: 'download',
       stylingMode: 'text',

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/scheduler/m_appointment_drag_behavior.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -85,6 +85,10 @@ export default class AppointmentDragBehavior {
       var _appointmentDragging$;
       e.itemData = this.getItemData(e.itemElement);
       e.itemSettings = this.getItemSettings(e.itemElement);
+      if (this.scheduler._isAppointmentBeingUpdated(e.itemData)) {
+        e.cancel = true;
+        return;
+      }
       (_appointmentDragging$ = appointmentDragging.onDragStart) === null || _appointmentDragging$ === void 0 || _appointmentDragging$.call(appointmentDragging, e);
       if (!e.cancel) {
         options.onDragStart(e);
@@ -94,6 +98,14 @@ export default class AppointmentDragBehavior {
   createDragMoveHandler(options, appointmentDragging) {
     return e => {
       var _appointmentDragging$2;
+      if (!this.appointmentInfo) {
+        e.cancel = true;
+        return;
+      }
+      if (this.scheduler._isAppointmentBeingUpdated(this.appointmentInfo.appointment)) {
+        e.cancel = true;
+        return;
+      }
       (_appointmentDragging$2 = appointmentDragging.onDragMove) === null || _appointmentDragging$2 === void 0 || _appointmentDragging$2.call(appointmentDragging, e);
       if (!e.cancel) {
         options.onDragMove(e);
@@ -103,6 +115,10 @@ export default class AppointmentDragBehavior {
   createDragEndHandler(options, appointmentDragging) {
     return e => {
       var _appointmentDragging$3;
+      if (!this.appointmentInfo) {
+        e.cancel = true;
+        return;
+      }
       const updatedData = this.appointments.invoke('getUpdatedData', e.itemData);
       this.appointmentInfo = null;
       e.toItemData = extend({}, e.itemData, updatedData);

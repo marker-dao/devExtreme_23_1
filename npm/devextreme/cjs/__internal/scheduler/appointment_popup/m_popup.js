@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointment_popup/m_popup.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -83,6 +83,7 @@ class AppointmentPopup {
   _createPopupConfig() {
     const editingConfig = this.scheduler.getEditingConfig();
     const customPopupOptions = (editingConfig === null || editingConfig === void 0 ? void 0 : editingConfig.popup) ?? {};
+    this.customToolbarItems = customPopupOptions.toolbarItems;
     const defaultPopupConfig = {
       height: 'auto',
       maxHeight: '90%',
@@ -291,7 +292,17 @@ class AppointmentPopup {
     const shiftDifference = originTimezoneShift - clonedTimezoneShift;
     return shiftDifference ? new Date(clonedDate.getTime() + shiftDifference * _date.default.dateToMilliseconds('hour')) : clonedDate;
   }
+  tryApplyCustomToolbarItems() {
+    if (this.customToolbarItems) {
+      this.popup.option('toolbarItems', this.customToolbarItems);
+      return true;
+    }
+    return false;
+  }
   updateToolbarForRecurrenceGroup() {
+    if (this.tryApplyCustomToolbarItems()) {
+      return;
+    }
     const toolbarItems = [{
       toolbar: 'top',
       location: 'before',
@@ -337,6 +348,9 @@ class AppointmentPopup {
     this.popup.option('toolbarItems', toolbarItems);
   }
   updateToolbarForMainGroup() {
+    if (this.tryApplyCustomToolbarItems()) {
+      return;
+    }
     const isCreating = this.state.action === ACTION_TO_APPOINTMENT.CREATE;
     const formTitleKey = isCreating ? 'dxScheduler-newPopupTitle' : 'dxScheduler-editPopupTitle';
     const toolbarItems = [{

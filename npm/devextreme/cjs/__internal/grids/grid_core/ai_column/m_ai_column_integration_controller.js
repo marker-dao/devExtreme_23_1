@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/grids/grid_core/ai_column/m_ai_column_integration_controller.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -31,7 +31,13 @@ class AIColumnIntegrationController extends _m_modules.Controller {
     this.createAction('onAIColumnRequestCreating');
     this.createAction('onAIColumnResponseReceived');
   }
-  sendRequest(columnName, useCache, callbacks) {
+  sendRequestCore(_ref) {
+    let {
+      columnName,
+      useCache,
+      needToShowLoadPanel,
+      callbacks
+    } = _ref;
     const aiIntegration = this.getAIIntegration(columnName);
     if (!aiIntegration) {
       return;
@@ -73,6 +79,7 @@ class AIColumnIntegrationController extends _m_modules.Controller {
     if (areAllDataCached) {
       return;
     }
+    callbacks.onRequestSending(needToShowLoadPanel);
     const abort = aiIntegration.generateGridColumn({
       text: prompt,
       data: reducedData,

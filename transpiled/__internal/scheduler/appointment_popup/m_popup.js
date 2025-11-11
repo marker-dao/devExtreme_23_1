@@ -75,6 +75,7 @@ class AppointmentPopup {
   _createPopupConfig() {
     const editingConfig = this.scheduler.getEditingConfig();
     const customPopupOptions = (editingConfig === null || editingConfig === void 0 ? void 0 : editingConfig.popup) ?? {};
+    this.customToolbarItems = customPopupOptions.toolbarItems;
     const defaultPopupConfig = {
       height: 'auto',
       maxHeight: '90%',
@@ -283,7 +284,17 @@ class AppointmentPopup {
     const shiftDifference = originTimezoneShift - clonedTimezoneShift;
     return shiftDifference ? new Date(clonedDate.getTime() + shiftDifference * _date.default.dateToMilliseconds('hour')) : clonedDate;
   }
+  tryApplyCustomToolbarItems() {
+    if (this.customToolbarItems) {
+      this.popup.option('toolbarItems', this.customToolbarItems);
+      return true;
+    }
+    return false;
+  }
   updateToolbarForRecurrenceGroup() {
+    if (this.tryApplyCustomToolbarItems()) {
+      return;
+    }
     const toolbarItems = [{
       toolbar: 'top',
       location: 'before',
@@ -329,6 +340,9 @@ class AppointmentPopup {
     this.popup.option('toolbarItems', toolbarItems);
   }
   updateToolbarForMainGroup() {
+    if (this.tryApplyCustomToolbarItems()) {
+      return;
+    }
     const isCreating = this.state.action === ACTION_TO_APPOINTMENT.CREATE;
     const formTitleKey = isCreating ? 'dxScheduler-newPopupTitle' : 'dxScheduler-editPopupTitle';
     const toolbarItems = [{

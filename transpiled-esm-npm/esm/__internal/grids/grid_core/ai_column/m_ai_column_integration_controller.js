@@ -16,7 +16,13 @@ export class AIColumnIntegrationController extends Controller {
     this.createAction('onAIColumnRequestCreating');
     this.createAction('onAIColumnResponseReceived');
   }
-  sendRequest(columnName, useCache, callbacks) {
+  sendRequestCore(_ref) {
+    let {
+      columnName,
+      useCache,
+      needToShowLoadPanel,
+      callbacks
+    } = _ref;
     const aiIntegration = this.getAIIntegration(columnName);
     if (!aiIntegration) {
       return;
@@ -58,6 +64,7 @@ export class AIColumnIntegrationController extends Controller {
     if (areAllDataCached) {
       return;
     }
+    callbacks.onRequestSending(needToShowLoadPanel);
     const abort = aiIntegration.generateGridColumn({
       text: prompt,
       data: reducedData,

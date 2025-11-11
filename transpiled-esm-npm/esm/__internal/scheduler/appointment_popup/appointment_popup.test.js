@@ -1457,6 +1457,74 @@ describe('Appointment Popup Form', () => {
       expect(focusSpy).toHaveBeenCalledTimes(1);
       focusSpy.mockRestore();
     });
+    it('should preserve custom toolbarItems when popup opens', async () => {
+      const {
+        scheduler,
+        POM
+      } = await createScheduler(_extends({}, getDefaultConfig(), {
+        editing: {
+          popup: {
+            toolbarItems: [{
+              toolbar: 'top',
+              location: 'before',
+              text: 'Custom Title',
+              cssClass: 'custom-title'
+            }, {
+              toolbar: 'top',
+              location: 'after',
+              widget: 'dxButton',
+              options: {
+                text: 'Custom Save'
+              }
+            }]
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const toolbarItems = POM.popup.component.option('toolbarItems');
+      expect(toolbarItems).toBeDefined();
+      expect(toolbarItems).toHaveLength(2);
+      expect(toolbarItems).toContainEqual(expect.objectContaining({
+        cssClass: 'custom-title',
+        location: 'before',
+        text: 'Custom Title',
+        toolbar: 'top'
+      }));
+      expect(toolbarItems).toContainEqual(expect.objectContaining({
+        toolbar: 'top',
+        location: 'after',
+        widget: 'dxButton',
+        options: expect.objectContaining({
+          text: 'Custom Save'
+        })
+      }));
+    });
+    it('should preserve custom toolbarItems when popup is reopened', async () => {
+      var _toolbarItems$;
+      const {
+        scheduler,
+        POM
+      } = await createScheduler(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          popup: {
+            toolbarItems: [{
+              toolbar: 'top',
+              location: 'before',
+              text: 'Custom Toolbar'
+            }]
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      scheduler.hideAppointmentPopup();
+      scheduler.showAppointmentPopup(allDayAppointment);
+      const toolbarItems = POM.popup.component.option('toolbarItems');
+      expect(toolbarItems).toBeDefined();
+      expect(toolbarItems).toHaveLength(1);
+      expect(toolbarItems === null || toolbarItems === void 0 || (_toolbarItems$ = toolbarItems[0]) === null || _toolbarItems$ === void 0 ? void 0 : _toolbarItems$.text).toBe('Custom Toolbar');
+    });
   });
 });
 describe('Appointment Popup Content', () => {

@@ -92,9 +92,6 @@ class MessageBubble extends _widget.default {
   _renderAttachments() {
     const {
       attachments,
-      activeStateEnabled,
-      focusStateEnabled,
-      hoverStateEnabled,
       onAttachmentDownloadClick
     } = this.option();
     if (!this._$attachments) {
@@ -103,9 +100,6 @@ class MessageBubble extends _widget.default {
     this._$attachments.empty();
     if (attachments !== null && attachments !== void 0 && attachments.length) {
       this._createComponent(this._$attachments, _file_view.default, {
-        activeStateEnabled,
-        focusStateEnabled,
-        hoverStateEnabled,
         files: attachments,
         onDownload: onAttachmentDownloadClick
       });

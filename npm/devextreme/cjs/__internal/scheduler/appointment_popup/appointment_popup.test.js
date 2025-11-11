@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/appointment_popup/appointment_popup.test.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1467,6 +1467,74 @@ const getDefaultConfig = () => ({
       (0, _globals.expect)(focusSpy).toHaveBeenCalled();
       (0, _globals.expect)(focusSpy).toHaveBeenCalledTimes(1);
       focusSpy.mockRestore();
+    });
+    (0, _globals.it)('should preserve custom toolbarItems when popup opens', async () => {
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          popup: {
+            toolbarItems: [{
+              toolbar: 'top',
+              location: 'before',
+              text: 'Custom Title',
+              cssClass: 'custom-title'
+            }, {
+              toolbar: 'top',
+              location: 'after',
+              widget: 'dxButton',
+              options: {
+                text: 'Custom Save'
+              }
+            }]
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      const toolbarItems = POM.popup.component.option('toolbarItems');
+      (0, _globals.expect)(toolbarItems).toBeDefined();
+      (0, _globals.expect)(toolbarItems).toHaveLength(2);
+      (0, _globals.expect)(toolbarItems).toContainEqual(_globals.expect.objectContaining({
+        cssClass: 'custom-title',
+        location: 'before',
+        text: 'Custom Title',
+        toolbar: 'top'
+      }));
+      (0, _globals.expect)(toolbarItems).toContainEqual(_globals.expect.objectContaining({
+        toolbar: 'top',
+        location: 'after',
+        widget: 'dxButton',
+        options: _globals.expect.objectContaining({
+          text: 'Custom Save'
+        })
+      }));
+    });
+    (0, _globals.it)('should preserve custom toolbarItems when popup is reopened', async () => {
+      var _toolbarItems$;
+      const {
+        scheduler,
+        POM
+      } = await (0, _create_scheduler.createScheduler)(_extends({}, getDefaultConfig(), {
+        editing: {
+          allowAdding: true,
+          allowUpdating: true,
+          popup: {
+            toolbarItems: [{
+              toolbar: 'top',
+              location: 'before',
+              text: 'Custom Toolbar'
+            }]
+          }
+        }
+      }));
+      scheduler.showAppointmentPopup(commonAppointment);
+      scheduler.hideAppointmentPopup();
+      scheduler.showAppointmentPopup(allDayAppointment);
+      const toolbarItems = POM.popup.component.option('toolbarItems');
+      (0, _globals.expect)(toolbarItems).toBeDefined();
+      (0, _globals.expect)(toolbarItems).toHaveLength(1);
+      (0, _globals.expect)(toolbarItems === null || toolbarItems === void 0 || (_toolbarItems$ = toolbarItems[0]) === null || _toolbarItems$ === void 0 ? void 0 : _toolbarItems$.text).toBe('Custom Toolbar');
     });
   });
 });

@@ -12,5 +12,8 @@ class AIPromptEditorViewController extends _m_modules.ViewController {
   show(cellElement, column) {
     return this.aiPromptEditorView.show(cellElement, column);
   }
+  hide() {
+    return this.aiPromptEditorView.hide();
+  }
 }
 exports.AIPromptEditorViewController = AIPromptEditorViewController;

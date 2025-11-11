@@ -107,7 +107,7 @@ class PivotGridHelpers {
     if (!this[`export${(0, _inflector.camelize)(area, true)}FieldHeaders`]) {
       return [];
     }
-    const fields = this._getAllFieldHeaders()[area === 'data' ? 'values' : `${area}s`].filter(fieldHeader => fieldHeader.area === area);
+    const fields = this._getAllFieldHeaders()[area === 'data' ? 'values' : `${area}s`].filter(fieldHeader => fieldHeader.area === area && fieldHeader.visible !== false);
     if ((0, _position.getDefaultAlignment)(this.rtlEnabled) === 'right') {
       fields.sort((a, b) => b.areaIndex - a.areaIndex);
     }

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/columns_controller/m_columns_controller_utils.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -775,7 +775,8 @@ export const mergeColumns = (that, columns, commandColumns, needToExtend) => {
         result[i] = extend({
           fixed: isColumnFixing
         }, commandColumns[commandColumnIndex], column, {
-          calculateCellValue: commandColumns[commandColumnIndex].calculateCellValue
+          calculateCellValue: commandColumns[commandColumnIndex].calculateCellValue,
+          cssClass: [commandColumns[commandColumnIndex].cssClass ?? '', column.cssClass ?? ''].join(' ').trim()
         });
         if (column.type !== GROUP_COMMAND_COLUMN_NAME) {
           defaultCommandColumns = defaultCommandColumns.filter(callbackFilter);

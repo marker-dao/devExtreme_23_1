@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/__internal/scheduler/workspaces/m_work_space.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -287,7 +287,11 @@ class SchedulerWorkSpace extends _ui2.default {
     }
     const isMultiSelectionAllowed = this.option('allowMultipleCellSelection');
     const currentCellData = this._getFullCellData($cell);
-    const focusedCellData = this.cellsSelectionState.getFocusedCell().cellData;
+    const focusedCell = this.cellsSelectionState.getFocusedCell();
+    if (!focusedCell) {
+      return;
+    }
+    const focusedCellData = focusedCell.cellData;
     const nextFocusedCellData = this.cellsSelectionController.moveToCell({
       isMultiSelection,
       isMultiSelectionAllowed,

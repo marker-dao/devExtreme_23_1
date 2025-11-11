@@ -131,6 +131,10 @@ const RECURRENCE_EDITING_MODE = {
   CANCEL: 'cancel'
 };
 class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidget {
+  constructor() {
+    super(...arguments);
+    this._updatingAppointments = new Set();
+  }
   get timeZoneCalculator() {
     if (!this._timeZoneCalculator) {
       this._timeZoneCalculator = (0, _index.createTimeZoneCalculator)(this.option('timeZone'));
@@ -1380,6 +1384,9 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
       // @ts-expect-error
       dragEvent.cancel = new _deferred.Deferred();
     }
+    if ((0, _type.isPromise)(updatingOptions.cancel) && dragEvent) {
+      this._updatingAppointments.add(target);
+    }
     return this._processActionResult(updatingOptions, function (canceled) {
       // @ts-expect-error
       let deferred = new _deferred.Deferred();
@@ -1388,13 +1395,18 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
         try {
           deferred = this.appointmentDataSource.update(target, rawAppointment).done(() => {
             dragEvent === null || dragEvent === void 0 || dragEvent.cancel.resolve(false);
-          }).always(storeAppointment => this._onDataPromiseCompleted(StoreEventNames.UPDATED, storeAppointment)).fail(() => performFailAction());
+          }).always(storeAppointment => {
+            this._updatingAppointments.delete(target);
+            this._onDataPromiseCompleted(StoreEventNames.UPDATED, storeAppointment);
+          }).fail(() => performFailAction());
         } catch (err) {
           performFailAction(err);
+          this._updatingAppointments.delete(target);
           deferred.resolve();
         }
       } else {
         performFailAction();
+        this._updatingAppointments.delete(target);
         deferred.resolve();
       }
       return deferred.promise();
@@ -1652,6 +1664,9 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
   }
   _getDragBehavior() {
     return this._workSpace.dragBehavior;
+  }
+  _isAppointmentBeingUpdated(appointmentData) {
+    return this._updatingAppointments.has(appointmentData);
   }
   getViewOffsetMs() {
     const offsetFromOptions = this.getViewOption('offset');

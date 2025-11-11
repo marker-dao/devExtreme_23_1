@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/collection/collection_widget.edit.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,7 +28,7 @@ export const NOT_EXISTING_INDEX = -1;
 export const indexExists = index => index !== NOT_EXISTING_INDEX;
 class CollectionWidget extends BaseCollectionWidget {
   constructor(element, options) {
-    CollectionWidget._userOptions = options ?? {};
+    CollectionWidget._initUserOptions = options ?? {};
     // @ts-expect-error
     super(element, options);
   }
@@ -57,6 +57,8 @@ class CollectionWidget extends BaseCollectionWidget {
     });
   }
   _init() {
+    this._userOptions = _extends({}, CollectionWidget._initUserOptions);
+    CollectionWidget._initUserOptions = undefined;
     this._initEditStrategy();
     super._init();
     this._initKeyGetter();
@@ -325,7 +327,7 @@ class CollectionWidget extends BaseCollectionWidget {
         [name]: optionValue
       } = this.option();
       const length = isDefined(optionValue) && Array.isArray(optionValue) && optionValue.length;
-      return !!length || name in CollectionWidget._userOptions;
+      return !!length || name in (this._userOptions ?? {});
     };
     if (isOptionDefined('selectedItems')) {
       optionName = 'selectedItems';
@@ -790,5 +792,5 @@ class CollectionWidget extends BaseCollectionWidget {
     });
   }
 }
-CollectionWidget._userOptions = {};
+CollectionWidget._initUserOptions = {};
 export default CollectionWidget;

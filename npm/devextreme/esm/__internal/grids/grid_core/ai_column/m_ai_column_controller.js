@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/grids/grid_core/ai_column/m_ai_column_controller.js)
 * Version: 25.2.0
-* Build date: Fri Nov 07 2025
+* Build date: Tue Nov 11 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -58,9 +58,6 @@ export class AIColumnController extends Controller {
     this.subscribeToDataSourceChanged();
     this.addAICommandColumn();
   }
-  showResults(columnName, result, cachedData) {
-    // Update the results in the UI or internal state
-  }
   getAIColumns() {
     return this.columnsController.getColumns().filter(col => col.type === 'ai');
   }
@@ -86,14 +83,14 @@ export class AIColumnController extends Controller {
     }
   }
   sendRequest(columnName, useCache) {
-    var _column$ai3;
     let needToShowLoadPanel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
     const callbacks = this.getRequestCallbacks();
-    const column = this.columnsController.columnOption(columnName);
-    if (needToShowLoadPanel && !!(column !== null && column !== void 0 && (_column$ai3 = column.ai) !== null && _column$ai3 !== void 0 && _column$ai3.prompt)) {
-      this.dataController.beginCustomLoading();
-    }
-    this.aiColumnIntegrationController.sendRequest(columnName, useCache, callbacks);
+    this.aiColumnIntegrationController.sendRequestCore({
+      columnName,
+      useCache,
+      needToShowLoadPanel,
+      callbacks
+    });
   }
   sendAIColumnRequest(columnName) {
     this.sendRequest(columnName, false);
@@ -103,6 +100,11 @@ export class AIColumnController extends Controller {
   }
   getRequestCallbacks() {
     return {
+      onRequestSending: needToShowLoadPanel => {
+        if (needToShowLoadPanel) {
+          this.dataController.beginCustomLoading();
+        }
+      },
       onComplete: data => {
         this.dataController.endCustomLoading();
         this.aiRequestCompleted.fire(data);
@@ -115,7 +117,7 @@ export class AIColumnController extends Controller {
     };
   }
   clearAIColumn(columnName) {
-    this.aiColumnIntegrationController.abortRequest(columnName);
+    this.abortAIColumnRequest(columnName);
     this.aiColumnIntegrationController.clearAIColumn(columnName);
     this.columnsController.columnOption(columnName, 'ai.prompt', '');
     this.updateAICells();
@@ -126,7 +128,11 @@ export class AIColumnController extends Controller {
   aiColumnOptionChanged(column, optionName, value) {
     const isPromptOptionName = isPromptOption(optionName, value);
     if (isPromptOptionName && column.name) {
+      var _column$ai3;
       this.aiColumnIntegrationController.clearAIColumn(column.name);
+      if (!((_column$ai3 = column.ai) !== null && _column$ai3 !== void 0 && _column$ai3.prompt)) {
+        this.updateAICells();
+      }
     }
   }
   dispose() {
