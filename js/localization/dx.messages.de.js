@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.de.js)
-* Version: 25.2.0
-* Build date: Tue Nov 11 2025
+* Version: 25.2.3
+* Build date: Tue Dec 16 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -284,6 +284,7 @@
             "dxScheduler-editorLabelEndDate": "Endzeit",
             "dxScheduler-editorLabelDescription": "Beschreibung",
             "dxScheduler-editorLabelRecurrence": "Wiederholen",
+            "dxScheduler-noSubject": "(No subject)",
             "dxScheduler-navigationToday": "Heute",
             "dxScheduler-navigationPrevious": "Vorherige Seite",
             "dxScheduler-navigationNext": "Nächste Seite",
@@ -551,6 +552,38 @@
             "dxHtmlEditor-aiToolbarItemAriaLabel": "KI-Assistent Symbolleistenelement",
             "dxHtmlEditor-aiResultTextAreaAriaLabel": "KI-Assistent Ergebnis",
             "dxHtmlEditor-aiAskPlaceholder": "KI bitten, Text zu ändern",
+            "dxHtmlEditor-aiCommandSummarize": "Summarize",
+            "dxHtmlEditor-aiCommandProofread": "Proofread",
+            "dxHtmlEditor-aiCommandExpand": "Expand",
+            "dxHtmlEditor-aiCommandShorten": "Shorten",
+            "dxHtmlEditor-aiCommandChangeStyle": "Change Style",
+            "dxHtmlEditor-aiCommandChangeTone": "Change Tone",
+            "dxHtmlEditor-aiCommandTranslate": "Translate",
+            "dxHtmlEditor-aiCommandAskAI": "Ask AI",
+            "dxHtmlEditor-aiCommandChangeStyleFormal": "Formal",
+            "dxHtmlEditor-aiCommandChangeStyleInformal": "Informal",
+            "dxHtmlEditor-aiCommandChangeStyleTechnical": "Technical",
+            "dxHtmlEditor-aiCommandChangeStyleBusiness": "Business",
+            "dxHtmlEditor-aiCommandChangeStyleCreative": "Creative",
+            "dxHtmlEditor-aiCommandChangeStyleJournalistic": "Journalistic",
+            "dxHtmlEditor-aiCommandChangeStyleAcademic": "Academic",
+            "dxHtmlEditor-aiCommandChangeStylePersuasive": "Persuasive",
+            "dxHtmlEditor-aiCommandChangeStyleNarrative": "Narrative",
+            "dxHtmlEditor-aiCommandChangeStyleExpository": "Expository",
+            "dxHtmlEditor-aiCommandChangeStyleDescriptive": "Descriptive",
+            "dxHtmlEditor-aiCommandChangeStyleConversational": "Conversational",
+            "dxHtmlEditor-aiCommandChangeToneProfessional": "Professional",
+            "dxHtmlEditor-aiCommandChangeToneCasual": "Casual",
+            "dxHtmlEditor-aiCommandChangeToneStraightforward": "Straightforward",
+            "dxHtmlEditor-aiCommandChangeToneConfident": "Confident",
+            "dxHtmlEditor-aiCommandChangeToneFriendly": "Friendly",
+            "dxHtmlEditor-aiCommandTranslateArabic": "Arabic",
+            "dxHtmlEditor-aiCommandTranslateChinese": "Chinese",
+            "dxHtmlEditor-aiCommandTranslateEnglish": "English",
+            "dxHtmlEditor-aiCommandTranslateFrench": "French",
+            "dxHtmlEditor-aiCommandTranslateGerman": "German",
+            "dxHtmlEditor-aiCommandTranslateJapanese": "Japanese",
+            "dxHtmlEditor-aiCommandTranslateSpanish": "Spanish",
             "dxFileManager-newDirectoryName": "Ohne Titel",
             "dxFileManager-rootDirectoryName": "Dateien",
             "dxFileManager-errorNoAccess": "Zugriff verweigert. Die Operation kann nicht durchgeführt werden.",

@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.vi.js)
-* Version: 25.2.0
-* Build date: Tue Nov 11 2025
+* Version: 25.2.3
+* Build date: Tue Dec 16 2025
 *
 * Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -284,6 +284,7 @@
             "dxScheduler-editorLabelEndDate": "Ngày kết thúc",
             "dxScheduler-editorLabelDescription": "Mô tả",
             "dxScheduler-editorLabelRecurrence": "Lặp lại",
+            "dxScheduler-noSubject": "(No subject)",
             "dxScheduler-navigationToday": "Today",
             "dxScheduler-navigationPrevious": "Previous page",
             "dxScheduler-navigationNext": "Next page",
@@ -551,6 +552,38 @@
             "dxHtmlEditor-aiToolbarItemAriaLabel": "AI Assistant toolbar item",
             "dxHtmlEditor-aiResultTextAreaAriaLabel": "AI Assistant result",
             "dxHtmlEditor-aiAskPlaceholder": "Ask AI to modify text",
+            "dxHtmlEditor-aiCommandSummarize": "Summarize",
+            "dxHtmlEditor-aiCommandProofread": "Proofread",
+            "dxHtmlEditor-aiCommandExpand": "Expand",
+            "dxHtmlEditor-aiCommandShorten": "Shorten",
+            "dxHtmlEditor-aiCommandChangeStyle": "Change Style",
+            "dxHtmlEditor-aiCommandChangeTone": "Change Tone",
+            "dxHtmlEditor-aiCommandTranslate": "Translate",
+            "dxHtmlEditor-aiCommandAskAI": "Ask AI",
+            "dxHtmlEditor-aiCommandChangeStyleFormal": "Formal",
+            "dxHtmlEditor-aiCommandChangeStyleInformal": "Informal",
+            "dxHtmlEditor-aiCommandChangeStyleTechnical": "Technical",
+            "dxHtmlEditor-aiCommandChangeStyleBusiness": "Business",
+            "dxHtmlEditor-aiCommandChangeStyleCreative": "Creative",
+            "dxHtmlEditor-aiCommandChangeStyleJournalistic": "Journalistic",
+            "dxHtmlEditor-aiCommandChangeStyleAcademic": "Academic",
+            "dxHtmlEditor-aiCommandChangeStylePersuasive": "Persuasive",
+            "dxHtmlEditor-aiCommandChangeStyleNarrative": "Narrative",
+            "dxHtmlEditor-aiCommandChangeStyleExpository": "Expository",
+            "dxHtmlEditor-aiCommandChangeStyleDescriptive": "Descriptive",
+            "dxHtmlEditor-aiCommandChangeStyleConversational": "Conversational",
+            "dxHtmlEditor-aiCommandChangeToneProfessional": "Professional",
+            "dxHtmlEditor-aiCommandChangeToneCasual": "Casual",
+            "dxHtmlEditor-aiCommandChangeToneStraightforward": "Straightforward",
+            "dxHtmlEditor-aiCommandChangeToneConfident": "Confident",
+            "dxHtmlEditor-aiCommandChangeToneFriendly": "Friendly",
+            "dxHtmlEditor-aiCommandTranslateArabic": "Arabic",
+            "dxHtmlEditor-aiCommandTranslateChinese": "Chinese",
+            "dxHtmlEditor-aiCommandTranslateEnglish": "English",
+            "dxHtmlEditor-aiCommandTranslateFrench": "French",
+            "dxHtmlEditor-aiCommandTranslateGerman": "German",
+            "dxHtmlEditor-aiCommandTranslateJapanese": "Japanese",
+            "dxHtmlEditor-aiCommandTranslateSpanish": "Spanish",
             "dxFileManager-newDirectoryName": "Thư mục không tên",
             "dxFileManager-rootDirectoryName": "Các tập tin",
             "dxFileManager-errorNoAccess": "Từ chối truy cập. Thao tác không thể hoàn tất.",
