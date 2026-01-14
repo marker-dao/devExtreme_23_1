@@ -19,6 +19,8 @@ class MessageBubble extends Widget {
       isDeleted: false,
       isEdited: false,
       text: '',
+      focusStateEnabled: true,
+      hoverStateEnabled: true,
       template: null
     });
   }
@@ -109,7 +111,7 @@ class MessageBubble extends Widget {
       functionCall
     } = metadata;
     const accordionItems = [{
-      title: `${messageLocalization.format('dxChat-functionCallTitle')}`,
+      title: messageLocalization.format('dxChat-functionCallTitle'),
       template: () => {
         const $content = $('<div>');
         const $functionName = $('<div>').append($('<strong>').text(`${messageLocalization.format('dxChat-functionCallLabel')}: `)).append($('<span>').text(functionCall.name));
@@ -124,11 +126,17 @@ class MessageBubble extends Widget {
         return $content;
       }
     }];
+    const {
+      focusStateEnabled,
+      hoverStateEnabled
+    } = this.option();
     this._createComponent(this._$functionCall, Accordion, {
       dataSource: accordionItems,
       collapsible: true,
       multiple: false,
-      selectedIndex: -1
+      selectedIndex: -1,
+      focusStateEnabled,
+      hoverStateEnabled
     });
   }
   _renderAttachments() {
@@ -180,6 +188,10 @@ class MessageBubble extends Widget {
         break;
       case 'metadata':
         this._renderFunctionCallElement();
+        this._renderFunctionCall();
+        break;
+      case 'focusStateEnabled':
+      case 'hoverStateEnabled':
         this._renderFunctionCall();
         break;
       case 'onAttachmentDownloadClick':

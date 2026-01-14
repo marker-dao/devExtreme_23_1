@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.fr.js)
 * Version: 26.1.0
-* Build date: Tue Jan 13 2026
+* Build date: Wed Jan 14 2026
 *
 * Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -399,7 +399,7 @@
             "dxChat-fileViewLabel": "File list",
             "dxChat-downloadButtonLabel": "Download file {0}",
             "dxChat-fileLimitReachedWarning": "You selected too many files. Select no more than {0} files and retry.",
-            "dxChat-functionCallTitle": "{0} function called",
+            "dxChat-functionCallTitle": "function called",
             "dxChat-functionCallLabel": "Function Called",
             "dxChat-argumentsLabel": "Arguments",
             "dxChat-resultLabel": "Result",

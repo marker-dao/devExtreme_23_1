@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/__internal/ui/chat/messagebubble.js)
 * Version: 26.1.0
-* Build date: Tue Jan 13 2026
+* Build date: Wed Jan 14 2026
 *
 * Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -27,6 +27,8 @@ class MessageBubble extends Widget {
       isDeleted: false,
       isEdited: false,
       text: '',
+      focusStateEnabled: true,
+      hoverStateEnabled: true,
       template: null
     });
   }
@@ -117,7 +119,7 @@ class MessageBubble extends Widget {
       functionCall
     } = metadata;
     const accordionItems = [{
-      title: `${messageLocalization.format('dxChat-functionCallTitle')}`,
+      title: messageLocalization.format('dxChat-functionCallTitle'),
       template: () => {
         const $content = $('<div>');
         const $functionName = $('<div>').append($('<strong>').text(`${messageLocalization.format('dxChat-functionCallLabel')}: `)).append($('<span>').text(functionCall.name));
@@ -132,11 +134,17 @@ class MessageBubble extends Widget {
         return $content;
       }
     }];
+    const {
+      focusStateEnabled,
+      hoverStateEnabled
+    } = this.option();
     this._createComponent(this._$functionCall, Accordion, {
       dataSource: accordionItems,
       collapsible: true,
       multiple: false,
-      selectedIndex: -1
+      selectedIndex: -1,
+      focusStateEnabled,
+      hoverStateEnabled
     });
   }
   _renderAttachments() {
@@ -188,6 +196,10 @@ class MessageBubble extends Widget {
         break;
       case 'metadata':
         this._renderFunctionCallElement();
+        this._renderFunctionCall();
+        break;
+      case 'focusStateEnabled':
+      case 'hoverStateEnabled':
         this._renderFunctionCall();
         break;
       case 'onAttachmentDownloadClick':
