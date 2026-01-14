@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.getAppointmentDateRange = void 0;
 var _date = require("../../../core/utils/date");
 var _m_date = require("../../../core/utils/m_date");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const toMs = _m_date.dateUtils.dateToMilliseconds;
 // NOTE: View data generator shifts all day cell dates by offset
 // and return equal start and end dates.
@@ -135,7 +134,7 @@ const getAppointmentDateRange = options => {
     isAllDay: Boolean(appointmentSettings.info.appointment.allDay),
     isOccupiedAllDay: Boolean(appointmentSettings.allDay)
   };
-  const extendedOptions = _extends({}, options, cellInfo, {
+  const extendedOptions = Object.assign({}, options, cellInfo, {
     appointment,
     relativeAppointmentRect
   });

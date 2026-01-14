@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../../../ui/validation_summary';
 import '../../../ui/validation_group';
 import eventsEngine from '../../../common/core/events/core/events_engine';
@@ -56,7 +55,7 @@ class Form extends Widget {
     this._createSmartPastedAction();
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       formID: `dx-${new Guid()}`,
       formData: {},
       colCount: 1,
@@ -349,7 +348,7 @@ class Form extends Widget {
           };
         }
         if (isObject(item)) {
-          const preparedItem = _extends({}, item);
+          const preparedItem = Object.assign({}, item);
           itemRunTimeInfo.preparedItem = preparedItem;
           preparedItem.guid = guid;
           this._tryPrepareGroupItemCaption(preparedItem);
@@ -458,7 +457,7 @@ class Form extends Widget {
   }
   _itemTabbedTemplate(tabbedItem, data, $itemContainer) {
     const $tabPanel = $('<div>').appendTo($itemContainer);
-    const tabPanelOptions = _extends({}, tabbedItem.tabPanelOptions, {
+    const tabPanelOptions = Object.assign({}, tabbedItem.tabPanelOptions, {
       dataSource: tabbedItem.tabs,
       onItemRendered: args => {
         var _tabbedItem$tabPanelO, _tabbedItem$tabPanelO2;

@@ -280,11 +280,11 @@ describe('Options', () => {
       result: {
         height: 999
       }
-    }])('search.editorOptions: $value', _ref10 => {
+    }])('search.editorOptions: $value', _ref0 => {
       let {
         value,
         result
-      } = _ref10;
+      } = _ref0;
       setupOpened({
         columnChooser: {
           enabled: true,
@@ -303,10 +303,10 @@ describe('Options', () => {
       mode: 'select'
     }, {
       mode: 'dragAndDrop'
-    }])('mode: $value', _ref11 => {
+    }])('mode: $value', _ref1 => {
       let {
         mode
-      } = _ref11;
+      } = _ref1;
       setupOpened({
         columnChooser: {
           enabled: true,
@@ -329,11 +329,11 @@ describe('Options', () => {
     }, {
       value: false,
       result: 'normal'
-    }])('selection.allowSelectAll: $value', _ref12 => {
+    }])('selection.allowSelectAll: $value', _ref10 => {
       let {
         value,
         result
-      } = _ref12;
+      } = _ref10;
       setupOpened({
         columnChooser: {
           enabled: true,
@@ -355,11 +355,11 @@ describe('Options', () => {
     }, {
       value: false,
       result: false
-    }])('selection.selectByClick: $value', _ref13 => {
+    }])('selection.selectByClick: $value', _ref11 => {
       let {
         value,
         result
-      } = _ref13;
+      } = _ref11;
       setupOpened({
         columnChooser: {
           enabled: true,
@@ -381,11 +381,11 @@ describe('Options', () => {
     }, {
       value: 'desc',
       result: ['C Column', 'B Column', 'A Column']
-    }])('sortOrder: $value', _ref14 => {
+    }])('sortOrder: $value', _ref12 => {
       let {
         value,
         result
-      } = _ref14;
+      } = _ref12;
       setupOpened({
         columns: ['B Column', 'C Column', 'A Column'],
         columnChooser: {
@@ -406,11 +406,11 @@ describe('Options', () => {
     }, {
       value: false,
       result: false
-    }])('column.visible: $value', _ref15 => {
+    }])('column.visible: $value', _ref13 => {
       let {
         value,
         result
-      } = _ref15;
+      } = _ref13;
       setupOpened({
         columns: [{
           dataField: 'column',
@@ -430,11 +430,11 @@ describe('Options', () => {
     }, {
       value: 'custom caption',
       result: 'custom caption'
-    }])('column.caption: $value', _ref16 => {
+    }])('column.caption: $value', _ref14 => {
       let {
         value,
         result
-      } = _ref16;
+      } = _ref14;
       setupOpened({
         columns: [{
           dataField: 'Test',
@@ -454,11 +454,11 @@ describe('Options', () => {
     }, {
       value: true,
       result: false
-    }])('column.allowHiding: $value', _ref17 => {
+    }])('column.allowHiding: $value', _ref15 => {
       let {
         value,
         result
-      } = _ref17;
+      } = _ref15;
       setupOpened({
         columns: [{
           dataField: 'test column',
@@ -478,11 +478,11 @@ describe('Options', () => {
     }, {
       value: true,
       result: 1
-    }])('column.showInColumnChooser: $value', _ref18 => {
+    }])('column.showInColumnChooser: $value', _ref16 => {
       let {
         value,
         result
-      } = _ref18;
+      } = _ref16;
       setupOpened({
         columns: [{
           dataField: 'test column',
@@ -502,12 +502,12 @@ describe('Options', () => {
     }, {
       value: 'custom_name',
       result: 'custom_name'
-    }])('column.name: $value', _ref19 => {
+    }])('column.name: $value', _ref17 => {
       var _treeView$getNodes$0$;
       let {
         value,
         result
-      } = _ref19;
+      } = _ref17;
       setupOpened({
         columns: [{
           dataField: 'test',

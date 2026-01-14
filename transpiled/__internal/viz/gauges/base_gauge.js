@@ -19,7 +19,26 @@ var _theme_manager = _interopRequireDefault(require("../../viz/gauges/theme_mana
 var _tracker = _interopRequireDefault(require("../../viz/gauges/tracker"));
 var _translator1d = require("../../viz/translators/translator1d");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable no-self-compare */ /* eslint-disable prefer-rest-params */ /* eslint-disable prefer-spread */ /* eslint-disable @typescript-eslint/no-this-alias */ /* eslint-disable no-continue */ /* eslint-disable @typescript-eslint/init-declarations */ /* eslint-disable no-plusplus */ /* eslint-disable func-names */ /* eslint-disable @typescript-eslint/naming-convention */ /* eslint-disable no-param-reassign */ /* eslint-disable no-multi-assign */ /* eslint-disable @stylistic/max-len */ /* eslint-disable @typescript-eslint/explicit-module-boundary-types */ /* eslint-disable @typescript-eslint/no-unsafe-return */ /* eslint-disable @typescript-eslint/no-use-before-define */ /* eslint-disable @typescript-eslint/explicit-function-return-type */ /* eslint-disable prefer-destructuring */ /* eslint-disable @typescript-eslint/no-unused-expressions */ /* eslint-disable @typescript-eslint/prefer-optional-chain */
+/* eslint-disable no-self-compare */
+/* eslint-disable prefer-rest-params */
+/* eslint-disable prefer-spread */
+/* eslint-disable @typescript-eslint/no-this-alias */
+/* eslint-disable no-continue */
+/* eslint-disable @typescript-eslint/init-declarations */
+/* eslint-disable no-plusplus */
+/* eslint-disable func-names */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-multi-assign */
+/* eslint-disable @stylistic/max-len */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
+
 const _Number = Number;
 const _extend = _extend2.extend;
 const _format = _format_helper.default.format;
@@ -291,7 +310,7 @@ const {
   _change_TITLE
 } = BaseGauge.prototype;
 BaseGauge.prototype._change_TITLE = function () {
-  this._titleBBoxCache = _extends({}, this._title.getLayoutOptions());
+  this._titleBBoxCache = Object.assign({}, this._title.getLayoutOptions());
   _change_TITLE.apply(this, arguments);
   /// #DEBUG
   this._DEBUG_change_title && this._DEBUG_change_title();

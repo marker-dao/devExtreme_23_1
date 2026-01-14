@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import dateLocalization from '../../../common/core/localization/date';
 import messageLocalization from '../../../common/core/localization/message';
 import config from '../../../core/config';
@@ -54,7 +53,7 @@ const STRATEGY_CLASSES = {
 class DateBox extends DropDownEditor {
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), this._strategy.supportedKeys());
+    return Object.assign({}, super._supportedKeys(), this._strategy.supportedKeys());
   }
   _renderButtonContainers() {
     // @ts-expect-error ts-error
@@ -62,7 +61,7 @@ class DateBox extends DropDownEditor {
     this._strategy.customizeButtons();
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       type: 'date',
       showAnalogClock: true,
       value: null,
@@ -312,7 +311,7 @@ class DateBox extends DropDownEditor {
   _renderPopup() {
     var _this$_popup;
     super._renderPopup();
-    (_this$_popup = this._popup) === null || _this$_popup === void 0 || _this$_popup.$wrapper().addClass(DATEBOX_WRAPPER_CLASS);
+    (_this$_popup = this._popup) === null || _this$_popup === void 0 || (_this$_popup = _this$_popup.$wrapper()) === null || _this$_popup === void 0 || _this$_popup.addClass(DATEBOX_WRAPPER_CLASS);
     this._renderPopupWrapper();
   }
   _getPopupToolbarItems() {
@@ -323,12 +322,13 @@ class DateBox extends DropDownEditor {
   }
   _popupConfig() {
     const popupConfig = super._popupConfig();
-    return _extends({}, this._strategy.popupConfig(popupConfig), {
+    return Object.assign({}, this._strategy.popupConfig(popupConfig), {
       title: this._getPopupTitle(),
       dragEnabled: false
     });
   }
   _renderPopupWrapper() {
+    var _this$_popup$$wrapper;
     if (!this._popup) {
       return;
     }
@@ -340,7 +340,7 @@ class DateBox extends DropDownEditor {
     const {
       type
     } = this.option();
-    this._popup.$wrapper().addClass(`${DATEBOX_WRAPPER_CLASS}-${type}`).addClass(`${DATEBOX_WRAPPER_CLASS}-${this._pickerType}`).addClass(DROPDOWNEDITOR_OVERLAY_CLASS);
+    (_this$_popup$$wrapper = this._popup.$wrapper()) === null || _this$_popup$$wrapper === void 0 || _this$_popup$$wrapper.addClass(`${DATEBOX_WRAPPER_CLASS}-${type}`).addClass(`${DATEBOX_WRAPPER_CLASS}-${this._pickerType}`).addClass(DROPDOWNEDITOR_OVERLAY_CLASS);
   }
   _renderPopupContent() {
     super._renderPopupContent();

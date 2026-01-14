@@ -8,8 +8,7 @@ var _shift_intervals = require("../../common/shift_intervals");
 var _trim_interval = require("../../common/trim_interval");
 var _get_one_day_cell_intervals = require("./get_one_day_cell_intervals");
 const _excluded = ["startDayHour", "endDayHour", "skippedDays"];
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const MONTH_INTERVAL_DAYS_COUNT = 7;
 const splitBy7Days = intervals => {
   const result = [];
@@ -24,7 +23,7 @@ const splitBy7Days = intervals => {
   }
   return result;
 };
-const cropIntervalsByDayHours = (intervals, startDayHour, endDayHour) => intervals.map(item => _extends({}, item, {
+const cropIntervalsByDayHours = (intervals, startDayHour, endDayHour) => intervals.map(item => Object.assign({}, item, {
   min: new Date(item.min).setUTCHours(startDayHour, 0, 0, 0),
   max: new Date(item.max - 1).setUTCHours(endDayHour, 0, 0, 0)
 }));

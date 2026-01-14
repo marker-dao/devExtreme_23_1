@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["getResourceManager", "groupOrientation", "groupByDate", "isAllDayPanelVisible", "viewOffset"];
 import dateUtils from '../../../../core/utils/date';
@@ -83,7 +82,7 @@ export default class ViewDataProvider {
     const resourceManager = getResourceManager();
     const groupCount = resourceManager.groupCount();
     const interval = this.viewDataGenerator.getInterval(renderOptions.hoursInterval);
-    return _extends({}, restOptions, {
+    return Object.assign({}, restOptions, {
       startViewDate: this.viewDataGenerator.getStartViewDate(renderOptions),
       isVerticalGrouping: isVerticalGroupingApplied(groupCount, groupOrientation),
       isHorizontalGrouping: isHorizontalGroupingApplied(groupCount, groupOrientation),

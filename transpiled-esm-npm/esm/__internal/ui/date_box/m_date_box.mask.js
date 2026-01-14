@@ -1,7 +1,5 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace, isCommandKeyPressed, normalizeKeyName } from '../../../common/core/events/utils/index';
-import dateLocalization from '../../../common/core/localization/date';
 import defaultDateNames from '../../../common/core/localization/default_date_names';
 import { getFormat } from '../../../common/core/localization/ldml/date.format';
 import { getRegExpInfo } from '../../../common/core/localization/ldml/date.parser';
@@ -11,6 +9,7 @@ import browser from '../../../core/utils/browser';
 import { clipboardText } from '../../../core/utils/dom';
 import { fitIntoRange, inRange, sign } from '../../../core/utils/math';
 import { isDate, isDefined, isFunction, isString } from '../../../core/utils/type';
+import dateLocalization from '../../core/localization/date';
 import DateBoxBase from './m_date_box.base';
 import { getDatePartIndexByPosition, renderDateParts } from './m_date_box.mask.parts';
 const MASK_EVENT_NAMESPACE = 'dateBoxMask';
@@ -30,7 +29,7 @@ class DateBoxMask extends DateBoxBase {
       }
       return maskHandler.apply(this, [e]);
     };
-    return _extends({}, originalHandlers, {
+    return Object.assign({}, originalHandlers, {
       del: e => applyHandler(e, event => {
         this._revertPart(FORWARD);
         this._isAllSelected() || event.preventDefault();
@@ -96,12 +95,13 @@ class DateBoxMask extends DateBoxBase {
   }
   _toggleAmPm() {
     const currentValue = this._getActivePartProp('text');
+    // @ts-expect-error ts-error
     const indexOfCurrentValue = defaultDateNames.getPeriodNames().indexOf(currentValue);
     const newValue = indexOfCurrentValue ^ 1;
     this._setActivePartValue(newValue);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       useMaskBehavior: false,
       emptyDateValue: new Date(2000, 0, 1, 0, 0, 0)
     });
@@ -191,8 +191,11 @@ class DateBoxMask extends DateBoxBase {
     }
   }
   _processInputKey(key) {
-    if (this._isAllSelected()) {
+    var _this$_dateParts;
+    const hasMultipleParts = ((_this$_dateParts = this._dateParts) === null || _this$_dateParts === void 0 ? void 0 : _this$_dateParts.length) > 1;
+    if (this._isAllSelected() && hasMultipleParts) {
       this._activePartIndex = 0;
+      this._clearSearchValue();
     }
     this._setNewDateIfEmpty();
     // eslint-disable-next-line radix
@@ -215,7 +218,6 @@ class DateBoxMask extends DateBoxBase {
       return this._formatPattern;
     }
     const format = this._strategy.getDisplayFormat(this.option('displayFormat'));
-    // @ts-expect-error ts-error
     const isLDMLPattern = isString(format) && !dateLocalization._getPatternByFormat(format);
     if (isLDMLPattern) {
       this._formatPattern = format;
@@ -262,8 +264,9 @@ class DateBoxMask extends DateBoxBase {
     }
   }
   _searchString(char) {
-    // eslint-disable-next-line radix
-    if (!isNaN(parseInt(this._getActivePartProp('text')))) {
+    const text = this._getActivePartProp('text');
+    const convertedText = numberLocalization.convertDigits(text, true);
+    if (!isNaN(parseInt(convertedText, 10))) {
       return;
     }
     const limits = this._getActivePartProp('limits')(this._maskValue);
@@ -301,6 +304,7 @@ class DateBoxMask extends DateBoxBase {
     return this.option('useMaskBehavior') && mode === 'text';
   }
   _prepareRegExpInfo() {
+    // @ts-expect-error ts-error
     this._regExpInfo = getRegExpInfo(this._getFormatPattern(), dateLocalization);
     const {
       regexp
@@ -534,7 +538,6 @@ class DateBoxMask extends DateBoxBase {
   }
   _maskPasteHandler(e) {
     const newText = this._replaceSelectedText(this.option('text'), this._caret(), clipboardText(e));
-    // @ts-expect-error ts-error
     const date = dateLocalization.parse(newText, this._getFormatPattern());
     if (date && this._isDateValid(date)) {
       this._maskValue = date;
@@ -561,14 +564,17 @@ class DateBoxMask extends DateBoxBase {
   }
   _enterHandler() {
     this._fireChangeEvent();
-    this._selectNextPart(FORWARD);
+    if (this._useMaskBehavior() && this._isAllSelected()) {
+      this._selectFirstPart();
+    } else {
+      this._selectNextPart(FORWARD);
+    }
   }
   _focusOutHandler(e) {
     const shouldFireChangeEvent = this._useMaskBehavior() && !e.isDefaultPrevented();
     if (shouldFireChangeEvent) {
       this._fireChangeEvent();
       super._focusOutHandler(e);
-      this._selectFirstPart();
     } else {
       super._focusOutHandler(e);
     }

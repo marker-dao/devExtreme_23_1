@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { name as clickEventName } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace } from '../../../common/core/events/utils';
@@ -40,7 +39,7 @@ class EditDecoratorSelection extends EditDecorator {
     const $container = config.$container.addClass(this._containerClass);
     const $control = $('<div>').addClass(this._controlClass).appendTo($container);
     // eslint-disable-next-line no-new
-    new this._controlWidget($control.get(0), _extends({}, this._commonOptions(), {
+    new this._controlWidget($control.get(0), Object.assign({}, this._commonOptions(), {
       value: this._isSelected($itemElement.get(0)),
       elementAttr: {
         'aria-label': messageLocalization.format('CheckState')

@@ -13,7 +13,9 @@ var _type = require("../../core/utils/type");
 var _pagination_props = require("./common/pagination_props");
 var _get_element_width = require("./utils/get_element_width");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-explicit-any */ /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 function calculateLargeDisplayMode(_ref) {
   let {
     parent: parentWidth,
@@ -51,7 +53,7 @@ function getElementsWidth(_ref3) {
   };
 }
 const ResizableContainerDefaultProps = exports.ResizableContainerDefaultProps = {
-  paginationProps: _extends({}, _pagination_props.PaginationDefaultProps)
+  paginationProps: Object.assign({}, _pagination_props.PaginationDefaultProps)
 };
 class ResizableContainer extends _index.InfernoComponent {
   constructor(props) {
@@ -208,7 +210,7 @@ class ResizableContainer extends _index.InfernoComponent {
       allowedPageSizes: this.elementsWidth.allowedPageSizes,
       pages: this.elementsWidth.pages
     });
-    this.actualInfoTextVisible = calculateInfoTextVisible(_extends({}, currentElementsWidth, {
+    this.actualInfoTextVisible = calculateInfoTextVisible(Object.assign({}, currentElementsWidth, {
       info: this.elementsWidth.info
     }));
     this.setState(() => ({
@@ -228,7 +230,7 @@ class ResizableContainer extends _index.InfernoComponent {
         contentTemplate: Content
       }
     } = this;
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, Content, _extends({
+    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, Content, Object.assign({
       "rootElementRef": this.parentRef,
       "allowedPageSizesRef": this.allowedPageSizesRef,
       "infoTextRef": this.infoTextRef,

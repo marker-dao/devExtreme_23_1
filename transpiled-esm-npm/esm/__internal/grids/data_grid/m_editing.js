@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import './module_not_extended/editor_factory';
 import { dataControllerEditingExtenderMixin, editingModule } from '../../grids/grid_core/editing/m_editing';
 import gridCore from './m_core';
@@ -12,9 +11,9 @@ const data = Base => class DataEditingDataGridExtender extends dataControllerEdi
     return super._changeRowExpandCore.apply(this, arguments);
   }
 };
-gridCore.registerModule('editing', _extends({}, editingModule, {
-  extenders: _extends({}, editingModule.extenders, {
-    controllers: _extends({}, editingModule.extenders.controllers, {
+gridCore.registerModule('editing', Object.assign({}, editingModule, {
+  extenders: Object.assign({}, editingModule.extenders, {
+    controllers: Object.assign({}, editingModule.extenders.controllers, {
       data
     })
   })

@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.getMultiPageRowPages = exports.checkPageContainsOnlyHeader = void 0;
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable operator-assignment */
 /* eslint-disable no-plusplus */
@@ -14,7 +13,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 const isHeader = rect => (rect === null || rect === void 0 ? void 0 : rect.sourceCellInfo.gridCell.rowType) === 'header';
 const spitMultiPageRows = (rectsToPatch, isCurrentPageContainsOnlyHeader, firstRectYAdjustment, splitMultiPageRowFunc, checkIsFitToPageFunc) => {
   let [newPageRects, remainPageRects] = splitMultiPageRowFunc(isCurrentPageContainsOnlyHeader, rectsToPatch);
-  const newPageRectsArray = [isCurrentPageContainsOnlyHeader ? newPageRects.map(rect => _extends({}, rect, {
+  const newPageRectsArray = [isCurrentPageContainsOnlyHeader ? newPageRects.map(rect => Object.assign({}, rect, {
     y: firstRectYAdjustment
   })) : newPageRects];
   while (!checkIsFitToPageFunc(false, remainPageRects[0].h)) {

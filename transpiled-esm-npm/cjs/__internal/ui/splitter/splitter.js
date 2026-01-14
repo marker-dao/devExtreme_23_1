@@ -26,7 +26,6 @@ var _layout_default = require("./utils/layout_default");
 var _number_comparison = require("./utils/number_comparison");
 var _types = require("./utils/types");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const SPLITTER_CLASS = 'dx-splitter';
 const SPLITTER_ITEM_CLASS = 'dx-splitter-item';
 const SPLITTER_ITEM_HIDDEN_CONTENT_CLASS = 'dx-splitter-item-hidden-content';
@@ -56,7 +55,7 @@ class Splitter extends _collection_widget.default {
   }
   _getDefaultOptions() {
     const defaultOptions = super._getDefaultOptions();
-    return _extends({}, defaultOptions, {
+    return Object.assign({}, defaultOptions, {
       orientation: ORIENTATION.horizontal,
       onItemCollapsed: undefined,
       onItemExpanded: undefined,
@@ -65,7 +64,7 @@ class Splitter extends _collection_widget.default {
       onResizeStart: undefined,
       allowKeyboardNavigation: true,
       separatorSize: DEFAULT_RESIZE_HANDLE_SIZE,
-      _itemAttributes: _extends({}, defaultOptions._itemAttributes, {
+      _itemAttributes: Object.assign({}, defaultOptions._itemAttributes, {
         role: 'group'
       }),
       _renderQueue: undefined

@@ -2,7 +2,6 @@
 
 var _globals = require("@jest/globals");
 var _get_updated_options = require("./get_updated_options");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 (0, _globals.describe)('get_updated_options', () => {
   class DummyDataSource {
     constructor() {
@@ -113,7 +112,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       id: 'field2',
       visible: true
     }];
-    const columns = [oldColumns[0], _extends({}, oldColumns[1], {
+    const columns = [oldColumns[0], Object.assign({}, oldColumns[1], {
       visible: false
     })];
     (0, _globals.expect)((0, _get_updated_options.getUpdatedOptions)({

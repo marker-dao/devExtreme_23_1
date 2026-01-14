@@ -1,0 +1,36 @@
+/**
+* DevExtreme (cjs/__internal/common/m_charts.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.registerPattern = exports.registerGradient = exports.default = void 0;
+var _utils = require("../viz/core/utils");
+const graphicObjects = {};
+const registerPattern = options => {
+  const id = (0, _utils.getNextDefsSvgId)();
+  graphicObjects[id] = Object.assign({
+    type: 'pattern'
+  }, options);
+  return id;
+};
+exports.registerPattern = registerPattern;
+const registerGradient = (type, options) => {
+  const id = (0, _utils.getNextDefsSvgId)();
+  graphicObjects[id] = Object.assign({
+    type
+  }, options);
+  return id;
+};
+exports.registerGradient = registerGradient;
+const getGraphicObjects = () => graphicObjects;
+var _default = exports.default = {
+  getGraphicObjects
+};

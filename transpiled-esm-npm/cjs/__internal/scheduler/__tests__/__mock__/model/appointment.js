@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.createAppointmentModel = void 0;
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const EMPTY_POSITION = {
   top: 0,
   left: 0,
@@ -51,7 +50,7 @@ const createAppointmentModel = element => ({
     }
     return view === 'agenda' ? getAgendaColor(element) : getColor(element);
   },
-  getSnapshot: () => _extends({
+  getSnapshot: () => Object.assign({
     text: getText(element),
     date: getDisplayDate(element)
   }, getGeometry(element))

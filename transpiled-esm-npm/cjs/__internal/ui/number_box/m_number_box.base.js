@@ -18,14 +18,13 @@ var _type = require("../../../core/utils/type");
 var _m_text_editor = _interopRequireDefault(require("../../ui/text_box/m_text_editor"));
 var _m_number_box = _interopRequireDefault(require("./m_number_box.spins"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const math = Math;
 const WIDGET_CLASS = 'dx-numberbox';
 const FIREFOX_CONTROL_KEYS = ['tab', 'del', 'backspace', 'leftArrow', 'rightArrow', 'home', 'end', 'enter'];
 const FORCE_VALUECHANGE_EVENT_NAMESPACE = 'NumberBoxForceValueChange';
 class NumberBoxBase extends _m_text_editor.default {
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       upArrow(e) {
         if (!(0, _index.isCommandKeyPressed)(e)) {
           e.preventDefault();
@@ -44,7 +43,7 @@ class NumberBoxBase extends _m_text_editor.default {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: 0,
       min: undefined,
       max: undefined,

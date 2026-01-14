@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createComponentVNode, normalizeProps } from "inferno";
 import { resizeObserverSingleton } from '../../../../core/m_resize_observer';
 import { ErrorRow } from '../../../../grids/new/grid_core/content_view/error_row';
@@ -17,11 +16,11 @@ export class ContentView extends Component {
     this.resizeObserverTimeout = null;
   }
   render() {
-    return createVNode(1, "div", CLASSES.contentView, [normalizeProps(createComponentVNode(2, LoadPanel, _extends({}, this.props.loadPanelProps))), this.props.noDataTextProps.visible ? normalizeProps(createComponentVNode(2, NoDataText, _extends({}, this.props.noDataTextProps))) : normalizeProps(createComponentVNode(2, Scrollable, _extends({
+    return createVNode(1, "div", CLASSES.contentView, [normalizeProps(createComponentVNode(2, LoadPanel, Object.assign({}, this.props.loadPanelProps))), this.props.noDataTextProps.visible ? normalizeProps(createComponentVNode(2, NoDataText, Object.assign({}, this.props.noDataTextProps))) : normalizeProps(createComponentVNode(2, Scrollable, Object.assign({
       "componentRef": this.props.scrollableRef
     }, this.props.scrollableProps, {
       children: this.props.children
-    }), null, this.scrollableRef)), normalizeProps(createComponentVNode(2, ErrorRow, _extends({}, this.props.errorRowProps)))], 0, {
+    }), null, this.scrollableRef)), normalizeProps(createComponentVNode(2, ErrorRow, Object.assign({}, this.props.errorRowProps)))], 0, {
       "oncontextmenu": this.props.showContextMenu
     }, null, this.containerRef);
   }

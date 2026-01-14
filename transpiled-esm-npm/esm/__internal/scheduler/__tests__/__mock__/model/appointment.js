@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 const EMPTY_POSITION = {
   top: 0,
   left: 0,
@@ -45,7 +44,7 @@ export const createAppointmentModel = element => ({
     }
     return view === 'agenda' ? getAgendaColor(element) : getColor(element);
   },
-  getSnapshot: () => _extends({
+  getSnapshot: () => Object.assign({
     text: getText(element),
     date: getDisplayDate(element)
   }, getGeometry(element))

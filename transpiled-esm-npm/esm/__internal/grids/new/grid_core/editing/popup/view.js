@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import $ from '../../../../../../core/renderer';
 import { computed, signal } from '../../../../../core/state_manager/index';
@@ -81,11 +80,11 @@ export class EditPopupView extends View {
       extend(simpleFormItem, column.formItem);
       simpleFormItem.dataField ?? (simpleFormItem.dataField = column.dataField);
       simpleFormItem.validationRules ?? (simpleFormItem.validationRules = column.validationRules);
-      simpleFormItem.label = _extends({
+      simpleFormItem.label = Object.assign({
         text: column.caption
       }, column.formItem.label);
       const originalContentReady = simpleFormItem === null || simpleFormItem === void 0 || (_simpleFormItem$edito = simpleFormItem.editorOptions) === null || _simpleFormItem$edito === void 0 ? void 0 : _simpleFormItem$edito.onContentReady;
-      simpleFormItem.editorOptions = _extends({
+      simpleFormItem.editorOptions = Object.assign({
         stylingMode: 'outlined',
         disabled: !column.allowEditing
       }, column.editorOptions, column.formItem.editorOptions, simpleFormItem.editorOptions, {

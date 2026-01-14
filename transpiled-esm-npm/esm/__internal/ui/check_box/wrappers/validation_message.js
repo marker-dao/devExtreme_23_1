@@ -1,12 +1,11 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-import _extends from "@babel/runtime/helpers/esm/extends";
 const _excluded = ["accessKey", "activeStateEnabled", "boundary", "className", "contentId", "disabled", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "mode", "offset", "onClick", "onKeyDown", "positionSide", "rtlEnabled", "tabIndex", "target", "validationErrors", "visible", "visualContainer", "width"];
 import { createComponentVNode, normalizeProps } from "inferno";
 import LegacyValidationMessage from '../../../../ui/validation_message';
 import { BaseWidgetDefaultProps } from '../../../core/r1/base_props';
 import { DomComponentWrapper } from '../../../core/r1/dom_component_wrapper';
 import { BaseInfernoComponent } from '../../../core/r1/runtime/inferno/index';
-export const defaultValidationMessageProps = _extends({}, BaseWidgetDefaultProps, {
+export const defaultValidationMessageProps = Object.assign({}, BaseWidgetDefaultProps, {
   mode: 'auto',
   positionSide: 'top',
   offset: Object.freeze({
@@ -26,7 +25,7 @@ export class ValidationMessage extends BaseInfernoComponent {
     return restProps;
   }
   render() {
-    return normalizeProps(createComponentVNode(2, DomComponentWrapper, _extends({
+    return normalizeProps(createComponentVNode(2, DomComponentWrapper, Object.assign({
       "componentType": LegacyValidationMessage,
       "componentProps": this.props,
       "templateNames": []

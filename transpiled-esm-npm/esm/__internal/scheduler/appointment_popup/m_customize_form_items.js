@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { extend } from '../../../core/utils/extend';
 const isGroupItem = item => 'items' in item;
 const createFormItemFromConfig = configItem => typeof configItem === 'string' ? {
@@ -11,7 +10,7 @@ const buildFormItemsMap = function (items) {
   let map = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Map();
   return items.reduce((accumulator, item) => {
     if (item.name) {
-      accumulator.set(item.name, _extends({}, item));
+      accumulator.set(item.name, Object.assign({}, item));
     }
     return buildFormItemsMap(isGroupItem(item) ? item.items ?? [] : [], accumulator);
   }, map);
@@ -43,7 +42,7 @@ const customizeFormItems = (items, userConfig) => {
   const customize = userItems => userItems.map(customItems => {
     const formItem = resolveItem(customItems);
     if (isGroupItem(formItem) && hasChildItems(customItems) && customItems.items) {
-      return _extends({}, formItem, {
+      return Object.assign({}, formItem, {
         items: customize(customItems.items)
       });
     }

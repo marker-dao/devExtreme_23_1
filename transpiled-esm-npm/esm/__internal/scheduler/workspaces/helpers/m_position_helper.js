@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 const getCellSize = DOMMetaData => {
   const {
@@ -158,7 +157,7 @@ class GroupStrategyBase {
     return result;
   }
   getVerticalMax(options) {
-    let maxAllowedPosition = this._getMaxAllowedVerticalPosition(_extends({}, options, {
+    let maxAllowedPosition = this._getMaxAllowedVerticalPosition(Object.assign({}, options, {
       viewDataProvider: this.viewDataProvider,
       rtlEnabled: this.rtlEnabled,
       DOMMetaData: this.DOMMetaData
@@ -218,7 +217,7 @@ class GroupStrategyHorizontal extends GroupStrategyBase {
       groupIndex
     } = options;
     const correctedGroupIndex = isVirtualScrolling ? groupIndex : 0;
-    return this._getMaxAllowedVerticalPosition(_extends({}, options, {
+    return this._getMaxAllowedVerticalPosition(Object.assign({}, options, {
       groupIndex: correctedGroupIndex
     }));
   }

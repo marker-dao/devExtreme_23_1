@@ -1,15 +1,23 @@
+import localizationMessage from '../../../../common/core/localization/message';
 import { capitalize } from '../../../core/utils/capitalize';
 export const AI_DIALOG_ASKAI_COMMAND_NAME = 'askAI';
 export const AI_DIALOG_CUSTOM_COMMAND_NAME = 'custom';
-export const defaultCommandNames = {
-  summarize: 'Summarize',
-  proofread: 'Proofread',
-  expand: 'Expand',
-  shorten: 'Shorten',
-  changeStyle: 'Change Style',
-  changeTone: 'Change Tone',
-  translate: 'Translate',
-  askAI: 'Ask AI'
+export const commandMessageKeys = {
+  summarize: 'dxHtmlEditor-aiCommandSummarize',
+  proofread: 'dxHtmlEditor-aiCommandProofread',
+  expand: 'dxHtmlEditor-aiCommandExpand',
+  shorten: 'dxHtmlEditor-aiCommandShorten',
+  changeStyle: 'dxHtmlEditor-aiCommandChangeStyle',
+  changeTone: 'dxHtmlEditor-aiCommandChangeTone',
+  translate: 'dxHtmlEditor-aiCommandTranslate',
+  askAI: 'dxHtmlEditor-aiCommandAskAI'
+};
+export const getDefaultCommandName = name => {
+  const key = commandMessageKeys[name];
+  if (key) {
+    return localizationMessage.format(key);
+  }
+  return capitalize(name);
 };
 const htmlEditorAIChangeStyleOptions = ['formal', 'informal', 'technical', 'business', 'creative', 'journalistic', 'academic', 'persuasive', 'narrative', 'expository', 'descriptive', 'conversational'];
 const htmlEditorAIChangeToneOptions = ['professional', 'casual', 'straightforward', 'confident', 'friendly'];
@@ -25,18 +33,19 @@ const aiCommandNames = {
   askAI: 'execute',
   custom: 'execute'
 };
+const getLocalizedCommandOption = command => option => localizationMessage.format(`dxHtmlEditor-aiCommand${capitalize(command)}${capitalize(option)}`);
 export const getDefaultOptionsByCommand = command => {
+  const getLocalizedOption = getLocalizedCommandOption(command);
   const commandToOptionsMap = {
-    changeStyle: htmlEditorAIChangeStyleOptions,
-    changeTone: htmlEditorAIChangeToneOptions,
-    translate: htmlEditorAITranslateOptions
+    changeStyle: htmlEditorAIChangeStyleOptions.map(getLocalizedOption),
+    changeTone: htmlEditorAIChangeToneOptions.map(getLocalizedOption),
+    translate: htmlEditorAITranslateOptions.map(getLocalizedOption)
   };
   return commandToOptionsMap[command];
 };
 const createDefinitionFromString = commandName => {
-  var _getDefaultOptionsByC;
-  const text = defaultCommandNames[commandName] ?? capitalize(commandName);
-  const defaultOptions = (_getDefaultOptionsByC = getDefaultOptionsByCommand(commandName)) === null || _getDefaultOptionsByC === void 0 ? void 0 : _getDefaultOptionsByC.map(capitalize);
+  const text = getDefaultCommandName(commandName);
+  const defaultOptions = getDefaultOptionsByCommand(commandName);
   return {
     id: commandName,
     text,
@@ -45,10 +54,9 @@ const createDefinitionFromString = commandName => {
   };
 };
 const createDefinitionFromObject = (id, name, text, rawOptions, prompt) => {
-  var _getDefaultOptionsByC2;
   const capitalizedRaw = rawOptions === null || rawOptions === void 0 ? void 0 : rawOptions.map(capitalize);
-  const options = capitalizedRaw ?? ((_getDefaultOptionsByC2 = getDefaultOptionsByCommand(name)) === null || _getDefaultOptionsByC2 === void 0 ? void 0 : _getDefaultOptionsByC2.map(capitalize));
-  const displayText = text ?? defaultCommandNames[name] ?? capitalize(name);
+  const options = capitalizedRaw ?? getDefaultOptionsByCommand(name);
+  const displayText = text ?? getDefaultCommandName(name);
   const definition = {
     id,
     name,

@@ -1,0 +1,22 @@
+/**
+* DevExtreme (esm/__internal/grids/data_grid/module_not_extended/toast.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { ToastViewController } from '../../../grids/grid_core/toast/m_toast_controller';
+import { ToastView } from '../../../grids/grid_core/toast/m_toast_view';
+import gridCore from '../m_core';
+gridCore.registerModule('toast', {
+  defaultOptions() {
+    return {};
+  },
+  controllers: {
+    toastViewController: ToastViewController
+  },
+  views: {
+    toastView: ToastView
+  }
+});

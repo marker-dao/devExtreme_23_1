@@ -1,5 +1,4 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-import _extends from "@babel/runtime/helpers/esm/extends";
 const _excluded = ["viewData", "viewContext", "tableRef", "addDateTableClass", "width", "cellTemplate", "dataCellTemplate", "groupOrientation", "addVerticalSizesClassToRows"];
 import { createComponentVNode, normalizeProps } from "inferno";
 import { createReRenderEffect, InfernoWrapperComponent } from '../../../../core/r1/runtime/inferno/index';
@@ -7,7 +6,7 @@ import { DateTableBody, DateTableBodyDefaultProps } from './date_table_body';
 import { DateTableCellBase } from './date_table_cell_base';
 import { LayoutDefaultProps } from './layout_props';
 import { Table } from './table';
-export const DateTableDefaultProps = _extends({}, LayoutDefaultProps, {
+export const DateTableDefaultProps = Object.assign({}, LayoutDefaultProps, {
   cellTemplate: DateTableCellBase
 });
 export class DateTable extends InfernoWrapperComponent {
@@ -34,7 +33,7 @@ export class DateTable extends InfernoWrapperComponent {
     const leftVirtualCellWidth = viewData.leftVirtualCellWidth ?? 0;
     const rightVirtualCellWidth = viewData.rightVirtualCellWidth ?? 0;
     const virtualCellsCount = viewData.groupedData[0].dateTable[0].cells.length;
-    return normalizeProps(createComponentVNode(2, Table, _extends({}, restProps, {
+    return normalizeProps(createComponentVNode(2, Table, Object.assign({}, restProps, {
       "tableRef": tableRef,
       "topVirtualRowHeight": topVirtualRowHeight,
       "bottomVirtualRowHeight": bottomVirtualRowHeight,

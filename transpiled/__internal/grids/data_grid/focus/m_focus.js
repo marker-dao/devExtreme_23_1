@@ -8,7 +8,6 @@ var _m_focus = require("../../../grids/grid_core/focus/m_focus");
 var _m_core = _interopRequireDefault(require("../m_core"));
 var _m_utils = require("../m_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991 /* IE11 */;
 const data = Base => class FocusDataControllerExtender extends _m_focus.focusModule.extenders.controllers.data(Base) {
   changeRowExpand(path, isRowClick) {
@@ -127,9 +126,9 @@ const data = Base => class FocusDataControllerExtender extends _m_focus.focusMod
     }).fail(deferred.reject);
   }
 };
-_m_core.default.registerModule('focus', _extends({}, _m_focus.focusModule, {
-  extenders: _extends({}, _m_focus.focusModule.extenders, {
-    controllers: _extends({}, _m_focus.focusModule.extenders.controllers, {
+_m_core.default.registerModule('focus', Object.assign({}, _m_focus.focusModule, {
+  extenders: Object.assign({}, _m_focus.focusModule.extenders, {
+    controllers: Object.assign({}, _m_focus.focusModule.extenders.controllers, {
       data
     })
   })

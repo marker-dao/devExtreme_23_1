@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable no-return-assign */
 /* eslint-disable @stylistic/max-len */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -6,8 +5,8 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { calculateTextHeight, getTextDimensions, getTextLines } from '../pdf_utils';
 function createMultiCellRect(rect, text, marginTop) {
-  return _extends({}, rect, {
-    sourceCellInfo: _extends({}, rect.sourceCellInfo, {
+  return Object.assign({}, rect, {
+    sourceCellInfo: Object.assign({}, rect.sourceCellInfo, {
       text
     }),
     y: marginTop

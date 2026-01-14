@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { isTouchEvent } from '../../../common/core/events/utils';
 import localizationMessage from '../../../common/core/localization/message';
 import { getPublicElement } from '../../../core/element';
@@ -71,7 +70,7 @@ class ListEdit extends ListBase {
         parent.space.apply(this, [e]);
       }
     };
-    return _extends({}, parent, {
+    return Object.assign({}, parent, {
       del: deleteFocusedItem,
       upArrow: e => moveFocusedItem(e, true),
       downArrow: e => moveFocusedItem(e),
@@ -101,7 +100,7 @@ class ListEdit extends ListBase {
     return super._isItemStrictEquals(item1, item2);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       showSelectionControls: false,
       selectionMode: 'none',
       selectAllMode: 'page',

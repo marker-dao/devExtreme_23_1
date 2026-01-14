@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../../common/core/events/core/events_engine';
 import { extend } from '../../../../core/utils/extend';
 import { isFunction } from '../../../../core/utils/type';
@@ -30,7 +29,7 @@ class RangeCalendarStrategy extends CalendarStrategy {
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   supportedKeys() {
     const dateRangeBox = this.getDateRangeBox();
-    return _extends({}, super.supportedKeys(), {
+    return Object.assign({}, super.supportedKeys(), {
       rightArrow: () => {
         if (dateRangeBox.option('opened')) {
           return true;

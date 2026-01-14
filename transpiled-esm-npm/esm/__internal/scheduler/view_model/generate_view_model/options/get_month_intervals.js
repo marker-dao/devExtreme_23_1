@@ -1,5 +1,4 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-import _extends from "@babel/runtime/helpers/esm/extends";
 const _excluded = ["startDayHour", "endDayHour", "skippedDays"];
 import { shiftIntervals } from '../../common/shift_intervals';
 import { trimInterval } from '../../common/trim_interval';
@@ -18,7 +17,7 @@ const splitBy7Days = intervals => {
   }
   return result;
 };
-const cropIntervalsByDayHours = (intervals, startDayHour, endDayHour) => intervals.map(item => _extends({}, item, {
+const cropIntervalsByDayHours = (intervals, startDayHour, endDayHour) => intervals.map(item => Object.assign({}, item, {
   min: new Date(item.min).setUTCHours(startDayHour, 0, 0, 0),
   max: new Date(item.max - 1).setUTCHours(endDayHour, 0, 0, 0)
 }));

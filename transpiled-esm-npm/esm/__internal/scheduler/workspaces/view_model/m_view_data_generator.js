@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import dateUtils from '../../../../core/utils/date';
 import { dateUtilsTs } from '../../../core/utils/date';
 import { HORIZONTAL_GROUP_ORIENTATION } from '../../constants';
@@ -84,7 +83,7 @@ export class ViewDataGenerator {
     groupsList.slice(1).forEach((groups, index) => {
       const groupIndex = index + 1;
       viewDataMap.forEach((row, rowIndex) => {
-        const nextGroupRow = row.map(cellData => _extends({}, cellData, {
+        const nextGroupRow = row.map(cellData => Object.assign({}, cellData, {
           groups,
           groupIndex
         }));
@@ -98,7 +97,7 @@ export class ViewDataGenerator {
     groupsList.slice(1).forEach((groups, index) => {
       const groupIndex = index + 1;
       const nextGroupMap = viewDataMap.map(cellsRow => {
-        const nextRow = cellsRow.map(cellData => _extends({}, cellData, {
+        const nextRow = cellsRow.map(cellData => Object.assign({}, cellData, {
           groupIndex,
           groups
         }));
@@ -113,10 +112,10 @@ export class ViewDataGenerator {
     const correctedGroupCount = correctedGroupList.length;
     const result = viewDataMap.map(cellsRow => {
       const groupedByDateCellsRow = cellsRow.reduce((currentRow, cell) => {
-        const rowWithCurrentCell = [...currentRow, _extends({}, cell, {
+        const rowWithCurrentCell = [...currentRow, Object.assign({}, cell, {
           isFirstGroupCell: true,
           isLastGroupCell: correctedGroupCount === 0
-        }), ...correctedGroupList.map((groups, index) => _extends({}, cell, {
+        }), ...correctedGroupList.map((groups, index) => Object.assign({}, cell, {
           groups,
           groupIndex: index + 1,
           isFirstGroupCell: false,
@@ -140,7 +139,7 @@ export class ViewDataGenerator {
       const isAllDay = row[0].allDay;
       const keyBase = (rowIndex - allDayPanelsCount) * totalColumnCount;
       const currentAllDayPanelsCount = isAllDay ? allDayPanelsCount + 1 : allDayPanelsCount;
-      currentViewDataMap.push(row.map((cell, columnIndex) => _extends({}, cell, {
+      currentViewDataMap.push(row.map((cell, columnIndex) => Object.assign({}, cell, {
         key: keyBase + columnIndex
       })));
       return {
@@ -293,7 +292,7 @@ export class ViewDataGenerator {
       const index = rowIndex * columnCount + columnIndex;
       const isFirstGroupCell = this._isFirstGroupCell(rowIndex, columnIndex, options, rowCount, columnCount);
       const isLastGroupCell = this._isLastGroupCell(rowIndex, columnIndex, options, rowCount, columnCount);
-      cellsRow.push(_extends({}, cellDataValue, {
+      cellsRow.push(Object.assign({}, cellDataValue, {
         index,
         isFirstGroupCell,
         isLastGroupCell
@@ -324,7 +323,7 @@ export class ViewDataGenerator {
     return data;
   }
   prepareAllDayCellData(options, rowIndex, columnIndex) {
-    const data = this.prepareCellData(_extends({}, options, {
+    const data = this.prepareCellData(Object.assign({}, options, {
       // NOTE: For all-day cells we should shift cell's dates
       // after trimming these dates time.
       viewOffset: 0
@@ -334,7 +333,7 @@ export class ViewDataGenerator {
     } = options;
     const startDate = dateUtils.trimTime(data.startDate);
     const shiftedStartDate = dateUtilsTs.addOffsets(startDate, viewOffset);
-    return _extends({}, data, {
+    return Object.assign({}, data, {
       startDate: shiftedStartDate,
       endDate: shiftedStartDate,
       allDay: true
@@ -524,8 +523,8 @@ export class ViewDataGenerator {
       if (!isFocused && indexInSelectedCells === -1) {
         return cell;
       }
-      return _extends({}, cell, {
-        cellData: _extends({}, cell.cellData, {
+      return Object.assign({}, cell, {
+        cellData: Object.assign({}, cell.cellData, {
           isSelected: indexInSelectedCells > -1,
           isFocused
         })

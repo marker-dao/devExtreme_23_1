@@ -6,23 +6,23 @@ Object.defineProperty(exports, "CustomStore", {
     return _m_custom_store.default;
   }
 });
-exports.isGroupItemsArray = isGroupItemsArray;
-exports.isItemsArray = isItemsArray;
-exports.isLoadResultObject = isLoadResultObject;
-var _m_custom_store = _interopRequireDefault(require("../../__internal/data/m_custom_store"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function isGroupItem(item) {
-  if (item === undefined || item === null || typeof item !== 'object') {
-    return false;
+Object.defineProperty(exports, "isGroupItemsArray", {
+  enumerable: true,
+  get: function () {
+    return _m_custom_store.isGroupItemsArray;
   }
-  return 'key' in item && 'items' in item;
-}
-function isLoadResultObject(res) {
-  return !Array.isArray(res) && 'data' in res;
-}
-function isGroupItemsArray(res) {
-  return Array.isArray(res) && !!res.length && isGroupItem(res[0]);
-}
-function isItemsArray(res) {
-  return Array.isArray(res) && !isGroupItem(res[0]);
-}
+});
+Object.defineProperty(exports, "isItemsArray", {
+  enumerable: true,
+  get: function () {
+    return _m_custom_store.isItemsArray;
+  }
+});
+Object.defineProperty(exports, "isLoadResultObject", {
+  enumerable: true,
+  get: function () {
+    return _m_custom_store.isLoadResultObject;
+  }
+});
+var _m_custom_store = _interopRequireWildcard(require("../../__internal/data/m_custom_store"));
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }

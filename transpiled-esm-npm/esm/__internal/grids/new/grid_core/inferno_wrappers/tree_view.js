@@ -1,5 +1,4 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-import _extends from "@babel/runtime/helpers/esm/extends";
 const _excluded = ["selected"],
   _excluded2 = ["selected"];
 import { equalByValue } from '../../../../../core/utils/common';
@@ -12,7 +11,7 @@ export class TreeView extends InfernoWrapper {
   updateComponentOptions(prevProps, props) {
     var _this$component, _this$component2;
     const itemsOnlySelectionChanged = this.isItemsOnlySelectionChanged(prevProps, props);
-    const propsToUpdate = _extends({}, props);
+    const propsToUpdate = Object.assign({}, props);
     if (itemsOnlySelectionChanged) {
       this.updateSelection(props.items ?? []);
       delete propsToUpdate.items;

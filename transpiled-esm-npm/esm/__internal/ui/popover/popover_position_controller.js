@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import positionUtils from '../../../common/core/animation/position';
 import { pairToObject } from '../../../core/utils/common';
 import { extend } from '../../../core/utils/extend';
@@ -56,7 +55,7 @@ export class PopoverPositionController extends OverlayPositionController {
     const {
       $arrow
     } = elements;
-    this._properties = _extends({}, superProperties, {
+    this._properties = Object.assign({}, superProperties, {
       shading,
       target
     });
@@ -100,7 +99,7 @@ export class PopoverPositionController extends OverlayPositionController {
         hOffset += arrowOffset;
       }
     }
-    const position = _extends({}, this._position, {
+    const position = Object.assign({}, this._position, {
       offset: `${hOffset} ${vOffset}`
     });
     return position;
@@ -144,7 +143,7 @@ export class PopoverPositionController extends OverlayPositionController {
   }
   _positionToObject(position) {
     if (isCommonPosition(position)) {
-      const configuration = _extends({}, POPOVER_POSITION_ALIASES[position]);
+      const configuration = Object.assign({}, POPOVER_POSITION_ALIASES[position]);
       return configuration;
     }
     return position;

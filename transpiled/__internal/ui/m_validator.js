@@ -16,7 +16,6 @@ var _dom_component = _interopRequireDefault(require("../core/widget/dom_componen
 var _m_validation_engine = _interopRequireDefault(require("./m_validation_engine"));
 var _m_default_adapter = _interopRequireDefault(require("./validation/m_default_adapter"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const VALIDATOR_CLASS = 'dx-validator';
 const VALIDATION_STATUS_VALID = 'valid';
 const VALIDATION_STATUS_INVALID = 'invalid';
@@ -28,7 +27,7 @@ class Validator extends _dom_component.default {
     this.option(_m_validation_engine.default.initValidationOptions(options));
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       validationRules: []
     });
   }

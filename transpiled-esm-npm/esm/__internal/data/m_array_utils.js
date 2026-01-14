@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { errors } from '../../common/data/errors';
 import { keysEqual, rejectedPromise, trivialPromise } from '../../common/data/utils';
 import config from '../../core/config';
@@ -74,7 +73,7 @@ function cloneInstanceWithChangedPaths(instance, changes, clonedInstances) {
   if (instance) {
     clonedInstances.set(instance, result);
   }
-  const instanceWithoutPrototype = _extends({}, instance);
+  const instanceWithoutPrototype = Object.assign({}, instance);
   deepExtendArraySafe(result, instanceWithoutPrototype, true, true, true);
   // eslint-disable-next-line no-restricted-syntax, guard-for-in
   for (const name in instanceWithoutPrototype) {

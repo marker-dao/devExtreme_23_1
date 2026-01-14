@@ -4,13 +4,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.DEFAULT_SCHEDULER_OPTIONS_RULES = exports.DEFAULT_SCHEDULER_OPTIONS = exports.DEFAULT_SCHEDULER_INTERNAL_OPTIONS = exports.DEFAULT_SCHEDULER_INTEGRATION_OPTIONS = exports.DEFAULT_ICONS_SHOW_MODE = void 0;
-var _message = _interopRequireDefault(require("../../../../common/core/localization/message"));
 var _devices = _interopRequireDefault(require("../../../../core/devices"));
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _themes = require("../../../../ui/themes");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DEFAULT_APPOINTMENT_TEMPLATE_NAME = 'item';
 const DEFAULT_APPOINTMENT_COLLECTOR_TEMPLATE_NAME = 'appointmentCollector';
 const DEFAULT_ICONS_SHOW_MODE = exports.DEFAULT_ICONS_SHOW_MODE = 'main';
@@ -84,7 +82,7 @@ const DEFAULT_SCHEDULER_OPTIONS = exports.DEFAULT_SCHEDULER_OPTIONS = {
   timeZone: '',
   startDateTimeZoneExpr: 'startDateTimeZone',
   endDateTimeZoneExpr: 'endDateTimeZone',
-  noDataText: _message.default.format('dxCollectionWidget-noDataText'),
+  noDataText: '',
   adaptivityEnabled: false,
   scrolling: {
     mode: 'standard'
@@ -106,7 +104,7 @@ const DEFAULT_SCHEDULER_OPTIONS = exports.DEFAULT_SCHEDULER_OPTIONS = {
 const DEFAULT_SCHEDULER_INTERNAL_OPTIONS = exports.DEFAULT_SCHEDULER_INTERNAL_OPTIONS = {
   indicatorTime: undefined,
   renovateRender: true,
-  editing: _extends({
+  editing: Object.assign({
     legacyForm: false
   }, DEFAULT_SCHEDULER_OPTIONS.editing, {
     popup: {}

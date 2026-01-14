@@ -41,7 +41,13 @@ const orderEach = function (map, func) {
 exports.orderEach = orderEach;
 const getDeepCopyTarget = item => {
   if ((0, _type.isObject)(item)) {
-    return Array.isArray(item) ? [] : {};
+    if (Array.isArray(item)) {
+      return [];
+    }
+    if (!(0, _type.isPlainObject)(item)) {
+      return Object.create(Object.getPrototypeOf(item));
+    }
+    return {};
   }
   return item;
 };

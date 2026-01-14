@@ -1,5 +1,4 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-import _extends from "@babel/runtime/helpers/esm/extends";
 const _excluded = ["startDate", "endDate", "isFirstGroupCell", "isLastGroupCell"];
 import dateUtils from '../../../../core/utils/date';
 import timeZoneUtils from '../../m_utils_time_zone';
@@ -47,7 +46,7 @@ export class DateHeaderDataGenerator {
     for (let dayIndex = 0; dayIndex < daysInView; dayIndex += 1) {
       const cell = completeViewDataMap[index][dayIndex * colSpan];
       const shiftedStartDate = timeZoneUtils.addOffsetsWithoutDST(cell.startDate, -viewOffset);
-      weekDaysRow.push(_extends({}, cell, {
+      weekDaysRow.push(Object.assign({}, cell, {
         colSpan,
         text: formatWeekdayAndDay(shiftedStartDate),
         isFirstGroupCell: false,
@@ -106,7 +105,7 @@ export class DateHeaderDataGenerator {
         cellCountInDay,
         viewOffset
       });
-      return _extends({}, restProps, {
+      return Object.assign({}, restProps, {
         startDate,
         text,
         today: dateUtils.sameDate(shiftedStartDate, today),

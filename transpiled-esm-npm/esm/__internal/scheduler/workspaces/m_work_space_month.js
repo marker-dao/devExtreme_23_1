@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../../core/component_registrator';
 import { noop } from '../../../core/utils/common';
 import dateUtils from '../../../core/utils/date';
@@ -32,7 +31,7 @@ class SchedulerWorkSpaceMonth extends SchedulerWorkSpace {
     return currentDate.getTime() - (firstViewDate.getTime() - this.option('startDayHour') * 3600000) - timeZoneOffset;
   }
   _getDateGenerationOptions() {
-    return _extends({}, super._getDateGenerationOptions(), {
+    return Object.assign({}, super._getDateGenerationOptions(), {
       cellCountInDay: 1
     });
   }

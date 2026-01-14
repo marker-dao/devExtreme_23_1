@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { name as clickEventName } from '../../../common/core/events/click';
 import { name as contextMenuEventName } from '../../../common/core/events/contextmenu';
 import eventsEngine from '../../../common/core/events/core/events_engine';
@@ -63,7 +62,7 @@ class CollectionWidget extends Widget {
         this._moveFocus(location, e);
       }
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       space,
       enter: this._enterKeyHandler,
       leftArrow: move.bind(this, FOCUS_LEFT),
@@ -103,7 +102,7 @@ class CollectionWidget extends Widget {
     this._itemClickHandler(this._getHandlerExtendedParams(e, $itemElement));
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       selectOnFocus: false,
       loopItemFocus: true,
       items: [],
@@ -876,7 +875,7 @@ class CollectionWidget extends Widget {
     const {
       _itemAttributes
     } = this.option();
-    const attributes = _extends({}, _itemAttributes);
+    const attributes = Object.assign({}, _itemAttributes);
     const {
       class: customClassValue
     } = attributes;
@@ -1086,7 +1085,7 @@ class CollectionWidget extends Widget {
     }), actionConfig);
   }
   _itemEventHandler(initiator, handlerOptionName, actionArgs, actionConfig) {
-    const action = this._createActionByOption(handlerOptionName, _extends({
+    const action = this._createActionByOption(handlerOptionName, Object.assign({
       validatingTargetName: 'itemElement'
     }, actionConfig));
     return this._itemEventHandlerImpl(initiator, action, actionArgs);

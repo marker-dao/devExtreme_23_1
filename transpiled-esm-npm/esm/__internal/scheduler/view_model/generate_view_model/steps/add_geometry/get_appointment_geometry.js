@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { getAppointmentX, getAppointmentY } from './get_appointment_abstract_geometry';
 import { getAbstractSizeByViewOrientation, getRealSizeByViewOrientation } from './swap_by_view_orientation';
 export const getAppointmentGeometry = (entity, _ref) => {
@@ -11,7 +10,7 @@ export const getAppointmentGeometry = (entity, _ref) => {
   } = _ref;
   const cellAbstractSize = getAbstractSizeByViewOrientation(cellSize, viewOrientation);
   const collectorFullAbstractSize = getAbstractSizeByViewOrientation(collectorWithMarginsSize, viewOrientation);
-  const abstractGeometry = _extends({}, getAppointmentX(entity, cellAbstractSize, cells), getAppointmentY(entity, cellAbstractSize, collectorFullAbstractSize.sizeY, collectorPosition));
+  const abstractGeometry = Object.assign({}, getAppointmentX(entity, cellAbstractSize, cells), getAppointmentY(entity, cellAbstractSize, collectorFullAbstractSize.sizeY, collectorPosition));
   const entityGeometry = getRealSizeByViewOrientation(abstractGeometry, viewOrientation);
   return entityGeometry;
 };

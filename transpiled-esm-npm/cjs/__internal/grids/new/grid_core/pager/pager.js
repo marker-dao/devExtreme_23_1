@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.PagerView = PagerView;
 var _inferno = require("inferno");
 var _pager = require("../inferno_wrappers/pager");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 function PagerView(props) {
-  return props.visible ? (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _pager.Pager, _extends({}, props))) : (0, _inferno.createFragment)();
+  return props.visible ? (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _pager.Pager, Object.assign({}, props))) : (0, _inferno.createFragment)();
 }

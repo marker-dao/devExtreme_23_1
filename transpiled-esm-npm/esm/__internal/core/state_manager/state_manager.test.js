@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/init-declarations */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable spellcheck/spell-checker */
@@ -18,10 +17,10 @@ const waitGarbageCollection = async () => {
   global.gc();
 };
 describe('StateManager', () => {
-  const originalEnv = _extends({}, process.env);
+  const originalEnv = Object.assign({}, process.env);
   beforeAll(() => {
     jest.resetModules();
-    process.env = _extends({}, originalEnv, {
+    process.env = Object.assign({}, originalEnv, {
       NODE_ENV: 'development'
     });
   });

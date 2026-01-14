@@ -10,7 +10,6 @@ var _view_port = require("../../../core/utils/view_port");
 var _overlay_position_controller = require("../../ui/overlay/overlay_position_controller");
 var _m_window = _interopRequireDefault(require("../../core/utils/m_window"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = _m_window.default.getWindow();
 class PopupPositionController extends _overlay_position_controller.OverlayPositionController {
   constructor(params) {
@@ -26,7 +25,7 @@ class PopupPositionController extends _overlay_position_controller.OverlayPositi
       dragAndResizeArea,
       outsideDragFactor
     } = properties;
-    this._properties = _extends({}, superProperties, {
+    this._properties = Object.assign({}, superProperties, {
       fullScreen,
       forceApplyBindings,
       dragOutsideBoundary,
@@ -76,16 +75,22 @@ class PopupPositionController extends _overlay_position_controller.OverlayPositi
   }
   positionContent() {
     if (this._properties.fullScreen) {
-      (0, _translator.move)(this._$content, {
-        top: 0,
-        left: 0
-      });
+      if (this._$content) {
+        (0, _translator.move)(this._$content, {
+          top: 0,
+          left: 0
+        });
+      }
       this.detectVisualPositionChange();
     } else {
       var _this$_properties$for, _this$_properties;
       (_this$_properties$for = (_this$_properties = this._properties).forceApplyBindings) === null || _this$_properties$for === void 0 || _this$_properties$for.call(_this$_properties);
       super.positionContent();
     }
+  }
+  clean() {
+    this._$dragResizeContainer = undefined;
+    super.clean();
   }
   _normalizePosition(position) {
     const normalizedPosition = super._normalizePosition(position);

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { OptionManager } from '../../../core/options/option_manager';
 import { convertRulesToOptions, getFieldName, getNestedOptionValue, getParentName } from '../../../core/options/utils';
 import { equalByValue, noop } from '../../../core/utils/common';
@@ -152,7 +151,7 @@ export class Options {
     if (name) {
       const fullPath = getPathParts(name);
       const value = fullPath.reduce((value, field) => value ? value[field] : this.initial(field), null);
-      const defaultValue = isObject(value) ? _extends({}, value) : value;
+      const defaultValue = isObject(value) ? Object.assign({}, value) : value;
       this._optionManager.set(name, defaultValue, false);
     }
   }

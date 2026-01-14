@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.addLevel = void 0;
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const between = (value, min, max) => Math.min(Math.max(value, min), max);
 const addLevel = (entities, _ref) => {
   let {
@@ -18,7 +17,7 @@ const addLevel = (entities, _ref) => {
     const entityEndDate = entity.endDateUTC === entity.startDateUTC ? entity.endDateUTC + 1 : entity.endDateUTC;
     const index = levelsEndDate.findIndex(endDate => entity.startDateUTC >= endDate);
     const level = index === -1 ? levelsEndDate.length : index;
-    const extended = _extends({}, entity, {
+    const extended = Object.assign({}, entity, {
       level,
       maxLevel: minMaxLevel,
       inStackWithCollector: false

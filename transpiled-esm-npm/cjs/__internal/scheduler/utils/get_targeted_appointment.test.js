@@ -5,13 +5,12 @@ var _resource_manager = require("../../scheduler/__mock__/resource_manager.mock"
 var _appointment_data_accessor = require("../__mock__/appointment_data_accessor.mock");
 var _appointment_data_accessor2 = require("./data_accessor/appointment_data_accessor");
 var _get_targeted_appointment = require("./get_targeted_appointment");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const dataAccessor = new _appointment_data_accessor2.AppointmentDataAccessor(_appointment_data_accessor.mockUppercaseFieldExpressions, true);
 const appointment = {
   StartDate: new Date(200, 0, 0),
   EndDate: new Date(200, 0, 1)
 };
-const appointmentRecurrence = _extends({}, appointment, {
+const appointmentRecurrence = Object.assign({}, appointment, {
   RecurrenceRule: 'FREQ=DAILY'
 });
 const info = {
@@ -26,7 +25,7 @@ const info = {
 };
 (0, _globals.describe)('getTargetedAppointment', () => {
   (0, _globals.it)('should return collector targeted appointment', () => {
-    (0, _globals.expect)((0, _get_targeted_appointment.getTargetedAppointment)(appointment, {}, dataAccessor, (0, _resource_manager.getResourceManagerMock)())).toEqual(_extends({}, appointment, {
+    (0, _globals.expect)((0, _get_targeted_appointment.getTargetedAppointment)(appointment, {}, dataAccessor, (0, _resource_manager.getResourceManagerMock)())).toEqual(Object.assign({}, appointment, {
       displayStartDate: new Date(200, 0, 0),
       displayEndDate: new Date(200, 0, 1)
     }));
@@ -35,7 +34,7 @@ const info = {
     (0, _globals.expect)((0, _get_targeted_appointment.getTargetedAppointment)(appointmentRecurrence, {
       info,
       groupIndex: 0
-    }, dataAccessor, (0, _resource_manager.getResourceManagerMock)())).toEqual(_extends({}, appointmentRecurrence, {
+    }, dataAccessor, (0, _resource_manager.getResourceManagerMock)())).toEqual(Object.assign({}, appointmentRecurrence, {
       StartDate: new Date(200, 0, 5),
       EndDate: new Date(200, 0, 6),
       displayStartDate: new Date(200, 0, 5, 10),
@@ -48,7 +47,7 @@ const info = {
     (0, _globals.expect)((0, _get_targeted_appointment.getTargetedAppointment)(appointmentRecurrence, {
       info,
       groupIndex: 5 // 0,1; 0,2; 0,3; 0,4; 1,1; 1,2; <- 5
-    }, dataAccessor, resourceManager)).toEqual(_extends({}, appointmentRecurrence, {
+    }, dataAccessor, resourceManager)).toEqual(Object.assign({}, appointmentRecurrence, {
       assigneeId: [2],
       roomId: 1,
       StartDate: new Date(200, 0, 5),
@@ -60,14 +59,14 @@ const info = {
   (0, _globals.it)('should return agenda item targeted partial dates', () => {
     (0, _globals.expect)((0, _get_targeted_appointment.getTargetedAppointmentFromInfo)(appointmentRecurrence, {
       isAgendaModel: true,
-      info: _extends({}, info, {
+      info: Object.assign({}, info, {
         partialDates: {
           startDate: new Date(200, 0, 5, 3),
           endDate: new Date(200, 0, 7)
         }
       }),
       groupIndex: 0
-    }, dataAccessor, (0, _resource_manager.getResourceManagerMock)(), true)).toEqual(_extends({}, appointmentRecurrence, {
+    }, dataAccessor, (0, _resource_manager.getResourceManagerMock)(), true)).toEqual(Object.assign({}, appointmentRecurrence, {
       StartDate: new Date(200, 0, 5),
       EndDate: new Date(200, 0, 6),
       displayStartDate: new Date(200, 0, 5, 3),
@@ -79,14 +78,14 @@ const info = {
     await resourceManager.loadGroupResources(['roomId', 'assigneeId']);
     (0, _globals.expect)((0, _get_targeted_appointment.getTargetedAppointmentFromInfo)(appointment, {
       isAgendaModel: true,
-      info: _extends({}, info, {
+      info: Object.assign({}, info, {
         partialDates: {
           startDate: new Date(200, 0, 5, 3),
           endDate: new Date(200, 0, 7)
         }
       }),
       groupIndex: 3 // 0,1; 0,2; 0,3; 0,4; <- 3
-    }, dataAccessor, resourceManager, true)).toEqual(_extends({}, appointment, {
+    }, dataAccessor, resourceManager, true)).toEqual(Object.assign({}, appointment, {
       assigneeId: [4],
       roomId: 0,
       StartDate: new Date(200, 0, 5),

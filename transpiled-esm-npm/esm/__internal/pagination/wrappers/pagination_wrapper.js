@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["pageSize", "pageIndex", "itemCount"];
 import { ComponentWrapper } from '../../core/r1/component_wrapper';
@@ -52,6 +51,6 @@ export class PaginationWrapper extends ComponentWrapper {
       itemCount = this.option('itemCount');
     }
     const validatedOptions = validateOptions(pageSize, pageIndex, itemCount);
-    return _extends({}, rest, validatedOptions);
+    return Object.assign({}, rest, validatedOptions);
   }
 }

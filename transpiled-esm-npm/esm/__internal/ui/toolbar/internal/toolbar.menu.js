@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import devices from '../../../../core/devices';
 import $ from '../../../../core/renderer';
 import { ChildDefaultTemplate } from '../../../../core/templates/child_default_template';
@@ -28,7 +27,7 @@ export default class DropDownMenu extends Widget {
     if (!opened || !((_this$_list = this._list) !== null && _this$_list !== void 0 && _this$_list.option('focusedElement'))) {
       extension = this._button._supportedKeys();
     }
-    return _extends({}, super._supportedKeys(), extension, {
+    return Object.assign({}, super._supportedKeys(), extension, {
       tab() {
         var _this$_popup;
         (_this$_popup = this._popup) === null || _this$_popup === void 0 || _this$_popup.hide();
@@ -36,7 +35,7 @@ export default class DropDownMenu extends Widget {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       items: [],
       dataSource: null,
       itemTemplate: 'item',

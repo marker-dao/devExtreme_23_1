@@ -15,12 +15,11 @@ var _type = require("../../../core/utils/type");
 var _uiCollection_widget = _interopRequireDefault(require("../../../ui/collection/ui.collection_widget.async"));
 var _data_adapter = _interopRequireDefault(require("./data_adapter"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DISABLED_STATE_CLASS = 'dx-state-disabled';
 const ITEM_URL_CLASS = 'dx-item-url';
 class HierarchicalCollectionWidget extends _uiCollection_widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       keyExpr: 'id',
       displayExpr: 'text',
       selectedExpr: 'selected',
@@ -60,7 +59,7 @@ class HierarchicalCollectionWidget extends _uiCollection_widget.default {
     const {
       items = []
     } = this.option();
-    this._dataAdapter = new _data_adapter.default(_extends({
+    this._dataAdapter = new _data_adapter.default(Object.assign({
       dataAccessors: {
         getters: accessors.getters,
         setters: accessors.setters
@@ -101,7 +100,7 @@ class HierarchicalCollectionWidget extends _uiCollection_widget.default {
     const linkAttributes = (0, _type.isObject)(linkAttr) ? linkAttr : {};
     return (0, _renderer.default)('<a>').addClass(ITEM_URL_CLASS)
     // @ts-expect-error ts-error
-    .attr(_extends({}, linkAttributes, {
+    .attr(Object.assign({}, linkAttributes, {
       href: url
     }))
     // @ts-expect-error ts-error

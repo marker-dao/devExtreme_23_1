@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["elementRef", "navigationStrategy", "children"],
   _excluded2 = ["navigationStrategy", "elementRef", "children"],
@@ -27,7 +26,7 @@ export const KbnNavigationContainerDisabled = props => {
     "data-dx-focus-decoy": false
   }), children, createVNode(1, "div", null, null, 1, {
     "data-dx-focus-decoy": false
-  })], 0, _extends({}, restProps, {
+  })], 0, Object.assign({}, restProps, {
     "data-dx-focus-container": false
   }), null, elementRef));
 };
@@ -64,7 +63,7 @@ export class KbnNavigationContainerEnabled extends Component {
     }, null, this.firstFocusDecoyRef), children, createVNode(1, "div", null, null, 1, {
       "data-dx-focus-decoy": true,
       "tabindex": 0
-    }, null, this.lastFocusDecoyRef)], 0, _extends({}, restProps, {
+    }, null, this.lastFocusDecoyRef)], 0, Object.assign({}, restProps, {
       "onKeyDown": this.onKeyDown.bind(this),
       "data-dx-focus-container": true
     }), null, ref));
@@ -114,5 +113,5 @@ export const KbnNavigationContainer = props => {
       enabled
     } = props,
     restProps = _objectWithoutPropertiesLoose(props, _excluded3);
-  return enabled ? normalizeProps(createComponentVNode(2, KbnNavigationContainerEnabled, _extends({}, restProps))) : normalizeProps(createComponentVNode(2, KbnNavigationContainerDisabled, _extends({}, restProps)));
+  return enabled ? normalizeProps(createComponentVNode(2, KbnNavigationContainerEnabled, Object.assign({}, restProps))) : normalizeProps(createComponentVNode(2, KbnNavigationContainerDisabled, Object.assign({}, restProps)));
 };

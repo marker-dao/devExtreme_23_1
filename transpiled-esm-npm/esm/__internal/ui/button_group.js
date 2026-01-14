@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../core/component_registrator';
 import $ from '../../core/renderer';
 import { BindableTemplate } from '../../core/templates/bindable_template';
@@ -51,7 +50,7 @@ class ButtonCollection extends CollectionWidgetEdit {
     };
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       itemTemplateProperty: null
     });
   }
@@ -116,7 +115,7 @@ class ButtonCollection extends CollectionWidgetEdit {
 }
 class ButtonGroup extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       focusStateEnabled: true,
       selectionMode: 'single',

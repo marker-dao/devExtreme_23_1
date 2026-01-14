@@ -8,7 +8,8 @@ var _logger = require("./logger");
 var _preact_signal_value_container_manager = require("./preact_signal_value_container_manager");
 var _redux_dev_tools_connector = require("./redux_dev_tools_connector");
 var _utils = require("./utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // eslint-disable-next-line spellcheck/spell-checker
+// eslint-disable-next-line spellcheck/spell-checker
+
 class StateManager {
   constructor(config) {
     this.componentState = {};
@@ -57,8 +58,8 @@ class StateManager {
     const fullPathToProperty = (0, _utils.joinStatePath)(stateId, propertyName);
     try {
       valueContainerManager.trackChanges(valueContainerChange => {
-        const valueContainerChangeCopy = _extends({}, valueContainerChange, {
-          payload: _extends({}, valueContainerChange.payload, {
+        const valueContainerChangeCopy = Object.assign({}, valueContainerChange, {
+          payload: Object.assign({}, valueContainerChange.payload, {
             path: fullPathToProperty
           })
         });

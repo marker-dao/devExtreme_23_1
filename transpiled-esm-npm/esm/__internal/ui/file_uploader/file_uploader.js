@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace, isTouchEvent, normalizeKeyName } from '../../../common/core/events/utils/index';
 import messageLocalization from '../../../common/core/localization/message';
@@ -50,8 +49,6 @@ const FILEUPLOADER_UPLOAD_BUTTON_CLASS = 'dx-fileuploader-upload-button';
 const FILEUPLOADER_INVALID_CLASS = 'dx-fileuploader-invalid';
 const FILEUPLOADER_AFTER_LOAD_DELAY = 400;
 const DRAG_EVENT_DELTA = 1;
-const GAP = 10;
-const REFERENCE_TEXT = '1023 bytes';
 const DIALOG_TRIGGER_EVENT_NAMESPACE = 'dxFileUploaderDialogTrigger';
 const keyUpEventName = 'keyup';
 const nativeClickEvent = 'click';
@@ -69,7 +66,7 @@ class FileUploader extends Editor {
         type: 'dxclick'
       });
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       space: click,
       enter: click
     });
@@ -82,7 +79,7 @@ class FileUploader extends Editor {
   }
   _getDefaultOptions() {
     // @ts-expect-error default values = null are not compatible with public types
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       chunkSize: 0,
       value: [],
       selectButtonText: messageLocalization.format('dxFileUploader-selectFile'),
@@ -649,10 +646,10 @@ class FileUploader extends Editor {
     const $icon = (_this$_$filesContaine5 = this._$filesContainer) === null || _this$_$filesContaine5 === void 0 ? void 0 : _this$_$filesContaine5.find(`.${FILEUPLOADER_FILE_ICON_CLASS}`).eq(0);
     const iconWidth = _showFileIcon ? getOuterWidth($icon) : 0;
     const prevFileSize = $fileSize === null || $fileSize === void 0 ? void 0 : $fileSize.text();
-    $fileSize === null || $fileSize === void 0 || $fileSize.text(REFERENCE_TEXT);
+    $fileSize === null || $fileSize === void 0 || $fileSize.text('1000 Mb');
     const fileSizeWidth = getWidth($fileSize);
     $fileSize === null || $fileSize === void 0 || $fileSize.text(prevFileSize ?? '');
-    const maxWidth = filesContainerWidth - buttonsWidth - fileSizeWidth - iconWidth - GAP;
+    const maxWidth = filesContainerWidth - buttonsWidth - fileSizeWidth - iconWidth;
     (_this$_$filesContaine6 = this._$filesContainer) === null || _this$_$filesContaine6 === void 0 || _this$_$filesContaine6.find(`.${FILEUPLOADER_FILE_NAME_CLASS}`).css('maxWidth', maxWidth);
   }
   _renderFileButtons(file, $container) {
@@ -1232,9 +1229,9 @@ class FileUploader extends Editor {
   }
   _getTotalFilesSize() {
     if (!this._totalFilesSize) {
-      var _this$_files10;
+      var _this$_files0;
       this._totalFilesSize = 0;
-      (_this$_files10 = this._files) === null || _this$_files10 === void 0 || _this$_files10.forEach(file => {
+      (_this$_files0 = this._files) === null || _this$_files0 === void 0 || _this$_files0.forEach(file => {
         this._totalFilesSize += file.value.size;
       });
     }
@@ -1242,9 +1239,9 @@ class FileUploader extends Editor {
   }
   _getTotalLoadedFilesSize() {
     if (!this._totalLoadedFilesSize) {
-      var _this$_files11;
+      var _this$_files1;
       this._totalLoadedFilesSize = 0;
-      (_this$_files11 = this._files) === null || _this$_files11 === void 0 || _this$_files11.forEach(file => {
+      (_this$_files1 = this._files) === null || _this$_files1 === void 0 || _this$_files1.forEach(file => {
         this._totalLoadedFilesSize += file.loadedSize;
       });
     }
@@ -1304,14 +1301,14 @@ class FileUploader extends Editor {
     return document.documentElement.scrollLeft || document.body.scrollLeft;
   }
   _updateReadOnlyState() {
-    var _this$_files12;
+    var _this$_files10;
     const {
       readOnly
     } = this.option();
     this._selectButton.option({
       disabled: readOnly
     });
-    (_this$_files12 = this._files) === null || _this$_files12 === void 0 || _this$_files12.forEach(file => {
+    (_this$_files10 = this._files) === null || _this$_files10 === void 0 || _this$_files10.forEach(file => {
       var _file$cancelButton3;
       return (_file$cancelButton3 = file.cancelButton) === null || _file$cancelButton3 === void 0 ? void 0 : _file$cancelButton3.option({
         disabled: readOnly
@@ -1321,7 +1318,7 @@ class FileUploader extends Editor {
     this._attachDragEventHandlers(this._$inputWrapper);
   }
   _updateHoverState() {
-    var _this$_selectButton, _this$_uploadButton, _this$_files13;
+    var _this$_selectButton, _this$_uploadButton, _this$_files11;
     const {
       hoverStateEnabled: value
     } = this.option();
@@ -1331,7 +1328,7 @@ class FileUploader extends Editor {
     (_this$_uploadButton = this._uploadButton) === null || _this$_uploadButton === void 0 || _this$_uploadButton.option({
       hoverStateEnabled: value
     });
-    (_this$_files13 = this._files) === null || _this$_files13 === void 0 || _this$_files13.forEach(file => {
+    (_this$_files11 = this._files) === null || _this$_files11 === void 0 || _this$_files11.forEach(file => {
       var _file$uploadButton3, _file$cancelButton4;
       (_file$uploadButton3 = file.uploadButton) === null || _file$uploadButton3 === void 0 || _file$uploadButton3.option({
         hoverStateEnabled: value
@@ -1342,7 +1339,7 @@ class FileUploader extends Editor {
     });
   }
   _optionChanged(args) {
-    var _this$_files14;
+    var _this$_files12;
     const {
       name,
       value,
@@ -1406,7 +1403,7 @@ class FileUploader extends Editor {
         }
         break;
       case '_buttonStylingMode':
-        (_this$_files14 = this._files) === null || _this$_files14 === void 0 || _this$_files14.forEach(file => {
+        (_this$_files12 = this._files) === null || _this$_files12 === void 0 || _this$_files12.forEach(file => {
           var _file$uploadButton4, _file$cancelButton5;
           (_file$uploadButton4 = file.uploadButton) === null || _file$uploadButton4 === void 0 || _file$uploadButton4.option({
             stylingMode: value

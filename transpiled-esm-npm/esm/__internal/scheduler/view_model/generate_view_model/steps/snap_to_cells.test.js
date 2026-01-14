@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { snapToCells } from './snap_to_cells';
 describe('snapToCells', () => {
@@ -70,23 +69,23 @@ describe('snapToCells', () => {
       cellIndex: 5,
       rowIndex: 3,
       columnIndex: 2
-    }])).toEqual([_extends({}, items[0], {
+    }])).toEqual([Object.assign({}, items[0], {
       duration: 10,
       startDateUTC: 0,
       endDateUTC: 10
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       duration: 20,
       startDateUTC: 30,
       endDateUTC: 50
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       duration: 30,
       startDateUTC: 0,
       endDateUTC: 30
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       duration: 10,
       startDateUTC: 40,
       endDateUTC: 50
-    }), _extends({}, items[4], {
+    }), Object.assign({}, items[4], {
       duration: 10,
       startDateUTC: 50,
       endDateUTC: 60

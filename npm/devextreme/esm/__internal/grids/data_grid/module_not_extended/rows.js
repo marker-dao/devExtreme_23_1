@@ -1,0 +1,12 @@
+/**
+* DevExtreme (esm/__internal/grids/data_grid/module_not_extended/rows.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { rowsModule } from '../../../grids/grid_core/views/m_rows_view';
+import gridCore from '../m_core';
+export const RowsView = rowsModule.views.rowsView;
+gridCore.registerModule('rows', rowsModule);

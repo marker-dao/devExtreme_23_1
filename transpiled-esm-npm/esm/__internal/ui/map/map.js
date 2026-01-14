@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import pointerEvents from '../../../common/core/events/pointer';
 import { addNamespace } from '../../../common/core/events/utils/index';
@@ -29,7 +28,7 @@ const MAP_CONTAINER_CLASS = 'dx-map-container';
 const MAP_SHIELD_CLASS = 'dx-map-shield';
 class Map extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       bounds: {
         northEast: null,
         southWest: null

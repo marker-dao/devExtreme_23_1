@@ -1,7 +1,4 @@
-import { AIColumnController } from '../../../grids/grid_core/ai_column/m_ai_column_controller';
-import { columnHeadersViewExtender } from '../../../grids/grid_core/ai_column/m_ai_column_view';
-import { AIPromptEditorView } from '../../../grids/grid_core/ai_column/m_ai_prompt_editor_view';
-import { AIPromptEditorViewController } from '../../../grids/grid_core/ai_column/m_ai_prompt_editor_view_controller';
+import { AIColumnController, AIPromptEditorView, AIPromptEditorViewController, columnHeadersViewExtender } from '../../../grids/grid_core/ai_column/index';
 import gridCore from '../m_core';
 gridCore.registerModule('aiColumn', {
   controllers: {

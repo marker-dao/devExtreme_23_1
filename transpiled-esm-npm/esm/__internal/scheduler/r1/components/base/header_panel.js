@@ -1,11 +1,10 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createComponentVNode } from "inferno";
 import { createReRenderEffect, InfernoWrapperComponent } from '../../../../core/r1/runtime/inferno/index';
 import { PublicTemplate } from '../../../../scheduler/r1/components/templates/index';
 import { isHorizontalGroupingApplied } from '../../utils/index';
 import { DateHeader } from './date_header';
 import { GroupPanel, GroupPanelDefaultProps } from './group_panel';
-export const HeaderPanelDefaultProps = _extends({}, GroupPanelDefaultProps, {
+export const HeaderPanelDefaultProps = Object.assign({}, GroupPanelDefaultProps, {
   isRenderDateHeader: true,
   dateHeaderTemplate: DateHeader
 });

@@ -227,7 +227,7 @@ class DiagramFloatingPanel extends _uiDiagram.default {
     'onVisibilityChanged');
   }
   _optionChanged(args) {
-    var _this$_popup4, _this$_popup5, _this$_popup6, _this$_popup7, _this$_popup8, _this$_popup9, _this$_popup10;
+    var _this$_popup4, _this$_popup5, _this$_popup6, _this$_popup7, _this$_popup8, _this$_popup9, _this$_popup0;
     switch (args.name) {
       case 'onVisibilityChanging':
         this._createOnVisibilityChangingAction();
@@ -254,7 +254,7 @@ class DiagramFloatingPanel extends _uiDiagram.default {
         (_this$_popup9 = this._popup) === null || _this$_popup9 === void 0 || _this$_popup9.option('minWidth', this._getPopupMinWidth());
         break;
       case 'minHeight':
-        (_this$_popup10 = this._popup) === null || _this$_popup10 === void 0 || _this$_popup10.option('minHeight', this._getPopupMinHeight());
+        (_this$_popup0 = this._popup) === null || _this$_popup0 === void 0 || _this$_popup0.option('minHeight', this._getPopupMinHeight());
         break;
       case 'isMobileView':
         this._invalidate();

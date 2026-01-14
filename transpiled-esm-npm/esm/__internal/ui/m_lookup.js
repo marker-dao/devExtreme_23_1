@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { locate, move, resetPosition } from '../../common/core/animation/translator';
 import eventsEngine from '../../common/core/events/core/events_engine';
 import messageLocalization from '../../common/core/localization/message';
@@ -43,7 +42,7 @@ const MATERIAL_LOOKUP_LIST_PADDING = 8;
 const WINDOW_RATIO = 0.8;
 class Lookup extends DropDownList {
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       space(e) {
         e.preventDefault();
         this._validatedOpening();
@@ -63,7 +62,7 @@ class Lookup extends DropDownList {
       }
       return size * WINDOW_RATIO;
     };
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       placeholder: messageLocalization.format('Select'),
       searchPlaceholder: messageLocalization.format('Search'),
       searchEnabled: true,
@@ -493,6 +492,7 @@ class Lookup extends DropDownList {
     }
   }
   _renderPopup() {
+    var _this$_popup$$wrapper;
     if (this.option('usePopover') && !this.option('dropDownOptions.fullScreen')) {
       if (this.option('_scrollToSelectedItemEnabled')) {
         super._renderPopup();
@@ -504,7 +504,7 @@ class Lookup extends DropDownList {
       super._renderPopup();
     }
     this._$popup.addClass(LOOKUP_POPUP_CLASS);
-    this._popup.$wrapper().addClass(LOOKUP_POPUP_WRAPPER_CLASS);
+    (_this$_popup$$wrapper = this._popup.$wrapper()) === null || _this$_popup$$wrapper === void 0 || _this$_popup$$wrapper.addClass(LOOKUP_POPUP_WRAPPER_CLASS);
   }
   _renderPopover() {
     const popupConfig = this._popupConfig();
@@ -531,7 +531,10 @@ class Lookup extends DropDownList {
     if (this.option('_scrollToSelectedItemEnabled')) {
       this._popup._$arrow.remove();
     }
-    this._setPopupContentId(this._popup.$content());
+    const $content = this._popup.$content();
+    if ($content) {
+      this._setPopupContentId($content);
+    }
     this._contentReadyHandler();
   }
   _popupHidingHandler() {
@@ -768,7 +771,8 @@ class Lookup extends DropDownList {
   }
   _toggleSearchClass(isSearchEnabled) {
     if (this._popup) {
-      this._popup.$wrapper().toggleClass(LOOKUP_POPUP_SEARCH_CLASS, isSearchEnabled);
+      var _this$_popup$$wrapper2;
+      (_this$_popup$$wrapper2 = this._popup.$wrapper()) === null || _this$_popup$$wrapper2 === void 0 || _this$_popup$$wrapper2.toggleClass(LOOKUP_POPUP_SEARCH_CLASS, isSearchEnabled);
     }
   }
   _setSearchPlaceholder() {
@@ -838,8 +842,8 @@ class Lookup extends DropDownList {
         var _this$_searchBox7;
         (_this$_searchBox7 = this._searchBox) === null || _this$_searchBox7 === void 0 || _this$_searchBox7.focus();
       } else {
-        var _this$_list10;
-        (_this$_list10 = this._list) === null || _this$_list10 === void 0 || _this$_list10.focus();
+        var _this$_list0;
+        (_this$_list0 = this._list) === null || _this$_list0 === void 0 || _this$_list0.focus();
       }
     });
   }
@@ -854,8 +858,8 @@ class Lookup extends DropDownList {
     this._selectListItem(e.itemData, e.event.currentTarget);
   }
   _selectListItem(itemData, target) {
-    var _this$_list11;
-    (_this$_list11 = this._list) === null || _this$_list11 === void 0 || _this$_list11.selectItem(target);
+    var _this$_list1;
+    (_this$_list1 = this._list) === null || _this$_list1 === void 0 || _this$_list1.selectItem(target);
     const {
       applyValueMode
     } = this.option();
@@ -864,10 +868,10 @@ class Lookup extends DropDownList {
     }
   }
   _currentSelectedItem() {
-    var _this$_list12;
+    var _this$_list10;
     return this.option('grouped')
     // @ts-expect-error ts-error
-    ? this._list.option('selectedItems[0]').items[0] : (_this$_list12 = this._list) === null || _this$_list12 === void 0 ? void 0 : _this$_list12.option('selectedItems[0]');
+    ? this._list.option('selectedItems[0]').items[0] : (_this$_list10 = this._list) === null || _this$_list10 === void 0 ? void 0 : _this$_list10.option('selectedItems[0]');
   }
   _resetValue(e) {
     this._saveValueChangeEvent(e.event);

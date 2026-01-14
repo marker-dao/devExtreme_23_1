@@ -10,9 +10,10 @@ var _combine_classes = require("../../../../../core/utils/combine_classes");
 var _utils2 = require("../../../../../grids/new/grid_core/accessibility/utils");
 var _index = require("../../../../../grids/new/grid_core/keyboard_navigation/index");
 var _card = require("./card/card");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable
+/* eslint-disable
   spellcheck/spell-checker
 */
+
 const CLASSES = exports.CLASSES = {
   content: 'dx-cardview-content',
   grid: 'dx-cardview-content-grid',
@@ -76,7 +77,7 @@ class Content extends _inferno.Component {
       "onFocusMoved": (newIdx, element) => {
         this.onCardFocusMoved(newIdx, element);
       },
-      children: (0, _inferno.createVNode)(1, "div", className, this.props.items.map((item, idx) => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, CardItem, _extends({}, this.props.cardProps, {
+      children: (0, _inferno.createVNode)(1, "div", className, this.props.items.map((item, idx) => (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, CardItem, Object.assign({}, this.props.cardProps, {
         "elementRef": this.cardElementRefs[idx],
         "navigationIdx": idx,
         "kbnEnabled": this.props.kbnEnabled,
@@ -93,36 +94,36 @@ class Content extends _inferno.Component {
             this.focusFirstCardAfterReload = true;
           },
           Space: event => {
-            var _this$props$cardProps9, _this$props$cardProps10;
-            (_this$props$cardProps9 = this.props.cardProps) === null || _this$props$cardProps9 === void 0 || (_this$props$cardProps10 = _this$props$cardProps9.selectCard) === null || _this$props$cardProps10 === void 0 || _this$props$cardProps10.call(_this$props$cardProps9, item, {
+            var _this$props$cardProps9, _this$props$cardProps0;
+            (_this$props$cardProps9 = this.props.cardProps) === null || _this$props$cardProps9 === void 0 || (_this$props$cardProps0 = _this$props$cardProps9.selectCard) === null || _this$props$cardProps0 === void 0 || _this$props$cardProps0.call(_this$props$cardProps9, item, {
               control: (0, _utils.isCommandKeyPressed)(event),
               shift: event.shiftKey,
               needToUpdateCheckboxes: true
             });
           },
           'Space+shift': event => {
-            var _this$props$cardProps11, _this$props$cardProps12;
-            (_this$props$cardProps11 = this.props.cardProps) === null || _this$props$cardProps11 === void 0 || (_this$props$cardProps12 = _this$props$cardProps11.selectCard) === null || _this$props$cardProps12 === void 0 || _this$props$cardProps12.call(_this$props$cardProps11, item, {
+            var _this$props$cardProps1, _this$props$cardProps10;
+            (_this$props$cardProps1 = this.props.cardProps) === null || _this$props$cardProps1 === void 0 || (_this$props$cardProps10 = _this$props$cardProps1.selectCard) === null || _this$props$cardProps10 === void 0 || _this$props$cardProps10.call(_this$props$cardProps1, item, {
               control: (0, _utils.isCommandKeyPressed)(event),
               shift: event.shiftKey,
               needToUpdateCheckboxes: true
             });
           },
           'a+ctrl': () => {
-            var _this$props$cardProps13, _this$props$cardProps14;
-            (_this$props$cardProps13 = this.props.cardProps) === null || _this$props$cardProps13 === void 0 || (_this$props$cardProps14 = _this$props$cardProps13.onSelectAllCards) === null || _this$props$cardProps14 === void 0 || _this$props$cardProps14.call(_this$props$cardProps13);
+            var _this$props$cardProps11, _this$props$cardProps12;
+            (_this$props$cardProps11 = this.props.cardProps) === null || _this$props$cardProps11 === void 0 || (_this$props$cardProps12 = _this$props$cardProps11.onSelectAllCards) === null || _this$props$cardProps12 === void 0 || _this$props$cardProps12.call(_this$props$cardProps11);
           },
           'f+ctrl': () => {
-            var _this$props$cardProps15, _this$props$cardProps16;
-            (_this$props$cardProps15 = this.props.cardProps) === null || _this$props$cardProps15 === void 0 || (_this$props$cardProps16 = _this$props$cardProps15.onSearchFocus) === null || _this$props$cardProps16 === void 0 || _this$props$cardProps16.call(_this$props$cardProps15);
+            var _this$props$cardProps13, _this$props$cardProps14;
+            (_this$props$cardProps13 = this.props.cardProps) === null || _this$props$cardProps13 === void 0 || (_this$props$cardProps14 = _this$props$cardProps13.onSearchFocus) === null || _this$props$cardProps14 === void 0 || _this$props$cardProps14.call(_this$props$cardProps13);
           },
           'Enter+shift': () => {
-            var _this$props$cardProps17, _this$props$cardProps18;
-            (_this$props$cardProps17 = this.props.cardProps) === null || _this$props$cardProps17 === void 0 || (_this$props$cardProps18 = _this$props$cardProps17.onEdit) === null || _this$props$cardProps18 === void 0 || _this$props$cardProps18.call(_this$props$cardProps17, item.key, this.cardElementRefs[idx].current ?? undefined);
+            var _this$props$cardProps15, _this$props$cardProps16;
+            (_this$props$cardProps15 = this.props.cardProps) === null || _this$props$cardProps15 === void 0 || (_this$props$cardProps16 = _this$props$cardProps15.onEdit) === null || _this$props$cardProps16 === void 0 || _this$props$cardProps16.call(_this$props$cardProps15, item.key, this.cardElementRefs[idx].current ?? undefined);
           },
           Delete: () => {
-            var _this$props$cardProps19, _this$props$cardProps20;
-            (_this$props$cardProps19 = this.props.cardProps) === null || _this$props$cardProps19 === void 0 || (_this$props$cardProps20 = _this$props$cardProps19.onDelete) === null || _this$props$cardProps20 === void 0 || _this$props$cardProps20.call(_this$props$cardProps19, item.key, this.cardElementRefs[idx].current ?? undefined);
+            var _this$props$cardProps17, _this$props$cardProps18;
+            (_this$props$cardProps17 = this.props.cardProps) === null || _this$props$cardProps17 === void 0 || (_this$props$cardProps18 = _this$props$cardProps17.onDelete) === null || _this$props$cardProps18 === void 0 || _this$props$cardProps18.call(_this$props$cardProps17, item.key, this.cardElementRefs[idx].current ?? undefined);
           }
         },
         "caughtEventPreventDefault": true,

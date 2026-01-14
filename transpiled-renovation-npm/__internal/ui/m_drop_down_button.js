@@ -23,7 +23,6 @@ var _m_utils = require("../ui/drop_down_editor/m_utils");
 var _listEdit = _interopRequireDefault(require("../ui/list/list.edit.search"));
 var _m_popup = _interopRequireDefault(require("../ui/popup/m_popup"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DROP_DOWN_BUTTON_CLASS = 'dx-dropdownbutton';
 const DROP_DOWN_BUTTON_CONTENT = 'dx-dropdownbutton-content';
 const DROP_DOWN_BUTTON_ACTION_CLASS = 'dx-dropdownbutton-action';
@@ -37,7 +36,7 @@ const DX_ICON_RIGHT_CLASS = 'dx-icon-right';
 const OVERLAY_CONTENT_LABEL = 'Dropdown';
 class DropDownButton extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       itemTemplate: 'item',
       keyExpr: 'this',
       selectedItem: null,
@@ -301,7 +300,7 @@ class DropDownButton extends _widget.default {
       stylingMode,
       tabIndex
     } = this.option();
-    const buttonGroupOptions = _extends({
+    const buttonGroupOptions = Object.assign({
       items: this._getButtonGroupItems(),
       width: '100%',
       height: '100%',
@@ -322,11 +321,11 @@ class DropDownButton extends _widget.default {
   _renderPopupContent() {
     const $content = this._popup.$content();
     const template = this._getTemplateByOption('dropDownContentTemplate');
-    $content.empty();
+    $content === null || $content === void 0 || $content.empty();
     this._popupContentId = `dx-${new _guid.default()}`;
     this.setAria('id', this._popupContentId, $content);
     const result = template.render({
-      container: (0, _element.getPublicElement)($content),
+      container: $content ? (0, _element.getPublicElement)($content) : undefined,
       model: this.option('items') || this._dataController.getDataSource()
     });
     return result;
@@ -441,11 +440,12 @@ class DropDownButton extends _widget.default {
     return true;
   }
   _renderPopup() {
+    var _this$_popup$$content, _this$_popup$$wrapper;
     const $popup = (0, _renderer.default)('<div>');
     this.$element().append($popup);
     this._popup = this._createComponent($popup, _m_popup.default, this._popupOptions());
-    this._popup.$content().addClass(DROP_DOWN_BUTTON_CONTENT);
-    this._popup.$wrapper().addClass(DROP_DOWN_BUTTON_POPUP_WRAPPER_CLASS);
+    (_this$_popup$$content = this._popup.$content()) === null || _this$_popup$$content === void 0 || _this$_popup$$content.addClass(DROP_DOWN_BUTTON_CONTENT);
+    (_this$_popup$$wrapper = this._popup.$wrapper()) === null || _this$_popup$$wrapper === void 0 || _this$_popup$$wrapper.addClass(DROP_DOWN_BUTTON_POPUP_WRAPPER_CLASS);
     this._popup.$overlayContent().attr('aria-label', OVERLAY_CONTENT_LABEL);
     this._popup.on('hiding', this._popupHidingHandler.bind(this));
     this._popup.on('showing', this._popupShowingHandler.bind(this));
@@ -497,7 +497,7 @@ class DropDownButton extends _widget.default {
     // @ts-expect-error ts-error
     this._getButtons().each((index, $button) => {
       if (index === 0) {
-        this.setAria(_extends({}, firstButtonAria, commonButtonAria), (0, _renderer.default)($button));
+        this.setAria(Object.assign({}, firstButtonAria, commonButtonAria), (0, _renderer.default)($button));
       } else {
         this.setAria(commonButtonAria, (0, _renderer.default)($button));
       }
@@ -616,14 +616,19 @@ class DropDownButton extends _widget.default {
     }
   }
   _updateItemCollection(optionName) {
-    const selectedItemKey = this.option('selectedItemKey');
+    const {
+      selectedItemKey,
+      useSelectMode
+    } = this.option();
     this._setListOption('selectedItem', null);
     // @ts-expect-error ts-error
     this._setWidgetOption('_list', [optionName]);
     if ((0, _type.isDefined)(selectedItemKey)) {
       this._loadSelectedItem().done(selectedItem => {
-        this._setListOption('selectedItemKeys', [selectedItemKey]);
-        this._setListOption('selectedItem', selectedItem);
+        if (useSelectMode) {
+          this._setListOption('selectedItemKeys', [selectedItemKey]);
+          this._setListOption('selectedItem', selectedItem);
+        }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       }).fail(error => {
         this._setListOption('selectedItemKeys', []);

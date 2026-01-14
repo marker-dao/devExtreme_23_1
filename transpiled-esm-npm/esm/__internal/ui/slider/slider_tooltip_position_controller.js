@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import positionUtils from '../../../common/core/animation/position';
 import { move } from '../../../common/core/animation/translator';
 import $ from '../../../core/renderer';
@@ -54,14 +53,16 @@ export class SliderTooltipPositionController extends PopoverPositionController {
     const left = ((_this$_visualPosition = this._visualPosition) === null || _this$_visualPosition === void 0 ? void 0 : _this$_visualPosition.left) ?? 0;
     const isLeftSide = collisionSide === 'left';
     const offset = (isLeftSide ? 1 : -1) * oversize;
-    move(this._$content, {
-      left: left + offset
-    });
+    if (this._$content) {
+      move(this._$content, {
+        left: left + offset
+      });
+    }
     this._updateVisualPositionValue();
   }
   _positionToObject(position) {
     if (isCommonPosition(position)) {
-      const configuration = _extends({}, SLIDER_TOOLTIP_POSITION_ALIASES[position]);
+      const configuration = Object.assign({}, SLIDER_TOOLTIP_POSITION_ALIASES[position]);
       return configuration;
     }
     return position;

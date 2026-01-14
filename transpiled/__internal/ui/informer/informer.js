@@ -9,7 +9,6 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _m_icon = require("../../core/utils/m_icon");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const INFORMER_CLASS = exports.INFORMER_CLASS = 'dx-informer';
 const INFORMER_ERROR_CLASS = 'dx-informer-error';
 const INFORMER_INFO_CLASS = 'dx-informer-info';
@@ -21,7 +20,7 @@ const INFORMER_TEXT_CLASS = exports.INFORMER_TEXT_CLASS = 'dx-informer-text';
 const INFORMER_ICON_CLASS = 'dx-informer-icon';
 class Informer extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       contentAlignment: 'center',
       icon: '',
       showBackground: true,

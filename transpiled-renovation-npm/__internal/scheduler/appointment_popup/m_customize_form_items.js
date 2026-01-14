@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.customizeFormItems = void 0;
 var _extend = require("../../../core/utils/extend");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const isGroupItem = item => 'items' in item;
 const createFormItemFromConfig = configItem => typeof configItem === 'string' ? {
   itemType: 'simple',
@@ -17,7 +16,7 @@ const buildFormItemsMap = function (items) {
   let map = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Map();
   return items.reduce((accumulator, item) => {
     if (item.name) {
-      accumulator.set(item.name, _extends({}, item));
+      accumulator.set(item.name, Object.assign({}, item));
     }
     return buildFormItemsMap(isGroupItem(item) ? item.items ?? [] : [], accumulator);
   }, map);
@@ -49,7 +48,7 @@ const customizeFormItems = (items, userConfig) => {
   const customize = userItems => userItems.map(customItems => {
     const formItem = resolveItem(customItems);
     if (isGroupItem(formItem) && hasChildItems(customItems) && customItems.items) {
-      return _extends({}, formItem, {
+      return Object.assign({}, formItem, {
         items: customize(customItems.items)
       });
     }

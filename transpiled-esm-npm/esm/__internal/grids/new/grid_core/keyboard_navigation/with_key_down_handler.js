@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["onKeyDown", "keyDownConfig", "children"];
 import { createComponentVNode, normalizeProps } from "inferno";
@@ -31,7 +30,7 @@ export const withKeyDownHandler = WrappedComponent => {
           children
         } = _this$props,
         restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
-      return normalizeProps(createComponentVNode(2, WrappedComponent, _extends({}, restProps, {
+      return normalizeProps(createComponentVNode(2, WrappedComponent, Object.assign({}, restProps, {
         "onKeyDown": this.onKeyDown.bind(this),
         children: children
       })));

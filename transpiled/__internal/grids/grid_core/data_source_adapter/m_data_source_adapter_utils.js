@@ -9,7 +9,6 @@ var _type = require("../../../../core/utils/type");
 var _m_common = _interopRequireDefault(require("../../../core/utils/m_common"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const cloneItems = function (items, groupCount) {
   if (items) {
     items = items.slice(0);
@@ -114,7 +113,7 @@ const getItemFromCache = function (options, cacheItem, groupCount, index, take) 
 exports.getItemFromCache = getItemFromCache;
 const getGroupItemFromCache = function (cacheItem, groupCount, skips, takes) {
   if (groupCount && cacheItem) {
-    const result = _extends({}, cacheItem);
+    const result = Object.assign({}, cacheItem);
     const skip = skips[0] || 0;
     const take = takes[0];
     const {
@@ -188,7 +187,7 @@ const setPageDataToCache = function (options, data, groupCount) {
 exports.setPageDataToCache = setPageDataToCache;
 const getCacheItem = function (cacheItem, loadedItem, groupCount, skips) {
   if (groupCount && loadedItem) {
-    const result = _extends({}, loadedItem);
+    const result = Object.assign({}, loadedItem);
     delete result.isContinuation;
     delete result.isContinuationOnNextPage;
     const skip = skips[0] || 0;

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createFragment, createComponentVNode, normalizeProps } from "inferno";
 import messageLocalization from '../../../../../localization/message';
 import { Component } from 'inferno';
@@ -117,7 +116,7 @@ export class ColumnChooser extends Component {
       treeViewSelectModeConfig,
       treeViewDragAndDropModeConfig
     } = this.props;
-    return normalizeProps(createComponentVNode(2, TreeView, _extends({
+    return normalizeProps(createComponentVNode(2, TreeView, Object.assign({
       "componentRef": treeViewRef,
       "dataStructure": 'plain',
       "activeStateEnabled": true,

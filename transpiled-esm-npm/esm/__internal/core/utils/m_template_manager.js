@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import config from '../../../core/config';
 import devices from '../../../core/devices';
 import { getPublicElement } from '../../../core/element';
@@ -56,7 +55,7 @@ export const addPublicElementNormalization = template => {
   return extend({}, template, {
     render(options) {
       const $container = $(options.container);
-      return render(_extends({}, options, {
+      return render(Object.assign({}, options, {
         container: getPublicElement($container)
       }));
     }

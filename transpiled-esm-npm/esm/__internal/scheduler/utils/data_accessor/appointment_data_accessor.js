@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { compileGetter, compileSetter } from '../../../../core/utils/data';
 import dateSerialization from '../../../../core/utils/date_serialization';
 import { validateRRule } from '../../recurrence/validate_rule';
@@ -12,7 +11,7 @@ export class AppointmentDataAccessor extends DataAccessor {
     super();
     this.forceIsoDateParsing = forceIsoDateParsing;
     this.dateSerializationFormat = dateSerializationFormat;
-    this.expr = _extends({}, fields);
+    this.expr = Object.assign({}, fields);
     this.updateExpressions(fields);
   }
   getCommonAccessExpressions(expr) {

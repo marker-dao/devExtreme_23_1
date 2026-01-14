@@ -43,10 +43,10 @@ var _scrollable = _interopRequireDefault(require("../../ui/scroll_view/scrollabl
 var _tab_panel = _interopRequireDefault(require("../../ui/tab_panel/tab_panel"));
 var _m_text_editor = require("../../ui/text_box/m_text_editor.base");
 var _constants2 = require("../../ui/toolbar/constants");
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
+// @ts-expect-error ts-error
+
 const ITEM_OPTIONS_FOR_VALIDATION_UPDATING = ['items', 'isRequired', 'validationRules', 'visible'];
 class Form extends _widget.default {
   constructor() {
@@ -64,7 +64,7 @@ class Form extends _widget.default {
     this._createSmartPastedAction();
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       formID: `dx-${new _guid.default()}`,
       formData: {},
       colCount: 1,
@@ -357,7 +357,7 @@ class Form extends _widget.default {
           };
         }
         if ((0, _type.isObject)(item)) {
-          const preparedItem = _extends({}, item);
+          const preparedItem = Object.assign({}, item);
           itemRunTimeInfo.preparedItem = preparedItem;
           preparedItem.guid = guid;
           this._tryPrepareGroupItemCaption(preparedItem);
@@ -470,7 +470,7 @@ class Form extends _widget.default {
   }
   _itemTabbedTemplate(tabbedItem, data, $itemContainer) {
     const $tabPanel = (0, _renderer.default)('<div>').appendTo($itemContainer);
-    const tabPanelOptions = _extends({}, tabbedItem.tabPanelOptions, {
+    const tabPanelOptions = Object.assign({}, tabbedItem.tabPanelOptions, {
       dataSource: tabbedItem.tabs,
       onItemRendered: args => {
         var _tabbedItem$tabPanelO, _tabbedItem$tabPanelO2;

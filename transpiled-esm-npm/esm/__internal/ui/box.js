@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 // eslint-disable-next-line max-classes-per-file
 import registerComponent from '../../core/component_registrator';
 import $ from '../../core/renderer';
@@ -123,7 +122,7 @@ class LayoutStrategy {
 }
 class Box extends CollectionWidget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       direction: 'row',
       align: 'start',
       crossAlign: 'stretch',
@@ -198,7 +197,7 @@ class Box extends CollectionWidget {
         onItemRendered
       } = this.option();
       if (item) {
-        this._createComponent(item.$item, Box, _extends({
+        this._createComponent(item.$item, Box, Object.assign({
           itemTemplate,
           itemHoldTimeout,
           onItemHold,

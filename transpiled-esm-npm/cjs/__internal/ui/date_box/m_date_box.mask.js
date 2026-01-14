@@ -6,20 +6,19 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
 var _index = require("../../../common/core/events/utils/index");
-var _date = _interopRequireDefault(require("../../../common/core/localization/date"));
 var _default_date_names = _interopRequireDefault(require("../../../common/core/localization/default_date_names"));
-var _date2 = require("../../../common/core/localization/ldml/date.format");
-var _date3 = require("../../../common/core/localization/ldml/date.parser");
+var _date = require("../../../common/core/localization/ldml/date.format");
+var _date2 = require("../../../common/core/localization/ldml/date.parser");
 var _number = _interopRequireDefault(require("../../../common/core/localization/number"));
 var _devices = _interopRequireDefault(require("../../../core/devices"));
 var _browser = _interopRequireDefault(require("../../../core/utils/browser"));
 var _dom = require("../../../core/utils/dom");
 var _math = require("../../../core/utils/math");
 var _type = require("../../../core/utils/type");
+var _date3 = _interopRequireDefault(require("../../core/localization/date"));
 var _m_date_box = _interopRequireDefault(require("./m_date_box.base"));
 var _m_date_boxMask = require("./m_date_box.mask.parts");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const MASK_EVENT_NAMESPACE = 'dateBoxMask';
 const FORWARD = 1;
 const BACKWARD = -1;
@@ -37,7 +36,7 @@ class DateBoxMask extends _m_date_box.default {
       }
       return maskHandler.apply(this, [e]);
     };
-    return _extends({}, originalHandlers, {
+    return Object.assign({}, originalHandlers, {
       del: e => applyHandler(e, event => {
         this._revertPart(FORWARD);
         this._isAllSelected() || event.preventDefault();
@@ -103,12 +102,13 @@ class DateBoxMask extends _m_date_box.default {
   }
   _toggleAmPm() {
     const currentValue = this._getActivePartProp('text');
+    // @ts-expect-error ts-error
     const indexOfCurrentValue = _default_date_names.default.getPeriodNames().indexOf(currentValue);
     const newValue = indexOfCurrentValue ^ 1;
     this._setActivePartValue(newValue);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       useMaskBehavior: false,
       emptyDateValue: new Date(2000, 0, 1, 0, 0, 0)
     });
@@ -198,8 +198,11 @@ class DateBoxMask extends _m_date_box.default {
     }
   }
   _processInputKey(key) {
-    if (this._isAllSelected()) {
+    var _this$_dateParts;
+    const hasMultipleParts = ((_this$_dateParts = this._dateParts) === null || _this$_dateParts === void 0 ? void 0 : _this$_dateParts.length) > 1;
+    if (this._isAllSelected() && hasMultipleParts) {
       this._activePartIndex = 0;
+      this._clearSearchValue();
     }
     this._setNewDateIfEmpty();
     // eslint-disable-next-line radix
@@ -222,12 +225,11 @@ class DateBoxMask extends _m_date_box.default {
       return this._formatPattern;
     }
     const format = this._strategy.getDisplayFormat(this.option('displayFormat'));
-    // @ts-expect-error ts-error
-    const isLDMLPattern = (0, _type.isString)(format) && !_date.default._getPatternByFormat(format);
+    const isLDMLPattern = (0, _type.isString)(format) && !_date3.default._getPatternByFormat(format);
     if (isLDMLPattern) {
       this._formatPattern = format;
     } else {
-      this._formatPattern = (0, _date2.getFormat)(value => _date.default.format(value, format));
+      this._formatPattern = (0, _date.getFormat)(value => _date3.default.format(value, format));
     }
     return this._formatPattern;
   }
@@ -269,8 +271,9 @@ class DateBoxMask extends _m_date_box.default {
     }
   }
   _searchString(char) {
-    // eslint-disable-next-line radix
-    if (!isNaN(parseInt(this._getActivePartProp('text')))) {
+    const text = this._getActivePartProp('text');
+    const convertedText = _number.default.convertDigits(text, true);
+    if (!isNaN(parseInt(convertedText, 10))) {
       return;
     }
     const limits = this._getActivePartProp('limits')(this._maskValue);
@@ -308,7 +311,8 @@ class DateBoxMask extends _m_date_box.default {
     return this.option('useMaskBehavior') && mode === 'text';
   }
   _prepareRegExpInfo() {
-    this._regExpInfo = (0, _date3.getRegExpInfo)(this._getFormatPattern(), _date.default);
+    // @ts-expect-error ts-error
+    this._regExpInfo = (0, _date2.getRegExpInfo)(this._getFormatPattern(), _date3.default);
     const {
       regexp
     } = this._regExpInfo;
@@ -541,8 +545,7 @@ class DateBoxMask extends _m_date_box.default {
   }
   _maskPasteHandler(e) {
     const newText = this._replaceSelectedText(this.option('text'), this._caret(), (0, _dom.clipboardText)(e));
-    // @ts-expect-error ts-error
-    const date = _date.default.parse(newText, this._getFormatPattern());
+    const date = _date3.default.parse(newText, this._getFormatPattern());
     if (date && this._isDateValid(date)) {
       this._maskValue = date;
       this._renderDisplayText(this._getDisplayedText(this._maskValue));
@@ -568,14 +571,17 @@ class DateBoxMask extends _m_date_box.default {
   }
   _enterHandler() {
     this._fireChangeEvent();
-    this._selectNextPart(FORWARD);
+    if (this._useMaskBehavior() && this._isAllSelected()) {
+      this._selectFirstPart();
+    } else {
+      this._selectNextPart(FORWARD);
+    }
   }
   _focusOutHandler(e) {
     const shouldFireChangeEvent = this._useMaskBehavior() && !e.isDefaultPrevented();
     if (shouldFireChangeEvent) {
       this._fireChangeEvent();
       super._focusOutHandler(e);
-      this._selectFirstPart();
     } else {
       super._focusOutHandler(e);
     }

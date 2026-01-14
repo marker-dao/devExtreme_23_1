@@ -9,7 +9,6 @@ var _common = require("../../../core/utils/common");
 var _deferred = require("../../../core/utils/deferred");
 var _type = require("../../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class SelectionStrategy {
   constructor(options) {
     this._lastSelectAllPageDeferred = (0, _deferred.Deferred)().reject();
@@ -133,7 +132,7 @@ class SelectionStrategy {
     const needLoadAllData = this.options.maxFilterLengthInRequest && filterLength > this.options.maxFilterLengthInRequest;
     const deferred = (0, _deferred.Deferred)();
     const queryParams = this._getQueryParams();
-    const loadOptions = _extends({
+    const loadOptions = Object.assign({
       filter: needLoadAllData ? undefined : remoteFilter,
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       select: needLoadAllData ? this.options.dataFields() : select || this.options.dataFields()

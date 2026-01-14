@@ -1,0 +1,24 @@
+/**
+* DevExtreme (esm/__internal/grids/tree_list/module_not_extended/ai_column.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { AIColumnController, AIPromptEditorView, AIPromptEditorViewController, columnHeadersViewExtender } from '../../../grids/grid_core/ai_column/index';
+import gridCore from '../m_core';
+gridCore.registerModule('aiColumn', {
+  controllers: {
+    aiColumn: AIColumnController,
+    aiPromptEditor: AIPromptEditorViewController
+  },
+  views: {
+    aiPromptEditorView: AIPromptEditorView
+  },
+  extenders: {
+    views: {
+      columnHeadersView: columnHeadersViewExtender
+    }
+  }
+});

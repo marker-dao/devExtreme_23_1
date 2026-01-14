@@ -1,0 +1,174 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _renderer = _interopRequireDefault(require("../../../core/renderer"));
+var _size = require("../../../core/utils/size");
+var _type = require("../../../core/utils/type");
+var _window = require("../../../core/utils/window");
+var _splitter_control = _interopRequireDefault(require("../../../ui/splitter_control"));
+var _widget = _interopRequireDefault(require("../../core/widget/widget"));
+var _drawer = _interopRequireDefault(require("../../ui/drawer/drawer"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const window = (0, _window.getWindow)();
+const ADAPTIVE_STATE_SCREEN_WIDTH = 573;
+const FILE_MANAGER_ADAPTIVITY_DRAWER_PANEL_CLASS = 'dx-filemanager-adaptivity-drawer-panel';
+const DRAWER_PANEL_CONTENT_INITIAL = 'dx-drawer-panel-content-initial';
+const DRAWER_PANEL_CONTENT_ADAPTIVE = 'dx-drawer-panel-content-adaptive';
+class FileManagerAdaptivityControl extends _widget.default {
+  _initMarkup() {
+    super._initMarkup();
+    this._initActions();
+    this._isInAdaptiveState = false;
+    const $drawer = (0, _renderer.default)('<div>').appendTo(this.$element());
+    (0, _renderer.default)('<div>').addClass(FILE_MANAGER_ADAPTIVITY_DRAWER_PANEL_CLASS).appendTo($drawer);
+    // @ts-expect-error ts-error
+    this._drawer = this._createComponent($drawer, _drawer.default);
+    this._drawer.option({
+      opened: true,
+      template: this._createDrawerTemplate.bind(this)
+    });
+    (0, _renderer.default)(this._drawer.content()).addClass(DRAWER_PANEL_CONTENT_INITIAL);
+    const $drawerContent = $drawer.find(`.${FILE_MANAGER_ADAPTIVITY_DRAWER_PANEL_CLASS}`).first();
+    const {
+      contentTemplate: contentRenderer
+    } = this.option();
+    if ((0, _type.isFunction)(contentRenderer)) {
+      contentRenderer($drawerContent);
+    }
+    this._updateDrawerMaxSize();
+  }
+  _createDrawerTemplate(container) {
+    var _this$_drawer, _this$_drawer2;
+    const {
+      drawerTemplate
+    } = this.option();
+    drawerTemplate === null || drawerTemplate === void 0 || drawerTemplate(container);
+    this._splitter = this._createComponent('<div>', _splitter_control.default, {
+      container: this.$element(),
+      leftElement: (0, _renderer.default)((_this$_drawer = this._drawer) === null || _this$_drawer === void 0 ? void 0 : _this$_drawer.content()),
+      rightElement: (0, _renderer.default)((_this$_drawer2 = this._drawer) === null || _this$_drawer2 === void 0 ? void 0 : _this$_drawer2.viewContent()),
+      onApplyPanelSize: this._onApplyPanelSize.bind(this),
+      onActiveStateChanged: this._onActiveStateChanged.bind(this)
+    });
+    this._splitter.$element().appendTo(container);
+    this._splitter.disableSplitterCalculation(true);
+  }
+  _render() {
+    super._render();
+    this._checkAdaptiveState();
+  }
+  _onApplyPanelSize(e) {
+    var _this$_splitter, _this$_drawer3;
+    if (!(0, _window.hasWindow)()) {
+      return;
+    }
+    if (!((_this$_splitter = this._splitter) !== null && _this$_splitter !== void 0 && _this$_splitter.isSplitterMoved())) {
+      this._setDrawerWidth('');
+      return;
+    }
+    (0, _renderer.default)((_this$_drawer3 = this._drawer) === null || _this$_drawer3 === void 0 ? void 0 : _this$_drawer3.content()).removeClass(DRAWER_PANEL_CONTENT_INITIAL);
+    this._setDrawerWidth(e.leftPanelWidth);
+  }
+  _onActiveStateChanged(e) {
+    var _this$_splitter2;
+    (_this$_splitter2 = this._splitter) === null || _this$_splitter2 === void 0 || _this$_splitter2.disableSplitterCalculation(!e.isActive);
+    if (!e.isActive) {
+      var _this$_splitter3;
+      (_this$_splitter3 = this._splitter) === null || _this$_splitter3 === void 0 || _this$_splitter3.$element().css('left', 'auto');
+    }
+  }
+  _setDrawerWidth(width) {
+    var _this$_drawer4, _this$_drawer5;
+    (0, _renderer.default)((_this$_drawer4 = this._drawer) === null || _this$_drawer4 === void 0 ? void 0 : _this$_drawer4.content()).css('width', width);
+    this._updateDrawerMaxSize();
+    (_this$_drawer5 = this._drawer) === null || _this$_drawer5 === void 0 || _this$_drawer5.resizeViewContent();
+  }
+  _updateDrawerMaxSize() {
+    var _this$_drawer6;
+    (_this$_drawer6 = this._drawer) === null || _this$_drawer6 === void 0 || _this$_drawer6.option('maxSize', this._drawer.getRealPanelWidth());
+  }
+  // @ts-expect-error ts-error
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  _dimensionChanged(dimension) {
+    if (!dimension || dimension !== 'height') {
+      this._checkAdaptiveState();
+    }
+  }
+  _checkAdaptiveState() {
+    const oldState = this._isInAdaptiveState;
+    this._isInAdaptiveState = this._isSmallScreen();
+    if (oldState !== this._isInAdaptiveState) {
+      var _this$_drawer7;
+      this.toggleDrawer(!this._isInAdaptiveState, true);
+      (0, _renderer.default)((_this$_drawer7 = this._drawer) === null || _this$_drawer7 === void 0 ? void 0 : _this$_drawer7.content()).toggleClass(DRAWER_PANEL_CONTENT_ADAPTIVE, this._isInAdaptiveState);
+      this._raiseAdaptiveStateChanged(this._isInAdaptiveState);
+    }
+    if (this._isInAdaptiveState && this._isDrawerOpened()) {
+      this._updateDrawerMaxSize();
+    }
+  }
+  _isSmallScreen() {
+    return (0, _size.getWidth)(window) <= ADAPTIVE_STATE_SCREEN_WIDTH;
+  }
+  _isDrawerOpened() {
+    var _this$_drawer8;
+    const {
+      opened
+    } = ((_this$_drawer8 = this._drawer) === null || _this$_drawer8 === void 0 ? void 0 : _this$_drawer8.option()) ?? {};
+    return opened;
+  }
+  _initActions() {
+    this._actions = {
+      onAdaptiveStateChanged: this._createActionByOption('onAdaptiveStateChanged')
+    };
+  }
+  _raiseAdaptiveStateChanged(enabled) {
+    var _this$_actions, _this$_actions$onAdap;
+    (_this$_actions = this._actions) === null || _this$_actions === void 0 || (_this$_actions$onAdap = _this$_actions.onAdaptiveStateChanged) === null || _this$_actions$onAdap === void 0 || _this$_actions$onAdap.call(_this$_actions, {
+      enabled
+    });
+  }
+  _getDefaultOptions() {
+    return Object.assign({}, super._getDefaultOptions(), {
+      drawerTemplate: undefined,
+      contentTemplate: undefined,
+      onAdaptiveStateChanged: undefined
+    });
+  }
+  _optionChanged(args) {
+    const {
+      name
+    } = args;
+    switch (name) {
+      case 'drawerTemplate':
+      case 'contentTemplate':
+        this.repaint();
+        break;
+      case 'onAdaptiveStateChanged':
+        this._actions[name] = this._createActionByOption(name);
+        break;
+      default:
+        super._optionChanged(args);
+    }
+  }
+  isInAdaptiveState() {
+    return this._isInAdaptiveState;
+  }
+  toggleDrawer(showing, skipAnimation) {
+    var _this$_drawer9, _this$_drawer0, _this$_splitter4;
+    this._updateDrawerMaxSize();
+    (_this$_drawer9 = this._drawer) === null || _this$_drawer9 === void 0 || _this$_drawer9.option('animationEnabled', !skipAnimation);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    (_this$_drawer0 = this._drawer) === null || _this$_drawer0 === void 0 || _this$_drawer0.toggle(showing);
+    const isSplitterActive = this._isDrawerOpened() && !this.isInAdaptiveState();
+    (_this$_splitter4 = this._splitter) === null || _this$_splitter4 === void 0 || _this$_splitter4.toggleDisabled(!isSplitterActive);
+  }
+  getSplitterElement() {
+    var _this$_splitter5;
+    return (_this$_splitter5 = this._splitter) === null || _this$_splitter5 === void 0 || (_this$_splitter5 = _this$_splitter5.getSplitterBorderElement()) === null || _this$_splitter5 === void 0 ? void 0 : _this$_splitter5.get(0);
+  }
+}
+var _default = exports.default = FileManagerAdaptivityControl;

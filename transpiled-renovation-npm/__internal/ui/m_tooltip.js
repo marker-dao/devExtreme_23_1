@@ -10,13 +10,12 @@ var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _type = require("../../core/utils/type");
 var _ui = _interopRequireDefault(require("../../ui/popover/ui.popover"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE tooltip
 const TOOLTIP_CLASS = 'dx-tooltip';
 const TOOLTIP_WRAPPER_CLASS = 'dx-tooltip-wrapper';
 class Tooltip extends _ui.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       toolbarItems: [],
       showCloseButton: false,
       enableBodyScroll: true,
@@ -30,8 +29,9 @@ class Tooltip extends _ui.default {
     });
   }
   _render() {
+    var _this$$wrapper;
     this.$element().addClass(TOOLTIP_CLASS);
-    this.$wrapper().addClass(TOOLTIP_WRAPPER_CLASS);
+    (_this$$wrapper = this.$wrapper()) === null || _this$$wrapper === void 0 || _this$$wrapper.addClass(TOOLTIP_WRAPPER_CLASS);
     super._render();
   }
   _renderContent() {

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../../ui/html_editor/converters/m_delta';
 // @ts-expect-error ts-error
 import { Event as dxEvent } from '../../../common/core/events';
@@ -43,7 +42,7 @@ class HtmlEditor extends Editor {
     } = config();
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const stylingMode = editorStylingMode || 'outlined';
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       // @ts-expect-error undefined is not allowed
       aiIntegration: null,
       allowSoftLineBreak: false,
@@ -504,7 +503,7 @@ class HtmlEditor extends Editor {
           } = this.option();
           if (currentValue !== previousValue) {
             this._setSubmitValue(currentValue);
-            super._optionChanged(_extends({}, args, {
+            super._optionChanged(Object.assign({}, args, {
               [name]: currentValue
             }));
           }

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { compileGetter, getPathParts } from '../../../../../core/utils/data';
 import { captionize } from '../../../../../core/utils/inflector';
 import { isDefined, isString, type } from '../../../../../core/utils/type';
@@ -9,10 +8,10 @@ export function normalizeColumn(column, templateNormalizationFunc, columnFromDat
   const columnDataTypeDefaultOptions = defaultColumnPropertiesByDataType[dataType];
   const columnFormat = column.format ?? (columnDataTypeDefaultOptions === null || columnDataTypeDefaultOptions === void 0 ? void 0 : columnDataTypeDefaultOptions.format) ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.format);
   const caption = captionize(column.name);
-  const colWithDefaults = _extends({}, defaultColumnProperties, columnDataTypeDefaultOptions, {
+  const colWithDefaults = Object.assign({}, defaultColumnProperties, columnDataTypeDefaultOptions, {
     caption
   }, column);
-  const normalizedColumn = _extends({}, colWithDefaults, {
+  const normalizedColumn = Object.assign({}, colWithDefaults, {
     dataType
   }, !!columnFormat && {
     format: columnFormat
@@ -89,7 +88,7 @@ export function preNormalizeColumns(columns) {
       };
     }
     return column;
-  }).map((column, index) => _extends({}, column, {
+  }).map((column, index) => Object.assign({}, column, {
     name: column.name ?? column.dataField ?? `column-${index}`
   }));
   const visibleIndexes = getVisibleIndexes(normalizedColumns === null || normalizedColumns === void 0 ? void 0 : normalizedColumns.map(c => c.visibleIndex));
@@ -166,7 +165,7 @@ export function addDataFieldToComputedColumns(columns) {
       return column;
     }
     // NOTE: same logic in datagrid
-    return _extends({}, column, {
+    return Object.assign({}, column, {
       dataField: column.name
     });
   });

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { extend } from '../../../../../core/utils/extend';
 import { isDefined, isString } from '../../../../../core/utils/type';
 import { DEFAULT_TOOLBAR_ITEMS } from './const';
@@ -22,7 +21,7 @@ function normalizeToolbarItem(item, defaultButtonsMap, defaultItemNames) {
     if (isDefined(defaultButtonsMap[button.name])) {
       button = extend(true, {}, defaultButtonsMap[button.name], button);
     } else if (defaultItemNames.includes(button.name)) {
-      button = _extends({}, button, {
+      button = Object.assign({}, button, {
         visible: false
       });
     }

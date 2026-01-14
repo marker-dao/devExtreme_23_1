@@ -9,7 +9,6 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _deferred = require("../../../core/utils/deferred");
 var _m_stubs = require("../../core/utils/m_stubs");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const getOperationBySearchMode = searchMode => searchMode === 'equals' ? '=' : searchMode;
 exports.getOperationBySearchMode = getOperationBySearchMode;
 class SearchBoxController {
@@ -51,7 +50,7 @@ class SearchBoxController {
       searchTimeout
     } = options;
     const placeholder = _message.default.format('Search');
-    return _extends({
+    return Object.assign({
       mode: 'search',
       placeholder,
       tabIndex,

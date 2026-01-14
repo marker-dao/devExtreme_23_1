@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import each from 'jest-each';
 import * as utils from './utils';
@@ -298,19 +297,19 @@ describe('HeaderFilter', () => {
       });
       each`
       column                                                      | expectedResult
-      ${_extends({}, allowFilteringColumnConfig, {
+      ${Object.assign({}, allowFilteringColumnConfig, {
         filterValues: []
       })}                                                          | ${false}
-      ${_extends({}, allowFilteringColumnConfig, {
+      ${Object.assign({}, allowFilteringColumnConfig, {
         filterValues: [1, 2, 3]
       })}                                                          | ${true}
-      ${_extends({}, allowFilteringColumnConfig, {
+      ${Object.assign({}, allowFilteringColumnConfig, {
         filterValues: null
       })}                                                          | ${false}
-      ${_extends({}, allowFilteringColumnConfig, {
+      ${Object.assign({}, allowFilteringColumnConfig, {
         filterValues: 'test'
       })}                                                          | ${true}
-      ${_extends({}, allowFilteringColumnConfig, {
+      ${Object.assign({}, allowFilteringColumnConfig, {
         filterValues: [null]
       })}                                                          | ${true}
 `.it('should check if there are selected values', _ref7 => {
@@ -325,37 +324,37 @@ describe('HeaderFilter', () => {
     describe('getComposedHeaderFilter', () => {
       it.each([{
         caseName: 'two columns have plain values',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: 'test'
-        }), _extends({}, allowFilteringColumnConfig, {
+        }), Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: 'test2'
         })],
         result: [['ID1', '=', 'test'], 'and', ['ID2', '=', 'test2']]
       }, {
         caseName: 'one columns has plain value',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: 'test'
         })],
         result: [['ID1', '=', 'test']]
       }, {
         caseName: 'two columns have array values',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [1, 2, 3]
-        }), _extends({}, allowFilteringColumnConfig, {
+        }), Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: ['test1', 'test2']
         })],
         result: [['ID1', 'anyof', [1, 2, 3]], 'and', ['ID2', 'anyof', ['test1', 'test2']]]
       }, {
         caseName: 'two columns have array values, one of them contain 1 item',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [1]
-        }), _extends({}, allowFilteringColumnConfig, {
+        }), Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: ['test1', 'test2']
         })],
@@ -365,18 +364,18 @@ describe('HeaderFilter', () => {
         columns: [{
           dataField: 'ID1',
           filterValues: [1, 2, 3]
-        }, _extends({}, allowFilteringColumnConfig, {
+        }, Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: ['test1', 'test2']
         })],
         result: [['ID2', 'anyof', ['test1', 'test2']]]
       }, {
         caseName: 'two columns have exclude filterType',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [1, 2, 3],
           filterType: 'exclude'
-        }), _extends({}, allowFilteringColumnConfig, {
+        }), Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: 'test1',
           filterType: 'exclude'
@@ -384,24 +383,24 @@ describe('HeaderFilter', () => {
         result: [['ID1', 'noneof', [1, 2, 3]], 'and', ['ID2', '<>', 'test1']]
       }, {
         caseName: 'one column has an array of filter expressions',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [['ID1', '>', 5], ['ID1', '<', 10]]
         })],
         result: [[['ID1', '>', 5], 'or', ['ID1', '<', 10]]]
       }, {
         caseName: 'one column has an array of plain value and filter expressions',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [5, ['ID1', '=', 10]]
         })],
         result: [[['ID1', '=', 5], 'or', ['ID1', '=', 10]]]
       }, {
         caseName: 'two column have an array of filter expressions',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [['ID1', '>', 5], ['ID1', '<', 10]]
-        }), _extends({}, allowFilteringColumnConfig, {
+        }), Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: [['ID2', '>', 6], ['ID2', '<', 9]]
         })],

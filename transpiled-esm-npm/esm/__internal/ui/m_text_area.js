@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../common/core/events/core/events_engine';
 import scrollEvents from '../../common/core/events/gesture/emitter.gesture.scroll';
 import pointerEvents from '../../common/core/events/pointer';
@@ -15,7 +14,7 @@ export const TEXTAREA_CLASS = 'dx-textarea';
 export const TEXTEDITOR_INPUT_CLASS_AUTO_RESIZE = 'dx-texteditor-input-auto-resize';
 class TextArea extends TextBox {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       spellcheck: true,
       autoResizeEnabled: false,
       _shouldAttachKeyboardEvents: false

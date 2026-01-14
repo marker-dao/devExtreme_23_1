@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 import positionUtils from '../common/core/animation/position';
 import { locate, move } from '../common/core/animation/translator';
@@ -208,7 +207,7 @@ class Draggable extends DOMComponent {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _fireRemoveEvent(sourceEvent) {}
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       // @ts-expect-error
       onDragStart: null,
       // @ts-expect-error
@@ -516,7 +515,7 @@ class Draggable extends DOMComponent {
       dragElement: $dragElement.get(0),
       initialOffset: isFixedPosition && initialOffset
     }));
-    this._getAction('onDraggableElementShown')(_extends({}, dragStartArgs, {
+    this._getAction('onDraggableElementShown')(Object.assign({}, dragStartArgs, {
       dragElement: $dragElement
     }));
     const $area = this._getArea();

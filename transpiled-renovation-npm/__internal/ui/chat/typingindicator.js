@@ -8,7 +8,6 @@ var _message = _interopRequireDefault(require("../../../common/core/localization
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _dom_component = _interopRequireDefault(require("../../core/widget/dom_component"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CHAT_TYPINGINDICATOR_CLASS = 'dx-chat-typingindicator';
 const CHAT_TYPINGINDICATOR_CONTENT_CLASS = 'dx-chat-typingindicator-content';
 const CHAT_TYPINGINDICATOR_TEXT_CLASS = 'dx-chat-typingindicator-text';
@@ -16,7 +15,7 @@ const CHAT_TYPINGINDICATOR_BUBBLE_CLASS = 'dx-chat-typingindicator-bubble';
 const CHAT_TYPINGINDICATOR_CIRCLE_CLASS = 'dx-chat-typingindicator-circle';
 class TypingIndicator extends _dom_component.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       typingUsers: []
     });
   }

@@ -4,7 +4,6 @@ var _globals = require("@jest/globals");
 var _appointment_data_accessor = require("../../../scheduler/__mock__/appointment_data_accessor.mock");
 var _timezone_calculator = require("../../r1/timezone_calculator");
 var _prepare_appointments = require("./prepare_appointments");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const schedulerMock = {
   currentView: {
     type: 'agenda'
@@ -41,7 +40,7 @@ const schedulerMock = {
         endDate: data[0].startDate.getTime() + 30 * 60000
       },
       hasRecurrenceRule: false,
-      itemData: _extends({}, data[0], {
+      itemData: Object.assign({}, data[0], {
         endDate: new Date(2021, 9, 9, 17, 30)
       }),
       recurrenceException: undefined,

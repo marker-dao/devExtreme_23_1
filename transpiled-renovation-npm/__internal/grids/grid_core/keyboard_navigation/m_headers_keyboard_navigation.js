@@ -8,7 +8,6 @@ var _index = require("../../../../common/core/events/utils/index");
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _position = require("../../../../core/utils/position");
 var _type = require("../../../../core/utils/type");
-var _get_element_location_internal = require("../../../ui/scroll_view/utils/get_element_location_internal");
 var _const = require("../sticky_columns/const");
 var _dom = require("../sticky_columns/dom");
 var _utils = require("../sticky_columns/utils");
@@ -16,8 +15,6 @@ var _const2 = require("./const");
 var _m_column_focus_dispatcher = require("./m_column_focus_dispatcher");
 var _m_column_keyboard_navigation_core = require("./m_column_keyboard_navigation_core");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-/* eslint-disable max-classes-per-file */
-
 class HeadersKeyboardNavigationController extends _m_column_keyboard_navigation_core.ColumnKeyboardNavigationController {
   constructor() {
     super(...arguments);
@@ -123,33 +120,6 @@ class HeadersKeyboardNavigationController extends _m_column_keyboard_navigation_
     }
     return result;
   }
-  getContainerBoundingRect($container) {
-    const containerRect = (0, _position.getBoundingRect)($container.get(0));
-    return {
-      left: containerRect.left,
-      right: containerRect.right
-    };
-  }
-  getScrollPadding($container) {
-    const containerRect = (0, _position.getBoundingRect)($container.get(0));
-    const containerBoundingRect = this.getContainerBoundingRect($container);
-    return {
-      left: containerBoundingRect.left - containerRect.left,
-      right: containerRect.right - containerBoundingRect.right
-    };
-  }
-  scrollToColumn($cell) {
-    var _this$getView;
-    const scrollable = (_this$getView = this.getView('rowsView')) === null || _this$getView === void 0 ? void 0 : _this$getView.getScrollable();
-    if (!scrollable) {
-      return;
-    }
-    const scrollPadding = this.getScrollPadding((0, _renderer.default)(scrollable.container()));
-    const scrollPosition = (0, _get_element_location_internal.getElementLocationInternal)($cell[0], 'horizontal', (0, _renderer.default)(this._columnHeadersView.getContent())[0], scrollable.scrollOffset(), scrollPadding, this.addWidgetPrefix('table'));
-    scrollable.scrollTo({
-      x: scrollPosition
-    });
-  }
   init() {
     super.init();
     this._columnHeadersView = this.getView('columnHeadersView');
@@ -180,37 +150,21 @@ class HeadersKeyboardNavigationController extends _m_column_keyboard_navigation_
     }
     const focusedCellIsOutsideVisibleArea = $focusedCell.length && this.isOutsideVisibleArea($focusedCell, (0, _renderer.default)(this._columnHeadersView.getContent()));
     if (focusedCellIsOutsideVisibleArea) {
-      this.scrollToColumn($focusedCell);
-    } else {
-      super.restoreFocus();
+      this.scrollToNextCell($focusedCell).then(() => {
+        super.restoreFocus();
+      });
+      return;
     }
+    super.restoreFocus();
   }
   needToFocus() {
     return this.needToRestoreFocus;
   }
 }
 exports.HeadersKeyboardNavigationController = HeadersKeyboardNavigationController;
-const columnHeadersView = Base => class ColumnHeadersViewKeyboardNavigationExtender extends Base {
-  handleScroll(e) {
-    var _this$_headersKeyboar, _this$_columnsControl;
-    super.handleScroll(e);
-    if (!((_this$_headersKeyboar = this._headersKeyboardNavigation) !== null && _this$_headersKeyboar !== void 0 && _this$_headersKeyboar.needToFocus())) {
-      return;
-    }
-    const isNeedToRenderVirtualColumns = (_this$_columnsControl = this._columnsController) === null || _this$_columnsControl === void 0 ? void 0 : _this$_columnsControl.isNeedToRenderVirtualColumns(e.target.scrollLeft);
-    if (!isNeedToRenderVirtualColumns) {
-      this._headersKeyboardNavigation.restoreFocus();
-    }
-  }
-};
 const headersKeyboardNavigationModule = exports.headersKeyboardNavigationModule = {
   controllers: {
     headersKeyboardNavigation: HeadersKeyboardNavigationController,
     columnFocusDispatcher: _m_column_focus_dispatcher.ColumnFocusDispatcher
-  },
-  extenders: {
-    views: {
-      columnHeadersView
-    }
   }
 };

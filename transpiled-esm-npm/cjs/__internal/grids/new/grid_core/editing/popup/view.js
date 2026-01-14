@@ -19,7 +19,8 @@ var _controller2 = require("../controller");
 var _utils = require("../utils");
 var _component = require("./component");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 const EDITOR_TYPES_BY_DATA_TYPE = {
   string: 'dxTextBox',
   number: 'dxNumberBox',
@@ -87,11 +88,11 @@ class EditPopupView extends _view.View {
       (0, _m_extend.extend)(simpleFormItem, column.formItem);
       simpleFormItem.dataField ?? (simpleFormItem.dataField = column.dataField);
       simpleFormItem.validationRules ?? (simpleFormItem.validationRules = column.validationRules);
-      simpleFormItem.label = _extends({
+      simpleFormItem.label = Object.assign({
         text: column.caption
       }, column.formItem.label);
       const originalContentReady = simpleFormItem === null || simpleFormItem === void 0 || (_simpleFormItem$edito = simpleFormItem.editorOptions) === null || _simpleFormItem$edito === void 0 ? void 0 : _simpleFormItem$edito.onContentReady;
-      simpleFormItem.editorOptions = _extends({
+      simpleFormItem.editorOptions = Object.assign({
         stylingMode: 'outlined',
         disabled: !column.allowEditing
       }, column.editorOptions, column.formItem.editorOptions, simpleFormItem.editorOptions, {

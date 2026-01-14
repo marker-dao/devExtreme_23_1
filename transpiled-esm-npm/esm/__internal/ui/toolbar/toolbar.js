@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../../core/component_registrator';
 import { MultiLineStrategy } from './strategy/toolbar.multiline';
 import { SingleLineStrategy } from './strategy/toolbar.singleline';
@@ -8,7 +7,7 @@ const TOOLBAR_MULTILINE_CLASS = 'dx-toolbar-multiline';
 const TOOLBAR_AUTO_HIDE_TEXT_CLASS = 'dx-toolbar-text-auto-hide';
 class Toolbar extends ToolbarBase {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       menuItemTemplate: 'menuItem',
       overflowMenuVisible: false,
       multiline: false

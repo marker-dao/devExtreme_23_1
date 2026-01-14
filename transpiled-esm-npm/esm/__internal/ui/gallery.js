@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../../common/core/animation';
 import { move } from '../../common/core/animation/translator';
 import { name as clickEventName } from '../../common/core/events/click';
@@ -40,13 +39,13 @@ const GALLERY_ITEM_DATA_KEY = 'dxGalleryItemData';
 const MAX_CALC_ERROR = 1;
 class GalleryNavButton extends Widget {
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       pageUp: noop,
       pageDown: noop
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       direction: 'next',
       onClick: null,
       hoverStateEnabled: true,
@@ -85,7 +84,7 @@ class Gallery extends CollectionWidget {
     return GALLERY_ITEM_SELECTOR;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: false,
       animationDuration: 400,
       animationEnabled: true,
@@ -428,7 +427,7 @@ class Gallery extends CollectionWidget {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    fx.animate(this._$container.get(0), _extends({
+    fx.animate(this._$container.get(0), Object.assign({
       type: 'slide',
       to: {
         left: targetPosition * (this._elementWidth() ?? 0)

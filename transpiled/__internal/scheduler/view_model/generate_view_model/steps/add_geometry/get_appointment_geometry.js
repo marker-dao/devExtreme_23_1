@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.getAppointmentGeometry = void 0;
 var _get_appointment_abstract_geometry = require("./get_appointment_abstract_geometry");
 var _swap_by_view_orientation = require("./swap_by_view_orientation");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const getAppointmentGeometry = (entity, _ref) => {
   let {
     collectorPosition,
@@ -17,7 +16,7 @@ const getAppointmentGeometry = (entity, _ref) => {
   } = _ref;
   const cellAbstractSize = (0, _swap_by_view_orientation.getAbstractSizeByViewOrientation)(cellSize, viewOrientation);
   const collectorFullAbstractSize = (0, _swap_by_view_orientation.getAbstractSizeByViewOrientation)(collectorWithMarginsSize, viewOrientation);
-  const abstractGeometry = _extends({}, (0, _get_appointment_abstract_geometry.getAppointmentX)(entity, cellAbstractSize, cells), (0, _get_appointment_abstract_geometry.getAppointmentY)(entity, cellAbstractSize, collectorFullAbstractSize.sizeY, collectorPosition));
+  const abstractGeometry = Object.assign({}, (0, _get_appointment_abstract_geometry.getAppointmentX)(entity, cellAbstractSize, cells), (0, _get_appointment_abstract_geometry.getAppointmentY)(entity, cellAbstractSize, collectorFullAbstractSize.sizeY, collectorPosition));
   const entityGeometry = (0, _swap_by_view_orientation.getRealSizeByViewOrientation)(abstractGeometry, viewOrientation);
   return entityGeometry;
 };

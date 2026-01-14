@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
 import { isDefined } from '../../../core/utils/type';
@@ -8,7 +7,7 @@ const AVATAR_INITIALS_CLASS = 'dx-avatar-initials';
 const AVATAR_IMAGE_CLASS = 'dx-avatar-image';
 class Avatar extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       name: 'Unknown User',
       url: '',
       alt: ''

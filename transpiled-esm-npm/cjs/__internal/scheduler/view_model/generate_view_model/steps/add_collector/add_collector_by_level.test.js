@@ -2,7 +2,6 @@
 
 var _globals = require("@jest/globals");
 var _add_collector_by_level = require("./add_collector_by_level");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const monthCells = Array.from({
   length: 28
 }).map((_, index) => ({
@@ -61,16 +60,16 @@ const monthCells = Array.from({
       maxLevel: 3,
       collectBy: 'byStartDate',
       isCompact: false
-    })).toEqual([_extends({}, items[0], {
+    })).toEqual([Object.assign({}, items[0], {
       items: [],
       isCompact: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       items: [],
       isCompact: false
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       items: [],
       isCompact: false
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       items: [],
       isCompact: false
     })]);
@@ -123,10 +122,10 @@ const monthCells = Array.from({
       maxLevel: 0,
       collectBy: 'byStartDate',
       isCompact: false
-    })).toEqual([_extends({}, items[0], {
+    })).toEqual([Object.assign({}, items[0], {
       items: [items[0], items[1]],
       isCompact: false
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       items: [items[2], items[3]],
       isCompact: false
     })]);
@@ -179,16 +178,16 @@ const monthCells = Array.from({
       maxLevel: 2,
       collectBy: 'byStartDate',
       isCompact: true
-    })).toEqual([_extends({}, items[0], {
+    })).toEqual([Object.assign({}, items[0], {
       items: [],
       isCompact: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       items: [],
       isCompact: false
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       items: [],
       isCompact: false
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       items: [items[2]],
       isCompact: true
     })]);
@@ -255,22 +254,22 @@ const monthCells = Array.from({
       maxLevel: -1,
       collectBy: 'byStartDate',
       isCompact: true
-    })).toEqual([_extends({}, items[0], {
+    })).toEqual([Object.assign({}, items[0], {
       items: [],
       isCompact: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       items: [],
       isCompact: false
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       items: [],
       isCompact: false
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       items: [],
       isCompact: false
-    }), _extends({}, items[4], {
+    }), Object.assign({}, items[4], {
       items: [],
       isCompact: false
-    }), _extends({}, items[5], {
+    }), Object.assign({}, items[5], {
       items: [],
       isCompact: false
     })]);
@@ -327,27 +326,27 @@ const monthCells = Array.from({
       maxLevel: 1,
       collectBy: 'byOccupation',
       isCompact: true
-    })).toEqual([_extends({}, items[0], {
+    })).toEqual([Object.assign({}, items[0], {
       items: [],
       isCompact: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       items: [items[1], items[2], items[3]],
       isCompact: true
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       startDateUTC: monthCells[8].min,
       endDateUTC: monthCells[8].max,
       cellIndex: 8,
       endCellIndex: 8,
       rowIndex: monthCells[8].rowIndex,
       columnIndex: monthCells[8].columnIndex,
-      items: [_extends({}, items[1], {
+      items: [Object.assign({}, items[1], {
         startDateUTC: monthCells[8].min,
         endDateUTC: monthCells[8].max,
         cellIndex: 8,
         endCellIndex: 8,
         rowIndex: monthCells[8].rowIndex,
         columnIndex: monthCells[8].columnIndex
-      }), _extends({}, items[2], {
+      }), Object.assign({}, items[2], {
         startDateUTC: monthCells[8].min,
         endDateUTC: monthCells[8].max,
         cellIndex: 8,
@@ -356,14 +355,14 @@ const monthCells = Array.from({
         columnIndex: monthCells[8].columnIndex
       })],
       isCompact: true
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       startDateUTC: monthCells[9].min,
       endDateUTC: monthCells[9].max,
       cellIndex: 9,
       endCellIndex: 9,
       rowIndex: monthCells[9].rowIndex,
       columnIndex: monthCells[9].columnIndex,
-      items: [_extends({}, items[1], {
+      items: [Object.assign({}, items[1], {
         startDateUTC: monthCells[9].min,
         endDateUTC: monthCells[9].max,
         cellIndex: 9,

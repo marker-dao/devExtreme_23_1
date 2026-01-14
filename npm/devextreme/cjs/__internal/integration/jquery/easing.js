@@ -1,0 +1,18 @@
+/**
+* DevExtreme (cjs/__internal/integration/jquery/easing.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+var _easing = require("../../common/core/animation/easing");
+var _jquery = _interopRequireDefault(require("jquery"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+// eslint-disable-next-line import/no-extraneous-dependencies
+
+if (_jquery.default) {
+  (0, _easing.setEasing)(_jquery.default.easing);
+}

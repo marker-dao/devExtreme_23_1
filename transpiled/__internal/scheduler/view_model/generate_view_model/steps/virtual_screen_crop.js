@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.cropByVirtualScreen = void 0;
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const cropByVirtualScreen = (entities, _ref) => {
   let {
     isVirtualScrolling,
@@ -23,7 +22,7 @@ const cropByVirtualScreen = (entities, _ref) => {
       const top = Math.max(screen.top, item.top);
       const width = Math.min(screen.right, right) - left;
       const height = Math.min(screen.bottom, bottom) - top;
-      acc.push(_extends({}, item, {
+      acc.push(Object.assign({}, item, {
         left,
         width,
         top,

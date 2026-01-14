@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { getContext } from '../di.test_utils';
 import { ItemsController } from '../items_controller/items_controller';
@@ -6,7 +5,7 @@ import { ToolbarController } from '../toolbar/controller';
 import { SelectionController } from './controller';
 const setup = function () {
   let config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  const context = getContext(_extends({
+  const context = getContext(Object.assign({
     selection: {
       mode: 'single'
     }

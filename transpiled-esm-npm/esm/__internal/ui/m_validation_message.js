@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../core/component_registrator';
 import $ from '../../core/renderer';
 import { getDefaultAlignment } from '../../core/utils/position';
@@ -12,7 +11,7 @@ const INVALID_MESSAGE_CONTENT = 'dx-invalid-message-content';
 const VALIDATION_MESSAGE_MIN_WIDTH = 100;
 class ValidationMessage extends Overlay {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       integrationOptions: {},
       templatesRenderAsynchronously: false,
       shading: false,
@@ -62,20 +61,23 @@ class ValidationMessage extends Overlay {
   }
   _toggleVisibilityClasses(visible) {
     if (visible) {
+      var _this$$wrapper;
       this.$element().addClass(INVALID_MESSAGE);
-      this.$wrapper().addClass(INVALID_MESSAGE);
+      (_this$$wrapper = this.$wrapper()) === null || _this$$wrapper === void 0 || _this$$wrapper.addClass(INVALID_MESSAGE);
     } else {
+      var _this$$wrapper2;
       this.$element().removeClass(INVALID_MESSAGE);
-      this.$wrapper().removeClass(INVALID_MESSAGE);
+      (_this$$wrapper2 = this.$wrapper()) === null || _this$$wrapper2 === void 0 || _this$$wrapper2.removeClass(INVALID_MESSAGE);
     }
   }
   _updateContentId() {
+    var _this$$content;
     const {
       container,
       contentId
     } = this.option();
     const id = contentId ?? $(container).attr('aria-describedby');
-    this.$content().addClass(INVALID_MESSAGE_CONTENT).attr('id', id);
+    (_this$$content = this.$content()) === null || _this$$content === void 0 || _this$$content.addClass(INVALID_MESSAGE_CONTENT).attr('id', id);
   }
   _renderInnerHtml(element) {
     const $element = element && $(element);
@@ -92,10 +94,11 @@ class ValidationMessage extends Overlay {
     return validationErrorMessage;
   }
   _toggleModeClass() {
+    var _this$$wrapper3;
     const {
       mode
     } = this.option();
-    this.$wrapper().toggleClass(INVALID_MESSAGE_AUTO, mode === 'auto').toggleClass(INVALID_MESSAGE_ALWAYS, mode === 'always');
+    (_this$$wrapper3 = this.$wrapper()) === null || _this$$wrapper3 === void 0 || _this$$wrapper3.toggleClass(INVALID_MESSAGE_AUTO, mode === 'auto').toggleClass(INVALID_MESSAGE_ALWAYS, mode === 'always');
   }
   updateMaxWidth() {
     const target = this.option('target');
@@ -130,7 +133,7 @@ class ValidationMessage extends Overlay {
     } = this.option();
     const rtlSide = getDefaultAlignment(rtlEnabled);
     const positions = this._getPositionsArray(positionSide, rtlSide);
-    const offset = _extends({}, componentOffset);
+    const offset = Object.assign({}, componentOffset);
     this.$element().addClass(`dx-invalid-message-${positionSide}`);
     // @ts-expect-error ts-error
     if (rtlEnabled && positionSide !== 'left' && positionSide !== 'right') offset.h = -offset.h;

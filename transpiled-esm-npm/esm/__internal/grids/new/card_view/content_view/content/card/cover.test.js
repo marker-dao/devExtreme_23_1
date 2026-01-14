@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode, normalizeProps } from "inferno";
 import { describe, expect, it } from '@jest/globals';
 import { render } from 'inferno';
@@ -11,7 +10,7 @@ describe('Cover', () => {
       alt: 'Card Cover',
       className: 'cover-image'
     };
-    render(normalizeProps(createComponentVNode(2, Cover, _extends({
+    render(normalizeProps(createComponentVNode(2, Cover, Object.assign({
       "card": {}
     }, props))), container);
     const image = container.querySelector('img');
@@ -24,7 +23,7 @@ describe('Cover', () => {
     it('should render image thumbnail', () => {
       const container = document.createElement('div');
       const props = {};
-      render(normalizeProps(createComponentVNode(2, Cover, _extends({
+      render(normalizeProps(createComponentVNode(2, Cover, Object.assign({
         "card": {}
       }, props))), container);
       expect(container).toMatchSnapshot();

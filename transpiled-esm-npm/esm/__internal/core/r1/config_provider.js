@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseInfernoComponent } from '../../core/r1/runtime/inferno/index';
@@ -24,7 +23,7 @@ export class ConfigProvider extends BaseInfernoComponent {
     }
   }
   getChildContext() {
-    return _extends({}, this.context, {
+    return Object.assign({}, this.context, {
       [ConfigContext.id]: this.config || ConfigContext.defaultValue
     });
   }

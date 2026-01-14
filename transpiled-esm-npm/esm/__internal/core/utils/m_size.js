@@ -209,20 +209,20 @@ export const implementationsMap = {
     return elementSizeHelper('innerWidth', ...args);
   },
   setInnerWidth: function () {
-    for (var _len10 = arguments.length, args = new Array(_len10), _key10 = 0; _key10 < _len10; _key10++) {
-      args[_key10] = arguments[_key10];
+    for (var _len0 = arguments.length, args = new Array(_len0), _key0 = 0; _key0 < _len0; _key0++) {
+      args[_key0] = arguments[_key0];
     }
     return elementSizeHelper('innerWidth', ...args);
   },
   getInnerHeight: function () {
-    for (var _len11 = arguments.length, args = new Array(_len11), _key11 = 0; _key11 < _len11; _key11++) {
-      args[_key11] = arguments[_key11];
+    for (var _len1 = arguments.length, args = new Array(_len1), _key1 = 0; _key1 < _len1; _key1++) {
+      args[_key1] = arguments[_key1];
     }
     return elementSizeHelper('innerHeight', ...args);
   },
   setInnerHeight: function () {
-    for (var _len12 = arguments.length, args = new Array(_len12), _key12 = 0; _key12 < _len12; _key12++) {
-      args[_key12] = arguments[_key12];
+    for (var _len10 = arguments.length, args = new Array(_len10), _key10 = 0; _key10 < _len10; _key10++) {
+      args[_key10] = arguments[_key10];
     }
     return elementSizeHelper('innerHeight', ...args);
   }

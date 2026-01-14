@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../../common/core/localization/message';
 import devices from '../../../../core/devices';
 import { getWidth } from '../../../../core/utils/size';
@@ -56,7 +55,7 @@ export const getPopupToolbarItems = (allowUpdating, doneClick) => {
   const result = [];
   const buttonsConfig = getButtonsConfig();
   if (allowUpdating) {
-    result.push(_extends({}, buttonsConfig.doneButton, {
+    result.push(Object.assign({}, buttonsConfig.doneButton, {
       onClick: doneClick
     }));
   }

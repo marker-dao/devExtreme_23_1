@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createFragment } from "inferno";
 import dxPopup from '../../../../../ui/popup';
 import { createPortal } from 'inferno';
@@ -17,8 +16,8 @@ export class Popup extends InfernoWrapper {
     // @ts-expect-error
     if ((_props = props) !== null && _props !== void 0 && (_props = _props.position) !== null && _props !== void 0 && (_props = _props.of) !== null && _props !== void 0 && _props.current) {
       // eslint-disable-next-line no-param-reassign
-      props = _extends({}, props, {
-        position: _extends({}, props.position, {
+      props = Object.assign({}, props, {
+        position: Object.assign({}, props.position, {
           // @ts-expect-error
           of: wrapRef(props.position.of)
         })

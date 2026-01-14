@@ -8,10 +8,9 @@ require("../../../ui/toolbar");
 var _component_registrator = _interopRequireDefault(require("../../../core/component_registrator"));
 var _ui = _interopRequireDefault(require("../../../ui/popover/ui.popover"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class PopoverFull extends _ui.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       preventScrollEvents: false
     });
   }

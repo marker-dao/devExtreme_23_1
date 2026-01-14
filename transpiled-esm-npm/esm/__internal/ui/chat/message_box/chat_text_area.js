@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { normalizeKeyName } from '../../../../common/core/events/utils/index';
 import messageLocalization from '../../../../common/core/localization/message';
 import devices from '../../../../core/devices';
@@ -20,6 +19,7 @@ const ERRORS = {
   fileLimit: messageLocalization.format('dxChat-fileLimitReachedWarning', MAX_ATTACHMENTS_COUNT)
 };
 const isMobile = () => devices.current().deviceType !== 'desktop';
+export const DEFAULT_ALLOWED_FILE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.pdf', '.docx', '.xlsx', '.pptx', '.txt', '.rtf', '.csv', '.md'];
 class ChatTextArea extends TextArea {
   constructor() {
     super(...arguments);
@@ -51,13 +51,12 @@ class ChatTextArea extends TextArea {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       stylingMode: 'outlined',
       placeholder: messageLocalization.format('dxChat-textareaPlaceholder'),
       autoResizeEnabled: true,
       valueChangeEvent: 'input',
-      maxHeight: '53.86em',
-      fileUploaderOptions: undefined
+      maxHeight: '53.86em'
     });
   }
   _defaultOptionsRules() {
@@ -70,7 +69,7 @@ class ChatTextArea extends TextArea {
     return rules;
   }
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       enter: e => {
         if (this._shouldSendMessageOnEnter(e)) {
           e.preventDefault();
@@ -224,10 +223,12 @@ class ChatTextArea extends TextArea {
     const {
       fileUploaderOptions = {}
     } = this.option();
-    const multiple = fileUploaderOptions.multiple ?? true;
     const visible = this._shouldHideFileUploader(fileUploaderOptions.value);
-    return _extends({}, fileUploaderOptions, {
-      multiple,
+    const defaultFileUploaderOptions = {
+      multiple: true,
+      allowedFileExtensions: DEFAULT_ALLOWED_FILE_EXTENSIONS
+    };
+    return Object.assign({}, defaultFileUploaderOptions, fileUploaderOptions, {
       visible,
       uploadMode: 'instantly',
       dialogTrigger: this.$element().find(`.${CHAT_TEXT_AREA_ATTACH_BUTTON}`).get(0),
@@ -286,7 +287,7 @@ class ChatTextArea extends TextArea {
     } = this.option();
     const fileInfo = (_this$_filesToSend4 = this._filesToSend) === null || _this$_filesToSend4 === void 0 ? void 0 : _this$_filesToSend4.get(file);
     if (this._filesToSend && fileInfo) {
-      this._filesToSend.set(file, _extends({}, fileInfo, {
+      this._filesToSend.set(file, Object.assign({}, fileInfo, {
         readyToSend: true
       }));
     }

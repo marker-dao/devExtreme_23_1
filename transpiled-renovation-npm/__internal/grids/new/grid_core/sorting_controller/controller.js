@@ -9,7 +9,6 @@ var _index2 = require("../columns_controller/index");
 var _utils = require("../columns_controller/utils");
 var _options_controller = require("../options_controller/options_controller");
 var _utils2 = require("./utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class SortingController {
   constructor(options, columnsController) {
     // TODO: Resolve the nested update issue
@@ -161,7 +160,7 @@ class SortingController {
         orderedSortedColumns.forEach(c => {
           const index = (0, _utils.getColumnIndexByName)(newColumns, c.name);
           if (newColumns[index].sortIndex !== counter) {
-            newColumns[index] = _extends({}, newColumns[index], {
+            newColumns[index] = Object.assign({}, newColumns[index], {
               sortIndex: counter
             });
           }

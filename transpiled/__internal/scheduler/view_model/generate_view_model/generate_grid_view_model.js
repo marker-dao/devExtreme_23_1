@@ -63,7 +63,8 @@ const generateGridViewModel = (schedulerStore, items) => {
   const step7 = (0, _add_direction.addDirection)(step6, 'horizontal', viewOrientation);
   const step8 = (0, _add_emptiness.addEmptiness)(step7, {
     isTimelineView,
-    isAdaptivityEnabled
+    isAdaptivityEnabled,
+    isMonthView
   });
   return step8;
 };

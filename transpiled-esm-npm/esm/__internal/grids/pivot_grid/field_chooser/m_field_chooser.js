@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../data_source/m_data_source';
 import localizationMessage from '../../../../common/core/localization/message';
 import registerComponent from '../../../../core/component_registrator';
@@ -67,7 +66,7 @@ function getScrollable(container) {
 }
 export class FieldChooser extends FieldChooserBase {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       height: 400,
       layout: 0,
       dataSource: null,

@@ -9,7 +9,8 @@ var _icon = require("../../../core/utils/icon");
 var _index = require("../../core/r1/runtime/inferno/index");
 var _index2 = require("../../core/r1/utils/index");
 var _combine_classes = require("../../core/utils/combine_classes");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // with short path tests cant run
+// with short path tests cant run
+
 const defaultIconProps = exports.defaultIconProps = {
   position: 'left',
   source: ''
@@ -34,12 +35,12 @@ class Icon extends _index.BaseInfernoComponent {
       source
     } = this.props;
     if (this.sourceType === 'dxIcon') {
-      return (0, _combine_classes.combineClasses)(_extends({}, generalClasses, {
+      return (0, _combine_classes.combineClasses)(Object.assign({}, generalClasses, {
         [`dx-icon-${source}`]: true
       }));
     }
     if (this.sourceType === 'fontIcon') {
-      return (0, _combine_classes.combineClasses)(_extends({}, generalClasses, {
+      return (0, _combine_classes.combineClasses)(Object.assign({}, generalClasses, {
         [String(source)]: !!source
       }));
     }
@@ -47,7 +48,7 @@ class Icon extends _index.BaseInfernoComponent {
       return (0, _combine_classes.combineClasses)(generalClasses);
     }
     if (this.sourceType === 'svg') {
-      return (0, _combine_classes.combineClasses)(_extends({}, generalClasses, {
+      return (0, _combine_classes.combineClasses)(Object.assign({}, generalClasses, {
         'dx-svg-icon': true
       }));
     }

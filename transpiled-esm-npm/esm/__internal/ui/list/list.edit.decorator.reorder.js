@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import holdEvent from '../../../common/core/events/hold';
 import pointerEvents from '../../../common/core/events/pointer';
@@ -23,7 +22,7 @@ class EditDecoratorReorder extends EditDecorator {
     this._groupedEnabled = grouped;
     this._lockedDrag = false;
     const filter = this._groupedEnabled ? '> .dx-list-items > .dx-list-group > .dx-list-group-body > .dx-list-item' : '> .dx-list-items > .dx-list-item';
-    this._sortable = list._createComponent(list._scrollView.content(), Sortable, _extends({
+    this._sortable = list._createComponent(list._scrollView.content(), Sortable, Object.assign({
       component: list,
       contentTemplate: null,
       allowReordering: false,

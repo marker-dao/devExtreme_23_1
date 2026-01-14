@@ -5,13 +5,12 @@ var _globals = require("@jest/globals");
 var _item = require("../../../../grids/new/card_view/header_panel/item");
 var _columns_controller = require("../../../../grids/new/grid_core/columns_controller/columns_controller.mock");
 var _index = require("./a11y/index");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CLASSES = {
   itemRoot: 'dx-cardview-header-item'
 };
 const setup = props => {
   const rootElement = document.createElement('div');
-  (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _item.Item, _extends({}, props))), rootElement);
+  (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _item.Item, Object.assign({}, props))), rootElement);
   return rootElement;
 };
 const getItemRoot = element => element.querySelector(`.${CLASSES.itemRoot}`);

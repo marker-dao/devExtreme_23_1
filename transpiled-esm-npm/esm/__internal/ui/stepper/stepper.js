@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../common/core/localization/message';
 import registerComponent from '../../../core/component_registrator';
 import $ from '../../../core/renderer';
@@ -26,7 +25,7 @@ export const ORIENTATION = {
 };
 class Stepper extends CollectionWidgetAsync {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       orientation: 'horizontal',
       linear: true,
       selectionMode: 'single',
@@ -50,7 +49,7 @@ class Stepper extends CollectionWidgetAsync {
       linear,
       selectOnFocus
     } = this.option();
-    return _extends({}, defaultHandlers, {
+    return Object.assign({}, defaultHandlers, {
       home: linear && selectOnFocus ? defaultHandlers.leftArrow : defaultHandlers.home,
       end: linear && selectOnFocus ? defaultHandlers.rightArrow : defaultHandlers.end
     });
@@ -125,8 +124,8 @@ class Stepper extends CollectionWidgetAsync {
       itemData,
       index
     } = renderArgs;
-    return super._createItemByTemplate(itemTemplate, _extends({}, renderArgs, {
-      itemData: _extends({
+    return super._createItemByTemplate(itemTemplate, Object.assign({}, renderArgs, {
+      itemData: Object.assign({
         text: `${index + 1}`
       }, itemData)
     }));

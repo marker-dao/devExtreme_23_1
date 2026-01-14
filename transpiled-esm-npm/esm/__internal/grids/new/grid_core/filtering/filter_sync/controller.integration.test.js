@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable spellcheck/spell-checker */
 import { describe, expect, it } from '@jest/globals';
 import CardView from '../../../../../grids/new/card_view/widget';
@@ -24,7 +23,7 @@ const setup = function () {
     body
   } = document;
   body.append(container);
-  const cardView = new CardView(container, _extends({}, DEFAULT_OPTIONS, options));
+  const cardView = new CardView(container, Object.assign({}, DEFAULT_OPTIONS, options));
   rerender();
   return cardView;
 };
@@ -218,7 +217,7 @@ describe.skip('FilterSync', () => {
               }]
             });
             const column = cardView.option('columns[0]');
-            cardView.option('columns[0]', _extends({}, column, {
+            cardView.option('columns[0]', Object.assign({}, column, {
               filterType: changes.headerFilterType,
               filterValues: changes.headerFilter
             }));
@@ -238,12 +237,12 @@ describe.skip('FilterSync', () => {
           });
         });
         describe('FilterPanel -> empty HeaderFilter', () => {
-          it.each(cases.filterPanel)('Option: $caseName', _ref10 => {
+          it.each(cases.filterPanel)('Option: $caseName', _ref0 => {
             let {
               changes,
               expected,
               filteredIds
-            } = _ref10;
+            } = _ref0;
             const cardView = setup({
               dataSource,
               columns: [{
@@ -258,10 +257,10 @@ describe.skip('FilterSync', () => {
             const headerFilterType = cardView.columnOption('value', 'filterType');
             const headerFilter = cardView.columnOption('value', 'filterValues');
             const filterPanel = cardView.option('filterValue');
-            const visibleIds = cardView.getVisibleCards().map(_ref11 => {
+            const visibleIds = cardView.getVisibleCards().map(_ref1 => {
               let {
                 data
-              } = _ref11;
+              } = _ref1;
               return data.id;
             });
             expect(headerFilterType).toStrictEqual(expected.headerFilterType);

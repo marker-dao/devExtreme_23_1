@@ -1,0 +1,72 @@
+/**
+* DevExtreme (cjs/__internal/grids/new/grid_core/core/view.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+var _inferno = require("inferno");
+var _m_inferno_renderer = require("../../../../core/m_inferno_renderer");
+var _base_component = require("../../../../core/r1/runtime/inferno/base_component");
+var _index = require("../../../../core/state_manager/index");
+var _m_window = require("../../../../core/utils/m_window");
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-this-alias */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable max-classes-per-file */
+
+class View {
+  constructor() {
+    this.firstRender = true;
+  }
+  render(root) {
+    this.root = root;
+    const ViewComponent = this.component;
+    const props = this.getProps();
+    return (0, _index.effect)(() => {
+      this.props = props.value;
+      const content = (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, ViewComponent, Object.assign({}, props.value)));
+      _m_inferno_renderer.infernoRenderer.renderIntoContainer(content, root, !this.firstRender);
+      this.firstRender = false;
+    });
+  }
+  asInferno() {
+    // eslint-disable-next-line no-return-assign
+    return this.inferno ?? (this.inferno = this._asInferno());
+  }
+  _asInferno() {
+    const view = this;
+    return class InfernoView extends _base_component.BaseInfernoComponent {
+      constructor() {
+        super();
+        const props = view.getProps();
+        this.unsubscribe = (0, _index.effect)(() => {
+          view.props = props.value;
+          this.state ?? (this.state = {
+            props: props.value
+          });
+          if (this.state.props !== props.value && (0, _m_window.hasWindow)()) {
+            this.setState({
+              props: props.value
+            });
+          }
+        });
+      }
+      componentWillUnmount() {
+        this.unsubscribe();
+      }
+      render() {
+        const ViewComponent = view.component;
+        return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, ViewComponent, Object.assign({}, this.state.props)));
+      }
+    };
+  }
+}
+exports.View = View;

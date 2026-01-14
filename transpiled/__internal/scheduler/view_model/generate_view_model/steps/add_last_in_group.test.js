@@ -2,7 +2,6 @@
 
 var _globals = require("@jest/globals");
 var _add_last_in_group = require("./add_last_in_group");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const items = [{
   groupIndex: 0,
   startDateUTC: new Date(2020, 0, 10, 0)
@@ -24,17 +23,17 @@ const items = [{
 }];
 (0, _globals.describe)('addLastInGroup', () => {
   (0, _globals.it)('should add last in group', () => {
-    (0, _globals.expect)((0, _add_last_in_group.addLastInGroup)(items)).toEqual([_extends({}, items[0], {
+    (0, _globals.expect)((0, _add_last_in_group.addLastInGroup)(items)).toEqual([Object.assign({}, items[0], {
       isLastInGroup: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       isLastInGroup: true
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       isLastInGroup: true
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       isLastInGroup: false
-    }), _extends({}, items[4], {
+    }), Object.assign({}, items[4], {
       isLastInGroup: true
-    }), _extends({}, items[5], {
+    }), Object.assign({}, items[5], {
       isLastInGroup: true
     })]);
   });

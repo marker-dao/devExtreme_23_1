@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["customerId", "maxVersionAllowed", "format", "internalUsageId"];
 import config from '../../../core/config';
@@ -103,7 +102,7 @@ export function parseLicenseKey(encodedKey) {
   }
   return {
     kind: TokenKind.verified,
-    payload: _extends({
+    payload: Object.assign({
       customerId,
       maxVersionAllowed
     }, rest)

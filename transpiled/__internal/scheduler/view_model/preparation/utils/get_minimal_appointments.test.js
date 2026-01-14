@@ -5,7 +5,6 @@ var _appointment_data_accessor = require("../../../__mock__/appointment_data_acc
 var _timezone_calculator = require("../../../r1/timezone_calculator");
 var _appointment_data_accessor2 = require("../../../utils/data_accessor/appointment_data_accessor");
 var _get_minimal_appointments = require("./get_minimal_appointments");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 (0, _globals.describe)('getMinimalAppointments', () => {
   (0, _globals.it)('should prepare correct recurrence appointment', () => {
     const data = [{
@@ -96,7 +95,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       startDateTimeZone: 'Etc/GMT+10',
       endDateTimeZone: 'Etc/GMT-10'
     };
-    const data = [_extends({
+    const data = [Object.assign({
       startDate: new Date(2021, 9, 8),
       endDate: new Date(2021, 9, 9)
     }, expectedTimezones)];

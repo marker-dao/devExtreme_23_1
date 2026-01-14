@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { signal } from '../../../../../core/state_manager/index';
 import { removeFieldConditionsFromFilter } from '../../../../../filter_builder/m_utils';
 import gridCoreUtils from '../../../../../grids/grid_core/m_utils';
@@ -38,7 +37,7 @@ export class HeaderFilterViewController {
         columnsController.updateColumns(columns => {
           const index = getColumnIndexByName(columns, column.name);
           const newColumns = [...columns];
-          newColumns[index] = _extends({}, newColumns[index], {
+          newColumns[index] = Object.assign({}, newColumns[index], {
             // NOTE: Copy array because of mutations in legacy code
             filterValues: Array.isArray(filterValues) ? [...filterValues] : filterValues,
             filterType
@@ -50,9 +49,9 @@ export class HeaderFilterViewController {
     };
     const popupOptions = {
       type,
-      column: _extends({}, column),
+      column: Object.assign({}, column),
       isFilterBuilder,
-      headerFilter: _extends({}, column.headerFilter),
+      headerFilter: Object.assign({}, column.headerFilter),
       filterType: column.filterType,
       // NOTE: Copy array because of mutations in legacy code
       filterValues: Array.isArray(column.filterValues) ? [...column.filterValues] : column.filterValues,

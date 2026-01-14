@@ -9,7 +9,6 @@ var _utils = require("../../../core/options/utils");
 var _common = require("../../../core/utils/common");
 var _data = require("../../../core/utils/data");
 var _type = require("../../../core/utils/type");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class Options {
   constructor(options, defaultOptions, optionsByReference, deprecatedOptions) {
     this._deprecatedCallback;
@@ -158,7 +157,7 @@ class Options {
     if (name) {
       const fullPath = (0, _data.getPathParts)(name);
       const value = fullPath.reduce((value, field) => value ? value[field] : this.initial(field), null);
-      const defaultValue = (0, _type.isObject)(value) ? _extends({}, value) : value;
+      const defaultValue = (0, _type.isObject)(value) ? Object.assign({}, value) : value;
       this._optionManager.set(name, defaultValue, false);
     }
   }

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { isPlainObject, type } from '../../../../core/utils/type';
 const defaultNotDeepCopyArrays = ['dataSource', 'selectedRowKeys'];
 const propsToIgnore = {
@@ -26,7 +25,7 @@ function compare(resultPaths, item1, item2, key, fullPropName, notDeepCopyArrays
     } else {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const diffPaths = objectDiffs(item1, item2, fullPropName, notDeepCopyArrays);
-      resultPaths.push(...diffPaths.map(item => _extends({}, item, {
+      resultPaths.push(...diffPaths.map(item => Object.assign({}, item, {
         path: `${key}.${item.path}`
       })));
     }
@@ -39,7 +38,7 @@ function compare(resultPaths, item1, item2, key, fullPropName, notDeepCopyArrays
     } else {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const diffPaths = objectDiffs(item1, item2, fullPropName, notDeepCopyArrays);
-      [].push.apply(resultPaths, diffPaths.map(item => _extends({}, item, {
+      [].push.apply(resultPaths, diffPaths.map(item => Object.assign({}, item, {
         path: `${key}${item.path}`
       })));
     }

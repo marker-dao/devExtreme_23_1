@@ -1,0 +1,56 @@
+import $ from '../../../core/renderer';
+import Button from '../../../ui/button';
+import Widget from '../../core/widget/widget';
+const FILE_MANAGER_FILE_ACTIONS_BUTTON = 'dx-filemanager-file-actions-button';
+const FILE_MANAGER_FILE_ACTIONS_BUTTON_ACTIVATED = 'dx-filemanager-file-actions-button-activated';
+const ACTIVE_STATE_CLASS = 'dx-state-active';
+class FileManagerFileActionsButton extends Widget {
+  _initMarkup() {
+    this._createClickAction();
+    const $button = $('<div>');
+    this.$element().append($button).addClass(FILE_MANAGER_FILE_ACTIONS_BUTTON);
+    this._button = this._createComponent($button, Button, {
+      icon: 'overflow',
+      stylingMode: 'text',
+      onClick: e => this._raiseClick(e)
+    });
+    super._initMarkup();
+  }
+  _createClickAction() {
+    this._clickAction = this._createActionByOption('onClick');
+  }
+  _raiseClick(e) {
+    var _this$_clickAction;
+    (_this$_clickAction = this._clickAction) === null || _this$_clickAction === void 0 || _this$_clickAction.call(this, e);
+  }
+  _getDefaultOptions() {
+    return Object.assign({}, super._getDefaultOptions(), {
+      cssClass: '',
+      onClick: undefined
+    });
+  }
+  _optionChanged(args) {
+    const {
+      name
+    } = args;
+    switch (name) {
+      case 'cssClass':
+        this.repaint();
+        break;
+      case 'onClick':
+        this._createClickAction();
+        break;
+      default:
+        super._optionChanged(args);
+    }
+  }
+  setActive(active) {
+    this.$element().toggleClass(FILE_MANAGER_FILE_ACTIONS_BUTTON_ACTIVATED, active);
+    // eslint-disable-next-line no-restricted-globals
+    setTimeout(() => {
+      var _this$_button;
+      return (_this$_button = this._button) === null || _this$_button === void 0 ? void 0 : _this$_button.$element().toggleClass(ACTIVE_STATE_CLASS, active);
+    });
+  }
+}
+export default FileManagerFileActionsButton;

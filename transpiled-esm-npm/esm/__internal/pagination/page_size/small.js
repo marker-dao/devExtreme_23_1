@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode } from "inferno";
 import { InfernoComponent, InfernoEffect } from '../../core/r1/runtime/inferno/index';
 import { PaginationDefaultProps } from '../common/pagination_props';
@@ -9,7 +8,7 @@ import { getElementMinWidth } from '../utils/get_element_width';
 const PaginationSmallDefaultProps = {
   allowedPageSizes: []
 };
-const PageSizeSmallDefaultProps = _extends({}, PaginationSmallDefaultProps, {
+const PageSizeSmallDefaultProps = Object.assign({}, PaginationSmallDefaultProps, {
   pageSize: PaginationDefaultProps.pageSize,
   pageSizeChangedInternal: PaginationDefaultProps.pageSizeChangedInternal
 });

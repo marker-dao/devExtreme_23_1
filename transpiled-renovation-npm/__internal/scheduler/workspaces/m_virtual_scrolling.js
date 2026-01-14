@@ -10,7 +10,8 @@ var _dom_adapter = _interopRequireDefault(require("../../../core/dom_adapter"));
 var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
+/* eslint-disable max-classes-per-file */
+
 const DEFAULT_CELL_HEIGHT = 50;
 const MIN_CELL_WIDTH = 1;
 const MIN_SCROLL_OFFSET = 10;
@@ -150,7 +151,7 @@ class VirtualScrollingDispatcher {
     var _this$verticalVirtual2, _this$horizontalVirtu2;
     const verticalRenderState = ((_this$verticalVirtual2 = this.verticalVirtualScrolling) === null || _this$verticalVirtual2 === void 0 ? void 0 : _this$verticalVirtual2.getRenderState()) || {};
     const horizontalRenderState = ((_this$horizontalVirtu2 = this.horizontalVirtualScrolling) === null || _this$horizontalVirtu2 === void 0 ? void 0 : _this$horizontalVirtu2.getRenderState()) || {};
-    return _extends({}, verticalRenderState, horizontalRenderState);
+    return Object.assign({}, verticalRenderState, horizontalRenderState);
   }
   getCellHeight() {
     const cellHeight = this.options.getCellHeight();
@@ -208,14 +209,14 @@ class VirtualScrollingDispatcher {
   }
   _createVirtualScrollingBase() {
     if (this.verticalScrollingAllowed) {
-      this.verticalVirtualScrolling = new VerticalVirtualScrolling(_extends({}, this.options, {
+      this.verticalVirtualScrolling = new VerticalVirtualScrolling(Object.assign({}, this.options, {
         viewportHeight: this.viewportHeight,
         rowHeight: this.rowHeight,
         outlineCount: this.outlineCount
       }));
     }
     if (this.horizontalScrollingAllowed) {
-      this.horizontalVirtualScrolling = new HorizontalVirtualScrolling(_extends({}, this.options, {
+      this.horizontalVirtualScrolling = new HorizontalVirtualScrolling(Object.assign({}, this.options, {
         viewportWidth: this.viewportWidth,
         cellWidth: this.cellWidth,
         outlineCount: this.outlineCount
@@ -496,7 +497,7 @@ class VirtualScrollingBase {
 }
 class VerticalVirtualScrolling extends VirtualScrollingBase {
   constructor(options) {
-    super(_extends({}, options, {
+    super(Object.assign({}, options, {
       itemSize: options.rowHeight,
       viewportSize: options.viewportHeight
     }));
@@ -528,7 +529,7 @@ class VerticalVirtualScrolling extends VirtualScrollingBase {
 }
 class HorizontalVirtualScrolling extends VirtualScrollingBase {
   constructor(options) {
-    super(_extends({}, options, {
+    super(Object.assign({}, options, {
       itemSize: options.cellWidth,
       viewportSize: options.viewportWidth
     }));

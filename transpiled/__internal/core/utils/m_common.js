@@ -11,7 +11,6 @@ var _deferred = require("../../../core/utils/deferred");
 var _iterator = require("../../../core/utils/iterator");
 var _type = require("../../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // @ts-expect-error new deferred
 const uiLayerInitialized = exports.uiLayerInitialized = new _deferred.Deferred();
 const ensureDefined = function (value, defaultValue) {
@@ -252,7 +251,7 @@ const compareArrays = (array1, array2, depth, options) => {
   if (array1.length !== array2.length) {
     return false;
   }
-  return !array1.some((item, idx) => !compareByValue(item, array2[idx], depth + 1, _extends({}, options, {
+  return !array1.some((item, idx) => !compareByValue(item, array2[idx], depth + 1, Object.assign({}, options, {
     strict: true
   })));
 };
@@ -293,7 +292,7 @@ const compareByValue = (value1, value2, depth, options) => {
 };
 const equalByValue = function (value1, value2) {
   let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DEFAULT_EQUAL_BY_VALUE_OPTS;
-  const compareOptions = _extends({}, DEFAULT_EQUAL_BY_VALUE_OPTS, options);
+  const compareOptions = Object.assign({}, DEFAULT_EQUAL_BY_VALUE_OPTS, options);
   return compareByValue(value1, value2, 0, compareOptions);
 };
 exports.equalByValue = equalByValue;

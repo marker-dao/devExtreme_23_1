@@ -10,7 +10,6 @@ var _get_month_intervals = require("./get_month_intervals");
 var _get_panel_collector_options = require("./get_panel_collector_options");
 var _get_view_model_options = require("./get_view_model_options");
 var _get_week_intervals = require("./get_week_intervals");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const getLayoutIntervals = (compareOptions, cellDurationMinutes, viewOffset, isTimeline, isMonthView, panelName) => {
   switch (true) {
     case isMonthView:
@@ -71,7 +70,7 @@ class OptionManager {
       } = getLayoutIntervals(compareOptions, cellDurationMinutes, viewOffset, isTimelineView || panelName === 'allDayPanel', isMonthView, panelName);
       const groupByDateSplitIntervals = viewOrientation === 'vertical' ? dayIntervals : cells;
       const splitIntervals = isGroupByDate ? groupByDateSplitIntervals : intervals;
-      const geometryOptions = _extends({
+      const geometryOptions = Object.assign({
         intervals,
         cells,
         maxAppointmentsPerCell: maxLevel,
@@ -87,7 +86,7 @@ class OptionManager {
         collectorPosition: viewOrientation === 'vertical' ? 'end' : 'start'
       }, collectorSizes, {
         groupCount,
-        groupSize: (0, _get_group_size.getGroupSize)(_extends({}, compareOptions, {
+        groupSize: (0, _get_group_size.getGroupSize)(Object.assign({}, compareOptions, {
           cellSize,
           cellDurationMinutes,
           intervals,

@@ -13,7 +13,6 @@ var _extend = require("../../../core/utils/extend");
 var _size = require("../../../core/utils/size");
 var _context_menu2 = _interopRequireDefault(require("../../ui/context_menu/context_menu"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DX_CONTEXT_MENU_CONTENT_DELIMITER_CLASS = 'dx-context-menu-content-delimiter';
 const DX_SUBMENU_CLASS = 'dx-submenu';
 class Submenu extends _context_menu2.default {
@@ -21,7 +20,7 @@ class Submenu extends _context_menu2.default {
     return Math.max(offsetTop, windowHeight - offsetTop - anchorHeight);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       orientation: 'horizontal',
       // @ts-expect-error ts-error
       tabIndex: null,

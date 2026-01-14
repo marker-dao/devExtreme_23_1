@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable spellcheck/spell-checker */
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import $ from '../../../../../core/renderer';
@@ -50,7 +49,7 @@ describe('Options', () => {
       it('header items should contain tabindex=0', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -61,7 +60,7 @@ describe('Options', () => {
       it('header items container should render focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -78,7 +77,7 @@ describe('Options', () => {
       it('cards should contain tabindex=0', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -89,7 +88,7 @@ describe('Options', () => {
       it('card content should render focus trap container', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -101,7 +100,7 @@ describe('Options', () => {
       it('card content should render focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -118,7 +117,7 @@ describe('Options', () => {
       it('cards container should render focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -135,7 +134,7 @@ describe('Options', () => {
       it('header items should not contain tabindex', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -146,7 +145,7 @@ describe('Options', () => {
       it('header items container should not has active focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -163,7 +162,7 @@ describe('Options', () => {
       it('cards should not contain tabindex', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -174,7 +173,7 @@ describe('Options', () => {
       it('card content should render focus trap container', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -186,7 +185,7 @@ describe('Options', () => {
       it('card content should not has active focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -203,7 +202,7 @@ describe('Options', () => {
       it('cards container should not render focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -221,7 +220,7 @@ describe('Options', () => {
         const callbackMock = jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },
@@ -248,7 +247,7 @@ describe('Options', () => {
         const callbackMock = jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },
@@ -273,7 +272,7 @@ describe('Options', () => {
         const callbackMock = jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },
@@ -299,7 +298,7 @@ describe('Options', () => {
         const callbackMock = jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },
@@ -324,7 +323,7 @@ describe('Options', () => {
         const callbackMock = jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },
@@ -351,7 +350,7 @@ describe('Options', () => {
         const callbackMock = jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },

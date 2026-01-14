@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { name as dxDblClickEvent } from '../../../common/core/events/double_click';
 import { addNamespace, getChar, isCommandKeyPressed, normalizeKeyName } from '../../../common/core/events/utils/index';
@@ -21,7 +20,7 @@ const NUMPAD_DOT_KEY_CODE = 110;
 const CARET_TIMEOUT_DURATION = 0;
 class NumberBoxMask extends NumberBoxBase {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       useMaskBehavior: true,
       // @ts-expect-error ts-error
       format: null
@@ -35,7 +34,7 @@ class NumberBoxMask extends NumberBoxBase {
       return super._supportedKeys();
     }
     const that = this;
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       minus: that._revertSign.bind(that),
       del: that._removeHandler.bind(that),
       backspace: that._removeHandler.bind(that),

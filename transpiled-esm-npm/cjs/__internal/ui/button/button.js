@@ -21,7 +21,6 @@ var _combine_classes = require("../../core/utils/combine_classes");
 var _icon2 = require("./icon");
 var _ink_ripple = require("./ink_ripple");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const BUTTON_CLASS = exports.BUTTON_CLASS = 'dx-button';
 const stylingModes = ['outlined', 'text', 'contained'];
 const buttonComponentProps = exports.buttonComponentProps = ['accessKey', 'activeStateEnabled', 'className', 'disabled', 'focusStateEnabled', 'height', 'hint', 'hoverStateEnabled', 'icon', 'iconPosition', 'iconTemplate', 'onClick', 'onKeyDown', 'onSubmit', 'pressed', 'rtlEnabled', 'stylingMode', 'tabIndex', 'template', 'templateData', 'text', 'type', 'useInkRipple', 'useSubmitBehavior', 'visible', 'width'];
@@ -53,7 +52,7 @@ const omit = (obj, excludedKeys) => {
     return result;
   }, {});
 };
-const defaultButtonProps = exports.defaultButtonProps = _extends({}, _base_props.BaseWidgetDefaultProps, {
+const defaultButtonProps = exports.defaultButtonProps = Object.assign({}, _base_props.BaseWidgetDefaultProps, {
   activeStateEnabled: true,
   hoverStateEnabled: true,
   icon: '',
@@ -205,7 +204,7 @@ class Button extends _index.InfernoWrapperComponent {
           break;
       }
     }
-    return _extends({
+    return Object.assign({
       role: 'button'
     }, label ? {
       label
@@ -237,7 +236,7 @@ class Button extends _index.InfernoWrapperComponent {
       text,
       templateData
     } = this.props;
-    return _extends({
+    return Object.assign({
       icon,
       text
     }, templateData);
@@ -279,7 +278,7 @@ class Button extends _index.InfernoWrapperComponent {
       "position": iconPosition,
       "iconTemplate": IconTemplate
     });
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _widget.Widget, _extends({
+    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _widget.Widget, Object.assign({
       "accessKey": this.props.accessKey,
       "activeStateEnabled": this.props.activeStateEnabled,
       "aria": this.aria,
@@ -311,7 +310,7 @@ class Button extends _index.InfernoWrapperComponent {
   }
 }
 exports.Button = Button;
-Button.defaultProps = _extends({}, defaultButtonProps, (0, _utils.convertRulesToOptions)(defaultOptionRules));
+Button.defaultProps = Object.assign({}, defaultButtonProps, (0, _utils.convertRulesToOptions)(defaultOptionRules));
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const __defaultOptionRules = [];
 function defaultOptions(rule) {

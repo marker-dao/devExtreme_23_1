@@ -11,7 +11,6 @@ var _pagination_props = require("./common/pagination_props");
 var _content = require("./content");
 var _resizable_container = require("./resizable_container");
 var _compatibility_utils = require("./utils/compatibility_utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class Pagination extends _index.InfernoWrapperComponent {
   constructor(props) {
     super(props);
@@ -45,7 +44,7 @@ class Pagination extends _index.InfernoWrapperComponent {
     });
   }
   getPaginationProps() {
-    return _extends({}, this.props, {
+    return Object.assign({}, this.props, {
       className: this.getClassName(),
       pageIndex: this.getPageIndex(),
       // eslint-disable-next-line @stylistic/max-len

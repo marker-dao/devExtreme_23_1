@@ -15,7 +15,8 @@ var _ready_callbacks = _interopRequireDefault(require("../../../core/utils/ready
 var _type = require("../../../core/utils/type");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
+// @ts-expect-error ts-error
+
 const SCROLLBAR = 'dxScrollbar';
 const SCROLLABLE_SCROLLBAR_CLASS = 'dx-scrollable-scrollbar';
 const SCROLLABLE_SCROLLBAR_ACTIVE_CLASS = `${SCROLLABLE_SCROLLBAR_CLASS}-active`;
@@ -30,7 +31,7 @@ const MIN_CONTAINER_TO_CONTENT_RATIO = 1;
 let activeScrollbar = null;
 class Scrollbar extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       visible: false,
       activeStateEnabled: false,
       visibilityMode: 'onScroll',

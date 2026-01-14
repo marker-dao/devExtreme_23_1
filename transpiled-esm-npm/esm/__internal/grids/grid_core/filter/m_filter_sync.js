@@ -244,11 +244,11 @@ const data = Base => class DataControllerFilterSyncExtender extends Base {
     return (isDefined(this.option('filterValue')) || this._filterSyncController._skipSyncColumnOptions) && this.isFilterSyncActive();
   }
   _calculateAdditionalFilter() {
-    if (this.option('filterPanel.filterEnabled') === false) {
+    const columns = this._columnsController.getFilteringColumns();
+    if (!(columns !== null && columns !== void 0 && columns.length) || this.option('filterPanel.filterEnabled') === false) {
       return super._calculateAdditionalFilter();
     }
     const filters = [super._calculateAdditionalFilter()];
-    const columns = this._columnsController.getFilteringColumns();
     let filterValue = this.option('filterValue');
     if (this.isFilterSyncActive()) {
       const currentColumnForHeaderFilter = this._headerFilterController.getCurrentColumn();

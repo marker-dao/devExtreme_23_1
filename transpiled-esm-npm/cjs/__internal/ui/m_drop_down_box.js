@@ -21,7 +21,8 @@ var _m_selectors = require("../core/utils/m_selectors");
 var _m_drop_down_editor = _interopRequireDefault(require("../ui/drop_down_editor/m_drop_down_editor"));
 var _utils = require("../ui/overlay/utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
+// @ts-expect-error ts-error
+
 const {
   getActiveElement
 } = _dom_adapter.default;
@@ -30,7 +31,7 @@ const ANONYMOUS_TEMPLATE_NAME = 'content';
 class DropDownBox extends _m_drop_down_editor.default {
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       tab(e) {
         if (!this.option('opened')) {
           return;
@@ -53,7 +54,7 @@ class DropDownBox extends _m_drop_down_editor.default {
     return (0, _renderer.default)(this.content()).find('*');
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       acceptCustomValue: false,
       contentTemplate: ANONYMOUS_TEMPLATE_NAME,
       openOnFieldClick: true,
@@ -181,6 +182,7 @@ class DropDownBox extends _m_drop_down_editor.default {
     }
   }
   _renderPopupContent() {
+    var _this$_popup;
     // @ts-expect-error ts-error
     if (this.option('contentTemplate') === ANONYMOUS_TEMPLATE_NAME) {
       return;
@@ -189,8 +191,10 @@ class DropDownBox extends _m_drop_down_editor.default {
     if (!(contentTemplate && this.option('contentTemplate'))) {
       return;
     }
-    // @ts-expect-error ts-error
-    const $popupContent = this._popup.$content();
+    const $popupContent = (_this$_popup = this._popup) === null || _this$_popup === void 0 ? void 0 : _this$_popup.$content();
+    if (!$popupContent) {
+      return;
+    }
     const templateData = {
       value: this._fieldRenderData(),
       component: this
@@ -240,7 +244,7 @@ class DropDownBox extends _m_drop_down_editor.default {
     const {
       focusStateEnabled
     } = this.option();
-    return _extends({}, super._popupConfig(), {
+    return Object.assign({}, super._popupConfig(), {
       tabIndex: -1,
       dragEnabled: false,
       focusStateEnabled,

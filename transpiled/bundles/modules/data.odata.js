@@ -14,10 +14,5 @@ DevExpress.data.utils.odata.serializePropName = ODataUtilsModule.serializePropNa
 DevExpress.data.utils.odata.serializeValue = ODataUtilsModule.serializeValue;
 DevExpress.data.utils.odata.serializeKey = ODataUtilsModule.serializeKey;
 DevExpress.data.utils.odata.sendRequest = ODataUtilsModule.sendRequest;
-
-/// #DEBUG
-DevExpress.data.OData__internals = ODataUtilsModule.OData__internals;
-/// #ENDDEBUG
-
 DevExpress.data.queryAdapters = DevExpress.data.queryAdapters || {};
 DevExpress.data.queryAdapters.odata = require('../../common/data/odata/query_adapter').odata;

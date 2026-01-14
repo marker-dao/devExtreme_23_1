@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import scrollEvents from '../../../common/core/events/gesture/emitter.gesture.scroll';
 import { addNamespace } from '../../../common/core/events/utils';
@@ -26,7 +25,7 @@ const HORIZONTAL = 'horizontal';
 const BOTH = 'both';
 class Scrollable extends DOMComponent {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       disabled: false,
       onScroll: null,
       direction: VERTICAL,

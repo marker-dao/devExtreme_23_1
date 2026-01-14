@@ -3,7 +3,6 @@
 var _m_grid_view = require("../../grids/grid_core/views/m_grid_view");
 var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const TREELIST_EXPANDABLE_INSTRUCTION = 'dxTreeList-ariaExpandableInstruction';
 class TreeListResizingController extends _m_grid_view.ResizingController {
   constructor() {
@@ -21,7 +20,7 @@ class TreeListResizingController extends _m_grid_view.ResizingController {
 }
 _m_core.default.registerModule('gridView', {
   defaultOptions: _m_grid_view.gridViewModule.defaultOptions,
-  controllers: _extends({}, _m_grid_view.gridViewModule.controllers, {
+  controllers: Object.assign({}, _m_grid_view.gridViewModule.controllers, {
     resizing: TreeListResizingController
   }),
   views: _m_grid_view.gridViewModule.views

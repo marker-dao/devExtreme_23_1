@@ -1,0 +1,44 @@
+/**
+* DevExtreme (esm/__internal/ui/form/components/button_item.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import $ from '../../../../core/renderer';
+import { extend } from '../../../../core/utils/extend';
+import { isDefined } from '../../../../core/utils/type';
+export const FIELD_BUTTON_ITEM_CLASS = 'dx-field-button-item';
+function convertAlignmentToTextAlign(horizontalAlignment) {
+  return isDefined(horizontalAlignment) ? horizontalAlignment : 'right';
+}
+function convertAlignmentToJustifyContent(verticalAlignment) {
+  switch (verticalAlignment) {
+    case 'center':
+      return 'center';
+    case 'bottom':
+      return 'flex-end';
+    default:
+      return 'flex-start';
+  }
+}
+export function renderButtonItem(_ref) {
+  let {
+    item,
+    $parent,
+    rootElementCssClassList,
+    validationGroup,
+    createComponentCallback
+  } = _ref;
+  const $rootElement = $('<div>').appendTo($parent).addClass(rootElementCssClassList.join(' ')).addClass(FIELD_BUTTON_ITEM_CLASS).css('textAlign', convertAlignmentToTextAlign(item.horizontalAlignment));
+  // TODO: try to avoid changes in $container.parent() and adjust the created $elements only
+  $parent.css('justifyContent', convertAlignmentToJustifyContent(item.verticalAlignment));
+  const $button = $('<div>').appendTo($rootElement);
+  return {
+    $rootElement,
+    buttonInstance: createComponentCallback($button, extend({
+      validationGroup
+    }, item.buttonOptions))
+  };
+}

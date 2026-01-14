@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { isCommandKeyPressed } from '../../common/core/events/utils/index';
 import registerComponent from '../../core/component_registrator';
 import $ from '../../core/renderer';
@@ -13,7 +12,7 @@ class Autocomplete extends DropDownList {
     const parent = super._supportedKeys();
     // @ts-expect-error ts-error
     item = item && $(item);
-    return _extends({}, parent, {
+    return Object.assign({}, parent, {
       upArrow(e) {
         // @ts-expect-error ts-error
         if (parent.upArrow.apply(this, arguments) && !isCommandKeyPressed(e)) {
@@ -53,7 +52,7 @@ class Autocomplete extends DropDownList {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       minSearchLength: 1,
       maxItemCount: 10,
       noDataText: '',

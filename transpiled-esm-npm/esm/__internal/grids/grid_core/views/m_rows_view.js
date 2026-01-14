@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import eventsEngine from '../../../../common/core/events/core/events_engine';
@@ -314,7 +313,7 @@ export class RowsView extends ColumnsView {
         this._scrollLeft = -1;
       }
     }
-    that.scrollChanged.fire(_extends({}, e.scrollOffset, {
+    that.scrollChanged.fire(Object.assign({}, e.scrollOffset, {
       left: scrollLeft
     }), that.name);
   }
@@ -1234,6 +1233,13 @@ export class RowsView extends ColumnsView {
    */
   _renderIcons($iconContainer, options) {
     return $iconContainer;
+  }
+  normalizeScrollLeft(scrollLeft) {
+    const scrollable = this.getScrollable();
+    if (this.option('rtlEnabled') && scrollable) {
+      return getWidth(scrollable.$content()) - getWidth(scrollable.$element()) - scrollLeft;
+    }
+    return scrollLeft;
   }
 }
 export const rowsModule = {

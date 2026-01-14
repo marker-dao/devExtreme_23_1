@@ -1,0 +1,589 @@
+/**
+* DevExtreme (cjs/__internal/ui/file_manager/ui.file_manager.items_list.thumbnails.list_box.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
+var _hold = _interopRequireDefault(require("../../../common/core/events/hold"));
+var _utils = require("../../../common/core/events/utils");
+var _renderer = _interopRequireDefault(require("../../../core/renderer"));
+var _bindable_template = require("../../../core/templates/bindable_template");
+var _deferred = require("../../../core/utils/deferred");
+var _extend = require("../../../core/utils/extend");
+var _size = require("../../../core/utils/size");
+var _type = require("../../../core/utils/type");
+var _uiCollection_widget = _interopRequireDefault(require("../../../ui/collection/ui.collection_widget.edit"));
+var _scroll_view = _interopRequireDefault(require("../../../ui/scroll_view"));
+var _selection = _interopRequireDefault(require("../../ui/selection/selection"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+// eslint-disable-next-line @stylistic/max-len
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/no-unused-vars,max-classes-per-file */
+
+const FILE_MANAGER_THUMBNAILS_VIEW_PORT_CLASS = 'dx-filemanager-thumbnails-view-port';
+const FILE_MANAGER_THUMBNAILS_ITEM_LIST_CONTAINER_CLASS = 'dx-filemanager-thumbnails-container';
+const FILE_MANAGER_THUMBNAILS_ITEM_CLASS = 'dx-filemanager-thumbnails-item';
+const FILE_MANAGER_THUMBNAILS_ITEM_NAME_CLASS = 'dx-filemanager-thumbnails-item-name';
+const FILE_MANAGER_THUMBNAILS_ITEM_SPACER_CLASS = 'dx-filemanager-thumbnails-item-spacer';
+const FILE_MANAGER_THUMBNAILS_ITEM_DATA_KEY = 'dxFileManagerItemData';
+const FILE_MANAGER_THUMBNAILS_LIST_BOX_NAMESPACE = 'dxFileManagerThumbnailsListBox';
+const FILE_MANAGER_THUMBNAILS_LIST_BOX_HOLD_EVENT_NAME = (0, _utils.addNamespace)(_hold.default.name, FILE_MANAGER_THUMBNAILS_LIST_BOX_NAMESPACE);
+class ListBoxLayoutUtils {
+  constructor(scrollView, $viewPort, $itemContainer, $item) {
+    this._layoutModel = null;
+    this._scrollView = scrollView;
+    this._$viewPort = $viewPort;
+    this._$itemContainer = $itemContainer;
+    this._$item = $item;
+  }
+  updateItems($item) {
+    this._$item = $item;
+  }
+  reset() {
+    this._layoutModel = null;
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  getLayoutModel() {
+    if (!this._layoutModel) {
+      this._layoutModel = this._createLayoutModel();
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this._layoutModel;
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _createLayoutModel() {
+    if (!this._$item) {
+      return null;
+    }
+    const itemWidth = (0, _size.getOuterWidth)(this._$item, true);
+    if (itemWidth === 0) {
+      return null;
+    }
+    const itemHeight = (0, _size.getOuterHeight)(this._$item, true);
+    const viewPortWidth = (0, _size.getInnerWidth)(this._$itemContainer);
+    const viewPortHeight = (0, _size.getInnerHeight)(this._$viewPort);
+    const viewPortScrollTop = this._scrollView.scrollTop();
+    const viewPortScrollBottom = viewPortScrollTop + viewPortHeight;
+    const itemPerRowCount = Math.floor(viewPortWidth / itemWidth);
+    const rowPerPageRate = viewPortHeight / itemHeight;
+    return {
+      itemWidth,
+      itemHeight,
+      viewPortWidth,
+      viewPortHeight,
+      viewPortScrollTop,
+      viewPortScrollBottom,
+      itemPerRowCount,
+      rowPerPageRate
+    };
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  createItemLayoutModel(index) {
+    const layout = this.getLayoutModel();
+    if (!layout) {
+      return null;
+    }
+    const itemRowIndex = Math.floor(index / layout.itemPerRowCount);
+    const itemColumnIndex = index % layout.itemPerRowCount;
+    const itemTop = itemRowIndex * layout.itemHeight;
+    const itemBottom = itemTop + layout.itemHeight;
+    return {
+      itemRowIndex,
+      itemColumnIndex,
+      itemTop,
+      itemBottom
+    };
+  }
+  scrollToItem(index) {
+    const layout = this.getLayoutModel();
+    if (!layout) {
+      return;
+    }
+    const itemRowIndex = Math.floor(index / layout.itemPerRowCount);
+    const itemTop = itemRowIndex * layout.itemHeight;
+    const itemBottom = itemTop + layout.itemHeight;
+    let newScrollTop = layout.viewPortScrollTop;
+    if (itemTop < layout.viewPortScrollTop) {
+      newScrollTop = itemTop;
+    } else if (itemBottom > layout.viewPortScrollBottom) {
+      newScrollTop = itemBottom - layout.viewPortHeight;
+    }
+    this._scrollView.scrollTo(newScrollTop);
+  }
+}
+class FileManagerThumbnailListBox extends _uiCollection_widget.default {
+  _initMarkup() {
+    this._initActions();
+    this._lockFocusedItemProcessing = false;
+    this.$element().addClass(FILE_MANAGER_THUMBNAILS_VIEW_PORT_CLASS);
+    this._renderScrollView();
+    this._renderItemsContainer();
+    this._createScrollViewControl();
+    super._initMarkup();
+    this.onFocusedItemChanged = this._onFocusedItemChanged.bind(this);
+    this._layoutUtils = new ListBoxLayoutUtils(this._scrollView, this.$element(), this._$itemContainer, this.itemElements().first());
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    this._syncFocusedItemKey();
+  }
+  _initActions() {
+    this._actions = {
+      onItemEnterKeyPressed: this._createActionByOption('onItemEnterKeyPressed'),
+      onFocusedItemChanged: this._createActionByOption('onFocusedItemChanged')
+    };
+  }
+  _initTemplates() {
+    super._initTemplates();
+    const {
+      itemThumbnailTemplate,
+      getTooltipText
+    } = this.option();
+    this._itemThumbnailTemplate = itemThumbnailTemplate;
+    this._getTooltipText = getTooltipText;
+    this._templateManager.addDefaultTemplates({
+      item: new _bindable_template.BindableTemplate(($container, data, itemModel) => {
+        const $itemElement = this._getDefaultItemTemplate(itemModel, $container);
+        $container.append($itemElement);
+      }, ['fileItem'], this.option('integrationOptions.watchMethod'))
+    });
+  }
+  _createScrollViewControl() {
+    if (!this._scrollView) {
+      this._scrollView = this._createComponent(this._$scrollView, _scroll_view.default, {
+        scrollByContent: true,
+        scrollByThumb: true,
+        useKeyboard: false,
+        showScrollbar: 'onHover'
+      });
+    }
+  }
+  _renderScrollView() {
+    if (!this._$scrollView) {
+      this._$scrollView = (0, _renderer.default)('<div>').appendTo(this.$element());
+    }
+  }
+  getScrollable() {
+    return this._scrollView;
+  }
+  _renderItemsContainer() {
+    if (!this._$itemContainer) {
+      this._$itemContainer = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_THUMBNAILS_ITEM_LIST_CONTAINER_CLASS).appendTo(this._$scrollView);
+    }
+  }
+  _render() {
+    super._render();
+    this._detachEventHandlers();
+    this._attachEventHandlers();
+  }
+  _clean() {
+    this._detachEventHandlers();
+    super._clean();
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _supportedKeys() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return (0, _extend.extend)(super._supportedKeys(), {
+      upArrow(e) {
+        this._beforeKeyProcessing(e);
+        this._processArrowKeys(-1, false, e);
+      },
+      downArrow(e) {
+        this._beforeKeyProcessing(e);
+        this._processArrowKeys(1, false, e);
+      },
+      home(e) {
+        this._beforeKeyProcessing(e);
+        this._processHomeEndKeys(0, true, e);
+      },
+      end(e) {
+        this._beforeKeyProcessing(e);
+        this._processHomeEndKeys(this._getItemsLength() - 1, true, e);
+      },
+      pageUp(e) {
+        this._beforeKeyProcessing(e);
+        this._processPageChange(true, e);
+      },
+      pageDown(e) {
+        this._beforeKeyProcessing(e);
+        this._processPageChange(false, e);
+      },
+      enter(e) {
+        this._beforeKeyProcessing(e);
+        this._actions.onItemEnterKeyPressed(this._getFocusedItem());
+      },
+      A(e) {
+        this._beforeKeyProcessing(e);
+        if ((0, _utils.isCommandKeyPressed)(e)) {
+          this.selectAll();
+        }
+      }
+    });
+  }
+  _beforeKeyProcessing(e) {
+    var _this$_layoutUtils;
+    e.preventDefault();
+    (_this$_layoutUtils = this._layoutUtils) === null || _this$_layoutUtils === void 0 || _this$_layoutUtils.reset();
+  }
+  _processArrowKeys(offset, horizontal, eventArgs) {
+    const item = this._getFocusedItem();
+    if (item) {
+      if (!horizontal) {
+        var _this$_layoutUtils2;
+        const layout = (_this$_layoutUtils2 = this._layoutUtils) === null || _this$_layoutUtils2 === void 0 ? void 0 : _this$_layoutUtils2.getLayoutModel();
+        if (!layout) {
+          return;
+        }
+        // eslint-disable-next-line no-param-reassign
+        offset *= layout.itemPerRowCount;
+      }
+      const newItemIndex = this._getIndexByItem(item) + offset;
+      this._focusItemByIndex(newItemIndex, true, eventArgs);
+    }
+  }
+  _processHomeEndKeys(index, scrollToItem, eventArgs) {
+    this._focusItemByIndex(index, scrollToItem, eventArgs);
+  }
+  _processPageChange(pageUp, eventArgs) {
+    var _this$_layoutUtils3, _this$_layoutUtils4;
+    const item = this._getFocusedItem();
+    if (!item) {
+      return;
+    }
+    const layout = (_this$_layoutUtils3 = this._layoutUtils) === null || _this$_layoutUtils3 === void 0 ? void 0 : _this$_layoutUtils3.getLayoutModel();
+    if (!layout) {
+      return;
+    }
+    const itemLayout = (_this$_layoutUtils4 = this._layoutUtils) === null || _this$_layoutUtils4 === void 0 ? void 0 : _this$_layoutUtils4.createItemLayoutModel(this._getIndexByItem(item));
+    const rowOffset = pageUp ? layout.rowPerPageRate : -layout.rowPerPageRate;
+    // @ts-expect-error ts-error
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    const newRowRate = (itemLayout === null || itemLayout === void 0 ? void 0 : itemLayout.itemRowIndex) - rowOffset;
+    const roundFunc = pageUp ? Math.ceil : Math.floor;
+    const newRowIndex = roundFunc(newRowRate);
+    // @ts-expect-error ts-error
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    let newItemIndex = newRowIndex * layout.itemPerRowCount + (itemLayout === null || itemLayout === void 0 ? void 0 : itemLayout.itemColumnIndex);
+    if (newItemIndex < 0) {
+      newItemIndex = 0;
+    } else if (newItemIndex >= this._getItemsLength()) {
+      newItemIndex = this._getItemsLength() - 1;
+    }
+    this._focusItemByIndex(newItemIndex, true, eventArgs);
+  }
+  _processLongTap(e) {
+    const $targetItem = this._closestItemElement((0, _renderer.default)(e.target));
+    const itemIndex = this._getIndexByItemElement($targetItem);
+    this._selection.changeItemSelection(itemIndex, {
+      control: true
+    });
+  }
+  _attachEventHandlers() {
+    const {
+      selectionMode
+    } = this.option();
+    if (selectionMode === 'multiple') {
+      _events_engine.default.on(this._itemContainer(), FILE_MANAGER_THUMBNAILS_LIST_BOX_HOLD_EVENT_NAME, `.${this._itemContentClass()}`, e => {
+        this._processLongTap(e);
+        e.stopPropagation();
+      });
+    }
+    _events_engine.default.on(this._itemContainer(), 'mousedown selectstart', e => {
+      if (e.shiftKey) {
+        e.preventDefault();
+      }
+    });
+  }
+  _detachEventHandlers() {
+    _events_engine.default.off(this._itemContainer(), FILE_MANAGER_THUMBNAILS_LIST_BOX_HOLD_EVENT_NAME);
+    _events_engine.default.off(this._itemContainer(), 'mousedown selectstart');
+  }
+  _itemContainer() {
+    return this._$itemContainer;
+  }
+  _itemClass() {
+    return FILE_MANAGER_THUMBNAILS_ITEM_CLASS;
+  }
+  _itemDataKey() {
+    return FILE_MANAGER_THUMBNAILS_ITEM_DATA_KEY;
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _getDefaultItemTemplate(fileItemInfo, $itemElement) {
+    $itemElement.attr('title', this._getTooltipText(fileItemInfo));
+    const $itemThumbnail = this._itemThumbnailTemplate(fileItemInfo);
+    const $itemSpacer = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_THUMBNAILS_ITEM_SPACER_CLASS);
+    const $itemName = (0, _renderer.default)('<div>').addClass(FILE_MANAGER_THUMBNAILS_ITEM_NAME_CLASS).text(fileItemInfo.fileItem.name);
+    $itemElement.append($itemThumbnail, $itemSpacer, $itemName);
+  }
+  _itemSelectHandler(e) {
+    let options = {};
+    const {
+      selectionMode
+    } = this.option();
+    if (selectionMode === 'multiple') {
+      if (!this._isPreserveSelectionMode) {
+        this._isPreserveSelectionMode = (0, _utils.isCommandKeyPressed)(e) || e.shiftKey;
+      }
+      options = {
+        control: this._isPreserveSelectionMode,
+        shift: e.shiftKey
+      };
+    }
+    const index = this._getIndexByItemElement(e.currentTarget);
+    this._selection.changeItemSelection(index, options);
+  }
+  _initSelectionModule() {
+    super._initSelectionModule();
+    const options = (0, _extend.extend)(this._selection.options, {
+      selectedKeys: this.option('selectedItemKeys'),
+      onSelectionChanged: args => {
+        this.option('selectedItems', this._getItemsByKeys(args.selectedItemKeys, args.selectedItems));
+        this._updateSelectedItems(args);
+      }
+    });
+    this._selection = new _selection.default(options);
+  }
+  _updateSelectedItems(args) {
+    const {
+      addedItemKeys,
+      removedItemKeys
+    } = args;
+    if (this._rendered && (addedItemKeys.length || removedItemKeys.length)) {
+      if (!this._rendering) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const addedSelection = [];
+        // eslint-disable-next-line @typescript-eslint/init-declarations
+        let normalizedIndex;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const removedSelection = [];
+        this._editStrategy.beginCache();
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        for (let i = 0; i < removedItemKeys.length; i += 1) {
+          normalizedIndex = this._getIndexByKey(removedItemKeys[i]);
+          removedSelection.push(normalizedIndex);
+          this._removeSelection(normalizedIndex);
+        }
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        for (let i = 0; i < addedItemKeys.length; i += 1) {
+          normalizedIndex = this._getIndexByKey(addedItemKeys[i]);
+          addedSelection.push(normalizedIndex);
+          this._addSelection(normalizedIndex);
+        }
+        this._editStrategy.endCache();
+        this._updateSelection(addedSelection, removedSelection);
+      }
+      this._fireSelectionChangeEvent(args);
+    }
+  }
+  _fireSelectionChangeEvent(args) {
+    this._createActionByOption('onSelectionChanged', {
+      excludeValidators: ['disabled', 'readOnly']
+    })(args);
+  }
+  _updateSelection(addedSelection, removedSelection) {
+    const selectedItemsCount = this.getSelectedItems().length;
+    if (selectedItemsCount === 0) {
+      this._isPreserveSelectionMode = false;
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _normalizeSelectedItems() {
+    const {
+      selectedItems
+    } = this.option();
+    // @ts-expect-error ts-error
+    const newKeys = this._getKeysByItems(selectedItems);
+    const oldKeys = this._selection.getSelectedItemKeys();
+    if (!this._compareKeys(oldKeys, newKeys)) {
+      this._selection.setSelection(newKeys);
+    }
+    // @ts-expect-error ts-error
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return new _deferred.Deferred().resolve().promise();
+  }
+  _focusOutHandler() {}
+  _focusInHandler() {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  _getItems() {
+    const {
+      items
+    } = this.option();
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    return items || [];
+  }
+  _getItemsLength() {
+    return this._getItems().length;
+  }
+  _getIndexByItemElement(itemElement) {
+    return this._editStrategy.getNormalizedIndex(itemElement);
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _getItemByIndex(index) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this._getItems()[index];
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _getFocusedItem() {
+    const {
+      focusedElement
+    } = this.option();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this.getItemByItemElement(focusedElement);
+  }
+  _focusItem(item, scrollToItem) {
+    this.option('focusedElement', this.getItemElementByItem(item));
+    if (scrollToItem) {
+      var _this$_layoutUtils5;
+      (_this$_layoutUtils5 = this._layoutUtils) === null || _this$_layoutUtils5 === void 0 || _this$_layoutUtils5.scrollToItem(this._getIndexByItem(item));
+    }
+  }
+  _focusItemByIndex(index, scrollToItem, eventArgs) {
+    if (index >= 0 && index < this._getItemsLength()) {
+      const item = this._getItemByIndex(index);
+      // @ts-expect-error ts-error
+      this._focusItem(item, scrollToItem, eventArgs);
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _syncFocusedItemKey() {
+    var _this$_dataSource;
+    if (!this._syncFocusedItemKeyDeferred) {
+      // @ts-expect-error
+      this._syncFocusedItemKeyDeferred = new _deferred.Deferred();
+    }
+    const deferred = this._syncFocusedItemKeyDeferred;
+    // @ts-expect-error
+    if ((_this$_dataSource = this._dataSource) !== null && _this$_dataSource !== void 0 && _this$_dataSource.isLoading()) {
+      return deferred === null || deferred === void 0 ? void 0 : deferred.promise();
+    }
+    const focusedItemKey = this.option('focusedItemKey');
+    if ((0, _type.isDefined)(focusedItemKey)) {
+      const {
+        items
+      } = this.option();
+      const focusedItem = items === null || items === void 0 ? void 0 : items.find(item => this.keyOf(item) === focusedItemKey);
+      if (focusedItem) {
+        this._focusItem(focusedItem, true);
+        deferred === null || deferred === void 0 || deferred.resolve();
+      } else {
+        this.option('focusedItemKey', undefined);
+        deferred === null || deferred === void 0 || deferred.reject();
+      }
+    } else {
+      deferred === null || deferred === void 0 || deferred.resolve();
+    }
+    this._syncFocusedItemKeyDeferred = null;
+    return deferred === null || deferred === void 0 ? void 0 : deferred.promise();
+  }
+  _onFocusedItemChanged() {
+    const focusedItem = this._getFocusedItem();
+    const newFocusedItemKey = this.keyOf(focusedItem);
+    const {
+      focusedItemKey
+    } = this.option();
+    if (newFocusedItemKey !== focusedItemKey) {
+      this._lockFocusedItemProcessing = true;
+      this.option('focusedItemKey', newFocusedItemKey);
+      this._lockFocusedItemProcessing = false;
+      this._raiseFocusedItemChanged(focusedItem);
+    }
+  }
+  _raiseFocusedItemChanged(focusedItem) {
+    const {
+      focusedElement
+    } = this.option();
+    const args = {
+      item: focusedItem,
+      itemElement: focusedElement
+    };
+    this._actions.onFocusedItemChanged(args);
+  }
+  _changeItemSelection(item, select) {
+    if (this.isItemSelected(item) === select) {
+      return;
+    }
+    const itemElement = this.getItemElementByItem(item);
+    const index = this._getIndexByItemElement(itemElement);
+    this._selection.changeItemSelection(index, {
+      control: this._isPreserveSelectionMode
+    });
+  }
+  _chooseSelectOption() {
+    return 'selectedItemKeys';
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  getSelectedItems() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this._selection.getSelectedItems();
+  }
+  getItemElementByItem(item) {
+    return this._editStrategy.getItemElement(item);
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  getItemByItemElement(itemElement) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this._getItemByIndex(this._getIndexByItemElement(itemElement));
+  }
+  selectAll() {
+    const {
+      selectionMode
+    } = this.option();
+    if (selectionMode !== 'multiple') return;
+    // @ts-expect-error ts-error
+    this._selection.selectAll();
+    this._isPreserveSelectionMode = true;
+  }
+  selectItem(item) {
+    this._changeItemSelection(item, true);
+  }
+  deselectItem(item) {
+    this._changeItemSelection(item, false);
+  }
+  clearSelection() {
+    // @ts-expect-error ts-error
+    this._selection.deselectAll();
+  }
+  _optionChanged(args) {
+    const {
+      name,
+      value
+    } = args;
+    switch (name) {
+      case 'items':
+        if (this._layoutUtils) {
+          this._layoutUtils.updateItems(this.itemElements().first());
+        }
+        super._optionChanged(args);
+        break;
+      case 'focusedItemKey':
+        if (this._lockFocusedItemProcessing) {
+          break;
+        }
+        if ((0, _type.isDefined)(value)) {
+          var _this$_syncFocusedIte;
+          // @ts-expect-error ts-error
+          (_this$_syncFocusedIte = this._syncFocusedItemKey()) === null || _this$_syncFocusedIte === void 0 || _this$_syncFocusedIte.done(() => {
+            const focusedItem = this._getFocusedItem();
+            this._raiseFocusedItemChanged(focusedItem);
+          });
+        } else {
+          this.option('focusedElement', null);
+          this._raiseFocusedItemChanged(null);
+        }
+        break;
+      case 'onItemEnterKeyPressed':
+      case 'onFocusedItemChanged':
+        this._actions[name] = this._createActionByOption(name);
+        break;
+      default:
+        super._optionChanged(args);
+    }
+  }
+}
+var _default = exports.default = FileManagerThumbnailListBox;

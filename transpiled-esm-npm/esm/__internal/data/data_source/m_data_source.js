@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { applyBatch } from '../../../common/data/array_utils';
 import { CustomStore } from '../../../common/data/custom_store';
 import OperationManager from '../../../common/data/data_source/operation_manager';
@@ -372,7 +371,7 @@ export const DataSource = Class.inherit({
     const operationId = this._operationManager.add(deferred);
     const storeLoadOptions = this._createStoreLoadOptions();
     if (this._store && !isEmptyObject(storeLoadOptions === null || storeLoadOptions === void 0 ? void 0 : storeLoadOptions.langParams)) {
-      this._store._langParams = _extends({}, this._store._langParams, storeLoadOptions.langParams);
+      this._store._langParams = Object.assign({}, this._store._langParams, storeLoadOptions.langParams);
     }
     deferred.always(() => this._operationManager.remove(operationId));
     return {

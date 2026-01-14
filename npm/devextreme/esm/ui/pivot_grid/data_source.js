@@ -1,0 +1,10 @@
+/**
+* DevExtreme (esm/ui/pivot_grid/data_source.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { PivotGridDataSource } from '../../__internal/grids/pivot_grid/data_source/m_data_source';
+export default PivotGridDataSource;

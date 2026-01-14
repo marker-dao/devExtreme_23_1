@@ -9,7 +9,6 @@ exports.normalizeToolbarItems = normalizeToolbarItems;
 var _extend = require("../../../../../core/utils/extend");
 var _type = require("../../../../../core/utils/type");
 var _const = require("./const");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 function isVisible(visibleConfig, items) {
   if (visibleConfig === undefined) {
     return items.length > 0;
@@ -30,7 +29,7 @@ function normalizeToolbarItem(item, defaultButtonsMap, defaultItemNames) {
     if ((0, _type.isDefined)(defaultButtonsMap[button.name])) {
       button = (0, _extend.extend)(true, {}, defaultButtonsMap[button.name], button);
     } else if (defaultItemNames.includes(button.name)) {
-      button = _extends({}, button, {
+      button = Object.assign({}, button, {
         visible: false
       });
     }

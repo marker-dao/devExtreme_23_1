@@ -2,7 +2,6 @@
 
 var _globals = require("@jest/globals");
 var _m_customize_form_items = require("./m_customize_form_items");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const subjectGroup = {
   name: 'subjectGroup',
   itemType: 'group',
@@ -91,7 +90,7 @@ const mainTestCase = [mainGroup, recurrenceGroup];
       items: [],
       visible: false
     }]);
-    (0, _globals.expect)(result).toEqual([_extends({}, mainGroup, {
+    (0, _globals.expect)(result).toEqual([Object.assign({}, mainGroup, {
       items: [],
       visible: false
     })]);
@@ -104,7 +103,7 @@ const mainTestCase = [mainGroup, recurrenceGroup];
   (0, _globals.it)('should extract item from group and change order', () => {
     const customizeItems = ['subjectGroup', 'recurrenceGroup', 'mainGroup'];
     const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, customizeItems);
-    const expectedMainGroup = _extends({}, mainGroup, {
+    const expectedMainGroup = Object.assign({}, mainGroup, {
       items: [dateGroup, repeatGroup, resourcesGroup, descriptionGroup]
     });
     (0, _globals.expect)(result).toEqual([subjectGroup, recurrenceGroup, expectedMainGroup]);
@@ -112,7 +111,7 @@ const mainTestCase = [mainGroup, recurrenceGroup];
   (0, _globals.it)('should extract multiple items from parent group', () => {
     const customizeItems = ['subjectGroup', 'repeatGroup', 'mainGroup'];
     const result = (0, _m_customize_form_items.customizeFormItems)(mainTestCase, customizeItems);
-    const expectedMainGroup = _extends({}, mainGroup, {
+    const expectedMainGroup = Object.assign({}, mainGroup, {
       items: [dateGroup, resourcesGroup, descriptionGroup]
     });
     (0, _globals.expect)(result).toEqual([subjectGroup, repeatGroup, expectedMainGroup]);
@@ -174,7 +173,7 @@ const mainTestCase = [mainGroup, recurrenceGroup];
       name: 'mainGroup',
       items: ['subjectGroup', 'dateGroup']
     }]);
-    (0, _globals.expect)(result).toEqual([_extends({}, mainGroup, {
+    (0, _globals.expect)(result).toEqual([Object.assign({}, mainGroup, {
       items: [subjectGroup, dateGroup]
     })]);
   });
@@ -187,7 +186,7 @@ const mainTestCase = [mainGroup, recurrenceGroup];
         name: 'dateGroup'
       }]
     }]);
-    (0, _globals.expect)(result).toEqual([_extends({}, mainGroup, {
+    (0, _globals.expect)(result).toEqual([Object.assign({}, mainGroup, {
       items: [subjectGroup, dateGroup]
     })]);
   });
@@ -200,7 +199,7 @@ const mainTestCase = [mainGroup, recurrenceGroup];
         items: ['subjectGroup']
       }, 'dateGroup']
     }]);
-    (0, _globals.expect)(result).toEqual([_extends({}, mainGroup, {
+    (0, _globals.expect)(result).toEqual([Object.assign({}, mainGroup, {
       items: [{
         name: 'several',
         itemType: 'group',
@@ -218,8 +217,8 @@ const mainTestCase = [mainGroup, recurrenceGroup];
         name: 'dateGroup'
       }]
     }]);
-    (0, _globals.expect)(result).toEqual([_extends({}, mainGroup, {
-      items: [_extends({}, subjectGroup, {
+    (0, _globals.expect)(result).toEqual([Object.assign({}, mainGroup, {
+      items: [Object.assign({}, subjectGroup, {
         visible: false
       }), dateGroup]
     })]);

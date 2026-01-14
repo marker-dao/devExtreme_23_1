@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../../../common/core/events/click';
 import '../../../common/core/events/core/emitter.feedback';
 import '../../../common/core/events/hover';
@@ -66,11 +65,11 @@ export class ComponentWrapper extends DOMComponent {
     // @ts-expect-error badly typed base class
     super._getDefaultOptions(), viewDefaultProps, this._propsInfo.twoWay.reduce((options, _ref) => {
       let [name, defaultName, eventName] = _ref;
-      return _extends({}, options, {
+      return Object.assign({}, options, {
         [name]: viewDefaultProps[defaultName],
         [eventName]: value => this.option(name, value)
       });
-    }, {}), this._propsInfo.templates.reduce((options, name) => _extends({}, options, {
+    }, {}), this._propsInfo.templates.reduce((options, name) => Object.assign({}, options, {
       [name]: null
     }), {}));
   }
@@ -219,7 +218,7 @@ export class ComponentWrapper extends DOMComponent {
   }
   prepareStyleProp(props) {
     if (typeof props.style === 'string') {
-      return _extends({}, props, {
+      return Object.assign({}, props, {
         style: {},
         cssText: props.style
       });
@@ -230,7 +229,7 @@ export class ComponentWrapper extends DOMComponent {
     const {
       elementAttr
     } = this.option();
-    const options = this._patchOptionValues(_extends({}, this._props, {
+    const options = this._patchOptionValues(Object.assign({}, this._props, {
       ref: this._viewRef,
       children: this._extractDefaultSlot(),
       aria: this._aria
@@ -238,7 +237,7 @@ export class ComponentWrapper extends DOMComponent {
     this._propsInfo.templates.forEach(template => {
       options[template] = this._componentTemplates[template];
     });
-    return this.prepareStyleProp(_extends({}, options, this.elementAttr, elementAttr, {
+    return this.prepareStyleProp(Object.assign({}, options, this.elementAttr, elementAttr, {
       className: [...(this.elementAttr.class ?? '').split(' '), ...((elementAttr === null || elementAttr === void 0 ? void 0 : elementAttr.class) ?? '').split(' ')].filter((c, i, a) => c && a.indexOf(c) === i).join(' ').trim(),
       class: ''
     }, this._actionsMap));
@@ -247,7 +246,7 @@ export class ComponentWrapper extends DOMComponent {
     return {};
   }
   _getActionConfigsFull() {
-    return _extends({}, this._getActionConfigs(), this._getAdditionalActionConfigs());
+    return Object.assign({}, this._getActionConfigs(), this._getAdditionalActionConfigs());
   }
   getDefaultTemplates() {
     const defaultTemplates = Object.values(this._templatesInfo);
@@ -263,11 +262,11 @@ export class ComponentWrapper extends DOMComponent {
   _optionsWithDefaultTemplates(options) {
     const templateOptions = Object.entries(this._templatesInfo).reduce((result, _ref4) => {
       let [templateName, templateValue] = _ref4;
-      return _extends({}, result, {
+      return Object.assign({}, result, {
         [templateName]: options[templateName] ?? templateValue
       });
     }, {});
-    return _extends({}, options, templateOptions);
+    return Object.assign({}, options, templateOptions);
   }
   _init() {
     // @ts-expect-error badly typed base class
@@ -406,7 +405,7 @@ export class ComponentWrapper extends DOMComponent {
     this._refresh();
   }
   _supportedKeys() {
-    return _extends({}, this.defaultKeyHandlers, this.customKeyHandlers);
+    return Object.assign({}, this.defaultKeyHandlers, this.customKeyHandlers);
   }
   registerKeyHandler(key, handler) {
     this.customKeyHandlers[key] = handler;

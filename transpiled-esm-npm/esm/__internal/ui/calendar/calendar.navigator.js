@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../core/renderer';
 import { current, isFluent, isMaterial } from '../../../ui/themes';
 import Widget from '../../core/widget/widget';
@@ -13,7 +12,7 @@ const CALENDAR_NAVIGATOR_CAPTION_BUTTON_CLASS = 'dx-calendar-caption-button';
 const BUTTON_TEXT_CLASS = 'dx-button-text';
 class Navigator extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       onClick: undefined,
       onCaptionClick: undefined,
       type: 'normal',

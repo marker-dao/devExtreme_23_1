@@ -47,15 +47,15 @@ const keyboardNavigationScrollableA11yExtender = Base => class ScrollableA11yExt
     super._focus($cell, disableFocus, skipFocusEvent);
     this.makeScrollableFocusableIfNeed();
   }
-  _tabKeyHandler(eventArgs, isEditing) {
+  _tabKeyHandler(event) {
     const isCellPositionDefined = (0, _type.isDefined)(this._focusedCellPosition) && !(0, _type.isEmptyObject)(this._focusedCellPosition);
-    const isOriginalHandlerRequired = !isCellPositionDefined || !eventArgs.shift && this._isLastValidCell(this._focusedCellPosition) || eventArgs.shift && this._isFirstValidCell(this._focusedCellPosition);
+    const isOriginalHandlerRequired = !isCellPositionDefined || !event.shift && this._isLastValidCell(this._focusedCellPosition) || event.shift && this._isFirstValidCell(this._focusedCellPosition);
     const isNeedFocusable = this.isScrollableNeedFocusable();
     if (isOriginalHandlerRequired && isNeedFocusable) {
       var _this$_$firstNotFixed;
       (_this$_$firstNotFixed = this._$firstNotFixedCell) === null || _this$_$firstNotFixed === void 0 || _this$_$firstNotFixed.removeAttr('tabIndex');
     }
-    super._tabKeyHandler(eventArgs, isEditing);
+    super._tabKeyHandler(event);
   }
   getFirstNotFixedCell() {
     var _this$_editingControl;

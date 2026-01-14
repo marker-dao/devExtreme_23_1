@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../../../ui/toolbar/ui.toolbar.base';
 import { triggerResizeEvent } from '../../../common/core/events/visibility_change';
 import messageLocalization from '../../../common/core/localization/message';
@@ -98,7 +97,7 @@ const getLocalizationKey = itemType => itemType.toLowerCase() === 'done' ? 'OK' 
 const getHeightStrategyChangeOffset = (currentHeightStrategyClass, popupVerticalPaddings) => currentHeightStrategyClass === HEIGHT_STRATEGIES.flex ? -popupVerticalPaddings : 0;
 class Popup extends Overlay {
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       upArrow: e => {
         var _this$_drag;
         (_this$_drag = this._drag) === null || _this$_drag === void 0 || _this$_drag.moveUp(e);
@@ -118,7 +117,7 @@ class Popup extends Overlay {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       fullScreen: false,
       title: '',
       showTitle: true,
@@ -278,6 +277,7 @@ class Popup extends Overlay {
     return this.option('fullScreen') ? fullScreenConfig : defaultConfig;
   }
   _init() {
+    var _this$$wrapper, _this$_$content;
     const {
       _wrapperClassExternal: popupWrapperClassExternal
     } = this.option();
@@ -286,8 +286,8 @@ class Popup extends Overlay {
     this._createBodyOverflowManager();
     this._updateResizeCallbackSkipCondition();
     this.$element().addClass(POPUP_CLASS);
-    this.$wrapper().addClass(popupWrapperClasses);
-    this._$popupContent = this._$content.wrapInner($('<div>').addClass(POPUP_CONTENT_CLASS)).children().eq(0);
+    (_this$$wrapper = this.$wrapper()) === null || _this$$wrapper === void 0 || _this$$wrapper.addClass(popupWrapperClasses);
+    this._$popupContent = (_this$_$content = this._$content) === null || _this$_$content === void 0 ? void 0 : _this$_$content.wrapInner($('<div>').addClass(POPUP_CONTENT_CLASS)).children().eq(0);
     this._toggleContentScrollClass();
     this.$overlayContent().attr('role', 'dialog');
   }
@@ -335,10 +335,11 @@ class Popup extends Overlay {
     && this._showAnimationProcessing || this._areContentDimensionsRendered(entry);
   }
   _observeContentResize(shouldObserve) {
+    var _this$_$content2;
     if (!this.option('useResizeObserver')) {
       return;
     }
-    const contentElement = this._$content.get(0);
+    const contentElement = (_this$_$content2 = this._$content) === null || _this$_$content2 === void 0 ? void 0 : _this$_$content2.get(0);
     if (shouldObserve) {
       resizeObserverSingleton.observe(contentElement, entry => {
         this._contentResizeHandler(entry);
@@ -421,7 +422,11 @@ class Popup extends Overlay {
     var _this$_$topToolbar3;
     (_this$_$topToolbar3 = this._$topToolbar) === null || _this$_$topToolbar3 === void 0 || _this$_$topToolbar3.remove();
     const items = this._getTopToolbarItems();
-    const $toolbarContainer = $('<div>').addClass(POPUP_TITLE_CLASS).addClass(TOOLBAR_CLASS).insertBefore(this.$content());
+    const $content = this.$content();
+    if (!$content) {
+      return;
+    }
+    const $toolbarContainer = $('<div>').addClass(POPUP_TITLE_CLASS).addClass(TOOLBAR_CLASS).insertBefore($content);
     this._$topToolbar = this._renderToolbar('titleTemplate', items, $toolbarContainer, {
       onInitialized: e => {
         this._topToolbar = e.component;
@@ -452,7 +457,11 @@ class Popup extends Overlay {
     var _this$_$bottomToolbar2;
     (_this$_$bottomToolbar2 = this._$bottomToolbar) === null || _this$_$bottomToolbar2 === void 0 || _this$_$bottomToolbar2.remove();
     const items = this._getToolbarItems('bottom');
-    const $toolbarContainer = $('<div>').addClass(POPUP_BOTTOM_CLASS).addClass(TOOLBAR_CLASS).insertAfter(this.$content());
+    const $content = this.$content();
+    if (!$content) {
+      return;
+    }
+    const $toolbarContainer = $('<div>').addClass(POPUP_BOTTOM_CLASS).addClass(TOOLBAR_CLASS).insertAfter($content);
     this._$bottomToolbar = this._renderToolbar('bottomTemplate', items, $toolbarContainer, {
       compactMode: true,
       onInitialized: e => {
@@ -479,6 +488,15 @@ class Popup extends Overlay {
     }
     return this._renderByTemplate(template, $container);
   }
+  _getIntegrationOptions() {
+    // @ts-expect-error integrationOptions
+    const {
+      integrationOptions
+    } = this.option();
+    return Object.assign({}, integrationOptions, {
+      skipTemplates: ['content', 'title']
+    });
+  }
   _renderByPolymorphicTemplate(items, $container, additionalToolbarOptions) {
     const {
       disabled,
@@ -486,9 +504,7 @@ class Popup extends Overlay {
       useDefaultToolbarButtons,
       useFlatToolbarButtons
     } = this.option();
-    const integrationOptions = extend({}, this.option('integrationOptions'), {
-      skipTemplates: ['content', 'title']
-    });
+    const integrationOptions = this._getIntegrationOptions();
     const toolbarOptions = extend(additionalToolbarOptions, {
       disabled,
       rtlEnabled,
@@ -523,7 +539,14 @@ class Popup extends Overlay {
   }
   _updateToolbarOptions(toolbar, options) {
     const instance = toolbar === 'top' ? this._topToolbar : this._bottomToolbar;
-    instance === null || instance === void 0 || instance.option(options);
+    if (!instance) {
+      return;
+    }
+    const integrationOptions = this._getIntegrationOptions();
+    // @ts-expect-error integrationOptions
+    instance.option(Object.assign({}, options, {
+      integrationOptions
+    }));
   }
   _toggleAriaLabel() {
     var _this$_$topToolbar4;
@@ -673,33 +696,36 @@ class Popup extends Overlay {
     return TOOLBAR_NAME_BASE;
   }
   _toggleDisabledState(value) {
+    var _this$$content;
     // @ts-expect-error ts-error
     super._toggleDisabledState(...arguments);
-    this.$content().toggleClass(DISABLED_STATE_CLASS, Boolean(value));
+    (_this$$content = this.$content()) === null || _this$$content === void 0 || _this$$content.toggleClass(DISABLED_STATE_CLASS, Boolean(value));
   }
   _toggleClasses() {
     const aliases = ALLOWED_TOOLBAR_ITEM_ALIASES;
     each(aliases, (_, alias) => {
-      var _this$_$bottomToolbar3;
+      var _this$$wrapper2, _this$_$bottomToolbar3;
       const className = `${POPUP_CLASS}-${alias}`;
       const isVisible = this._toolbarItemClasses.includes(className);
-      this.$wrapper().toggleClass(`${className}-visible`, isVisible);
+      (_this$$wrapper2 = this.$wrapper()) === null || _this$$wrapper2 === void 0 || _this$$wrapper2.toggleClass(`${className}-visible`, isVisible);
       (_this$_$bottomToolbar3 = this._$bottomToolbar) === null || _this$_$bottomToolbar3 === void 0 || _this$_$bottomToolbar3.toggleClass(className, isVisible);
     });
   }
   _toggleFocusClass(isFocused, $element) {
     super._toggleFocusClass(isFocused, $element);
     if (isFocused && !zIndexPool.isLastZIndexInStack(this._zIndex)) {
+      var _this$_$wrapper, _this$_$content3;
       const zIndex = zIndexPool.create(this._zIndexInitValue());
       zIndexPool.remove(this._zIndex);
       this._zIndex = zIndex;
-      this._$wrapper.css('zIndex', zIndex);
-      this._$content.css('zIndex', zIndex);
+      (_this$_$wrapper = this._$wrapper) === null || _this$_$wrapper === void 0 || _this$_$wrapper.css('zIndex', zIndex);
+      (_this$_$content3 = this._$content) === null || _this$_$content3 === void 0 || _this$_$content3.css('zIndex', zIndex);
     }
   }
   _toggleContentScrollClass() {
+    var _this$$content2;
     const isNativeScrollingEnabled = !this.option('preventScrollEvents');
-    this.$content().toggleClass(POPUP_CONTENT_SCROLLABLE_CLASS, isNativeScrollingEnabled);
+    (_this$$content2 = this.$content()) === null || _this$$content2 === void 0 || _this$$content2.toggleClass(POPUP_CONTENT_SCROLLABLE_CLASS, isNativeScrollingEnabled);
   }
   _getPositionControllerConfig() {
     const superConfiguration = super._getPositionControllerConfig();
@@ -710,14 +736,14 @@ class Popup extends Overlay {
       dragAndResizeArea,
       outsideDragFactor
     } = this.option();
-    const properties = _extends({}, superConfiguration.properties, {
+    const properties = Object.assign({}, superConfiguration.properties, {
       fullScreen,
       forceApplyBindings,
       dragOutsideBoundary,
       dragAndResizeArea,
       outsideDragFactor
     });
-    const elements = _extends({}, superConfiguration.elements);
+    const elements = Object.assign({}, superConfiguration.elements);
     const configuration = {
       properties,
       elements
@@ -784,13 +810,15 @@ class Popup extends Overlay {
   _resetContentHeight() {
     const height = this._getOptionValue('height');
     if (height === 'auto') {
-      this.$content().css({
+      var _this$$content3;
+      (_this$$content3 = this.$content()) === null || _this$$content3 === void 0 || _this$$content3.css({
         height: 'auto',
         maxHeight: 'none'
       });
     }
   }
   _renderDrag() {
+    var _this$_$content4;
     const $dragTarget = this._getDragTarget();
     const {
       dragEnabled
@@ -801,7 +829,7 @@ class Popup extends Overlay {
     const config = {
       dragEnabled,
       handle: $dragTarget.get(0),
-      draggableElement: this._$content.get(0),
+      draggableElement: (_this$_$content4 = this._$content) === null || _this$_$content4 === void 0 ? void 0 : _this$_$content4.get(0),
       positionController: this._positionController
     };
     if (this._drag) {
@@ -812,6 +840,9 @@ class Popup extends Overlay {
     this.$overlayContent().toggleClass(POPUP_DRAGGABLE_CLASS, dragEnabled);
   }
   _renderResize() {
+    if (!this._$content) {
+      return;
+    }
     this._resizable = this._createComponent(this._$content, Resizable, {
       handles: this.option('resizeEnabled') ? 'all' : 'none',
       onResizeStart: e => {
@@ -850,13 +881,14 @@ class Popup extends Overlay {
     (_this$_actions3 = this._actions) === null || _this$_actions3 === void 0 || (_this$_actions3$onRes = _this$_actions3.onResizeEnd) === null || _this$_actions3$onRes === void 0 || _this$_actions3$onRes.call(_this$_actions3, e);
   }
   _setContentHeight() {
+    var _this$$content4;
     const {
       forceApplyBindings
     } = this.option();
     (forceApplyBindings ?? noop)();
     const overlayContent = this.$overlayContent().get(0);
     const currentHeightStrategyClass = this._chooseHeightStrategy(overlayContent);
-    this.$content().css(this._getHeightCssStyles(currentHeightStrategyClass, overlayContent));
+    (_this$$content4 = this.$content()) === null || _this$$content4 === void 0 || _this$$content4.css(this._getHeightCssStyles(currentHeightStrategyClass, overlayContent));
     this._setHeightClasses(this.$overlayContent(), currentHeightStrategyClass);
   }
   _chooseHeightStrategy(overlayContent) {
@@ -916,14 +948,15 @@ class Popup extends Overlay {
     return this.$overlayContent().get(0).style.height === 'auto';
   }
   _splitPopupHeight() {
+    var _this$$content5, _this$$content6;
     const topToolbar = this.topToolbar();
     const bottomToolbar = this.bottomToolbar();
     return {
       header: getVisibleHeight(topToolbar === null || topToolbar === void 0 ? void 0 : topToolbar.get(0)),
       footer: getVisibleHeight(bottomToolbar === null || bottomToolbar === void 0 ? void 0 : bottomToolbar.get(0)),
       contentVerticalOffsets: getVerticalOffsets(this.$overlayContent().get(0), true),
-      popupVerticalOffsets: getVerticalOffsets(this.$content().get(0), true),
-      popupVerticalPaddings: getVerticalOffsets(this.$content().get(0), false)
+      popupVerticalOffsets: getVerticalOffsets((_this$$content5 = this.$content()) === null || _this$$content5 === void 0 ? void 0 : _this$$content5.get(0), true),
+      popupVerticalPaddings: getVerticalOffsets((_this$$content6 = this.$content()) === null || _this$$content6 === void 0 ? void 0 : _this$$content6.get(0), false)
     };
   }
   _isAllWindowCovered() {
@@ -961,6 +994,10 @@ class Popup extends Overlay {
   _dispose() {
     super._dispose();
     this._toggleBodyScroll(true);
+    this._$topToolbar = null;
+    this._$bottomToolbar = null;
+    // @ts-expect-error _$popupContent can be null
+    this._$popupContent = null;
   }
   _renderFullscreenWidthClass() {
     const isFullScreen = getOuterWidth(this.$overlayContent()) === getWidth(window);
@@ -1128,7 +1165,11 @@ class Popup extends Overlay {
     return this._$content;
   }
   getFocusableElements() {
-    return this.$wrapper().find('[tabindex]')
+    const $wrapper = this.$wrapper();
+    if (!$wrapper) {
+      return $();
+    }
+    return $wrapper.find('[tabindex]')
     // @ts-expect-error ts-error
     .filter((_, item) => item.getAttribute('tabindex') >= 0);
   }

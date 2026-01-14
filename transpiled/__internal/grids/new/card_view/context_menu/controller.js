@@ -8,7 +8,6 @@ var _index = require("../../grid_core/columns_controller/index");
 var _controller = require("../../grid_core/context_menu/controller");
 var _index2 = require("../../grid_core/sorting_controller/index");
 var _options_controller = require("../options_controller");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class ContextMenuController extends _controller.BaseContextMenuController {
   constructor(columnsController, options, sortingController) {
     super();
@@ -28,7 +27,7 @@ class ContextMenuController extends _controller.BaseContextMenuController {
       items.push(...this.getSortingItems(contextInfo.column));
     }
     // @ts-expect-error
-    const event = _extends({
+    const event = Object.assign({
       items: items.length > 0 ? items : undefined,
       target: view,
       targetElement: targetElement,

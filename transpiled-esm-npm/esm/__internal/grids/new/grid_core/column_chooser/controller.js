@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../../../core/renderer';
 import { computed, signal } from '../../../../core/state_manager/index';
 import { sortColumns } from '../../../../grids/grid_core/columns_controller/m_columns_controller_utils';
@@ -58,7 +57,7 @@ export class ColumnChooserController {
         // in case when allowHiding=false and node.selected=false, we do not hide column
         const skip = !canHide && !node.selected;
         if (!skip) {
-          columns[columnIndex] = _extends({}, columns[columnIndex], {
+          columns[columnIndex] = Object.assign({}, columns[columnIndex], {
             visible: node.selected
           });
         }

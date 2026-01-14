@@ -1,14 +1,13 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { addAllDayPanelOccupation } from './utils/add_all_day_panel_occupation';
 import { filterByAttributes } from './utils/filter_by_attributes/filter_by_attributes';
 import { filterByIntervals } from './utils/filter_by_intervals/filter_by_intervals';
 import { getFilterOptions } from './utils/get_filter_options/get_filter_options';
 import { splitByGroupIndex } from './utils/split_by_group_index';
 import { splitByRecurrence } from './utils/split_by_recurrence/split_by_recurrence';
-const addDuration = entities => entities.map(entity => _extends({}, entity, {
+const addDuration = entities => entities.map(entity => Object.assign({}, entity, {
   duration: entity.endDateUTC - entity.startDateUTC
 }));
-const saveDatesBeforeSplit = entities => entities.map(entity => _extends({}, entity, {
+const saveDatesBeforeSplit = entities => entities.map(entity => Object.assign({}, entity, {
   datesBeforeSplit: {
     startDateUTC: entity.startDateUTC,
     endDateUTC: entity.endDateUTC

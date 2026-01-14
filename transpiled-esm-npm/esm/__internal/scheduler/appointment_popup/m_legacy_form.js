@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../m_recurrence_editor';
 import '../../../ui/text_area';
 import '../../../ui/tag_box';
@@ -182,7 +181,7 @@ export class AppointmentForm {
     const editorPath = this.getEditorPath(name, groupName);
     const itemEditorOptions = this.form.itemOption(editorPath).editorOptions;
     const type = isAllDay ? 'date' : 'datetime';
-    const newEditorOption = _extends({}, itemEditorOptions, {
+    const newEditorOption = Object.assign({}, itemEditorOptions, {
       type
     });
     this.form.itemOption(editorPath, 'editorOptions', newEditorOption);

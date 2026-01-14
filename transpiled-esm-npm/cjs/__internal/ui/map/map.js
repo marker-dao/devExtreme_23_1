@@ -22,8 +22,9 @@ var _providerDynamic2 = _interopRequireDefault(require("./provider.dynamic.bing"
 var _providerDynamic3 = _interopRequireDefault(require("./provider.dynamic.google"));
 var _provider = _interopRequireDefault(require("./provider.google_static"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // NOTE external urls must have protocol explicitly specified
+// NOTE external urls must have protocol explicitly specified
 // (because inside Cordova package the protocol is "file:")
+
 const PROVIDERS = {
   azure: _providerDynamic.default,
   googleStatic: _provider.default,
@@ -35,7 +36,7 @@ const MAP_CONTAINER_CLASS = 'dx-map-container';
 const MAP_SHIELD_CLASS = 'dx-map-shield';
 class Map extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       bounds: {
         northEast: null,
         southWest: null

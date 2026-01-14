@@ -2,7 +2,6 @@
 
 var _globals = require("@jest/globals");
 var _add_geometry_inside_interval = require("./add_geometry_inside_interval");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const intervals = [{
   min: 0,
   max: 20
@@ -80,7 +79,7 @@ const cells = [{
         height: 24
       },
       viewOrientation: 'horizontal'
-    })).toEqual(_extends({}, entity, {
+    })).toEqual(Object.assign({}, entity, {
       top: 24,
       width: 100,
       height: 56,
@@ -117,7 +116,7 @@ const cells = [{
         height: 24
       },
       viewOrientation: 'vertical'
-    })).toEqual(_extends({}, entity, {
+    })).toEqual(Object.assign({}, entity, {
       top: 0,
       width: 20,
       height: 160,
@@ -158,7 +157,7 @@ const cells = [{
         height: 24
       },
       viewOrientation: 'horizontal'
-    })).toEqual(_extends({}, entity, {
+    })).toEqual(Object.assign({}, entity, {
       top: 0,
       width: 18,
       height: 20,
@@ -206,7 +205,7 @@ const cells = [{
         height: 24
       },
       viewOrientation: 'vertical'
-    })).toEqual(_extends({}, entity, {
+    })).toEqual(Object.assign({}, entity, {
       top: 0,
       width: 18,
       height: 20,

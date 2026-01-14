@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.DataSourceAdapterTreeList = void 0;
 var _array_store = _interopRequireDefault(require("../../../../common/data/array_store"));
 var _array_utils = require("../../../../common/data/array_utils");
 var _query = _interopRequireDefault(require("../../../../common/data/query"));
@@ -287,8 +287,18 @@ class DataSourceAdapterTreeList extends _m_data_source_adapter.default {
       keys: resultKeys
     };
   }
+  _isOperationIdOutdated(operationId) {
+    return operationId !== undefined && this._lastOperationId !== undefined && operationId !== this._lastOperationId;
+  }
   _loadParentsOrChildren(data, options, needChildren) {
     var _options$storeLoadOpt, _options$loadOptions;
+    if (this._isOperationIdOutdated(options.operationId)) {
+      this._dataSource.cancel(options.operationId);
+      // @ts-expect-error
+      const rejectedDeferred = new _deferred.Deferred();
+      rejectedDeferred.reject();
+      return rejectedDeferred;
+    }
     let filter;
     let needLocalFiltering;
     const {
@@ -331,6 +341,10 @@ class DataSourceAdapterTreeList extends _m_data_source_adapter.default {
     });
     const store = options.fullData ? new _array_store.default(options.fullData) : this._dataSource.store();
     this.loadFromStore(loadOptions, store).done(loadedData => {
+      if (this._isOperationIdOutdated(options.operationId)) {
+        d.reject();
+        return;
+      }
       if (loadedData.length) {
         if (needLocalFiltering) {
           // @ts-expect-error
@@ -724,6 +738,7 @@ class DataSourceAdapterTreeList extends _m_data_source_adapter.default {
     _m_core.default.foreachNodes(nodes, callback);
   }
 }
+exports.DataSourceAdapterTreeList = DataSourceAdapterTreeList;
 let DataSourceAdapterTreeListType = DataSourceAdapterTreeList;
 var _default = exports.default = {
   extend(extender) {

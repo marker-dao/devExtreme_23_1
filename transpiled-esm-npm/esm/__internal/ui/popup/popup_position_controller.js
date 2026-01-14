@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { move } from '../../../common/core/animation/translator';
 import $ from '../../../core/renderer';
 import { originalViewPort } from '../../../core/utils/view_port';
@@ -19,7 +18,7 @@ export class PopupPositionController extends OverlayPositionController {
       dragAndResizeArea,
       outsideDragFactor
     } = properties;
-    this._properties = _extends({}, superProperties, {
+    this._properties = Object.assign({}, superProperties, {
       fullScreen,
       forceApplyBindings,
       dragOutsideBoundary,
@@ -69,16 +68,22 @@ export class PopupPositionController extends OverlayPositionController {
   }
   positionContent() {
     if (this._properties.fullScreen) {
-      move(this._$content, {
-        top: 0,
-        left: 0
-      });
+      if (this._$content) {
+        move(this._$content, {
+          top: 0,
+          left: 0
+        });
+      }
       this.detectVisualPositionChange();
     } else {
       var _this$_properties$for, _this$_properties;
       (_this$_properties$for = (_this$_properties = this._properties).forceApplyBindings) === null || _this$_properties$for === void 0 || _this$_properties$for.call(_this$_properties);
       super.positionContent();
     }
+  }
+  clean() {
+    this._$dragResizeContainer = undefined;
+    super.clean();
   }
   _normalizePosition(position) {
     const normalizedPosition = super._normalizePosition(position);

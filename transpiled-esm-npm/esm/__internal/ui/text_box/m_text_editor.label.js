@@ -41,6 +41,7 @@ class TextEditorLabel {
     const visible = this._isVisible();
     this._updateEditorBeforeButtonsClass(visible);
     this._updateEditorLabelClass(visible);
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     visible ? this._$root.appendTo(this._props.$editor) : this._$root.detach();
     this._attachEvents();
   }

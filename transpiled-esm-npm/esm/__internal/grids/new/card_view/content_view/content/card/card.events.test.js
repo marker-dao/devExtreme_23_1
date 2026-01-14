@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode, normalizeProps } from "inferno";
 import { describe, expect, it } from '@jest/globals';
 import { createRef, render } from 'inferno';
@@ -70,12 +69,12 @@ describe('Callbacks', () => {
     describe('when allowSelectOnClick = true', () => {
       it('should rise it', () => {
         const container = document.createElement('div');
-        const newProps = _extends({}, props, {
+        const newProps = Object.assign({}, props, {
           elementRef: createRef(),
           allowSelectOnClick: true
         });
         // @ts-expect-error
-        render(normalizeProps(createComponentVNode(2, Card, _extends({}, newProps))), container);
+        render(normalizeProps(createComponentVNode(2, Card, Object.assign({}, newProps))), container);
         const cardElement = container.querySelector(`.${CLASSES.card}`);
         cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('click'));
         expect(mockSelectCard.called).toBe(true);
@@ -84,12 +83,12 @@ describe('Callbacks', () => {
     describe('when allowSelectOnClick = false', () => {
       it('should not rise it', () => {
         const container = document.createElement('div');
-        const newProps = _extends({}, props, {
+        const newProps = Object.assign({}, props, {
           elementRef: createRef(),
           allowSelectOnClick: false
         });
         // @ts-expect-error
-        render(normalizeProps(createComponentVNode(2, Card, _extends({}, newProps))), container);
+        render(normalizeProps(createComponentVNode(2, Card, Object.assign({}, newProps))), container);
         const cardElement = container.querySelector(`.${CLASSES.card}`);
         cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('click'));
         expect(mockSelectCard.called).toBe(false);

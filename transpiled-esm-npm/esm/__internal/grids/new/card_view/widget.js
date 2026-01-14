@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 /* eslint-disable spellcheck/spell-checker */
 import registerComponent from '../../../../core/component_registrator';
@@ -39,7 +38,7 @@ export class CardViewBase extends GridCoreNew {
   // eslint-disable-next-line @stylistic/max-len
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), extend(true, {}, defaultOptions));
+    return Object.assign({}, super._getDefaultOptions(), extend(true, {}, defaultOptions));
   }
 }
 export class CardView extends ContentViewModule.PublicMethods(CardViewBase) {}

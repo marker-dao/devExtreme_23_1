@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { getDateByAsciiString } from '../../../../recurrence/base';
 import { generateRecurrenceUTCDates } from './generate_recurrence_utc_dates';
 import { getDateInformation, getDateOffsetMs } from './get_date_information';
@@ -46,7 +45,7 @@ export const getAppointmentRecurrenceOccurrences = (appointment, _ref) => {
     const startDateInfo = getDateInformation(startDateMsBase, timeZone);
     const endDateInfo = getDateInformation(endDateMsBase, timeZone);
     const [startDateFix, endDateFix] = getUnreachableShift(startDateInfo, endDateInfo);
-    return [_extends({}, appointment, {
+    return [Object.assign({}, appointment, {
       startDateUTC: startDateMsBase + startDateFix + startDateInfo.offsetMs,
       endDateUTC: endDateMsBase + endDateFix + endDateInfo.offsetMs
     })];
@@ -79,7 +78,7 @@ export const getAppointmentRecurrenceOccurrences = (appointment, _ref) => {
     const [startDateFix, endDateFix] = getUnreachableShiftRecurrence(startDateInfo, endDateInfo);
     const sourceStartDate = startDateMs + startDateDSTChange;
     const sourceEndDate = endDateMs + endDateDSTChange;
-    return _extends({}, appointment, {
+    return Object.assign({}, appointment, {
       source: {
         startDate: sourceStartDate,
         endDate: sourceEndDate

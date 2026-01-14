@@ -28,7 +28,6 @@ var _get_scroll_left_max = require("../../ui/scroll_view/utils/get_scroll_left_m
 var _constants = require("./constants");
 var _item = _interopRequireDefault(require("./item"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE tabs
 const TABS_CLASS = exports.TABS_CLASS = 'dx-tabs';
 const TABS_WRAPPER_CLASS = exports.TABS_WRAPPER_CLASS = 'dx-tabs-wrapper';
@@ -107,7 +106,7 @@ class Tabs extends _uiCollection_widget.default {
     return FEEDBACK_HIDE_TIMEOUT;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       showNavButtons: true,
       scrollByContent: true,

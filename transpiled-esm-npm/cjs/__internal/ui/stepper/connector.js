@@ -9,7 +9,6 @@ var _style = require("../../../core/utils/style");
 var _dom_component = _interopRequireDefault(require("../../core/widget/dom_component"));
 var _stepper = require("./stepper");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const STEPPER_CONNECTOR_CLASS = exports.STEPPER_CONNECTOR_CLASS = 'dx-stepper-connector';
 const STEPPER_CONNECTOR_HORIZONTAL_ORIENTATION_CLASS = exports.STEPPER_CONNECTOR_HORIZONTAL_ORIENTATION_CLASS = 'dx-stepper-connector-horizontal';
 const STEPPER_CONNECTOR_VERTICAL_ORIENTATION_CLASS = exports.STEPPER_CONNECTOR_VERTICAL_ORIENTATION_CLASS = 'dx-stepper-connector-vertical';
@@ -20,7 +19,7 @@ const FLEX_GROW = 'flexGrow';
 const MAX_SIZE = exports.MAX_SIZE = 100;
 class Connector extends _dom_component.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       orientation: 'horizontal',
       size: MAX_SIZE,
       value: 0

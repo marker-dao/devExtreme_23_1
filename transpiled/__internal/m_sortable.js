@@ -18,7 +18,6 @@ var _window = require("../core/utils/window");
 var _m_draggable = _interopRequireDefault(require("./m_draggable"));
 var _type = require("../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = (0, _window.getWindow)();
 const SORTABLE = 'dxSortable';
 const PLACEHOLDER_CLASS = 'placeholder';
@@ -64,7 +63,7 @@ class Sortable extends _m_draggable.default {
     this._sourceScrollableInfo = null;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       clone: true,
       filter: '> *',
       itemOrientation: 'vertical',

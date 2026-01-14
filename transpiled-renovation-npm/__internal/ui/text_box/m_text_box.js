@@ -11,7 +11,6 @@ var _size = require("../../../core/utils/size");
 var _window = require("../../../core/utils/window");
 var _m_text_editor = _interopRequireDefault(require("../../ui/text_box/m_text_editor.mask"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE textBox
 const window = (0, _window.getWindow)();
 const ignoreKeys = ['backspace', 'tab', 'enter', 'pageUp', 'pageDown', 'end', 'home', 'leftArrow', 'rightArrow', 'downArrow', 'upArrow', 'del'];
@@ -27,7 +26,7 @@ class TextBox extends _m_text_editor.default {
     super.ctor(element, options);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: '',
       mode: 'text',
       maxLength: null

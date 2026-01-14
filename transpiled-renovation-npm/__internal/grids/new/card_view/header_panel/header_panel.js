@@ -14,9 +14,10 @@ var _utils = require("../../grid_core/filtering/header_filter/utils");
 var _column_sortable = require("./column_sortable");
 var _item = require("./item");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable
+/* eslint-disable
   spellcheck/spell-checker
 */
+
 const CLASSES = exports.CLASSES = {
   link: 'dx-link',
   headers: 'dx-cardview-headers',
@@ -54,7 +55,7 @@ class HeaderPanel extends _inferno.Component {
       [CLASSES.contentHasHeaderItems]: hasHeaderItems,
       [CLASSES.contentEmpty]: !hasHeaderItems
     });
-    return (0, _inferno.createVNode)(1, "div", CLASSES.headers, (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _column_sortable.ColumnSortable, _extends({}, this.props.draggingOptions, {
+    return (0, _inferno.createVNode)(1, "div", CLASSES.headers, (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _column_sortable.ColumnSortable, Object.assign({}, this.props.draggingOptions, {
       "className": CLASSES.sortable,
       "source": "header-panel-main",
       "getColumnByIndex": index => this.props.visibleColumns[index],

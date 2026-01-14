@@ -11,8 +11,7 @@ var _render_utils = require("../../../../core/r1/utils/render_utils");
 var _index3 = require("../../utils/index");
 var _cell = require("./cell");
 var _date_header_text = require("./date_header_text");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const DateHeaderCellDefaultProps = exports.DateHeaderCellDefaultProps = _extends({}, _cell.CellBaseDefaultProps, {
+const DateHeaderCellDefaultProps = exports.DateHeaderCellDefaultProps = Object.assign({}, _cell.CellBaseDefaultProps, {
   today: false,
   colSpan: 1,
   isWeekDayCell: false,

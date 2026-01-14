@@ -10,8 +10,7 @@ var _index = require("../../r1/utils/index");
 var _constants_view = require("../../utils/options/constants_view");
 const _excluded = ["startDate", "endDate", "isFirstGroupCell", "isLastGroupCell"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 class DateHeaderDataGenerator {
   constructor(_viewDataGenerator) {
     this._viewDataGenerator = _viewDataGenerator;
@@ -54,7 +53,7 @@ class DateHeaderDataGenerator {
     for (let dayIndex = 0; dayIndex < daysInView; dayIndex += 1) {
       const cell = completeViewDataMap[index][dayIndex * colSpan];
       const shiftedStartDate = _m_utils_time_zone.default.addOffsetsWithoutDST(cell.startDate, -viewOffset);
-      weekDaysRow.push(_extends({}, cell, {
+      weekDaysRow.push(Object.assign({}, cell, {
         colSpan,
         text: (0, _index.formatWeekdayAndDay)(shiftedStartDate),
         isFirstGroupCell: false,
@@ -113,7 +112,7 @@ class DateHeaderDataGenerator {
         cellCountInDay,
         viewOffset
       });
-      return _extends({}, restProps, {
+      return Object.assign({}, restProps, {
         startDate,
         text,
         today: _date.default.sameDate(shiftedStartDate, today),

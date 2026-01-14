@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createFragment, createComponentVNode, normalizeProps } from "inferno";
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Component, createRef } from 'inferno';
@@ -24,10 +23,10 @@ export class Field extends Component {
         "field": this.props.field
       }), 2);
     }
-    return createFragment([normalizeProps(createComponentVNode(2, Caption, _extends({
+    return createFragment([normalizeProps(createComponentVNode(2, Caption, Object.assign({
       "field": this.props.field,
       "template": this.props.captionTemplate
-    }, this.props.captionProps))), normalizeProps(createComponentVNode(2, ValueText, _extends({
+    }, this.props.captionProps))), normalizeProps(createComponentVNode(2, ValueText, Object.assign({
       "fieldHintEnabled": this.props.fieldHintEnabled,
       "field": this.props.field,
       "template": this.props.valueTemplate

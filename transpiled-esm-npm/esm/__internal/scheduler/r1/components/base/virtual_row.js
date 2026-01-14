@@ -1,10 +1,9 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode } from "inferno";
 import { BaseInfernoComponent } from '../../../../core/r1/runtime/inferno/index';
 import { renderUtils } from '../../utils/index';
 import { Row, RowDefaultProps } from './row';
 import { VirtualCell, VirtualCellDefaultProps } from './virtual_cell';
-export const VirtualRowDefaultProps = _extends({}, RowDefaultProps, {
+export const VirtualRowDefaultProps = Object.assign({}, RowDefaultProps, {
   leftVirtualCellWidth: 0,
   rightVirtualCellWidth: 0,
   cellsCount: 1

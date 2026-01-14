@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../../core/renderer';
 import { deferRender } from '../../../../core/utils/common';
 import { compileGetter } from '../../../../core/utils/data';
@@ -116,7 +115,7 @@ export class SingleLineStrategy {
       const itemData = this._toolbar._getItemData(hiddenItem);
       const $itemContainer = $(hiddenItem);
       const $itemMarkup = $itemContainer.children();
-      return _extends({
+      return Object.assign({
         menuItemTemplate: () => {
           this._restoreItems.push({
             container: $itemContainer,

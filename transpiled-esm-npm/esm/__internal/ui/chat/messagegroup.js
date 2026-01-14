@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import dateLocalization from '../../../common/core/localization/date';
 import messageLocalization from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
@@ -20,7 +19,7 @@ const CHAT_MESSAGE_EDITED_ICON_CLASS = 'dx-chat-message-edited-icon';
 const CHAT_MESSAGE_EDITED_TEXT_CLASS = 'dx-chat-message-edited-text';
 class MessageGroup extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       items: [],
       alignment: 'start',
       showAvatar: true,
@@ -94,10 +93,11 @@ class MessageGroup extends Widget {
       options.src = message.src;
     } else {
       options.text = message.text;
+      options.metadata = message.metadata;
     }
     if (messageTemplate) {
       options.template = (messageData, container) => {
-        messageTemplate(_extends({}, message, messageData), container);
+        messageTemplate(Object.assign({}, message, messageData), container);
       };
     }
     return options;

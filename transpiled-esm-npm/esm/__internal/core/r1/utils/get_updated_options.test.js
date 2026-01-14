@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { getUpdatedOptions } from './get_updated_options';
 describe('get_updated_options', () => {
@@ -111,7 +110,7 @@ describe('get_updated_options', () => {
       id: 'field2',
       visible: true
     }];
-    const columns = [oldColumns[0], _extends({}, oldColumns[1], {
+    const columns = [oldColumns[0], Object.assign({}, oldColumns[1], {
       visible: false
     })];
     expect(getUpdatedOptions({

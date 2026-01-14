@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../core/component_registrator';
 import { data as elementData } from '../../core/element_data';
 import Guid from '../../core/guid';
@@ -21,7 +20,7 @@ class Validator extends DOMComponent {
     this.option(ValidationEngine.initValidationOptions(options));
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       validationRules: []
     });
   }

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["config"];
 import { createVNode, normalizeProps } from "inferno";
@@ -40,7 +39,7 @@ export class InkRipple extends BaseInfernoComponent {
     }
   }
   render() {
-    return normalizeProps(createVNode(1, "div", "dx-inkripple", null, 1, _extends({}, this.restAttributes)));
+    return normalizeProps(createVNode(1, "div", "dx-inkripple", null, 1, Object.assign({}, this.restAttributes)));
   }
 }
 InkRipple.defaultProps = defaultInkRippleProps;

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import browser from '../../../../core/utils/browser';
 import { isMaterialBased } from '../../../../ui/themes';
 import * as columnChooser from './column_chooser/index';
@@ -16,7 +15,7 @@ import * as searchPanel from './search/index';
 import * as selection from './selection/index';
 import * as sortingController from './sorting_controller/index';
 import * as toolbar from './toolbar/index';
-export const defaultOptions = _extends({}, dataController.defaultOptions, sortingController.defaultOptions, columnsController.defaultOptions, pager.defaultOptions, filterPanel.defaultOptions, filterController.defaultOptions, headerFilter.defaultOptions, filterSync.defaultOptions, contentView.defaultOptions, searchPanel.defaultOptions, columnChooser.defaultOptions, selection.defaultOptions, toolbar.defaultOptions, editing.defaultOptions, keyboardNavigation.defaultOptions);
+export const defaultOptions = Object.assign({}, dataController.defaultOptions, sortingController.defaultOptions, columnsController.defaultOptions, pager.defaultOptions, filterPanel.defaultOptions, filterController.defaultOptions, headerFilter.defaultOptions, filterSync.defaultOptions, contentView.defaultOptions, searchPanel.defaultOptions, columnChooser.defaultOptions, selection.defaultOptions, toolbar.defaultOptions, editing.defaultOptions, keyboardNavigation.defaultOptions);
 // TODO: separate by modules
 // TODO: add typing for defaultOptionRules
 export const defaultOptionsRules = [{

@@ -7,7 +7,7 @@ exports.RootElementUpdater = void 0;
 exports.normalizeEventName = normalizeEventName;
 var _inferno = require("inferno");
 const _excluded = ["rootElementRef", "ref", "className", "children"];
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 function normalizeEventName(name) {
   return name.substring(2).toLowerCase();
 }

@@ -9,13 +9,12 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _type = require("../../../core/utils/type");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const AVATAR_CLASS = 'dx-avatar';
 const AVATAR_INITIALS_CLASS = 'dx-avatar-initials';
 const AVATAR_IMAGE_CLASS = 'dx-avatar-image';
 class Avatar extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       name: 'Unknown User',
       url: '',
       alt: ''

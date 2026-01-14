@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { triggerResizeEvent } from '../../../common/core/events/visibility_change';
 import messageLocalization from '../../../common/core/localization/message';
 import devices from '../../../core/devices';
@@ -73,7 +72,7 @@ export class AppointmentPopup {
     return this.scheduler.createComponent(popupElement, Popup, options);
   }
   _createPopupConfig() {
-    return _extends({}, POPUP_CONFIG, {
+    return Object.assign({}, POPUP_CONFIG, {
       onHiding: () => this.scheduler.focus(),
       contentTemplate: () => this._createPopupContent(),
       onShowing: e => this._onShowing(e),
@@ -108,7 +107,7 @@ export class AppointmentPopup {
     const appointment = this._createAppointmentAdapter(rawAppointment);
     const resourceManager = this.scheduler.getResourceManager();
     const rawAppointmentGroupValues = getRawAppointmentGroupValues(rawAppointment, resourceManager.resources);
-    return _extends({}, rawAppointment, rawAppointmentGroupValues, {
+    return Object.assign({}, rawAppointment, rawAppointmentGroupValues, {
       repeat: Boolean(appointment.recurrenceRule)
     });
   }

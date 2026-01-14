@@ -20,7 +20,6 @@ var _small_screen = require("../../../ui/html_editor/utils/small_screen");
 var _load_indicator2 = require("../../../ui/load_indicator");
 var _m_text_editor = require("../../../ui/text_box/m_text_editor.base");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const AI_DIALOG_CLASS = exports.AI_DIALOG_CLASS = 'dx-aidialog';
 const AI_DIALOG_CONTROLS_CLASS = exports.AI_DIALOG_CONTROLS_CLASS = 'dx-aidialog-controls';
 const AI_DIALOG_CONTENT_CLASS = exports.AI_DIALOG_CONTENT_CLASS = 'dx-aidialog-content';
@@ -75,7 +74,7 @@ class AIDialog extends _m_baseDialog.default {
   }
   _getPopupConfig() {
     const baseConfig = super._getPopupConfig();
-    return (0, _extend.extend)(true, {}, baseConfig, _extends({
+    return (0, _extend.extend)(true, {}, baseConfig, Object.assign({
       minWidth: POPUP_MIN_WIDTH,
       maxWidth: POPUP_MAX_WIDTH,
       height: 'auto',
@@ -182,7 +181,7 @@ class AIDialog extends _m_baseDialog.default {
       maxHeight: TEXT_AREA_MAX_HEIGHT,
       autoResizeEnabled: true
     };
-    const options = _extends({
+    const options = Object.assign({
       inputAttr: {
         'aria-label': _message.default.format('dxHtmlEditor-aiResultTextAreaAriaLabel')
       },
@@ -268,7 +267,7 @@ class AIDialog extends _m_baseDialog.default {
           width: REPLACE_DROPDOWN_WIDTH
         },
         onButtonClick: e => {
-          this._replaceButtonAction(_extends({}, e, {
+          this._replaceButtonAction(Object.assign({}, e, {
             itemData: {
               id: ReplaceButtonActions.Replace
             }

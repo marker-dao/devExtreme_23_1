@@ -10,16 +10,15 @@ var _filtering = _interopRequireDefault(require("../../../../../../ui/shared/fil
 var _m_utils = _interopRequireDefault(require("../../../../../grids/grid_core/m_utils"));
 const _excluded = ["texts", "visible"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const mergeColumnHeaderFilterOptions = (column, rootOptions) => {
   var _column$headerFilter;
   const _ref = rootOptions ?? {},
     restRootOptions = _objectWithoutPropertiesLoose(_ref, _excluded);
-  return _extends({}, column, {
+  return Object.assign({}, column, {
     allowHeaderFiltering: !!(rootOptions !== null && rootOptions !== void 0 && rootOptions.visible) && !!(column !== null && column !== void 0 && column.allowFiltering) && !!(column !== null && column !== void 0 && column.allowHeaderFiltering),
-    headerFilter: _extends({}, restRootOptions, column === null || column === void 0 ? void 0 : column.headerFilter, {
-      search: _extends({}, restRootOptions === null || restRootOptions === void 0 ? void 0 : restRootOptions.search, column === null || column === void 0 || (_column$headerFilter = column.headerFilter) === null || _column$headerFilter === void 0 ? void 0 : _column$headerFilter.search)
+    headerFilter: Object.assign({}, restRootOptions, column === null || column === void 0 ? void 0 : column.headerFilter, {
+      search: Object.assign({}, restRootOptions === null || restRootOptions === void 0 ? void 0 : restRootOptions.search, column === null || column === void 0 || (_column$headerFilter = column.headerFilter) === null || _column$headerFilter === void 0 ? void 0 : _column$headerFilter.search)
     })
   });
 };

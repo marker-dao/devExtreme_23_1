@@ -1,0 +1,43 @@
+/**
+* DevExtreme (cjs/__internal/grids/new/grid_core/editing/utils.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.defaultSetFieldValue = exports.PendingPromises = void 0;
+const defaultSetFieldValue = function (newData, value) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const column = this;
+  const {
+    dataField
+  } = column;
+  if (!dataField) {
+    return;
+  }
+  newData[dataField] = value;
+};
+exports.defaultSetFieldValue = defaultSetFieldValue;
+class PendingPromises {
+  constructor() {
+    this.promises = new Set();
+  }
+  waitForAll() {
+    return Promise.all([...this.promises]);
+  }
+  add(p) {
+    this.promises.add(p);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    p.then(() => {
+      this.promises.delete(p);
+    });
+    return p;
+  }
+}
+exports.PendingPromises = PendingPromises;

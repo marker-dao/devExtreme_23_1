@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import dateLocalization from '../../../../common/core/localization/date';
 import dateUtils from '../../../../core/utils/date';
 import { isDefined, isObject } from '../../../../core/utils/type';
@@ -238,7 +237,7 @@ export const isDataOnWeekend = date => {
 export const getWeekendsCount = days => 2 * Math.floor(days / 7);
 export const extendGroupItemsForGroupingByDate = (groupRenderItems, columnCountPerGroup) => [...new Array(columnCountPerGroup)].reduce((currentGroupItems, _, index) => groupRenderItems.map((groupsRow, rowIndex) => {
   const currentRow = currentGroupItems[rowIndex] || [];
-  return [...currentRow, ...groupsRow.map((item, columnIndex) => _extends({}, item, {
+  return [...currentRow, ...groupsRow.map((item, columnIndex) => Object.assign({}, item, {
     key: `${item.key}_group_by_date_${index}`,
     isFirstGroupCell: columnIndex === 0,
     isLastGroupCell: columnIndex === groupsRow.length - 1

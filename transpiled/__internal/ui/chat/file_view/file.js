@@ -11,7 +11,6 @@ var _m_icon = require("../../../core/utils/m_icon");
 var _dom_component = _interopRequireDefault(require("../../../core/widget/dom_component"));
 var _file_uploader = require("../../../ui/file_uploader/file_uploader.utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CHAT_FILE_CLASS = exports.CHAT_FILE_CLASS = 'dx-chat-file';
 const CHAT_FILE_ICON_CONTAINER_CLASS = 'dx-chat-file-icon-container';
 const CHAT_FILE_NAME_CLASS = exports.CHAT_FILE_NAME_CLASS = 'dx-chat-file-name';
@@ -19,7 +18,7 @@ const CHAT_FILE_SIZE_CLASS = exports.CHAT_FILE_SIZE_CLASS = 'dx-chat-file-size';
 const CHAT_FILE_DOWNLOAD_BUTTON_CLASS = 'dx-chat-file-download-button';
 class File extends _dom_component.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: true,
       focusStateEnabled: true,
       hoverStateEnabled: true,

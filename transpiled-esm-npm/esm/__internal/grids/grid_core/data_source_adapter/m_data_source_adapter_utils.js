@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { extend } from '../../../../core/utils/extend';
 import { isDefined } from '../../../../core/utils/type';
 import commonUtils from '../../../core/utils/m_common';
@@ -100,7 +99,7 @@ export const getItemFromCache = function (options, cacheItem, groupCount, index,
 };
 export const getGroupItemFromCache = function (cacheItem, groupCount, skips, takes) {
   if (groupCount && cacheItem) {
-    const result = _extends({}, cacheItem);
+    const result = Object.assign({}, cacheItem);
     const skip = skips[0] || 0;
     const take = takes[0];
     const {
@@ -171,7 +170,7 @@ export const setPageDataToCache = function (options, data, groupCount) {
 };
 export const getCacheItem = function (cacheItem, loadedItem, groupCount, skips) {
   if (groupCount && loadedItem) {
-    const result = _extends({}, loadedItem);
+    const result = Object.assign({}, loadedItem);
     delete result.isContinuation;
     delete result.isContinuationOnNextPage;
     const skip = skips[0] || 0;

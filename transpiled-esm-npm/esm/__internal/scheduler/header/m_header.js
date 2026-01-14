@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../../../ui/button_group';
 import '../../../ui/drop_down_button';
 import registerComponent from '../../../core/component_registrator';
@@ -122,7 +121,7 @@ export class SchedulerHeader extends Widget {
   _createToolbarConfig() {
     const options = this.option('toolbar');
     const parsedItems = options.items.map(element => this._parseItem(element));
-    return _extends({}, options, {
+    return Object.assign({}, options, {
       items: parsedItems
     });
   }

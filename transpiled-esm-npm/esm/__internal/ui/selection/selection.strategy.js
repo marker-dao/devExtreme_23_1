@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import dataQuery from '../../../common/data/query';
 import { equalByValue, getKeyHash, noop } from '../../../core/utils/common';
 import { Deferred } from '../../../core/utils/deferred';
@@ -126,7 +125,7 @@ export default class SelectionStrategy {
     const needLoadAllData = this.options.maxFilterLengthInRequest && filterLength > this.options.maxFilterLengthInRequest;
     const deferred = Deferred();
     const queryParams = this._getQueryParams();
-    const loadOptions = _extends({
+    const loadOptions = Object.assign({
       filter: needLoadAllData ? undefined : remoteFilter,
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       select: needLoadAllData ? this.options.dataFields() : select || this.options.dataFields()

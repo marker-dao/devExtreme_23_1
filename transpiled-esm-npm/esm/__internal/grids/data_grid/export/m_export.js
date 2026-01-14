@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 import '../../../../ui/button';
 import '../../../../ui/drop_down_button';
@@ -626,7 +625,7 @@ const headerPanel = Base => class ExportHeaderPanelExtender extends Base {
       disabled
     };
     if (items.length === 1) {
-      const widgetOptions = _extends({}, items[0], {
+      const widgetOptions = Object.assign({}, items[0], {
         hint: items[0].text,
         elementAttr: {
           class: DATAGRID_EXPORT_BUTTON_CLASS

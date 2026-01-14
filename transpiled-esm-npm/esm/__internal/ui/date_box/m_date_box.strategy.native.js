@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import devices from '../../../core/devices';
 import dateSerialization from '../../../core/utils/date_serialization';
 import { inputType } from '../../../core/utils/support';
@@ -11,7 +10,7 @@ class NativeStrategy extends DateBoxStrategy {
   }
   // eslint-disable-next-line class-methods-use-this
   popupConfig(popupConfig) {
-    return _extends({}, popupConfig, {
+    return Object.assign({}, popupConfig, {
       width: 'auto'
     });
   }

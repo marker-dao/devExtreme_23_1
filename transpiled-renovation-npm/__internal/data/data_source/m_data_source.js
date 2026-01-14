@@ -19,7 +19,6 @@ var _queue = require("../../../core/utils/queue");
 var _type = require("../../../core/utils/type");
 var _m_common = _interopRequireDefault(require("../../core/utils/m_common"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DataSource = exports.DataSource = _class.default.inherit({
   ctor(options) {
     // @ts-expect-error
@@ -379,7 +378,7 @@ const DataSource = exports.DataSource = _class.default.inherit({
     const operationId = this._operationManager.add(deferred);
     const storeLoadOptions = this._createStoreLoadOptions();
     if (this._store && !(0, _type.isEmptyObject)(storeLoadOptions === null || storeLoadOptions === void 0 ? void 0 : storeLoadOptions.langParams)) {
-      this._store._langParams = _extends({}, this._store._langParams, storeLoadOptions.langParams);
+      this._store._langParams = Object.assign({}, this._store._langParams, storeLoadOptions.langParams);
     }
     deferred.always(() => this._operationManager.remove(operationId));
     return {

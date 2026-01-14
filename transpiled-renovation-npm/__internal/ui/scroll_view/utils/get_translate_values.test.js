@@ -3,8 +3,9 @@
 var _globals = require("@jest/globals");
 var _get_element_style = require("./get_element_style");
 var _get_translate_values = require("./get_translate_values");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-unsafe-return */
-_globals.jest.mock('./get_element_style', () => _extends({}, _globals.jest.requireActual('./get_element_style'), {
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+
+_globals.jest.mock('./get_element_style', () => Object.assign({}, _globals.jest.requireActual('./get_element_style'), {
   getElementTransform: _globals.jest.fn(() => '')
 }));
 (0, _globals.describe)('getTranslateValues', () => {

@@ -4,7 +4,10 @@ var _globals = require("@jest/globals");
 var _index = require("../../core/state_manager/index");
 var _di = require("../di");
 var _setup_state_manager = require("./dev/setup_state_manager");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/init-declarations */ /* eslint-disable max-classes-per-file */ /* eslint-disable spellcheck/spell-checker */
+/* eslint-disable @typescript-eslint/init-declarations */
+/* eslint-disable max-classes-per-file */
+/* eslint-disable spellcheck/spell-checker */
+
 const waitGarbageCollection = async () => {
   if (!global.gc) {
     throw new Error('Global gc is not defined. Did you use the `--expose-gc` flag?');
@@ -17,10 +20,10 @@ const waitGarbageCollection = async () => {
   global.gc();
 };
 (0, _globals.describe)('StateManager', () => {
-  const originalEnv = _extends({}, process.env);
+  const originalEnv = Object.assign({}, process.env);
   (0, _globals.beforeAll)(() => {
     _globals.jest.resetModules();
-    process.env = _extends({}, originalEnv, {
+    process.env = Object.assign({}, originalEnv, {
       NODE_ENV: 'development'
     });
   });

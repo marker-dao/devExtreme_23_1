@@ -16,7 +16,8 @@ var _uiCollection_widget = _interopRequireDefault(require("../../ui/collection/u
 var _ui = _interopRequireDefault(require("../../ui/widget/ui.errors"));
 var _box = _interopRequireDefault(require("../ui/box"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
+// @ts-expect-error ts-error
+
 // STYLE responsiveBox
 const RESPONSIVE_BOX_CLASS = 'dx-responsivebox';
 const SCREEN_SIZE_CLASS_PREFIX = `${RESPONSIVE_BOX_CLASS}-screen-`;
@@ -25,7 +26,7 @@ const BOX_ITEM_DATA_KEY = 'dxBoxItemData';
 const HD_SCREEN_WIDTH = 1920;
 class ResponsiveBox extends _uiCollection_widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       rows: [],
       cols: [],
       singleColumnScreen: '',
@@ -239,7 +240,7 @@ class ResponsiveBox extends _uiCollection_widget.default {
         result.push({
           // @ts-expect-error ts-error
           item,
-          location: _extends({
+          location: Object.assign({
             rowspan: 1,
             colspan: 1
           }, location)
@@ -458,7 +459,7 @@ class ResponsiveBox extends _uiCollection_widget.default {
   _blockSize(block, direction) {
     const defaultMinSize = direction === 'row' ? 'auto' : 0;
     const sizeConfigs = direction === 'row' ? this._rows : this._cols;
-    const result = _extends({}, this._createDefaultSizeConfig(), {
+    const result = Object.assign({}, this._createDefaultSizeConfig(), {
       ratio: 0
     });
     for (let index = block[direction].start; index <= block[direction].end; index += 1) {

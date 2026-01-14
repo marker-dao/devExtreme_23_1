@@ -31,7 +31,8 @@ var _m_select_box = _interopRequireDefault(require("../ui/m_select_box"));
 var _m_utils = _interopRequireDefault(require("../ui/text_box/m_utils.caret"));
 var _m_utils2 = require("../ui/text_box/m_utils.scroll");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+
 function xor(a, b) {
   return (a || b) && !(a && b);
 }
@@ -56,7 +57,7 @@ class TagBox extends _m_select_box.default {
     // @ts-expect-error ts-error
     const sendToList = options => this._list._keyboardHandler(options);
     const rtlEnabled = this.option('rtlEnabled');
-    return _extends({}, parent, {
+    return Object.assign({}, parent, {
       backspace(e) {
         if (!this._isCaretAtTheStart()) {
           return;

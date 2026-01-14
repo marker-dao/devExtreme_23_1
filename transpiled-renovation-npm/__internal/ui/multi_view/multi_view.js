@@ -20,7 +20,6 @@ var _type = require("../../../core/utils/type");
 var _uiCollection_widget = _interopRequireDefault(require("../../../ui/collection/ui.collection_widget.live_update"));
 var _multi_view = require("./multi_view.animation");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE multiView
 const MULTIVIEW_CLASS = 'dx-multiview';
 const MULTIVIEW_WRAPPER_CLASS = 'dx-multiview-wrapper';
@@ -37,13 +36,13 @@ class MultiView extends _uiCollection_widget.default {
     return `.${MULTIVIEW_ITEM_CLASS}`;
   }
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       pageUp: _common.noop,
       pageDown: _common.noop
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       selectedIndex: 0,
       swipeEnabled: true,
       animationEnabled: true,

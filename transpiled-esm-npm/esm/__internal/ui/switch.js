@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../../common/core/animation';
 import { name as clickEventName } from '../../common/core/events/click';
 import { lock } from '../../common/core/events/core/emitter.feedback';
@@ -44,7 +43,7 @@ class Switch extends Editor {
       this._saveValueChangeEvent(e);
       this._animateValue(value);
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       space: click,
       enter: click,
       leftArrow: e => {
@@ -59,7 +58,7 @@ class Switch extends Editor {
     return false;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       activeStateEnabled: true,
       switchedOnText: messageLocalization.format('dxSwitch-switchedOnText'),

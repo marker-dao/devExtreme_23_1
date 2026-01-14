@@ -43,22 +43,18 @@ const getPanelCollectorOptions = (schedulerStore, _ref) => {
   };
   const maxAppointmentsPerCell = schedulerStore.getViewOption('maxAppointmentsPerCell');
   const collectorSizes = maxAppointmentsPerCell === 'unlimited' && !alwaysReserveSpaceForCollector ? UNLIMITED_COLLECTOR_SIZES : (0, _get_collector_size.getCollectorSize)(cellSize, collectorCSS, !isAdaptivityEnabled && panelName === 'allDayPanel' ? cellSize.width * ALL_DAY_COLLECTOR_WIDTH_FACTOR : 0);
-  const maxLevel = (0, _get_max_level.getMaxLevel)({
+  const maxLevelOptions = {
     maxAppointmentsPerCell,
     cellSize,
     collectorSize: collectorSizes.collectorWithMarginsSize,
     viewOrientation,
     isTimelineView,
     isAdaptivityEnabled
-  });
-  const minLevel = viewOrientation === 'vertical' ? MIN_LEVEL_VERTICAL_VIEW : (0, _get_max_level.getMaxLevel)({
-    maxAppointmentsPerCell: 'auto',
-    cellSize,
-    collectorSize: collectorSizes.collectorWithMarginsSize,
-    viewOrientation,
-    isTimelineView,
-    isAdaptivityEnabled
-  });
+  };
+  const maxLevel = (0, _get_max_level.getMaxLevel)(maxLevelOptions);
+  const minLevel = viewOrientation === 'vertical' ? MIN_LEVEL_VERTICAL_VIEW : (0, _get_max_level.getMaxLevel)(Object.assign({}, maxLevelOptions, {
+    maxAppointmentsPerCell: 'auto'
+  }));
   return {
     allDayPanelCellSize,
     cellSize,

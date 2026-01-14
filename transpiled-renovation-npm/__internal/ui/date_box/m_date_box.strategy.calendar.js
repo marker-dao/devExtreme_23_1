@@ -13,7 +13,8 @@ var _calendar = _interopRequireDefault(require("../../../ui/calendar"));
 var _themes = require("../../../ui/themes");
 var _m_date_box = _interopRequireDefault(require("./m_date_box.strategy"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error
+// @ts-expect-error
+
 const TODAY_BUTTON_CLASS = 'dx-button-today';
 class CalendarStrategy extends _m_date_box.default {
   ctor(dateBox) {
@@ -21,7 +22,7 @@ class CalendarStrategy extends _m_date_box.default {
     this.NAME = 'Calendar';
   }
   getDefaultOptions() {
-    return _extends({}, super.getDefaultOptions(), {
+    return Object.assign({}, super.getDefaultOptions(), {
       todayButtonText: this.dateBox.option('todayButtonText') ?? _message.default.format('dxCalendar-todayButtonText')
     });
   }

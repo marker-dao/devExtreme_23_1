@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import positionUtils from '../../../common/core/animation/position';
 import { locate, move, resetPosition } from '../../../common/core/animation/translator';
 import $ from '../../../core/renderer';
@@ -137,7 +136,9 @@ export class OverlayPositionController {
     if (this._shouldRenderContentInitialPosition) {
       this._renderContentInitialPosition();
     } else {
-      move(this._$content, this._visualPosition);
+      if (this._$content) {
+        move(this._$content, this._visualPosition);
+      }
       this.detectVisualPositionChange();
     }
   }
@@ -157,14 +158,25 @@ export class OverlayPositionController {
     const positionStyle = useFixed ? 'fixed' : 'absolute';
     (_this$_$wrapper = this._$wrapper) === null || _this$_$wrapper === void 0 || _this$_$wrapper.css('position', positionStyle);
   }
+  clean() {
+    this._$root = undefined;
+    this._$content = undefined;
+    this._$wrapper = undefined;
+    this._$markupContainer = undefined;
+    this._$visualContainer = undefined;
+  }
   _updateVisualPositionValue() {
     this._previousVisualPosition = this._visualPosition;
-    this._visualPosition = locate(this._$content);
+    if (this._$content) {
+      this._visualPosition = locate(this._$content);
+    }
   }
   _renderContentInitialPosition() {
     var _this$_$wrapper2, _this$_$wrapper3, _this$_$wrapper4;
     this._renderBoundaryOffset();
-    resetPosition(this._$content);
+    if (this._$content) {
+      resetPosition(this._$content);
+    }
     const wrapperOverflow = ((_this$_$wrapper2 = this._$wrapper) === null || _this$_$wrapper2 === void 0 ? void 0 : _this$_$wrapper2.css('overflow')) ?? '';
     (_this$_$wrapper3 = this._$wrapper) === null || _this$_$wrapper3 === void 0 || _this$_$wrapper3.css('overflow', 'hidden');
     if (!this._properties._skipContentPositioning) {
@@ -234,7 +246,7 @@ export class OverlayPositionController {
   }
   _positionToObject(position) {
     if (isPositionAlignment(position)) {
-      const configuration = _extends({}, OVERLAY_POSITION_ALIASES[position]);
+      const configuration = Object.assign({}, OVERLAY_POSITION_ALIASES[position]);
       return configuration;
     }
     return position;

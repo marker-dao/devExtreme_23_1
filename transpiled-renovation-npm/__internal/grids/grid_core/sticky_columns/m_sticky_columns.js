@@ -596,7 +596,7 @@ const headersKeyboardNavigation = Base => class HeadersKeyboardNavigationStickyC
     }
     const nextCellIsOutsideVisibleArea = $nextCell.length && this.isOutsideVisibleArea($nextCell, (0, _renderer.default)(this._columnHeadersView.getContent()));
     if (nextCellIsOutsideVisibleArea) {
-      this.scrollToColumn($nextCell);
+      this.scrollToNextCell($nextCell);
     }
   }
 };

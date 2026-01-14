@@ -1,0 +1,27 @@
+"use strict";
+
+var _event_registrator_callbacks = _interopRequireDefault(require("../../../common/core/events/core/event_registrator_callbacks"));
+var _renderer = _interopRequireDefault(require("../../../core/renderer"));
+var _m_type = require("../../core/utils/m_type");
+var _m_events_engine = _interopRequireDefault(require("../../events/core/m_events_engine"));
+var _index = require("../../events/utils/index");
+var _knockout = _interopRequireDefault(require("knockout"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+// eslint-disable-next-line import/no-extraneous-dependencies
+
+if (_knockout.default) {
+  _event_registrator_callbacks.default.add(name => {
+    const koBindingEventName = (0, _index.addNamespace)(name, `${name}Binding`);
+    _knockout.default.bindingHandlers[name] = {
+      update(element, valueAccessor, allBindingsAccessor, viewModel) {
+        const $element = (0, _renderer.default)(element);
+        const unwrappedValue = _knockout.default.utils.unwrapObservable(valueAccessor());
+        const eventSource = unwrappedValue.execute ? unwrappedValue.execute : unwrappedValue;
+        _m_events_engine.default.off($element, koBindingEventName);
+        _m_events_engine.default.on($element, koBindingEventName, (0, _m_type.isPlainObject)(unwrappedValue) ? unwrappedValue : {}, e => {
+          eventSource.call(viewModel, viewModel, e);
+        });
+      }
+    };
+  });
+}

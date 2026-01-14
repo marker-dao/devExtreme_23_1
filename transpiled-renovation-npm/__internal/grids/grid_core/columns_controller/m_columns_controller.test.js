@@ -6,14 +6,13 @@ var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _data_grid = _interopRequireDefault(require("../../../../ui/data_grid"));
 var _data_grid2 = require("../../../grids/data_grid/__tests__/__mock__/model/data_grid");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const UNSUPPORTED_GROUPING_COLUMN_TYPES = ['adaptive', 'buttons', 'detailExpand', 'groupExpand', 'selection', 'drag', 'ai'];
 const GRID_CONTAINER_ID = 'gridContainer';
 const createDataGrid = async function () {
   let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   return new Promise(resolve => {
     const $container = (0, _renderer.default)('<div>').attr('id', GRID_CONTAINER_ID).appendTo(document.body);
-    const instance = new _data_grid.default($container.get(0), _extends({}, options));
+    const instance = new _data_grid.default($container.get(0), Object.assign({}, options));
     const contentReadyHandler = () => {
       resolve({
         $container,

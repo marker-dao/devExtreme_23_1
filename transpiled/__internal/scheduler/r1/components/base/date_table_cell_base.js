@@ -11,8 +11,7 @@ var _render_utils = require("../../../../core/r1/utils/render_utils");
 var _index3 = require("../../utils/index");
 var _const = require("../const");
 var _cell = require("./cell");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const DateTableCallBaseDefaultProps = exports.DateTableCallBaseDefaultProps = _extends({}, _cell.CellBaseDefaultProps, {
+const DateTableCallBaseDefaultProps = exports.DateTableCallBaseDefaultProps = Object.assign({}, _cell.CellBaseDefaultProps, {
   otherMonth: false,
   today: false,
   isFirstDayMonthHighlighting: false,
@@ -39,7 +38,7 @@ class DateTableCellBase extends _index.BaseInfernoComponent {
       startDate
     } = this.props;
     this.dataCellTemplateProps = {
-      data: _extends({
+      data: Object.assign({
         startDate,
         endDate,
         groups,

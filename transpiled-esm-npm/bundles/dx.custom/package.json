@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "main": "../../cjs/bundles/dx.custom.js",
+  "module": "../../esm/bundles/dx.custom.js"
+}

@@ -1,3 +1,3 @@
 "use strict";
 
-require("../../common/core/localization/globalize/message");
+require("../../__internal/core/localization/globalize/message");

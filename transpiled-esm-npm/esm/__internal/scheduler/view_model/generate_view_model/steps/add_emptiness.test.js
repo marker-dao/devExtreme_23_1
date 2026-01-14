@@ -10,7 +10,8 @@ describe('addEmptiness', () => {
       width: 41
     }], {
       isTimelineView: true,
-      isAdaptivityEnabled: false
+      isAdaptivityEnabled: false,
+      isMonthView: false
     })).toEqual([{
       height: 34,
       width: 41,
@@ -34,7 +35,8 @@ describe('addEmptiness', () => {
       isAllDayPanelOccupied: true
     }], {
       isTimelineView: false,
-      isAdaptivityEnabled: false
+      isAdaptivityEnabled: false,
+      isMonthView: false
     })).toEqual([{
       height: 34,
       width: 39,
@@ -59,7 +61,8 @@ describe('addEmptiness', () => {
       width: 40
     }], {
       isTimelineView: false,
-      isAdaptivityEnabled: true
+      isAdaptivityEnabled: true,
+      isMonthView: false
     })).toEqual([{
       height: 25,
       width: 40,

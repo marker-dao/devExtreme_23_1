@@ -11,6 +11,7 @@ const getAICommandColumnDefaultOptions = () => ({
   command: _const.AI_COLUMN_NAME,
   cssClass: _const.CLASSES.aiColumn,
   fixed: false,
+  encodeHtml: true,
   minWidth: 120
 });
 exports.getAICommandColumnDefaultOptions = getAICommandColumnDefaultOptions;

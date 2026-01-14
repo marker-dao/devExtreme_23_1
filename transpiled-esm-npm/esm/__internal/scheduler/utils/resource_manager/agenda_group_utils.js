@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 const hasGroupAppointments = (resourceById, appointments, node) => {
   const resource = resourceById[node.resourceIndex];
   const value = node.grouped[node.resourceIndex];
@@ -6,7 +5,7 @@ const hasGroupAppointments = (resourceById, appointments, node) => {
 };
 const filterGroupTree = (resourceById, appointments, node) => {
   if (!hasGroupAppointments(resourceById, appointments, node)) return undefined;
-  return _extends({}, node, {
+  return Object.assign({}, node, {
     children: node.children.length ? node.children.map(childrenNode => filterGroupTree(resourceById, appointments, childrenNode)).filter(Boolean) : []
   });
 };

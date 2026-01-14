@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { customizeFormItems } from './m_customize_form_items';
 const subjectGroup = {
@@ -89,7 +88,7 @@ describe('customizeFormItems', () => {
       items: [],
       visible: false
     }]);
-    expect(result).toEqual([_extends({}, mainGroup, {
+    expect(result).toEqual([Object.assign({}, mainGroup, {
       items: [],
       visible: false
     })]);
@@ -102,7 +101,7 @@ describe('customizeFormItems', () => {
   it('should extract item from group and change order', () => {
     const customizeItems = ['subjectGroup', 'recurrenceGroup', 'mainGroup'];
     const result = customizeFormItems(mainTestCase, customizeItems);
-    const expectedMainGroup = _extends({}, mainGroup, {
+    const expectedMainGroup = Object.assign({}, mainGroup, {
       items: [dateGroup, repeatGroup, resourcesGroup, descriptionGroup]
     });
     expect(result).toEqual([subjectGroup, recurrenceGroup, expectedMainGroup]);
@@ -110,7 +109,7 @@ describe('customizeFormItems', () => {
   it('should extract multiple items from parent group', () => {
     const customizeItems = ['subjectGroup', 'repeatGroup', 'mainGroup'];
     const result = customizeFormItems(mainTestCase, customizeItems);
-    const expectedMainGroup = _extends({}, mainGroup, {
+    const expectedMainGroup = Object.assign({}, mainGroup, {
       items: [dateGroup, resourcesGroup, descriptionGroup]
     });
     expect(result).toEqual([subjectGroup, repeatGroup, expectedMainGroup]);
@@ -172,7 +171,7 @@ describe('customizeFormItems', () => {
       name: 'mainGroup',
       items: ['subjectGroup', 'dateGroup']
     }]);
-    expect(result).toEqual([_extends({}, mainGroup, {
+    expect(result).toEqual([Object.assign({}, mainGroup, {
       items: [subjectGroup, dateGroup]
     })]);
   });
@@ -185,7 +184,7 @@ describe('customizeFormItems', () => {
         name: 'dateGroup'
       }]
     }]);
-    expect(result).toEqual([_extends({}, mainGroup, {
+    expect(result).toEqual([Object.assign({}, mainGroup, {
       items: [subjectGroup, dateGroup]
     })]);
   });
@@ -198,7 +197,7 @@ describe('customizeFormItems', () => {
         items: ['subjectGroup']
       }, 'dateGroup']
     }]);
-    expect(result).toEqual([_extends({}, mainGroup, {
+    expect(result).toEqual([Object.assign({}, mainGroup, {
       items: [{
         name: 'several',
         itemType: 'group',
@@ -216,8 +215,8 @@ describe('customizeFormItems', () => {
         name: 'dateGroup'
       }]
     }]);
-    expect(result).toEqual([_extends({}, mainGroup, {
-      items: [_extends({}, subjectGroup, {
+    expect(result).toEqual([Object.assign({}, mainGroup, {
+      items: [Object.assign({}, subjectGroup, {
         visible: false
       }), dateGroup]
     })]);

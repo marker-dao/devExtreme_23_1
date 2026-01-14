@@ -10,7 +10,6 @@ var _type = require("../../../core/utils/type");
 var _message = _interopRequireDefault(require("../../../localization/message"));
 var _m_inflector = require("../../core/utils/m_inflector");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DAY_FORMAT = 'd';
 const DAYS_IN_WORK_WEEK = 5;
 const {
@@ -286,7 +285,7 @@ const getViewName = view => {
 exports.getViewName = getViewName;
 const getViewText = view => view.name || _message.default.format(`dxScheduler-switcher${(0, _m_inflector.camelize)(view.type, true)}`);
 exports.getViewText = getViewText;
-const formatViews = views => views.map(view => _extends({}, view, {
+const formatViews = views => views.map(view => Object.assign({}, view, {
   name: getViewName(view),
   text: getViewText(view)
 }));

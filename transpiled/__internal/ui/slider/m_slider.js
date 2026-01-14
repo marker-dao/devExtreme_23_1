@@ -23,7 +23,8 @@ var _m_ink_ripple = require("../../core/utils/m_ink_ripple");
 var _m_track_bar = _interopRequireDefault(require("../m_track_bar"));
 var _m_slider_handle = _interopRequireDefault(require("./m_slider_handle"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
+// @ts-expect-error ts-error
+
 const SLIDER_CLASS = 'dx-slider';
 const SLIDER_WRAPPER_CLASS = 'dx-slider-wrapper';
 const SLIDER_HANDLE_SELECTOR = '.dx-slider-handle';
@@ -75,7 +76,7 @@ class Slider extends _m_track_bar.default {
     const moveHandleLeft = offset => {
       this.option('value', roundedValue(offset, !rtlEnabled));
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       leftArrow(e) {
         this._processKeyboardEvent(e);
         moveHandleLeft(this.option('step'));
@@ -110,7 +111,7 @@ class Slider extends _m_track_bar.default {
     this._saveValueChangeEvent(e);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: 50,
       hoverStateEnabled: true,
       activeStateEnabled: true,
@@ -486,6 +487,7 @@ class Slider extends _m_track_bar.default {
     } else {
       this.option('value', value);
       this._saveValueChangeEvent(undefined);
+      this._actualValue = undefined;
     }
   }
   _getActualValue() {

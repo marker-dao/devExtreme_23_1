@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable prefer-destructuring */
 import dateLocalization from '../../../../common/core/localization/date';
 import messageLocalization from '../../../../common/core/localization/message';
@@ -425,7 +424,7 @@ export class ColumnsController extends modules.Controller {
       }
     }
     return result.map(columns => columns.map(column => {
-      const newColumn = _extends({}, column);
+      const newColumn = Object.assign({}, column);
       if (newColumn.headerId) {
         newColumn.headerId += '-fixed';
       }
@@ -458,7 +457,7 @@ export class ColumnsController extends modules.Controller {
     if (expandColumns.length) {
       expandColumn = this.columnOption('command:expand');
     }
-    expandColumns = map(expandColumns, column => extend({}, _extends({}, column, {
+    expandColumns = map(expandColumns, column => extend({}, Object.assign({}, column, {
       ownerBand: undefined
     }), {
       visibleWidth: null,
@@ -911,6 +910,9 @@ export class ColumnsController extends modules.Controller {
     const firstItems = that._getFirstItems(dataSource);
     let isColumnDataTypesUpdated = false;
     each(that._columns, (index, column) => {
+      if (column.type === AI_COLUMN_NAME) {
+        return;
+      }
       let i;
       let value;
       let dataType;
@@ -1392,7 +1394,7 @@ export class ColumnsController extends modules.Controller {
     if (columnOptions.selectedFilterOperation && !('defaultSelectedFilterOperation' in calculatedColumnOptions)) {
       calculatedColumnOptions.defaultSelectedFilterOperation = columnOptions.selectedFilterOperation;
     }
-    if (columnOptions.lookup) {
+    if (columnOptions.lookup && columnOptions.type !== AI_COLUMN_NAME) {
       calculatedColumnOptions.lookup = {
         calculateCellValue(value, skipDeserialization) {
           if (this.valueExpr) {
@@ -1460,8 +1462,16 @@ export class ColumnsController extends modules.Controller {
   }
   getRowIndex(columnIndex, alwaysGetRowIndex) {
     const column = this._columns[columnIndex];
+    if (!column) {
+      return 0;
+    }
+    const isCommandOrGroupColumn = column.command || this._isColumnInGroupPanel(column);
+    const isVisibleDataColumn = column.visible && !isCommandOrGroupColumn;
+    if (!alwaysGetRowIndex && !isVisibleDataColumn) {
+      return 0;
+    }
     const bandColumnsCache = this.getBandColumnsCache();
-    return column && (alwaysGetRowIndex || column.visible && !(column.command || isDefined(column.groupIndex))) ? getParentBandColumns(columnIndex, bandColumnsCache.columnParentByIndex).length : 0;
+    return getParentBandColumns(columnIndex, bandColumnsCache.columnParentByIndex).length;
   }
   getChildrenByBandColumn(bandColumnIndex, onlyVisibleDirectChildren) {
     const that = this;

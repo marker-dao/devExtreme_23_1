@@ -13,7 +13,6 @@ var _listEdit = _interopRequireDefault(require("../../ui/list/list.edit.decorato
 var _listEdit2 = require("../../ui/list/list.edit.decorator_registry");
 var _m_radio_button = _interopRequireDefault(require("../../ui/radio_group/m_radio_button"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const SELECT_DECORATOR_ENABLED_CLASS = 'dx-list-select-decorator-enabled';
 const SELECT_DECORATOR_SELECT_ALL_CLASS = 'dx-list-select-all';
 const SELECT_DECORATOR_SELECT_ALL_CHECKBOX_CLASS = 'dx-list-select-all-checkbox';
@@ -43,7 +42,7 @@ class EditDecoratorSelection extends _listEdit.default {
     const $container = config.$container.addClass(this._containerClass);
     const $control = (0, _renderer.default)('<div>').addClass(this._controlClass).appendTo($container);
     // eslint-disable-next-line no-new
-    new this._controlWidget($control.get(0), _extends({}, this._commonOptions(), {
+    new this._controlWidget($control.get(0), Object.assign({}, this._commonOptions(), {
       value: this._isSelected($itemElement.get(0)),
       elementAttr: {
         'aria-label': _message.default.format('CheckState')

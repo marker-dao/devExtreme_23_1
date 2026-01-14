@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { splitByParts } from './split_by_parts';
 const intervals = [{
@@ -23,19 +22,19 @@ describe('splitByParts', () => {
       startDateUTC: Date.UTC(2000, 0, 10, 8),
       endDateUTC: Date.UTC(2000, 0, 10, 10)
     }];
-    expect(splitByParts(items, intervals)).toEqual([_extends({}, items[0], {
+    expect(splitByParts(items, intervals)).toEqual([Object.assign({}, items[0], {
       startDateUTC: Date.UTC(2000, 0, 10, 3),
       endDateUTC: Date.UTC(2000, 0, 10, 5),
       duration: 2 * 3600000,
       partIndex: 0,
       partCount: 0
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       startDateUTC: Date.UTC(2000, 0, 10, 7),
       endDateUTC: Date.UTC(2000, 0, 10, 8),
       duration: 3600000,
       partIndex: 0,
       partCount: 0
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       startDateUTC: Date.UTC(2000, 0, 10, 8),
       endDateUTC: Date.UTC(2000, 0, 10, 10),
       duration: 2 * 3600000,
@@ -85,56 +84,56 @@ describe('splitByParts', () => {
       startDateUTC: Date.UTC(2000, 0, 11, 9),
       endDateUTC: Date.UTC(2000, 0, 13, 1)
     }];
-    expect(splitByParts(items, intervals)).toEqual([_extends({}, items[0], {
+    expect(splitByParts(items, intervals)).toEqual([Object.assign({}, items[0], {
       startDateUTC: Date.UTC(2000, 0, 10, 3),
       endDateUTC: Date.UTC(2000, 0, 10, 10),
       duration: 7 * 3600000,
       partIndex: 0,
       partCount: 2,
       reduced: 'body'
-    }), _extends({}, items[0], {
+    }), Object.assign({}, items[0], {
       startDateUTC: Date.UTC(2000, 0, 11, 3),
       endDateUTC: Date.UTC(2000, 0, 11, 5),
       duration: 2 * 3600000,
       partIndex: 1,
       partCount: 2,
       reduced: 'tail'
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       startDateUTC: Date.UTC(2000, 0, 10, 3),
       endDateUTC: Date.UTC(2000, 0, 10, 10),
       duration: 7 * 3600000,
       partIndex: 0,
       partCount: 2,
       reduced: 'head'
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       startDateUTC: Date.UTC(2000, 0, 11, 3),
       endDateUTC: Date.UTC(2000, 0, 11, 5),
       duration: 2 * 3600000,
       partIndex: 1,
       partCount: 2,
       reduced: 'tail'
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       startDateUTC: Date.UTC(2000, 0, 11, 8),
       endDateUTC: Date.UTC(2000, 0, 11, 10),
       duration: 2 * 3600000,
       partIndex: 0,
       partCount: 2,
       reduced: 'head'
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       startDateUTC: Date.UTC(2000, 0, 12, 3),
       endDateUTC: Date.UTC(2000, 0, 12, 10),
       duration: 7 * 3600000,
       partIndex: 1,
       partCount: 2,
       reduced: 'body'
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       startDateUTC: Date.UTC(2000, 0, 11, 9),
       endDateUTC: Date.UTC(2000, 0, 11, 10),
       duration: 3600000,
       partIndex: 0,
       partCount: 2,
       reduced: 'head'
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       startDateUTC: Date.UTC(2000, 0, 12, 3),
       endDateUTC: Date.UTC(2000, 0, 12, 10),
       duration: 7 * 3600000,

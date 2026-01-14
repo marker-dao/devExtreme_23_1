@@ -1,0 +1,17 @@
+/**
+* DevExtreme (cjs/common/core/localization/utils.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "toFixed", {
+  enumerable: true,
+  get: function () {
+    return _utils.toFixed;
+  }
+});
+var _utils = require("../../../__internal/core/localization/utils");

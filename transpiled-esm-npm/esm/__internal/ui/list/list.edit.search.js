@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../../core/component_registrator';
 import errors from '../../../ui/widget/ui.errors';
 import SearchBoxController, { getOperationBySearchMode } from '../../ui/collection/search_box_controller';
@@ -22,7 +21,7 @@ class ListSearch extends ListEdit {
     return filter;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       // @ts-expect-error ts-error
       searchMode: '',
       // @ts-expect-error ts-error

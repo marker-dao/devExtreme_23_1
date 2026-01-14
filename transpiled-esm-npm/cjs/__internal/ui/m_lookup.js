@@ -26,7 +26,6 @@ var _m_drop_down_list = _interopRequireDefault(require("../ui/drop_down_editor/m
 var _m_utils = require("../ui/drop_down_editor/m_utils");
 var _m_text_box = _interopRequireDefault(require("../ui/text_box/m_text_box"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = (0, _window.getWindow)();
 const LOOKUP_CLASS = 'dx-lookup';
 const LOOKUP_SEARCH_CLASS = 'dx-lookup-search';
@@ -50,7 +49,7 @@ const MATERIAL_LOOKUP_LIST_PADDING = 8;
 const WINDOW_RATIO = 0.8;
 class Lookup extends _m_drop_down_list.default {
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       space(e) {
         e.preventDefault();
         this._validatedOpening();
@@ -70,7 +69,7 @@ class Lookup extends _m_drop_down_list.default {
       }
       return size * WINDOW_RATIO;
     };
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       placeholder: _message.default.format('Select'),
       searchPlaceholder: _message.default.format('Search'),
       searchEnabled: true,
@@ -500,6 +499,7 @@ class Lookup extends _m_drop_down_list.default {
     }
   }
   _renderPopup() {
+    var _this$_popup$$wrapper;
     if (this.option('usePopover') && !this.option('dropDownOptions.fullScreen')) {
       if (this.option('_scrollToSelectedItemEnabled')) {
         super._renderPopup();
@@ -511,7 +511,7 @@ class Lookup extends _m_drop_down_list.default {
       super._renderPopup();
     }
     this._$popup.addClass(LOOKUP_POPUP_CLASS);
-    this._popup.$wrapper().addClass(LOOKUP_POPUP_WRAPPER_CLASS);
+    (_this$_popup$$wrapper = this._popup.$wrapper()) === null || _this$_popup$$wrapper === void 0 || _this$_popup$$wrapper.addClass(LOOKUP_POPUP_WRAPPER_CLASS);
   }
   _renderPopover() {
     const popupConfig = this._popupConfig();
@@ -538,7 +538,10 @@ class Lookup extends _m_drop_down_list.default {
     if (this.option('_scrollToSelectedItemEnabled')) {
       this._popup._$arrow.remove();
     }
-    this._setPopupContentId(this._popup.$content());
+    const $content = this._popup.$content();
+    if ($content) {
+      this._setPopupContentId($content);
+    }
     this._contentReadyHandler();
   }
   _popupHidingHandler() {
@@ -775,7 +778,8 @@ class Lookup extends _m_drop_down_list.default {
   }
   _toggleSearchClass(isSearchEnabled) {
     if (this._popup) {
-      this._popup.$wrapper().toggleClass(LOOKUP_POPUP_SEARCH_CLASS, isSearchEnabled);
+      var _this$_popup$$wrapper2;
+      (_this$_popup$$wrapper2 = this._popup.$wrapper()) === null || _this$_popup$$wrapper2 === void 0 || _this$_popup$$wrapper2.toggleClass(LOOKUP_POPUP_SEARCH_CLASS, isSearchEnabled);
     }
   }
   _setSearchPlaceholder() {
@@ -845,8 +849,8 @@ class Lookup extends _m_drop_down_list.default {
         var _this$_searchBox7;
         (_this$_searchBox7 = this._searchBox) === null || _this$_searchBox7 === void 0 || _this$_searchBox7.focus();
       } else {
-        var _this$_list10;
-        (_this$_list10 = this._list) === null || _this$_list10 === void 0 || _this$_list10.focus();
+        var _this$_list0;
+        (_this$_list0 = this._list) === null || _this$_list0 === void 0 || _this$_list0.focus();
       }
     });
   }
@@ -861,8 +865,8 @@ class Lookup extends _m_drop_down_list.default {
     this._selectListItem(e.itemData, e.event.currentTarget);
   }
   _selectListItem(itemData, target) {
-    var _this$_list11;
-    (_this$_list11 = this._list) === null || _this$_list11 === void 0 || _this$_list11.selectItem(target);
+    var _this$_list1;
+    (_this$_list1 = this._list) === null || _this$_list1 === void 0 || _this$_list1.selectItem(target);
     const {
       applyValueMode
     } = this.option();
@@ -871,10 +875,10 @@ class Lookup extends _m_drop_down_list.default {
     }
   }
   _currentSelectedItem() {
-    var _this$_list12;
+    var _this$_list10;
     return this.option('grouped')
     // @ts-expect-error ts-error
-    ? this._list.option('selectedItems[0]').items[0] : (_this$_list12 = this._list) === null || _this$_list12 === void 0 ? void 0 : _this$_list12.option('selectedItems[0]');
+    ? this._list.option('selectedItems[0]').items[0] : (_this$_list10 = this._list) === null || _this$_list10 === void 0 ? void 0 : _this$_list10.option('selectedItems[0]');
   }
   _resetValue(e) {
     this._saveValueChangeEvent(e.event);

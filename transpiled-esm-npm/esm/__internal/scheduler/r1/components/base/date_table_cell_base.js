@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createFragment, createComponentVNode } from "inferno";
 import { BaseInfernoComponent } from '../../../../core/r1/runtime/inferno/index';
 import { PublicTemplate } from '../../../../scheduler/r1/components/templates/index';
@@ -6,7 +5,7 @@ import { combineClasses } from '../../../../core/r1/utils/render_utils';
 import { renderUtils } from '../../utils/index';
 import { DATE_TABLE_CELL_CLASS } from '../const';
 import { CellBase, CellBaseDefaultProps } from './cell';
-export const DateTableCallBaseDefaultProps = _extends({}, CellBaseDefaultProps, {
+export const DateTableCallBaseDefaultProps = Object.assign({}, CellBaseDefaultProps, {
   otherMonth: false,
   today: false,
   isFirstDayMonthHighlighting: false,
@@ -33,7 +32,7 @@ export class DateTableCellBase extends BaseInfernoComponent {
       startDate
     } = this.props;
     this.dataCellTemplateProps = {
-      data: _extends({
+      data: Object.assign({
         startDate,
         endDate,
         groups,

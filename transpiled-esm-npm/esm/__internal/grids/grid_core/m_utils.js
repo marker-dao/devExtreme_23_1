@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 // @ts-check
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import DataSource from '../../../common/data/data_source';
@@ -19,7 +18,10 @@ import { getWindow } from '../../../core/utils/window';
 import formatHelper from '../../../format_helper';
 import LoadPanel from '../../../ui/load_panel';
 import sharedFiltering from '../../../ui/shared/filtering';
+import { isNumeric } from '../../core/utils/m_type';
+import { AI_COLUMN_NAME } from './ai_column/const';
 import { isEqualSelectors, isSelectorEqualWithCallback } from './utils/index';
+const BASE_LOAD_PANEL_Z_INDEX = 1000;
 const DATAGRID_SELECTION_DISABLED_CLASS = 'dx-selection-disabled';
 const DATAGRID_GROUP_OPENED_CLASS = 'dx-datagrid-group-opened';
 const DATAGRID_GROUP_CLOSED_CLASS = 'dx-datagrid-group-closed';
@@ -53,6 +55,7 @@ const DATE_INTERVAL_SELECTORS = {
     return value && value.getSeconds();
   }
 };
+const DEFAULT_COLUMN_WIDTH = 50;
 const getIntervalSelector = function () {
   const data = arguments[1];
   const value = this.calculateCellValue(data);
@@ -146,6 +149,11 @@ const addPointIfNeed = (points, pointProps, pointCreated) => {
     points.push(point);
   }
 };
+const getColumnWidths = columns => columns.map(column => {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const width = column.visibleWidth || column.width;
+  return isNumeric(width) ? parseFloat(width) : DEFAULT_COLUMN_WIDTH;
+});
 function normalizeGroupingLoadOptions(group) {
   if (!Array.isArray(group)) {
     group = [group];
@@ -192,7 +200,8 @@ export default {
       loadPanelOptions = extend({
         shading: false,
         message: loadPanelOptions.text,
-        container: $container
+        container: $container,
+        zIndex: BASE_LOAD_PANEL_Z_INDEX
       }, loadPanelOptions);
       that._loadPanel = that._createComponent($('<div>').appendTo($container), LoadPanel, loadPanelOptions);
     } else {
@@ -292,7 +301,8 @@ export default {
     if (column.calculateDisplayValue && data && rowType !== 'group') {
       return column.calculateDisplayValue(data);
     }
-    if (column.lookup && !(rowType === 'group' && (column.calculateGroupValue || column.calculateDisplayValue))) {
+    const isCalculatedFromLookup = column.lookup && column.type !== AI_COLUMN_NAME && (rowType !== 'group' || !column.calculateGroupValue && !column.calculateDisplayValue);
+    if (isCalculatedFromLookup) {
       return column.lookup.calculateCellValue(value);
     }
     return value;
@@ -414,7 +424,7 @@ export default {
           pointProps.y = prevItemOffset.top;
         }
         if (needToCheckPrevPoint && Math.round(prevItemOffsetX) !== Math.round(pointProps.x)) {
-          const prevPointProps = _extends({}, pointProps, {
+          const prevPointProps = Object.assign({}, pointProps, {
             item: items[i - 1],
             x: prevItemOffsetX
           });
@@ -574,7 +584,7 @@ export default {
       }
       return d;
     };
-    const lookupDataSource = _extends({}, lookupDataSourceOptions, {
+    const lookupDataSource = Object.assign({}, lookupDataSourceOptions, {
       __dataGridSourceFilter: filter,
       load: loadOptions => {
         // @ts-expect-error
@@ -585,7 +595,7 @@ export default {
             return;
           }
           const filter = this.combineFilters(items.flatMap(data => data.key).map(key => [column.lookup.valueExpr, key]), 'or');
-          const newDataSource = new DataSource(_extends({}, lookupDataSourceOptions, loadOptions, {
+          const newDataSource = new DataSource(Object.assign({}, lookupDataSourceOptions, loadOptions, {
             filter: this.combineFilters([filter, loadOptions.filter], 'and'),
             paginate: false // pagination is included to filter
           }));
@@ -659,5 +669,6 @@ export default {
   },
   // New utils
   isEqualSelectors,
-  isSelectorEqualWithCallback
+  isSelectorEqualWithCallback,
+  getColumnWidths
 };

@@ -13,9 +13,11 @@ var _widget = require("../../../core/r1/widget");
 var _combine_classes = require("../../../core/utils/combine_classes");
 var _validation_message = require("../wrappers/validation_message");
 const _excluded = ["accessKey", "activeStateEnabled", "aria", "children", "className", "classes", "defaultValue", "disabled", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "inputAttr", "isDirty", "isValid", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "tabIndex", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "visible", "width"];
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/explicit-module-boundary-types */ /* eslint-disable @typescript-eslint/no-unsafe-return */ /* eslint-disable @typescript-eslint/no-non-null-assertion */
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const getCssClasses = model => {
   const {
     classes,
@@ -29,7 +31,7 @@ const getCssClasses = model => {
   };
   return (0, _combine_classes.combineClasses)(classesMap);
 };
-const defaultEditorProps = exports.defaultEditorProps = _extends({}, _widget.WidgetDefaultProps, {
+const defaultEditorProps = exports.defaultEditorProps = Object.assign({}, _widget.WidgetDefaultProps, {
   readOnly: false,
   name: '',
   validationError: null,
@@ -79,7 +81,7 @@ class Editor extends _index.InfernoWrapperComponent {
     onFocusIn === null || onFocusIn === void 0 || onFocusIn(event);
   }
   get cssClasses() {
-    return `${getCssClasses(_extends({}, this.props, {
+    return `${getCssClasses(Object.assign({}, this.props, {
       value: this.props.value !== undefined ? this.props.value : this.state.value
     }))}`;
   }
@@ -104,7 +106,7 @@ class Editor extends _index.InfernoWrapperComponent {
     if (this.shouldShowValidationMessage) {
       result.describedBy = this.state.validationMessageGuid;
     }
-    return _extends({}, result, this.props.aria);
+    return Object.assign({}, result, this.props.aria);
   }
   get validationErrors() {
     if (this.__getterCache.validationErrors !== undefined) {
@@ -118,7 +120,7 @@ class Editor extends _index.InfernoWrapperComponent {
       } = this.props;
       let allValidationErrors = validationErrors && [...validationErrors];
       if (!allValidationErrors && validationError) {
-        allValidationErrors = [_extends({}, validationError)];
+        allValidationErrors = [Object.assign({}, validationError)];
       }
       return allValidationErrors;
     })();
@@ -145,7 +147,7 @@ class Editor extends _index.InfernoWrapperComponent {
     }
   }
   render() {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _widget.Widget, _extends({
+    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _widget.Widget, Object.assign({
       "rootElementRef": this.rootElementRef,
       "aria": this.aria,
       "classes": this.cssClasses,

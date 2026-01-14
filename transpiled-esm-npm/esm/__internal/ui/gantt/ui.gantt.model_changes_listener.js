@@ -72,24 +72,24 @@ export const ModelChangesListener = {
         (_gantt$_actionsManage9 = gantt._actionsManager) === null || _gantt$_actionsManage9 === void 0 || _gantt$_actionsManage9.raiseDeletingAction(GANTT_DEPENDENCIES, args);
       },
       NotifyResourceCreating: args => {
-        var _gantt$_actionsManage10;
-        (_gantt$_actionsManage10 = gantt._actionsManager) === null || _gantt$_actionsManage10 === void 0 || _gantt$_actionsManage10.raiseInsertingAction(GANTT_RESOURCES, args);
+        var _gantt$_actionsManage0;
+        (_gantt$_actionsManage0 = gantt._actionsManager) === null || _gantt$_actionsManage0 === void 0 || _gantt$_actionsManage0.raiseInsertingAction(GANTT_RESOURCES, args);
       },
       NotifyResourceRemoving: args => {
-        var _gantt$_actionsManage11;
-        (_gantt$_actionsManage11 = gantt._actionsManager) === null || _gantt$_actionsManage11 === void 0 || _gantt$_actionsManage11.raiseDeletingAction(GANTT_RESOURCES, args);
+        var _gantt$_actionsManage1;
+        (_gantt$_actionsManage1 = gantt._actionsManager) === null || _gantt$_actionsManage1 === void 0 || _gantt$_actionsManage1.raiseDeletingAction(GANTT_RESOURCES, args);
       },
       NotifyResourceAssigning: args => {
-        var _gantt$_actionsManage12;
-        (_gantt$_actionsManage12 = gantt._actionsManager) === null || _gantt$_actionsManage12 === void 0 || _gantt$_actionsManage12.raiseInsertingAction(GANTT_RESOURCE_ASSIGNMENTS, args);
+        var _gantt$_actionsManage10;
+        (_gantt$_actionsManage10 = gantt._actionsManager) === null || _gantt$_actionsManage10 === void 0 || _gantt$_actionsManage10.raiseInsertingAction(GANTT_RESOURCE_ASSIGNMENTS, args);
       },
       NotifyResourceUnassigning: args => {
-        var _gantt$_actionsManage13;
-        (_gantt$_actionsManage13 = gantt._actionsManager) === null || _gantt$_actionsManage13 === void 0 || _gantt$_actionsManage13.raiseDeletingAction(GANTT_RESOURCE_ASSIGNMENTS, args);
+        var _gantt$_actionsManage11;
+        (_gantt$_actionsManage11 = gantt._actionsManager) === null || _gantt$_actionsManage11 === void 0 || _gantt$_actionsManage11.raiseDeletingAction(GANTT_RESOURCE_ASSIGNMENTS, args);
       },
       NotifyScaleCellPrepared: args => {
-        var _gantt$_actionsManage14;
-        (_gantt$_actionsManage14 = gantt._actionsManager) === null || _gantt$_actionsManage14 === void 0 || _gantt$_actionsManage14.raiseScaleCellPreparedAction(args);
+        var _gantt$_actionsManage12;
+        (_gantt$_actionsManage12 = gantt._actionsManager) === null || _gantt$_actionsManage12 === void 0 || _gantt$_actionsManage12.raiseScaleCellPreparedAction(args);
       },
       NotifyGanttViewUpdated: () => {
         gantt._onGanttViewCoreUpdated();

@@ -1,0 +1,28 @@
+/**
+* DevExtreme (esm/__internal/grids/grid_core/__tests__/__mock__/model/edit_form.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+const SELECTORS = {
+  textEditorInput: 'dx-texteditor-input',
+  item: 'dx-item'
+};
+export class EditFormModel {
+  constructor(root) {
+    this.root = root;
+  }
+  getElement() {
+    return this.root;
+  }
+  getItem(id) {
+    var _this$root;
+    return ((_this$root = this.root) === null || _this$root === void 0 ? void 0 : _this$root.querySelector(`.${SELECTORS.textEditorInput}[id*=_${id}]`)) ?? null;
+  }
+  getItems() {
+    var _this$root2;
+    return ((_this$root2 = this.root) === null || _this$root2 === void 0 ? void 0 : _this$root2.querySelectorAll(`.${SELECTORS.item}`)) ?? null;
+  }
+}

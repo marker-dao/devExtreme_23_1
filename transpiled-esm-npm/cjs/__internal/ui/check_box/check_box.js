@@ -13,9 +13,10 @@ var _combine_classes = require("../../core/utils/combine_classes");
 var _check_box_icon = require("./check_box_icon");
 var _editor = require("./editor_base/editor");
 const _excluded = ["accessKey", "activeStateEnabled", "aria", "className", "classes", "defaultValue", "disabled", "enableThreeStateBehavior", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "iconSize", "inputAttr", "isDirty", "isValid", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "saveValueChangeEvent", "tabIndex", "text", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "visible", "width"];
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/explicit-module-boundary-types */ /* eslint-disable @typescript-eslint/no-non-null-assertion */
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const getCssClasses = model => {
   const {
     text,
@@ -31,7 +32,7 @@ const getCssClasses = model => {
   };
   return (0, _combine_classes.combineClasses)(classesMap);
 };
-const defaultCheckBoxProps = exports.defaultCheckBoxProps = _extends({}, _editor.defaultEditorProps, {
+const defaultCheckBoxProps = exports.defaultCheckBoxProps = Object.assign({}, _editor.defaultEditorProps, {
   text: '',
   enableThreeStateBehavior: false,
   activeStateEnabled: true,
@@ -115,7 +116,7 @@ class CheckBox extends _index.InfernoWrapperComponent {
     return undefined;
   }
   get cssClasses() {
-    return getCssClasses(_extends({}, this.props, {
+    return getCssClasses(Object.assign({}, this.props, {
       // @ts-expect-error
       value: this.props.value !== undefined ? this.props.value : this.state.value
     }));
@@ -127,7 +128,7 @@ class CheckBox extends _index.InfernoWrapperComponent {
       role: 'checkbox',
       checked: indeterminate ? 'mixed' : `${checked}`
     };
-    return _extends({}, result, this.props.aria);
+    return Object.assign({}, result, this.props.aria);
   }
   get restAttributes() {
     const _this$props3 = this.props,
@@ -142,7 +143,7 @@ class CheckBox extends _index.InfernoWrapperComponent {
   }
   render() {
     const value = this.props.value !== undefined ? this.props.value : this.state.value;
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _editor.Editor, _extends({
+    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _editor.Editor, Object.assign({
       "aria": this.aria,
       "classes": this.cssClasses,
       "onClick": this.onWidgetClick,
@@ -168,7 +169,7 @@ class CheckBox extends _index.InfernoWrapperComponent {
       "isValid": this.props.isValid,
       "onFocusIn": this.props.onFocusIn
     }, this.restAttributes, {
-      children: (0, _inferno.createFragment)([(0, _inferno.normalizeProps)((0, _inferno.createVNode)(64, "input", null, null, 1, _extends({
+      children: (0, _inferno.createFragment)([(0, _inferno.normalizeProps)((0, _inferno.createVNode)(64, "input", null, null, 1, Object.assign({
         "type": "hidden",
         "value": `${value}`
       }, this.props.name && {

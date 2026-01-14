@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
 import Widget from '../../core/widget/widget';
@@ -8,7 +7,7 @@ const CHAT_ALERTLIST_ERROR_CLASS = 'dx-chat-alertlist-error';
 const ICON_ERRORCIRCLE = 'errorcircle';
 class AlertList extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       items: []
     });
   }

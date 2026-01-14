@@ -1,39 +1,9 @@
 "use strict";
 
 exports.default = void 0;
-var _default = (currencySymbol, accountingFormat) => {
-  if (!accountingFormat) {
-    return;
-  }
-  let encodedCurrencySymbol = currencySymbol;
-  if (typeof currencySymbol === 'string') {
-    encodedCurrencySymbol = '';
-    for (let i = 0; i < currencySymbol.length; i++) {
-      if (currencySymbol[i] !== '$') {
-        encodedCurrencySymbol += '\\';
-      }
-      encodedCurrencySymbol += currencySymbol[i];
-    }
-  }
-  const encodeSymbols = {
-    '.00': '{0}',
-    '\'': '\\\'',
-    '\\(': '\\(',
-    '\\)': '\\)',
-    ' ': '\\ ',
-    '"': '&quot;',
-    '\\¤': encodedCurrencySymbol
-  };
-  const result = accountingFormat.split(';');
-  for (let i = 0; i < result.length; i++) {
-    for (const symbol in encodeSymbols) {
-      if (Object.prototype.hasOwnProperty.call(encodeSymbols, symbol)) {
-        result[i] = result[i].replace(new RegExp(symbol, 'g'), encodeSymbols[symbol]);
-      }
-    }
-  }
-  return result.length === 2 ? result[0] + '_);' + result[1] : result[0];
-};
-exports.default = _default;
+var _open_xml_currency_format = _interopRequireDefault(require("../../../__internal/core/localization/open_xml_currency_format"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+// deprecated
+var _default = exports.default = _open_xml_currency_format.default;
 module.exports = exports.default;
 module.exports.default = exports.default;

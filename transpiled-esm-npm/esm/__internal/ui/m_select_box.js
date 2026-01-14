@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../ui/list/modules/selection';
 import { normalizeKeyName } from '../../common/core/events/utils';
 import messageLocalization from '../../common/core/localization/message';
@@ -44,7 +43,7 @@ class SelectBox extends DropDownList {
         that._searchHandler();
       }
     };
-    return _extends({}, parent, {
+    return Object.assign({}, parent, {
       tab() {
         const {
           opened
@@ -157,7 +156,7 @@ class SelectBox extends DropDownList {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       placeholder: messageLocalization.format('Select'),
       fieldTemplate: null,
       customItemCreateEvent: 'change',

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import DataSource from '../../../../data/data_source';
 import { normalizeDataSourceOptions } from '../../../data/data_source/m_utils';
 export const normalizeDataSource = function (dataSourceOptions) {
@@ -9,7 +8,7 @@ export const normalizeDataSource = function (dataSourceOptions) {
   if (dataSourceOptions instanceof DataSource) {
     return dataSourceOptions;
   }
-  const result = _extends({}, normalizeDataSourceOptions(dataSourceOptions, {}), options);
+  const result = Object.assign({}, normalizeDataSourceOptions(dataSourceOptions, {}), options);
   return new DataSource(result);
 };
 export const loadResource = async function (dataSource) {

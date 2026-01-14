@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../../../ui/text_box';
 import '../../../ui/number_box';
 import '../../../ui/check_box';
@@ -34,7 +33,7 @@ const LAYOUT_MANAGER_LAST_COL_CLASS = 'dx-last-col';
 const MIN_COLUMN_WIDTH = 200;
 class LayoutManager extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       layoutData: {},
       readOnly: false,
       colCount: 1,
@@ -549,7 +548,7 @@ class LayoutManager extends Widget {
     };
     const config = buttonConfigs[item.name];
     if (config) {
-      item.buttonOptions = _extends({}, config, item.buttonOptions ?? {});
+      item.buttonOptions = Object.assign({}, config, item.buttonOptions ?? {});
     }
   }
   _renderButtonItem(info) {
@@ -753,7 +752,7 @@ class LayoutManager extends Widget {
     } = this.option();
     // @ts-expect-error ts-error
     let hasEditorReadOnly = Object.hasOwn(editorOptions, 'readOnly');
-    const instance = super._createComponent($editor, component, _extends({}, editorOptions, {
+    const instance = super._createComponent($editor, component, Object.assign({}, editorOptions, {
       readOnly: !hasEditorReadOnly ? readOnlyState : editorOptions.readOnly
     }));
     let isChangeByForm = false;

@@ -9,7 +9,6 @@ var _date_serialization = _interopRequireDefault(require("../../../../core/utils
 var _validate_rule = require("../../recurrence/validate_rule");
 var _data_accessor = require("./data_accessor");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const isDateField = field => field === 'startDate' || field === 'endDate';
 const isBooleanField = field => field === 'allDay' || field === 'disabled';
 class AppointmentDataAccessor extends _data_accessor.DataAccessor {
@@ -19,7 +18,7 @@ class AppointmentDataAccessor extends _data_accessor.DataAccessor {
     super();
     this.forceIsoDateParsing = forceIsoDateParsing;
     this.dateSerializationFormat = dateSerializationFormat;
-    this.expr = _extends({}, fields);
+    this.expr = Object.assign({}, fields);
     this.updateExpressions(fields);
   }
   getCommonAccessExpressions(expr) {

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { isCommandKeyPressed } from '../../../../common/core/events/utils';
 import $ from '../../../../core/renderer';
 import { isDefined } from '../../../../core/utils/type';
@@ -75,11 +74,10 @@ const headersKeyboardNavigation = Base => class HeadersKeyboardNavigationControl
     this._columnsController.endUpdate();
   }
 };
-gridCore.registerModule('headersKeyboardNavigation', _extends({}, headersKeyboardNavigationModule, {
+gridCore.registerModule('headersKeyboardNavigation', Object.assign({}, headersKeyboardNavigationModule, {
   extenders: {
     controllers: {
       headersKeyboardNavigation
-    },
-    views: _extends({}, headersKeyboardNavigationModule.extenders.views)
+    }
   }
 }));

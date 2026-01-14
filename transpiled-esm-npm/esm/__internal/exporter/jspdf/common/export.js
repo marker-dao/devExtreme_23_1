@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-depth */
 /* eslint-disable @typescript-eslint/init-declarations */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
@@ -176,10 +175,10 @@ function exportDataGrid(options) {
             }
           }
         }
-        leftRect.sourceCellInfo = _extends({}, sourceRect.sourceCellInfo, {
+        leftRect.sourceCellInfo = Object.assign({}, sourceRect.sourceCellInfo, {
           debugSourceCellInfo: sourceRect.sourceCellInfo
         }, leftRectTextOptions);
-        rightRect.sourceCellInfo = _extends({}, sourceRect.sourceCellInfo, {
+        rightRect.sourceCellInfo = Object.assign({}, sourceRect.sourceCellInfo, {
           debugSourceCellInfo: sourceRect.sourceCellInfo
         }, rightRectTextOptions);
       };
@@ -198,17 +197,17 @@ function exportDataGrid(options) {
           const isTextHeightGreaterThanRect = jsPDFDocument.getTextDimensions(sourceRect.sourceCellInfo.text).h > topRect.h;
           const isTextTopAlignment = ((_sourceRect$sourceCel9 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel9 === void 0 ? void 0 : _sourceRect$sourceCel9.verticalAlign) === 'top';
           if (isTextHeightGreaterThanRect || !isTextTopAlignment) {
-            var _sourceRect$sourceCel10, _sourceRect$sourceCel11, _sourceRect$sourceCel12;
+            var _sourceRect$sourceCel0, _sourceRect$sourceCel1, _sourceRect$sourceCel10;
             let topTextTopOffset;
             let bottomTextTopOffset;
-            if (((_sourceRect$sourceCel10 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel10 === void 0 ? void 0 : _sourceRect$sourceCel10.verticalAlign) === 'top') {
+            if (((_sourceRect$sourceCel0 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel0 === void 0 ? void 0 : _sourceRect$sourceCel0.verticalAlign) === 'top') {
               topTextTopOffset = sourceRect.sourceCellInfo._textTopOffset ?? 0;
               bottomTextTopOffset = topTextTopOffset - topRect.h;
-            } else if (((_sourceRect$sourceCel11 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel11 === void 0 ? void 0 : _sourceRect$sourceCel11.verticalAlign) === 'middle') {
+            } else if (((_sourceRect$sourceCel1 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel1 === void 0 ? void 0 : _sourceRect$sourceCel1.verticalAlign) === 'middle') {
               const offset = sourceRect.sourceCellInfo._textTopOffset ?? 0;
               topTextTopOffset = offset + (sourceRect.y + sourceRect.h / 2) - (topRect.y + topRect.h / 2);
               bottomTextTopOffset = offset + (sourceRect.y + sourceRect.h / 2) - (bottomRect.y + bottomRect.h / 2);
-            } else if (((_sourceRect$sourceCel12 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel12 === void 0 ? void 0 : _sourceRect$sourceCel12.verticalAlign) === 'bottom') {
+            } else if (((_sourceRect$sourceCel10 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel10 === void 0 ? void 0 : _sourceRect$sourceCel10.verticalAlign) === 'bottom') {
               topTextTopOffset = sourceRect.y + sourceRect.h - (topRect.y + topRect.h);
               bottomTextTopOffset = sourceRect.y + sourceRect.h - (bottomRect.y + bottomRect.h);
             }
@@ -224,10 +223,10 @@ function exportDataGrid(options) {
             };
           }
         }
-        topRect.sourceCellInfo = _extends({}, sourceRect.sourceCellInfo, {
+        topRect.sourceCellInfo = Object.assign({}, sourceRect.sourceCellInfo, {
           debugSourceCellInfo: sourceRect.sourceCellInfo
         }, topRectTextOptions);
-        bottomRect.sourceCellInfo = _extends({}, sourceRect.sourceCellInfo, {
+        bottomRect.sourceCellInfo = Object.assign({}, sourceRect.sourceCellInfo, {
           debugSourceCellInfo: sourceRect.sourceCellInfo
         }, bottomRectTextOptions);
       };

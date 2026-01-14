@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/prefer-for-of */
 /* eslint-disable @typescript-eslint/no-unused-vars, max-classes-per-file */
 import { name as clickEventName } from '../../../../common/core/events/click';
@@ -1077,10 +1076,13 @@ class EditingControllerImpl extends modules.ViewController {
     if (index >= 0) {
       const changes = [...this.getChanges()];
       const {
-        key
+        key,
+        type
       } = changes[index];
       this._removeInternalData(key);
-      this._updateInsertAfterOrBeforeKeys(changes, index);
+      if (type !== DATA_EDIT_DATA_REMOVE_TYPE) {
+        this._updateInsertAfterOrBeforeKeys(changes, index);
+      }
       changes.splice(index, 1);
       this._silentOption(EDITING_CHANGES_OPTION_NAME, changes);
       if (equalByValue(this.option(EDITING_EDITROWKEY_OPTION_NAME), key)) {
@@ -1294,7 +1296,7 @@ class EditingControllerImpl extends modules.ViewController {
         data,
         type
       } = change;
-      const changeCopy = _extends({}, change);
+      const changeCopy = Object.assign({}, change);
       let deferred;
       let params;
       // @ts-expect-error
@@ -1767,7 +1769,7 @@ class EditingControllerImpl extends modules.ViewController {
     return isCustomSetCellValue || isCustomCalculateCellValue;
   }
   _applyChange(options, params, forceUpdateRow) {
-    const changeOptions = _extends({}, options, {
+    const changeOptions = Object.assign({}, options, {
       forceUpdateRow
     });
     this._addChange(params, changeOptions);
@@ -1861,7 +1863,7 @@ class EditingControllerImpl extends modules.ViewController {
       delete changeParams.oldData;
       changes.push(changeParams);
     }
-    const change = _extends({}, changes[index]);
+    const change = Object.assign({}, changes[index]);
     if (change) {
       if (changeParams.data) {
         change.data = createObjectWithChanges(change.data, changeParams.data);

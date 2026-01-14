@@ -26,20 +26,5 @@ class ColumnFocusDispatcher extends _m_modules.Controller {
       });
     }
   }
-  restoreFocus(keyboardNavigationController) {
-    if (keyboardNavigationController.getFirstFocusableVisibleIndex() >= 0) {
-      keyboardNavigationController.restoreFocus();
-    } else {
-      this.keyboardNavigationControllers.forEach(keyboardController => {
-        if (keyboardController === keyboardNavigationController) {
-          return;
-        }
-        const firstFocusableVisibleIndex = keyboardController.getFirstFocusableVisibleIndex();
-        if (firstFocusableVisibleIndex >= 0) {
-          keyboardController.restoreFocus();
-        }
-      });
-    }
-  }
 }
 exports.ColumnFocusDispatcher = ColumnFocusDispatcher;

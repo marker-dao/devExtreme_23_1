@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { mockAppointmentDataAccessor } from '../../../../scheduler/__mock__/appointment_data_accessor.mock';
 import { replaceIncorrectEndDate } from './replace_incorrect_end_date';
@@ -19,11 +18,11 @@ describe('replaceIncorrectEndDate', () => {
       endDate: new Date(2019, 4, 3, 13)
     }];
     const expectedEndDates = [new Date(2019, 4, 3, 12, 30), new Date(2019, 4, 3, 12, 30), new Date(2019, 4, 3, 23, 59, 59, 999)];
-    expect(replaceIncorrectEndDate(items, 30, mockAppointmentDataAccessor)).toEqual([_extends({}, items[0], {
+    expect(replaceIncorrectEndDate(items, 30, mockAppointmentDataAccessor)).toEqual([Object.assign({}, items[0], {
       endDate: expectedEndDates[0]
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       endDate: expectedEndDates[1]
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       endDate: expectedEndDates[2]
     }), items[3]]);
   });

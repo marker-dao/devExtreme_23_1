@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import holdEvent from '../../../common/core/events/hold';
 import pointerEvents from '../../../common/core/events/pointer';
@@ -100,7 +99,7 @@ class Tabs extends CollectionWidgetLiveUpdate {
     return FEEDBACK_HIDE_TIMEOUT;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       showNavButtons: true,
       scrollByContent: true,

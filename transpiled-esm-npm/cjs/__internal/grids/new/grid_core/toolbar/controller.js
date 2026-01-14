@@ -8,7 +8,6 @@ var _index = require("../../../../core/state_manager/index");
 var _options_controller = require("../options_controller/options_controller");
 var _const = require("./const");
 var _utils = require("./utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class ToolbarController {
   constructor(options) {
     this.options = options;
@@ -23,7 +22,7 @@ class ToolbarController {
       name
     } = item.peek();
     this.itemSubscriptions[name] = (0, _index.effect)(() => {
-      const newDefaultItems = _extends({}, this.defaultItems.peek());
+      const newDefaultItems = Object.assign({}, this.defaultItems.peek());
       if (needRender.value) {
         newDefaultItems[name] = item.value;
       } else {

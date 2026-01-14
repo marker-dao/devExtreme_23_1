@@ -105,6 +105,7 @@ if (_devextremeQuill.default) {
             const isSelectionChanged = eventName === SELECTION_CHANGE_EVENT;
             this._updateToolbar(isSelectionChanged);
           }
+          this._updateHeaderFormatWidget();
         });
       }
     }
@@ -289,17 +290,16 @@ if (_devextremeQuill.default) {
       }, item);
     }
     _createCommandMenuItem(command, text, commandOptions) {
-      var _getDefaultOptionsByC;
-      const options = (commandOptions === null || commandOptions === void 0 ? void 0 : commandOptions.map(_capitalize.capitalize)) ?? ((_getDefaultOptionsByC = (0, _ai.getDefaultOptionsByCommand)(command)) === null || _getDefaultOptionsByC === void 0 ? void 0 : _getDefaultOptionsByC.map(_capitalize.capitalize));
+      const options = (commandOptions === null || commandOptions === void 0 ? void 0 : commandOptions.map(_capitalize.capitalize)) ?? (0, _ai.getDefaultOptionsByCommand)(command);
       const item = {
         id: command,
         name: command,
-        text: text ?? _ai.defaultCommandNames[command],
+        text: text ?? (0, _ai.getDefaultCommandName)(command),
         items: options === null || options === void 0 ? void 0 : options.map(option => ({
           id: option,
           text: option,
           parentCommand: command,
-          options: options === null || options === void 0 ? void 0 : options.map(_capitalize.capitalize)
+          options
         }))
       };
       return item;
@@ -358,7 +358,7 @@ if (_devextremeQuill.default) {
       var _dataSource$0$items;
       const {
         name = TOOLBAR_AI_ITEM_NAME,
-        commands = Object.keys(_ai.defaultCommandNames)
+        commands = Object.keys(_ai.commandMessageKeys)
       } = item;
       const commandsMap = (0, _ai.buildCommandsMap)(commands);
       const menuItems = this._buildMenuItems(commands);
@@ -560,6 +560,16 @@ if (_devextremeQuill.default) {
         this._markActiveFormatWidget(formatName, formatWidget, formats);
       }
       this._toggleClearFormatting(hasFormats || selection.length > 1);
+    }
+    _updateHeaderFormatWidget() {
+      const selection = this.quill.getSelection();
+      const formatName = 'header';
+      const formatWidget = this._toolbarWidgets.getByName(formatName);
+      const formats = this.quill.getFormat(selection);
+      if (!selection || !formatWidget) {
+        return;
+      }
+      this._markActiveFormatWidget(formatName, formatWidget, formats);
     }
     _markActiveFormatWidget(name, widget, formats) {
       if (this._isColorFormat(name)) {

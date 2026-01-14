@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import config from '../../../core/config';
 import Guid from '../../../core/guid';
 import { toComparable } from '../../../core/utils/data';
@@ -228,7 +227,7 @@ const compareArrays = (array1, array2, depth, options) => {
   if (array1.length !== array2.length) {
     return false;
   }
-  return !array1.some((item, idx) => !compareByValue(item, array2[idx], depth + 1, _extends({}, options, {
+  return !array1.some((item, idx) => !compareByValue(item, array2[idx], depth + 1, Object.assign({}, options, {
     strict: true
   })));
 };
@@ -269,7 +268,7 @@ const compareByValue = (value1, value2, depth, options) => {
 };
 export const equalByValue = function (value1, value2) {
   let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DEFAULT_EQUAL_BY_VALUE_OPTS;
-  const compareOptions = _extends({}, DEFAULT_EQUAL_BY_VALUE_OPTS, options);
+  const compareOptions = Object.assign({}, DEFAULT_EQUAL_BY_VALUE_OPTS, options);
   return compareByValue(value1, value2, 0, compareOptions);
 };
 export default {

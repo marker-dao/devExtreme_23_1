@@ -31,7 +31,8 @@ var _form = _interopRequireDefault(require("../../ui/form/form.items_runtime_inf
 var _formLayout_manager = require("../../ui/form/form.layout_manager.utils");
 var _responsive_box = _interopRequireDefault(require("../../ui/responsive_box"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
+// @ts-expect-error ts-error
+
 const FORM_EDITOR_BY_DEFAULT = 'dxTextBox';
 const LAYOUT_MANAGER_FIRST_ROW_CLASS = 'dx-first-row';
 const LAYOUT_MANAGER_LAST_ROW_CLASS = 'dx-last-row';
@@ -40,7 +41,7 @@ const LAYOUT_MANAGER_LAST_COL_CLASS = 'dx-last-col';
 const MIN_COLUMN_WIDTH = 200;
 class LayoutManager extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       layoutData: {},
       readOnly: false,
       colCount: 1,
@@ -555,7 +556,7 @@ class LayoutManager extends _widget.default {
     };
     const config = buttonConfigs[item.name];
     if (config) {
-      item.buttonOptions = _extends({}, config, item.buttonOptions ?? {});
+      item.buttonOptions = Object.assign({}, config, item.buttonOptions ?? {});
     }
   }
   _renderButtonItem(info) {
@@ -759,7 +760,7 @@ class LayoutManager extends _widget.default {
     } = this.option();
     // @ts-expect-error ts-error
     let hasEditorReadOnly = Object.hasOwn(editorOptions, 'readOnly');
-    const instance = super._createComponent($editor, component, _extends({}, editorOptions, {
+    const instance = super._createComponent($editor, component, Object.assign({}, editorOptions, {
       readOnly: !hasEditorReadOnly ? readOnlyState : editorOptions.readOnly
     }));
     let isChangeByForm = false;

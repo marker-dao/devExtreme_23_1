@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../common/core/events/core/events_engine';
 import { eventData } from '../../common/core/events/utils/index';
 import messageLocalization from '../../common/core/localization/message';
@@ -45,7 +44,7 @@ class RangeSlider extends Slider {
       _changeHandle(e, rtlEnabled ? that._$handleEnd : that._$handleStart);
       _setHandleValue(e, step, -1);
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       leftArrow(e) {
         this._processKeyboardEvent(e);
         moveHandleLeft(e, this.option('step'));
@@ -81,7 +80,7 @@ class RangeSlider extends Slider {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       start: 40,
       end: 60,
       value: [40, 60],

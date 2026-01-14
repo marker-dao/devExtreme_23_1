@@ -3,11 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.ITEM_CLASS = exports.EXPANDER_ICON_STUB_CLASS = void 0;
+exports.default = exports.TOGGLE_ITEM_VISIBILITY_CLASS = exports.SELECT_ALL_ITEM_CLASS = exports.ITEM_CLASS = exports.EXPANDER_ICON_STUB_CLASS = exports.CHECK_BOX_CLASS = void 0;
 var _animation = require("../../../common/core/animation");
 var _click = require("../../../common/core/events/click");
+var _contextmenu = require("../../../common/core/events/contextmenu");
 var _events_engine = _interopRequireDefault(require("../../../common/core/events/core/events_engine"));
 var _double_click = require("../../../common/core/events/double_click");
+var _hold = _interopRequireDefault(require("../../../common/core/events/hold"));
 var _pointer = _interopRequireDefault(require("../../../common/core/events/pointer"));
 var _utils = require("../../../common/core/events/utils");
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
@@ -29,7 +31,6 @@ var _consts = require("../../ui/scroll_view/consts");
 var _scrollable = _interopRequireDefault(require("../../ui/scroll_view/scrollable"));
 var _get_relative_offset = require("../../ui/scroll_view/utils/get_relative_offset");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const WIDGET_CLASS = 'dx-treeview';
 const NODE_CLASS = `${WIDGET_CLASS}-node`;
 const NODE_CONTAINER_CLASS = `${NODE_CLASS}-container`;
@@ -42,20 +43,20 @@ const ITEM_WITH_CUSTOM_EXPANDER_ICON_CLASS = `${ITEM_CLASS}-with-custom-expander
 const CUSTOM_EXPANDER_ICON_ITEM_CONTAINER_CLASS = `${WIDGET_CLASS}-custom-expander-icon-item-container`;
 const ITEM_WITHOUT_CHECKBOX_CLASS = `${ITEM_CLASS}-without-checkbox`;
 const ITEM_DATA_KEY = `${ITEM_CLASS}-data`;
-const TOGGLE_ITEM_VISIBILITY_CLASS = `${WIDGET_CLASS}-toggle-item-visibility`;
+const TOGGLE_ITEM_VISIBILITY_CLASS = exports.TOGGLE_ITEM_VISIBILITY_CLASS = `${WIDGET_CLASS}-toggle-item-visibility`;
 const CUSTOM_COLLAPSE_ICON_CLASS = `${WIDGET_CLASS}-custom-collapse-icon`;
 const CUSTOM_EXPAND_ICON_CLASS = `${WIDGET_CLASS}-custom-expand-icon`;
 const LOAD_INDICATOR_CLASS = `${WIDGET_CLASS}-loadindicator`;
 const LOAD_INDICATOR_WRAPPER_CLASS = `${WIDGET_CLASS}-loadindicator-wrapper`;
 const TOGGLE_ITEM_VISIBILITY_OPENED_CLASS = `${WIDGET_CLASS}-toggle-item-visibility-opened`;
-const SELECT_ALL_ITEM_CLASS = `${WIDGET_CLASS}-select-all-item`;
+const SELECT_ALL_ITEM_CLASS = exports.SELECT_ALL_ITEM_CLASS = `${WIDGET_CLASS}-select-all-item`;
 const INVISIBLE_STATE_CLASS = 'dx-state-invisible';
 const DISABLED_STATE_CLASS = 'dx-state-disabled';
 const SELECTED_ITEM_CLASS = 'dx-state-selected';
 const EXPAND_EVENT_NAMESPACE = 'dxTreeView_expand';
 const DATA_ITEM_ID = 'data-item-id';
 const ITEM_URL_CLASS = 'dx-item-url';
-const CHECK_BOX_CLASS = 'dx-checkbox';
+const CHECK_BOX_CLASS = exports.CHECK_BOX_CLASS = 'dx-checkbox';
 const CHECK_BOX_ICON_CLASS = 'dx-checkbox-icon';
 const ROOT_NODE_CLASS = `${WIDGET_CLASS}-root-node`;
 const EXPANDER_ICON_STUB_CLASS = exports.EXPANDER_ICON_STUB_CLASS = `${WIDGET_CLASS}-expander-icon-stub`;
@@ -118,7 +119,7 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
       const rootItem = this._getItemData($rootElement.find(`.${ITEM_CLASS}`));
       this._toggleExpandedNestedItems([rootItem], state);
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       enter: this._showCheckboxes() ? select : click,
       space: this._showCheckboxes() ? select : click,
       asterisk: e => {
@@ -164,7 +165,7 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
     return WIDGET_CLASS;
   }
   _getDefaultOptions() {
-    const defaultOptions = _extends({}, super._getDefaultOptions(), {
+    const defaultOptions = Object.assign({}, super._getDefaultOptions(), {
       animationEnabled: true,
       dataStructure: 'tree',
       deferRendering: true,
@@ -843,6 +844,18 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
   _detachExpandEvent(itemsContainer) {
     _events_engine.default.off(itemsContainer, `.${EXPAND_EVENT_NAMESPACE}`, this._itemSelector());
   }
+  _detachHoldEvent(itemsContainer) {
+    const itemSelector = this._itemSelector();
+    // @ts-expect-error ts-error
+    const eventName = (0, _utils.addNamespace)(_hold.default.name, this.NAME);
+    _events_engine.default.off(itemsContainer, eventName, itemSelector);
+  }
+  _detachContextMenuEvent(itemsContainer) {
+    const itemSelector = this._itemSelector();
+    // @ts-expect-error ts-error
+    const eventName = (0, _utils.addNamespace)(_contextmenu.name, this.NAME);
+    _events_engine.default.off(itemsContainer, eventName, itemSelector);
+  }
   _getEventNameByOption(name) {
     const event = name === 'click' ? _click.name : _double_click.name;
     return (0, _utils.addNamespace)(event, EXPAND_EVENT_NAMESPACE);
@@ -1412,9 +1425,9 @@ class TreeViewBase extends _hierarchical_collection_widget.default {
   _detachClickEvent(itemsContainer) {
     const {
       clickEventNamespace,
-      itemSelector,
       pointerDownEventNamespace,
-      nodeSelector
+      nodeSelector,
+      itemSelector
     } = this._getItemClickEventData();
     _events_engine.default.off(itemsContainer, clickEventNamespace, itemSelector);
     _events_engine.default.off(itemsContainer, pointerDownEventNamespace, nodeSelector);

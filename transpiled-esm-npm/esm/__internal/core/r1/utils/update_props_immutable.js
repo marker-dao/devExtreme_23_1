@@ -1,7 +1,6 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { getPathParts } from '../../../../core/utils/data';
 import { isPlainObject } from '../../../../core/utils/type';
-const cloneObjectValue = value => Array.isArray(value) ? [...value] : _extends({}, value);
+const cloneObjectValue = value => Array.isArray(value) ? [...value] : Object.assign({}, value);
 const cloneObjectProp = (value, prevValue, fullNameParts) => {
   const result = fullNameParts.length > 0 && prevValue && value !== prevValue ? cloneObjectValue(prevValue) : cloneObjectValue(value);
   const name = fullNameParts[0];

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../../common/core/localization/message';
 import $ from '../../../../core/renderer';
 import Button from '../../../../ui/button';
@@ -11,7 +10,7 @@ export const CHAT_EDITING_PREVIEW_TEXT_CLASS = 'dx-chat-editing-preview-text';
 export const CHAT_EDITING_PREVIEW_CANCEL_BUTTON_CLASS = 'dx-chat-editing-preview-cancel-button';
 class EditingPreview extends DOMComponent {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: true,
       focusStateEnabled: true,
       hoverStateEnabled: true,

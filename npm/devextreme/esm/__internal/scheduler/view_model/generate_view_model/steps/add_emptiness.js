@@ -1,0 +1,17 @@
+/**
+* DevExtreme (esm/__internal/scheduler/view_model/generate_view_model/steps/add_emptiness.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { getMinAppointmentSize } from '../options/get_min_appointment_size';
+export const addEmptiness = (entities, options) => entities.map(entity => {
+  const minSize = getMinAppointmentSize(Object.assign({}, options, {
+    isAllDayAppointment: entity.allDay
+  }));
+  return Object.assign({}, entity, {
+    empty: !entity.isAllDayPanelOccupied && (entity.height < minSize.height || entity.width < minSize.width)
+  });
+});

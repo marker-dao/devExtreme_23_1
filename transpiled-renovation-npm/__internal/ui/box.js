@@ -14,7 +14,8 @@ var _window = require("../../core/utils/window");
 var _collection_widget = _interopRequireDefault(require("../ui/collection/collection_widget.edit"));
 var _item = _interopRequireDefault(require("../ui/collection/item"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // eslint-disable-next-line max-classes-per-file
+// eslint-disable-next-line max-classes-per-file
+
 const BOX_CLASS = 'dx-box';
 const BOX_FLEX_CLASS = 'dx-box-flex';
 const BOX_ITEM_CLASS = 'dx-box-item';
@@ -129,7 +130,7 @@ class LayoutStrategy {
 }
 class Box extends _collection_widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       direction: 'row',
       align: 'start',
       crossAlign: 'stretch',
@@ -204,7 +205,7 @@ class Box extends _collection_widget.default {
         onItemRendered
       } = this.option();
       if (item) {
-        this._createComponent(item.$item, Box, _extends({
+        this._createComponent(item.$item, Box, Object.assign({
           itemTemplate,
           itemHoldTimeout,
           onItemHold,

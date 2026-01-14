@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable no-spaced-func */
 import { describe, expect, it } from '@jest/globals';
 import { ColumnsController } from '../../../../../grids/new/grid_core/columns_controller';
@@ -115,7 +114,7 @@ describe('HeaderFilter', () => {
           viewController,
           columnsController
         } = setup({
-          headerFilter: _extends({}, expectedHeaderFilter),
+          headerFilter: Object.assign({}, expectedHeaderFilter),
           filterValues: 'test',
           columns: [{
             dataField: 'A'

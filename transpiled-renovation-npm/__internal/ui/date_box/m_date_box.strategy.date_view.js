@@ -8,11 +8,10 @@ var _message = _interopRequireDefault(require("../../../common/core/localization
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _support = require("../../../core/utils/support");
 var _window = require("../../../core/utils/window");
+var _date_view = _interopRequireDefault(require("./date_view"));
 var _m_date_box = _interopRequireDefault(require("./m_date_box.strategy"));
 var _m_date_utils = _interopRequireDefault(require("./m_date_utils"));
-var _m_date_view = _interopRequireDefault(require("./m_date_view"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = (0, _window.getWindow)();
 class DateViewStrategy extends _m_date_box.default {
   ctor(dateBox) {
@@ -20,7 +19,7 @@ class DateViewStrategy extends _m_date_box.default {
     this.NAME = 'DateView';
   }
   getDefaultOptions() {
-    return _extends({}, super.getDefaultOptions(), {
+    return Object.assign({}, super.getDefaultOptions(), {
       openOnFieldClick: true,
       applyButtonText: _message.default.format('OK'),
       'dropDownOptions.showTitle': true
@@ -105,7 +104,7 @@ class DateViewStrategy extends _m_date_box.default {
     this._widget.$element().appendTo(this._getWidgetContainer());
   }
   _getWidgetName() {
-    return _m_date_view.default;
+    return _date_view.default;
   }
   renderOpenedState() {
     super.renderOpenedState();

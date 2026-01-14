@@ -12,7 +12,8 @@ var _add_emptiness = require("./add_emptiness");
       width: 41
     }], {
       isTimelineView: true,
-      isAdaptivityEnabled: false
+      isAdaptivityEnabled: false,
+      isMonthView: false
     })).toEqual([{
       height: 34,
       width: 41,
@@ -36,7 +37,8 @@ var _add_emptiness = require("./add_emptiness");
       isAllDayPanelOccupied: true
     }], {
       isTimelineView: false,
-      isAdaptivityEnabled: false
+      isAdaptivityEnabled: false,
+      isMonthView: false
     })).toEqual([{
       height: 34,
       width: 39,
@@ -61,7 +63,8 @@ var _add_emptiness = require("./add_emptiness");
       width: 40
     }], {
       isTimelineView: false,
-      isAdaptivityEnabled: true
+      isAdaptivityEnabled: true,
+      isMonthView: false
     })).toEqual([{
       height: 25,
       width: 40,

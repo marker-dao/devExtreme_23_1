@@ -1,8 +1,7 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { combineClasses } from '../../../core/r1/utils/render_utils';
 export const addToStyles = (options, style) => {
   const nextStyle = style ?? {};
-  const result = _extends({}, nextStyle);
+  const result = Object.assign({}, nextStyle);
   options.forEach(_ref => {
     let {
       attr,

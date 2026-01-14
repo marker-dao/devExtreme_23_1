@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
 import { Deferred } from '../../../core/utils/deferred';
@@ -43,7 +42,7 @@ class SearchBoxController {
       searchTimeout
     } = options;
     const placeholder = messageLocalization.format('Search');
-    return _extends({
+    return Object.assign({
       mode: 'search',
       placeholder,
       tabIndex,

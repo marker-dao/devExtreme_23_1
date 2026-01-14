@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.getTargetedAppointmentFromInfo = exports.getTargetedAppointment = void 0;
 var _appointment_groups_utils = require("./resource_manager/appointment_groups_utils");
 var _group_utils = require("./resource_manager/group_utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const setTargetedAppointmentResources = (rawAppointment, settings, resourceManager) => {
   const {
     groups,
@@ -23,7 +22,7 @@ const getTargetedAppointmentFromInfo = function (rawAppointment, settings, dataA
   const {
     info
   } = settings;
-  const rawTargetedAppointment = _extends({}, rawAppointment);
+  const rawTargetedAppointment = Object.assign({}, rawAppointment);
   dataAccessor.set('startDate', rawTargetedAppointment, new Date(info.sourceAppointment.startDate));
   dataAccessor.set('endDate', rawTargetedAppointment, new Date(info.sourceAppointment.endDate));
   const displayDates = usePartialDates && 'partialDates' in info ? info.partialDates : info.appointment;
@@ -37,7 +36,7 @@ const getTargetedAppointment = (rawAppointment, settings, dataAccessor, resource
   const startDate = dataAccessor.get('startDate', rawAppointment);
   const endDate = dataAccessor.get('endDate', rawAppointment);
   if (!('info' in settings)) {
-    return _extends({}, rawAppointment, {
+    return Object.assign({}, rawAppointment, {
       displayStartDate: startDate,
       displayEndDate: endDate
     });

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../../core/component_registrator';
 import dateUtils from '../../../core/utils/date';
 // NOTE: Renovation component import.
@@ -47,7 +46,7 @@ class SchedulerTimelineMonth extends SchedulerTimeline {
   }
   generateRenderOptions() {
     const options = super.generateRenderOptions(true);
-    return _extends({}, options, {
+    return Object.assign({}, options, {
       getDateForHeaderText: (_, date) => date
     });
   }

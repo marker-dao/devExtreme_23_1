@@ -20,10 +20,11 @@ var _items_controller = require("../items_controller/items_controller");
 var _controller4 = require("../lifecycle/controller");
 var _options_controller = require("../options_controller/options_controller");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable
+/* eslint-disable
   @typescript-eslint/explicit-function-return-type,
   @typescript-eslint/explicit-module-boundary-types
 */
+
 class ContentView extends _view.View {
   constructor(dataController, options, errorController, columnsController, selectionController, itemsController, editingController, contextMenuController, searchUIController, keyboardNavigationController, lifecycle) {
     super();
@@ -63,7 +64,7 @@ class ContentView extends _view.View {
     const showScrollbar = this.options.oneWay('scrolling.showScrollbar');
     const useNativeConfig = this.options.oneWay('scrolling.useNative');
     return {
-      loadPanelProps: _extends({}, loadPanelConfig.value, {
+      loadPanelProps: Object.assign({}, loadPanelConfig.value, {
         visible: this.dataController.isLoading.value
       }),
       noDataTextProps: {

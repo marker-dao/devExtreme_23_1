@@ -23,9 +23,13 @@ var _window = require("../../../core/utils/window");
 var _format_helper = _interopRequireDefault(require("../../../format_helper"));
 var _load_panel = _interopRequireDefault(require("../../../ui/load_panel"));
 var _filtering = _interopRequireDefault(require("../../../ui/shared/filtering"));
+var _m_type = require("../../core/utils/m_type");
+var _const = require("./ai_column/const");
 var _index = require("./utils/index");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-check
+// @ts-check
+
+const BASE_LOAD_PANEL_Z_INDEX = 1000;
 const DATAGRID_SELECTION_DISABLED_CLASS = 'dx-selection-disabled';
 const DATAGRID_GROUP_OPENED_CLASS = 'dx-datagrid-group-opened';
 const DATAGRID_GROUP_CLOSED_CLASS = 'dx-datagrid-group-closed';
@@ -59,6 +63,7 @@ const DATE_INTERVAL_SELECTORS = {
     return value && value.getSeconds();
   }
 };
+const DEFAULT_COLUMN_WIDTH = 50;
 const getIntervalSelector = function () {
   const data = arguments[1];
   const value = this.calculateCellValue(data);
@@ -152,6 +157,11 @@ const addPointIfNeed = (points, pointProps, pointCreated) => {
     points.push(point);
   }
 };
+const getColumnWidths = columns => columns.map(column => {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const width = column.visibleWidth || column.width;
+  return (0, _m_type.isNumeric)(width) ? parseFloat(width) : DEFAULT_COLUMN_WIDTH;
+});
 function normalizeGroupingLoadOptions(group) {
   if (!Array.isArray(group)) {
     group = [group];
@@ -198,7 +208,8 @@ var _default = exports.default = {
       loadPanelOptions = (0, _extend.extend)({
         shading: false,
         message: loadPanelOptions.text,
-        container: $container
+        container: $container,
+        zIndex: BASE_LOAD_PANEL_Z_INDEX
       }, loadPanelOptions);
       that._loadPanel = that._createComponent((0, _renderer.default)('<div>').appendTo($container), _load_panel.default, loadPanelOptions);
     } else {
@@ -298,7 +309,8 @@ var _default = exports.default = {
     if (column.calculateDisplayValue && data && rowType !== 'group') {
       return column.calculateDisplayValue(data);
     }
-    if (column.lookup && !(rowType === 'group' && (column.calculateGroupValue || column.calculateDisplayValue))) {
+    const isCalculatedFromLookup = column.lookup && column.type !== _const.AI_COLUMN_NAME && (rowType !== 'group' || !column.calculateGroupValue && !column.calculateDisplayValue);
+    if (isCalculatedFromLookup) {
       return column.lookup.calculateCellValue(value);
     }
     return value;
@@ -420,7 +432,7 @@ var _default = exports.default = {
           pointProps.y = prevItemOffset.top;
         }
         if (needToCheckPrevPoint && Math.round(prevItemOffsetX) !== Math.round(pointProps.x)) {
-          const prevPointProps = _extends({}, pointProps, {
+          const prevPointProps = Object.assign({}, pointProps, {
             item: items[i - 1],
             x: prevItemOffsetX
           });
@@ -585,7 +597,7 @@ var _default = exports.default = {
       }
       return d;
     };
-    const lookupDataSource = _extends({}, lookupDataSourceOptions, {
+    const lookupDataSource = Object.assign({}, lookupDataSourceOptions, {
       __dataGridSourceFilter: filter,
       load: loadOptions => {
         // @ts-expect-error
@@ -596,7 +608,7 @@ var _default = exports.default = {
             return;
           }
           const filter = this.combineFilters(items.flatMap(data => data.key).map(key => [column.lookup.valueExpr, key]), 'or');
-          const newDataSource = new _data_source.default(_extends({}, lookupDataSourceOptions, loadOptions, {
+          const newDataSource = new _data_source.default(Object.assign({}, lookupDataSourceOptions, loadOptions, {
             filter: this.combineFilters([filter, loadOptions.filter], 'and'),
             paginate: false // pagination is included to filter
           }));
@@ -670,5 +682,6 @@ var _default = exports.default = {
   },
   // New utils
   isEqualSelectors: _index.isEqualSelectors,
-  isSelectorEqualWithCallback: _index.isSelectorEqualWithCallback
+  isSelectorEqualWithCallback: _index.isSelectorEqualWithCallback,
+  getColumnWidths
 };

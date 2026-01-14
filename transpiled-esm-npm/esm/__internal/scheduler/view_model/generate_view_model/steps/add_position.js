@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { binarySearchCellIndex } from './binary_search_cell_index';
 export const addPosition = (entities, cells) => entities.map(entity => {
   const cellIndex = binarySearchCellIndex(cells, entity.startDateUTC);
@@ -6,7 +5,7 @@ export const addPosition = (entities, cells) => entities.map(entity => {
   while (endCellIndex < cells.length - 1 && entity.endDateUTC > cells[endCellIndex].max && entity.endDateUTC >= cells[endCellIndex + 1].min) {
     endCellIndex += 1;
   }
-  return _extends({}, entity, {
+  return Object.assign({}, entity, {
     startDateUTC: Math.max(entity.startDateUTC, cells[cellIndex].min),
     endDateUTC: Math.min(entity.endDateUTC, cells[endCellIndex].max),
     cellIndex,

@@ -373,13 +373,13 @@ export class GanttTreeList {
     return mappedData;
   }
   setOption(optionName, value) {
-    var _this$_treeList10;
-    (_this$_treeList10 = this._treeList) === null || _this$_treeList10 === void 0 || _this$_treeList10.option(optionName, value);
+    var _this$_treeList0;
+    (_this$_treeList0 = this._treeList) === null || _this$_treeList0 === void 0 || _this$_treeList0.option(optionName, value);
   }
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   getOption(optionName) {
-    var _this$_treeList11;
-    return (_this$_treeList11 = this._treeList) === null || _this$_treeList11 === void 0 ? void 0 : _this$_treeList11.option(optionName);
+    var _this$_treeList1;
+    return (_this$_treeList1 = this._treeList) === null || _this$_treeList1 === void 0 ? void 0 : _this$_treeList1.option(optionName);
   }
   onTaskInserted(insertedId, parentId) {
     if (isDefined(parentId)) {
@@ -396,7 +396,7 @@ export class GanttTreeList {
   }
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   getDataSource() {
-    var _this$_treeList12;
-    return (_this$_treeList12 = this._treeList) === null || _this$_treeList12 === void 0 ? void 0 : _this$_treeList12.getDataSource();
+    var _this$_treeList10;
+    return (_this$_treeList10 = this._treeList) === null || _this$_treeList10 === void 0 ? void 0 : _this$_treeList10.getDataSource();
   }
 }

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import domAdapter from '../../core/dom_adapter';
 import { getPublicElement } from '../../core/element';
 import { data as elementData } from '../../core/element_data';
@@ -71,7 +70,7 @@ class SchedulerTableCreator {
         if (options.cellTemplate && options.cellTemplate.render) {
           const additionalTemplateData = options.getTemplateData ? options.getTemplateData(rowIndex) : {};
           const templateOptions = {
-            model: _extends({
+            model: Object.assign({
               text: options.getCellText ? options.getCellText(rowIndex, columnIndex) : '',
               date: options.getCellDate ? options.getCellDate(rowIndex) : undefined
             }, additionalTemplateData),

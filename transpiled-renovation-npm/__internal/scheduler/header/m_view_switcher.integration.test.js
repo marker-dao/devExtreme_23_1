@@ -5,7 +5,9 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _localization = require("../../../localization");
 var _scheduler = _interopRequireDefault(require("../../../ui/scheduler"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable i18n/no-russian-character */ /* eslint-disable spellcheck/spell-checker */
+/* eslint-disable i18n/no-russian-character */
+/* eslint-disable spellcheck/spell-checker */
+
 const SCHEDULER_CONTAINER_ID = 'schedulerContainer';
 const SELECTORS = {
   schedulerContainer: '#schedulerContainer',
@@ -17,7 +19,10 @@ const SELECTORS = {
 const defaultViews = ['day', 'week', 'workWeek', 'month', 'timelineDay', 'timelineWeek', 'timelineWorkWeek', 'timelineMonth', 'agenda'];
 const createScheduler = options => new Promise(resolve => {
   const $container = (0, _renderer.default)('<div>').attr('id', SCHEDULER_CONTAINER_ID).appendTo(document.body);
-  const instance = new _scheduler.default($container.get(0), _extends({}, options, {
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let instance;
+  // eslint-disable-next-line prefer-const
+  instance = new _scheduler.default($container.get(0), Object.assign({}, options, {
     onContentReady: () => {
       resolve({
         $container,

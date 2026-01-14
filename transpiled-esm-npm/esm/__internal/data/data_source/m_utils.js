@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["items"];
 import ArrayStore from '../../../common/data/array_store';
@@ -23,7 +22,7 @@ export const normalizeStoreLoadOptionAccessorArguments = originalArguments => {
 };
 const mapGroup = (group, level, mapper) => map(group, item => {
   const restItem = _objectWithoutPropertiesLoose(item, _excluded);
-  return _extends({}, restItem, {
+  return Object.assign({}, restItem, {
     items: mapRecursive(item.items, level - 1, mapper)
   });
 });

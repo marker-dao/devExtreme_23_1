@@ -2,7 +2,6 @@
 
 var _globals = require("@jest/globals");
 var _remote = require("./remote");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 (0, _globals.describe)('Remote filtering', () => {
   (0, _globals.describe)('combineRemoteFilter', () => {
     const FilterPosition = {
@@ -30,7 +29,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
     (0, _globals.it)('should return correct filter if recurrenceRuleExpr', () => {
       const combinedFilter = (0, _remote.combineRemoteFilter)({
         dataAccessors: {
-          expr: _extends({}, defaultDataAccessors.expr, {
+          expr: Object.assign({}, defaultDataAccessors.expr, {
             recurrenceRuleExpr: 'recurrenceRule'
           })
         },

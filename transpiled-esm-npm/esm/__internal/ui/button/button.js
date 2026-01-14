@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createComponentVNode, normalizeProps } from "inferno";
 import { click } from '../../../common/core/events/short';
 import messageLocalization from '../../../common/core/localization/message';
@@ -46,7 +45,7 @@ const omit = (obj, excludedKeys) => {
     return result;
   }, {});
 };
-export const defaultButtonProps = _extends({}, BaseWidgetDefaultProps, {
+export const defaultButtonProps = Object.assign({}, BaseWidgetDefaultProps, {
   activeStateEnabled: true,
   hoverStateEnabled: true,
   icon: '',
@@ -198,7 +197,7 @@ export class Button extends InfernoWrapperComponent {
           break;
       }
     }
-    return _extends({
+    return Object.assign({
       role: 'button'
     }, label ? {
       label
@@ -230,7 +229,7 @@ export class Button extends InfernoWrapperComponent {
       text,
       templateData
     } = this.props;
-    return _extends({
+    return Object.assign({
       icon,
       text
     }, templateData);
@@ -272,7 +271,7 @@ export class Button extends InfernoWrapperComponent {
       "position": iconPosition,
       "iconTemplate": IconTemplate
     });
-    return normalizeProps(createComponentVNode(2, Widget, _extends({
+    return normalizeProps(createComponentVNode(2, Widget, Object.assign({
       "accessKey": this.props.accessKey,
       "activeStateEnabled": this.props.activeStateEnabled,
       "aria": this.aria,
@@ -303,7 +302,7 @@ export class Button extends InfernoWrapperComponent {
     }), null, this.widgetRef));
   }
 }
-Button.defaultProps = _extends({}, defaultButtonProps, convertRulesToOptions(defaultOptionRules));
+Button.defaultProps = Object.assign({}, defaultButtonProps, convertRulesToOptions(defaultOptionRules));
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const __defaultOptionRules = [];
 export function defaultOptions(rule) {

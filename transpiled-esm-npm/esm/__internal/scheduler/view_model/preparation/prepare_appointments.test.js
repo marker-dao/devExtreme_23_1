@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { mockAppointmentDataAccessor } from '../../../scheduler/__mock__/appointment_data_accessor.mock';
 import { createTimeZoneCalculator } from '../../r1/timezone_calculator';
@@ -39,7 +38,7 @@ describe('prepareAppointments', () => {
         endDate: data[0].startDate.getTime() + 30 * 60000
       },
       hasRecurrenceRule: false,
-      itemData: _extends({}, data[0], {
+      itemData: Object.assign({}, data[0], {
         endDate: new Date(2021, 9, 9, 17, 30)
       }),
       recurrenceException: undefined,

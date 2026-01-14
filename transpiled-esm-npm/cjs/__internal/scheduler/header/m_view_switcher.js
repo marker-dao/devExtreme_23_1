@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.getTabViewSwitcher = exports.getDropDownViewSwitcher = void 0;
 var _themes = require("../../../ui/themes");
 var _m_utils = require("./m_utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const ClASS = {
   container: 'dx-scheduler-view-switcher',
   dropDownButton: 'dx-scheduler-view-switcher-dropdown-button',
@@ -30,7 +29,7 @@ const getTabViewSwitcher = (header, item) => {
   const isVisible = isViewSwitcherVisible(views);
   // @ts-expect-error
   const stylingMode = (0, _themes.isFluent)() ? 'outlined' : 'contained';
-  return _extends({
+  return Object.assign({
     widget: 'dxButtonGroup',
     locateInMenu: 'auto',
     location: 'after',
@@ -61,7 +60,7 @@ const getDropDownViewSwitcher = (header, item) => {
     views
   } = getViewsAndSelectedView(header);
   const isVisible = isViewSwitcherVisible(views);
-  return _extends({
+  return Object.assign({
     widget: 'dxDropDownButton',
     locateInMenu: 'never',
     location: 'after',

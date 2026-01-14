@@ -8,7 +8,6 @@ var _inferno = require("inferno");
 var _index = require("../../../../core/r1/runtime/inferno/index");
 var _group_panel_horizontal_row = require("./group_panel_horizontal_row");
 var _group_panel_props = require("./group_panel_props");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class GroupPanelHorizontal extends _index.BaseInfernoComponent {
   constructor() {
     super(...arguments);
@@ -35,7 +34,7 @@ class GroupPanelHorizontal extends _index.BaseInfernoComponent {
     }, [...new Array(groupPanelItems.length)]);
     this._groupPanelItems = groupPanelItems.map((groupsRenderRow, index) => {
       const colSpan = colSpans[index];
-      return groupsRenderRow.map(groupItem => _extends({}, groupItem, {
+      return groupsRenderRow.map(groupItem => Object.assign({}, groupItem, {
         colSpan
       }));
     });

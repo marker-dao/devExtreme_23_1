@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import EventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace, normalizeKeyName } from '../../../common/core/events/utils/index';
 import { data } from '../../../core/element_data';
@@ -58,7 +57,7 @@ class Editor extends Widget {
     $element.addClass(DX_INVALID_BADGE_CLASS);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: null,
       name: '',
       onValueChanged: null,

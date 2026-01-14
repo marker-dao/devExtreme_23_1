@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { DataSource } from '../../../common/data/data_source/data_source';
 import { normalizeLoadResult } from '../../../common/data/data_source/utils';
@@ -30,7 +29,7 @@ class CollectionWidget extends BaseCollectionWidget {
     this._optionsByReference.selectedItem = true;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       selectionMode: 'none',
       selectionRequired: false,
       selectByClick: true,
@@ -49,7 +48,7 @@ class CollectionWidget extends BaseCollectionWidget {
     });
   }
   _init() {
-    this._userOptions = _extends({}, CollectionWidget._initUserOptions);
+    this._userOptions = Object.assign({}, CollectionWidget._initUserOptions);
     CollectionWidget._initUserOptions = undefined;
     this._initEditStrategy();
     super._init();

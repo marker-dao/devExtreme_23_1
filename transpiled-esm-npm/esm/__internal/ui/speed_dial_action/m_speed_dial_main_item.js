@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import config from '../../../core/config';
 import $ from '../../../core/renderer';
@@ -92,7 +91,7 @@ class SpeedDialMainItem extends SpeedDialItem {
       callOverlayRenderShading: true,
       hideOnOutsideClick: true
     };
-    return _extends({}, super._getDefaultOptions(), defaultOptions, config().floatingActionButtonConfig, {
+    return Object.assign({}, super._getDefaultOptions(), defaultOptions, config().floatingActionButtonConfig, {
       shading: false
     });
   }

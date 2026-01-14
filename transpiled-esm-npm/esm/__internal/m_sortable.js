@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../common/core/animation';
 import { resetPosition } from '../common/core/animation/translator';
 import eventsEngine from '../common/core/events/core/events_engine';
@@ -57,7 +56,7 @@ class Sortable extends Draggable {
     this._sourceScrollableInfo = null;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       clone: true,
       filter: '> *',
       itemOrientation: 'vertical',

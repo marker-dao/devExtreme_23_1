@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import Action from '../../../core/action';
 import Class from '../../../core/class';
 import Config from '../../../core/config';
@@ -255,7 +254,7 @@ export class Component extends Class.inherit({}) {
     let eventName;
     // eslint-disable-next-line @typescript-eslint/init-declarations
     let actionFunc;
-    let actionConfig = _extends({}, config ?? {});
+    let actionConfig = Object.assign({}, config ?? {});
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const result = function () {
       var _actionConfig, _actionConfig2;

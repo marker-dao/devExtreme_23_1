@@ -10,7 +10,6 @@ var _element_data = require("../../core/element_data");
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _type = require("../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const ROW_SELECTOR = 'tr';
 class SchedulerTableCreator {
   constructor() {
@@ -78,7 +77,7 @@ class SchedulerTableCreator {
         if (options.cellTemplate && options.cellTemplate.render) {
           const additionalTemplateData = options.getTemplateData ? options.getTemplateData(rowIndex) : {};
           const templateOptions = {
-            model: _extends({
+            model: Object.assign({
               text: options.getCellText ? options.getCellText(rowIndex, columnIndex) : '',
               date: options.getCellDate ? options.getCellDate(rowIndex) : undefined
             }, additionalTemplateData),

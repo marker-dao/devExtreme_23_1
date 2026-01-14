@@ -12,9 +12,8 @@ var _editor_label_props = require("./common/editor_label_props");
 var _editor_props = require("./common/editor_props");
 var _editor_state_props = require("./common/editor_state_props");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DEFAULT_VALUE = 0;
-const NumberBoxDefaultProps = exports.NumberBoxDefaultProps = _extends({}, _editor_props.EditorDefaultProps, _editor_state_props.EditorStateDefaultProps, _editor_label_props.EditorLabelDefaultProps, {
+const NumberBoxDefaultProps = exports.NumberBoxDefaultProps = Object.assign({}, _editor_props.EditorDefaultProps, _editor_state_props.EditorStateDefaultProps, _editor_label_props.EditorLabelDefaultProps, {
   value: DEFAULT_VALUE,
   isReactComponentWrapper: true
 });

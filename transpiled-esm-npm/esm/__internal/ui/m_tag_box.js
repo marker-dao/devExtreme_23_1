@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import { name as clickEvent } from '../../common/core/events/click';
 import eventsEngine from '../../common/core/events/core/events_engine';
@@ -50,7 +49,7 @@ class TagBox extends SelectBox {
     // @ts-expect-error ts-error
     const sendToList = options => this._list._keyboardHandler(options);
     const rtlEnabled = this.option('rtlEnabled');
-    return _extends({}, parent, {
+    return Object.assign({}, parent, {
       backspace(e) {
         if (!this._isCaretAtTheStart()) {
           return;

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { addCollectorByLevel } from './add_collector_by_level';
 const monthCells = Array.from({
@@ -59,16 +58,16 @@ describe('addCollectorByLevel', () => {
       maxLevel: 3,
       collectBy: 'byStartDate',
       isCompact: false
-    })).toEqual([_extends({}, items[0], {
+    })).toEqual([Object.assign({}, items[0], {
       items: [],
       isCompact: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       items: [],
       isCompact: false
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       items: [],
       isCompact: false
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       items: [],
       isCompact: false
     })]);
@@ -121,10 +120,10 @@ describe('addCollectorByLevel', () => {
       maxLevel: 0,
       collectBy: 'byStartDate',
       isCompact: false
-    })).toEqual([_extends({}, items[0], {
+    })).toEqual([Object.assign({}, items[0], {
       items: [items[0], items[1]],
       isCompact: false
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       items: [items[2], items[3]],
       isCompact: false
     })]);
@@ -177,16 +176,16 @@ describe('addCollectorByLevel', () => {
       maxLevel: 2,
       collectBy: 'byStartDate',
       isCompact: true
-    })).toEqual([_extends({}, items[0], {
+    })).toEqual([Object.assign({}, items[0], {
       items: [],
       isCompact: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       items: [],
       isCompact: false
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       items: [],
       isCompact: false
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       items: [items[2]],
       isCompact: true
     })]);
@@ -253,22 +252,22 @@ describe('addCollectorByLevel', () => {
       maxLevel: -1,
       collectBy: 'byStartDate',
       isCompact: true
-    })).toEqual([_extends({}, items[0], {
+    })).toEqual([Object.assign({}, items[0], {
       items: [],
       isCompact: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       items: [],
       isCompact: false
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       items: [],
       isCompact: false
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       items: [],
       isCompact: false
-    }), _extends({}, items[4], {
+    }), Object.assign({}, items[4], {
       items: [],
       isCompact: false
-    }), _extends({}, items[5], {
+    }), Object.assign({}, items[5], {
       items: [],
       isCompact: false
     })]);
@@ -325,27 +324,27 @@ describe('addCollectorByLevel', () => {
       maxLevel: 1,
       collectBy: 'byOccupation',
       isCompact: true
-    })).toEqual([_extends({}, items[0], {
+    })).toEqual([Object.assign({}, items[0], {
       items: [],
       isCompact: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       items: [items[1], items[2], items[3]],
       isCompact: true
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       startDateUTC: monthCells[8].min,
       endDateUTC: monthCells[8].max,
       cellIndex: 8,
       endCellIndex: 8,
       rowIndex: monthCells[8].rowIndex,
       columnIndex: monthCells[8].columnIndex,
-      items: [_extends({}, items[1], {
+      items: [Object.assign({}, items[1], {
         startDateUTC: monthCells[8].min,
         endDateUTC: monthCells[8].max,
         cellIndex: 8,
         endCellIndex: 8,
         rowIndex: monthCells[8].rowIndex,
         columnIndex: monthCells[8].columnIndex
-      }), _extends({}, items[2], {
+      }), Object.assign({}, items[2], {
         startDateUTC: monthCells[8].min,
         endDateUTC: monthCells[8].max,
         cellIndex: 8,
@@ -354,14 +353,14 @@ describe('addCollectorByLevel', () => {
         columnIndex: monthCells[8].columnIndex
       })],
       isCompact: true
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       startDateUTC: monthCells[9].min,
       endDateUTC: monthCells[9].max,
       cellIndex: 9,
       endCellIndex: 9,
       rowIndex: monthCells[9].rowIndex,
       columnIndex: monthCells[9].columnIndex,
-      items: [_extends({}, items[1], {
+      items: [Object.assign({}, items[1], {
         startDateUTC: monthCells[9].min,
         endDateUTC: monthCells[9].max,
         cellIndex: 9,

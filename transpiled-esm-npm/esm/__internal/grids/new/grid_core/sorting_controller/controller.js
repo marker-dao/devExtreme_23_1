@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { batch, computed } from '../../../../core/state_manager/index';
 import { ColumnsController } from '../columns_controller/index';
 import { getColumnIndexByName } from '../columns_controller/utils';
@@ -155,7 +154,7 @@ export class SortingController {
         orderedSortedColumns.forEach(c => {
           const index = getColumnIndexByName(newColumns, c.name);
           if (newColumns[index].sortIndex !== counter) {
-            newColumns[index] = _extends({}, newColumns[index], {
+            newColumns[index] = Object.assign({}, newColumns[index], {
               sortIndex: counter
             });
           }

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import numberLocalization from '../../../common/core/localization/number';
 import $ from '../../../core/renderer';
 import Tooltip from '../../ui/m_tooltip';
@@ -8,7 +7,7 @@ import { SliderTooltipPositionController } from '../../ui/slider/slider_tooltip_
 const SLIDER_TOOLTIP_VISIBILITY_CLASS = 'dx-slider-tooltip-visible-on-hover';
 class SliderTooltip extends Tooltip {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       visible: false,
       position: 'top',
       hideOnOutsideClick: false,
@@ -41,12 +40,13 @@ class SliderTooltip extends Tooltip {
   // eslint-disable-next-line class-methods-use-this
   _toggleAriaAttributes() {}
   _renderContentText() {
+    var _this$$content;
     const {
       value,
       format
     } = this.option();
     const formattedText = numberLocalization.format(value ?? 0, format);
-    this.$content().text(formattedText);
+    (_this$$content = this.$content()) === null || _this$$content === void 0 || _this$$content.text(formattedText);
     this._renderPosition();
   }
   _toggleShowModeClass() {

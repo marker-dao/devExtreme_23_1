@@ -42,4 +42,4 @@ Object.defineProperty(exports, "parseNumber", {
     return _localization.parseNumber;
   }
 });
-var _localization = require("./common/core/localization");
+var _localization = require("./__internal/core/localization");

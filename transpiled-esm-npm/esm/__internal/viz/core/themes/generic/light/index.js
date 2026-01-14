@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import bar_gauge from './bar_gauge';
 import bullet from './bullet';
 import chart from './chart';
@@ -14,12 +13,12 @@ import treeMap from './tree_map';
 import vectorMap from './vector_map';
 export default [{
   baseThemeName: undefined,
-  theme: _extends({
+  theme: Object.assign({
     name: 'generic.light',
     isDefault: true,
     font: {
       color: SECONDARY_TITLE_COLOR,
-      family: '\'Segoe UI\', \'Helvetica Neue\', \'Trebuchet MS\', Verdana, sans-serif',
+      family: '-apple-system, BlinkMacSystemFont, \'avenir next\', avenir, \'segoe ui\', \'helvetica neue\', \'adwaita sans\', cantarell, ubuntu, roboto, noto, helvetica, arial, sans-serif',
       weight: 400,
       size: 12,
       cursor: 'default'
@@ -34,7 +33,7 @@ export default [{
       backgroundColor: WHITE,
       font: {
         size: 28,
-        family: '\'Segoe UI Light\', \'Helvetica Neue Light\', \'Segoe UI\', \'Helvetica Neue\', \'Trebuchet MS\', Verdana, sans-serif',
+        family: '-apple-system, BlinkMacSystemFont, \'avenir next\', avenir, \'segoe ui\', \'helvetica neue\', \'adwaita sans\', cantarell, ubuntu, roboto, noto, helvetica, arial, sans-serif',
         weight: 200
       },
       subtitle: {

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { getNextIntervalStartDate } from './get_next_interval_start_date';
 import { getPrevIntervalEndDate } from './get_prev_interval_end_date';
 const getSingleReduced = (isStartOnPrevInterval, isEndOnNextInterval) => {
@@ -26,7 +25,7 @@ const getReduced = (isFirstItem, isLastItem, isStartOnPrevInterval, isEndOnNextI
 const cropEntityByInterval = (entity, interval) => {
   const startDate = entity.startDateUTC < interval.min ? interval.min : entity.startDateUTC;
   const endDate = entity.endDateUTC > interval.max ? interval.max : entity.endDateUTC;
-  return _extends({}, entity, {
+  return Object.assign({}, entity, {
     startDateUTC: startDate,
     endDateUTC: endDate,
     duration: endDate - startDate
@@ -60,7 +59,7 @@ export const splitByParts = (entities, intervals) => {
     const isStartOnPrevView = entity.startDateUTC < prevIntervalEndDate;
     const isEndOnNextView = entity.endDateUTC > nextIntervalStartDate;
     if (partCount <= 1) {
-      result.push(_extends({}, cropEntityByInterval(entity, intervals[startIndex]), {
+      result.push(Object.assign({}, cropEntityByInterval(entity, intervals[startIndex]), {
         partIndex: 0,
         partCount: 0,
         reduced: getSingleReduced(isStartOnPrevView, isEndOnNextView)
@@ -71,7 +70,7 @@ export const splitByParts = (entities, intervals) => {
       }).map((_, partIndex) => {
         const isFirstIdx = partIndex === 0;
         const isLastIdx = partIndex === partCount - 1;
-        return _extends({}, cropEntityByInterval(entity, intervals[startIndex + partIndex]), {
+        return Object.assign({}, cropEntityByInterval(entity, intervals[startIndex + partIndex]), {
           partIndex,
           partCount,
           reduced: getReduced(isFirstIdx, isLastIdx, isStartOnPrevView, isEndOnNextView)

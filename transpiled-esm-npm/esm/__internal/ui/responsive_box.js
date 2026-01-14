@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../core/component_registrator';
 import $ from '../../core/renderer';
 // @ts-expect-error ts-error
@@ -21,7 +20,7 @@ const BOX_ITEM_DATA_KEY = 'dxBoxItemData';
 const HD_SCREEN_WIDTH = 1920;
 class ResponsiveBox extends CollectionWidget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       rows: [],
       cols: [],
       singleColumnScreen: '',
@@ -235,7 +234,7 @@ class ResponsiveBox extends CollectionWidget {
         result.push({
           // @ts-expect-error ts-error
           item,
-          location: _extends({
+          location: Object.assign({
             rowspan: 1,
             colspan: 1
           }, location)
@@ -454,7 +453,7 @@ class ResponsiveBox extends CollectionWidget {
   _blockSize(block, direction) {
     const defaultMinSize = direction === 'row' ? 'auto' : 0;
     const sizeConfigs = direction === 'row' ? this._rows : this._cols;
-    const result = _extends({}, this._createDefaultSizeConfig(), {
+    const result = Object.assign({}, this._createDefaultSizeConfig(), {
       ratio: 0
     });
     for (let index = block[direction].start; index <= block[direction].end; index += 1) {

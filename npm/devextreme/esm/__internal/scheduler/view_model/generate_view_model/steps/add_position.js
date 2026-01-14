@@ -1,0 +1,24 @@
+/**
+* DevExtreme (esm/__internal/scheduler/view_model/generate_view_model/steps/add_position.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { binarySearchCellIndex } from './binary_search_cell_index';
+export const addPosition = (entities, cells) => entities.map(entity => {
+  const cellIndex = binarySearchCellIndex(cells, entity.startDateUTC);
+  let endCellIndex = cellIndex;
+  while (endCellIndex < cells.length - 1 && entity.endDateUTC > cells[endCellIndex].max && entity.endDateUTC >= cells[endCellIndex + 1].min) {
+    endCellIndex += 1;
+  }
+  return Object.assign({}, entity, {
+    startDateUTC: Math.max(entity.startDateUTC, cells[cellIndex].min),
+    endDateUTC: Math.min(entity.endDateUTC, cells[endCellIndex].max),
+    cellIndex,
+    endCellIndex,
+    rowIndex: cells[cellIndex].rowIndex,
+    columnIndex: cells[cellIndex].columnIndex
+  });
+});

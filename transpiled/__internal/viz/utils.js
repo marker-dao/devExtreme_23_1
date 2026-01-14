@@ -12,7 +12,20 @@ Object.defineProperty(exports, "refreshPaths", {
 });
 var _iterator = require("../../core/utils/iterator");
 var _renderer = require("../viz/core/renderers/renderer");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable import/no-import-module-exports */ /* eslint-disable prefer-rest-params */ /* eslint-disable no-bitwise */ /* eslint-disable @typescript-eslint/init-declarations */ /* eslint-disable func-names */ /* eslint-disable import/no-mutable-exports */ /* eslint-disable @typescript-eslint/no-shadow */ /* eslint-disable no-param-reassign */ /* eslint-disable @typescript-eslint/explicit-module-boundary-types */ /* eslint-disable @typescript-eslint/no-unsafe-return */ /* eslint-disable @typescript-eslint/explicit-function-return-type */ /* eslint-disable prefer-destructuring */ /* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable import/no-import-module-exports */
+/* eslint-disable prefer-rest-params */
+/* eslint-disable no-bitwise */
+/* eslint-disable @typescript-eslint/init-declarations */
+/* eslint-disable func-names */
+/* eslint-disable import/no-mutable-exports */
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 const {
   floor
 } = Math;
@@ -83,7 +96,7 @@ const areCanvasesDifferent = function (canvas1, canvas2) {
 };
 exports.areCanvasesDifferent = areCanvasesDifferent;
 const floorCanvasDimensions = function (canvas) {
-  return _extends({}, canvas, {
+  return Object.assign({}, canvas, {
     height: floor(canvas.height),
     width: floor(canvas.width)
   });

@@ -7,7 +7,7 @@ var _items_controller = require("../items_controller/items_controller");
 var _options_controller = require("../options_controller/options_controller.mock");
 var _columns_controller = require("./columns_controller");
 const _excluded = ["selector"];
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const setup = config => {
   const context = (0, _di.getContext)(config);
   return {

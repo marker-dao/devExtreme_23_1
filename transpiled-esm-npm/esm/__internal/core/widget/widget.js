@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../../../common/core/events/click';
 import '../../../common/core/events/core/emitter.feedback';
 import '../../../common/core/events/hover';
@@ -280,7 +279,7 @@ class Widget extends DOMComponent {
   }
   _toggleFocusClass(isFocused, $element) {
     const $focusTarget = $element !== null && $element !== void 0 && $element.length ? $element : this._focusTarget();
-    $focusTarget.toggleClass(FOCUSED_STATE_CLASS, isFocused);
+    $focusTarget === null || $focusTarget === void 0 || $focusTarget.toggleClass(FOCUSED_STATE_CLASS, isFocused);
   }
   _hasFocusClass(element) {
     const $focusTarget = $(element ?? this._focusTarget());
@@ -340,7 +339,7 @@ class Widget extends DOMComponent {
   }
   _cleanFocusState() {
     const $element = this._focusTarget();
-    $element.removeAttr('tabIndex');
+    $element === null || $element === void 0 || $element.removeAttr('tabIndex');
     this._toggleFocusClass(false);
     this._detachFocusEvents();
     this._detachKeyboardEvents();
@@ -590,7 +589,7 @@ class Widget extends DOMComponent {
   }
   registerKeyHandler(key, handler) {
     const currentKeys = this._supportedKeys();
-    this._supportedKeys = () => _extends({}, currentKeys, {
+    this._supportedKeys = () => Object.assign({}, currentKeys, {
       [key]: handler
     });
   }

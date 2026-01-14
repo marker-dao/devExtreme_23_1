@@ -1,3 +1,3 @@
 "use strict";
 
-require("../../common/core/localization/globalize/date");
+require("../../__internal/core/localization/globalize/date");

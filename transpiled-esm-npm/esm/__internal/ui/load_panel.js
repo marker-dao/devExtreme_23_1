@@ -1,5 +1,4 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-import _extends from "@babel/runtime/helpers/esm/extends";
 const _excluded = ["src"];
 import messageLocalization from '../../common/core/localization/message';
 import registerComponent from '../../core/component_registrator';
@@ -19,12 +18,12 @@ const LOADPANEL_CONTENT_WRAPPER_CLASS = 'dx-loadpanel-content-wrapper';
 const LOADPANEL_PANE_HIDDEN_CLASS = 'dx-loadpanel-pane-hidden';
 class LoadPanel extends Overlay {
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       escape: noop
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       message: messageLocalization.format('Loading'),
       width: 222,
       height: 90,
@@ -74,14 +73,15 @@ class LoadPanel extends Overlay {
     super._init();
   }
   _render() {
+    var _this$$wrapper;
     super._render();
     this.$element().addClass(LOADPANEL_CLASS);
-    this.$wrapper().addClass(LOADPANEL_WRAPPER_CLASS);
+    (_this$$wrapper = this.$wrapper()) === null || _this$$wrapper === void 0 || _this$$wrapper.addClass(LOADPANEL_WRAPPER_CLASS);
     this._updateWrapperAria();
   }
   _setDeprecatedOptions() {
     super._setDeprecatedOptions();
-    this._deprecatedOptions = _extends({}, this._deprecatedOptions, {
+    this._deprecatedOptions = Object.assign({}, this._deprecatedOptions, {
       // @ts-expect-error ts-error
       indicatorSrc: {
         since: '25.2',
@@ -90,7 +90,8 @@ class LoadPanel extends Overlay {
     });
   }
   _updateWrapperAria() {
-    this.$wrapper().removeAttr('aria-label').removeAttr('role');
+    var _this$$wrapper2;
+    (_this$$wrapper2 = this.$wrapper()) === null || _this$$wrapper2 === void 0 || _this$$wrapper2.removeAttr('aria-label').removeAttr('role');
     const showIndicator = this.option('showIndicator');
     if (!showIndicator) {
       const aria = this._getAriaAttributes();
@@ -111,10 +112,14 @@ class LoadPanel extends Overlay {
     return aria;
   }
   _renderContentImpl() {
+    const $content = this.$content();
+    if (!$content) {
+      return Promise.resolve(undefined);
+    }
     const result = super._renderContentImpl();
-    this.$content().addClass(LOADPANEL_CONTENT_CLASS);
+    $content.addClass(LOADPANEL_CONTENT_CLASS);
     this._$loadPanelContentWrapper = $('<div>').addClass(LOADPANEL_CONTENT_WRAPPER_CLASS);
-    this._$loadPanelContentWrapper.appendTo(this.$content());
+    this._$loadPanelContentWrapper.appendTo($content);
     this._togglePaneVisible();
     this._cleanPreviousContent();
     this._renderLoadIndicator();
@@ -175,18 +180,20 @@ class LoadPanel extends Overlay {
         src
       } = indicatorOptions,
       restIndicatorOptions = _objectWithoutPropertiesLoose(indicatorOptions, _excluded);
-    this._createComponent(this._$indicator, LoadIndicator, _extends({
+    this._createComponent(this._$indicator, LoadIndicator, Object.assign({
       elementAttr: this._getAriaAttributes(),
       indicatorSrc: src ?? indicatorSrc
     }, restIndicatorOptions));
   }
   _cleanPreviousContent() {
-    this.$content().find(`.${LOADPANEL_MESSAGE_CLASS}`).remove();
-    this.$content().find(`.${LOADPANEL_INDICATOR_CLASS}`).remove();
+    var _this$$content, _this$$content2;
+    (_this$$content = this.$content()) === null || _this$$content === void 0 || _this$$content.find(`.${LOADPANEL_MESSAGE_CLASS}`).remove();
+    (_this$$content2 = this.$content()) === null || _this$$content2 === void 0 || _this$$content2.find(`.${LOADPANEL_INDICATOR_CLASS}`).remove();
     this._$indicator = undefined;
   }
   _togglePaneVisible() {
-    this.$content().toggleClass(LOADPANEL_PANE_HIDDEN_CLASS, !this.option('showPane'));
+    var _this$$content3;
+    (_this$$content3 = this.$content()) === null || _this$$content3 === void 0 || _this$$content3.toggleClass(LOADPANEL_PANE_HIDDEN_CLASS, !this.option('showPane'));
   }
   _optionChanged(args) {
     switch (args.name) {

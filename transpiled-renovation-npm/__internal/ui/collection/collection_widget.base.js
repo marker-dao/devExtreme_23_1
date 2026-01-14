@@ -30,7 +30,6 @@ var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _m_data_helper = _interopRequireDefault(require("../../data/m_data_helper"));
 var _item = _interopRequireDefault(require("../../ui/collection/item"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const COLLECTION_CLASS = 'dx-collection';
 const ITEM_CLASS = exports.ITEM_CLASS = 'dx-item';
 const CONTENT_CLASS_POSTFIX = '-content';
@@ -68,7 +67,7 @@ class CollectionWidget extends _widget.default {
         this._moveFocus(location, e);
       }
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       space,
       enter: this._enterKeyHandler,
       leftArrow: move.bind(this, FOCUS_LEFT),
@@ -108,7 +107,7 @@ class CollectionWidget extends _widget.default {
     this._itemClickHandler(this._getHandlerExtendedParams(e, $itemElement));
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       selectOnFocus: false,
       loopItemFocus: true,
       items: [],
@@ -881,7 +880,7 @@ class CollectionWidget extends _widget.default {
     const {
       _itemAttributes
     } = this.option();
-    const attributes = _extends({}, _itemAttributes);
+    const attributes = Object.assign({}, _itemAttributes);
     const {
       class: customClassValue
     } = attributes;
@@ -1091,7 +1090,7 @@ class CollectionWidget extends _widget.default {
     }), actionConfig);
   }
   _itemEventHandler(initiator, handlerOptionName, actionArgs, actionConfig) {
-    const action = this._createActionByOption(handlerOptionName, _extends({
+    const action = this._createActionByOption(handlerOptionName, Object.assign({
       validatingTargetName: 'itemElement'
     }, actionConfig));
     return this._itemEventHandlerImpl(initiator, action, actionArgs);

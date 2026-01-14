@@ -15,7 +15,6 @@ var _deferred = require("../../core/utils/deferred");
 var _iterator = require("../../core/utils/iterator");
 var _type = require("../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const {
   abstract
 } = _class.default;
@@ -67,7 +66,7 @@ const Store = _class.default.inherit({
   _loadImpl(options) {
     if (!(0, _type.isEmptyObject)(this._langParams)) {
       options = options || {};
-      options._langParams = _extends({}, this._langParams, options._langParams);
+      options._langParams = Object.assign({}, this._langParams, options._langParams);
     }
     // @ts-expect-error
     return queryByOptions(this.createQuery(options), options).enumerate();

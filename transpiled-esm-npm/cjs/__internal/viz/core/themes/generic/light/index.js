@@ -18,15 +18,14 @@ var _sparkline = _interopRequireDefault(require("./sparkline"));
 var _tree_map = _interopRequireDefault(require("./tree_map"));
 var _vector_map = _interopRequireDefault(require("./vector_map"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 var _default = exports.default = [{
   baseThemeName: undefined,
-  theme: _extends({
+  theme: Object.assign({
     name: 'generic.light',
     isDefault: true,
     font: {
       color: _contants.SECONDARY_TITLE_COLOR,
-      family: '\'Segoe UI\', \'Helvetica Neue\', \'Trebuchet MS\', Verdana, sans-serif',
+      family: '-apple-system, BlinkMacSystemFont, \'avenir next\', avenir, \'segoe ui\', \'helvetica neue\', \'adwaita sans\', cantarell, ubuntu, roboto, noto, helvetica, arial, sans-serif',
       weight: 400,
       size: 12,
       cursor: 'default'
@@ -41,7 +40,7 @@ var _default = exports.default = [{
       backgroundColor: _contants.WHITE,
       font: {
         size: 28,
-        family: '\'Segoe UI Light\', \'Helvetica Neue Light\', \'Segoe UI\', \'Helvetica Neue\', \'Trebuchet MS\', Verdana, sans-serif',
+        family: '-apple-system, BlinkMacSystemFont, \'avenir next\', avenir, \'segoe ui\', \'helvetica neue\', \'adwaita sans\', cantarell, ubuntu, roboto, noto, helvetica, arial, sans-serif',
         weight: 200
       },
       subtitle: {

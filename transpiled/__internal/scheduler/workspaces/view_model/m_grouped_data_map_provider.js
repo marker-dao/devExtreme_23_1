@@ -9,7 +9,6 @@ var _date2 = require("../../../core/utils/date");
 var _index = require("../../../scheduler/r1/utils/index");
 var _m_utils_time_zone = _interopRequireDefault(require("../../m_utils_time_zone"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const toMs = _date.default.dateToMilliseconds;
 class GroupedDataMapProvider {
   constructor(viewDataGenerator, viewDataMap, completeViewDataMap, viewOptions) {
@@ -109,7 +108,7 @@ class GroupedDataMapProvider {
         // NOTE: If this is appointment's render call
         // we should shift the real cellData dates by viewOffset
         // to find correct cell indexes.
-        const cellData = isAppointmentRender ? _extends({}, originCellData, {
+        const cellData = isAppointmentRender ? Object.assign({}, originCellData, {
           startDate: _date2.dateUtilsTs.addOffsets(cell.cellData.startDate, -viewOffset),
           endDate: _date2.dateUtilsTs.addOffsets(cell.cellData.endDate, -viewOffset)
         }) : originCellData;

@@ -25,7 +25,6 @@ var _m_index = _interopRequireDefault(require("../../ui/text_box/texteditor_butt
 var _m_date_range = require("./m_date_range.utils");
 var _m_multiselect_date_box = _interopRequireDefault(require("./m_multiselect_date_box"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DATERANGEBOX_CLASS = 'dx-daterangebox';
 const TEXTEDITOR_LABEL_STATIC_CLASS = 'dx-texteditor-with-label';
 const TEXTEDITOR_LABEL_OUTSIDE_CLASS = 'dx-texteditor-label-outside';
@@ -483,7 +482,7 @@ class DateRangeBox extends _editor.default {
   _getStartDateBoxConfig() {
     var _options$dropDownOpti;
     const options = this.option();
-    return _extends({}, this._getDateBoxConfig(), {
+    return Object.assign({}, this._getDateBoxConfig(), {
       applyButtonText: options.applyButtonText,
       calendarOptions: options.calendarOptions,
       cancelButtonText: options.cancelButtonText,
@@ -491,7 +490,7 @@ class DateRangeBox extends _editor.default {
       deferRendering: options.deferRendering,
       // @ts-expect-error
       disabledDates: (_options$dropDownOpti = options.dropDownOptions) === null || _options$dropDownOpti === void 0 ? void 0 : _options$dropDownOpti.disabledDates,
-      dropDownOptions: _extends({
+      dropDownOptions: Object.assign({
         showTitle: false,
         title: '',
         hideOnOutsideClick: e => this._hideOnOutsideClickHandler(e),
@@ -541,7 +540,7 @@ class DateRangeBox extends _editor.default {
   }
   _getEndDateBoxConfig() {
     const options = this.option();
-    return _extends({}, this._getDateBoxConfig(), {
+    return Object.assign({}, this._getDateBoxConfig(), {
       invalidDateMessage: options.invalidEndDateMessage,
       dateOutOfRangeMessage: options.endDateOutOfRangeMessage,
       onValueChanged: _ref3 => {
@@ -906,7 +905,7 @@ class DateRangeBox extends _editor.default {
           // @ts-expect-error
           this._options.silent('validationErrors', newValue);
           // @ts-expect-error
-          super._optionChanged(_extends({}, args, {
+          super._optionChanged(Object.assign({}, args, {
             value: newValue
           }));
           break;

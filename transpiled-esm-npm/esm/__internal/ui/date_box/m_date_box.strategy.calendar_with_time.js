@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import dateLocalization from '../../../common/core/localization/date';
 import $ from '../../../core/renderer';
 import dateUtils from '../../../core/utils/date';
@@ -6,7 +5,7 @@ import { extend } from '../../../core/utils/extend';
 import { getWidth } from '../../../core/utils/size';
 import { getWindow } from '../../../core/utils/window';
 import Box from '../../ui/box';
-import TimeView from '../../ui/date_box/m_time_view';
+import TimeView from '../../ui/date_box/time_view';
 import CalendarStrategy from './m_date_box.strategy.calendar';
 import uiDateUtils from './m_date_utils';
 const window = getWindow();
@@ -19,7 +18,7 @@ class CalendarWithTimeStrategy extends CalendarStrategy {
     this.NAME = 'CalendarWithTime';
   }
   getDefaultOptions() {
-    return _extends({}, super.getDefaultOptions(), {
+    return Object.assign({}, super.getDefaultOptions(), {
       applyValueMode: 'useButtons',
       buttonsLocation: 'bottom after',
       'dropDownOptions.showTitle': false

@@ -1,0 +1,60 @@
+/**
+* DevExtreme (cjs/__internal/ui/button/ink_ripple.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.defaultInkRippleProps = exports.InkRipple = void 0;
+var _inferno = require("inferno");
+var _index = require("../../core/r1/runtime/inferno/index");
+var _m_ink_ripple = require("../../core/utils/m_ink_ripple");
+const _excluded = ["config"];
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
+const defaultInkRippleProps = exports.defaultInkRippleProps = {
+  config: {}
+};
+class InkRipple extends _index.BaseInfernoComponent {
+  constructor(props) {
+    super(props);
+    this.__getterCache = {};
+    this.state = {};
+    this.hideWave = this.hideWave.bind(this);
+    this.showWave = this.showWave.bind(this);
+  }
+  get getConfig() {
+    if (this.__getterCache.getConfig === undefined) {
+      this.__getterCache.getConfig = (0, _m_ink_ripple.initConfig)(this.props.config);
+    }
+    return this.__getterCache.getConfig;
+  }
+  get restAttributes() {
+    const _this$props = this.props,
+      restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
+    return restProps;
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  hideWave(opts) {
+    (0, _m_ink_ripple.hideWave)(this.getConfig, opts);
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  showWave(opts) {
+    (0, _m_ink_ripple.showWave)(this.getConfig, opts);
+  }
+  componentWillUpdate(nextProps) {
+    if (this.props.config !== nextProps.config) {
+      this.__getterCache.getConfig = undefined;
+    }
+  }
+  render() {
+    return (0, _inferno.normalizeProps)((0, _inferno.createVNode)(1, "div", "dx-inkripple", null, 1, Object.assign({}, this.restAttributes)));
+  }
+}
+exports.InkRipple = InkRipple;
+InkRipple.defaultProps = defaultInkRippleProps;

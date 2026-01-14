@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.splitByParts = void 0;
 var _get_next_interval_start_date = require("./get_next_interval_start_date");
 var _get_prev_interval_end_date = require("./get_prev_interval_end_date");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const getSingleReduced = (isStartOnPrevInterval, isEndOnNextInterval) => {
   switch (true) {
     case isStartOnPrevInterval && isEndOnNextInterval:
@@ -32,7 +31,7 @@ const getReduced = (isFirstItem, isLastItem, isStartOnPrevInterval, isEndOnNextI
 const cropEntityByInterval = (entity, interval) => {
   const startDate = entity.startDateUTC < interval.min ? interval.min : entity.startDateUTC;
   const endDate = entity.endDateUTC > interval.max ? interval.max : entity.endDateUTC;
-  return _extends({}, entity, {
+  return Object.assign({}, entity, {
     startDateUTC: startDate,
     endDateUTC: endDate,
     duration: endDate - startDate
@@ -66,7 +65,7 @@ const splitByParts = (entities, intervals) => {
     const isStartOnPrevView = entity.startDateUTC < prevIntervalEndDate;
     const isEndOnNextView = entity.endDateUTC > nextIntervalStartDate;
     if (partCount <= 1) {
-      result.push(_extends({}, cropEntityByInterval(entity, intervals[startIndex]), {
+      result.push(Object.assign({}, cropEntityByInterval(entity, intervals[startIndex]), {
         partIndex: 0,
         partCount: 0,
         reduced: getSingleReduced(isStartOnPrevView, isEndOnNextView)
@@ -77,7 +76,7 @@ const splitByParts = (entities, intervals) => {
       }).map((_, partIndex) => {
         const isFirstIdx = partIndex === 0;
         const isLastIdx = partIndex === partCount - 1;
-        return _extends({}, cropEntityByInterval(entity, intervals[startIndex + partIndex]), {
+        return Object.assign({}, cropEntityByInterval(entity, intervals[startIndex + partIndex]), {
           partIndex,
           partCount,
           reduced: getReduced(isFirstIdx, isLastIdx, isStartOnPrevView, isEndOnNextView)

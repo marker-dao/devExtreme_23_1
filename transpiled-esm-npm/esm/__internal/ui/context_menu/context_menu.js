@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../../../common/core/animation';
 import animationPosition from '../../../common/core/animation/position';
 import { name as contextMenuEventName } from '../../../common/core/events/contextmenu';
@@ -63,7 +62,7 @@ class ContextMenu extends MenuBase {
     return isObject(showEventOption) ? showEventOption.delay ?? 0 : 0;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       showEvent: DEFAULT_SHOW_EVENT,
       hideOnOutsideClick: true,
       position: {
@@ -111,14 +110,15 @@ class ContextMenu extends MenuBase {
   }
   _focusInHandler() {}
   _itemContainer() {
-    return this._overlay ? this._overlay.$content() : $();
+    var _this$_overlay;
+    return ((_this$_overlay = this._overlay) === null || _this$_overlay === void 0 ? void 0 : _this$_overlay.$content()) ?? $();
   }
   _eventBindingTarget() {
     return this._itemContainer();
   }
   itemsContainer() {
-    var _this$_overlay;
-    return ((_this$_overlay = this._overlay) === null || _this$_overlay === void 0 ? void 0 : _this$_overlay.$content()) ?? $();
+    var _this$_overlay2;
+    return ((_this$_overlay2 = this._overlay) === null || _this$_overlay2 === void 0 ? void 0 : _this$_overlay2.$content()) ?? $();
   }
   _supportedKeys() {
     const selectItem = () => {
@@ -133,7 +133,7 @@ class ContextMenu extends MenuBase {
       }
       this.selectItem($item[0]);
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       space: selectItem,
       escape: () => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -321,6 +321,9 @@ class ContextMenu extends MenuBase {
     const overlayOptions = this._getOverlayOptions();
     this._overlay = this._createComponent($('<div>').appendTo(this.$element()), Overlay, overlayOptions);
     const $overlayContent = this._overlay.$content();
+    if (!$overlayContent) {
+      return;
+    }
     $overlayContent.addClass(DX_CONTEXT_MENU_CLASS);
     this._addCustomCssClass($overlayContent);
     this._addPlatformDependentClass($overlayContent);
@@ -537,8 +540,8 @@ class ContextMenu extends MenuBase {
     return $(target).closest(`.${DX_MENU_ITEMS_CONTAINER_CLASS}`);
   }
   _getItemsContainers() {
-    var _this$_overlay2;
-    return ((_this$_overlay2 = this._overlay) === null || _this$_overlay2 === void 0 ? void 0 : _this$_overlay2.$content().find(`.${DX_MENU_ITEMS_CONTAINER_CLASS}`)) ?? $();
+    var _this$_overlay3;
+    return ((_this$_overlay3 = this._overlay) === null || _this$_overlay3 === void 0 || (_this$_overlay3 = _this$_overlay3.$content()) === null || _this$_overlay3 === void 0 ? void 0 : _this$_overlay3.find(`.${DX_MENU_ITEMS_CONTAINER_CLASS}`)) ?? $();
   }
   _searchActiveItem(target) {
     return $(target).closest(`.${DX_MENU_ITEM_CLASS}`).eq(0);
@@ -599,11 +602,11 @@ class ContextMenu extends MenuBase {
     return availableHeight - SUBMENU_PADDING;
   }
   _setOverlayMaxHeight($subMenu) {
-    var _this$_overlay3;
+    var _this$_overlay4;
     if (!$subMenu) {
       return;
     }
-    (_this$_overlay3 = this._overlay) === null || _this$_overlay3 === void 0 || _this$_overlay3.option({
+    (_this$_overlay4 = this._overlay) === null || _this$_overlay4 === void 0 || _this$_overlay4.option({
       maxHeight: () => {
         const $content = $subMenu.find(`.${DX_MENU_ITEMS_CONTAINER_CLASS}`);
         const outerHeight = getOuterHeight($content);
@@ -663,14 +666,14 @@ class ContextMenu extends MenuBase {
     return $submenu.css('visibility') === 'visible';
   }
   _drawSubmenu($itemElement) {
-    var _this$_overlay4;
+    var _this$_overlay5;
     const {
       animation: animationOption
     } = this.option();
     const animation = animationOption ? animationOption.show : {};
     const $submenu = $itemElement.children(`.${DX_SUBMENU_CLASS}`);
     const submenuPosition = this._getSubmenuPosition($itemElement);
-    if ((_this$_overlay4 = this._overlay) !== null && _this$_overlay4 !== void 0 && _this$_overlay4.option('visible')) {
+    if ((_this$_overlay5 = this._overlay) !== null && _this$_overlay5 !== void 0 && _this$_overlay5.option('visible')) {
       if (!isDefined(this._shownSubmenus)) {
         this._shownSubmenus = [];
       }
@@ -768,10 +771,10 @@ class ContextMenu extends MenuBase {
       return;
     }
     if ($submenu.length === 0) {
-      var _this$_overlay5;
+      var _this$_overlay6;
       const $prevSubmenu = $($itemElement.parents(`.${DX_SUBMENU_CLASS}`)[0]);
       this._hideSubmenu($prevSubmenu);
-      if (!actionArgs.canceled && (_this$_overlay5 = this._overlay) !== null && _this$_overlay5 !== void 0 && _this$_overlay5.option('visible')) {
+      if (!actionArgs.canceled && (_this$_overlay6 = this._overlay) !== null && _this$_overlay6 !== void 0 && _this$_overlay6.option('visible')) {
         this.option('visible', false);
       }
     } else {
@@ -815,9 +818,9 @@ class ContextMenu extends MenuBase {
     fx.stop($container.get(0), true);
   }
   _hideAllShownSubmenus() {
-    var _this$_overlay6;
+    var _this$_overlay7;
     const shownSubmenus = extend([], this._shownSubmenus);
-    const $expandedItems = ((_this$_overlay6 = this._overlay) === null || _this$_overlay6 === void 0 ? void 0 : _this$_overlay6.$content().find(`.${DX_MENU_ITEM_EXPANDED_CLASS}`)) ?? $();
+    const $expandedItems = ((_this$_overlay7 = this._overlay) === null || _this$_overlay7 === void 0 || (_this$_overlay7 = _this$_overlay7.$content()) === null || _this$_overlay7 === void 0 ? void 0 : _this$_overlay7.find(`.${DX_MENU_ITEM_EXPANDED_CLASS}`)) ?? $();
     $expandedItems.removeClass(DX_MENU_ITEM_EXPANDED_CLASS);
     each(shownSubmenus, (_, $submenu) => {
       this._hideSubmenu($submenu);
@@ -884,18 +887,19 @@ class ContextMenu extends MenuBase {
     }
     const position = this._positionContextMenu(event);
     if (position) {
-      var _this$_overlay7, _this$_overlay8, _event$originalEvent;
+      var _this$_overlay8, _this$_overlay9, _event$originalEvent;
       if (!this._overlay) {
+        var _this$_overlay$$conte;
         this._renderContextMenuOverlay();
-        this._overlay.$content().addClass(this._widgetClass());
+        (_this$_overlay$$conte = this._overlay.$content()) === null || _this$_overlay$$conte === void 0 || _this$_overlay$$conte.addClass(this._widgetClass());
         this._renderFocusState();
         this._attachHoverEvents();
         this._attachClickEvent();
         this._renderItems(this._dataAdapter.getRootNodes());
       }
-      const $subMenu = $((_this$_overlay7 = this._overlay) === null || _this$_overlay7 === void 0 ? void 0 : _this$_overlay7.content()).children(`.${DX_SUBMENU_CLASS}`);
+      const $subMenu = $((_this$_overlay8 = this._overlay) === null || _this$_overlay8 === void 0 ? void 0 : _this$_overlay8.content()).children(`.${DX_SUBMENU_CLASS}`);
       this._setOptionWithoutOptionChange('visible', true);
-      (_this$_overlay8 = this._overlay) === null || _this$_overlay8 === void 0 || _this$_overlay8.option({
+      (_this$_overlay9 = this._overlay) === null || _this$_overlay9 === void 0 || _this$_overlay9.option({
         height: () => this._getMaxHeight(position.of),
         position
       });
@@ -915,21 +919,21 @@ class ContextMenu extends MenuBase {
     return promise;
   }
   _renderItems(nodes, submenuContainer) {
-    var _this$_overlay9;
+    var _this$_overlay0;
     super._renderItems(nodes, submenuContainer);
-    const $submenu = $((_this$_overlay9 = this._overlay) === null || _this$_overlay9 === void 0 ? void 0 : _this$_overlay9.content()).children(`.${DX_SUBMENU_CLASS}`);
+    const $submenu = $((_this$_overlay0 = this._overlay) === null || _this$_overlay0 === void 0 ? void 0 : _this$_overlay0.content()).children(`.${DX_SUBMENU_CLASS}`);
     if ($submenu.length) {
       this._initScrollable($submenu);
     }
   }
   _setAriaAttributes() {
-    var _this$_overlay10;
+    var _this$_overlay1;
     this._overlayContentId = `dx-${new Guid()}`;
     this.setAria('owns', this._overlayContentId);
     this.setAria({
       id: this._overlayContentId,
       role: 'menu'
-    }, (_this$_overlay10 = this._overlay) === null || _this$_overlay10 === void 0 ? void 0 : _this$_overlay10.$content());
+    }, (_this$_overlay1 = this._overlay) === null || _this$_overlay1 === void 0 ? void 0 : _this$_overlay1.$content());
   }
   _cleanAriaAttributes() {
     if (this._overlay) {
@@ -949,7 +953,7 @@ class ContextMenu extends MenuBase {
     const {
       position
     } = this.option();
-    return _extends({}, position, {
+    return Object.assign({}, position, {
       // @ts-expect-error ts-error
       of: this._getTarget()
     });

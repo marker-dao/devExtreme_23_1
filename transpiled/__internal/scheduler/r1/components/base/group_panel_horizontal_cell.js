@@ -9,8 +9,7 @@ var _index = require("../../../../core/r1/runtime/inferno/index");
 var _index2 = require("../../../../scheduler/r1/components/templates/index");
 var _render_utils = require("../../../../core/r1/utils/render_utils");
 var _group_panel_props = require("./group_panel_props");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const GroupPanelHorizontalCellDefaultProps = exports.GroupPanelHorizontalCellDefaultProps = _extends({}, _group_panel_props.GroupPanelCellDefaultProps, {
+const GroupPanelHorizontalCellDefaultProps = exports.GroupPanelHorizontalCellDefaultProps = Object.assign({}, _group_panel_props.GroupPanelCellDefaultProps, {
   isFirstGroupCell: false,
   isLastGroupCell: false,
   colSpan: 1

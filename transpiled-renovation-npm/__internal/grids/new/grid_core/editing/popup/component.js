@@ -9,7 +9,6 @@ var _const = require("../../const");
 var _form = require("../../inferno_wrappers/form");
 var _popup = require("../../inferno_wrappers/popup");
 var _buttons = require("./buttons");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class EditPopup extends _inferno.Component {
   render() {
     if (!this.props.visible) {
@@ -25,13 +24,13 @@ class EditPopup extends _inferno.Component {
       onCancel: this.props.onCancel,
       text: this.props.texts.cancel
     })];
-    return (0, _inferno.createVNode)(1, "div", _const.CLASSES.excludeFlexBox, (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _popup.Popup, _extends({
+    return (0, _inferno.createVNode)(1, "div", _const.CLASSES.excludeFlexBox, (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _popup.Popup, Object.assign({
       "visible": true,
       "toolbarItems": toolbarItems,
       "onHidden": this.props.onHide,
       "showTitle": false
     }, this.props.popupProps, {
-      children: (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _form.Form, _extends({
+      children: (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _form.Form, Object.assign({
         "componentRef": this.props.formRef,
         "colCount": 2,
         "labelLocation": 'top',

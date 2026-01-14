@@ -10,7 +10,7 @@ var _style = require("../../../core/utils/style");
 var _index = require("../../core/r1/runtime/inferno/index");
 const _excluded = ["size"];
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const defaultCheckBoxIconProps = exports.defaultCheckBoxIconProps = {};
 class CheckBoxIcon extends _index.BaseInfernoComponent {
   constructor(props) {

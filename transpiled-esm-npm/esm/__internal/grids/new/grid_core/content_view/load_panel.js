@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode, normalizeProps } from "inferno";
 import { getWindow } from '../../../../../core/utils/window';
 import { BaseInfernoComponent } from '../../../../core/r1/runtime/inferno/index';
@@ -22,10 +21,10 @@ export class LoadPanel extends BaseInfernoComponent {
     const {
       rootElementRef
     } = this.context[CommonPropsContext.id];
-    const loadPanelProperties = _extends({
+    const loadPanelProperties = Object.assign({
       container: rootElementRef.current,
       position: this.calculatePosition(rootElementRef.current)
     }, this.props);
-    return normalizeProps(createComponentVNode(2, LoadPanelBase, _extends({}, loadPanelProperties)));
+    return normalizeProps(createComponentVNode(2, LoadPanelBase, Object.assign({}, loadPanelProperties)));
   }
 }

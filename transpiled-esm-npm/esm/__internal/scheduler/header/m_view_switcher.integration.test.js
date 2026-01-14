@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable i18n/no-russian-character */
 /* eslint-disable spellcheck/spell-checker */
 import { afterEach, describe, expect, it } from '@jest/globals';
@@ -16,7 +15,10 @@ const SELECTORS = {
 const defaultViews = ['day', 'week', 'workWeek', 'month', 'timelineDay', 'timelineWeek', 'timelineWorkWeek', 'timelineMonth', 'agenda'];
 const createScheduler = options => new Promise(resolve => {
   const $container = $('<div>').attr('id', SCHEDULER_CONTAINER_ID).appendTo(document.body);
-  const instance = new Scheduler($container.get(0), _extends({}, options, {
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let instance;
+  // eslint-disable-next-line prefer-const
+  instance = new Scheduler($container.get(0), Object.assign({}, options, {
     onContentReady: () => {
       resolve({
         $container,

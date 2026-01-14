@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import dateLocalization from '../../../common/core/localization/date';
 import dateUtils from '../../../core/utils/date';
 import { isFunction, isObject } from '../../../core/utils/type';
@@ -273,7 +272,7 @@ export const getViewName = view => {
   return view;
 };
 export const getViewText = view => view.name || messageLocalization.format(`dxScheduler-switcher${camelize(view.type, true)}`);
-export const formatViews = views => views.map(view => _extends({}, view, {
+export const formatViews = views => views.map(view => Object.assign({}, view, {
   name: getViewName(view),
   text: getViewText(view)
 }));

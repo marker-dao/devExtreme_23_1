@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { end as hoverEventEnd } from '../../../common/core/events/hover';
 import pointerEvents from '../../../common/core/events/pointer';
@@ -47,7 +46,7 @@ const DEFAULT_DELAY = {
 const ACTIONS = ['onSubmenuShowing', 'onSubmenuShown', 'onSubmenuHiding', 'onSubmenuHidden', 'onItemContextMenu', 'onItemClick', 'onSelectionChanged', 'onItemRendered'];
 class Menu extends MenuBase {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       orientation: 'horizontal',
       submenuDirection: 'auto',
       showFirstSubmenuMode: {
@@ -348,7 +347,7 @@ class Menu extends MenuBase {
       animation,
       selectByClick
     } = this.option();
-    return _extends({}, menuOptions, {
+    return Object.assign({}, menuOptions, {
       // @ts-expect-error ts-error
       dataSource: this.getDataSource(),
       animationEnabled: !!animation,
@@ -372,6 +371,7 @@ class Menu extends MenuBase {
     });
   }
   _initAdaptivity() {
+    var _this$_overlay$$conte, _this$_overlay$$wrapp;
     if (!this._isAdaptivityEnabled()) {
       return;
     }
@@ -381,10 +381,10 @@ class Menu extends MenuBase {
     const $hamburger = this._renderHamburgerButton();
     this._treeView = this._createComponent($('<div>'), TreeView, this._getTreeViewOptions());
     this._overlay = this._createComponent($('<div>'), Overlay, this._getAdaptiveOverlayOptions());
-    this._overlay.$content().append(this._treeView.$element()).addClass(DX_ADAPTIVE_MODE_CLASS)
+    (_this$_overlay$$conte = this._overlay.$content()) === null || _this$_overlay$$conte === void 0 || _this$_overlay$$conte.append(this._treeView.$element()).addClass(DX_ADAPTIVE_MODE_CLASS)
     // @ts-expect-error ts-error
     .addClass(cssClass);
-    this._overlay.$wrapper().addClass(DX_ADAPTIVE_MODE_OVERLAY_WRAPPER_CLASS);
+    (_this$_overlay$$wrapp = this._overlay.$wrapper()) === null || _this$_overlay$$wrapp === void 0 || _this$_overlay$$wrapp.addClass(DX_ADAPTIVE_MODE_OVERLAY_WRAPPER_CLASS);
     this._$adaptiveContainer = $('<div>').addClass(DX_ADAPTIVE_MODE_CLASS);
     this._$adaptiveContainer.append($hamburger);
     this._$adaptiveContainer.append(this._overlay.$element());
@@ -423,7 +423,7 @@ class Menu extends MenuBase {
   _createSubmenu(node, $rootItem) {
     const $submenuContainer = $('<div>').addClass(DX_CONTEXT_MENU_CLASS).appendTo($rootItem);
     const items = this._getChildNodes(node);
-    const subMenu = this._createComponent($submenuContainer, Submenu, _extends({}, this._getSubmenuOptions(), {
+    const subMenu = this._createComponent($submenuContainer, Submenu, Object.assign({}, this._getSubmenuOptions(), {
       _dataAdapter: this._dataAdapter,
       _parentKey: node.internalFields.key,
       items,
@@ -610,24 +610,24 @@ class Menu extends MenuBase {
     // @ts-expect-error ts-error
     eventArgs.submenu = params.submenu;
     (_this$_actions$onSubm5 = (_this$_actions7 = this._actions).onSubmenuHiding) === null || _this$_actions$onSubm5 === void 0 || _this$_actions$onSubm5.call(_this$_actions7, eventArgs);
+    if (eventArgs.cancel) {
+      return;
+    }
     const {
       focusedElement
     } = this.option();
-    const {
-      focusedElement: submenuFocusedElement
-    } = submenu.option();
-    const isVisibleSubmenuHiding = this._visibleSubmenu === submenu;
-    const isFocusedElementHiding = focusedElement === submenuFocusedElement;
-    if (isVisibleSubmenuHiding && isFocusedElementHiding) {
+    const submenuContainerElement = $(eventArgs.submenuContainer).get(0);
+    const focusedDomElement = $(focusedElement).get(0);
+    const isFocusedElementInsideSubmenu = focusedDomElement && submenuContainerElement ? submenuContainerElement.contains(focusedDomElement) : false;
+    if (isFocusedElementInsideSubmenu) {
       this.option('focusedElement', getPublicElement($menuAnchorItem));
     }
-    if (!eventArgs.cancel) {
-      if (isVisibleSubmenuHiding) {
-        this._visibleSubmenu = null;
-      }
-      $border.hide();
-      $menuAnchorItem.removeClass(DX_MENU_ITEM_EXPANDED_CLASS);
+    const isVisibleSubmenuHiding = this._visibleSubmenu === submenu;
+    if (isVisibleSubmenuHiding) {
+      this._visibleSubmenu = null;
     }
+    $border.hide();
+    $menuAnchorItem.removeClass(DX_MENU_ITEM_EXPANDED_CLASS);
   }
   _submenuOnHiddenHandler($menuAnchorItem, submenu, _ref3) {
     var _this$_actions$onSubm6, _this$_actions8;

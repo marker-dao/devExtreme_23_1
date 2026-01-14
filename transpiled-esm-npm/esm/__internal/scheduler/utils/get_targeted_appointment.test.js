@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { getResourceManagerMock } from '../../scheduler/__mock__/resource_manager.mock';
 import { mockUppercaseFieldExpressions } from '../__mock__/appointment_data_accessor.mock';
@@ -9,7 +8,7 @@ const appointment = {
   StartDate: new Date(200, 0, 0),
   EndDate: new Date(200, 0, 1)
 };
-const appointmentRecurrence = _extends({}, appointment, {
+const appointmentRecurrence = Object.assign({}, appointment, {
   RecurrenceRule: 'FREQ=DAILY'
 });
 const info = {
@@ -24,7 +23,7 @@ const info = {
 };
 describe('getTargetedAppointment', () => {
   it('should return collector targeted appointment', () => {
-    expect(getTargetedAppointment(appointment, {}, dataAccessor, getResourceManagerMock())).toEqual(_extends({}, appointment, {
+    expect(getTargetedAppointment(appointment, {}, dataAccessor, getResourceManagerMock())).toEqual(Object.assign({}, appointment, {
       displayStartDate: new Date(200, 0, 0),
       displayEndDate: new Date(200, 0, 1)
     }));
@@ -33,7 +32,7 @@ describe('getTargetedAppointment', () => {
     expect(getTargetedAppointment(appointmentRecurrence, {
       info,
       groupIndex: 0
-    }, dataAccessor, getResourceManagerMock())).toEqual(_extends({}, appointmentRecurrence, {
+    }, dataAccessor, getResourceManagerMock())).toEqual(Object.assign({}, appointmentRecurrence, {
       StartDate: new Date(200, 0, 5),
       EndDate: new Date(200, 0, 6),
       displayStartDate: new Date(200, 0, 5, 10),
@@ -46,7 +45,7 @@ describe('getTargetedAppointment', () => {
     expect(getTargetedAppointment(appointmentRecurrence, {
       info,
       groupIndex: 5 // 0,1; 0,2; 0,3; 0,4; 1,1; 1,2; <- 5
-    }, dataAccessor, resourceManager)).toEqual(_extends({}, appointmentRecurrence, {
+    }, dataAccessor, resourceManager)).toEqual(Object.assign({}, appointmentRecurrence, {
       assigneeId: [2],
       roomId: 1,
       StartDate: new Date(200, 0, 5),
@@ -58,14 +57,14 @@ describe('getTargetedAppointment', () => {
   it('should return agenda item targeted partial dates', () => {
     expect(getTargetedAppointmentFromInfo(appointmentRecurrence, {
       isAgendaModel: true,
-      info: _extends({}, info, {
+      info: Object.assign({}, info, {
         partialDates: {
           startDate: new Date(200, 0, 5, 3),
           endDate: new Date(200, 0, 7)
         }
       }),
       groupIndex: 0
-    }, dataAccessor, getResourceManagerMock(), true)).toEqual(_extends({}, appointmentRecurrence, {
+    }, dataAccessor, getResourceManagerMock(), true)).toEqual(Object.assign({}, appointmentRecurrence, {
       StartDate: new Date(200, 0, 5),
       EndDate: new Date(200, 0, 6),
       displayStartDate: new Date(200, 0, 5, 3),
@@ -77,14 +76,14 @@ describe('getTargetedAppointment', () => {
     await resourceManager.loadGroupResources(['roomId', 'assigneeId']);
     expect(getTargetedAppointmentFromInfo(appointment, {
       isAgendaModel: true,
-      info: _extends({}, info, {
+      info: Object.assign({}, info, {
         partialDates: {
           startDate: new Date(200, 0, 5, 3),
           endDate: new Date(200, 0, 7)
         }
       }),
       groupIndex: 3 // 0,1; 0,2; 0,3; 0,4; <- 3
-    }, dataAccessor, resourceManager, true)).toEqual(_extends({}, appointment, {
+    }, dataAccessor, resourceManager, true)).toEqual(Object.assign({}, appointment, {
       assigneeId: [4],
       roomId: 0,
       StartDate: new Date(200, 0, 5),

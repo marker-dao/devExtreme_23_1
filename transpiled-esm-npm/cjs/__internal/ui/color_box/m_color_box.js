@@ -10,7 +10,6 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _m_drop_down_editor = _interopRequireDefault(require("../../ui/drop_down_editor/m_drop_down_editor"));
 var _m_color_view = _interopRequireDefault(require("./m_color_view"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const COLOR_BOX_CLASS = 'dx-colorbox';
 const COLOR_BOX_INPUT_CLASS = `${COLOR_BOX_CLASS}-input`;
 const COLOR_BOX_INPUT_CONTAINER_CLASS = `${COLOR_BOX_INPUT_CLASS}-container`;
@@ -61,7 +60,7 @@ class ColorBox extends _m_drop_down_editor.default {
       }
       return true;
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       enter: this._enterKeyHandler,
       leftArrow: arrowHandler,
       rightArrow: arrowHandler,
@@ -70,7 +69,7 @@ class ColorBox extends _m_drop_down_editor.default {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       editAlphaChannel: false,
       applyValueMode: 'useButtons',
       keyStep: 1,
@@ -89,7 +88,7 @@ class ColorBox extends _m_drop_down_editor.default {
     }
   }
   _popupConfig() {
-    return _extends({}, super._popupConfig(), {
+    return Object.assign({}, super._popupConfig(), {
       width: ''
     });
   }
@@ -107,7 +106,11 @@ class ColorBox extends _m_drop_down_editor.default {
   }
   _createColorView() {
     this._popup.$overlayContent().addClass(COLOR_BOX_OVERLAY_CLASS);
-    const $colorView = (0, _renderer.default)('<div>').appendTo(this._popup.$content());
+    const $content = this._popup.$content();
+    if (!$content) {
+      return;
+    }
+    const $colorView = (0, _renderer.default)('<div>').appendTo($content);
     this._colorView = this._createComponent($colorView, _m_color_view.default, this._colorViewConfig());
   }
   _applyNewColor(value) {

@@ -22,7 +22,6 @@ var _drawerRenderingStrategy = _interopRequireDefault(require("../../ui/drawer/d
 var _drawerRenderingStrategy2 = _interopRequireDefault(require("../../ui/drawer/drawer.rendering.strategy.push"));
 var _drawerRenderingStrategy3 = _interopRequireDefault(require("../../ui/drawer/drawer.rendering.strategy.shrink"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DRAWER_CLASS = 'dx-drawer';
 const DRAWER_WRAPPER_CLASS = 'dx-drawer-wrapper';
 const DRAWER_PANEL_CONTENT_CLASS = 'dx-drawer-panel-content';
@@ -35,7 +34,7 @@ const ANONYMOUS_TEMPLATE_NAME = 'content';
 const PANEL_TEMPLATE_NAME = 'panel';
 class Drawer extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       position: 'left',
       opened: false,
       // @ts-expect-error ts-error

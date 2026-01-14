@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { getCurrentView, getViewOption, getViews, parseCurrentDate, parseDateOption } from './utils';
 describe('views utils', () => {
@@ -19,7 +18,7 @@ describe('views utils', () => {
         name: 'MyDay',
         groups: ['a', 'b']
       };
-      expect(getViews([input])).toEqual([_extends({}, input, {
+      expect(getViews([input])).toEqual([Object.assign({}, input, {
         skippedDays: []
       })]);
     });
@@ -50,7 +49,7 @@ describe('views utils', () => {
         input,
         output
       } = _ref;
-      expect(getViews([input])).toEqual([_extends({}, output, {
+      expect(getViews([input])).toEqual([Object.assign({}, output, {
         skippedDays: []
       })]);
     });
@@ -108,7 +107,7 @@ describe('views utils', () => {
         input,
         output
       } = _ref2;
-      expect(getViews([input])).toEqual([_extends({}, output, {
+      expect(getViews([input])).toEqual([Object.assign({}, output, {
         skippedDays: []
       })]);
     });
@@ -131,7 +130,7 @@ describe('views utils', () => {
         input,
         output
       } = _ref3;
-      expect(getViews([input])).toEqual([_extends({}, output, {
+      expect(getViews([input])).toEqual([Object.assign({}, output, {
         skippedDays: [0, 6]
       })]);
     });

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import Color from '../../../color';
 import registerComponent from '../../../core/component_registrator';
 import $ from '../../../core/renderer';
@@ -54,7 +53,7 @@ class ColorBox extends DropDownEditor {
       }
       return true;
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       enter: this._enterKeyHandler,
       leftArrow: arrowHandler,
       rightArrow: arrowHandler,
@@ -63,7 +62,7 @@ class ColorBox extends DropDownEditor {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       editAlphaChannel: false,
       applyValueMode: 'useButtons',
       keyStep: 1,
@@ -82,7 +81,7 @@ class ColorBox extends DropDownEditor {
     }
   }
   _popupConfig() {
-    return _extends({}, super._popupConfig(), {
+    return Object.assign({}, super._popupConfig(), {
       width: ''
     });
   }
@@ -100,7 +99,11 @@ class ColorBox extends DropDownEditor {
   }
   _createColorView() {
     this._popup.$overlayContent().addClass(COLOR_BOX_OVERLAY_CLASS);
-    const $colorView = $('<div>').appendTo(this._popup.$content());
+    const $content = this._popup.$content();
+    if (!$content) {
+      return;
+    }
+    const $colorView = $('<div>').appendTo($content);
     this._colorView = this._createComponent($colorView, ColorView, this._colorViewConfig());
   }
   _applyNewColor(value) {

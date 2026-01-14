@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../../../common/core/animation';
 import { name as clickEventName } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
@@ -62,7 +61,7 @@ export class ListBase extends CollectionWidget {
     return LIST_FEEDBACK_SHOW_TIMEOUT;
   }
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       leftArrow: noop,
       rightArrow: noop,
       pageUp(e) {
@@ -141,7 +140,7 @@ export class ListBase extends CollectionWidget {
     return $item.position().top;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       pullRefreshEnabled: false,
       scrollingEnabled: true,
@@ -370,7 +369,7 @@ export class ListBase extends CollectionWidget {
   _dataSourceOptions() {
     const scrollBottom = this._scrollBottomMode();
     const nextButton = this._nextButtonMode();
-    return _extends({}, super._dataSourceOptions(), {
+    return Object.assign({}, super._dataSourceOptions(), {
       paginate: ensureDefined(scrollBottom || nextButton, true)
     });
   }
@@ -1115,7 +1114,7 @@ export class ListBase extends CollectionWidget {
     }
     const $group = $itemElement.closest(`.${LIST_GROUP_CLASS}`);
     const $item = $group.find(`.${LIST_ITEM_CLASS}`);
-    return _extends({}, super._extendActionArgs($itemElement), {
+    return Object.assign({}, super._extendActionArgs($itemElement), {
       itemIndex: {
         group: $group.index(),
         item: $item.index($itemElement)

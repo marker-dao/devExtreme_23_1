@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { Guid } from '../../../common';
 import messageLocalization from '../../../common/core/localization/message';
 import registerComponent from '../../../core/component_registrator';
@@ -15,7 +14,7 @@ const CHAT_CLASS = 'dx-chat';
 const TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
 class Chat extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: true,
       alerts: [],
       dataSource: null,
@@ -150,10 +149,7 @@ class Chat extends Widget {
     return options;
   }
   _getAttachmentDownloadHandler() {
-    const {
-      onAttachmentDownloadClick
-    } = this.option();
-    if (!onAttachmentDownloadClick) {
+    if (!this.hasActionSubscription('onAttachmentDownloadClick')) {
       return;
     }
     // eslint-disable-next-line consistent-return
@@ -161,6 +157,32 @@ class Chat extends Widget {
       var _this$_attachmentDown;
       (_this$_attachmentDown = this._attachmentDownloadAction) === null || _this$_attachmentDown === void 0 || _this$_attachmentDown.call(this, e);
     };
+  }
+  on(eventName) {
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+    // @ts-expect-error ts-error
+    const result = super.on.apply(this, [eventName, ...args]);
+    if (eventName === 'attachmentDownloadClick') {
+      this._updateAttachmentDownloadHandler();
+    }
+    return result;
+  }
+  off(eventName) {
+    for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      args[_key2 - 1] = arguments[_key2];
+    }
+    // @ts-expect-error ts-error
+    const result = super.off.apply(this, [eventName, ...args]);
+    if (eventName === 'attachmentDownloadClick') {
+      this._updateAttachmentDownloadHandler();
+    }
+    return result;
+  }
+  _updateAttachmentDownloadHandler() {
+    var _this$_messageList2;
+    (_this$_messageList2 = this._messageList) === null || _this$_messageList2 === void 0 || _this$_messageList2.option('onAttachmentDownloadClick', this._getAttachmentDownloadHandler());
   }
   _allowEditAction(message) {
     const {
@@ -541,9 +563,7 @@ class Chat extends Widget {
         break;
       case 'onAttachmentDownloadClick':
         this._createAttachmentDownloadAction();
-        this._messageList.option({
-          onAttachmentDownloadClick: this._getAttachmentDownloadHandler()
-        });
+        this._updateAttachmentDownloadHandler();
         break;
       case 'showDayHeaders':
       case 'showAvatar':

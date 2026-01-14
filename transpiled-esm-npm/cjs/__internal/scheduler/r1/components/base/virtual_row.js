@@ -9,8 +9,7 @@ var _index = require("../../../../core/r1/runtime/inferno/index");
 var _index2 = require("../../utils/index");
 var _row = require("./row");
 var _virtual_cell = require("./virtual_cell");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const VirtualRowDefaultProps = exports.VirtualRowDefaultProps = _extends({}, _row.RowDefaultProps, {
+const VirtualRowDefaultProps = exports.VirtualRowDefaultProps = Object.assign({}, _row.RowDefaultProps, {
   leftVirtualCellWidth: 0,
   rightVirtualCellWidth: 0,
   cellsCount: 1

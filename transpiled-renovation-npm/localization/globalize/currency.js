@@ -1,3 +1,3 @@
 "use strict";
 
-require("../../common/core/localization/globalize/currency");
+require("../../__internal/core/localization/globalize/currency");

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { addGeometryInsideInterval } from './add_geometry_inside_interval';
 const intervals = [{
@@ -78,7 +77,7 @@ describe('addGeometryInsideInterval', () => {
         height: 24
       },
       viewOrientation: 'horizontal'
-    })).toEqual(_extends({}, entity, {
+    })).toEqual(Object.assign({}, entity, {
       top: 24,
       width: 100,
       height: 56,
@@ -115,7 +114,7 @@ describe('addGeometryInsideInterval', () => {
         height: 24
       },
       viewOrientation: 'vertical'
-    })).toEqual(_extends({}, entity, {
+    })).toEqual(Object.assign({}, entity, {
       top: 0,
       width: 20,
       height: 160,
@@ -156,7 +155,7 @@ describe('addGeometryInsideInterval', () => {
         height: 24
       },
       viewOrientation: 'horizontal'
-    })).toEqual(_extends({}, entity, {
+    })).toEqual(Object.assign({}, entity, {
       top: 0,
       width: 18,
       height: 20,
@@ -204,7 +203,7 @@ describe('addGeometryInsideInterval', () => {
         height: 24
       },
       viewOrientation: 'vertical'
-    })).toEqual(_extends({}, entity, {
+    })).toEqual(Object.assign({}, entity, {
       top: 0,
       width: 18,
       height: 20,

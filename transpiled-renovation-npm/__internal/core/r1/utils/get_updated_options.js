@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getUpdatedOptions = getUpdatedOptions;
 var _type = require("../../../../core/utils/type");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const defaultNotDeepCopyArrays = ['dataSource', 'selectedRowKeys'];
 const propsToIgnore = {
   integrationOptions: true
@@ -32,7 +31,7 @@ function compare(resultPaths, item1, item2, key, fullPropName, notDeepCopyArrays
     } else {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const diffPaths = objectDiffs(item1, item2, fullPropName, notDeepCopyArrays);
-      resultPaths.push(...diffPaths.map(item => _extends({}, item, {
+      resultPaths.push(...diffPaths.map(item => Object.assign({}, item, {
         path: `${key}.${item.path}`
       })));
     }
@@ -45,7 +44,7 @@ function compare(resultPaths, item1, item2, key, fullPropName, notDeepCopyArrays
     } else {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const diffPaths = objectDiffs(item1, item2, fullPropName, notDeepCopyArrays);
-      [].push.apply(resultPaths, diffPaths.map(item => _extends({}, item, {
+      [].push.apply(resultPaths, diffPaths.map(item => Object.assign({}, item, {
         path: `${key}${item.path}`
       })));
     }

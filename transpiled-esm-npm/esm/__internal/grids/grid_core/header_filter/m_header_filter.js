@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 import { name as clickEventName } from '../../../../common/core/events/click';
 import eventsEngine from '../../../../common/core/events/core/events_engine';
@@ -50,7 +49,7 @@ export function convertDataFromUTCToLocal(data, column) {
   const dates = ungroupUTCDates(data);
   // @ts-expect-error
   const query = dataQuery(dates);
-  const group = gridCoreUtils.getHeaderFilterGroupParameters(_extends({}, column, {
+  const group = gridCoreUtils.getHeaderFilterGroupParameters(Object.assign({}, column, {
     calculateCellValue: date => date
   }));
   // @ts-expect-error

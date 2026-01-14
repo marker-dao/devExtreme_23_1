@@ -12,7 +12,6 @@ var _const = require("../const");
 var _popup = require("../inferno_wrappers/popup");
 var _tree_view = require("../inferno_wrappers/tree_view");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CLASS = exports.CLASS = {
   excludeFlexBox: _const.CLASSES.excludeFlexBox,
   root: 'column-chooser',
@@ -123,7 +122,7 @@ class ColumnChooser extends _inferno.Component {
       treeViewSelectModeConfig,
       treeViewDragAndDropModeConfig
     } = this.props;
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _tree_view.TreeView, _extends({
+    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _tree_view.TreeView, Object.assign({
       "componentRef": treeViewRef,
       "dataStructure": 'plain',
       "activeStateEnabled": true,

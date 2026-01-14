@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.expandAllDayRegularPanel = exports.expandAllDayAllDayPanel = void 0;
 var _m_date = require("../../../../core/utils/m_date");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const toMs = _m_date.dateUtils.dateToMilliseconds;
 const MINUTE_MS = toMs('minute');
 const DAY_MS = toMs('day');
@@ -56,12 +55,12 @@ const expandAllDayAllDayPanel = (entities, endDayHour, viewOffsetMs) => entities
     // (0 hours) [startHour, endHour] (appointment start, end) (24 hours)
     const minStartDate = new Date(entity.startDateUTC).setUTCHours(endDayHour, 0, 0, 0) - MINUTE_MS;
     const maxEndDate = new Date(entity.endDateUTC).setUTCHours(endDayHour, 0, 0, 0) - MINUTE_MS;
-    return _extends({}, entity, {
+    return Object.assign({}, entity, {
       startDateUTC: Math.min(entity.startDateUTC, minStartDate),
       endDateUTC: maxEndDate
     });
   }
-  return _extends({}, entity, {
+  return Object.assign({}, entity, {
     startDateUTC: getShiftedStartDate(entity.startDateUTC, viewOffsetMs),
     endDateUTC: getShiftedEndDate(entity.endDateUTC, viewOffsetMs)
   });
@@ -74,7 +73,7 @@ const expandAllDayRegularPanel = entities => entities.map(entity => {
   const startDate = new Date(entity.startDateUTC);
   const endDate = new Date(entity.endDateUTC);
   endDate.setDate(endDate.getDate() + 1);
-  return _extends({}, entity, {
+  return Object.assign({}, entity, {
     endDateUTC: endDate.setUTCHours(startDate.getUTCHours(), startDate.getUTCMinutes(), startDate.getUTCSeconds(), startDate.getUTCMilliseconds())
   });
 });

@@ -24,24 +24,22 @@ export default class ClearButton extends TextEditorButton {
     const {
       editor
     } = this;
-    return editor._isClearButtonVisible();
+    return !!(editor !== null && editor !== void 0 && editor._isClearButtonVisible());
   }
   _attachEvents(instance, $button) {
-    const {
-      editor
-    } = this;
-    const editorName = editor.NAME;
-    eventsEngine.on($button,
-    // @ts-expect-error ts-error
-    addNamespace(pointerDown, editorName), e => {
+    var _this$editor;
+    const editorName = ((_this$editor = this.editor) === null || _this$editor === void 0 ? void 0 : _this$editor.NAME) ?? '';
+    eventsEngine.on($button, addNamespace(pointerDown, editorName), e => {
       e.preventDefault();
       if (e.pointerType !== 'mouse') {
-        editor._clearValueHandler(e);
+        var _this$editor2;
+        (_this$editor2 = this.editor) === null || _this$editor2 === void 0 || _this$editor2._clearValueHandler(e);
       }
     });
-    eventsEngine.on($button,
-    // @ts-expect-error ts-error
-    addNamespace(click, editorName), e => editor._clearValueHandler(e));
+    eventsEngine.on($button, addNamespace(click, editorName), e => {
+      var _this$editor3;
+      return (_this$editor3 = this.editor) === null || _this$editor3 === void 0 ? void 0 : _this$editor3._clearValueHandler(e);
+    });
   }
   // TODO: get rid of it
   // eslint-disable-next-line class-methods-use-this
@@ -58,10 +56,13 @@ export default class ClearButton extends TextEditorButton {
       editor,
       instance
     } = this;
+    if (!editor) {
+      return;
+    }
     const $editor = editor.$element();
     const isVisible = this._isVisible();
     if (instance) {
-      // @ts-expect-error ts-error
+      // @ts-expect-error instance is dxElementWrapper
       instance.toggleClass(STATE_INVISIBLE_CLASS, !isVisible);
     }
     this._legacyRender($editor, isVisible);

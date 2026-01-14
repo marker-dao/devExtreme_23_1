@@ -9,7 +9,6 @@ var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _button = _interopRequireDefault(require("../../../../ui/button"));
 var _dom_component = _interopRequireDefault(require("../../../core/widget/dom_component"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CHAT_EDITING_PREVIEW_CLASS = exports.CHAT_EDITING_PREVIEW_CLASS = 'dx-chat-editing-preview';
 const CHAT_EDITING_PREVIEW_HIDING_CLASS = exports.CHAT_EDITING_PREVIEW_HIDING_CLASS = 'dx-chat-editing-preview-hiding';
 const CHAT_EDITING_PREVIEW_CONTENT_CLASS = exports.CHAT_EDITING_PREVIEW_CONTENT_CLASS = 'dx-chat-editing-preview-content';
@@ -18,7 +17,7 @@ const CHAT_EDITING_PREVIEW_TEXT_CLASS = exports.CHAT_EDITING_PREVIEW_TEXT_CLASS 
 const CHAT_EDITING_PREVIEW_CANCEL_BUTTON_CLASS = exports.CHAT_EDITING_PREVIEW_CANCEL_BUTTON_CLASS = 'dx-chat-editing-preview-cancel-button';
 class EditingPreview extends _dom_component.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: true,
       focusStateEnabled: true,
       hoverStateEnabled: true,

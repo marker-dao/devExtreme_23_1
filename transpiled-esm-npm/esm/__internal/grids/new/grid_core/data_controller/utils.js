@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -84,7 +83,7 @@ export function getLocalLoadOptions(originOptions, localOperations) {
   return localLoadOptions;
 }
 export function getStoreLoadOptions(originOptions, localOperations) {
-  const storeLoadOptions = _extends({}, originOptions);
+  const storeLoadOptions = Object.assign({}, originOptions);
   if (localOperations.sorting) {
     delete storeLoadOptions.sort;
   }

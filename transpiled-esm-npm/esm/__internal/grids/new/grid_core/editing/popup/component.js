@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createFragment, createComponentVNode, normalizeProps } from "inferno";
 import { Component } from 'inferno';
 import { CLASSES } from '../../const';
@@ -20,13 +19,13 @@ export class EditPopup extends Component {
       onCancel: this.props.onCancel,
       text: this.props.texts.cancel
     })];
-    return createVNode(1, "div", CLASSES.excludeFlexBox, normalizeProps(createComponentVNode(2, Popup, _extends({
+    return createVNode(1, "div", CLASSES.excludeFlexBox, normalizeProps(createComponentVNode(2, Popup, Object.assign({
       "visible": true,
       "toolbarItems": toolbarItems,
       "onHidden": this.props.onHide,
       "showTitle": false
     }, this.props.popupProps, {
-      children: normalizeProps(createComponentVNode(2, Form, _extends({
+      children: normalizeProps(createComponentVNode(2, Form, Object.assign({
         "componentRef": this.props.formRef,
         "colCount": 2,
         "labelLocation": 'top',

@@ -11,7 +11,6 @@ var _constants = require("./utils/options/constants");
 var _utils = require("./utils/options/utils");
 var _index = require("./utils/options_validator/index");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class SchedulerOptionsBaseWidget extends _ui.default {
   constructor() {
     super(...arguments);
@@ -26,7 +25,7 @@ class SchedulerOptionsBaseWidget extends _ui.default {
   _getDefaultOptions() {
     // @ts-expect-error
     const options = super._getDefaultOptions();
-    return (0, _m_extend.extend)(true, options, _extends({}, _constants.DEFAULT_SCHEDULER_OPTIONS, _constants.DEFAULT_SCHEDULER_INTERNAL_OPTIONS, _constants.DEFAULT_SCHEDULER_INTEGRATION_OPTIONS));
+    return (0, _m_extend.extend)(true, options, Object.assign({}, _constants.DEFAULT_SCHEDULER_OPTIONS, _constants.DEFAULT_SCHEDULER_INTERNAL_OPTIONS, _constants.DEFAULT_SCHEDULER_INTEGRATION_OPTIONS));
   }
   _defaultOptionsRules() {
     // @ts-expect-error
@@ -56,7 +55,7 @@ class SchedulerOptionsBaseWidget extends _ui.default {
     this.validateOptions();
   }
   validateOptions() {
-    const currentViewOptions = _extends({}, this.option(), {
+    const currentViewOptions = Object.assign({}, this.option(), {
       // NOTE: We override this.option values here
       // because the old validation logic checked only current view options.
       // Changing it and validate all views configuration will be a BC.

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable @typescript-eslint/method-signature-style */
@@ -363,13 +362,13 @@ export function processModules(componentInstance, componentClass) {
     let {
       extenders
     } = _ref6;
-    return _extends({}, types, getExtendedTypes(types, extenders === null || extenders === void 0 ? void 0 : extenders.controllers));
+    return Object.assign({}, types, getExtendedTypes(types, extenders === null || extenders === void 0 ? void 0 : extenders.controllers));
   }, rootControllerTypes);
   const viewTypes = moduleExtenders.reduce((types, _ref7) => {
     let {
       extenders
     } = _ref7;
-    return _extends({}, types, getExtendedTypes(types, extenders === null || extenders === void 0 ? void 0 : extenders.views));
+    return Object.assign({}, types, getExtendedTypes(types, extenders === null || extenders === void 0 ? void 0 : extenders.views));
   }, rootViewTypes);
   // eslint-disable-next-line no-param-reassign
   componentInstance._controllers = createModuleItems(controllerTypes);

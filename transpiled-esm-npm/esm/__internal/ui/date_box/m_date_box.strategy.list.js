@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../../ui/list/modules/selection';
 import dateLocalization from '../../../common/core/localization/date';
 import { ensureDefined, noop } from '../../../core/utils/common';
@@ -29,7 +28,7 @@ class ListStrategy extends DateBoxStrategy {
     };
   }
   getDefaultOptions() {
-    return _extends({}, super.getDefaultOptions(), {
+    return Object.assign({}, super.getDefaultOptions(), {
       applyValueMode: 'instantly'
     });
   }

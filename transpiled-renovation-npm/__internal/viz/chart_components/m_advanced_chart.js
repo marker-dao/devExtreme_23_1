@@ -16,7 +16,8 @@ var _range_data_calculator = _interopRequireDefault(require("../../viz/series/he
 var _range = require("../../viz/translators/range");
 var _m_base_chart = require("./m_base_chart");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error
+// @ts-expect-error
+
 const {
   isArray
 } = Array;
@@ -447,7 +448,7 @@ const AdvancedChart = exports.AdvancedChart = _m_base_chart.BaseChart.inherit({
       const commonInterval = commonArgRange.interval;
       this._argumentAxes.forEach(a => {
         const currentInterval = argRanges[getPaneName(a)].interval ?? commonInterval; // T956425
-        a.setBusinessRange(new _range.Range(_extends({}, commonArgRange, {
+        a.setBusinessRange(new _range.Range(Object.assign({}, commonArgRange, {
           interval: currentInterval
         })), this._axesReinitialized, undefined, this._groupsData.categories);
       });
@@ -600,7 +601,7 @@ const AdvancedChart = exports.AdvancedChart = _m_base_chart.BaseChart.inherit({
     const name = fullName.split(/[.[]/)[0];
     let index = fullName.match(/\d+/g);
     index = (0, _type.isDefined)(index) ? parseInt(index[0], 10) : index;
-    if (fullName.indexOf('visualRange') > 0) {
+    if (fullName.split('.').indexOf('visualRange') > 0) {
       if ((0, _type.type)(value) !== 'object') {
         value = wrapVisualRange(fullName, value) ?? value;
       }
@@ -702,13 +703,14 @@ const AdvancedChart = exports.AdvancedChart = _m_base_chart.BaseChart.inherit({
   _optionChanged(arg) {
     if (!this._optionChangedLocker) {
       const optionName = 'visualRange';
-      let axes;
-      const isDirectOption = arg.fullName.indexOf(optionName) > 0 ? true : this.getPartialChangeOptionsName(arg).indexOf(optionName) > -1 ? false : undefined;
+      const isDirectOption = arg.fullName.split('.').indexOf(optionName) > 0 ? true : this.getPartialChangeOptionsName(arg).indexOf(optionName) > -1 ? false : undefined;
       if ((0, _type.isDefined)(isDirectOption)) {
-        axes = this._getAxesByOptionPath(arg, isDirectOption, optionName);
+        const axes = this._getAxesByOptionPath(arg, isDirectOption, optionName);
         if (axes) {
           if (axes.length > 1 || isArray(arg.value)) {
-            axes.forEach((a, index) => setAxisVisualRangeByOption(arg, a, isDirectOption, index));
+            axes.forEach((a, index) => {
+              setAxisVisualRangeByOption(arg, a, isDirectOption, index);
+            });
           } else if (axes.length === 1) {
             setAxisVisualRangeByOption(arg, axes[0], isDirectOption);
           }

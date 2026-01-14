@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode, normalizeProps } from "inferno";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -45,7 +44,7 @@ function getElementsWidth(_ref3) {
   };
 }
 export const ResizableContainerDefaultProps = {
-  paginationProps: _extends({}, PaginationDefaultProps)
+  paginationProps: Object.assign({}, PaginationDefaultProps)
 };
 export class ResizableContainer extends InfernoComponent {
   constructor(props) {
@@ -202,7 +201,7 @@ export class ResizableContainer extends InfernoComponent {
       allowedPageSizes: this.elementsWidth.allowedPageSizes,
       pages: this.elementsWidth.pages
     });
-    this.actualInfoTextVisible = calculateInfoTextVisible(_extends({}, currentElementsWidth, {
+    this.actualInfoTextVisible = calculateInfoTextVisible(Object.assign({}, currentElementsWidth, {
       info: this.elementsWidth.info
     }));
     this.setState(() => ({
@@ -222,7 +221,7 @@ export class ResizableContainer extends InfernoComponent {
         contentTemplate: Content
       }
     } = this;
-    return normalizeProps(createComponentVNode(2, Content, _extends({
+    return normalizeProps(createComponentVNode(2, Content, Object.assign({
       "rootElementRef": this.parentRef,
       "allowedPageSizesRef": this.allowedPageSizesRef,
       "infoTextRef": this.infoTextRef,

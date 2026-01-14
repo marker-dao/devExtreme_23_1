@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createFragment, createComponentVNode, normalizeProps } from "inferno";
 /* eslint-disable
   spellcheck/spell-checker
@@ -49,7 +48,7 @@ export class HeaderPanel extends Component {
       [CLASSES.contentHasHeaderItems]: hasHeaderItems,
       [CLASSES.contentEmpty]: !hasHeaderItems
     });
-    return createVNode(1, "div", CLASSES.headers, normalizeProps(createComponentVNode(2, ColumnSortable, _extends({}, this.props.draggingOptions, {
+    return createVNode(1, "div", CLASSES.headers, normalizeProps(createComponentVNode(2, ColumnSortable, Object.assign({}, this.props.draggingOptions, {
       "className": CLASSES.sortable,
       "source": "header-panel-main",
       "getColumnByIndex": index => this.props.visibleColumns[index],

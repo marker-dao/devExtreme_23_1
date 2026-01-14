@@ -9,11 +9,20 @@ var _draw_utils = require("./draw_utils");
 var _pdf_utils = require("./pdf_utils");
 var _create_on_split_multipage_row = require("./rows_spliting_utils/create_on_split_multipage_row");
 var _get_multipage_row_pages = require("./rows_spliting_utils/get_multipage_row_pages");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-explicit-any */ /* eslint-disable no-return-assign */ /* eslint-disable no-plusplus */ /* eslint-disable @typescript-eslint/no-use-before-define */ /* eslint-disable @typescript-eslint/explicit-module-boundary-types */ /* eslint-disable @stylistic/max-len */ /* eslint-disable @typescript-eslint/no-unsafe-return */ /* eslint-disable prefer-spread */ /* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-return-assign */
+/* eslint-disable no-plusplus */
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @stylistic/max-len */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable prefer-spread */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 const COORDINATE_EPSILON = 0.001;
 function convertToCellsArray(rows) {
-  return [].concat.apply([], rows.map(rowInfo => rowInfo.cells.filter(cell => !(0, _type.isDefined)(cell.pdfCell.isMerged)).map(cellInfo => _extends({}, cellInfo.pdfCell._rect, {
-    sourceCellInfo: _extends({}, cellInfo.pdfCell, {
+  return [].concat.apply([], rows.map(rowInfo => rowInfo.cells.filter(cell => !(0, _type.isDefined)(cell.pdfCell.isMerged)).map(cellInfo => Object.assign({}, cellInfo.pdfCell._rect, {
+    sourceCellInfo: Object.assign({}, cellInfo.pdfCell, {
       gridCell: cellInfo.gridCell
     })
   }))));
@@ -95,7 +104,7 @@ function splitByPages(doc, rowsInfo, options, onSeparateRectHorizontally, onSepa
       pageIndex += 1;
     }
   }
-  return verticallyPages.map(rects => rects.map(rect => _extends({}, rect.sourceCellInfo, {
+  return verticallyPages.map(rects => rects.map(rect => Object.assign({}, rect.sourceCellInfo, {
     _rect: rect
   })));
 }

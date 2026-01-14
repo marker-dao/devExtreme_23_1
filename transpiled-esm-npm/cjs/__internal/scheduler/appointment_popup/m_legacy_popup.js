@@ -16,7 +16,6 @@ var _m_loading = require("../m_loading");
 var _appointment_adapter = require("../utils/appointment_adapter/appointment_adapter");
 var _appointment_groups_utils = require("../utils/resource_manager/appointment_groups_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const toMs = _date.default.dateToMilliseconds;
 const APPOINTMENT_POPUP_CLASS = exports.APPOINTMENT_POPUP_CLASS = 'dx-scheduler-legacy-appointment-popup';
 const DAY_IN_MS = toMs('day');
@@ -80,7 +79,7 @@ class AppointmentPopup {
     return this.scheduler.createComponent(popupElement, _ui.default, options);
   }
   _createPopupConfig() {
-    return _extends({}, POPUP_CONFIG, {
+    return Object.assign({}, POPUP_CONFIG, {
       onHiding: () => this.scheduler.focus(),
       contentTemplate: () => this._createPopupContent(),
       onShowing: e => this._onShowing(e),
@@ -115,7 +114,7 @@ class AppointmentPopup {
     const appointment = this._createAppointmentAdapter(rawAppointment);
     const resourceManager = this.scheduler.getResourceManager();
     const rawAppointmentGroupValues = (0, _appointment_groups_utils.getRawAppointmentGroupValues)(rawAppointment, resourceManager.resources);
-    return _extends({}, rawAppointment, rawAppointmentGroupValues, {
+    return Object.assign({}, rawAppointment, rawAppointmentGroupValues, {
       repeat: Boolean(appointment.recurrenceRule)
     });
   }

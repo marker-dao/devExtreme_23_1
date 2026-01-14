@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { Cache } from '../../../global_cache';
 import { getGroupSize } from './get_group_size';
 import { getMonthIntervals } from './get_month_intervals';
@@ -65,7 +64,7 @@ export class OptionManager {
       } = getLayoutIntervals(compareOptions, cellDurationMinutes, viewOffset, isTimelineView || panelName === 'allDayPanel', isMonthView, panelName);
       const groupByDateSplitIntervals = viewOrientation === 'vertical' ? dayIntervals : cells;
       const splitIntervals = isGroupByDate ? groupByDateSplitIntervals : intervals;
-      const geometryOptions = _extends({
+      const geometryOptions = Object.assign({
         intervals,
         cells,
         maxAppointmentsPerCell: maxLevel,
@@ -81,7 +80,7 @@ export class OptionManager {
         collectorPosition: viewOrientation === 'vertical' ? 'end' : 'start'
       }, collectorSizes, {
         groupCount,
-        groupSize: getGroupSize(_extends({}, compareOptions, {
+        groupSize: getGroupSize(Object.assign({}, compareOptions, {
           cellSize,
           cellDurationMinutes,
           intervals,

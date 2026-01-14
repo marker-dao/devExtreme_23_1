@@ -10,8 +10,7 @@ var _const = require("./const");
 const _excluded = ["elementRef", "children"],
   _excluded2 = ["elementRef", "onKeyDown", "children"],
   _excluded3 = ["enabled", "ref", "onKeyDown"];
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 var __decorate = void 0 && (void 0).__decorate || function (decorators, target, key, desc) {
   var c = arguments.length,
     r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
@@ -37,7 +36,7 @@ const KbnFocusTrapDisabled = props => {
     "data-dx-focus-decoy": false
   })], 0, {
     "data-dx-focus-trap-content": false
-  }), 2, _extends({}, restProps), null, elementRef));
+  }), 2, Object.assign({}, restProps), null, elementRef));
 };
 exports.KbnFocusTrapDisabled = KbnFocusTrapDisabled;
 class KbnFocusTrapEnabled extends _inferno.Component {
@@ -70,7 +69,7 @@ class KbnFocusTrapEnabled extends _inferno.Component {
     }, null, this.lastFocusDecoyRef)], 0, {
       "data-dx-focus-trap-content": true,
       "onKeyDown": this.onContentKeyDown.bind(this)
-    }), 2, _extends({
+    }), 2, Object.assign({
       "onKeyDown": this.onKeyDown.bind(this)
     }, restProps), null, ref));
   }
@@ -133,9 +132,9 @@ const KbnFocusTrap = props => {
       onKeyDown
     } = props,
     restProps = _objectWithoutPropertiesLoose(props, _excluded3);
-  return enabled ? (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, KbnFocusTrapEnabled, _extends({}, restProps, {
+  return enabled ? (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, KbnFocusTrapEnabled, Object.assign({}, restProps, {
     "onKeyDown": onKeyDown
-  }))) : (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, KbnFocusTrapDisabled, _extends({}, restProps, {
+  }))) : (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, KbnFocusTrapDisabled, Object.assign({}, restProps, {
     "onKeyDown": onKeyDown
   })));
 };

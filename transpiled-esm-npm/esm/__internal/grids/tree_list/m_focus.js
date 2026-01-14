@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { Deferred } from '../../../core/utils/deferred';
 import { focusModule } from '../../grids/grid_core/focus/m_focus';
 import core from './m_core';
@@ -97,9 +96,9 @@ const data = Base => class TreeListDataControllerExtender extends focusModule.ex
     return d.promise();
   }
 };
-core.registerModule('focus', _extends({}, focusModule, {
-  extenders: _extends({}, focusModule.extenders, {
-    controllers: _extends({}, focusModule.extenders.controllers, {
+core.registerModule('focus', Object.assign({}, focusModule, {
+  extenders: Object.assign({}, focusModule.extenders, {
+    controllers: Object.assign({}, focusModule.extenders.controllers, {
       data
     })
   })

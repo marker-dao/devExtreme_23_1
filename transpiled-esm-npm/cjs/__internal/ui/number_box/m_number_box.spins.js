@@ -20,22 +20,33 @@ class SpinButtons extends _m_button.default {
     const {
       editor
     } = this;
-    // @ts-expect-error
-    const eventName = (0, _index.addNamespace)(_pointer.default.down, editor.NAME);
+    if (!editor) {
+      return;
+    }
+    const eventName = (0, _index.addNamespace)(_pointer.default.down, editor.NAME ?? '');
     const $spinContainerChildren = $spinContainer.children();
     const pointerDownAction = editor._createAction(
-    // @ts-expect-error
-    e => editor._spinButtonsPointerDownHandler(e));
+    // @ts-expect-error Private API
+    e => {
+      var _this$editor;
+      (_this$editor = this.editor) === null || _this$editor === void 0 || _this$editor._spinButtonsPointerDownHandler(e);
+    });
     _events_engine.default.off($spinContainer, eventName);
     _events_engine.default.on($spinContainer, eventName, e => pointerDownAction({
       event: e
     }));
     _m_number_box.default.getInstance($spinContainerChildren.eq(0)).option('onChange',
-    // @ts-expect-error
-    e => editor._spinUpChangeHandler(e));
+    // @ts-expect-error Private API
+    e => {
+      var _this$editor2;
+      (_this$editor2 = this.editor) === null || _this$editor2 === void 0 || _this$editor2._spinUpChangeHandler(e);
+    });
     _m_number_box.default.getInstance($spinContainerChildren.eq(1)).option('onChange',
-    // @ts-expect-error
-    e => editor._spinDownChangeHandler(e));
+    // @ts-expect-error Private API
+    e => {
+      var _this$editor3;
+      (_this$editor3 = this.editor) === null || _this$editor3 === void 0 || _this$editor3._spinDownChangeHandler(e);
+    });
   }
   _create() {
     const {
@@ -46,13 +57,13 @@ class SpinButtons extends _m_button.default {
     const $spinDown = (0, _renderer.default)('<div>').appendTo($spinContainer);
     const options = this._getOptions();
     this._addToContainer($spinContainer);
-    editor._createComponent($spinUp, _m_number_box.default, (0, _extend.extend)({
+    editor === null || editor === void 0 || editor._createComponent($spinUp, _m_number_box.default, (0, _extend.extend)({
       direction: 'up'
     }, options));
-    editor._createComponent($spinDown, _m_number_box.default, (0, _extend.extend)({
+    editor === null || editor === void 0 || editor._createComponent($spinDown, _m_number_box.default, (0, _extend.extend)({
       direction: 'down'
     }, options));
-    this._legacyRender(editor.$element(), this._isTouchFriendly(), options.visible);
+    this._legacyRender(editor === null || editor === void 0 ? void 0 : editor.$element(), this._isTouchFriendly(), options.visible);
     return {
       instance: $spinContainer,
       $element: $spinContainer
@@ -63,7 +74,7 @@ class SpinButtons extends _m_button.default {
       editor
     } = this;
     const visible = this._isVisible();
-    const disabled = editor.option('disabled');
+    const disabled = editor === null || editor === void 0 ? void 0 : editor.option('disabled');
     return {
       visible,
       disabled
@@ -74,13 +85,13 @@ class SpinButtons extends _m_button.default {
     const {
       editor
     } = this;
-    return super._isVisible() && editor.option('showSpinButtons');
+    return super._isVisible() && (editor === null || editor === void 0 ? void 0 : editor.option('showSpinButtons'));
   }
   _isTouchFriendly() {
     const {
       editor
     } = this;
-    return editor.option('showSpinButtons') && editor.option('useLargeSpinButtons');
+    return (editor === null || editor === void 0 ? void 0 : editor.option('showSpinButtons')) && (editor === null || editor === void 0 ? void 0 : editor.option('useLargeSpinButtons'));
   }
   // TODO: get rid of it
   _legacyRender($editor, isTouchFriendly, isVisible) {
@@ -95,7 +106,7 @@ class SpinButtons extends _m_button.default {
         editor,
         instance
       } = this;
-      const $editor = editor.$element();
+      const $editor = editor === null || editor === void 0 ? void 0 : editor.$element();
       const isVisible = this._isVisible();
       const isTouchFriendly = this._isTouchFriendly();
       // @ts-expect-error

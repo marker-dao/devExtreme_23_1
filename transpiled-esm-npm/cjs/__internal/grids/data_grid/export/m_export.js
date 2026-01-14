@@ -18,7 +18,8 @@ var _m_export = require("../../../grids/grid_core/m_export");
 var _listEdit = _interopRequireDefault(require("../../../ui/list/list.edit.search"));
 var _m_core = _interopRequireDefault(require("../m_core"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
+/* eslint-disable max-classes-per-file */
+
 const DATAGRID_EXPORT_MENU_CLASS = 'dx-datagrid-export-menu';
 const DATAGRID_EXPORT_BUTTON_CLASS = 'dx-datagrid-export-button';
 const DATAGRID_EXPORT_TOOLBAR_BUTTON_NAME = 'exportButton';
@@ -634,7 +635,7 @@ const headerPanel = Base => class ExportHeaderPanelExtender extends Base {
       disabled
     };
     if (items.length === 1) {
-      const widgetOptions = _extends({}, items[0], {
+      const widgetOptions = Object.assign({}, items[0], {
         hint: items[0].text,
         elementAttr: {
           class: DATAGRID_EXPORT_BUTTON_CLASS

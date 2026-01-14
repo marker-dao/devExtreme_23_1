@@ -3,7 +3,6 @@
 var _globals = require("@jest/globals");
 var _base = require("../../../../recurrence/base");
 var _get_appointment_recurrence_occurrences = require("./get_appointment_recurrence_occurrences");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const options = {
   firstDayOfWeek: 3,
   interval: {
@@ -22,7 +21,7 @@ const HOUR_MS = 3600000;
           endDate: Date.UTC(2000, 0, 10, 11)
         }
       };
-      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([_extends({}, appointment, {
+      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([Object.assign({}, appointment, {
         startDateUTC: appointment.source.startDate - HOUR_MS * 8,
         endDateUTC: appointment.source.endDate - HOUR_MS * 8
       })]);
@@ -34,7 +33,7 @@ const HOUR_MS = 3600000;
           endDate: Date.UTC(2025, 2, 9, 4)
         }
       };
-      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([_extends({}, appointment, {
+      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([Object.assign({}, appointment, {
         startDateUTC: appointment.source.startDate - HOUR_MS * 8,
         endDateUTC: appointment.source.endDate - HOUR_MS * 8
       })]);
@@ -46,7 +45,7 @@ const HOUR_MS = 3600000;
           endDate: Date.UTC(2025, 10, 2, 4)
         }
       };
-      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([_extends({}, appointment, {
+      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([Object.assign({}, appointment, {
         startDateUTC: appointment.source.startDate - HOUR_MS * 7,
         endDateUTC: appointment.source.endDate - HOUR_MS * 7
       })]);
@@ -58,7 +57,7 @@ const HOUR_MS = 3600000;
           endDate: Date.UTC(2025, 2, 9, 3, 45)
         }
       };
-      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([_extends({}, appointment, {
+      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([Object.assign({}, appointment, {
         startDateUTC: appointment.source.startDate - HOUR_MS * 8,
         endDateUTC: appointment.source.endDate - HOUR_MS * 8
       })]);
@@ -104,35 +103,35 @@ const HOUR_MS = 3600000;
         recurrenceRule: 'FREQ=DAILY',
         hasRecurrenceRule: true
       };
-      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([_extends({}, appointment, {
+      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 10, 10),
           endDate: Date.UTC(2000, 0, 10, 11)
         },
         startDateUTC: Date.UTC(2000, 0, 10, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 10, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 11, 10),
           endDate: Date.UTC(2000, 0, 11, 11)
         },
         startDateUTC: Date.UTC(2000, 0, 11, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 11, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 12, 10),
           endDate: Date.UTC(2000, 0, 12, 11)
         },
         startDateUTC: Date.UTC(2000, 0, 12, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 12, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 13, 10),
           endDate: Date.UTC(2000, 0, 13, 11)
         },
         startDateUTC: Date.UTC(2000, 0, 13, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 13, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 14, 10),
           endDate: Date.UTC(2000, 0, 14, 11)
@@ -150,10 +149,10 @@ const HOUR_MS = 3600000;
         recurrenceRule: 'FREQ=DAILY',
         hasRecurrenceRule: true
       };
-      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([_extends({}, appointment, {
+      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([Object.assign({}, appointment, {
         startDateUTC: Date.UTC(2000, 0, 13, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 13, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 14, 10),
           endDate: Date.UTC(2000, 0, 14, 11)
@@ -191,7 +190,7 @@ const HOUR_MS = 3600000;
         recurrenceRule: 'FREQ=DAILY;INTERVAL=20',
         hasRecurrenceRule: true
       };
-      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([_extends({}, appointment, {
+      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 9),
           endDate: Date.UTC(2000, 0, 16)
@@ -218,7 +217,7 @@ const HOUR_MS = 3600000;
         recurrenceRule: 'FREQ=DAILY;INTERVAL=10',
         hasRecurrenceRule: true
       };
-      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([_extends({}, appointment, {
+      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 9, 20),
           endDate: Date.UTC(2000, 0, 10, 10)
@@ -240,14 +239,14 @@ const HOUR_MS = 3600000;
         recurrenceRule: 'FREQ=DAILY',
         hasRecurrenceRule: true
       };
-      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([_extends({}, appointment, {
+      (0, _globals.expect)((0, _get_appointment_recurrence_occurrences.getAppointmentRecurrenceOccurrences)(appointment, options)).toEqual([Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 10, 10),
           endDate: Date.UTC(2000, 0, 10, 11)
         },
         startDateUTC: Date.UTC(2000, 0, 10, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 10, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 14, 10),
           endDate: Date.UTC(2000, 0, 14, 11)

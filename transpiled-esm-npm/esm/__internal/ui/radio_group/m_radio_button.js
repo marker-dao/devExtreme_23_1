@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { name as clickEventName } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace } from '../../../common/core/events/utils';
@@ -20,12 +19,12 @@ class RadioButton extends Editor {
         event: e
       });
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       space: click
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       activeStateEnabled: true,
       value: false

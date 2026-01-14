@@ -15,7 +15,7 @@ import errors from '../../../../ui/widget/ui.errors';
 import { capitalize } from '../../../core/utils/capitalize';
 import { DX_MENU_ITEM_CLASS } from '../../../ui/menu/menu';
 import Quill from 'devextreme-quill';
-import { buildCommandsMap, defaultCommandNames, getDefaultOptionsByCommand, hasInvalidCustomCommand } from '../utils/ai';
+import { buildCommandsMap, commandMessageKeys, getDefaultCommandName, getDefaultOptionsByCommand, hasInvalidCustomCommand } from '../utils/ai';
 import { getTableFormats, TABLE_OPERATIONS } from '../utils/m_table_helper';
 import { applyFormat, getDefaultClickHandler, getFormatHandlers, ICON_MAP } from '../utils/m_toolbar_helper';
 import BaseModule from './m_base';
@@ -98,6 +98,7 @@ if (Quill) {
             const isSelectionChanged = eventName === SELECTION_CHANGE_EVENT;
             this._updateToolbar(isSelectionChanged);
           }
+          this._updateHeaderFormatWidget();
         });
       }
     }
@@ -282,17 +283,16 @@ if (Quill) {
       }, item);
     }
     _createCommandMenuItem(command, text, commandOptions) {
-      var _getDefaultOptionsByC;
-      const options = (commandOptions === null || commandOptions === void 0 ? void 0 : commandOptions.map(capitalize)) ?? ((_getDefaultOptionsByC = getDefaultOptionsByCommand(command)) === null || _getDefaultOptionsByC === void 0 ? void 0 : _getDefaultOptionsByC.map(capitalize));
+      const options = (commandOptions === null || commandOptions === void 0 ? void 0 : commandOptions.map(capitalize)) ?? getDefaultOptionsByCommand(command);
       const item = {
         id: command,
         name: command,
-        text: text ?? defaultCommandNames[command],
+        text: text ?? getDefaultCommandName(command),
         items: options === null || options === void 0 ? void 0 : options.map(option => ({
           id: option,
           text: option,
           parentCommand: command,
-          options: options === null || options === void 0 ? void 0 : options.map(capitalize)
+          options
         }))
       };
       return item;
@@ -351,7 +351,7 @@ if (Quill) {
       var _dataSource$0$items;
       const {
         name = TOOLBAR_AI_ITEM_NAME,
-        commands = Object.keys(defaultCommandNames)
+        commands = Object.keys(commandMessageKeys)
       } = item;
       const commandsMap = buildCommandsMap(commands);
       const menuItems = this._buildMenuItems(commands);
@@ -553,6 +553,16 @@ if (Quill) {
         this._markActiveFormatWidget(formatName, formatWidget, formats);
       }
       this._toggleClearFormatting(hasFormats || selection.length > 1);
+    }
+    _updateHeaderFormatWidget() {
+      const selection = this.quill.getSelection();
+      const formatName = 'header';
+      const formatWidget = this._toolbarWidgets.getByName(formatName);
+      const formats = this.quill.getFormat(selection);
+      if (!selection || !formatWidget) {
+        return;
+      }
+      this._markActiveFormatWidget(formatName, formatWidget, formats);
     }
     _markActiveFormatWidget(name, widget, formats) {
       if (this._isColorFormat(name)) {

@@ -13,7 +13,6 @@ var _themes = require("../../../ui/themes");
 var _speech_recognition_adapter = require("../../core/speech_recognition_adapter");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const SPEECH_TO_TEXT_CLASS = exports.SPEECH_TO_TEXT_CLASS = 'dx-speech-to-text';
 const SPEECH_TO_TEXT_LISTENING_CLASS = exports.SPEECH_TO_TEXT_LISTENING_CLASS = 'dx-speech-to-text-listening';
 const DEFAULT_INITIAL_ICON = 'micoutline';
@@ -27,7 +26,7 @@ var SpeechToTextState;
 const ACTIONS = ['onStartClick', 'onStopClick', 'onResult', 'onError', 'onEnd'];
 class SpeechToText extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: true,
       customSpeechRecognizer: {
         enabled: false,

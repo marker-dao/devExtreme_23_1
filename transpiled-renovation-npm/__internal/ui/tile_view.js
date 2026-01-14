@@ -17,7 +17,6 @@ var _collection_widget = _interopRequireDefault(require("../ui/collection/collec
 var _scroll_view = _interopRequireDefault(require("../ui/scroll_view/scroll_view"));
 var _m_support = _interopRequireDefault(require("../core/utils/m_support"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const TILEVIEW_CLASS = 'dx-tileview';
 const TILEVIEW_CONTAINER_CLASS = 'dx-tileview-wrapper';
 const TILEVIEW_ITEM_CLASS = 'dx-tile';
@@ -50,7 +49,7 @@ class TileView extends _collection_widget.default {
     return TILEVIEW_ITEM_SELECTOR;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       direction: 'horizontal',
       hoverStateEnabled: true,
       showScrollbar: 'never',

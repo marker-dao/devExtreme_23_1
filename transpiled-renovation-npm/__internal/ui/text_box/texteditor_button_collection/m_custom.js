@@ -9,20 +9,19 @@ var _events_engine = _interopRequireDefault(require("../../../../common/core/eve
 var _hover = require("../../../../common/core/events/hover");
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _button = _interopRequireDefault(require("../../../../ui/button"));
-var _m_button = _interopRequireDefault(require("./m_button"));
+var _m_button = _interopRequireWildcard(require("./m_button"));
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CUSTOM_BUTTON_HOVERED_CLASS = 'dx-custom-button-hovered';
 class CustomButton extends _m_button.default {
   _attachEvents(instance, $element) {
-    const {
-      editor
-    } = this;
     _events_engine.default.on($element, _hover.start, () => {
-      editor.$element().addClass(CUSTOM_BUTTON_HOVERED_CLASS);
+      var _this$editor;
+      (_this$editor = this.editor) === null || _this$editor === void 0 || _this$editor.$element().addClass(CUSTOM_BUTTON_HOVERED_CLASS);
     });
     _events_engine.default.on($element, _hover.end, () => {
-      editor.$element().removeClass(CUSTOM_BUTTON_HOVERED_CLASS);
+      var _this$editor2;
+      (_this$editor2 = this.editor) === null || _this$editor2 === void 0 || _this$editor2.$element().removeClass(CUSTOM_BUTTON_HOVERED_CLASS);
     });
     _events_engine.default.on($element, _click.name, e => {
       e.stopPropagation();
@@ -32,49 +31,54 @@ class CustomButton extends _m_button.default {
     const {
       editor
     } = this;
+    if (!editor) {
+      return undefined;
+    }
     const $element = (0, _renderer.default)('<div>');
     this._addToContainer($element);
-    const instance = editor._createComponent($element, _button.default, _extends({}, this.options, {
-      // @ts-expect-error
+    const instance = editor._createComponent($element, _button.default, Object.assign({}, this.options, {
+      // @ts-expect-error ignoreParentReadOnly is private
       ignoreParentReadOnly: true,
       disabled: this._isDisabled(),
       integrationOptions: this._prepareIntegrationOptions(editor)
     }));
     return {
-      $element,
-      instance
+      instance,
+      $element
     };
   }
   // eslint-disable-next-line class-methods-use-this
   _prepareIntegrationOptions(editor) {
-    return _extends({}, editor.option('integrationOptions'), {
+    return Object.assign({}, editor.option('integrationOptions'), {
       skipTemplates: ['content']
     });
   }
   update() {
     const isUpdated = super.update();
-    if (this.instance) {
+    if ((0, _m_button.isButtonInstance)(this.instance)) {
       this.instance.option('disabled', this._isDisabled());
     }
     return isUpdated;
   }
   _isVisible() {
+    var _this$editor3;
     const {
       visible
-    } = this.editor.option();
+    } = ((_this$editor3 = this.editor) === null || _this$editor3 === void 0 ? void 0 : _this$editor3.option()) ?? {};
     return !!visible;
   }
   _isDisabled() {
+    var _this$editor4;
     const isDefinedByUser = this.options.disabled !== undefined;
     if (isDefinedByUser) {
-      if (this.instance) {
+      if ((0, _m_button.isButtonInstance)(this.instance)) {
         return this.instance.option('disabled');
       }
       return this.options.disabled;
     }
     const {
       readOnly
-    } = this.editor.option();
+    } = ((_this$editor4 = this.editor) === null || _this$editor4 === void 0 ? void 0 : _this$editor4.option()) ?? {};
     return readOnly;
   }
 }

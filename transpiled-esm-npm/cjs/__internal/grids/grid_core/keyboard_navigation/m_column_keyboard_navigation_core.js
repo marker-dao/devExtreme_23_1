@@ -84,10 +84,6 @@ class ColumnKeyboardNavigationController extends _m_keyboard_navigation_core.Key
       this.resetFocusedCellPosition();
     }
   }
-  restoreViewFocus() {
-    var _this$columnFocusDisp3;
-    (_this$columnFocusDisp3 = this.columnFocusDispatcher) === null || _this$columnFocusDisp3 === void 0 || _this$columnFocusDisp3.restoreFocus(this);
-  }
   restoreFocus() {
     var _$focusedCell$;
     this.needToRestoreFocus = false;

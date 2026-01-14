@@ -8,7 +8,6 @@ var _m_headers_keyboard_navigation = require("../../../grids/grid_core/keyboard_
 var _m_core = _interopRequireDefault(require("../m_core"));
 var _m_column_keyboard_navigation_mixin = require("./m_column_keyboard_navigation_mixin");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const headersKeyboardNavigation = Base => class HeadersKeyboardNavigationControllerExtender extends (0, _m_column_keyboard_navigation_mixin.ColumnKeyboardNavigationMixin)(Base) {
   getNewFocusedColumnBeforeGrouping(column, rowIndex) {
     if (column.showWhenGrouped) {
@@ -78,11 +77,10 @@ const headersKeyboardNavigation = Base => class HeadersKeyboardNavigationControl
     this._columnsController.endUpdate();
   }
 };
-_m_core.default.registerModule('headersKeyboardNavigation', _extends({}, _m_headers_keyboard_navigation.headersKeyboardNavigationModule, {
+_m_core.default.registerModule('headersKeyboardNavigation', Object.assign({}, _m_headers_keyboard_navigation.headersKeyboardNavigationModule, {
   extenders: {
     controllers: {
       headersKeyboardNavigation
-    },
-    views: _extends({}, _m_headers_keyboard_navigation.headersKeyboardNavigationModule.extenders.views)
+    }
   }
 }));

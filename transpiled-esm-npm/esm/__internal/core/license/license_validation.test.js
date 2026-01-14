@@ -448,11 +448,11 @@ describe('license check', () => {
   }, {
     token: TOKEN_23_2,
     version: '42.4.0'
-  }])('Trial panel should be displayed if license is outdated (>=1 major for RTM, >=2 major for preview)', _ref10 => {
+  }])('Trial panel should be displayed if license is outdated (>=1 major for RTM, >=2 major for preview)', _ref0 => {
     let {
       token,
       version
-    } = _ref10;
+    } = _ref0;
     validateLicense(token, version);
     expect(trialPanelSpy).toHaveBeenCalledTimes(1);
   });
@@ -468,11 +468,11 @@ describe('license check', () => {
   }, {
     token: TOKEN_23_2,
     version: '24.1.abc'
-  }])('Trial panel should not be displayed in previews if the license is for the previous RTM', _ref11 => {
+  }])('Trial panel should not be displayed in previews if the license is for the previous RTM', _ref1 => {
     let {
       token,
       version
-    } = _ref11;
+    } = _ref1;
     validateLicense(token, version);
     expect(trialPanelSpy).not.toHaveBeenCalled();
   });
@@ -503,11 +503,11 @@ describe('license check', () => {
   }, {
     token: '3.2.1',
     version: '1.2.3'
-  }])('W0021 error should be logged if license is corrupted/invalid [%#]', _ref12 => {
+  }])('W0021 error should be logged if license is corrupted/invalid [%#]', _ref10 => {
     let {
       token,
       version
-    } = _ref12;
+    } = _ref10;
     validateLicense(token, version);
     expect(errors.log).toHaveBeenCalledWith('W0021');
   });
@@ -565,11 +565,11 @@ describe('license check', () => {
   }, {
     token: '3.2.1',
     version: '1.2.0'
-  }])('trial panel should be displayed if license is corrupted/invalid, preview or not', _ref13 => {
+  }])('trial panel should be displayed if license is corrupted/invalid, preview or not', _ref11 => {
     let {
       token,
       version
-    } = _ref13;
+    } = _ref11;
     validateLicense(token, version);
     expect(trialPanelSpy).toHaveBeenCalledTimes(1);
   });

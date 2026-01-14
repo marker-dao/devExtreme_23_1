@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode } from "inferno";
 import { BaseInfernoComponent } from '../../core/r1/runtime/inferno/index';
 import LegacyNumberBox from '../../../ui/number_box';
@@ -7,7 +6,7 @@ import { EditorLabelDefaultProps } from './common/editor_label_props';
 import { EditorDefaultProps } from './common/editor_props';
 import { EditorStateDefaultProps } from './common/editor_state_props';
 const DEFAULT_VALUE = 0;
-export const NumberBoxDefaultProps = _extends({}, EditorDefaultProps, EditorStateDefaultProps, EditorLabelDefaultProps, {
+export const NumberBoxDefaultProps = Object.assign({}, EditorDefaultProps, EditorStateDefaultProps, EditorLabelDefaultProps, {
   value: DEFAULT_VALUE,
   isReactComponentWrapper: true
 });

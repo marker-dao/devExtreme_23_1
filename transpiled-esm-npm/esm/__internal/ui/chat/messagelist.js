@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { Guid } from '../../../common';
 import dateLocalization from '../../../common/core/localization/date';
 import messageLocalization from '../../../common/core/localization/message';
@@ -38,7 +37,7 @@ const ESCAPE_KEY = 'escape';
 export const MESSAGEGROUP_TIMEOUT = 5 * 1000 * 60;
 class MessageList extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       allowUpdating: () => false,
       allowDeleting: () => false,
       isEditActionDisabled: () => false,

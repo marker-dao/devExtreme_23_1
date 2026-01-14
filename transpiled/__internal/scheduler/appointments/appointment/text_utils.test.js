@@ -4,7 +4,6 @@ var _globals = require("@jest/globals");
 var _appointment_data_accessor = require("../../../scheduler/__mock__/appointment_data_accessor.mock");
 var _timezone_calculator = require("../../../scheduler/__mock__/timezone_calculator.mock");
 var _text_utils = require("./text_utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const getAppointmentResourcesValues = _globals.jest.fn();
 const options = {
   dataAccessors: _appointment_data_accessor.mockAppointmentDataAccessor,
@@ -16,7 +15,7 @@ const options = {
 (0, _globals.describe)('Appointment text utils', () => {
   (0, _globals.describe)('getAriaLabel', () => {
     (0, _globals.it)('should return text for all day appointment', () => {
-      (0, _globals.expect)((0, _text_utils.getAriaLabel)(_extends({}, options, {
+      (0, _globals.expect)((0, _text_utils.getAriaLabel)(Object.assign({}, options, {
         data: {
           allDay: true,
           text: 'Appointment name',
@@ -26,7 +25,7 @@ const options = {
       }))).toBe('Appointment name: March 10, 2025, All day');
     });
     (0, _globals.it)('should return text for one day appointment', () => {
-      (0, _globals.expect)((0, _text_utils.getAriaLabel)(_extends({}, options, {
+      (0, _globals.expect)((0, _text_utils.getAriaLabel)(Object.assign({}, options, {
         data: {
           text: 'Appointment name',
           startDate: Date.UTC(2025, 2, 10, 10),
@@ -37,7 +36,7 @@ const options = {
       }))).toBe('Appointment name: March 10, 2025, 10:00 AM - 10:30 AM');
     });
     (0, _globals.it)('should return text for a part of long appointment', () => {
-      (0, _globals.expect)((0, _text_utils.getAriaLabel)(_extends({}, options, {
+      (0, _globals.expect)((0, _text_utils.getAriaLabel)(Object.assign({}, options, {
         data: {
           text: 'Appointment name',
           startDate: Date.UTC(2025, 2, 10, 10),
@@ -50,7 +49,7 @@ const options = {
   });
   (0, _globals.describe)('getReducedIconTooltip', () => {
     (0, _globals.it)('should return text with end date', () => {
-      (0, _globals.expect)((0, _text_utils.getReducedIconTooltip)(_extends({}, options, {
+      (0, _globals.expect)((0, _text_utils.getReducedIconTooltip)(Object.assign({}, options, {
         data: {
           text: 'Appointment name',
           startDate: Date.UTC(2025, 2, 10, 10),
@@ -68,7 +67,7 @@ const options = {
         label: 'Assignee',
         values: ['Samantha Bright']
       }]));
-      (0, _globals.expect)(await (0, _text_utils.getAriaDescription)(_extends({}, options, {
+      (0, _globals.expect)(await (0, _text_utils.getAriaDescription)(Object.assign({}, options, {
         groupTexts: []
       }))).toBe('Assignee: Samantha Bright');
     });
@@ -80,13 +79,13 @@ const options = {
         label: 'Room',
         values: ['Room 1']
       }]));
-      (0, _globals.expect)(await (0, _text_utils.getAriaDescription)(_extends({}, options, {
+      (0, _globals.expect)(await (0, _text_utils.getAriaDescription)(Object.assign({}, options, {
         groupTexts: []
       }))).toBe('Assignee: Samantha Bright, John Heart; Room: Room 1');
     });
     (0, _globals.it)('should return text with group', async () => {
       getAppointmentResourcesValues.mockReturnValue([]);
-      (0, _globals.expect)(await (0, _text_utils.getAriaDescription)(_extends({}, options, {
+      (0, _globals.expect)(await (0, _text_utils.getAriaDescription)(Object.assign({}, options, {
         groupIndex: 0,
         groupTexts: ['Samantha Bright']
       }))).toBe('Group: Samantha Bright');
@@ -99,7 +98,7 @@ const options = {
         label: 'Room',
         values: ['Room 1', 'Room 2']
       }]));
-      (0, _globals.expect)(await (0, _text_utils.getAriaDescription)(_extends({}, options, {
+      (0, _globals.expect)(await (0, _text_utils.getAriaDescription)(Object.assign({}, options, {
         groupIndex: 1,
         groupTexts: ['Samantha Bright', 'Room 1']
       }))).toBe('Group: Samantha Bright, Room 1; Assignee: Samantha Bright; Room: Room 1, Room 2');

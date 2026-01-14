@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { setAppointmentGroupValues } from './resource_manager/appointment_groups_utils';
 import { getLeafGroupValues } from './resource_manager/group_utils';
 const setTargetedAppointmentResources = (rawAppointment, settings, resourceManager) => {
@@ -17,7 +16,7 @@ export const getTargetedAppointmentFromInfo = function (rawAppointment, settings
   const {
     info
   } = settings;
-  const rawTargetedAppointment = _extends({}, rawAppointment);
+  const rawTargetedAppointment = Object.assign({}, rawAppointment);
   dataAccessor.set('startDate', rawTargetedAppointment, new Date(info.sourceAppointment.startDate));
   dataAccessor.set('endDate', rawTargetedAppointment, new Date(info.sourceAppointment.endDate));
   const displayDates = usePartialDates && 'partialDates' in info ? info.partialDates : info.appointment;
@@ -30,7 +29,7 @@ export const getTargetedAppointment = (rawAppointment, settings, dataAccessor, r
   const startDate = dataAccessor.get('startDate', rawAppointment);
   const endDate = dataAccessor.get('endDate', rawAppointment);
   if (!('info' in settings)) {
-    return _extends({}, rawAppointment, {
+    return Object.assign({}, rawAppointment, {
       displayStartDate: startDate,
       displayEndDate: endDate
     });

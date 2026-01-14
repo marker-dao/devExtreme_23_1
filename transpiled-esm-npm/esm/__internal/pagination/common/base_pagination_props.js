@@ -1,7 +1,6 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { BaseWidgetDefaultProps } from '../../core/r1/base_props';
 import messageLocalization from '../../../common/core/localization/message';
-export const BasePaginationDefaultProps = _extends({}, BaseWidgetDefaultProps, {
+export const BasePaginationDefaultProps = Object.assign({}, BaseWidgetDefaultProps, {
   isGridCompatibilityMode: false,
   showInfo: false,
   displayMode: 'adaptive',

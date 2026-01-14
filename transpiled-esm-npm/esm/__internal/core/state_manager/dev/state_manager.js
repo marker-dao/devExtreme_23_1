@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { Logger } from './logger';
 import { PreactSignalValueContainerManagerFactory } from './preact_signal_value_container_manager';
 // eslint-disable-next-line spellcheck/spell-checker
@@ -52,8 +51,8 @@ class StateManager {
     const fullPathToProperty = joinStatePath(stateId, propertyName);
     try {
       valueContainerManager.trackChanges(valueContainerChange => {
-        const valueContainerChangeCopy = _extends({}, valueContainerChange, {
-          payload: _extends({}, valueContainerChange.payload, {
+        const valueContainerChangeCopy = Object.assign({}, valueContainerChange, {
+          payload: Object.assign({}, valueContainerChange.payload, {
             path: fullPathToProperty
           })
         });

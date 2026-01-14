@@ -1,6 +1,6 @@
 "use strict";
 
-var _date = require("../../common/core/localization/ldml/date.format");
+var _date = require("../../__internal/core/localization/ldml/date.format");
 Object.keys(_date).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (key in exports && exports[key] === _date[key]) return;

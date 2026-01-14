@@ -12,13 +12,14 @@ var _iterator = require("../../core/utils/iterator");
 var _collection_widget = _interopRequireDefault(require("../ui/collection/collection_widget.edit"));
 var _m_validation_engine = _interopRequireDefault(require("./m_validation_engine"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
+// @ts-expect-error ts-error
+
 const VALIDATION_SUMMARY_CLASS = 'dx-validationsummary';
 const ITEM_CLASS = `${VALIDATION_SUMMARY_CLASS}-item`;
 const ITEM_DATA_KEY = `${VALIDATION_SUMMARY_CLASS}-item-data`;
 class ValidationSummary extends _collection_widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       focusStateEnabled: false,
       // @ts-expect-error ts-error
       noDataText: null

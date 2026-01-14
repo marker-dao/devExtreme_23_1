@@ -21,5 +21,19 @@ class DataGridModel extends _grid_core.GridCoreModel {
     }
     return this.getInstance().getVisibleColumns(headerLevel);
   }
+  setDataGridOptions(options) {
+    const instance = this.getInstance();
+    Object.entries(options).forEach(_ref => {
+      let [optionName, optionValue] = _ref;
+      instance.option(optionName, optionValue);
+    });
+  }
+  setDataGridColumnOptions(columnName, options) {
+    const instance = this.getInstance();
+    Object.entries(options).forEach(_ref2 => {
+      let [optionName, optionValue] = _ref2;
+      instance.columnOption(columnName, optionName, optionValue);
+    });
+  }
 }
 exports.DataGridModel = DataGridModel;

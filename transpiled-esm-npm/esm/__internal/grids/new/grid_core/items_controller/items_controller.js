@@ -12,11 +12,11 @@ export class ItemsController {
     this.selectedCardKeys = signal([]);
     this.additionalItems = signal([]);
     this.items = computed(() => {
-      // NOTE: We should trigger computed by search options change
+      // NOTE: We should trigger computed by search options change,
       // But all work with these options encapsulated in SearchHighlightTextProcessor
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       this.searchController.highlightTextOptions.value;
-      return this.dataController.items.value.map((item, itemIndex) => this.createCardInfo(item, this.columnsController.visibleColumns.value, itemIndex, this.selectedCardKeys.value)).concat(this.additionalItems.value);
+      return this.dataController.items.value.map((item, itemIndex) => this.createCardInfo(item, this.columnsController.visibleColumns.peek(), itemIndex, this.selectedCardKeys.value)).concat(this.additionalItems.value);
     });
   }
   setSelectionState(keys) {

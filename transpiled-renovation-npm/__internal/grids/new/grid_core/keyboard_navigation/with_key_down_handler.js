@@ -8,8 +8,7 @@ var _inferno = require("inferno");
 var _index = require("../../../../grids/new/grid_core/core/events/index");
 var _utils = require("./utils");
 const _excluded = ["onKeyDown", "keyDownConfig", "children"];
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 var __decorate = void 0 && (void 0).__decorate || function (decorators, target, key, desc) {
   var c = arguments.length,
     r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
@@ -37,7 +36,7 @@ const withKeyDownHandler = WrappedComponent => {
           children
         } = _this$props,
         restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
-      return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, WrappedComponent, _extends({}, restProps, {
+      return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, WrappedComponent, Object.assign({}, restProps, {
         "onKeyDown": this.onKeyDown.bind(this),
         children: children
       })));

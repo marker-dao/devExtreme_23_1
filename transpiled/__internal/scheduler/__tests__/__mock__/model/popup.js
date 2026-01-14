@@ -9,6 +9,46 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
 class PopupModel {
   constructor(element) {
     var _this = this;
+    this.getInput = editorName => {
+      var _$input, _$input2, _$input3;
+      const editor = this.form.getEditor(editorName);
+      let $input = null;
+      if (editorName === 'startDateTimeZoneEditor' || editorName === 'endDateTimeZoneEditor') {
+        $input = editor === null || editor === void 0 ? void 0 : editor.$element().find('input[type="hidden"]');
+      }
+      if (!((_$input = $input) !== null && _$input !== void 0 && _$input.length)) {
+        $input = editor === null || editor === void 0 ? void 0 : editor.$element().find('.dx-texteditor-input');
+      }
+      if (!((_$input2 = $input) !== null && _$input2 !== void 0 && _$input2.length)) {
+        $input = editor === null || editor === void 0 ? void 0 : editor.$element().find('input');
+      }
+      if (!((_$input3 = $input) !== null && _$input3 !== void 0 && _$input3.length)) {
+        throw new Error(`Input element of editor with name "${editorName}" not found`);
+      }
+      return $input;
+    };
+    this.getInputValue = editorName => {
+      const $input = this.getInput(editorName);
+      return $input.val();
+    };
+    this.setInputValue = (editorName, value) => {
+      var _this$form$getEditor;
+      (_this$form$getEditor = this.form.getEditor(editorName)) === null || _this$form$getEditor === void 0 || _this$form$getEditor.option('value', value);
+    };
+    this.isInputVisible = editorName => {
+      const editor = this.form.getEditor(editorName);
+      if (!editor) {
+        return false;
+      }
+      return editor.$element().is(':visible');
+    };
+    this.getWeekDaysSelection = () => {
+      const buttons = this.element.querySelectorAll('.dx-scheduler-days-of-week-buttons .dx-button');
+      if (buttons.length === 0) {
+        throw new Error('Week day buttons not found');
+      }
+      return Array.from(buttons).map(button => button.classList.contains('dx-button-mode-contained'));
+    };
     this.getLabelIdByText = labelText => {
       const labels = Array.from(this.element.querySelectorAll('label'));
       const label = labels.find(l => {
@@ -102,7 +142,7 @@ class PopupModel {
     this.getForm = () => this.element.querySelector('.dx-form');
     this.getTitle = () => document.querySelector('.dx-popup-title .dx-toolbar-label');
     this.getSaveButton = () => {
-      const saveButton = this.element.querySelector('.dx-button.dx-popup-done');
+      const saveButton = this.element.querySelector('.dx-button[aria-label="Save"]');
       if (!saveButton) {
         throw new Error('Done button not found');
       }
@@ -116,7 +156,7 @@ class PopupModel {
       return backButton;
     };
     this.getCancelButton = () => {
-      const cancelButton = this.element.querySelector('.dx-button.dx-popup-cancel');
+      const cancelButton = this.element.querySelector('.dx-button[aria-label="Cancel"]');
       if (!cancelButton) {
         throw new Error('Cancel button not found');
       }
@@ -142,6 +182,13 @@ class PopupModel {
         throw new Error('Edit series button not found');
       }
       return editSeriesButton;
+    };
+    this.getEditAppointmentButton = () => {
+      const editAppointmentButton = document.querySelector('[aria-label="Edit appointment"]');
+      if (!editAppointmentButton) {
+        throw new Error('Edit appointment button not found');
+      }
+      return editAppointmentButton;
     };
     this.openRecurrenceSettings = () => {
       var _settingsButton$optio;
@@ -177,6 +224,7 @@ class PopupModel {
       repeatEditor.option('value', value);
       if (originalOnValueChanged) {
         originalOnValueChanged({
+          component: repeatEditor,
           value,
           previousValue,
           event: new Event('change')
@@ -320,8 +368,23 @@ class PopupModel {
   get recurrenceGroup() {
     return this.element.querySelector('.dx-scheduler-form-recurrence-group');
   }
+  isMainGroupVisible() {
+    const group = this.mainGroup;
+    if (!group) return false;
+    const $group = (0, _renderer.default)(group);
+    return !$group.hasClass('dx-scheduler-form-main-group-hidden');
+  }
+  isRecurrenceGroupVisible() {
+    const group = this.recurrenceGroup;
+    if (!group) return false;
+    const $group = (0, _renderer.default)(group);
+    return !$group.hasClass('dx-scheduler-form-recurrence-group-hidden');
+  }
   get subjectIcon() {
     return this.element.querySelector('.dx-scheduler-form-subject-group .dx-scheduler-form-icon .dx-icon');
+  }
+  get subjectInput() {
+    return this.element.querySelector('.dx-scheduler-form-text-editor .dx-textbox.dx-widget');
   }
   get startDate() {
     return this.element.querySelector('.dx-scheduler-form-start-date-editor .dx-datebox.dx-widget');
@@ -343,6 +406,9 @@ class PopupModel {
   }
   get repeatEditor() {
     return this.element.querySelector('.dx-scheduler-form-repeat-editor .dx-selectbox.dx-widget');
+  }
+  get descriptionTextArea() {
+    return this.element.querySelector('.dx-scheduler-form-description-editor .dx-textarea.dx-widget');
   }
   get frequencyEditor() {
     return this.element.querySelector('.dx-scheduler-form-recurrence-frequency-editor .dx-selectbox.dx-widget');

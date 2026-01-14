@@ -19,7 +19,6 @@ var _m_text_editorMask = require("./m_text_editor.mask.rule");
 var _m_text_editorMask2 = _interopRequireDefault(require("./m_text_editor.mask.strategy"));
 var _m_utils = _interopRequireDefault(require("./m_utils.caret"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const caret = _m_utils.default;
 const EMPTY_CHAR = ' ';
 const ESCAPED_CHAR = '\\';
@@ -58,7 +57,7 @@ function isSpaceChar(char) {
 }
 class TextEditorMask extends _m_text_editor.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       mask: '',
       maskChar: '_',
       maskRules: {},

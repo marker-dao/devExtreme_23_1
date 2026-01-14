@@ -12,7 +12,6 @@ var _type = require("../../../core/utils/type");
 var _overlay_position_controller = require("../../ui/overlay/overlay_position_controller");
 var _utils = require("../../ui/resizable/utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const WEIGHT_OF_SIDES = {
   left: -1,
   top: -1,
@@ -64,7 +63,7 @@ class PopoverPositionController extends _overlay_position_controller.OverlayPosi
     const {
       $arrow
     } = elements;
-    this._properties = _extends({}, superProperties, {
+    this._properties = Object.assign({}, superProperties, {
       shading,
       target
     });
@@ -108,7 +107,7 @@ class PopoverPositionController extends _overlay_position_controller.OverlayPosi
         hOffset += arrowOffset;
       }
     }
-    const position = _extends({}, this._position, {
+    const position = Object.assign({}, this._position, {
       offset: `${hOffset} ${vOffset}`
     });
     return position;
@@ -152,7 +151,7 @@ class PopoverPositionController extends _overlay_position_controller.OverlayPosi
   }
   _positionToObject(position) {
     if (isCommonPosition(position)) {
-      const configuration = _extends({}, POPOVER_POSITION_ALIASES[position]);
+      const configuration = Object.assign({}, POPOVER_POSITION_ALIASES[position]);
       return configuration;
     }
     return position;

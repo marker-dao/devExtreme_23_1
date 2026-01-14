@@ -20,7 +20,6 @@ var _type = require("../../../core/utils/type");
 var _window = require("../../../core/utils/window");
 var _dom_component = _interopRequireDefault(require("../../core/widget/dom_component"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const RESIZABLE = 'dxResizable';
 const RESIZABLE_CLASS = 'dx-resizable';
 const RESIZABLE_RESIZING_CLASS = 'dx-resizable-resizing';
@@ -41,7 +40,7 @@ const SIDE_BORDER_WIDTH_STYLES = {
 };
 class Resizable extends _dom_component.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       handles: 'all',
       // NOTE: does not affect proportional resize
       step: '1',
@@ -234,7 +233,7 @@ class Resizable extends _dom_component.default {
     return Math.min(value, this[`_${directionName}MaxOffset`] ?? Infinity);
   }
   _fitDeltaProportionally(delta) {
-    let fittedDelta = _extends({}, delta);
+    let fittedDelta = Object.assign({}, delta);
     const size = this._elementSize;
     const {
       minWidth,

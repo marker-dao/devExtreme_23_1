@@ -285,8 +285,9 @@ export class DataController extends DataHelperMixin(modules.Controller) {
     const updateItemsHandler = function (change) {
       var _change$changeTypes, _change$changeTypes2;
       that._columnsController.columnsChanged.remove(updateItemsHandler);
+      const needsFullRepaint = optionNames.visible || that._columnsController.getVisibleColumns().some(col => col.showEditorAlways);
       that.updateItems({
-        repaintChangesOnly: false,
+        repaintChangesOnly: needsFullRepaint ? false : that.option('repaintChangesOnly'),
         event: change === null || change === void 0 || (_change$changeTypes = change.changeTypes) === null || _change$changeTypes === void 0 ? void 0 : _change$changeTypes.event,
         virtualColumnsScrolling: change === null || change === void 0 || (_change$changeTypes2 = change.changeTypes) === null || _change$changeTypes2 === void 0 ? void 0 : _change$changeTypes2.virtualColumnsScrolling
       });
@@ -306,7 +307,7 @@ export class DataController extends DataHelperMixin(modules.Controller) {
           filterApplied = true;
         }
       }
-      const excludedOptionNames = ['ai', 'width', 'visibleWidth', 'filterValue', 'bufferedFilterValue', 'selectedFilterOperation', 'filterValues', 'filterType'];
+      const excludedOptionNames = ['width', 'visibleWidth', 'filterValue', 'bufferedFilterValue', 'selectedFilterOperation', 'filterValues', 'filterType'];
       if (!that._needApplyFilter && !gridCoreUtils.checkChanges(optionNames, excludedOptionNames)) {
         // TODO remove resubscribing
         that._columnsController.columnsChanged.add(updateItemsHandler);
@@ -1266,6 +1267,9 @@ export class DataController extends DataHelperMixin(modules.Controller) {
   pageSize(value) {
     return changePaging(this, 'pageSize', value);
   }
+  isCustomLoading() {
+    return this._isCustomLoading;
+  }
   beginCustomLoading(messageText) {
     this._isCustomLoading = true;
     this._loadingText = messageText ?? '';
@@ -1412,6 +1416,12 @@ export class DataController extends DataHelperMixin(modules.Controller) {
     var _this$_dataSource9;
     const operationTypes = ((_this$_dataSource9 = this._dataSource) === null || _this$_dataSource9 === void 0 ? void 0 : _this$_dataSource9.operationTypes()) ?? {};
     return Object.keys(operationTypes).some(type => operationTypes[type]);
+  }
+  /**
+   * @extended: virtual_scrolling
+   */
+  isViewportChanging() {
+    return false;
   }
 }
 export const dataControllerModule = {

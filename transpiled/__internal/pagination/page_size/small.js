@@ -11,11 +11,10 @@ var _select_box = require("../drop_down_editors/select_box");
 var _calculate_values_fitted_width = require("../utils/calculate_values_fitted_width");
 var _compatibility_utils = require("../utils/compatibility_utils");
 var _get_element_width = require("../utils/get_element_width");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const PaginationSmallDefaultProps = {
   allowedPageSizes: []
 };
-const PageSizeSmallDefaultProps = _extends({}, PaginationSmallDefaultProps, {
+const PageSizeSmallDefaultProps = Object.assign({}, PaginationSmallDefaultProps, {
   pageSize: _pagination_props.PaginationDefaultProps.pageSize,
   pageSizeChangedInternal: _pagination_props.PaginationDefaultProps.pageSizeChangedInternal
 });

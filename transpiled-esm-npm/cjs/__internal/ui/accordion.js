@@ -22,10 +22,8 @@ var _size = require("../../core/utils/size");
 var _type = require("../../core/utils/type");
 var _themes = require("../../ui/themes");
 var _collection_widget = _interopRequireDefault(require("../ui/collection/collection_widget.live_update"));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const ACCORDION_CLASS = 'dx-accordion';
 const ACCORDION_WRAPPER_CLASS = 'dx-accordion-wrapper';
 const ACCORDION_ITEM_CLASS = 'dx-accordion-item';
@@ -40,7 +38,7 @@ class Accordion extends _collection_widget.default {
     return `.${ACCORDION_ITEM_CLASS}`;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       itemTitleTemplate: 'title',
       // @ts-expect-error ts-error
@@ -165,7 +163,7 @@ class Accordion extends _collection_widget.default {
     const {
       itemTitleTemplate
     } = this.option();
-    const itemTitleDeferred = super._renderItemContent(_extends({}, args, {
+    const itemTitleDeferred = super._renderItemContent(Object.assign({}, args, {
       contentClass: ACCORDION_ITEM_TITLE_CLASS,
       templateProperty: 'titleTemplate',
       defaultTemplateName: itemTitleTemplate
@@ -186,7 +184,7 @@ class Accordion extends _collection_widget.default {
         deferred.resolve();
       }
       deferred.done(() => {
-        callBase(_extends({}, args, {
+        callBase(Object.assign({}, args, {
           contentClass: ACCORDION_ITEM_BODY_CLASS,
           container: (0, _element.getPublicElement)((0, _renderer.default)('<div>').appendTo((0, _renderer.default)(itemTitle).parent()))
         }));

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode } from "inferno";
 import { createReRenderEffect, InfernoWrapperComponent } from '../../../../core/r1/runtime/inferno/index';
 import { VERTICAL_GROUP_ORIENTATION } from '../../../constants';
@@ -6,7 +5,7 @@ import { isVerticalGroupingApplied } from '../../utils/index';
 import { GroupPanelHorizontal } from './group_panel_horizontal';
 import { GroupPanelBaseDefaultProps } from './group_panel_props';
 import { GroupPanelVertical } from './group_panel_vertical';
-export const GroupPanelDefaultProps = _extends({}, GroupPanelBaseDefaultProps, {
+export const GroupPanelDefaultProps = Object.assign({}, GroupPanelBaseDefaultProps, {
   groups: [],
   groupOrientation: VERTICAL_GROUP_ORIENTATION
 });

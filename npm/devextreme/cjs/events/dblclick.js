@@ -1,0 +1,20 @@
+/**
+* DevExtreme (cjs/events/dblclick.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function () {
+    return _dblclick.default;
+  }
+});
+var _dblclick = _interopRequireDefault(require("../common/core/events/dblclick"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+module.exports = exports.default;
+module.exports.default = exports.default;

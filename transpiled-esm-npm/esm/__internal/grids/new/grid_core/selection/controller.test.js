@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it, jest } from '@jest/globals';
 import { DataController } from '../data_controller';
 import { getContext } from '../di.test_utils';
@@ -7,7 +6,7 @@ import { OptionsControllerMock } from '../options_controller/options_controller.
 import { SelectionController } from './controller';
 const setup = function () {
   let config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  const context = getContext(_extends({
+  const context = getContext(Object.assign({
     selection: {
       mode: 'single'
     },

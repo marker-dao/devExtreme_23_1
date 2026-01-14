@@ -9,8 +9,7 @@ var _index = require("../../../../grids/new/grid_core/core/events/index");
 const _excluded = ["elementRef", "navigationStrategy", "children"],
   _excluded2 = ["navigationStrategy", "elementRef", "children"],
   _excluded3 = ["enabled", "ref"];
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 var __decorate = void 0 && (void 0).__decorate || function (decorators, target, key, desc) {
   var c = arguments.length,
     r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
@@ -33,7 +32,7 @@ const KbnNavigationContainerDisabled = props => {
     "data-dx-focus-decoy": false
   }), children, (0, _inferno.createVNode)(1, "div", null, null, 1, {
     "data-dx-focus-decoy": false
-  })], 0, _extends({}, restProps, {
+  })], 0, Object.assign({}, restProps, {
     "data-dx-focus-container": false
   }), null, elementRef));
 };
@@ -71,7 +70,7 @@ class KbnNavigationContainerEnabled extends _inferno.Component {
     }, null, this.firstFocusDecoyRef), children, (0, _inferno.createVNode)(1, "div", null, null, 1, {
       "data-dx-focus-decoy": true,
       "tabindex": 0
-    }, null, this.lastFocusDecoyRef)], 0, _extends({}, restProps, {
+    }, null, this.lastFocusDecoyRef)], 0, Object.assign({}, restProps, {
       "onKeyDown": this.onKeyDown.bind(this),
       "data-dx-focus-container": true
     }), null, ref));
@@ -122,6 +121,6 @@ const KbnNavigationContainer = props => {
       enabled
     } = props,
     restProps = _objectWithoutPropertiesLoose(props, _excluded3);
-  return enabled ? (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, KbnNavigationContainerEnabled, _extends({}, restProps))) : (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, KbnNavigationContainerDisabled, _extends({}, restProps)));
+  return enabled ? (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, KbnNavigationContainerEnabled, Object.assign({}, restProps))) : (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, KbnNavigationContainerDisabled, Object.assign({}, restProps)));
 };
 exports.KbnNavigationContainer = KbnNavigationContainer;

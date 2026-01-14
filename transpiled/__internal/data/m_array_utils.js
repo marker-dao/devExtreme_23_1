@@ -19,7 +19,6 @@ var _extend = require("../../core/utils/extend");
 var _object = require("../../core/utils/object");
 var _type = require("../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 function hasKey(target, keyOrKeys) {
   let key;
   // @ts-expect-error
@@ -87,7 +86,7 @@ function cloneInstanceWithChangedPaths(instance, changes, clonedInstances) {
   if (instance) {
     clonedInstances.set(instance, result);
   }
-  const instanceWithoutPrototype = _extends({}, instance);
+  const instanceWithoutPrototype = Object.assign({}, instance);
   (0, _object.deepExtendArraySafe)(result, instanceWithoutPrototype, true, true, true);
   // eslint-disable-next-line no-restricted-syntax, guard-for-in
   for (const name in instanceWithoutPrototype) {

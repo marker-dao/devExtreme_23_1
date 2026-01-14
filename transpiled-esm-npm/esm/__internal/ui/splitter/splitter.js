@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { lock } from '../../../common/core/events/core/emitter.feedback';
 import registerComponent from '../../../core/component_registrator';
 import domAdapter from '../../../core/dom_adapter';
@@ -49,7 +48,7 @@ class Splitter extends CollectionWidgetLiveUpdate {
   }
   _getDefaultOptions() {
     const defaultOptions = super._getDefaultOptions();
-    return _extends({}, defaultOptions, {
+    return Object.assign({}, defaultOptions, {
       orientation: ORIENTATION.horizontal,
       onItemCollapsed: undefined,
       onItemExpanded: undefined,
@@ -58,7 +57,7 @@ class Splitter extends CollectionWidgetLiveUpdate {
       onResizeStart: undefined,
       allowKeyboardNavigation: true,
       separatorSize: DEFAULT_RESIZE_HANDLE_SIZE,
-      _itemAttributes: _extends({}, defaultOptions._itemAttributes, {
+      _itemAttributes: Object.assign({}, defaultOptions._itemAttributes, {
         role: 'group'
       }),
       _renderQueue: undefined

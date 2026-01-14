@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../../../common/core/animation';
 import { resetPosition } from '../../../common/core/animation/translator';
 import { name as clickEventName } from '../../../common/core/events/click';
@@ -20,7 +19,7 @@ const DATEVIEW_ROLLER_ITEM_SELECTED_FRAME_CLASS = 'dx-dateview-item-selected-fra
 const DATEVIEW_ROLLER_ITEM_SELECTED_BORDER_CLASS = 'dx-dateview-item-selected-border';
 class DateViewRoller extends Scrollable {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       showScrollbar: 'never',
       useNative: false,
       selectedIndex: 0,

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createFragment } from "inferno";
 import { equalByValue } from '../../../../../core/utils/common';
 import { getTemplate } from '../../../../core/r1/utils/index';
@@ -13,8 +12,8 @@ export const PublicTemplate = _ref => {
     return createFragment();
   }
   const templateFn = getTemplate(template);
-  const templatePropsWithComparer = _extends({}, templateProps, {
-    data: _extends({}, templateProps.data ?? {}, {
+  const templatePropsWithComparer = Object.assign({}, templateProps, {
+    data: Object.assign({}, templateProps.data ?? {}, {
       // NOTE Fix for the T1251590
       // template_wrapper extract isEqual from props.data.isEqual
       // and use it on the shouldComponentUpdateHook

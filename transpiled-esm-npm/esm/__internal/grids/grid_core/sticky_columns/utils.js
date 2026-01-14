@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { isDefined } from '../../../../core/utils/type';
 import gridCoreUtils from '../../../grids/grid_core/m_utils';
 import { HIDDEN_COLUMNS_WIDTH } from '../adaptivity/const';
@@ -26,7 +25,7 @@ column) {
 export const processFixedColumns = function (that, columns) {
   return columns.map(column => {
     if (needToDisableStickyColumn(that, column)) {
-      return _extends({}, column, {
+      return Object.assign({}, column, {
         fixed: false,
         fixedPosition: ''
       });

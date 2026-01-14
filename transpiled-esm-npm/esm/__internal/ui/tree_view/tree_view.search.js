@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../../core/component_registrator';
 import $ from '../../../core/renderer';
 import SearchBoxController from '../../ui/collection/search_box_controller';
@@ -9,7 +8,7 @@ const TREEVIEW_NODE_CONTAINER_CLASS = 'dx-treeview-node-container';
 SearchBoxController.setEditorClass(TextBox);
 class TreeViewSearch extends TreeViewBase {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       searchValue: '',
       searchEnabled: false,
       searchEditorOptions: {}
@@ -110,7 +109,7 @@ class TreeViewSearch extends TreeViewBase {
       searchMode = 'contains',
       searchExpr
     } = this.option();
-    return _extends({}, super._getDataAdapterOptions(), {
+    return Object.assign({}, super._getDataAdapterOptions(), {
       searchValue,
       searchMode,
       searchExpr
@@ -168,10 +167,44 @@ class TreeViewSearch extends TreeViewBase {
     if (isSelectAllEnabled && items.length) {
       return this._getNodeContainer();
     }
-    if (this._scrollable && isSearchMode) {
-      return $(this._scrollable.content());
+    if (this.getScrollable() && isSearchMode) {
+      return $(this.getScrollable().content());
     }
     return super._itemContainer();
+  }
+  _applyToAllItemContainers(callback) {
+    if (this.getScrollable()) {
+      callback($(this.getScrollable().content()));
+    }
+    const nodeContainer = this._getNodeContainer();
+    if (nodeContainer.length) {
+      callback(nodeContainer);
+    }
+    callback(this.$element());
+  }
+  _attachClickEvent() {
+    if (this._selectAllEnabled()) {
+      this._applyToAllItemContainers(itemsContainer => {
+        this._detachClickEvent(itemsContainer);
+      });
+    }
+    super._attachClickEvent();
+  }
+  _attachHoldEvent() {
+    if (this._selectAllEnabled()) {
+      this._applyToAllItemContainers(itemsContainer => {
+        this._detachHoldEvent(itemsContainer);
+      });
+    }
+    super._attachHoldEvent();
+  }
+  _attachContextMenuEvent() {
+    if (this._selectAllEnabled()) {
+      this._applyToAllItemContainers(itemsContainer => {
+        this._detachContextMenuEvent(itemsContainer);
+      });
+    }
+    super._attachContextMenuEvent();
   }
   _addWidgetClass() {
     this.$element().addClass(this._widgetClass());

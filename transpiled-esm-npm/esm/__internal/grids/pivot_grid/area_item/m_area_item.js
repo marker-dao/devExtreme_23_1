@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import domAdapter from '../../../../core/dom_adapter';
 import { getPublicElement } from '../../../../core/element';
 import $ from '../../../../core/renderer';
@@ -490,7 +489,7 @@ class AreaItem {
     }
     const rtlEnabled = this.option('rtlEnabled');
     const areaName = this._getAreaName();
-    const scrollablePos = _extends({}, pos, {
+    const scrollablePos = Object.assign({}, pos, {
       left: rtlEnabled && (areaName === 'column' || areaName === 'data') ? this._getMaxLeftOffset(scrollable) - pos.left : pos.left
     });
     const memoizeScrollTo = this._getMemoizeScrollTo();

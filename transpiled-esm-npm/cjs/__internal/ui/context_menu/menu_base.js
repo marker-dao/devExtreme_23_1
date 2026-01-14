@@ -14,7 +14,8 @@ var _item = _interopRequireDefault(require("../../ui/collection/item"));
 var _menu_baseEdit = _interopRequireDefault(require("../../ui/context_menu/menu_base.edit.strategy"));
 var _hierarchical_collection_widget = _interopRequireDefault(require("../../ui/hierarchical_collection/hierarchical_collection_widget"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
+// @ts-expect-error ts-error
+
 const DX_MENU_CLASS = 'dx-menu';
 const DX_MENU_NO_ICONS_CLASS = `${DX_MENU_CLASS}-no-icons`;
 const DX_MENU_BASE_CLASS = 'dx-menu-base';
@@ -46,7 +47,7 @@ class MenuBase extends _hierarchical_collection_widget.default {
     return `.${ITEM_CLASS}`;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       items: [],
       cssClass: '',
       activeStateEnabled: true,
@@ -115,7 +116,7 @@ class MenuBase extends _hierarchical_collection_widget.default {
       }
       this.selectItem($item[0]);
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       space: selectItem,
       pageUp: _common.noop,
       pageDown: _common.noop

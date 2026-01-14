@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { normalizeKeyName } from '../../../common/core/events/utils/index';
 import registerComponent from '../../../core/component_registrator';
 import $ from '../../../core/renderer';
@@ -20,7 +19,7 @@ class TextBox extends TextEditor {
     super.ctor(element, options);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: '',
       mode: 'text',
       maxLength: null

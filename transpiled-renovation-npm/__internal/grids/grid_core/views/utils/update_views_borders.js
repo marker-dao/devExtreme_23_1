@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.updateViewsBorders = void 0;
 var _type = require("../../../../../core/utils/type");
 const _excluded = ["rowsView"];
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const CLASSES = {
   borderedTop: 'dx-bordered-top-view',
   borderedBottom: 'dx-bordered-bottom-view'

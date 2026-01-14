@@ -6,7 +6,8 @@ var _m_virtual_scrolling = require("../../grids/grid_core/virtual_scrolling/m_vi
 var _m_data_source_adapter = _interopRequireDefault(require("./data_source_adapter/m_data_source_adapter"));
 var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
+/* eslint-disable max-classes-per-file */
+
 const oldDefaultOptions = _m_virtual_scrolling.virtualScrollingModule.defaultOptions;
 _m_virtual_scrolling.virtualScrollingModule.extenders.views.rowsView = Base => class TreeListVirtualScrollingRowsViewExtender extends (0, _m_virtual_scrolling.rowsView)(Base) {
   _handleDataChanged(e) {
@@ -42,7 +43,7 @@ const dataSourceAdapterExtender = Base => class VirtualScrollingDataSourceAdapte
     });
   }
 };
-_m_core.default.registerModule('virtualScrolling', _extends({}, _m_virtual_scrolling.virtualScrollingModule, {
+_m_core.default.registerModule('virtualScrolling', Object.assign({}, _m_virtual_scrolling.virtualScrollingModule, {
   defaultOptions() {
     return (0, _extend.extend)(true, oldDefaultOptions(), {
       scrolling: {

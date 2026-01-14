@@ -33,14 +33,13 @@ var _uiDiagram6 = _interopRequireDefault(require("../../ui/diagram/ui.diagram.ma
 var _uiDiagram7 = _interopRequireDefault(require("../../ui/diagram/ui.diagram.properties_panel"));
 var _uiDiagram8 = _interopRequireDefault(require("../../ui/diagram/ui.diagram.properties_toolbar"));
 var _uiDiagram9 = _interopRequireDefault(require("../../ui/diagram/ui.diagram.scroll_view"));
-var _uiDiagram10 = _interopRequireDefault(require("../../ui/diagram/ui.diagram.toolbar"));
-var _uiDiagram11 = _interopRequireDefault(require("../../ui/diagram/ui.diagram.toolbox"));
-var _uiDiagram12 = _interopRequireDefault(require("../../ui/diagram/ui.diagram.view_toolbar"));
+var _uiDiagram0 = _interopRequireDefault(require("../../ui/diagram/ui.diagram.toolbar"));
+var _uiDiagram1 = _interopRequireDefault(require("../../ui/diagram/ui.diagram.toolbox"));
+var _uiDiagram10 = _interopRequireDefault(require("../../ui/diagram/ui.diagram.view_toolbar"));
 var _load_indicator = _interopRequireDefault(require("../../ui/load_indicator"));
 var _overlay = _interopRequireDefault(require("../../ui/overlay/overlay"));
 var zIndexPool = _interopRequireWildcard(require("../../ui/overlay/z_index"));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
@@ -321,7 +320,7 @@ class Diagram extends _widget.default {
     const isServerSide = !(0, _window.hasWindow)();
     const $toolBox = (0, _renderer.default)('<div>').appendTo($parent);
     const bounds = this._getToolboxBounds($parent, isServerSide);
-    this._toolbox = this._createComponent($toolBox, _uiDiagram11.default, {
+    this._toolbox = this._createComponent($toolBox, _uiDiagram1.default, {
       isMobileView: this.isMobileScreenSize(),
       isVisible: this._isToolboxVisible(),
       container: this.$element(),
@@ -419,7 +418,7 @@ class Diagram extends _widget.default {
   _renderViewToolbar($parent) {
     const isServerSide = !(0, _window.hasWindow)();
     const $container = (0, _renderer.default)('<div>').addClass(DIAGRAM_FLOATING_TOOLBAR_CONTAINER_CLASS).appendTo($parent);
-    this._viewToolbar = this._createComponent($container, _uiDiagram12.default, (0, _extend.extend)(this._getToolbarBaseOptions(), {
+    this._viewToolbar = this._createComponent($container, _uiDiagram10.default, (0, _extend.extend)(this._getToolbarBaseOptions(), {
       commands: this.option('viewToolbar.commands'),
       locateInMenu: 'never'
     }));
@@ -496,7 +495,7 @@ class Diagram extends _widget.default {
       offsetY,
       propertyTabs: this.option('propertiesPanel.tabs'),
       onCreateToolbar: e => {
-        e.toolbar = this._createComponent(e.$parent, _uiDiagram10.default, (0, _extend.extend)(this._getToolbarBaseOptions(), {
+        e.toolbar = this._createComponent(e.$parent, _uiDiagram0.default, (0, _extend.extend)(this._getToolbarBaseOptions(), {
           commands: e.commands,
           locateInMenu: 'never',
           editorStylingMode: 'outlined'

@@ -17,7 +17,6 @@ var _collection_widget = _interopRequireDefault(require("../ui/collection/collec
 var _m_popover = _interopRequireDefault(require("../ui/popover/m_popover"));
 var _m_popup = _interopRequireDefault(require("../ui/popup/m_popup"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE actionSheet
 const window = (0, _window.getWindow)();
 const ACTION_SHEET_CLASS = 'dx-actionsheet';
@@ -31,7 +30,7 @@ const ACTION_SHEET_WITHOUT_TITLE_CLASS = 'dx-actionsheet-without-title';
 const ACTION_SHEET_BUTTON_DEFAULT_STYLING_MODE = 'outlined';
 class ActionSheet extends _collection_widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       usePopover: false,
       // @ts-expect-error ts-error
       target: null,
@@ -124,7 +123,7 @@ class ActionSheet extends _collection_widget.default {
   _renderPopupTitle() {
     var _this$_popup2;
     this._mapPopupOption('showTitle');
-    (_this$_popup2 = this._popup) === null || _this$_popup2 === void 0 || _this$_popup2.$wrapper().toggleClass(ACTION_SHEET_WITHOUT_TITLE_CLASS, !this.option('showTitle'));
+    (_this$_popup2 = this._popup) === null || _this$_popup2 === void 0 || (_this$_popup2 = _this$_popup2.$wrapper()) === null || _this$_popup2 === void 0 || _this$_popup2.toggleClass(ACTION_SHEET_WITHOUT_TITLE_CLASS, !this.option('showTitle'));
   }
   _clean() {
     if (this._$popup) {
@@ -152,15 +151,17 @@ class ActionSheet extends _collection_widget.default {
     };
   }
   _createPopover() {
+    var _this$_popup$$wrapper;
     this._createComponent(this._$popup, _m_popover.default, (0, _extend.extend)(this._overlayConfig(), {
       width: this.option('width') || 200,
       height: this.option('height') || 'auto',
       target: this.option('target')
     }));
     this._popup.$overlayContent().attr('role', 'dialog');
-    this._popup.$wrapper().addClass(ACTION_SHEET_POPOVER_WRAPPER_CLASS);
+    (_this$_popup$$wrapper = this._popup.$wrapper()) === null || _this$_popup$$wrapper === void 0 || _this$_popup$$wrapper.addClass(ACTION_SHEET_POPOVER_WRAPPER_CLASS);
   }
   _createPopup() {
+    var _this$_popup$$wrapper2;
     this._createComponent(this._$popup, _m_popup.default, (0, _extend.extend)(this._overlayConfig(), {
       dragEnabled: false,
       width: this.option('width') || '100%',
@@ -210,10 +211,11 @@ class ActionSheet extends _collection_widget.default {
         }
       }
     }));
-    this._popup.$wrapper().addClass(ACTION_SHEET_POPUP_WRAPPER_CLASS);
+    (_this$_popup$$wrapper2 = this._popup.$wrapper()) === null || _this$_popup$$wrapper2 === void 0 || _this$_popup$$wrapper2.addClass(ACTION_SHEET_POPUP_WRAPPER_CLASS);
   }
   _popupContentReadyAction() {
-    this._popup.$content().append(this._$itemContainer);
+    var _this$_popup$$content;
+    (_this$_popup$$content = this._popup.$content()) === null || _this$_popup$$content === void 0 || _this$_popup$$content.append(this._$itemContainer);
     this._attachClickEvent();
     this._attachHoldEvent();
     this._prepareContent();
@@ -234,7 +236,11 @@ class ActionSheet extends _collection_widget.default {
     if (showCancelButton) {
       var _this$_popup3;
       const cancelClickAction = this._createActionByOption('onCancelClick') || _common.noop;
-      this._$cancelButton = (0, _renderer.default)('<div>').addClass(ACTION_SHEET_CANCEL_BUTTON_CLASS).appendTo((_this$_popup3 = this._popup) === null || _this$_popup3 === void 0 ? void 0 : _this$_popup3.$content());
+      const $content = (_this$_popup3 = this._popup) === null || _this$_popup3 === void 0 ? void 0 : _this$_popup3.$content();
+      if (!$content) {
+        return;
+      }
+      this._$cancelButton = (0, _renderer.default)('<div>').addClass(ACTION_SHEET_CANCEL_BUTTON_CLASS).appendTo($content);
       this._createComponent(this._$cancelButton, _wrapper.default, {
         disabled: false,
         stylingMode: ACTION_SHEET_BUTTON_DEFAULT_STYLING_MODE,

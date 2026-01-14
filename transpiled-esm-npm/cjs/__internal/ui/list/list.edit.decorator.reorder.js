@@ -11,7 +11,6 @@ var _m_sortable = _interopRequireDefault(require("../../m_sortable"));
 var _listEdit = _interopRequireDefault(require("../../ui/list/list.edit.decorator"));
 var _listEdit2 = require("../../ui/list/list.edit.decorator_registry");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const REORDER_HANDLE_CONTAINER_CLASS = 'dx-list-reorder-handle-container';
 const REORDER_HANDLE_CLASS = 'dx-list-reorder-handle';
 const REORDERING_ITEM_GHOST_CLASS = 'dx-list-item-ghost-reordering';
@@ -26,7 +25,7 @@ class EditDecoratorReorder extends _listEdit.default {
     this._groupedEnabled = grouped;
     this._lockedDrag = false;
     const filter = this._groupedEnabled ? '> .dx-list-items > .dx-list-group > .dx-list-group-body > .dx-list-item' : '> .dx-list-items > .dx-list-item';
-    this._sortable = list._createComponent(list._scrollView.content(), _m_sortable.default, _extends({
+    this._sortable = list._createComponent(list._scrollView.content(), _m_sortable.default, Object.assign({
       component: list,
       contentTemplate: null,
       allowReordering: false,

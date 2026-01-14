@@ -33,7 +33,7 @@ const applySorting = (data, sort) => queryByOptions(
 query(data), {
   sort
 }).toArray();
-class DataSourceAdapterTreeList extends DataSourceAdapter {
+export class DataSourceAdapterTreeList extends DataSourceAdapter {
   _createKeyGetter() {
     const keyExpr = this.getKeyExpr();
     return compileGetter(keyExpr);
@@ -280,8 +280,18 @@ class DataSourceAdapterTreeList extends DataSourceAdapter {
       keys: resultKeys
     };
   }
+  _isOperationIdOutdated(operationId) {
+    return operationId !== undefined && this._lastOperationId !== undefined && operationId !== this._lastOperationId;
+  }
   _loadParentsOrChildren(data, options, needChildren) {
     var _options$storeLoadOpt, _options$loadOptions;
+    if (this._isOperationIdOutdated(options.operationId)) {
+      this._dataSource.cancel(options.operationId);
+      // @ts-expect-error
+      const rejectedDeferred = new Deferred();
+      rejectedDeferred.reject();
+      return rejectedDeferred;
+    }
     let filter;
     let needLocalFiltering;
     const {
@@ -324,6 +334,10 @@ class DataSourceAdapterTreeList extends DataSourceAdapter {
     });
     const store = options.fullData ? new ArrayStore(options.fullData) : this._dataSource.store();
     this.loadFromStore(loadOptions, store).done(loadedData => {
+      if (this._isOperationIdOutdated(options.operationId)) {
+        d.reject();
+        return;
+      }
       if (loadedData.length) {
         if (needLocalFiltering) {
           // @ts-expect-error

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { gridViewModule, ResizingController } from '../../grids/grid_core/views/m_grid_view';
 import treeListCore from './m_core';
 const TREELIST_EXPANDABLE_INSTRUCTION = 'dxTreeList-ariaExpandableInstruction';
@@ -18,7 +17,7 @@ class TreeListResizingController extends ResizingController {
 }
 treeListCore.registerModule('gridView', {
   defaultOptions: gridViewModule.defaultOptions,
-  controllers: _extends({}, gridViewModule.controllers, {
+  controllers: Object.assign({}, gridViewModule.controllers, {
     resizing: TreeListResizingController
   }),
   views: gridViewModule.views

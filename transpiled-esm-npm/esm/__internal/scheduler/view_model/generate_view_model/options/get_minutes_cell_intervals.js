@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { splitIntervalByDay } from '../../common/split_interval_by_days';
 const filterBySkippedDays = (intervals, skippedDays) => intervals.filter(item => !skippedDays.includes(new Date(item.min).getUTCDay()));
 export const getMinutesCellIntervals = _ref => {
@@ -10,7 +9,7 @@ export const getMinutesCellIntervals = _ref => {
     skippedDays
   } = _ref;
   return intervals.reduce((result, interval, rowIndex) => {
-    const dayIntervals = splitIntervalByDay(_extends({}, interval, {
+    const dayIntervals = splitIntervalByDay(Object.assign({}, interval, {
       startDayHour,
       endDayHour,
       skippedDays

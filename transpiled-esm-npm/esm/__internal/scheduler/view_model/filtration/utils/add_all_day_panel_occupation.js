@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { isAppointmentTakesAllDay } from '../../../r1/utils/base';
 export const addAllDayPanelOccupation = (entities, _ref) => {
   let {
@@ -11,7 +10,7 @@ export const addAllDayPanelOccupation = (entities, _ref) => {
       startDate: new Date(entity.source.startDate),
       endDate: new Date(entity.source.endDate)
     }, allDayPanelMode);
-    return _extends({}, entity, {
+    return Object.assign({}, entity, {
       isAllDayPanelOccupied
     });
   });

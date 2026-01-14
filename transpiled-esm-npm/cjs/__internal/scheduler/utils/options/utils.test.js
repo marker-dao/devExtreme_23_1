@@ -2,7 +2,6 @@
 
 var _globals = require("@jest/globals");
 var _utils = require("./utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 (0, _globals.describe)('views utils', () => {
   (0, _globals.describe)('getViews', () => {
     (0, _globals.it)('should filter view with incorrect name', () => {
@@ -21,7 +20,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
         name: 'MyDay',
         groups: ['a', 'b']
       };
-      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([_extends({}, input, {
+      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([Object.assign({}, input, {
         skippedDays: []
       })]);
     });
@@ -52,7 +51,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
         input,
         output
       } = _ref;
-      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([_extends({}, output, {
+      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([Object.assign({}, output, {
         skippedDays: []
       })]);
     });
@@ -110,7 +109,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
         input,
         output
       } = _ref2;
-      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([_extends({}, output, {
+      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([Object.assign({}, output, {
         skippedDays: []
       })]);
     });
@@ -133,7 +132,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
         input,
         output
       } = _ref3;
-      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([_extends({}, output, {
+      (0, _globals.expect)((0, _utils.getViews)([input])).toEqual([Object.assign({}, output, {
         skippedDays: [0, 6]
       })]);
     });

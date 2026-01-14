@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode } from "inferno";
 import { createReRenderEffect, InfernoWrapperComponent } from '../core/r1/runtime/inferno/index';
 import { combineClasses } from '../core/r1/utils/render_utils';
@@ -39,7 +38,7 @@ export class Pagination extends InfernoWrapperComponent {
     });
   }
   getPaginationProps() {
-    return _extends({}, this.props, {
+    return Object.assign({}, this.props, {
       className: this.getClassName(),
       pageIndex: this.getPageIndex(),
       // eslint-disable-next-line @stylistic/max-len

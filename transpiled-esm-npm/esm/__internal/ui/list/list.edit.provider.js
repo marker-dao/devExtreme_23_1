@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../core/renderer';
 import { noop } from '../../../core/utils/common';
 import { each } from '../../../core/utils/iterator';
@@ -152,7 +151,7 @@ class EditProvider {
     (_this$_decorators2 = this._decorators) === null || _this$_decorators2 === void 0 || _this$_decorators2.forEach(decorator => {
       if (isFunction(decorator[method])) {
         const $container = $('<div>').addClass(containerClass);
-        decorator[method](_extends({}, config, {
+        decorator[method](Object.assign({}, config, {
           $container
         }));
         if ($container.children().length) {

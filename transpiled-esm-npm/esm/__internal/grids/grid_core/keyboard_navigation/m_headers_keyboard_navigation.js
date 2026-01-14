@@ -1,9 +1,7 @@
-/* eslint-disable max-classes-per-file */
 import { isCommandKeyPressed } from '../../../../common/core/events/utils/index';
 import $ from '../../../../core/renderer';
 import { getBoundingRect } from '../../../../core/utils/position';
 import { isDefined } from '../../../../core/utils/type';
-import { getElementLocationInternal } from '../../../ui/scroll_view/utils/get_element_location_internal';
 import { StickyPosition } from '../sticky_columns/const';
 import { GridCoreStickyColumnsDom } from '../sticky_columns/dom';
 import { getColumnFixedPosition } from '../sticky_columns/utils';
@@ -115,33 +113,6 @@ export class HeadersKeyboardNavigationController extends ColumnKeyboardNavigatio
     }
     return result;
   }
-  getContainerBoundingRect($container) {
-    const containerRect = getBoundingRect($container.get(0));
-    return {
-      left: containerRect.left,
-      right: containerRect.right
-    };
-  }
-  getScrollPadding($container) {
-    const containerRect = getBoundingRect($container.get(0));
-    const containerBoundingRect = this.getContainerBoundingRect($container);
-    return {
-      left: containerBoundingRect.left - containerRect.left,
-      right: containerRect.right - containerBoundingRect.right
-    };
-  }
-  scrollToColumn($cell) {
-    var _this$getView;
-    const scrollable = (_this$getView = this.getView('rowsView')) === null || _this$getView === void 0 ? void 0 : _this$getView.getScrollable();
-    if (!scrollable) {
-      return;
-    }
-    const scrollPadding = this.getScrollPadding($(scrollable.container()));
-    const scrollPosition = getElementLocationInternal($cell[0], 'horizontal', $(this._columnHeadersView.getContent())[0], scrollable.scrollOffset(), scrollPadding, this.addWidgetPrefix('table'));
-    scrollable.scrollTo({
-      x: scrollPosition
-    });
-  }
   init() {
     super.init();
     this._columnHeadersView = this.getView('columnHeadersView');
@@ -172,36 +143,20 @@ export class HeadersKeyboardNavigationController extends ColumnKeyboardNavigatio
     }
     const focusedCellIsOutsideVisibleArea = $focusedCell.length && this.isOutsideVisibleArea($focusedCell, $(this._columnHeadersView.getContent()));
     if (focusedCellIsOutsideVisibleArea) {
-      this.scrollToColumn($focusedCell);
-    } else {
-      super.restoreFocus();
+      this.scrollToNextCell($focusedCell).then(() => {
+        super.restoreFocus();
+      });
+      return;
     }
+    super.restoreFocus();
   }
   needToFocus() {
     return this.needToRestoreFocus;
   }
 }
-const columnHeadersView = Base => class ColumnHeadersViewKeyboardNavigationExtender extends Base {
-  handleScroll(e) {
-    var _this$_headersKeyboar, _this$_columnsControl;
-    super.handleScroll(e);
-    if (!((_this$_headersKeyboar = this._headersKeyboardNavigation) !== null && _this$_headersKeyboar !== void 0 && _this$_headersKeyboar.needToFocus())) {
-      return;
-    }
-    const isNeedToRenderVirtualColumns = (_this$_columnsControl = this._columnsController) === null || _this$_columnsControl === void 0 ? void 0 : _this$_columnsControl.isNeedToRenderVirtualColumns(e.target.scrollLeft);
-    if (!isNeedToRenderVirtualColumns) {
-      this._headersKeyboardNavigation.restoreFocus();
-    }
-  }
-};
 export const headersKeyboardNavigationModule = {
   controllers: {
     headersKeyboardNavigation: HeadersKeyboardNavigationController,
     columnFocusDispatcher: ColumnFocusDispatcher
-  },
-  extenders: {
-    views: {
-      columnHeadersView
-    }
   }
 };

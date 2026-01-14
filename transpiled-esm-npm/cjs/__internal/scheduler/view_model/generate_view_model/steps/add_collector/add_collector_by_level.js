@@ -5,8 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.addCollectorByLevel = void 0;
 var _split_by_condition = require("./split_by_condition");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const addEmptyCollector = entities => entities.map(entity => _extends({}, entity, {
+const addEmptyCollector = entities => entities.map(entity => Object.assign({}, entity, {
   items: [],
   isCompact: false
 }));
@@ -20,7 +19,7 @@ const groupByOccupation = (entities, cells, maxLevel) => entities.reduce((result
   result[entity.cellIndex].push(entity);
   for (let i = entity.cellIndex + 1; i <= entity.endCellIndex; i += 1) {
     if (entity.level >= maxLevel) {
-      result[i].push(_extends({}, entity, {
+      result[i].push(Object.assign({}, entity, {
         cellIndex: i,
         endCellIndex: i,
         startDateUTC: cells[i].min,
@@ -49,7 +48,7 @@ const addCollectorByLevel = (entities, _ref) => {
     const [free, collected] = (0, _split_by_condition.splitByCondition)(cellEntities, item => item.level < maxLevel);
     result.push(...addEmptyCollector(free));
     if (collected.length > 0) {
-      result.push(_extends({}, collected[0], {
+      result.push(Object.assign({}, collected[0], {
         items: collected,
         isCompact
       }));

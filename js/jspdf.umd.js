@@ -1,12 +1,12 @@
 /** @license
  *
  * jsPDF - PDF Document creation from JavaScript
- * Version 3.0.2 Built on 2025-08-26T11:48:30.929Z
+ * Version 4.0.0 Built on 2025-12-18T10:27:09.424Z
  *                      CommitID 00000000
  *
- * Copyright (c) 2010-2021 James Hall <james@parall.ax>, https://github.com/MrRio/jsPDF
- *               2015-2021 yWorks GmbH, http://www.yworks.com
- *               2015-2021 Lukas Holländer <lukas.hollaender@yworks.com>, https://github.com/HackbrettXXX
+ * Copyright (c) 2010-2025 James Hall <james@parall.ax>, https://github.com/MrRio/jsPDF
+ *               2015-2025 yWorks GmbH, http://www.yworks.com
+ *               2015-2025 Lukas Holländer <lukas.hollaender@yworks.com>, https://github.com/HackbrettXXX
  *               2016-2018 Aras Abbasi <aras.abbasi@gmail.com>
  *               2010 Aaron Spike, https://github.com/acspike
  *               2012 Willow Systems Corporation, https://github.com/willowsystems
@@ -4165,8 +4165,10 @@
           for (var l = 0; l < len; l++) {
             newY = l === 0 ? getVerticalCoordinate(y) : -leading;
             newX = l === 0 ? getHorizontalCoordinate(x) : 0;
+            var numSpaces = da[l].split(" ").length - 1;
+            var _spacing = numSpaces > 0 ? (maxWidth - lineWidths[l]) / numSpaces : 0;
             if (l < len - 1) {
-              wordSpacingPerLine.push(hpf(scale((maxWidth - lineWidths[l]) / (da[l].split(" ").length - 1))));
+              wordSpacingPerLine.push(hpf(scale(_spacing)));
             } else {
               wordSpacingPerLine.push(0);
             }
@@ -5667,8 +5669,8 @@
       this.x = pageX;
       this.y = pageY;
       this.matrix = pageMatrix;
-      this.width = getPageWidth(currentPage);
-      this.height = getPageHeight(currentPage);
+      this.width = getUnscaledPageWidth(currentPage);
+      this.height = getUnscaledPageHeight(currentPage);
       this.outputDestination = outputDestination;
       this.id = ""; // set by endFormObject()
       this.objectNumber = -1; // will be set by putXObject()
@@ -5681,8 +5683,8 @@
       pageX = this.x;
       pageY = this.y;
       pageMatrix = this.matrix;
-      setPageWidth(currentPage, this.width);
-      setPageHeight(currentPage, this.height);
+      setPageWidthWithoutScaling(currentPage, this.width);
+      setPageHeightWithoutScaling(currentPage, this.height);
       outputDestination = this.outputDestination;
     };
     var beginNewRenderTarget = function beginNewRenderTarget(x, y, width, height, matrix) {
@@ -5868,19 +5870,31 @@
         }
       }
     }
+    function getUnscaledPageWidth(pageNumber) {
+      return pagesContext[pageNumber].mediaBox.topRightX - pagesContext[pageNumber].mediaBox.bottomLeftX;
+    }
+    function setPageWidthWithoutScaling(pageNumber, value) {
+      pagesContext[pageNumber].mediaBox.topRightX = value + pagesContext[pageNumber].mediaBox.bottomLeftX;
+    }
+    function getUnscaledPageHeight(pageNumber) {
+      return pagesContext[pageNumber].mediaBox.topRightY - pagesContext[pageNumber].mediaBox.bottomLeftY;
+    }
+    function setPageHeightWithoutScaling(pageNumber, value) {
+      pagesContext[pageNumber].mediaBox.topRightY = value + pagesContext[pageNumber].mediaBox.bottomLeftY;
+    }
     var getPageWidth = API.getPageWidth = function (pageNumber) {
       pageNumber = pageNumber || currentPage;
-      return (pagesContext[pageNumber].mediaBox.topRightX - pagesContext[pageNumber].mediaBox.bottomLeftX) / scaleFactor;
+      return getUnscaledPageWidth(pageNumber) / scaleFactor;
     };
     var setPageWidth = API.setPageWidth = function (pageNumber, value) {
-      pagesContext[pageNumber].mediaBox.topRightX = value * scaleFactor + pagesContext[pageNumber].mediaBox.bottomLeftX;
+      setPageWidthWithoutScaling(pageNumber, value * scaleFactor);
     };
     var getPageHeight = API.getPageHeight = function (pageNumber) {
       pageNumber = pageNumber || currentPage;
-      return (pagesContext[pageNumber].mediaBox.topRightY - pagesContext[pageNumber].mediaBox.bottomLeftY) / scaleFactor;
+      return getUnscaledPageHeight(pageNumber) / scaleFactor;
     };
     var setPageHeight = API.setPageHeight = function (pageNumber, value) {
-      pagesContext[pageNumber].mediaBox.topRightY = value * scaleFactor + pagesContext[pageNumber].mediaBox.bottomLeftY;
+      setPageHeightWithoutScaling(pageNumber, value * scaleFactor);
     };
 
     /**
@@ -5931,7 +5945,9 @@
       getEncryptor: getEncryptor,
       output: output,
       getNumberOfPages: getNumberOfPages,
-      pages: pages,
+      get pages() {
+        return pages;
+      },
       out: out,
       f2: f2,
       f3: f3,
@@ -6008,7 +6024,7 @@
    * @type {string}
    * @memberof jsPDF#
    */
-  jsPDF.version = "3.0.2";
+  jsPDF.version = "4.0.0";
 
   var jsPDFAPI = jsPDF.API;
   var scaleFactor = 1;
@@ -8868,7 +8884,7 @@
           value: "<<" + image.decodeParameters + ">>"
         });
       }
-      if ("transparency" in image && Array.isArray(image.transparency)) {
+      if ("transparency" in image && Array.isArray(image.transparency) && image.transparency.length > 0) {
         var transparency = "",
           i = 0,
           len = image.transparency.length;
@@ -8897,16 +8913,17 @@
 
       // Soft mask
       if ("sMask" in image && typeof image.sMask !== "undefined") {
-        var decodeParameters = (image.predictor != null ? "/Predictor " + image.predictor : "") + " /Colors 1 /BitsPerComponent 8" + " /Columns " + image.width;
+        var _image$sMaskBitsPerCo;
+        var sMaskBitsPerComponent = (_image$sMaskBitsPerCo = image.sMaskBitsPerComponent) !== null && _image$sMaskBitsPerCo !== void 0 ? _image$sMaskBitsPerCo : image.bitsPerComponent;
         var sMask = {
           width: image.width,
           height: image.height,
           colorSpace: "DeviceGray",
-          bitsPerComponent: image.bitsPerComponent,
-          decodeParameters: decodeParameters,
+          bitsPerComponent: sMaskBitsPerComponent,
           data: image.sMask
         };
         if ("filter" in image) {
+          sMask.decodeParameters = "/Predictor ".concat(image.predictor, " /Colors 1 /BitsPerComponent ").concat(sMaskBitsPerComponent, " /Columns ").concat(image.width);
           sMask.filter = image.filter;
         }
         putImage.call(this, sMask);
@@ -10473,7 +10490,7 @@
       if (arguments[0] instanceof Cell) {
         currentCell = arguments[0];
       } else {
-        currentCell = new Cell(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
+        currentCell = new Cell(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6]);
       }
       _initialize.call(this);
       var lastCell = this.internal.__cell__.lastCell;
@@ -11478,11 +11495,16 @@
         }
       });
       var _fontFaceMap = null;
+      var _cachedFontList = null;
       function getFontFaceMap(pdf, fontFaces) {
-        if (_fontFaceMap === null) {
-          var fontMap = pdf.getFontList();
-          var convertedFontFaces = convertToFontFaces(fontMap);
+        var currentFontMap = pdf.getFontList();
+
+        // Check if the font list has changed by comparing the JSON representation
+        var currentFontMapString = JSON.stringify(currentFontMap);
+        if (_fontFaceMap === null || _cachedFontList !== currentFontMapString) {
+          var convertedFontFaces = convertToFontFaces(currentFontMap);
           _fontFaceMap = buildFontFaceMap(convertedFontFaces.concat(fontFaces));
+          _cachedFontList = currentFontMapString;
         }
         return _fontFaceMap;
       }
@@ -11547,6 +11569,7 @@
         },
         set: function set(value) {
           _fontFaceMap = null;
+          _cachedFontList = null;
           _fontFaces = value;
         }
       });
@@ -11560,7 +11583,7 @@
 
           //source: https://stackoverflow.com/a/10136041
           // eslint-disable-next-line no-useless-escape
-          rx = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-_,\"\'\sa-z]+?)\s*$/i;
+          rx = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-_,\"\'\sa-z0-9]+?)\s*$/i;
           matches = rx.exec(value);
           if (matches !== null) {
             var fontStyle = matches[1];
@@ -12501,16 +12524,16 @@
       matrix = matrix.multiply(decomposedTransformationMatrix.skew);
       matrix = matrix.multiply(decomposedTransformationMatrix.scale);
       var xRect = matrix.applyToRectangle(new Rectangle(x - sx * clipFactorX, y - sy * clipFactorY, swidth * factorX, sheight * factorY));
-      var pageArray = getPagesByPath.call(this, xRect);
-      var pages = [];
-      for (var ii = 0; ii < pageArray.length; ii += 1) {
-        if (pages.indexOf(pageArray[ii]) === -1) {
-          pages.push(pageArray[ii]);
-        }
-      }
-      sortPages(pages);
-      var clipPath;
       if (this.autoPaging) {
+        var pageArray = getPagesByPath.call(this, xRect);
+        var pages = [];
+        for (var ii = 0; ii < pageArray.length; ii += 1) {
+          if (pages.indexOf(pageArray[ii]) === -1) {
+            pages.push(pageArray[ii]);
+          }
+        }
+        sortPages(pages);
+        var clipPath;
         var min = pages[0];
         var max = pages[pages.length - 1];
         for (var i = min; i < max + 1; i++) {
@@ -12625,28 +12648,28 @@
       var oldLineWidth = this.lineWidth;
       var lineWidth = Math.abs(oldLineWidth * this.ctx.transform.scaleX);
       var lineJoin = this.lineJoin;
-      var origPath = JSON.parse(JSON.stringify(this.path));
-      var xPath = JSON.parse(JSON.stringify(this.path));
-      var clipPath;
-      var tmpPath;
-      var pages = [];
-      for (var i = 0; i < xPath.length; i++) {
-        if (typeof xPath[i].x !== "undefined") {
-          var page = getPagesByPath.call(this, xPath[i]);
-          for (var ii = 0; ii < page.length; ii += 1) {
-            if (pages.indexOf(page[ii]) === -1) {
-              pages.push(page[ii]);
+      if (this.autoPaging) {
+        var origPath = JSON.parse(JSON.stringify(this.path));
+        var xPath = JSON.parse(JSON.stringify(this.path));
+        var clipPath;
+        var tmpPath;
+        var pages = [];
+        for (var i = 0; i < xPath.length; i++) {
+          if (typeof xPath[i].x !== "undefined") {
+            var page = getPagesByPath.call(this, xPath[i]);
+            for (var ii = 0; ii < page.length; ii += 1) {
+              if (pages.indexOf(page[ii]) === -1) {
+                pages.push(page[ii]);
+              }
             }
           }
         }
-      }
-      for (var j = 0; j < pages.length; j++) {
-        while (this.pdf.internal.getNumberOfPages() < pages[j]) {
-          addPage.call(this);
+        for (var j = 0; j < pages.length; j++) {
+          while (this.pdf.internal.getNumberOfPages() < pages[j]) {
+            addPage.call(this);
+          }
         }
-      }
-      sortPages(pages);
-      if (this.autoPaging) {
+        sortPages(pages);
         var min = pages[0];
         var max = pages[pages.length - 1];
         for (var k = min; k < max + 1; k++) {
@@ -12683,12 +12706,12 @@
           }
           this.lineWidth = oldLineWidth;
         }
+        this.path = origPath;
       } else {
         this.lineWidth = lineWidth;
         drawPaths.call(this, rule, isClip);
         this.lineWidth = oldLineWidth;
       }
-      this.path = origPath;
     };
 
     /**
@@ -12929,23 +12952,23 @@
       var yBottom = getTextBottom.call(this, yBaseLine);
       var yTop = yBottom - textDimensions.h;
       var pt = this.ctx.transform.applyToPoint(new Point(options.x, yBaseLine));
-      var decomposedTransformationMatrix = this.ctx.transform.decompose();
-      var matrix = new Matrix();
-      matrix = matrix.multiply(decomposedTransformationMatrix.translate);
-      matrix = matrix.multiply(decomposedTransformationMatrix.skew);
-      matrix = matrix.multiply(decomposedTransformationMatrix.scale);
-      var baselineRect = this.ctx.transform.applyToRectangle(new Rectangle(options.x, yBaseLine, textDimensions.w, textDimensions.h));
-      var textBounds = matrix.applyToRectangle(new Rectangle(options.x, yTop, textDimensions.w, textDimensions.h));
-      var pageArray = getPagesByPath.call(this, textBounds);
-      var pages = [];
-      for (var ii = 0; ii < pageArray.length; ii += 1) {
-        if (pages.indexOf(pageArray[ii]) === -1) {
-          pages.push(pageArray[ii]);
-        }
-      }
-      sortPages(pages);
       var clipPath, oldSize, oldLineWidth;
       if (this.autoPaging) {
+        var decomposedTransformationMatrix = this.ctx.transform.decompose();
+        var matrix = new Matrix();
+        matrix = matrix.multiply(decomposedTransformationMatrix.translate);
+        matrix = matrix.multiply(decomposedTransformationMatrix.skew);
+        matrix = matrix.multiply(decomposedTransformationMatrix.scale);
+        var baselineRect = this.ctx.transform.applyToRectangle(new Rectangle(options.x, yBaseLine, textDimensions.w, textDimensions.h));
+        var textBounds = matrix.applyToRectangle(new Rectangle(options.x, yTop, textDimensions.w, textDimensions.h));
+        var pageArray = getPagesByPath.call(this, textBounds);
+        var pages = [];
+        for (var ii = 0; ii < pageArray.length; ii += 1) {
+          if (pages.indexOf(pageArray[ii]) === -1) {
+            pages.push(pageArray[ii]);
+          }
+        }
+        sortPages(pages);
         var min = pages[0];
         var max = pages[pages.length - 1];
         for (var i = min; i < max + 1; i++) {
@@ -13923,7 +13946,6 @@
    * @module
    */
   (function (jsPDFAPI) {
-
     /**
      * @name loadFile
      * @function
@@ -13935,6 +13957,39 @@
     jsPDFAPI.loadFile = function (url, sync, callback) {
       return browserRequest(url, sync, callback);
     };
+
+    /**
+     * Controls which local files may be read by jsPDF when running under Node.js.
+     *
+     * Security recommendation:
+     * - We strongly recommend using Node's permission flags (`node --permission --allow-fs-read=...`) instead of this property,
+     *   especially in production. The Node flags are enforced by the runtime and provide stronger guarantees.
+     *
+     * Behavior:
+     * - When present, jsPDF will allow reading only if the requested, resolved absolute path matches any entry in this array.
+     * - Each entry can be either:
+     *   - An absolute or relative file path for an exact match, or
+     *   - A prefix ending with a single wildcard `*` to allow all paths starting with that prefix.
+     * - Examples of allowed patterns:
+     *   - `"./fonts/MyFont.ttf"` (exact match by resolved path)
+     *   - `"/abs/path/to/file.txt"` (exact absolute path)
+     *   - `"./assets/*"` (any file whose resolved path starts with the resolved `./assets/` directory)
+     *
+     * Notes:
+     * - If Node's permission API is available (`process.permission`), it is checked first. If it denies access, reading will fail regardless of `allowFsRead`.
+     * - If neither `process.permission` nor `allowFsRead` is set, reading from the local file system is disabled and an error is thrown.
+     *
+     * Example:
+     * ```js
+     * const doc = jsPDF();
+     * doc.allowFsRead = ["./fonts/*", "./images/logo.png"]; // allow everything under ./fonts and a single file
+     * const ttf = doc.loadFile("./fonts/MyFont.ttf", true);
+     * ```
+     *
+     * @property {string[]|undefined}
+     * @name allowFsRead
+     */
+    jsPDFAPI.allowFsRead = undefined;
 
     /**
      * @name loadImageFile
@@ -23375,6 +23430,7 @@
     var _result = result,
       colorSpace = _result.colorSpace,
       colorsPerPixel = _result.colorsPerPixel,
+      sMaskBitsPerComponent = _result.sMaskBitsPerComponent,
       colorBytes = _result.colorBytes,
       alphaBytes = _result.alphaBytes,
       needSMask = _result.needSMask,
@@ -23385,18 +23441,19 @@
     if (canCompress(compression)) {
       predictor = getPredictorFromCompression(compression);
       filter = this.decode.FLATE_DECODE;
-      decodeParameters = "/Predictor ".concat(predictor, " ");
-      imageData = compressBytes(colorBytes, width * colorsPerPixel, colorsPerPixel, compression);
+      decodeParameters = "/Predictor ".concat(predictor, " /Colors ").concat(colorsPerPixel, " /BitsPerComponent ").concat(bitsPerComponent, " /Columns ").concat(width);
+      var rowByteLength = Math.ceil(width * colorsPerPixel * bitsPerComponent / 8);
+      imageData = compressBytes(colorBytes, rowByteLength, colorsPerPixel, bitsPerComponent, compression);
       if (needSMask) {
-        sMask = compressBytes(alphaBytes, width, 1, compression);
+        var sMaskRowByteLength = Math.ceil(width * sMaskBitsPerComponent / 8);
+        sMask = compressBytes(alphaBytes, sMaskRowByteLength, 1, sMaskBitsPerComponent, compression);
       }
     } else {
       filter = undefined;
-      decodeParameters = "";
+      decodeParameters = undefined;
       imageData = colorBytes;
       if (needSMask) sMask = alphaBytes;
     }
-    decodeParameters += "/Colors ".concat(colorsPerPixel, " /BitsPerComponent ").concat(bitsPerComponent, " /Columns ").concat(width);
     if (this.__addimage__.isArrayBuffer(imageData) || this.__addimage__.isArrayBufferView(imageData)) {
       imageData = this.__addimage__.arrayBufferToBinaryString(imageData);
     }
@@ -23416,6 +23473,7 @@
       width: width,
       height: height,
       bitsPerComponent: bitsPerComponent,
+      sMaskBitsPerComponent: sMaskBitsPerComponent,
       colorSpace: colorSpace
     };
   };
@@ -23444,7 +23502,7 @@
   function hasCompressionJS() {
     return typeof zlibSync === "function";
   }
-  function compressBytes(bytes, lineLength, colorsPerPixel, compression) {
+  function compressBytes(bytes, lineByteLength, channels, bitsPerComponent, compression) {
     var level = 4;
     var filter_method = filterUp;
     switch (compression) {
@@ -23461,27 +23519,28 @@
         filter_method = filterPaeth;
         break;
     }
-    bytes = applyPngFilterMethod(bytes, lineLength, colorsPerPixel, filter_method);
+    var bytesPerPixel = Math.ceil(channels * bitsPerComponent / 8);
+    bytes = applyPngFilterMethod(bytes, lineByteLength, bytesPerPixel, filter_method);
     var dat = zlibSync(bytes, {
       level: level
     });
     return jsPDF.API.__addimage__.arrayBufferToBinaryString(dat);
   }
-  function applyPngFilterMethod(bytes, lineLength, colorsPerPixel, filter_method) {
-    var lines = bytes.length / lineLength;
+  function applyPngFilterMethod(bytes, lineByteLength, bytesPerPixel, filter_method) {
+    var lines = bytes.length / lineByteLength;
     var result = new Uint8Array(bytes.length + lines);
     var filter_methods = getFilterMethods();
     var prevLine;
     for (var i = 0; i < lines; i += 1) {
-      var offset = i * lineLength;
-      var line = bytes.subarray(offset, offset + lineLength);
+      var offset = i * lineByteLength;
+      var line = bytes.subarray(offset, offset + lineByteLength);
       if (filter_method) {
-        result.set(filter_method(line, colorsPerPixel, prevLine), offset + i);
+        result.set(filter_method(line, bytesPerPixel, prevLine), offset + i);
       } else {
         var len = filter_methods.length;
         var results = [];
         for (var j = 0; j < len; j += 1) {
-          results[j] = filter_methods[j](line, colorsPerPixel, prevLine);
+          results[j] = filter_methods[j](line, bytesPerPixel, prevLine);
         }
         var ind = getIndexOfSmallestSum(results.concat());
         result.set(results[ind], offset + i);
@@ -23618,6 +23677,7 @@
       needSMask = true;
       mask = undefined;
       var totalPixels = width * height;
+      // per PNG spec, palettes always use 8 bits per component
       alphaBytes = new Uint8Array(totalPixels);
       var dataView = new DataView(data.buffer);
       for (var p = 0; p < totalPixels; p++) {
@@ -23626,10 +23686,13 @@
           alpha = _decodedPalette$palet[3];
         alphaBytes[p] = alpha;
       }
+    } else if (maskLength === 0) {
+      mask = undefined;
     }
     return {
       colorSpace: "Indexed",
       colorsPerPixel: 1,
+      sMaskBitsPerComponent: needSMask ? 8 : undefined,
       colorBytes: data,
       alphaBytes: alphaBytes,
       needSMask: needSMask,
@@ -23679,6 +23742,7 @@
     return {
       colorSpace: colorSpace,
       colorsPerPixel: colorsPerPixel,
+      sMaskBitsPerComponent: needSMask ? depth : undefined,
       colorBytes: colorBytes,
       alphaBytes: alphaBytes,
       needSMask: needSMask
@@ -23689,13 +23753,30 @@
       channels = decodedPng.channels;
     var colorSpace = channels === 1 ? "DeviceGray" : "DeviceRGB";
     var colorsPerPixel = colorSpace === "DeviceGray" ? 1 : 3;
-    var colorBytes = data instanceof Uint8Array ? data : new Uint8Array(data.buffer);
+    var colorBytes;
+    if (data instanceof Uint16Array) {
+      colorBytes = convertUint16ArrayToUint8Array(data);
+    } else {
+      colorBytes = data;
+    }
     return {
       colorSpace: colorSpace,
       colorsPerPixel: colorsPerPixel,
       colorBytes: colorBytes,
       needSMask: false
     };
+  }
+  function convertUint16ArrayToUint8Array(data) {
+    // PNG/PDF expect MSB-first byte order. Since EcmaScript does not specify
+    // the byte order of Uint16Array, we need to use a DataView to ensure the
+    // correct byte order.
+    var sampleCount = data.length;
+    var out = new Uint8Array(sampleCount * 2);
+    var outView = new DataView(out.buffer, out.byteOffset, out.byteLength);
+    for (var i = 0; i < sampleCount; i++) {
+      outView.setUint16(i * 2, data[i], false);
+    }
+    return out;
   }
   function readSample(view, sampleIndex, depth) {
     var bitIndex = sampleIndex * depth;
@@ -27954,9 +28035,6 @@
       function wd(a, b, c, d, e) {
         Ga(a, b, c, d, e);
         d[e + 3] = 255;
-      }
-      function ga(a, b) {
-        return 0 > a ? 0 : a > b ? b : a;
       }
       function la(a, b, c) {
         self[a] = function (a, e, f, g, h, k, l, m, n) {

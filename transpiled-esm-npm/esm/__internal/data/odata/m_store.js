@@ -84,7 +84,7 @@ const ODataStore = Store.inherit({
       withCredentials: this._requestDispatcher._withCredentials,
       expand: loadOptions === null || loadOptions === void 0 ? void 0 : loadOptions.expand,
       requireTotalCount: loadOptions === null || loadOptions === void 0 ? void 0 : loadOptions.requireTotalCount,
-      deserializeDates: this._requestDispatcher._deserializeDates,
+      processDatesAsUtc: this._requestDispatcher._processDatesAsUtc,
       fieldTypes: this._fieldTypes
     };
     // NOTE: For AppBuilder, do not remove

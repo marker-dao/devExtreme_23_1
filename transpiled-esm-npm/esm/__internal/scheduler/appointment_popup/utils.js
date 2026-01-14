@@ -20,7 +20,8 @@ export const getStartDateCommonConfig = firstDayOfWeek => ({
     type: 'date',
     useMaskBehavior: true,
     calendarOptions: {
-      firstDayOfWeek
+      firstDayOfWeek,
+      showTodayButton: true
     }
   }
 });

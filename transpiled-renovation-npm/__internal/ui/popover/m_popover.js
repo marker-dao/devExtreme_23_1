@@ -23,7 +23,6 @@ var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
 var _m_popup = _interopRequireDefault(require("../../ui/popup/m_popup"));
 var _popover_position_controller = require("./popover_position_controller");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE popover
 const POPOVER_CLASS = 'dx-popover';
 const POPOVER_WRAPPER_CLASS = 'dx-popover-wrapper';
@@ -38,7 +37,7 @@ const POSITION_FLIP_MAP = {
 };
 class Popover extends _m_popup.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       shading: false,
       position: (0, _extend.extend)({}, _popover_position_controller.POPOVER_POSITION_ALIASES.bottom),
       hideOnOutsideClick: true,
@@ -112,11 +111,12 @@ class Popover extends _m_popup.default {
     }];
   }
   _init() {
+    var _this$$wrapper;
     super._init();
     this._renderArrow();
     this._timeouts = {};
     this.$element().addClass(POPOVER_CLASS);
-    this.$wrapper().addClass(POPOVER_WRAPPER_CLASS);
+    (_this$$wrapper = this.$wrapper()) === null || _this$$wrapper === void 0 || _this$$wrapper.addClass(POPOVER_WRAPPER_CLASS);
     const {
       toolbarItems
     } = this.option();
@@ -244,7 +244,8 @@ class Popover extends _m_popup.default {
     super._stopAnimation.apply(this, arguments);
   }
   _renderTopToolbar() {
-    this.$wrapper().toggleClass(POPOVER_WITHOUT_TITLE_CLASS, !this.option('showTitle'));
+    var _this$$wrapper2;
+    (_this$$wrapper2 = this.$wrapper()) === null || _this$$wrapper2 === void 0 || _this$$wrapper2.toggleClass(POPOVER_WITHOUT_TITLE_CLASS, !this.option('showTitle'));
     super._renderTopToolbar();
   }
   _renderPosition() {
@@ -323,10 +324,12 @@ class Popover extends _m_popup.default {
     return undefined;
   }
   _togglePositionClass(positionClass) {
-    this.$wrapper().removeClass('dx-position-left dx-position-right dx-position-top dx-position-bottom').addClass(positionClass);
+    var _this$$wrapper3;
+    (_this$$wrapper3 = this.$wrapper()) === null || _this$$wrapper3 === void 0 || _this$$wrapper3.removeClass('dx-position-left dx-position-right dx-position-top dx-position-bottom').addClass(positionClass);
   }
   _toggleFlippedClass(isFlippedHorizontal, isFlippedVertical) {
-    this.$wrapper().toggleClass('dx-popover-flipped-horizontal', isFlippedHorizontal).toggleClass('dx-popover-flipped-vertical', isFlippedVertical);
+    var _this$$wrapper4;
+    (_this$$wrapper4 = this.$wrapper()) === null || _this$$wrapper4 === void 0 || _this$$wrapper4.toggleClass('dx-popover-flipped-horizontal', isFlippedHorizontal).toggleClass('dx-popover-flipped-vertical', isFlippedVertical);
   }
   _renderArrowPosition(side) {
     var _this$_positionContro2;
@@ -383,11 +386,11 @@ class Popover extends _m_popup.default {
       shading,
       target
     } = this.option();
-    const properties = _extends({}, superConfiguration.properties, {
+    const properties = Object.assign({}, superConfiguration.properties, {
       target,
       shading
     });
-    const elements = _extends({}, superConfiguration.elements, {
+    const elements = Object.assign({}, superConfiguration.elements, {
       $arrow: this._$arrow
     });
     const configuration = {
@@ -401,7 +404,8 @@ class Popover extends _m_popup.default {
   }
   _renderWrapperDimensions() {
     if (this.option('shading')) {
-      this.$wrapper().css({
+      var _this$$wrapper5;
+      (_this$$wrapper5 = this.$wrapper()) === null || _this$$wrapper5 === void 0 || _this$$wrapper5.css({
         width: '100%',
         height: '100%'
       });

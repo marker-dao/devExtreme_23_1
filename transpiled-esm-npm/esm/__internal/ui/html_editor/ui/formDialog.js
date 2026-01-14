@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import localizationMessage from '../../../../common/core/localization/message';
 import $ from '../../../../core/renderer';
 import { extend } from '../../../../core/utils/extend';
@@ -44,7 +43,7 @@ export default class FormDialog extends BaseDialog {
   }
   _getPopupConfig() {
     const baseConfig = super._getPopupConfig();
-    return extend(true, {}, baseConfig, _extends({
+    return extend(true, {}, baseConfig, Object.assign({
       showCloseButton: false,
       onInitialized: e => {
         this._popup = e.component;
@@ -58,7 +57,7 @@ export default class FormDialog extends BaseDialog {
         toolbar: 'bottom',
         location: 'after',
         widget: 'dxButton',
-        options: _extends({
+        options: Object.assign({
           onInitialized: this._addEscapeHandler.bind(this),
           text: localizationMessage.format('OK'),
           onClick: e => {
@@ -69,7 +68,7 @@ export default class FormDialog extends BaseDialog {
         toolbar: 'bottom',
         location: 'after',
         widget: 'dxButton',
-        options: _extends({
+        options: Object.assign({
           onInitialized: this._addEscapeHandler.bind(this),
           text: localizationMessage.format('Cancel'),
           onClick: () => {

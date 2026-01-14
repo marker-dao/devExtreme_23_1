@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { noop as _noop } from '../../../core/utils/common';
 import { extend as _extend } from '../../../core/utils/extend';
 import { reverseEach as _reverseEach } from '../../../core/utils/iterator';
@@ -441,7 +440,7 @@ export const AdvancedChart = BaseChart.inherit({
       const commonInterval = commonArgRange.interval;
       this._argumentAxes.forEach(a => {
         const currentInterval = argRanges[getPaneName(a)].interval ?? commonInterval; // T956425
-        a.setBusinessRange(new Range(_extends({}, commonArgRange, {
+        a.setBusinessRange(new Range(Object.assign({}, commonArgRange, {
           interval: currentInterval
         })), this._axesReinitialized, undefined, this._groupsData.categories);
       });
@@ -594,7 +593,7 @@ export const AdvancedChart = BaseChart.inherit({
     const name = fullName.split(/[.[]/)[0];
     let index = fullName.match(/\d+/g);
     index = _isDefined(index) ? parseInt(index[0], 10) : index;
-    if (fullName.indexOf('visualRange') > 0) {
+    if (fullName.split('.').indexOf('visualRange') > 0) {
       if (type(value) !== 'object') {
         value = wrapVisualRange(fullName, value) ?? value;
       }
@@ -696,13 +695,14 @@ export const AdvancedChart = BaseChart.inherit({
   _optionChanged(arg) {
     if (!this._optionChangedLocker) {
       const optionName = 'visualRange';
-      let axes;
-      const isDirectOption = arg.fullName.indexOf(optionName) > 0 ? true : this.getPartialChangeOptionsName(arg).indexOf(optionName) > -1 ? false : undefined;
+      const isDirectOption = arg.fullName.split('.').indexOf(optionName) > 0 ? true : this.getPartialChangeOptionsName(arg).indexOf(optionName) > -1 ? false : undefined;
       if (_isDefined(isDirectOption)) {
-        axes = this._getAxesByOptionPath(arg, isDirectOption, optionName);
+        const axes = this._getAxesByOptionPath(arg, isDirectOption, optionName);
         if (axes) {
           if (axes.length > 1 || isArray(arg.value)) {
-            axes.forEach((a, index) => setAxisVisualRangeByOption(arg, a, isDirectOption, index));
+            axes.forEach((a, index) => {
+              setAxisVisualRangeByOption(arg, a, isDirectOption, index);
+            });
           } else if (axes.length === 1) {
             setAxisVisualRangeByOption(arg, axes[0], isDirectOption);
           }

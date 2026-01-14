@@ -8,11 +8,10 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _m_slider_tooltip = _interopRequireDefault(require("../../ui/slider/m_slider_tooltip"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const SLIDER_HANDLE_CLASS = 'dx-slider-handle';
 class SliderHandle extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: false,
       value: 0,
       tooltip: {

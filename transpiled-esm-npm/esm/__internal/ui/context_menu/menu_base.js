@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import devices from '../../../core/devices';
 import $ from '../../../core/renderer';
 // @ts-expect-error ts-error
@@ -40,7 +39,7 @@ class MenuBase extends HierarchicalCollectionWidget {
     return `.${ITEM_CLASS}`;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       items: [],
       cssClass: '',
       activeStateEnabled: true,
@@ -109,7 +108,7 @@ class MenuBase extends HierarchicalCollectionWidget {
       }
       this.selectItem($item[0]);
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       space: selectItem,
       pageUp: noop,
       pageDown: noop

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable func-names */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
@@ -13,7 +12,7 @@ export const createContext = function (defaultValue) {
     defaultValue,
     Provider: class extends Component {
       getChildContext() {
-        return _extends({}, this.context, {
+        return Object.assign({}, this.context, {
           [id]: this.props.value || defaultValue
         });
       }

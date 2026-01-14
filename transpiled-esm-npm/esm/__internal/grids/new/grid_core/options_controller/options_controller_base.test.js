@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { createComponentMock } from './component.mock';
@@ -170,7 +169,7 @@ describe('oneWay', () => {
           optionsController
         } = setup(optionalOptions, defaultNestedPlainOptions);
         const value = optionsController.oneWay('nested');
-        expect(value.peek()).toStrictEqual(_extends({}, defaultNestedPlainOptions.nested, optionalOptions.nested));
+        expect(value.peek()).toStrictEqual(Object.assign({}, defaultNestedPlainOptions.nested, optionalOptions.nested));
       });
     });
     describe('array options', () => {

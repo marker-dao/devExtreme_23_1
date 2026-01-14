@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.getMaxAllowedPosition = exports.getGroupWidth = exports.getCellWidth = exports.getCellHeight = exports.getAllDayHeight = exports.PositionHelper = void 0;
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 /* eslint-disable max-classes-per-file */
 const getCellSize = DOMMetaData => {
   const {
@@ -170,7 +169,7 @@ class GroupStrategyBase {
     return result;
   }
   getVerticalMax(options) {
-    let maxAllowedPosition = this._getMaxAllowedVerticalPosition(_extends({}, options, {
+    let maxAllowedPosition = this._getMaxAllowedVerticalPosition(Object.assign({}, options, {
       viewDataProvider: this.viewDataProvider,
       rtlEnabled: this.rtlEnabled,
       DOMMetaData: this.DOMMetaData
@@ -230,7 +229,7 @@ class GroupStrategyHorizontal extends GroupStrategyBase {
       groupIndex
     } = options;
     const correctedGroupIndex = isVirtualScrolling ? groupIndex : 0;
-    return this._getMaxAllowedVerticalPosition(_extends({}, options, {
+    return this._getMaxAllowedVerticalPosition(Object.assign({}, options, {
       groupIndex: correctedGroupIndex
     }));
   }

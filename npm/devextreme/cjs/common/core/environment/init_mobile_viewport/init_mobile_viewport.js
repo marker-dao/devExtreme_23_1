@@ -1,0 +1,17 @@
+/**
+* DevExtreme (cjs/common/core/environment/init_mobile_viewport/init_mobile_viewport.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "initMobileViewport", {
+  enumerable: true,
+  get: function () {
+    return _init_mobile_viewport.initMobileViewport;
+  }
+});
+var _init_mobile_viewport = require("../../../../__internal/core/environment/init_mobile_viewport");

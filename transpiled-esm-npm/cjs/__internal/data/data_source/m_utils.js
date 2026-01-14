@@ -14,8 +14,7 @@ var _type = require("../../../core/utils/type");
 var _abstract_store = _interopRequireDefault(require("../../../data/abstract_store"));
 const _excluded = ["items"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const CANCELED_TOKEN = exports.CANCELED_TOKEN = 'canceled';
 const isPending = deferred => deferred.state() === 'pending';
 exports.isPending = isPending;
@@ -32,7 +31,7 @@ const normalizeStoreLoadOptionAccessorArguments = originalArguments => {
 exports.normalizeStoreLoadOptionAccessorArguments = normalizeStoreLoadOptionAccessorArguments;
 const mapGroup = (group, level, mapper) => (0, _iterator.map)(group, item => {
   const restItem = _objectWithoutPropertiesLoose(item, _excluded);
-  return _extends({}, restItem, {
+  return Object.assign({}, restItem, {
     items: mapRecursive(item.items, level - 1, mapper)
   });
 });

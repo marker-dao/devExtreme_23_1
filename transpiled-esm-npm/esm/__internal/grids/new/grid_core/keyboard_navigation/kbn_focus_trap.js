@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["elementRef", "children"],
   _excluded2 = ["elementRef", "onKeyDown", "children"],
@@ -31,7 +30,7 @@ export const KbnFocusTrapDisabled = props => {
     "data-dx-focus-decoy": false
   })], 0, {
     "data-dx-focus-trap-content": false
-  }), 2, _extends({}, restProps), null, elementRef));
+  }), 2, Object.assign({}, restProps), null, elementRef));
 };
 export class KbnFocusTrapEnabled extends Component {
   constructor() {
@@ -63,7 +62,7 @@ export class KbnFocusTrapEnabled extends Component {
     }, null, this.lastFocusDecoyRef)], 0, {
       "data-dx-focus-trap-content": true,
       "onKeyDown": this.onContentKeyDown.bind(this)
-    }), 2, _extends({
+    }), 2, Object.assign({
       "onKeyDown": this.onKeyDown.bind(this)
     }, restProps), null, ref));
   }
@@ -125,9 +124,9 @@ export const KbnFocusTrap = props => {
       onKeyDown
     } = props,
     restProps = _objectWithoutPropertiesLoose(props, _excluded3);
-  return enabled ? normalizeProps(createComponentVNode(2, KbnFocusTrapEnabled, _extends({}, restProps, {
+  return enabled ? normalizeProps(createComponentVNode(2, KbnFocusTrapEnabled, Object.assign({}, restProps, {
     "onKeyDown": onKeyDown
-  }))) : normalizeProps(createComponentVNode(2, KbnFocusTrapDisabled, _extends({}, restProps, {
+  }))) : normalizeProps(createComponentVNode(2, KbnFocusTrapDisabled, Object.assign({}, restProps, {
     "onKeyDown": onKeyDown
   })));
 };

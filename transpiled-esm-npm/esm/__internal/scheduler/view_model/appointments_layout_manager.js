@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { filterAppointments } from './filtration/filter_appointments';
 import { generateAgendaViewModel } from './generate_view_model/generate_agenda_view_model';
 import { generateGridViewModel } from './generate_view_model/generate_grid_view_model';
@@ -24,7 +23,7 @@ class AppointmentLayoutManager {
     const viewType = this.schedulerStore.currentView.type;
     if (viewType === 'agenda') {
       const viewModel = generateAgendaViewModel(this.schedulerStore, this.filteredItems);
-      return viewModel.map(item => _extends({}, item, {
+      return viewModel.map(item => Object.assign({}, item, {
         isAgendaModel: true,
         info: getAgendaAppointmentInfo(item)
       }));

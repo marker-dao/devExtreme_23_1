@@ -13,8 +13,7 @@ var _popup = _interopRequireDefault(require("../../../ui/popup"));
 var _button = require("../../ui/button/button");
 const _excluded = ["onApplyButtonClick", "onCancelButtonClick"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const CHAT_CONFIRMATION_POPUP_WRAPPER_CLASS = exports.CHAT_CONFIRMATION_POPUP_WRAPPER_CLASS = 'dx-chat-confirmation-popup-wrapper';
 const POPUP_WIDTH = 240;
 class ConfirmationPopup {
@@ -40,7 +39,7 @@ class ConfirmationPopup {
   _getPopupConfig() {
     const messageId = new _guid.default().toString();
     const $message = (0, _renderer.default)('<div>').text(_message.default.format('dxChat-editingDeleteConfirmText')).attr('id', messageId);
-    return (0, _extend.extend)(_extends({
+    return (0, _extend.extend)(Object.assign({
       width: POPUP_WIDTH,
       height: 'auto',
       showTitle: false,

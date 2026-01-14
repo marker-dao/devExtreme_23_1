@@ -2,7 +2,6 @@
 
 var _globals = require("@jest/globals");
 var _virtual_screen_crop = require("./virtual_screen_crop");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const options = {
   isVirtualScrolling: true,
   getVirtualScreen: () => ({
@@ -15,7 +14,7 @@ const options = {
 (0, _globals.describe)('cropByVirtualScreen', () => {
   (0, _globals.it)('should do nothing for isVirtualScrolling=false', () => {
     const entities = [1, 2, 3];
-    (0, _globals.expect)((0, _virtual_screen_crop.cropByVirtualScreen)(entities, _extends({}, options, {
+    (0, _globals.expect)((0, _virtual_screen_crop.cropByVirtualScreen)(entities, Object.assign({}, options, {
       isVirtualScrolling: false
     }))).toEqual(entities);
   });

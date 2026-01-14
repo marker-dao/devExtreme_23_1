@@ -10,7 +10,6 @@ var _validation_engine = _interopRequireDefault(require("../../../ui/validation_
 var _component_wrapper = require("../../core/r1/component_wrapper");
 var _button = require("./button");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // STYLE button
 class Button extends _component_wrapper.ComponentWrapper {
   // eslint-disable-next-line @stylistic/max-len
@@ -114,7 +113,7 @@ class Button extends _component_wrapper.ComponentWrapper {
     }
   }
   _patchOptionValues(options) {
-    return super._patchOptionValues(_extends({}, options, {
+    return super._patchOptionValues(Object.assign({}, options, {
       templateData: options._templateData
     }));
   }

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 // import type { ReadonlySignal } from '../../../../../core/state_manager/index';
 // import { computed } from '../../../../../core/state_manager/index';
 import { equalByValue } from '../../../../../../core/utils/common';
@@ -94,7 +93,7 @@ export class FilterSyncController {
       const filterConditions = getMatchedConditions(filterPanelValue, columnId);
       const filterType = getFilterType(filterConditions);
       const filterValues = filterType ? getFilterValues(filterConditions) : undefined;
-      return _extends({}, column, {
+      return Object.assign({}, column, {
         filterType,
         filterValues
       });

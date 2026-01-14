@@ -15,7 +15,8 @@ var _m_utils = require("../m_utils");
 var _constants_view = require("../utils/options/constants_view");
 var _m_work_space_indicator = _interopRequireDefault(require("./m_work_space_indicator"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // NOTE: Renovation component import.
+// NOTE: Renovation component import.
+
 const MONTH_CLASS = 'dx-scheduler-work-space-month';
 const DATE_TABLE_CURRENT_DATE_CLASS = 'dx-scheduler-date-table-current-date';
 const DATE_TABLE_CELL_TEXT_CLASS = 'dx-scheduler-date-table-cell-text';
@@ -38,7 +39,7 @@ class SchedulerWorkSpaceMonth extends _m_work_space_indicator.default {
     return currentDate.getTime() - (firstViewDate.getTime() - this.option('startDayHour') * 3600000) - timeZoneOffset;
   }
   _getDateGenerationOptions() {
-    return _extends({}, super._getDateGenerationOptions(), {
+    return Object.assign({}, super._getDateGenerationOptions(), {
       cellCountInDay: 1
     });
   }

@@ -20,7 +20,7 @@ var FilterControllerModule = _interopRequireWildcard(require("./filtering/index"
 var _items_controller = require("./items_controller/items_controller");
 var _index8 = require("./keyboard_navigation/index");
 var Lifecycle = _interopRequireWildcard(require("./lifecycle/index"));
-var _index10 = require("./options_validation/index");
+var _index0 = require("./options_validation/index");
 var _view2 = require("./pager/view");
 var _controller3 = require("./search/controller");
 var _view3 = require("./search/view");
@@ -28,8 +28,7 @@ var SelectionControllerModule = _interopRequireWildcard(require("./selection/ind
 var SortingControllerModule = _interopRequireWildcard(require("./sorting_controller/index"));
 var _controller4 = require("./toolbar/controller");
 var _view4 = require("./toolbar/view");
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function register(diContext) {
   diContext.register(DataControllerModule.DataController);
   diContext.register(DataControllerModule.CompatibilityDataController);
@@ -61,6 +60,6 @@ function register(diContext) {
   diContext.register(_view_controller.HeaderFilterViewController);
   diContext.register(_index8.KeyboardNavigationController);
   diContext.register(_controller.AccessibilityController);
-  diContext.register(_index10.OptionsValidationController);
+  diContext.register(_index0.OptionsValidationController);
   diContext.register(Lifecycle.Controller);
 }

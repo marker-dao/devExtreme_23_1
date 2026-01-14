@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import Widget from '../../ui/widget/ui.widget';
 import { extend } from '../core/utils/m_extend';
 import timeZoneUtils from './m_utils_time_zone';
@@ -19,7 +18,7 @@ export class SchedulerOptionsBaseWidget extends Widget {
   _getDefaultOptions() {
     // @ts-expect-error
     const options = super._getDefaultOptions();
-    return extend(true, options, _extends({}, DEFAULT_SCHEDULER_OPTIONS, DEFAULT_SCHEDULER_INTERNAL_OPTIONS, DEFAULT_SCHEDULER_INTEGRATION_OPTIONS));
+    return extend(true, options, Object.assign({}, DEFAULT_SCHEDULER_OPTIONS, DEFAULT_SCHEDULER_INTERNAL_OPTIONS, DEFAULT_SCHEDULER_INTEGRATION_OPTIONS));
   }
   _defaultOptionsRules() {
     // @ts-expect-error
@@ -49,7 +48,7 @@ export class SchedulerOptionsBaseWidget extends Widget {
     this.validateOptions();
   }
   validateOptions() {
-    const currentViewOptions = _extends({}, this.option(), {
+    const currentViewOptions = Object.assign({}, this.option(), {
       // NOTE: We override this.option values here
       // because the old validation logic checked only current view options.
       // Changing it and validate all views configuration will be a BC.

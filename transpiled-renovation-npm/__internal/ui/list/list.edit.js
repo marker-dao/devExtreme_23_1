@@ -15,7 +15,6 @@ var _list = require("../../ui/list/list.base");
 var _listEdit = _interopRequireDefault(require("../../ui/list/list.edit.provider"));
 var _listEditStrategy = _interopRequireDefault(require("../../ui/list/list.edit.strategy.grouped"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const LIST_ITEM_SELECTED_CLASS = 'dx-list-item-selected';
 const LIST_ITEM_RESPONSE_WAIT_CLASS = 'dx-list-item-response-wait';
 class ListEdit extends _list.ListBase {
@@ -78,7 +77,7 @@ class ListEdit extends _list.ListBase {
         parent.space.apply(this, [e]);
       }
     };
-    return _extends({}, parent, {
+    return Object.assign({}, parent, {
       del: deleteFocusedItem,
       upArrow: e => moveFocusedItem(e, true),
       downArrow: e => moveFocusedItem(e),
@@ -108,7 +107,7 @@ class ListEdit extends _list.ListBase {
     return super._isItemStrictEquals(item1, item2);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       showSelectionControls: false,
       selectionMode: 'none',
       selectAllMode: 'page',

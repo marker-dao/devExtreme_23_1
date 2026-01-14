@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace } from '../../../common/core/events/utils/index';
 import messageLocalization from '../../../common/core/localization/message';
@@ -476,7 +475,7 @@ class DateRangeBox extends Editor {
   _getStartDateBoxConfig() {
     var _options$dropDownOpti;
     const options = this.option();
-    return _extends({}, this._getDateBoxConfig(), {
+    return Object.assign({}, this._getDateBoxConfig(), {
       applyButtonText: options.applyButtonText,
       calendarOptions: options.calendarOptions,
       cancelButtonText: options.cancelButtonText,
@@ -484,7 +483,7 @@ class DateRangeBox extends Editor {
       deferRendering: options.deferRendering,
       // @ts-expect-error
       disabledDates: (_options$dropDownOpti = options.dropDownOptions) === null || _options$dropDownOpti === void 0 ? void 0 : _options$dropDownOpti.disabledDates,
-      dropDownOptions: _extends({
+      dropDownOptions: Object.assign({
         showTitle: false,
         title: '',
         hideOnOutsideClick: e => this._hideOnOutsideClickHandler(e),
@@ -534,7 +533,7 @@ class DateRangeBox extends Editor {
   }
   _getEndDateBoxConfig() {
     const options = this.option();
-    return _extends({}, this._getDateBoxConfig(), {
+    return Object.assign({}, this._getDateBoxConfig(), {
       invalidDateMessage: options.invalidEndDateMessage,
       dateOutOfRangeMessage: options.endDateOutOfRangeMessage,
       onValueChanged: _ref3 => {
@@ -899,7 +898,7 @@ class DateRangeBox extends Editor {
           // @ts-expect-error
           this._options.silent('validationErrors', newValue);
           // @ts-expect-error
-          super._optionChanged(_extends({}, args, {
+          super._optionChanged(Object.assign({}, args, {
             value: newValue
           }));
           break;

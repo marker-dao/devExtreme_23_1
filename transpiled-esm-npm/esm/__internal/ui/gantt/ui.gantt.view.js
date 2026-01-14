@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { cancelAnimationFrame, requestAnimationFrame } from '../../../common/core/animation/frame';
 import coreLocalization from '../../../common/core/localization/core';
@@ -44,7 +43,7 @@ export class GanttView extends Widget {
       stripLines: {
         // @ts-expect-error ts-error
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        stripLines: (_this$option = this.option('stripLines')) === null || _this$option === void 0 ? void 0 : _this$option.map(item => _extends({}, item))
+        stripLines: (_this$option = this.option('stripLines')) === null || _this$option === void 0 ? void 0 : _this$option.map(item => Object.assign({}, item))
       },
       areHorizontalBordersEnabled: this.option('showRowLines'),
       areAlternateRowsEnabled: false,

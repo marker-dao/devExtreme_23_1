@@ -1,5 +1,4 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-import _extends from "@babel/runtime/helpers/esm/extends";
 const _excluded = ["accessKey", "activeStateEnabled", "aria", "className", "classes", "defaultValue", "disabled", "enableThreeStateBehavior", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "iconSize", "inputAttr", "isDirty", "isValid", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "saveValueChangeEvent", "tabIndex", "text", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "visible", "width"];
 import { createVNode, createFragment, createComponentVNode, normalizeProps } from "inferno";
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -26,7 +25,7 @@ const getCssClasses = model => {
   };
   return combineClasses(classesMap);
 };
-export const defaultCheckBoxProps = _extends({}, defaultEditorProps, {
+export const defaultCheckBoxProps = Object.assign({}, defaultEditorProps, {
   text: '',
   enableThreeStateBehavior: false,
   activeStateEnabled: true,
@@ -110,7 +109,7 @@ export class CheckBox extends InfernoWrapperComponent {
     return undefined;
   }
   get cssClasses() {
-    return getCssClasses(_extends({}, this.props, {
+    return getCssClasses(Object.assign({}, this.props, {
       // @ts-expect-error
       value: this.props.value !== undefined ? this.props.value : this.state.value
     }));
@@ -122,7 +121,7 @@ export class CheckBox extends InfernoWrapperComponent {
       role: 'checkbox',
       checked: indeterminate ? 'mixed' : `${checked}`
     };
-    return _extends({}, result, this.props.aria);
+    return Object.assign({}, result, this.props.aria);
   }
   get restAttributes() {
     const _this$props3 = this.props,
@@ -137,7 +136,7 @@ export class CheckBox extends InfernoWrapperComponent {
   }
   render() {
     const value = this.props.value !== undefined ? this.props.value : this.state.value;
-    return normalizeProps(createComponentVNode(2, Editor, _extends({
+    return normalizeProps(createComponentVNode(2, Editor, Object.assign({
       "aria": this.aria,
       "classes": this.cssClasses,
       "onClick": this.onWidgetClick,
@@ -163,7 +162,7 @@ export class CheckBox extends InfernoWrapperComponent {
       "isValid": this.props.isValid,
       "onFocusIn": this.props.onFocusIn
     }, this.restAttributes, {
-      children: createFragment([normalizeProps(createVNode(64, "input", null, null, 1, _extends({
+      children: createFragment([normalizeProps(createVNode(64, "input", null, null, 1, Object.assign({
         "type": "hidden",
         "value": `${value}`
       }, this.props.name && {

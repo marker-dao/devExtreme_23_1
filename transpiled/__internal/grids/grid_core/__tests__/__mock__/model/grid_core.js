@@ -11,6 +11,8 @@ var _ai_prompt_editor = require("./ai_prompt_editor");
 var _ai_header_cell = require("./cell/ai_header_cell");
 var _data_cell = require("./cell/data_cell");
 var _header_cell = require("./cell/header_cell");
+var _edit_form = require("./edit_form");
+var _data_row = require("./row/data_row");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const SELECTORS = {
   headerRowClass: 'dx-header-row',
@@ -19,7 +21,10 @@ const SELECTORS = {
   aiDialog: 'dx-aidialog',
   aiPromptEditor: 'dx-ai-prompt-editor',
   toast: 'dx-toast',
-  loadPanel: 'dx-loadpanel'
+  loadPanel: 'dx-loadpanel',
+  editForm: 'edit-form',
+  headerCellIndicators: 'dx-column-indicators',
+  headerCellFilter: 'dx-header-filter'
 };
 class GridCoreModel {
   constructor(root) {
@@ -37,14 +42,22 @@ class GridCoreModel {
   getAIHeaderCell(columnIndex) {
     return new _ai_header_cell.AIHeaderCellModel(this.getHeaderCells()[columnIndex], this.addWidgetPrefix.bind(this));
   }
+  getHeaderCellFilter(columnIndex) {
+    const $headerCell = (0, _renderer.default)(this.getHeaderCells()[columnIndex]);
+    const headerFilterSelector = `.${SELECTORS.headerCellIndicators} > .${SELECTORS.headerCellFilter}`;
+    return $headerCell.find(headerFilterSelector);
+  }
   getDataRows() {
     return this.root.querySelectorAll(`.${SELECTORS.dataRowClass}`);
+  }
+  getDataRow(rowIndex) {
+    return new _data_row.DataRowModel(this.getDataRows()[rowIndex]);
   }
   getDataCells(rowIndex) {
     return this.root.querySelectorAll(`.${SELECTORS.dataRowClass}:nth-child(${rowIndex + 1}) > td`);
   }
   getDataCell(rowIndex, columnIndex) {
-    return new _data_cell.DataCellModel(this.getDataCells(rowIndex)[columnIndex]);
+    return new _data_cell.DataCellModel(this.getDataCells(rowIndex)[columnIndex], this.addWidgetPrefix.bind(this));
   }
   getGroupRows() {
     return this.root.querySelectorAll(`.${SELECTORS.groupRowClass}`);
@@ -87,6 +100,9 @@ class GridCoreModel {
   }
   getLoadPanel() {
     return new _load_panel.LoadPanelModel(document.body.querySelector(`.${SELECTORS.loadPanel}`));
+  }
+  getEditForm() {
+    return new _edit_form.EditFormModel(this.root.querySelector(`.${this.addWidgetPrefix(SELECTORS.editForm)}`));
   }
 }
 exports.GridCoreModel = GridCoreModel;

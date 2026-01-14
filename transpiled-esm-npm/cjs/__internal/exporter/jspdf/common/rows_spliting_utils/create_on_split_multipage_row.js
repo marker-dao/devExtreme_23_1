@@ -5,10 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createOnSplitMultiPageRow = void 0;
 var _pdf_utils = require("../pdf_utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable no-return-assign */ /* eslint-disable @stylistic/max-len */ /* eslint-disable @typescript-eslint/explicit-module-boundary-types */ /* eslint-disable @typescript-eslint/no-unsafe-return */ /* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable no-return-assign */
+/* eslint-disable @stylistic/max-len */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 function createMultiCellRect(rect, text, marginTop) {
-  return _extends({}, rect, {
-    sourceCellInfo: _extends({}, rect.sourceCellInfo, {
+  return Object.assign({}, rect, {
+    sourceCellInfo: Object.assign({}, rect.sourceCellInfo, {
       text
     }),
     y: marginTop

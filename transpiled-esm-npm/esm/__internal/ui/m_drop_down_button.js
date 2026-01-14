@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../common/core/localization/message';
 import registerComponent from '../../core/component_registrator';
 import { getPublicElement } from '../../core/element';
@@ -30,7 +29,7 @@ const DX_ICON_RIGHT_CLASS = 'dx-icon-right';
 const OVERLAY_CONTENT_LABEL = 'Dropdown';
 class DropDownButton extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       itemTemplate: 'item',
       keyExpr: 'this',
       selectedItem: null,
@@ -294,7 +293,7 @@ class DropDownButton extends Widget {
       stylingMode,
       tabIndex
     } = this.option();
-    const buttonGroupOptions = _extends({
+    const buttonGroupOptions = Object.assign({
       items: this._getButtonGroupItems(),
       width: '100%',
       height: '100%',
@@ -315,11 +314,11 @@ class DropDownButton extends Widget {
   _renderPopupContent() {
     const $content = this._popup.$content();
     const template = this._getTemplateByOption('dropDownContentTemplate');
-    $content.empty();
+    $content === null || $content === void 0 || $content.empty();
     this._popupContentId = `dx-${new Guid()}`;
     this.setAria('id', this._popupContentId, $content);
     const result = template.render({
-      container: getPublicElement($content),
+      container: $content ? getPublicElement($content) : undefined,
       model: this.option('items') || this._dataController.getDataSource()
     });
     return result;
@@ -434,11 +433,12 @@ class DropDownButton extends Widget {
     return true;
   }
   _renderPopup() {
+    var _this$_popup$$content, _this$_popup$$wrapper;
     const $popup = $('<div>');
     this.$element().append($popup);
     this._popup = this._createComponent($popup, Popup, this._popupOptions());
-    this._popup.$content().addClass(DROP_DOWN_BUTTON_CONTENT);
-    this._popup.$wrapper().addClass(DROP_DOWN_BUTTON_POPUP_WRAPPER_CLASS);
+    (_this$_popup$$content = this._popup.$content()) === null || _this$_popup$$content === void 0 || _this$_popup$$content.addClass(DROP_DOWN_BUTTON_CONTENT);
+    (_this$_popup$$wrapper = this._popup.$wrapper()) === null || _this$_popup$$wrapper === void 0 || _this$_popup$$wrapper.addClass(DROP_DOWN_BUTTON_POPUP_WRAPPER_CLASS);
     this._popup.$overlayContent().attr('aria-label', OVERLAY_CONTENT_LABEL);
     this._popup.on('hiding', this._popupHidingHandler.bind(this));
     this._popup.on('showing', this._popupShowingHandler.bind(this));
@@ -490,7 +490,7 @@ class DropDownButton extends Widget {
     // @ts-expect-error ts-error
     this._getButtons().each((index, $button) => {
       if (index === 0) {
-        this.setAria(_extends({}, firstButtonAria, commonButtonAria), $($button));
+        this.setAria(Object.assign({}, firstButtonAria, commonButtonAria), $($button));
       } else {
         this.setAria(commonButtonAria, $($button));
       }
@@ -609,14 +609,19 @@ class DropDownButton extends Widget {
     }
   }
   _updateItemCollection(optionName) {
-    const selectedItemKey = this.option('selectedItemKey');
+    const {
+      selectedItemKey,
+      useSelectMode
+    } = this.option();
     this._setListOption('selectedItem', null);
     // @ts-expect-error ts-error
     this._setWidgetOption('_list', [optionName]);
     if (isDefined(selectedItemKey)) {
       this._loadSelectedItem().done(selectedItem => {
-        this._setListOption('selectedItemKeys', [selectedItemKey]);
-        this._setListOption('selectedItem', selectedItem);
+        if (useSelectMode) {
+          this._setListOption('selectedItemKeys', [selectedItemKey]);
+          this._setListOption('selectedItem', selectedItem);
+        }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       }).fail(error => {
         this._setListOption('selectedItemKeys', []);

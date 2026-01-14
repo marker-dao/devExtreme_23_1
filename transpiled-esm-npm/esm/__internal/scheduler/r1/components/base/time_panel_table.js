@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["timePanelData", "viewContext", "tableRef", "timeCellTemplate"];
 import { createFragment, createComponentVNode, normalizeProps } from "inferno";
@@ -35,7 +34,7 @@ export class TimePanelTable extends InfernoWrapperComponent {
       topVirtualRowHeight,
       bottomVirtualRowHeight
     } = timePanelData;
-    return normalizeProps(createComponentVNode(2, Table, _extends({}, restProps, {
+    return normalizeProps(createComponentVNode(2, Table, Object.assign({}, restProps, {
       "className": "dx-scheduler-time-panel",
       "topVirtualRowHeight": topVirtualRowHeight ?? 0,
       "bottomVirtualRowHeight": bottomVirtualRowHeight ?? 0,

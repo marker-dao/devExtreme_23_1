@@ -6,7 +6,7 @@ Object.defineProperty(exports, "default", {
     return _parent_locales.default;
   }
 });
-var _parent_locales = _interopRequireDefault(require("../../common/core/localization/cldr-data/parent_locales"));
+var _parent_locales = _interopRequireDefault(require("../../__internal/core/localization/cldr-data/parent_locales"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 module.exports = exports.default;
 module.exports.default = exports.default;

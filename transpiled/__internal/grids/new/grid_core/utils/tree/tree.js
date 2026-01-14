@@ -6,10 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.shallowCopyTree = exports.shallowCopySubtreePath = exports.setTreeNodeByPath = exports.mergeOptionTrees = exports.getTreeNodeParentByPath = exports.getTreeNodeByPath = exports.deepMergeTrees = exports.deepCopyTreeNode = exports.createOrShallowCopySubtreePath = void 0;
 var _m_extend = require("../../../../../core/utils/m_extend");
 var _m_type = require("../../../../../core/utils/m_type");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const shallowCopyTree = tree => {
   if ((0, _m_type.isPlainObject)(tree)) {
-    return _extends({}, tree);
+    return Object.assign({}, tree);
   }
   if (Array.isArray(tree)) {
     return [...tree];

@@ -1,0 +1,31 @@
+/**
+* DevExtreme (esm/__internal/grids/grid_core/__tests__/__mock__/model/row/data_row.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+const SELECTORS = {
+  editRow: 'dx-edit-row',
+  deleteRowButton: 'dx-link-delete',
+  undeleteRowButton: 'dx-link-undelete'
+};
+export class DataRowModel {
+  constructor(root) {
+    var _this$root;
+    this.root = root;
+    this.isEditRow = !!((_this$root = this.root) !== null && _this$root !== void 0 && _this$root.classList.contains(SELECTORS.editRow));
+  }
+  getElement() {
+    return this.root;
+  }
+  getDeleteButton() {
+    const row = this.getElement();
+    return row.querySelector(`.${SELECTORS.deleteRowButton}`);
+  }
+  getRecoverButton() {
+    const row = this.getElement();
+    return row.querySelector(`.${SELECTORS.undeleteRowButton}`);
+  }
+}

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../core/component_registrator';
 import devices from '../../core/devices';
 import { getPublicElement } from '../../core/element';
@@ -43,7 +42,7 @@ class TileView extends CollectionWidget {
     return TILEVIEW_ITEM_SELECTOR;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       direction: 'horizontal',
       hoverStateEnabled: true,
       showScrollbar: 'never',

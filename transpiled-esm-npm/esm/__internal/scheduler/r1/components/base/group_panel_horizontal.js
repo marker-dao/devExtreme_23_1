@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createFragment, createComponentVNode } from "inferno";
 import { BaseInfernoComponent } from '../../../../core/r1/runtime/inferno/index';
 import { GroupPanelHorizontalRow } from './group_panel_horizontal_row';
@@ -29,7 +28,7 @@ export class GroupPanelHorizontal extends BaseInfernoComponent {
     }, [...new Array(groupPanelItems.length)]);
     this._groupPanelItems = groupPanelItems.map((groupsRenderRow, index) => {
       const colSpan = colSpans[index];
-      return groupsRenderRow.map(groupItem => _extends({}, groupItem, {
+      return groupsRenderRow.map(groupItem => Object.assign({}, groupItem, {
         colSpan
       }));
     });

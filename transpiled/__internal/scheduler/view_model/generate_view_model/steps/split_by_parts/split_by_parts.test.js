@@ -2,7 +2,6 @@
 
 var _globals = require("@jest/globals");
 var _split_by_parts = require("./split_by_parts");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const intervals = [{
   min: Date.UTC(2000, 0, 10, 3),
   max: Date.UTC(2000, 0, 10, 10)
@@ -25,19 +24,19 @@ const intervals = [{
       startDateUTC: Date.UTC(2000, 0, 10, 8),
       endDateUTC: Date.UTC(2000, 0, 10, 10)
     }];
-    (0, _globals.expect)((0, _split_by_parts.splitByParts)(items, intervals)).toEqual([_extends({}, items[0], {
+    (0, _globals.expect)((0, _split_by_parts.splitByParts)(items, intervals)).toEqual([Object.assign({}, items[0], {
       startDateUTC: Date.UTC(2000, 0, 10, 3),
       endDateUTC: Date.UTC(2000, 0, 10, 5),
       duration: 2 * 3600000,
       partIndex: 0,
       partCount: 0
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       startDateUTC: Date.UTC(2000, 0, 10, 7),
       endDateUTC: Date.UTC(2000, 0, 10, 8),
       duration: 3600000,
       partIndex: 0,
       partCount: 0
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       startDateUTC: Date.UTC(2000, 0, 10, 8),
       endDateUTC: Date.UTC(2000, 0, 10, 10),
       duration: 2 * 3600000,
@@ -87,56 +86,56 @@ const intervals = [{
       startDateUTC: Date.UTC(2000, 0, 11, 9),
       endDateUTC: Date.UTC(2000, 0, 13, 1)
     }];
-    (0, _globals.expect)((0, _split_by_parts.splitByParts)(items, intervals)).toEqual([_extends({}, items[0], {
+    (0, _globals.expect)((0, _split_by_parts.splitByParts)(items, intervals)).toEqual([Object.assign({}, items[0], {
       startDateUTC: Date.UTC(2000, 0, 10, 3),
       endDateUTC: Date.UTC(2000, 0, 10, 10),
       duration: 7 * 3600000,
       partIndex: 0,
       partCount: 2,
       reduced: 'body'
-    }), _extends({}, items[0], {
+    }), Object.assign({}, items[0], {
       startDateUTC: Date.UTC(2000, 0, 11, 3),
       endDateUTC: Date.UTC(2000, 0, 11, 5),
       duration: 2 * 3600000,
       partIndex: 1,
       partCount: 2,
       reduced: 'tail'
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       startDateUTC: Date.UTC(2000, 0, 10, 3),
       endDateUTC: Date.UTC(2000, 0, 10, 10),
       duration: 7 * 3600000,
       partIndex: 0,
       partCount: 2,
       reduced: 'head'
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       startDateUTC: Date.UTC(2000, 0, 11, 3),
       endDateUTC: Date.UTC(2000, 0, 11, 5),
       duration: 2 * 3600000,
       partIndex: 1,
       partCount: 2,
       reduced: 'tail'
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       startDateUTC: Date.UTC(2000, 0, 11, 8),
       endDateUTC: Date.UTC(2000, 0, 11, 10),
       duration: 2 * 3600000,
       partIndex: 0,
       partCount: 2,
       reduced: 'head'
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       startDateUTC: Date.UTC(2000, 0, 12, 3),
       endDateUTC: Date.UTC(2000, 0, 12, 10),
       duration: 7 * 3600000,
       partIndex: 1,
       partCount: 2,
       reduced: 'body'
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       startDateUTC: Date.UTC(2000, 0, 11, 9),
       endDateUTC: Date.UTC(2000, 0, 11, 10),
       duration: 3600000,
       partIndex: 0,
       partCount: 2,
       reduced: 'head'
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       startDateUTC: Date.UTC(2000, 0, 12, 3),
       endDateUTC: Date.UTC(2000, 0, 12, 10),
       duration: 7 * 3600000,

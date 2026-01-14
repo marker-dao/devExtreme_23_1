@@ -2,7 +2,6 @@
 
 var _globals = require("@jest/globals");
 var _add_position = require("./add_position");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 (0, _globals.describe)('addPosition', () => {
   (0, _globals.it)('should add cell indexes for regular appointments, contiguous cells', () => {
     const cells = [{
@@ -58,27 +57,27 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       startDateUTC: 59,
       endDateUTC: 60
     }];
-    (0, _globals.expect)((0, _add_position.addPosition)(items, cells)).toEqual([_extends({}, items[0], {
+    (0, _globals.expect)((0, _add_position.addPosition)(items, cells)).toEqual([Object.assign({}, items[0], {
       cellIndex: 0,
       endCellIndex: 0,
       rowIndex: 0,
       columnIndex: 0
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       cellIndex: 0,
       endCellIndex: 0,
       rowIndex: 0,
       columnIndex: 0
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       cellIndex: 0,
       endCellIndex: 2,
       rowIndex: 0,
       columnIndex: 0
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       cellIndex: 4,
       endCellIndex: 4,
       rowIndex: 2,
       columnIndex: 1
-    }), _extends({}, items[4], {
+    }), Object.assign({}, items[4], {
       cellIndex: 5,
       endCellIndex: 5,
       rowIndex: 3,

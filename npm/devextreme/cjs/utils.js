@@ -1,0 +1,23 @@
+/**
+* DevExtreme (cjs/utils.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "compileGetter", {
+  enumerable: true,
+  get: function () {
+    return _data.compileGetter;
+  }
+});
+Object.defineProperty(exports, "compileSetter", {
+  enumerable: true,
+  get: function () {
+    return _data.compileSetter;
+  }
+});
+var _data = require("./common/data");

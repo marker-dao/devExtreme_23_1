@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import animationPosition from '../../../common/core/animation/position';
 import { locate, move } from '../../../common/core/animation/translator';
 import { name as clickEventName } from '../../../common/core/events/click';
@@ -51,7 +50,7 @@ function createTemplateWrapperElement() {
 class DropDownEditor extends TextBox {
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       tab: e => {
         if (!this.option('opened')) {
           return;
@@ -116,7 +115,7 @@ class DropDownEditor extends TextBox {
     }]);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: null,
       onOpened: null,
       onClosed: null,
@@ -814,14 +813,13 @@ class DropDownEditor extends TextBox {
     return isOutsideClick;
   }
   _clean() {
-    delete this._openOnFieldClickAction;
-    delete this._$templateWrapper;
+    var _this$_$popup;
     this._clearFieldAddons(true);
-    if (this._$popup) {
-      this._$popup.remove();
-      delete this._$popup;
-      delete this._popup;
-    }
+    (_this$_$popup = this._$popup) === null || _this$_$popup === void 0 || _this$_$popup.remove();
+    this._openOnFieldClickAction = undefined;
+    this._$templateWrapper = undefined;
+    this._popup = undefined;
+    this._$popup = undefined;
     super._clean();
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,5 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
-import messageLocalization from '../../../../common/core/localization/message';
 import devices from '../../../../core/devices';
 import $ from '../../../../core/renderer';
 import dateUtils from '../../../../core/utils/date';
@@ -77,7 +75,7 @@ export const DEFAULT_SCHEDULER_OPTIONS = {
   timeZone: '',
   startDateTimeZoneExpr: 'startDateTimeZone',
   endDateTimeZoneExpr: 'endDateTimeZone',
-  noDataText: messageLocalization.format('dxCollectionWidget-noDataText'),
+  noDataText: '',
   adaptivityEnabled: false,
   scrolling: {
     mode: 'standard'
@@ -99,7 +97,7 @@ export const DEFAULT_SCHEDULER_OPTIONS = {
 export const DEFAULT_SCHEDULER_INTERNAL_OPTIONS = {
   indicatorTime: undefined,
   renovateRender: true,
-  editing: _extends({
+  editing: Object.assign({
     legacyForm: false
   }, DEFAULT_SCHEDULER_OPTIONS.editing, {
     popup: {}

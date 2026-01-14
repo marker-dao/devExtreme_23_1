@@ -9,7 +9,6 @@ var _generate_agenda_view_model = require("./generate_view_model/generate_agenda
 var _generate_grid_view_model = require("./generate_view_model/generate_grid_view_model");
 var _get_appointment_info = require("./get_appointment_info");
 var _prepare_appointments = require("./preparation/prepare_appointments");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class AppointmentLayoutManager {
   // NOTE: Here we should pass global store. But right now scheduler component is global store
   constructor(schedulerStore) {
@@ -30,7 +29,7 @@ class AppointmentLayoutManager {
     const viewType = this.schedulerStore.currentView.type;
     if (viewType === 'agenda') {
       const viewModel = (0, _generate_agenda_view_model.generateAgendaViewModel)(this.schedulerStore, this.filteredItems);
-      return viewModel.map(item => _extends({}, item, {
+      return viewModel.map(item => Object.assign({}, item, {
         isAgendaModel: true,
         info: (0, _get_appointment_info.getAgendaAppointmentInfo)(item)
       }));

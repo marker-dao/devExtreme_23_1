@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["x", "y", "canvas", "offsetX", "offsetY", "offset"];
 /* eslint-disable @stylistic/no-mixed-operators */
@@ -308,7 +307,7 @@ export class Plaque {
         onRendered: onRender
       });
     } else {
-      this.contentTemplate(_extends({
+      this.contentTemplate(Object.assign({
         group: this._contentGroup,
         onRender
       }, restProps));

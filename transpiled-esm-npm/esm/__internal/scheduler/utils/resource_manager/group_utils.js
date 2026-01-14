@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 export const groupResources = (resourceById, groups) => {
   if (!groups.length || Object.keys(resourceById).length === 0) {
     return {
@@ -20,14 +19,14 @@ export const groupResources = (resourceById, groups) => {
     }));
     const nextLeafs = [];
     leafs.forEach(leaf => {
-      leaf.children = nodes.map(node => _extends({}, node, {
-        grouped: _extends({}, node.grouped, leaf.grouped)
+      leaf.children = nodes.map(node => Object.assign({}, node, {
+        grouped: Object.assign({}, node.grouped, leaf.grouped)
       }));
       nextLeafs.push(...leaf.children);
     });
     leafs = nextLeafs;
   });
-  const groupLeafs = leafs.map((leaf, index) => _extends({}, leaf, {
+  const groupLeafs = leafs.map((leaf, index) => Object.assign({}, leaf, {
     groupIndex: index
   }));
   return {
@@ -57,7 +56,7 @@ export const getResourcesByGroupIndex = (groupsLeafs, resourceById, groupIndex) 
     return leafGroups[resourceIndex] !== undefined;
   }).map(_ref2 => {
     let [resourceIndex, resource] = _ref2;
-    return _extends({}, resource, {
+    return Object.assign({}, resource, {
       items: resource.items.filter(item => item.id === leafGroups[resourceIndex])
     });
   });

@@ -11,7 +11,8 @@ var _date2 = _interopRequireDefault(require("../../../core/utils/date"));
 var _date_serialization = _interopRequireDefault(require("../../../core/utils/date_serialization"));
 var _calendar = _interopRequireDefault(require("./calendar.base_view"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
+/* eslint-disable max-classes-per-file */
+
 const CALENDAR_OTHER_MONTH_CLASS = 'dx-calendar-other-month';
 const CALENDAR_OTHER_VIEW_CLASS = 'dx-calendar-other-view';
 const CALENDAR_WEEK_NUMBER_CELL_CLASS = 'dx-calendar-week-number-cell';
@@ -24,7 +25,7 @@ class MonthView extends _calendar.default {
     return 'longdate';
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       firstDayOfWeek: 0,
       rowCount: 6,
       colCount: 7

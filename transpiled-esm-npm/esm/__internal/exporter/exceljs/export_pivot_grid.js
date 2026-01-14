@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -160,7 +159,7 @@ class PivotGridHelpers {
       let cellData = [];
       const value = values.length > totalColumnsCount || shouldMergeHeaderField ? values.join(FIELD_HEADERS_SEPARATOR) : values[cellIndex];
       // @ts-expect-error
-      cellData = _extends({}, this._getDefaultFieldHeaderCellsData(value), {
+      cellData = Object.assign({}, this._getDefaultFieldHeaderCellsData(value), {
         headerType: area
       });
       excelCell.value = value;

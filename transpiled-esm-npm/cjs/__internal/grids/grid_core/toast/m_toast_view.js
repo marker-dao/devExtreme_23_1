@@ -8,7 +8,6 @@ var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _toast = _interopRequireDefault(require("../../../../ui/toast"));
 var _m_modules = require("../m_modules");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class ToastView extends _m_modules.View {
   constructor() {
     super(...arguments);
@@ -22,7 +21,7 @@ class ToastView extends _m_modules.View {
     if (!this._$toastContainer) {
       this._$toastContainer = (0, _renderer.default)('<div>').appendTo(this.component.$element());
     }
-    this._toastInstance = this._createComponent(this._$toastContainer, _toast.default, _extends({
+    this._toastInstance = this._createComponent(this._$toastContainer, _toast.default, Object.assign({
       position: {
         my: 'bottom',
         at: 'bottom',
@@ -36,7 +35,7 @@ class ToastView extends _m_modules.View {
   showToast(message) {
     let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const toast = this._createToastInstance(options);
-    toast === null || toast === void 0 || toast.option(_extends({}, options, {
+    toast === null || toast === void 0 || toast.option(Object.assign({}, options, {
       message,
       visible: true
     }));

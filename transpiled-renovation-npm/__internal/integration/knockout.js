@@ -1,0 +1,24 @@
+"use strict";
+
+var _m_error = _interopRequireDefault(require("../core/utils/m_error"));
+var _m_version = require("../core/utils/m_version");
+var _knockout = _interopRequireDefault(require("knockout"));
+require("./knockout/component_registrator");
+require("./knockout/event_registrator");
+require("./knockout/components");
+require("./knockout/validation");
+require("./knockout/variable_wrapper_utils");
+require("./knockout/clean_node");
+require("./knockout/clean_node_old");
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+/* eslint-disable import/first */
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+
+// Check availability in global environment
+if (_knockout.default) {
+  if ((0, _m_version.compare)(_knockout.default.version, [2, 3]) < 0) {
+    // @ts-expect-error
+    throw _m_error.default.Error('E0013');
+  }
+}

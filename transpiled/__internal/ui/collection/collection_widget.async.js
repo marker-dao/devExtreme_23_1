@@ -8,7 +8,6 @@ var _guid = _interopRequireDefault(require("../../../core/guid"));
 var _deferred = require("../../../core/utils/deferred");
 var _collection_widget = _interopRequireDefault(require("../../ui/collection/collection_widget.edit"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class CollectionWidgetAsync extends _collection_widget.default {
   _initMarkup() {
     this._asyncTemplateItemsMap = {};
@@ -24,7 +23,7 @@ class CollectionWidgetAsync extends _collection_widget.default {
     const itemDeferred = (0, _deferred.Deferred)();
     const uniqueKey = `dx${new _guid.default()}`;
     this._asyncTemplateItemsMap[uniqueKey] = itemDeferred;
-    const $itemContent = super._renderItemContent(_extends({}, args, {
+    const $itemContent = super._renderItemContent(Object.assign({}, args, {
       uniqueKey
     }));
     itemDeferred.done(() => {

@@ -842,7 +842,13 @@ const mergeColumns = (that, columns, commandColumns, needToExtend) => {
   return result;
 };
 exports.mergeColumns = mergeColumns;
-const isColumnFixed = (that, column) => (0, _type.isDefined)(column.fixed) || !column.type ? column.fixed && column.fixedPosition !== _const3.StickyPosition.Sticky : that._isColumnFixing();
+const isColumnFixed = (that, column) => {
+  const isFixedCommandColumn = column.type && column.type !== _const2.AI_COLUMN_NAME;
+  if (!isFixedCommandColumn) {
+    return column.fixed && column.fixedPosition !== _const3.StickyPosition.Sticky;
+  }
+  return that._isColumnFixing();
+};
 exports.isColumnFixed = isColumnFixed;
 const convertOwnerBandToColumnReference = columns => {
   columns.forEach(column => {

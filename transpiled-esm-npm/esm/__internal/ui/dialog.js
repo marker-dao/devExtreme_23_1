@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../common/core/events/core/events_engine';
 import messageLocalization from '../../common/core/localization/message';
 import Action from '../../core/action';
@@ -54,6 +53,7 @@ const getCancelButtonConfig = () => {
   return {};
 };
 export const custom = params => {
+  var _popupInstance$$wrapp;
   const {
     buttons,
     dragEnabled,
@@ -77,8 +77,9 @@ export const custom = params => {
   const $element = $('<div>').addClass(DX_DIALOG_CLASSNAME).appendTo(getViewport());
   const $message = $('<div>').addClass(DX_DIALOG_MESSAGE_CLASSNAME).html(messageMarkup).attr('id', messageId);
   const onContentReady = e => {
+    var _component$$content;
     const component = e.component;
-    component.$content().addClass(DX_DIALOG_CONTENT_CLASSNAME).append($message);
+    (_component$$content = component.$content()) === null || _component$$content === void 0 || _component$$content.addClass(DX_DIALOG_CONTENT_CLASSNAME).append($message);
     if (messageId) {
       component.$overlayContent().attr('aria-labelledby', messageId);
     }
@@ -148,7 +149,7 @@ export const custom = params => {
       toolbar: 'bottom',
       location: devices.current().android ? 'after' : 'center',
       widget: 'dxButton',
-      options: _extends({}, configuration, {
+      options: Object.assign({}, configuration, {
         onClick: e => {
           const result = action.execute(e);
           hide(result);
@@ -158,7 +159,7 @@ export const custom = params => {
     return buttonItem;
   });
   const popupPosition = position ?? {
-    boundaryOffset: _extends({}, DEFAULT_BOUNDARY_OFFSET)
+    boundaryOffset: Object.assign({}, DEFAULT_BOUNDARY_OFFSET)
   };
   const configuration = {
     // @ts-expect-error animation should be typed correctly in popup.d.ts
@@ -186,7 +187,7 @@ export const custom = params => {
     visualContainer: window,
     width
   };
-  const options = _extends({}, configuration, popupOptions, {
+  const options = Object.assign({}, configuration, popupOptions, {
     onHidden: e => {
       var _popupOptions$onHidde;
       $(e.element).remove();
@@ -195,7 +196,7 @@ export const custom = params => {
   });
   // @ts-expect-error Incorrect constructor usage
   popupInstance = new Popup($element, options);
-  popupInstance.$wrapper().addClass(DX_DIALOG_WRAPPER_CLASSNAME).addClass(DX_DIALOG_ROOT_CLASSNAME);
+  (_popupInstance$$wrapp = popupInstance.$wrapper()) === null || _popupInstance$$wrapp === void 0 || _popupInstance$$wrapp.addClass(DX_DIALOG_WRAPPER_CLASSNAME).addClass(DX_DIALOG_ROOT_CLASSNAME);
   const dialog = {
     show,
     hide
@@ -210,7 +211,7 @@ export const alert = (messageHtml, title, showTitle) => {
     title: titleValue,
     messageHtml,
     showTitle,
-    buttons: [_extends({}, DEFAULT_BUTTON_OPTIONS, getApplyButtonConfig())],
+    buttons: [Object.assign({}, DEFAULT_BUTTON_OPTIONS, getApplyButtonConfig())],
     dragEnabled: showTitle
   };
   return custom(options).show();
@@ -222,10 +223,10 @@ export const confirm = (messageHtml, title, showTitle) => {
     title: titleValue,
     messageHtml,
     showTitle,
-    buttons: [_extends({
+    buttons: [Object.assign({
       text: messageLocalization.format('Yes'),
       onClick: () => true
-    }, getApplyButtonConfig()), _extends({
+    }, getApplyButtonConfig()), Object.assign({
       text: messageLocalization.format('No'),
       onClick: () => false
     }, getCancelButtonConfig())],

@@ -9,7 +9,6 @@ var _popup = _interopRequireDefault(require("../../../../../ui/popup"));
 var _utils = require("./utils");
 var _widget_wrapper = require("./widget_wrapper");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class Popup extends _widget_wrapper.InfernoWrapper {
   constructor() {
     super(...arguments);
@@ -23,8 +22,8 @@ class Popup extends _widget_wrapper.InfernoWrapper {
     // @ts-expect-error
     if ((_props = props) !== null && _props !== void 0 && (_props = _props.position) !== null && _props !== void 0 && (_props = _props.of) !== null && _props !== void 0 && _props.current) {
       // eslint-disable-next-line no-param-reassign
-      props = _extends({}, props, {
-        position: _extends({}, props.position, {
+      props = Object.assign({}, props, {
+        position: Object.assign({}, props.position, {
           // @ts-expect-error
           of: (0, _utils.wrapRef)(props.position.of)
         })

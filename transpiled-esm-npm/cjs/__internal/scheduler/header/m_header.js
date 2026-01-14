@@ -21,7 +21,6 @@ var _m_utils = require("./m_utils");
 var _m_view_switcher = require("./m_view_switcher");
 var _today = require("./today");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CLASSES = {
   component: 'dx-scheduler-header',
   invisible: 'dx-state-invisible'
@@ -129,7 +128,7 @@ class SchedulerHeader extends _ui.default {
   _createToolbarConfig() {
     const options = this.option('toolbar');
     const parsedItems = options.items.map(element => this._parseItem(element));
-    return _extends({}, options, {
+    return Object.assign({}, options, {
       items: parsedItems
     });
   }

@@ -36,7 +36,6 @@ var _scroll_view = _interopRequireDefault(require("../../ui/scroll_view/scroll_v
 var _scrollable = require("../../ui/scroll_view/scrollable.device");
 var _get_element_style = require("../../ui/scroll_view/utils/get_element_style");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const LIST_CLASS = 'dx-list';
 const LIST_ITEMS_CLASS = 'dx-list-items';
 const LIST_ITEM_CLASS = 'dx-list-item';
@@ -70,7 +69,7 @@ class ListBase extends _collection_widget.default {
     return LIST_FEEDBACK_SHOW_TIMEOUT;
   }
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       leftArrow: _common.noop,
       rightArrow: _common.noop,
       pageUp(e) {
@@ -149,7 +148,7 @@ class ListBase extends _collection_widget.default {
     return $item.position().top;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       pullRefreshEnabled: false,
       scrollingEnabled: true,
@@ -378,7 +377,7 @@ class ListBase extends _collection_widget.default {
   _dataSourceOptions() {
     const scrollBottom = this._scrollBottomMode();
     const nextButton = this._nextButtonMode();
-    return _extends({}, super._dataSourceOptions(), {
+    return Object.assign({}, super._dataSourceOptions(), {
       paginate: (0, _common.ensureDefined)(scrollBottom || nextButton, true)
     });
   }
@@ -1123,7 +1122,7 @@ class ListBase extends _collection_widget.default {
     }
     const $group = $itemElement.closest(`.${LIST_GROUP_CLASS}`);
     const $item = $group.find(`.${LIST_ITEM_CLASS}`);
-    return _extends({}, super._extendActionArgs($itemElement), {
+    return Object.assign({}, super._extendActionArgs($itemElement), {
       itemIndex: {
         group: $group.index(),
         item: $item.index($itemElement)

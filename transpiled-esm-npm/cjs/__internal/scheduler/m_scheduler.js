@@ -69,7 +69,8 @@ var _m_work_space_month = _interopRequireDefault(require("./workspaces/m_work_sp
 var _m_work_space_week = _interopRequireDefault(require("./workspaces/m_work_space_week"));
 var _m_work_space_work_week = _interopRequireDefault(require("./workspaces/m_work_space_work_week"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error
+// @ts-expect-error
+
 const toMs = _date2.default.dateToMilliseconds;
 const WIDGET_CLASS = 'dx-scheduler';
 const WIDGET_SMALL_CLASS = `${WIDGET_CLASS}-small`;
@@ -723,7 +724,7 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
     }
     this._editing.allowDragging = this._editing.allowDragging && this._editing.allowUpdating;
     this._editing.allowResizing = this._editing.allowResizing && this._editing.allowUpdating;
-    const isReadOnly = Object.values(_extends({}, this._editing, {
+    const isReadOnly = Object.values(Object.assign({}, this._editing, {
       form: undefined,
       popup: undefined
     })).every(value => !value);
@@ -1062,8 +1063,8 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
   _recalculateWorkspace() {
     // @ts-expect-error
     this._workSpaceRecalculation = new _deferred.Deferred();
+    (0, _visibility_change.triggerResizeEvent)(this._workSpace.$element());
     this._waitAsyncTemplate(() => {
-      (0, _visibility_change.triggerResizeEvent)(this._workSpace.$element());
       this._workSpace.renderCurrentDateTimeLineAndShader();
     });
   }
@@ -1076,7 +1077,7 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
       resources: this.option('resources'),
       getResourceManager: () => this.resourceManager,
       getFilteredItems: () => this._layoutManager.filteredItems,
-      noDataText: this.option('noDataText'),
+      noDataText: this.option('noDataText') || _message.default.format('dxCollectionWidget-noDataText'),
       firstDayOfWeek: this.option('firstDayOfWeek'),
       startDayHour: this.option('startDayHour'),
       endDayHour: this.option('endDayHour'),
@@ -1217,7 +1218,7 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
   }
   _excludeAppointmentFromSeries(rawAppointment, newRawAppointment, exceptionDate, isDeleted, isPopupEditing, dragEvent) {
     const appointment = (0, _index2.excludeFromRecurrence)(rawAppointment, exceptionDate, this._dataAccessors);
-    const singleRawAppointment = _extends({}, newRawAppointment);
+    const singleRawAppointment = Object.assign({}, newRawAppointment);
     /* eslint-disable @typescript-eslint/no-dynamic-delete */
     delete singleRawAppointment[this._dataAccessors.expr.recurrenceExceptionExpr];
     delete singleRawAppointment[this._dataAccessors.expr.recurrenceRuleExpr];
@@ -1496,7 +1497,7 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
     this.showAppointmentPopup(resultAppointment, true);
   }
   showAppointmentPopup(rawAppointment, createNewAppointment, rawTargetedAppointment) {
-    const newRawTargetedAppointment = _extends({}, rawTargetedAppointment);
+    const newRawTargetedAppointment = Object.assign({}, rawTargetedAppointment);
     if (newRawTargetedAppointment) {
       delete newRawTargetedAppointment.displayStartDate;
       delete newRawTargetedAppointment.displayEndDate;
@@ -1560,7 +1561,7 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
       cancel: false,
       appointments: data.map(item => ({
         appointmentData: item.appointment,
-        currentAppointmentData: _extends({}, item.targetedAppointment),
+        currentAppointmentData: Object.assign({}, item.targetedAppointment),
         color: item.color
       })),
       targetElement: (0, _element.getPublicElement)(target)
@@ -1570,7 +1571,7 @@ class Scheduler extends _scheduler_options_base_widget.SchedulerOptionsBaseWidge
       this.hideAppointmentTooltip();
     } else {
       this._processActionResult(arg, canceled => {
-        !canceled && this._appointmentTooltip.show(target, data, _extends({}, this._getExtraAppointmentTooltipOptions(), options));
+        !canceled && this._appointmentTooltip.show(target, data, Object.assign({}, this._getExtraAppointmentTooltipOptions(), options));
       });
     }
   }

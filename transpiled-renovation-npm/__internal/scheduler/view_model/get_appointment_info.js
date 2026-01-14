@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.getAppointmentInfo = exports.getAgendaAppointmentInfo = void 0;
 var _m_utils_time_zone = _interopRequireDefault(require("../m_utils_time_zone"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const getAppointmentInfo = item => {
   const appointment = {
     allDay: item.allDay,
@@ -24,7 +23,7 @@ const getAppointmentInfo = item => {
   };
 };
 exports.getAppointmentInfo = getAppointmentInfo;
-const getAgendaAppointmentInfo = item => _extends({}, getAppointmentInfo(item), {
+const getAgendaAppointmentInfo = item => Object.assign({}, getAppointmentInfo(item), {
   partialDates: {
     allDay: item.allDay,
     startDate: _m_utils_time_zone.default.createDateFromUTCWithLocalOffset(new Date(item.datesAfterSplit.startDateUTC)),

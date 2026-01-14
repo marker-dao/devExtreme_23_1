@@ -5,6 +5,7 @@ export const getAICommandColumnDefaultOptions = () => ({
   command: AI_COLUMN_NAME,
   cssClass: CLASSES.aiColumn,
   fixed: false,
+  encodeHtml: true,
   minWidth: 120
 });
 export const getDataFromRowItems = items => items.filter(row => row.rowType === 'data').map(row => row.data);

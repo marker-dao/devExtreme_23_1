@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../common/core/events/core/events_engine';
 import { normalizeKeyName } from '../../common/core/events/utils/index';
 import registerComponent from '../../core/component_registrator';
@@ -24,7 +23,7 @@ const ANONYMOUS_TEMPLATE_NAME = 'content';
 class DropDownBox extends DropDownEditor {
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       tab(e) {
         if (!this.option('opened')) {
           return;
@@ -47,7 +46,7 @@ class DropDownBox extends DropDownEditor {
     return $(this.content()).find('*');
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       acceptCustomValue: false,
       contentTemplate: ANONYMOUS_TEMPLATE_NAME,
       openOnFieldClick: true,
@@ -175,6 +174,7 @@ class DropDownBox extends DropDownEditor {
     }
   }
   _renderPopupContent() {
+    var _this$_popup;
     // @ts-expect-error ts-error
     if (this.option('contentTemplate') === ANONYMOUS_TEMPLATE_NAME) {
       return;
@@ -183,8 +183,10 @@ class DropDownBox extends DropDownEditor {
     if (!(contentTemplate && this.option('contentTemplate'))) {
       return;
     }
-    // @ts-expect-error ts-error
-    const $popupContent = this._popup.$content();
+    const $popupContent = (_this$_popup = this._popup) === null || _this$_popup === void 0 ? void 0 : _this$_popup.$content();
+    if (!$popupContent) {
+      return;
+    }
     const templateData = {
       value: this._fieldRenderData(),
       component: this
@@ -234,7 +236,7 @@ class DropDownBox extends DropDownEditor {
     const {
       focusStateEnabled
     } = this.option();
-    return _extends({}, super._popupConfig(), {
+    return Object.assign({}, super._popupConfig(), {
       tabIndex: -1,
       dragEnabled: false,
       focusStateEnabled,

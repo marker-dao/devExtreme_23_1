@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../common/core/localization/message';
 import registerComponent from '../../core/component_registrator';
 import $ from '../../core/renderer';
@@ -24,7 +23,7 @@ export const ANIMATION_TYPE_CLASSES = {
 };
 class LoadIndicator extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       _animatingSegmentCount: 1,
       _animatingSegmentInner: false,
       animationType: AnimationType.Circle,

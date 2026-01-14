@@ -35,7 +35,6 @@ var _m_fields_area = require("./fields_area/m_fields_area");
 var _m_headers_area = _interopRequireDefault(require("./headers_area/m_headers_area"));
 var _m_widget_utils = require("./m_widget_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = (0, _window.getWindow)();
 const DATA_AREA_CELL_CLASS = 'dx-area-data-cell';
 const ROW_AREA_CELL_CLASS = 'dx-area-row-cell';
@@ -207,7 +206,7 @@ class PivotGrid extends _widget.default {
   }
   _setDeprecatedOptions() {
     super._setDeprecatedOptions();
-    this._deprecatedOptions = _extends({}, this._deprecatedOptions, {
+    this._deprecatedOptions = Object.assign({}, this._deprecatedOptions, {
       // @ts-expect-error ts-error
       'loadPanel.indicatorSrc': {
         since: '25.2',

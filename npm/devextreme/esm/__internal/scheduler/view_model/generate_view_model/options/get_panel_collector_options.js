@@ -1,0 +1,67 @@
+/**
+* DevExtreme (esm/__internal/scheduler/view_model/generate_view_model/options/get_panel_collector_options.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { getCollectorSize } from './get_collector_size';
+import { getMaxLevel } from './get_max_level';
+const UNLIMITED_COLLECTOR_SIZES = {
+  collectorSize: {
+    width: 0,
+    height: 0
+  },
+  collectorWithMarginsSize: {
+    width: 0,
+    height: 0
+  }
+};
+const ALL_DAY_COLLECTOR_WIDTH_FACTOR = 0.75;
+const MIN_LEVEL_VERTICAL_VIEW = 1;
+export const getPanelCollectorOptions = (schedulerStore, _ref) => {
+  var _DOMMetaData$dateTabl;
+  let {
+    alwaysReserveSpaceForCollector,
+    isTimelineView,
+    viewOrientation,
+    isAdaptivityEnabled,
+    collectorCSS,
+    DOMMetaData,
+    panelName
+  } = _ref;
+  // vertical grouping has only regular panel with all day appointments and regular appointments
+  const allDayPanelCellDOM = DOMMetaData.allDayPanelCellsMeta[0] || DOMMetaData.dateTableCellsMeta[0][0];
+  const regularPanelCellDOM = ((_DOMMetaData$dateTabl = DOMMetaData.dateTableCellsMeta[1]) === null || _DOMMetaData$dateTabl === void 0 ? void 0 : _DOMMetaData$dateTabl[0]) || DOMMetaData.dateTableCellsMeta[0][0];
+  const cellDOM = panelName === 'allDayPanel' ? allDayPanelCellDOM : regularPanelCellDOM;
+  const allDayPanelCellSize = {
+    width: allDayPanelCellDOM.width ?? 0,
+    height: allDayPanelCellDOM.height ?? 0
+  };
+  const cellSize = {
+    width: cellDOM.width ?? 0,
+    height: cellDOM.height ?? 0
+  };
+  const maxAppointmentsPerCell = schedulerStore.getViewOption('maxAppointmentsPerCell');
+  const collectorSizes = maxAppointmentsPerCell === 'unlimited' && !alwaysReserveSpaceForCollector ? UNLIMITED_COLLECTOR_SIZES : getCollectorSize(cellSize, collectorCSS, !isAdaptivityEnabled && panelName === 'allDayPanel' ? cellSize.width * ALL_DAY_COLLECTOR_WIDTH_FACTOR : 0);
+  const maxLevelOptions = {
+    maxAppointmentsPerCell,
+    cellSize,
+    collectorSize: collectorSizes.collectorWithMarginsSize,
+    viewOrientation,
+    isTimelineView,
+    isAdaptivityEnabled
+  };
+  const maxLevel = getMaxLevel(maxLevelOptions);
+  const minLevel = viewOrientation === 'vertical' ? MIN_LEVEL_VERTICAL_VIEW : getMaxLevel(Object.assign({}, maxLevelOptions, {
+    maxAppointmentsPerCell: 'auto'
+  }));
+  return {
+    allDayPanelCellSize,
+    cellSize,
+    collectorSizes,
+    maxLevel,
+    minLevel
+  };
+};

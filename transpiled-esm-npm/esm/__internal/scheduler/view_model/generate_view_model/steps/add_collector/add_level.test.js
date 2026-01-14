@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { addLevel } from './add_level';
 const collectorOptions = {
@@ -19,11 +18,11 @@ describe('addLevel', () => {
       endDateUTC: Date.UTC(2025, 0, 4),
       duration: 24 * 3600000
     }];
-    expect(addLevel(items, collectorOptions)).toEqual([_extends({}, items[0], {
+    expect(addLevel(items, collectorOptions)).toEqual([Object.assign({}, items[0], {
       level: 0,
       maxLevel: 3,
       inStackWithCollector: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       level: 0,
       maxLevel: 3,
       inStackWithCollector: false
@@ -37,11 +36,11 @@ describe('addLevel', () => {
       startDateUTC: Date.UTC(2025, 0, 1, 2, 15),
       endDateUTC: Date.UTC(2025, 0, 1, 3)
     }];
-    expect(addLevel(items, collectorOptions)).toEqual([_extends({}, items[0], {
+    expect(addLevel(items, collectorOptions)).toEqual([Object.assign({}, items[0], {
       level: 0,
       maxLevel: 3,
       inStackWithCollector: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       level: 0,
       maxLevel: 3,
       inStackWithCollector: false
@@ -61,19 +60,19 @@ describe('addLevel', () => {
       startDateUTC: Date.UTC(2025, 0, 8, 2),
       endDateUTC: Date.UTC(2025, 0, 8, 3)
     }];
-    expect(addLevel(items, collectorOptions)).toEqual([_extends({}, items[0], {
+    expect(addLevel(items, collectorOptions)).toEqual([Object.assign({}, items[0], {
       level: 0,
       maxLevel: 3,
       inStackWithCollector: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       level: 1,
       maxLevel: 3,
       inStackWithCollector: false
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       level: 2,
       maxLevel: 3,
       inStackWithCollector: false
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       level: 1,
       maxLevel: 3,
       inStackWithCollector: false
@@ -105,37 +104,37 @@ describe('addLevel', () => {
       startDateUTC: Date.UTC(2025, 0, 17),
       endDateUTC: Date.UTC(2025, 0, 18)
     }];
-    expect(addLevel(items, _extends({}, collectorOptions, {
+    expect(addLevel(items, Object.assign({}, collectorOptions, {
       maxLevel: 10
-    }))).toEqual([_extends({}, items[0], {
+    }))).toEqual([Object.assign({}, items[0], {
       level: 0,
       maxLevel: 3,
       inStackWithCollector: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       level: 1,
       maxLevel: 3,
       inStackWithCollector: false
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       level: 2,
       maxLevel: 3,
       inStackWithCollector: false
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       level: 1,
       maxLevel: 3,
       inStackWithCollector: false
-    }), _extends({}, items[4], {
+    }), Object.assign({}, items[4], {
       level: 0,
       maxLevel: 4,
       inStackWithCollector: false
-    }), _extends({}, items[5], {
+    }), Object.assign({}, items[5], {
       level: 1,
       maxLevel: 4,
       inStackWithCollector: false
-    }), _extends({}, items[6], {
+    }), Object.assign({}, items[6], {
       level: 2,
       maxLevel: 4,
       inStackWithCollector: false
-    }), _extends({}, items[7], {
+    }), Object.assign({}, items[7], {
       level: 3,
       maxLevel: 4,
       inStackWithCollector: false
@@ -161,29 +160,29 @@ describe('addLevel', () => {
       startDateUTC: Date.UTC(2025, 0, 8, 8),
       endDateUTC: Date.UTC(2025, 0, 8, 9)
     }];
-    expect(addLevel(items, _extends({}, collectorOptions, {
+    expect(addLevel(items, Object.assign({}, collectorOptions, {
       maxLevel: -1
-    }))).toEqual([_extends({}, items[0], {
+    }))).toEqual([Object.assign({}, items[0], {
       level: 0,
       maxLevel: 0,
       inStackWithCollector: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       level: 0,
       maxLevel: 2,
       inStackWithCollector: false
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       level: 1,
       maxLevel: 2,
       inStackWithCollector: false
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       level: 0,
       maxLevel: 2,
       inStackWithCollector: false
-    }), _extends({}, items[4], {
+    }), Object.assign({}, items[4], {
       level: 0,
       maxLevel: 2,
       inStackWithCollector: false
-    }), _extends({}, items[5], {
+    }), Object.assign({}, items[5], {
       level: 0,
       maxLevel: 0,
       inStackWithCollector: false
@@ -215,27 +214,27 @@ describe('addLevel', () => {
       startDateUTC: 10,
       endDateUTC: 10
     }];
-    expect(addLevel(items, collectorOptions)).toEqual([_extends({}, items[0], {
+    expect(addLevel(items, collectorOptions)).toEqual([Object.assign({}, items[0], {
       level: 0,
       maxLevel: 3,
       inStackWithCollector: true
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       level: 1,
       maxLevel: 3,
       inStackWithCollector: true
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       level: 0,
       maxLevel: 3,
       inStackWithCollector: true
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       level: 2,
       maxLevel: 3,
       inStackWithCollector: true
-    }), _extends({}, items[4], {
+    }), Object.assign({}, items[4], {
       level: 3,
       maxLevel: 3,
       inStackWithCollector: true
-    }), _extends({}, items[5], {
+    }), Object.assign({}, items[5], {
       level: 4,
       maxLevel: 3,
       inStackWithCollector: true

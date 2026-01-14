@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.CHAT_TEXT_AREA_TOOLBAR = exports.CHAT_TEXT_AREA_ATTACH_BUTTON = exports.CHAT_TEXTAREA_CLASS = void 0;
+exports.default = exports.DEFAULT_ALLOWED_FILE_EXTENSIONS = exports.CHAT_TEXT_AREA_TOOLBAR = exports.CHAT_TEXT_AREA_ATTACH_BUTTON = exports.CHAT_TEXTAREA_CLASS = void 0;
 var _index = require("../../../../common/core/events/utils/index");
 var _message = _interopRequireDefault(require("../../../../common/core/localization/message"));
 var _devices = _interopRequireDefault(require("../../../../core/devices"));
@@ -15,7 +15,6 @@ var _file_uploader = _interopRequireDefault(require("../../../ui/file_uploader/f
 var _informer = _interopRequireDefault(require("../../../ui/informer/informer"));
 var _m_text_area = _interopRequireDefault(require("../../../ui/m_text_area"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CHAT_TEXT_AREA_ATTACHMENTS = 'dx-chat-textarea-attachments';
 const CHAT_TEXT_AREA_ATTACH_BUTTON = exports.CHAT_TEXT_AREA_ATTACH_BUTTON = 'dx-chat-textarea-attach-button';
 const CHAT_TEXTAREA_CLASS = exports.CHAT_TEXTAREA_CLASS = 'dx-chat-textarea';
@@ -27,6 +26,7 @@ const ERRORS = {
   fileLimit: _message.default.format('dxChat-fileLimitReachedWarning', MAX_ATTACHMENTS_COUNT)
 };
 const isMobile = () => _devices.default.current().deviceType !== 'desktop';
+const DEFAULT_ALLOWED_FILE_EXTENSIONS = exports.DEFAULT_ALLOWED_FILE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.pdf', '.docx', '.xlsx', '.pptx', '.txt', '.rtf', '.csv', '.md'];
 class ChatTextArea extends _m_text_area.default {
   constructor() {
     super(...arguments);
@@ -58,13 +58,12 @@ class ChatTextArea extends _m_text_area.default {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       stylingMode: 'outlined',
       placeholder: _message.default.format('dxChat-textareaPlaceholder'),
       autoResizeEnabled: true,
       valueChangeEvent: 'input',
-      maxHeight: '53.86em',
-      fileUploaderOptions: undefined
+      maxHeight: '53.86em'
     });
   }
   _defaultOptionsRules() {
@@ -77,7 +76,7 @@ class ChatTextArea extends _m_text_area.default {
     return rules;
   }
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       enter: e => {
         if (this._shouldSendMessageOnEnter(e)) {
           e.preventDefault();
@@ -231,10 +230,12 @@ class ChatTextArea extends _m_text_area.default {
     const {
       fileUploaderOptions = {}
     } = this.option();
-    const multiple = fileUploaderOptions.multiple ?? true;
     const visible = this._shouldHideFileUploader(fileUploaderOptions.value);
-    return _extends({}, fileUploaderOptions, {
-      multiple,
+    const defaultFileUploaderOptions = {
+      multiple: true,
+      allowedFileExtensions: DEFAULT_ALLOWED_FILE_EXTENSIONS
+    };
+    return Object.assign({}, defaultFileUploaderOptions, fileUploaderOptions, {
       visible,
       uploadMode: 'instantly',
       dialogTrigger: this.$element().find(`.${CHAT_TEXT_AREA_ATTACH_BUTTON}`).get(0),
@@ -293,7 +294,7 @@ class ChatTextArea extends _m_text_area.default {
     } = this.option();
     const fileInfo = (_this$_filesToSend4 = this._filesToSend) === null || _this$_filesToSend4 === void 0 ? void 0 : _this$_filesToSend4.get(file);
     if (this._filesToSend && fileInfo) {
-      this._filesToSend.set(file, _extends({}, fileInfo, {
+      this._filesToSend.set(file, Object.assign({}, fileInfo, {
         readyToSend: true
       }));
     }

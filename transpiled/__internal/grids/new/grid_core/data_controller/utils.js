@@ -16,7 +16,10 @@ var _data_source = _interopRequireDefault(require("../../../../../data/data_sour
 var _utils = require("../../../../../data/data_source/utils");
 var _m_array_utils = require("../../../../data/m_array_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-unsafe-return */ /* eslint-disable @typescript-eslint/explicit-module-boundary-types */ /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 function normalizeDataSource(dataSourceLike, keyExpr) {
   if (dataSourceLike instanceof _data_source.default) {
     return dataSourceLike;
@@ -95,7 +98,7 @@ function getLocalLoadOptions(originOptions, localOperations) {
   return localLoadOptions;
 }
 function getStoreLoadOptions(originOptions, localOperations) {
-  const storeLoadOptions = _extends({}, originOptions);
+  const storeLoadOptions = Object.assign({}, originOptions);
   if (localOperations.sorting) {
     delete storeLoadOptions.sort;
   }

@@ -13,8 +13,7 @@ var _all_day_panel_table_body = require("./all_day_panel_table_body");
 var _date_table_cell_base = require("./date_table_cell_base");
 var _layout_props = require("./layout_props");
 var _row = require("./row");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const DateTableBodyDefaultProps = exports.DateTableBodyDefaultProps = _extends({}, _layout_props.LayoutDefaultProps, {
+const DateTableBodyDefaultProps = exports.DateTableBodyDefaultProps = Object.assign({}, _layout_props.LayoutDefaultProps, {
   cellTemplate: _date_table_cell_base.DateTableCellBase
 });
 class DateTableBody extends _index.BaseInfernoComponent {

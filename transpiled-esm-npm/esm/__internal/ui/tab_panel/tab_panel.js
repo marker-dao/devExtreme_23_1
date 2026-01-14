@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../../core/component_registrator';
 import devices from '../../../core/devices';
 import domAdapter from '../../../core/dom_adapter';
@@ -52,7 +51,7 @@ const STYLING_MODE = {
 };
 class TabPanel extends MultiView {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       itemTitleTemplate: 'title',
       hoverStateEnabled: true,
       selectOnFocus: false,

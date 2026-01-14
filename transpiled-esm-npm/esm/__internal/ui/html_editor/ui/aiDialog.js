@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../../../../ui/drop_down_button';
 import localizationMessage from '../../../../common/core/localization/message';
 import Guid from '../../../../core/guid';
@@ -68,7 +67,7 @@ export default class AIDialog extends BaseDialog {
   }
   _getPopupConfig() {
     const baseConfig = super._getPopupConfig();
-    return extend(true, {}, baseConfig, _extends({
+    return extend(true, {}, baseConfig, Object.assign({
       minWidth: POPUP_MIN_WIDTH,
       maxWidth: POPUP_MAX_WIDTH,
       height: 'auto',
@@ -175,7 +174,7 @@ export default class AIDialog extends BaseDialog {
       maxHeight: TEXT_AREA_MAX_HEIGHT,
       autoResizeEnabled: true
     };
-    const options = _extends({
+    const options = Object.assign({
       inputAttr: {
         'aria-label': localizationMessage.format('dxHtmlEditor-aiResultTextAreaAriaLabel')
       },
@@ -261,7 +260,7 @@ export default class AIDialog extends BaseDialog {
           width: REPLACE_DROPDOWN_WIDTH
         },
         onButtonClick: e => {
-          this._replaceButtonAction(_extends({}, e, {
+          this._replaceButtonAction(Object.assign({}, e, {
             itemData: {
               id: ReplaceButtonActions.Replace
             }

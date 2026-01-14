@@ -27,7 +27,8 @@ var _m_modules = _interopRequireDefault(require("../../../grids/grid_core/m_modu
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _m_header_filter_core = require("./m_header_filter_core");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
+/* eslint-disable max-classes-per-file */
+
 const DATE_INTERVAL_FORMATS = {
   month(value) {
     return _date.default.getMonthNames()[value - 1];
@@ -60,7 +61,7 @@ function convertDataFromUTCToLocal(data, column) {
   const dates = ungroupUTCDates(data);
   // @ts-expect-error
   const query = (0, _query.default)(dates);
-  const group = _m_utils.default.getHeaderFilterGroupParameters(_extends({}, column, {
+  const group = _m_utils.default.getHeaderFilterGroupParameters(Object.assign({}, column, {
     calculateCellValue: date => date
   }));
   // @ts-expect-error

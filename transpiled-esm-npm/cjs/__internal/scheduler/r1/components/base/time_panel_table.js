@@ -12,8 +12,7 @@ var _row = require("./row");
 var _table = require("./table");
 var _time_panel_cell = require("./time_panel_cell");
 const _excluded = ["timePanelData", "viewContext", "tableRef", "timeCellTemplate"];
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const TimePanelTableDefaultProps = exports.TimePanelTableDefaultProps = {
   timePanelData: {
     groupedData: [],
@@ -40,7 +39,7 @@ class TimePanelTable extends _index.InfernoWrapperComponent {
       topVirtualRowHeight,
       bottomVirtualRowHeight
     } = timePanelData;
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _table.Table, _extends({}, restProps, {
+    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _table.Table, Object.assign({}, restProps, {
       "className": "dx-scheduler-time-panel",
       "topVirtualRowHeight": topVirtualRowHeight ?? 0,
       "bottomVirtualRowHeight": bottomVirtualRowHeight ?? 0,

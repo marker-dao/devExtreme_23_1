@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CellsSelectionController = void 0;
 var _index = require("../../scheduler/r1/utils/index");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class CellsSelectionController {
   handleArrowClick(options) {
     const {
@@ -24,12 +23,12 @@ class CellsSelectionController {
         nextCellIndices = this.getCellFromNextRowPosition(focusedCellPosition, 'prev', edgeIndices);
         break;
       case 'left':
-        nextCellIndices = this.getCellFromNextColumnPosition(_extends({}, options, {
+        nextCellIndices = this.getCellFromNextColumnPosition(Object.assign({}, options, {
           direction: 'prev'
         }));
         break;
       case 'right':
-        nextCellIndices = this.getCellFromNextColumnPosition(_extends({}, options, {
+        nextCellIndices = this.getCellFromNextColumnPosition(Object.assign({}, options, {
           direction: 'next'
         }));
         break;
@@ -37,7 +36,7 @@ class CellsSelectionController {
         break;
     }
     const currentCellData = getCellDataByPosition(nextCellIndices.rowIndex, nextCellIndices.columnIndex, isAllDayPanelCell);
-    return this.moveToCell(_extends({}, options, {
+    return this.moveToCell(Object.assign({}, options, {
       currentCellData
     }));
   }

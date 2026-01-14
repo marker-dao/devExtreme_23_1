@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 import { extend } from '../../../core/utils/extend';
 import gridCoreUtils from '../../grids/grid_core/m_utils';
@@ -40,7 +39,7 @@ const dataSourceAdapterExtender = Base => class VirtualScrollingDataSourceAdapte
     });
   }
 };
-gridCore.registerModule('virtualScrolling', _extends({}, virtualScrollingModule, {
+gridCore.registerModule('virtualScrolling', Object.assign({}, virtualScrollingModule, {
   defaultOptions() {
     return extend(true, oldDefaultOptions(), {
       scrolling: {

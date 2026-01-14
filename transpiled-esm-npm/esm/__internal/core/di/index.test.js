@@ -132,16 +132,16 @@ describe('dependency cycle', () => {
       this.myClass2 = myClass2;
     }
   }
-  // @ts-expect-error
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  MyClass1.dependencies = [MyClass2];
+  MyClass1.dependencies = [];
   class MyClass2 {
     constructor(myClass1) {
       this.myClass1 = myClass1;
     }
   }
   MyClass2.dependencies = [MyClass1];
+  MyClass1.dependencies = [MyClass2];
   const ctx = new DIContext();
+  // @ts-expect-error
   ctx.register(MyClass1);
   ctx.register(MyClass2);
   it('should throw', () => {

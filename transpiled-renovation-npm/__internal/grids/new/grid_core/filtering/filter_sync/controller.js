@@ -14,8 +14,9 @@ var _index4 = require("../header_filter/index");
 var _utils2 = require("../header_filter/utils");
 var _index5 = require("../index");
 var _utils3 = require("./utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // import type { ReadonlySignal } from '../../../../../core/state_manager/index';
+// import type { ReadonlySignal } from '../../../../../core/state_manager/index';
 // import { computed } from '../../../../../core/state_manager/index';
+
 const FILTER_DEEP_COMPARISON_OPTS = {
   maxDepth: 6,
   strict: true
@@ -99,7 +100,7 @@ class FilterSyncController {
       const filterConditions = (0, _m_utils.getMatchedConditions)(filterPanelValue, columnId);
       const filterType = (0, _utils3.getFilterType)(filterConditions);
       const filterValues = filterType ? (0, _utils3.getFilterValues)(filterConditions) : undefined;
-      return _extends({}, column, {
+      return Object.assign({}, column, {
         filterType,
         filterValues
       });

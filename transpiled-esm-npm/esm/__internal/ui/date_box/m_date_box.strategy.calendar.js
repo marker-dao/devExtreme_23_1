@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../common/core/localization/message';
 // @ts-expect-error
 import { splitPair } from '../../../core/utils/common';
@@ -15,7 +14,7 @@ class CalendarStrategy extends DateBoxStrategy {
     this.NAME = 'Calendar';
   }
   getDefaultOptions() {
-    return _extends({}, super.getDefaultOptions(), {
+    return Object.assign({}, super.getDefaultOptions(), {
       todayButtonText: this.dateBox.option('todayButtonText') ?? messageLocalization.format('dxCalendar-todayButtonText')
     });
   }

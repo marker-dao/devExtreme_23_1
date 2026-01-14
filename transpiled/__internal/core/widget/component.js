@@ -19,7 +19,6 @@ var _extend = require("../../../core/utils/extend");
 var _public_component = require("../../../core/utils/public_component");
 var _type = require("../../../core/utils/type");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const getEventName = actionName => actionName.charAt(2).toLowerCase() + actionName.substr(3);
 const isInnerOption = optionName => optionName.indexOf('_', 0) === 0;
 class Component extends _class.default.inherit({}) {
@@ -262,7 +261,7 @@ class Component extends _class.default.inherit({}) {
     let eventName;
     // eslint-disable-next-line @typescript-eslint/init-declarations
     let actionFunc;
-    let actionConfig = _extends({}, config ?? {});
+    let actionConfig = Object.assign({}, config ?? {});
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const result = function () {
       var _actionConfig, _actionConfig2;

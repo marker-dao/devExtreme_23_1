@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { isAppointmentMatchedIntervals } from '../../../common/is_appointment_matched_intervals';
 const getIntervals = (appointment, _ref) => {
   let {
@@ -18,7 +17,7 @@ const getIntervals = (appointment, _ref) => {
 export const filterByIntervals = (entities, options) => entities.filter(appointment => {
   const intervals = getIntervals(appointment, options);
   // NOTE: if all day appointment ends at 00:00 make it longer to occupy next interval
-  const fixedAppointment = _extends({}, appointment);
+  const fixedAppointment = Object.assign({}, appointment);
   if (appointment.allDay) {
     fixedAppointment.endDateUTC += 1;
   }

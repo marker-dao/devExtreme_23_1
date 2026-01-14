@@ -18,7 +18,6 @@ var _collection_widget = _interopRequireDefault(require("../../ui/collection/col
 var _collection_widgetEditStrategy = _interopRequireDefault(require("../../ui/collection/collection_widget.edit.strategy.plain"));
 var _selection = _interopRequireDefault(require("../../ui/selection/selection"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const ITEM_DELETING_DATA_KEY = 'dxItemDeleting';
 const SELECTED_ITEM_CLASS = 'dx-item-selected';
 const NOT_EXISTING_INDEX = exports.NOT_EXISTING_INDEX = -1;
@@ -36,7 +35,7 @@ class CollectionWidget extends _collection_widget.default {
     this._optionsByReference.selectedItem = true;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       selectionMode: 'none',
       selectionRequired: false,
       selectByClick: true,
@@ -55,7 +54,7 @@ class CollectionWidget extends _collection_widget.default {
     });
   }
   _init() {
-    this._userOptions = _extends({}, CollectionWidget._initUserOptions);
+    this._userOptions = Object.assign({}, CollectionWidget._initUserOptions);
     CollectionWidget._initUserOptions = undefined;
     this._initEditStrategy();
     super._init();

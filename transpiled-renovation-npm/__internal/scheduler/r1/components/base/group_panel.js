@@ -11,8 +11,7 @@ var _index2 = require("../../utils/index");
 var _group_panel_horizontal = require("./group_panel_horizontal");
 var _group_panel_props = require("./group_panel_props");
 var _group_panel_vertical = require("./group_panel_vertical");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const GroupPanelDefaultProps = exports.GroupPanelDefaultProps = _extends({}, _group_panel_props.GroupPanelBaseDefaultProps, {
+const GroupPanelDefaultProps = exports.GroupPanelDefaultProps = Object.assign({}, _group_panel_props.GroupPanelBaseDefaultProps, {
   groups: [],
   groupOrientation: _constants.VERTICAL_GROUP_ORIENTATION
 });

@@ -15,7 +15,9 @@ var _items_controller = require("../items_controller/items_controller");
 var _index3 = require("../keyboard_navigation/index");
 var _options_controller = require("../options_controller/options_controller");
 var _confirm_controller = require("./confirm_controller");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-non-null-assertion */ /* eslint-disable spellcheck/spell-checker */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable spellcheck/spell-checker */
+
 class EditingController {
   constructor(options, itemsController, columnController, dataController, kbn, optionsValidationController, confirmController) {
     this.options = options;
@@ -58,7 +60,7 @@ class EditingController {
       }
       const insertChange = changes.find(change => change.key === editCardKey && change.type === 'insert');
       const oldData = (insertChange === null || insertChange === void 0 ? void 0 : insertChange.data) ?? oldItem.data;
-      const newData = insertChange ? _extends({}, oldData, changes) : (0, _data.applyChanges)([oldData], changes, {
+      const newData = insertChange ? Object.assign({}, oldData, changes) : (0, _data.applyChanges)([oldData], changes, {
         keyExpr: this.dataController.dataSource.peek().key(),
         immutable: true
       })[0];
@@ -252,8 +254,8 @@ class EditingController {
   }
   addChange(key, newData) {
     const existingChange = this.changes.peek().find(change => change.key === key && ['insert', 'update'].includes(change.type));
-    const newChange = existingChange ? _extends({}, existingChange, {
-      data: _extends({}, existingChange.data, newData)
+    const newChange = existingChange ? Object.assign({}, existingChange, {
+      data: Object.assign({}, existingChange.data, newData)
     }) : {
       key,
       type: 'update',

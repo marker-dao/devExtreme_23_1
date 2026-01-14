@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { cropByVirtualScreen } from './virtual_screen_crop';
 const options = {
@@ -13,7 +12,7 @@ const options = {
 describe('cropByVirtualScreen', () => {
   it('should do nothing for isVirtualScrolling=false', () => {
     const entities = [1, 2, 3];
-    expect(cropByVirtualScreen(entities, _extends({}, options, {
+    expect(cropByVirtualScreen(entities, Object.assign({}, options, {
       isVirtualScrolling: false
     }))).toEqual(entities);
   });

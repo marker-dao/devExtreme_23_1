@@ -23,7 +23,8 @@ var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 var _const = require("./const");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
+/* eslint-disable max-classes-per-file */
+
 const COLUMNS_SEPARATOR_CLASS = 'columns-separator';
 const COLUMNS_SEPARATOR_TRANSPARENT = 'columns-separator-transparent';
 const DRAGGING_HEADER_CLASS = 'drag-header';
@@ -397,7 +398,7 @@ class DraggingHeaderView extends _m_modules.default.View {
     const {
       columnElement
     } = options;
-    const dragOptions = _extends({}, options, {
+    const dragOptions = Object.assign({}, options, {
       draggingPanelBoundingRects: (0, _utils.getDraggingPanelBoundingRects)(options.draggingPanels)
     });
     this._isDragging = true;
@@ -1283,7 +1284,7 @@ class DraggingHeaderViewController extends _m_modules.default.ViewController {
   addColumnIndexOffset(columnIndex) {
     const offset = this._columnsController.getColumnIndexOffset();
     if ((0, _type.isObject)(columnIndex)) {
-      return _extends({}, columnIndex, {
+      return Object.assign({}, columnIndex, {
         columnIndex: columnIndex.columnIndex + offset
       });
     }

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { errors, handleError } from '../../common/data/errors';
 import storeHelper from '../../common/data/store_helper';
 import { processRequestResultLock } from '../../common/data/utils';
@@ -60,7 +59,7 @@ const Store = Class.inherit({
   _loadImpl(options) {
     if (!isEmptyObject(this._langParams)) {
       options = options || {};
-      options._langParams = _extends({}, this._langParams, options._langParams);
+      options._langParams = Object.assign({}, this._langParams, options._langParams);
     }
     // @ts-expect-error
     return queryByOptions(this.createQuery(options), options).enumerate();

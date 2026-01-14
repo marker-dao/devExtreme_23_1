@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../common/core/localization/message';
 import registerComponent from '../../../core/component_registrator';
 import devices from '../../../core/devices';
@@ -20,7 +19,7 @@ var SpeechToTextState;
 const ACTIONS = ['onStartClick', 'onStopClick', 'onResult', 'onError', 'onEnd'];
 class SpeechToText extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: true,
       customSpeechRecognizer: {
         enabled: false,

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { name as clickEventName } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { start as hoverStartEventName } from '../../../common/core/events/hover';
@@ -51,7 +50,7 @@ class BaseView extends Widget {
     return 'base';
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       date: new Date(),
       focusStateEnabled: false,
       cellTemplate: null,

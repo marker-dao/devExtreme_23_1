@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { name as clickEventName } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace } from '../../../common/core/events/utils/index';
@@ -16,7 +15,7 @@ const FAB_CONTENT_REVERSE_CLASS = 'dx-fa-button-content-reverse';
 const OVERLAY_CONTENT_SELECTOR = '.dx-overlay-content';
 class SpeedDialItem extends Overlay {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       shading: false,
       useInkRipple: false,
       callOverlayRenderShading: false,
@@ -64,8 +63,11 @@ class SpeedDialItem extends Overlay {
     }
     const $element = $('<div>').addClass(FAB_LABEL_CLASS);
     const $wrapper = $('<div>').addClass(FAB_LABEL_WRAPPER_CLASS);
-    this._$label = $wrapper.prependTo(this.$content()).append($element.text(label));
-    this.$content().toggleClass(FAB_CONTENT_REVERSE_CLASS, this._isPositionLeft(this.option('parentPosition')));
+    const $content = this.$content();
+    if ($content) {
+      this._$label = $wrapper.prependTo($content).append($element.text(label));
+      $content.toggleClass(FAB_CONTENT_REVERSE_CLASS, this._isPositionLeft(this.option('parentPosition')));
+    }
   }
   _isPositionLeft(position) {
     let currentLocation = '';

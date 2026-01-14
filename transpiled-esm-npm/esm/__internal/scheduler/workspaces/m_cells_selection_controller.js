@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { isDateAndTimeView } from '../../scheduler/r1/utils/index';
 export class CellsSelectionController {
   handleArrowClick(options) {
@@ -18,12 +17,12 @@ export class CellsSelectionController {
         nextCellIndices = this.getCellFromNextRowPosition(focusedCellPosition, 'prev', edgeIndices);
         break;
       case 'left':
-        nextCellIndices = this.getCellFromNextColumnPosition(_extends({}, options, {
+        nextCellIndices = this.getCellFromNextColumnPosition(Object.assign({}, options, {
           direction: 'prev'
         }));
         break;
       case 'right':
-        nextCellIndices = this.getCellFromNextColumnPosition(_extends({}, options, {
+        nextCellIndices = this.getCellFromNextColumnPosition(Object.assign({}, options, {
           direction: 'next'
         }));
         break;
@@ -31,7 +30,7 @@ export class CellsSelectionController {
         break;
     }
     const currentCellData = getCellDataByPosition(nextCellIndices.rowIndex, nextCellIndices.columnIndex, isAllDayPanelCell);
-    return this.moveToCell(_extends({}, options, {
+    return this.moveToCell(Object.assign({}, options, {
       currentCellData
     }));
   }

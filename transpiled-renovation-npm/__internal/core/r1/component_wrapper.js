@@ -19,7 +19,6 @@ var _inferno_renderer = _interopRequireDefault(require("../../../core/inferno_re
 var _template_wrapper = require("./template_wrapper");
 var _index = require("./utils/index");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const setDefaultOptionValue = (options, defaultValueGetter) => name => {
   if (Object.prototype.hasOwnProperty.call(options, name) && options[name] === undefined) {
     options[name] = defaultValueGetter(name);
@@ -73,11 +72,11 @@ class ComponentWrapper extends _dom_component.default {
     // @ts-expect-error badly typed base class
     super._getDefaultOptions(), viewDefaultProps, this._propsInfo.twoWay.reduce((options, _ref) => {
       let [name, defaultName, eventName] = _ref;
-      return _extends({}, options, {
+      return Object.assign({}, options, {
         [name]: viewDefaultProps[defaultName],
         [eventName]: value => this.option(name, value)
       });
-    }, {}), this._propsInfo.templates.reduce((options, name) => _extends({}, options, {
+    }, {}), this._propsInfo.templates.reduce((options, name) => Object.assign({}, options, {
       [name]: null
     }), {}));
   }
@@ -226,7 +225,7 @@ class ComponentWrapper extends _dom_component.default {
   }
   prepareStyleProp(props) {
     if (typeof props.style === 'string') {
-      return _extends({}, props, {
+      return Object.assign({}, props, {
         style: {},
         cssText: props.style
       });
@@ -237,7 +236,7 @@ class ComponentWrapper extends _dom_component.default {
     const {
       elementAttr
     } = this.option();
-    const options = this._patchOptionValues(_extends({}, this._props, {
+    const options = this._patchOptionValues(Object.assign({}, this._props, {
       ref: this._viewRef,
       children: this._extractDefaultSlot(),
       aria: this._aria
@@ -245,7 +244,7 @@ class ComponentWrapper extends _dom_component.default {
     this._propsInfo.templates.forEach(template => {
       options[template] = this._componentTemplates[template];
     });
-    return this.prepareStyleProp(_extends({}, options, this.elementAttr, elementAttr, {
+    return this.prepareStyleProp(Object.assign({}, options, this.elementAttr, elementAttr, {
       className: [...(this.elementAttr.class ?? '').split(' '), ...((elementAttr === null || elementAttr === void 0 ? void 0 : elementAttr.class) ?? '').split(' ')].filter((c, i, a) => c && a.indexOf(c) === i).join(' ').trim(),
       class: ''
     }, this._actionsMap));
@@ -254,7 +253,7 @@ class ComponentWrapper extends _dom_component.default {
     return {};
   }
   _getActionConfigsFull() {
-    return _extends({}, this._getActionConfigs(), this._getAdditionalActionConfigs());
+    return Object.assign({}, this._getActionConfigs(), this._getAdditionalActionConfigs());
   }
   getDefaultTemplates() {
     const defaultTemplates = Object.values(this._templatesInfo);
@@ -270,11 +269,11 @@ class ComponentWrapper extends _dom_component.default {
   _optionsWithDefaultTemplates(options) {
     const templateOptions = Object.entries(this._templatesInfo).reduce((result, _ref4) => {
       let [templateName, templateValue] = _ref4;
-      return _extends({}, result, {
+      return Object.assign({}, result, {
         [templateName]: options[templateName] ?? templateValue
       });
     }, {});
-    return _extends({}, options, templateOptions);
+    return Object.assign({}, options, templateOptions);
   }
   _init() {
     // @ts-expect-error badly typed base class
@@ -413,7 +412,7 @@ class ComponentWrapper extends _dom_component.default {
     this._refresh();
   }
   _supportedKeys() {
-    return _extends({}, this.defaultKeyHandlers, this.customKeyHandlers);
+    return Object.assign({}, this.defaultKeyHandlers, this.customKeyHandlers);
   }
   registerKeyHandler(key, handler) {
     this.customKeyHandlers[key] = handler;

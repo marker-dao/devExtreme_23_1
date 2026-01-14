@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.InfernoWrapper = void 0;
 var _inferno = require("inferno");
 var _config_context = require("../core/config_context");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class InfernoWrapper extends _inferno.Component {
   constructor() {
     super(...arguments);
@@ -22,7 +21,7 @@ class InfernoWrapper extends _inferno.Component {
   }
   getComponentOptions() {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return _extends({}, this.context[_config_context.ConfigContext.id], this.props);
+    return Object.assign({}, this.context[_config_context.ConfigContext.id], this.props);
   }
   updateComponentRef() {
     if (this.props.componentRef) {

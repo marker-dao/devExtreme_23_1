@@ -4,10 +4,9 @@ var _inferno = require("inferno");
 var _globals = require("@jest/globals");
 var _columns_controller = require("../../grid_core/columns_controller/columns_controller.mock");
 var _item = require("./item");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const setup = props => {
   const rootElement = document.createElement('div');
-  (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _item.Item, _extends({}, props))), rootElement);
+  (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _item.Item, Object.assign({}, props))), rootElement);
   return rootElement;
 };
 (0, _globals.describe)('Item', () => {

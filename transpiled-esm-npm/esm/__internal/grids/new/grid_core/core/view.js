@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode, normalizeProps } from "inferno";
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-this-alias */
@@ -18,7 +17,7 @@ export class View {
     const props = this.getProps();
     return effect(() => {
       this.props = props.value;
-      const content = normalizeProps(createComponentVNode(2, ViewComponent, _extends({}, props.value)));
+      const content = normalizeProps(createComponentVNode(2, ViewComponent, Object.assign({}, props.value)));
       infernoRenderer.renderIntoContainer(content, root, !this.firstRender);
       this.firstRender = false;
     });
@@ -50,7 +49,7 @@ export class View {
       }
       render() {
         const ViewComponent = view.component;
-        return normalizeProps(createComponentVNode(2, ViewComponent, _extends({}, this.state.props)));
+        return normalizeProps(createComponentVNode(2, ViewComponent, Object.assign({}, this.state.props)));
       }
     };
   }

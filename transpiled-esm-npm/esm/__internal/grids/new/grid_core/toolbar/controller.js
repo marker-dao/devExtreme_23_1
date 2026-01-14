@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { computed, effect, signal } from '../../../../core/state_manager/index';
 import { OptionsController } from '../options_controller/options_controller';
 import { DEFAULT_TOOLBAR_ITEMS } from './const';
@@ -17,7 +16,7 @@ export class ToolbarController {
       name
     } = item.peek();
     this.itemSubscriptions[name] = effect(() => {
-      const newDefaultItems = _extends({}, this.defaultItems.peek());
+      const newDefaultItems = Object.assign({}, this.defaultItems.peek());
       if (needRender.value) {
         newDefaultItems[name] = item.value;
       } else {

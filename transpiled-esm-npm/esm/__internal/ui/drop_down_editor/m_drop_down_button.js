@@ -13,22 +13,28 @@ export default class DropDownButton extends TextEditorButton {
     this.currentTemplate = null;
   }
   _attachEvents(instance) {
-    const {
-      editor
-    } = this;
     instance.option('onClick', e => {
-      var _editor$_shouldCallOp;
-      // @ts-expect-error
-      if ((_editor$_shouldCallOp = editor._shouldCallOpenHandler) !== null && _editor$_shouldCallOp !== void 0 && _editor$_shouldCallOp.call(editor)) {
-        // @ts-expect-error
-        editor._openHandler(e);
+      var _this$editor, _this$editor$_shouldC, _this$editor3;
+      // @ts-expect-error _shouldCallOpenHandler should be typed
+      if ((_this$editor = this.editor) !== null && _this$editor !== void 0 && (_this$editor$_shouldC = _this$editor._shouldCallOpenHandler) !== null && _this$editor$_shouldC !== void 0 && _this$editor$_shouldC.call(_this$editor)) {
+        var _this$editor2;
+        // @ts-expect-error _openHandler should be typed
+        (_this$editor2 = this.editor) === null || _this$editor2 === void 0 || _this$editor2._openHandler(e);
         return;
       }
-      // @ts-expect-error
-      !editor.option('openOnFieldClick') && editor._openHandler(e);
+      // @ts-expect-error openOnFieldClick should be typed
+      const {
+        openOnFieldClick
+      } = ((_this$editor3 = this.editor) === null || _this$editor3 === void 0 ? void 0 : _this$editor3.option()) ?? {};
+      if (!openOnFieldClick) {
+        var _this$editor4;
+        // @ts-expect-error _openHandler should be typed
+        (_this$editor4 = this.editor) === null || _this$editor4 === void 0 || _this$editor4._openHandler(e);
+      }
     });
     eventsEngine.on(instance.$element(), 'mousedown', e => {
-      if (editor.$element().is('.dx-state-focused')) {
+      var _this$editor5;
+      if ((_this$editor5 = this.editor) !== null && _this$editor5 !== void 0 && _this$editor5.$element().is('.dx-state-focused')) {
         e.preventDefault();
       }
     });
@@ -37,6 +43,9 @@ export default class DropDownButton extends TextEditorButton {
     const {
       editor
     } = this;
+    if (!editor) {
+      return undefined;
+    }
     const $element = $('<div>');
     const options = this._getOptions();
     this._addToContainer($element);
@@ -56,7 +65,7 @@ export default class DropDownButton extends TextEditorButton {
       editor
     } = this;
     const visible = this._isVisible();
-    const isReadOnly = editor.option('readOnly');
+    const isReadOnly = editor === null || editor === void 0 ? void 0 : editor.option('readOnly');
     const options = {
       focusStateEnabled: false,
       hoverStateEnabled: false,
@@ -73,7 +82,7 @@ export default class DropDownButton extends TextEditorButton {
       editor
     } = this;
     // @ts-expect-error
-    return super._isVisible() && editor.option('showDropDownButton');
+    return super._isVisible() && (editor === null || editor === void 0 ? void 0 : editor.option('showDropDownButton'));
   }
   // TODO: get rid of it
   _legacyRender($editor, $element, isVisible) {
@@ -83,12 +92,14 @@ export default class DropDownButton extends TextEditorButton {
     }
   }
   _isSameTemplate() {
-    return this.editor.option('dropDownButtonTemplate') === this.currentTemplate;
+    var _this$editor6;
+    return ((_this$editor6 = this.editor) === null || _this$editor6 === void 0 ? void 0 : _this$editor6.option('dropDownButtonTemplate')) === this.currentTemplate;
   }
   _addTemplate(options) {
     if (!this._isSameTemplate()) {
-      options.template = this.editor._getTemplateByOption('dropDownButtonTemplate');
-      this.currentTemplate = this.editor.option('dropDownButtonTemplate');
+      var _this$editor7, _this$editor8;
+      options.template = (_this$editor7 = this.editor) === null || _this$editor7 === void 0 ? void 0 : _this$editor7._getTemplateByOption('dropDownButtonTemplate');
+      this.currentTemplate = (_this$editor8 = this.editor) === null || _this$editor8 === void 0 ? void 0 : _this$editor8.option('dropDownButtonTemplate');
     }
   }
   // @ts-expect-error
@@ -99,7 +110,7 @@ export default class DropDownButton extends TextEditorButton {
         editor,
         instance
       } = this;
-      const $editor = editor.$element();
+      const $editor = editor === null || editor === void 0 ? void 0 : editor.$element();
       const options = this._getOptions();
       // @ts-expect-error
       instance === null || instance === void 0 || instance.option(options);

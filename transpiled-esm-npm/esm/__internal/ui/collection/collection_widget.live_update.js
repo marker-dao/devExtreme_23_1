@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { indexByKey, insert, update } from '../../../common/data/array_utils';
 import { keysEqual } from '../../../common/data/utils';
 import domAdapter from '../../../core/dom_adapter';
@@ -11,7 +10,7 @@ import CollectionWidgetAsync from '../../ui/collection/collection_widget.async';
 export const PRIVATE_KEY_FIELD = '__dx_key__';
 class CollectionWidgetLiveUpdate extends CollectionWidgetAsync {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       repaintChangesOnly: false
     });
   }

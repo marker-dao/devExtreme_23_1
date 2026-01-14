@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createComponentVNode, normalizeProps } from "inferno";
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -25,13 +24,13 @@ const DEFAULT_FEEDBACK_HIDE_TIMEOUT = 400;
 const DEFAULT_FEEDBACK_SHOW_TIMEOUT = 30;
 const getAria = args => Object.keys(args).reduce((r, key) => {
   if (args[key]) {
-    return _extends({}, r, {
+    return Object.assign({}, r, {
       [key === 'role' || key === 'id' ? key : `aria-${key}`]: String(args[key])
     });
   }
   return r;
 }, {});
-export const WidgetDefaultProps = _extends({}, BaseWidgetDefaultProps, {
+export const WidgetDefaultProps = Object.assign({}, BaseWidgetDefaultProps, {
   _feedbackHideTimeout: DEFAULT_FEEDBACK_HIDE_TIMEOUT,
   _feedbackShowTimeout: DEFAULT_FEEDBACK_SHOW_TIMEOUT,
   cssText: '',
@@ -83,7 +82,7 @@ export class Widget extends InfernoWrapperComponent {
     return [new InfernoEffect(this.setRootElementRef, []), new InfernoEffect(this.activeEffect, [this.props._feedbackShowTimeout, this.props.activeStateEnabled, this.props.activeStateUnit, this.props.disabled, this.props.onActive]), new InfernoEffect(this.inactiveEffect, [this.props._feedbackHideTimeout, this.props.activeStateEnabled, this.props.activeStateUnit, this.props.onInactive, this.state.active]), new InfernoEffect(this.clickEffect, [this.props.disabled, this.props.name, this.props.onClick]), new InfernoEffect(this.focusInEffect, [this.props.disabled, this.props.focusStateEnabled, this.props.name, this.props.onFocusIn]), new InfernoEffect(this.focusOutEffect, [this.props.focusStateEnabled, this.props.name, this.props.onFocusOut, this.state.focused]), new InfernoEffect(this.hoverStartEffect, [this.props.activeStateUnit, this.props.disabled, this.props.hoverStateEnabled, this.props.onHoverStart, this.state.active]), new InfernoEffect(this.hoverEndEffect, [this.props.activeStateUnit, this.props.hoverStateEnabled, this.props.onHoverEnd, this.state.hovered]), new InfernoEffect(this.keyboardEffect, [this.props.focusStateEnabled, this.props.onKeyDown]), new InfernoEffect(this.resizeEffect, [this.props.name, this.props.onDimensionChanged]), new InfernoEffect(this.windowResizeEffect, [this.props.onDimensionChanged]), new InfernoEffect(this.visibilityEffect, [this.props.name, this.props.onVisibilityChange]), new InfernoEffect(this.checkDeprecation, [this.props.height, this.props.width]), new InfernoEffect(this.applyCssTextEffect, [this.props.cssText]), createReRenderEffect()];
   }
   updateEffects() {
-    var _this$_effects$, _this$_effects$2, _this$_effects$3, _this$_effects$4, _this$_effects$5, _this$_effects$6, _this$_effects$7, _this$_effects$8, _this$_effects$9, _this$_effects$10, _this$_effects$11, _this$_effects$12, _this$_effects$13;
+    var _this$_effects$, _this$_effects$2, _this$_effects$3, _this$_effects$4, _this$_effects$5, _this$_effects$6, _this$_effects$7, _this$_effects$8, _this$_effects$9, _this$_effects$0, _this$_effects$1, _this$_effects$10, _this$_effects$11;
     (_this$_effects$ = this._effects[1]) === null || _this$_effects$ === void 0 || _this$_effects$.update([this.props._feedbackShowTimeout, this.props.activeStateEnabled, this.props.activeStateUnit, this.props.disabled, this.props.onActive]);
     (_this$_effects$2 = this._effects[2]) === null || _this$_effects$2 === void 0 || _this$_effects$2.update([this.props._feedbackHideTimeout, this.props.activeStateEnabled, this.props.activeStateUnit, this.props.onInactive, this.state.active]);
     (_this$_effects$3 = this._effects[3]) === null || _this$_effects$3 === void 0 || _this$_effects$3.update([this.props.disabled, this.props.name, this.props.onClick]);
@@ -93,10 +92,10 @@ export class Widget extends InfernoWrapperComponent {
     (_this$_effects$7 = this._effects[7]) === null || _this$_effects$7 === void 0 || _this$_effects$7.update([this.props.activeStateUnit, this.props.hoverStateEnabled, this.props.onHoverEnd, this.state.hovered]);
     (_this$_effects$8 = this._effects[8]) === null || _this$_effects$8 === void 0 || _this$_effects$8.update([this.props.focusStateEnabled, this.props.onKeyDown]);
     (_this$_effects$9 = this._effects[9]) === null || _this$_effects$9 === void 0 || _this$_effects$9.update([this.props.name, this.props.onDimensionChanged]);
-    (_this$_effects$10 = this._effects[10]) === null || _this$_effects$10 === void 0 || _this$_effects$10.update([this.props.onDimensionChanged]);
-    (_this$_effects$11 = this._effects[11]) === null || _this$_effects$11 === void 0 || _this$_effects$11.update([this.props.name, this.props.onVisibilityChange]);
-    (_this$_effects$12 = this._effects[12]) === null || _this$_effects$12 === void 0 || _this$_effects$12.update([this.props.height, this.props.width]);
-    (_this$_effects$13 = this._effects[13]) === null || _this$_effects$13 === void 0 || _this$_effects$13.update([this.props.cssText]);
+    (_this$_effects$0 = this._effects[10]) === null || _this$_effects$0 === void 0 || _this$_effects$0.update([this.props.onDimensionChanged]);
+    (_this$_effects$1 = this._effects[11]) === null || _this$_effects$1 === void 0 || _this$_effects$1.update([this.props.name, this.props.onVisibilityChange]);
+    (_this$_effects$10 = this._effects[12]) === null || _this$_effects$10 === void 0 || _this$_effects$10.update([this.props.height, this.props.width]);
+    (_this$_effects$11 = this._effects[13]) === null || _this$_effects$11 === void 0 || _this$_effects$11.update([this.props.cssText]);
   }
   setRootElementRef() {
     var _this$widgetElementRe;
@@ -281,8 +280,8 @@ export class Widget extends InfernoWrapperComponent {
       focusStateEnabled
     } = this.props;
     if (focusStateEnabled && onKeyDown) {
-      var _this$widgetElementRe10, _this$widgetElementRe11;
-      const id = keyboard.on((_this$widgetElementRe10 = this.widgetElementRef) === null || _this$widgetElementRe10 === void 0 ? void 0 : _this$widgetElementRe10.current, (_this$widgetElementRe11 = this.widgetElementRef) === null || _this$widgetElementRe11 === void 0 ? void 0 : _this$widgetElementRe11.current, e => onKeyDown(e));
+      var _this$widgetElementRe0, _this$widgetElementRe1;
+      const id = keyboard.on((_this$widgetElementRe0 = this.widgetElementRef) === null || _this$widgetElementRe0 === void 0 ? void 0 : _this$widgetElementRe0.current, (_this$widgetElementRe1 = this.widgetElementRef) === null || _this$widgetElementRe1 === void 0 ? void 0 : _this$widgetElementRe1.current, e => onKeyDown(e));
       return () => keyboard.off(id);
     }
     return undefined;
@@ -293,13 +292,13 @@ export class Widget extends InfernoWrapperComponent {
       onDimensionChanged
     } = this.props;
     if (onDimensionChanged) {
-      var _this$widgetElementRe12;
-      resize.on((_this$widgetElementRe12 = this.widgetElementRef) === null || _this$widgetElementRe12 === void 0 ? void 0 : _this$widgetElementRe12.current, onDimensionChanged, {
+      var _this$widgetElementRe10;
+      resize.on((_this$widgetElementRe10 = this.widgetElementRef) === null || _this$widgetElementRe10 === void 0 ? void 0 : _this$widgetElementRe10.current, onDimensionChanged, {
         namespace
       });
       return () => {
-        var _this$widgetElementRe13;
-        return resize.off((_this$widgetElementRe13 = this.widgetElementRef) === null || _this$widgetElementRe13 === void 0 ? void 0 : _this$widgetElementRe13.current, {
+        var _this$widgetElementRe11;
+        return resize.off((_this$widgetElementRe11 = this.widgetElementRef) === null || _this$widgetElementRe11 === void 0 ? void 0 : _this$widgetElementRe11.current, {
           namespace
         });
       };
@@ -325,13 +324,13 @@ export class Widget extends InfernoWrapperComponent {
     } = this.props;
     const namespace = `${name}VisibilityChange`;
     if (onVisibilityChange) {
-      var _this$widgetElementRe14;
-      visibility.on((_this$widgetElementRe14 = this.widgetElementRef) === null || _this$widgetElementRe14 === void 0 ? void 0 : _this$widgetElementRe14.current, () => onVisibilityChange(true), () => onVisibilityChange(false), {
+      var _this$widgetElementRe12;
+      visibility.on((_this$widgetElementRe12 = this.widgetElementRef) === null || _this$widgetElementRe12 === void 0 ? void 0 : _this$widgetElementRe12.current, () => onVisibilityChange(true), () => onVisibilityChange(false), {
         namespace
       });
       return () => {
-        var _this$widgetElementRe15;
-        return visibility.off((_this$widgetElementRe15 = this.widgetElementRef) === null || _this$widgetElementRe15 === void 0 ? void 0 : _this$widgetElementRe15.current, {
+        var _this$widgetElementRe13;
+        return visibility.off((_this$widgetElementRe13 = this.widgetElementRef) === null || _this$widgetElementRe13 === void 0 ? void 0 : _this$widgetElementRe13.current, {
           namespace
         });
       };
@@ -351,11 +350,11 @@ export class Widget extends InfernoWrapperComponent {
     }
   }
   applyCssTextEffect() {
-    var _this$widgetElementRe16;
+    var _this$widgetElementRe14;
     const {
       cssText
     } = this.props;
-    if (cssText !== undefined && cssText !== '' && (_this$widgetElementRe16 = this.widgetElementRef) !== null && _this$widgetElementRe16 !== void 0 && _this$widgetElementRe16.current) {
+    if (cssText !== undefined && cssText !== '' && (_this$widgetElementRe14 = this.widgetElementRef) !== null && _this$widgetElementRe14 !== void 0 && _this$widgetElementRe14.current) {
       this.widgetElementRef.current.style.cssText = cssText;
     }
   }
@@ -379,16 +378,16 @@ export class Widget extends InfernoWrapperComponent {
       visible
     } = this.props;
     const accessKey = focusStateEnabled && !disabled && this.props.accessKey;
-    const props = _extends({}, extend({}, accessKey && {
+    const props = Object.assign({}, extend({}, accessKey && {
       accessKey
-    }), getAria(_extends({}, aria, {
+    }), getAria(Object.assign({}, aria, {
       disabled,
       hidden: !visible
     })), extend({}, this.getRestAttributes(this.props)));
     return props;
   }
   getRestAttributes(props) {
-    const result = _extends({}, props);
+    const result = Object.assign({}, props);
     ['_feedbackHideTimeout', '_feedbackShowTimeout', 'accessKey', 'activeStateEnabled', 'activeStateUnit', 'addWidgetClass', 'aria', 'children', 'className', 'classes', 'cssText', 'disabled', 'focusStateEnabled', 'height', 'hint', 'hoverStateEnabled', 'name', 'onActive', 'onClick', 'onDimensionChanged', 'onFocusIn', 'onFocusOut', 'onHoverEnd', 'onHoverStart', 'onInactive', 'onKeyDown', 'onRootElementRendered', 'onVisibilityChange', 'rootElementRef', 'rtlEnabled', 'tabIndex', 'visible', 'width'].forEach(exclude => {
       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete result[exclude];
@@ -405,7 +404,7 @@ export class Widget extends InfernoWrapperComponent {
     const computedWidth = normalizeStyleProp('width', isFunction(width) ? width() : width);
     // @ts-expect-error ts-error
     const computedHeight = normalizeStyleProp('height', isFunction(height) ? height() : height);
-    return _extends({}, style, {
+    return Object.assign({}, style, {
       height: computedHeight ?? style.height,
       width: computedWidth ?? style.width
     });
@@ -449,13 +448,13 @@ export class Widget extends InfernoWrapperComponent {
     return isFocusable ? tabIndex : undefined;
   }
   focus() {
-    var _this$widgetElementRe17;
-    focus.trigger((_this$widgetElementRe17 = this.widgetElementRef) === null || _this$widgetElementRe17 === void 0 ? void 0 : _this$widgetElementRe17.current);
+    var _this$widgetElementRe15;
+    focus.trigger((_this$widgetElementRe15 = this.widgetElementRef) === null || _this$widgetElementRe15 === void 0 ? void 0 : _this$widgetElementRe15.current);
   }
   blur() {
-    var _this$widgetElementRe18, _this$widgetElementRe19;
-    const activeElement = domAdapter.getActiveElement((_this$widgetElementRe18 = this.widgetElementRef) === null || _this$widgetElementRe18 === void 0 ? void 0 : _this$widgetElementRe18.current);
-    if (((_this$widgetElementRe19 = this.widgetElementRef) === null || _this$widgetElementRe19 === void 0 ? void 0 : _this$widgetElementRe19.current) === activeElement) {
+    var _this$widgetElementRe16, _this$widgetElementRe17;
+    const activeElement = domAdapter.getActiveElement((_this$widgetElementRe16 = this.widgetElementRef) === null || _this$widgetElementRe16 === void 0 ? void 0 : _this$widgetElementRe16.current);
+    if (((_this$widgetElementRe17 = this.widgetElementRef) === null || _this$widgetElementRe17 === void 0 ? void 0 : _this$widgetElementRe17.current) === activeElement) {
       activeElement.blur();
     }
   }
@@ -474,7 +473,7 @@ export class Widget extends InfernoWrapperComponent {
       hint,
       children
     } = this.props;
-    const widget = normalizeProps(createVNode(1, "div", this.getCssClasses(), children, 0, _extends({}, this.getAttributes(), {
+    const widget = normalizeProps(createVNode(1, "div", this.getCssClasses(), children, 0, Object.assign({}, this.getAttributes(), {
       "tabindex": this.getTabIndex(),
       "title": hint,
       "style": this.getStyles()

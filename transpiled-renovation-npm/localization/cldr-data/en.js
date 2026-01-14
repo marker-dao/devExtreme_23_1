@@ -1,6 +1,6 @@
 "use strict";
 
-var _en = require("../../common/core/localization/cldr-data/en");
+var _en = require("../../__internal/core/localization/cldr-data/en");
 Object.keys(_en).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (key in exports && exports[key] === _en[key]) return;

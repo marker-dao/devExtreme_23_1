@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 import dateLocalization from '../../../common/core/localization/date';
 import domAdapter from '../../../core/dom_adapter';
@@ -18,7 +17,7 @@ export class MonthView extends BaseView {
     return 'longdate';
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       firstDayOfWeek: 0,
       rowCount: 6,
       colCount: 7

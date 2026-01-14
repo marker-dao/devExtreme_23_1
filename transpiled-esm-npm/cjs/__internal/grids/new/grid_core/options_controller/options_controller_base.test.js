@@ -3,7 +3,8 @@
 var _globals = require("@jest/globals");
 var _component = require("./component.mock");
 var _options_controller_base = require("./options_controller_base");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 const setup = (options, defaultOptions) => {
   const onOptionChangedMock = _globals.jest.fn();
   const component = (0, _component.createComponentMock)(options, defaultOptions);
@@ -171,7 +172,7 @@ const setup = (options, defaultOptions) => {
           optionsController
         } = setup(optionalOptions, defaultNestedPlainOptions);
         const value = optionsController.oneWay('nested');
-        (0, _globals.expect)(value.peek()).toStrictEqual(_extends({}, defaultNestedPlainOptions.nested, optionalOptions.nested));
+        (0, _globals.expect)(value.peek()).toStrictEqual(Object.assign({}, defaultNestedPlainOptions.nested, optionalOptions.nested));
       });
     });
     (0, _globals.describe)('array options', () => {

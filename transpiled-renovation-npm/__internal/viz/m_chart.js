@@ -709,6 +709,14 @@ const dxChart = _m_advanced_chart.AdvancedChart.inherit({
   },
   _handleSeriesDataUpdated() {
     const viewport = new _range.Range();
+    this._argumentAxes.forEach(axis => {
+      if (Array.isArray(axis._majorTicks)) {
+        axis._majorTicks.forEach(tick => tick.removeLabel && tick.removeLabel());
+      }
+      if (Array.isArray(axis._minorTicks)) {
+        axis._minorTicks.forEach(tick => tick.removeLabel && tick.removeLabel());
+      }
+    });
     this.series.forEach(s => {
       viewport.addRange(s.getArgumentRange());
     });

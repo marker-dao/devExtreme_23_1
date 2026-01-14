@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../../common/core/animation';
 import { name as clickEventName } from '../../common/core/events/click';
 import eventsEngine from '../../common/core/events/core/events_engine';
@@ -31,7 +30,7 @@ class Accordion extends CollectionWidgetLiveUpdate {
     return `.${ACCORDION_ITEM_CLASS}`;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       itemTitleTemplate: 'title',
       // @ts-expect-error ts-error
@@ -156,7 +155,7 @@ class Accordion extends CollectionWidgetLiveUpdate {
     const {
       itemTitleTemplate
     } = this.option();
-    const itemTitleDeferred = super._renderItemContent(_extends({}, args, {
+    const itemTitleDeferred = super._renderItemContent(Object.assign({}, args, {
       contentClass: ACCORDION_ITEM_TITLE_CLASS,
       templateProperty: 'titleTemplate',
       defaultTemplateName: itemTitleTemplate
@@ -177,7 +176,7 @@ class Accordion extends CollectionWidgetLiveUpdate {
         deferred.resolve();
       }
       deferred.done(() => {
-        callBase(_extends({}, args, {
+        callBase(Object.assign({}, args, {
           contentClass: ACCORDION_ITEM_BODY_CLASS,
           container: getPublicElement($('<div>').appendTo($(itemTitle).parent()))
         }));

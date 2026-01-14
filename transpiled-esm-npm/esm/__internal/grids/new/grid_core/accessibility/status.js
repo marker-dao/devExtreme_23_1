@@ -1,8 +1,7 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode } from "inferno";
 import { Component } from 'inferno';
 import { CLASSES as BASE_CLASSES } from '../const';
-const CLASSES = _extends({}, BASE_CLASSES, {
+const CLASSES = Object.assign({}, BASE_CLASSES, {
   container: 'dx-gridbase-a11y-status-container'
 });
 export class A11yStatusContainer extends Component {

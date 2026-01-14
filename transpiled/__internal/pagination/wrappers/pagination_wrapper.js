@@ -7,8 +7,7 @@ exports.PaginationWrapper = void 0;
 var _component_wrapper = require("../../core/r1/component_wrapper");
 var _validation_utils = require("../utils/validation_utils");
 const _excluded = ["pageSize", "pageIndex", "itemCount"];
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 class PaginationWrapper extends _component_wrapper.ComponentWrapper {
   _optionChanged(args) {
     switch (args.name) {
@@ -58,7 +57,7 @@ class PaginationWrapper extends _component_wrapper.ComponentWrapper {
       itemCount = this.option('itemCount');
     }
     const validatedOptions = (0, _validation_utils.validateOptions)(pageSize, pageIndex, itemCount);
-    return _extends({}, rest, validatedOptions);
+    return Object.assign({}, rest, validatedOptions);
   }
 }
 exports.PaginationWrapper = PaginationWrapper;

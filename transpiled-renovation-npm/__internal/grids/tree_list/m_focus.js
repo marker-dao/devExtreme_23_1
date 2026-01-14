@@ -4,7 +4,6 @@ var _deferred = require("../../../core/utils/deferred");
 var _m_focus = require("../../grids/grid_core/focus/m_focus");
 var _m_core = _interopRequireDefault(require("./m_core"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 function findIndex(items, callback) {
   let result = -1;
   items.forEach((node, index) => {
@@ -100,9 +99,9 @@ const data = Base => class TreeListDataControllerExtender extends _m_focus.focus
     return d.promise();
   }
 };
-_m_core.default.registerModule('focus', _extends({}, _m_focus.focusModule, {
-  extenders: _extends({}, _m_focus.focusModule.extenders, {
-    controllers: _extends({}, _m_focus.focusModule.extenders.controllers, {
+_m_core.default.registerModule('focus', Object.assign({}, _m_focus.focusModule, {
+  extenders: Object.assign({}, _m_focus.focusModule.extenders, {
+    controllers: Object.assign({}, _m_focus.focusModule.extenders.controllers, {
       data
     })
   })

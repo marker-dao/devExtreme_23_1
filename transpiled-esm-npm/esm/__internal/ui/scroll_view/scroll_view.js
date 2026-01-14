@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 import messageLocalization from '../../../common/core/localization/message';
 import registerComponent from '../../../core/component_registrator';
@@ -54,7 +53,7 @@ export class ScrollViewServerSide extends Scrollable {
 }
 export class ScrollView extends Scrollable {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       pullingDownText: messageLocalization.format('dxScrollView-pullingDownText'),
       pulledDownText: messageLocalization.format('dxScrollView-pulledDownText'),
       refreshingText: messageLocalization.format('dxScrollView-refreshingText'),

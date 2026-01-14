@@ -9,14 +9,13 @@ var _dom_component = _interopRequireDefault(require("../../../core/widget/dom_co
 var _chat_text_area = _interopRequireDefault(require("../../../ui/chat/message_box/chat_text_area"));
 var _editing_preview = _interopRequireDefault(require("../../../ui/chat/message_box/editing_preview"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CHAT_MESSAGEBOX_CLASS = exports.CHAT_MESSAGEBOX_CLASS = 'dx-chat-messagebox';
 const CHAT_MESSAGEBOX_TEXTAREA_CONTAINER_CLASS = exports.CHAT_MESSAGEBOX_TEXTAREA_CONTAINER_CLASS = 'dx-chat-messagebox-textarea-container';
 const TYPING_END_DELAY = exports.TYPING_END_DELAY = 2000;
 const ESCAPE_KEY = 'escape';
 class MessageBox extends _dom_component.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: true,
       focusStateEnabled: true,
       hoverStateEnabled: true,

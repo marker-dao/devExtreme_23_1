@@ -14,7 +14,8 @@ var _size = require("../../core/utils/size");
 var _m_slider = _interopRequireDefault(require("../ui/slider/m_slider"));
 var _m_slider_handle = _interopRequireDefault(require("./slider/m_slider_handle"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error
+// @ts-expect-error
+
 const RANGE_SLIDER_CLASS = 'dx-rangeslider';
 const RANGE_SLIDER_START_HANDLE_CLASS = `${RANGE_SLIDER_CLASS}-start-handle`;
 const RANGE_SLIDER_END_HANDLE_CLASS = `${RANGE_SLIDER_CLASS}-end-handle`;
@@ -51,7 +52,7 @@ class RangeSlider extends _m_slider.default {
       _changeHandle(e, rtlEnabled ? that._$handleEnd : that._$handleStart);
       _setHandleValue(e, step, -1);
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       leftArrow(e) {
         this._processKeyboardEvent(e);
         moveHandleLeft(e, this.option('step'));
@@ -87,7 +88,7 @@ class RangeSlider extends _m_slider.default {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       start: 40,
       end: 60,
       value: [40, 60],

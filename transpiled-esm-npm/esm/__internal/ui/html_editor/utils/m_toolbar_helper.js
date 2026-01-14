@@ -455,12 +455,12 @@ function prepareInsertTableHandler(module) {
     });
   };
 }
-function getTablePropertiesFormConfig(module, _ref10) {
+function getTablePropertiesFormConfig(module, _ref0) {
   let {
     $element: $table,
     formats,
     tableBlot
-  } = _ref10;
+  } = _ref0;
   let alignmentEditorInstance;
   let borderColorEditorInstance;
   let backgroundColorEditorInstance;
@@ -637,14 +637,14 @@ function getTablePropertiesFormConfig(module, _ref10) {
     applyHandler
   };
 }
-function getCellPropertiesFormConfig(module, _ref11) {
+function getCellPropertiesFormConfig(module, _ref1) {
   var _formats$cellPadding, _formats$cellPadding2;
   let {
     $element: $cell,
     formats,
     tableBlot,
     rowBlot
-  } = _ref11;
+  } = _ref1;
   let alignmentEditorInstance;
   let verticalAlignmentEditorInstance;
   let borderColorEditorInstance;
@@ -879,13 +879,13 @@ function getCellPropertiesFormConfig(module, _ref11) {
 function getFormConfigConstructor(type) {
   return type === 'cell' ? getCellPropertiesFormConfig : getTablePropertiesFormConfig;
 }
-function applyTableDimensionChanges(module, _ref12) {
+function applyTableDimensionChanges(module, _ref10) {
   let {
     $table,
     newHeight,
     newWidth,
     tableBlot
-  } = _ref12;
+  } = _ref10;
   if (isDefined(newWidth)) {
     const autoWidthColumns = getAutoSizedElements($table);
     if (autoWidthColumns.length > 0) {
@@ -927,14 +927,14 @@ function applyTableDimensionChanges(module, _ref12) {
     });
   }
 }
-function applyCellDimensionChanges(module, _ref13) {
+function applyCellDimensionChanges(module, _ref11) {
   let {
     $cell,
     newHeight,
     newWidth,
     tableBlot,
     rowBlot
-  } = _ref13;
+  } = _ref11;
   const $table = $($cell.closest('table'));
   if (isDefined(newWidth)) {
     const index = $($cell).index();

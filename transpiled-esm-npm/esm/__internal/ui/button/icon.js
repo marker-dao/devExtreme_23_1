@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createFragment } from "inferno";
 import { getImageSourceType } from '../../../core/utils/icon';
 import { BaseInfernoComponent } from '../../core/r1/runtime/inferno/index'; // with short path tests cant run
@@ -28,12 +27,12 @@ export class Icon extends BaseInfernoComponent {
       source
     } = this.props;
     if (this.sourceType === 'dxIcon') {
-      return combineClasses(_extends({}, generalClasses, {
+      return combineClasses(Object.assign({}, generalClasses, {
         [`dx-icon-${source}`]: true
       }));
     }
     if (this.sourceType === 'fontIcon') {
-      return combineClasses(_extends({}, generalClasses, {
+      return combineClasses(Object.assign({}, generalClasses, {
         [String(source)]: !!source
       }));
     }
@@ -41,7 +40,7 @@ export class Icon extends BaseInfernoComponent {
       return combineClasses(generalClasses);
     }
     if (this.sourceType === 'svg') {
-      return combineClasses(_extends({}, generalClasses, {
+      return combineClasses(Object.assign({}, generalClasses, {
         'dx-svg-icon': true
       }));
     }

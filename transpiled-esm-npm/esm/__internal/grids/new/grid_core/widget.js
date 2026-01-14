@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable spellcheck/spell-checker */
@@ -82,7 +81,7 @@ export class GridCoreNewBase extends Widget {
     this._initLifeCycleController();
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), extend(true, {}, defaultOptions));
+    return Object.assign({}, super._getDefaultOptions(), extend(true, {}, defaultOptions));
   }
   _defaultOptionsRules() {
     // @ts-expect-error

@@ -1,0 +1,32 @@
+/**
+* DevExtreme (cjs/localization/ldml/number.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+var _exportNames = {
+  FormatterConfig: true
+};
+Object.defineProperty(exports, "FormatterConfig", {
+  enumerable: true,
+  get: function () {
+    return _number2.FormatterConfig;
+  }
+});
+var _number = require("../../__internal/core/localization/ldml/number");
+Object.keys(_number).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _number[key]) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _number[key];
+    }
+  });
+});
+var _number2 = require("../../__internal/core/localization/number");

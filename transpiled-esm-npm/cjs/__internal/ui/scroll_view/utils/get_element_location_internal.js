@@ -7,12 +7,11 @@ exports.getElementLocationInternal = getElementLocationInternal;
 var _inflector = require("../../../../core/utils/inflector");
 var _consts = require("../consts");
 var _get_relative_offset = require("./get_relative_offset");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // this function tested by testcafe
 /* istanbul ignore next */
 function getElementLocationInternal(targetElement, direction, containerElement, scrollOffset, offset) {
   let scrollableContentClass = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : _consts.SCROLLABLE_CONTENT_CLASS;
-  const additionalOffset = _extends({
+  const additionalOffset = Object.assign({
     top: 0,
     left: 0,
     right: 0,

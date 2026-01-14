@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { combineRemoteFilter } from './remote';
 describe('Remote filtering', () => {
@@ -28,7 +27,7 @@ describe('Remote filtering', () => {
     it('should return correct filter if recurrenceRuleExpr', () => {
       const combinedFilter = combineRemoteFilter({
         dataAccessors: {
-          expr: _extends({}, defaultDataAccessors.expr, {
+          expr: Object.assign({}, defaultDataAccessors.expr, {
             recurrenceRuleExpr: 'recurrenceRule'
           })
         },

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { locate } from '../../../common/core/animation/translator';
 import Swipeable from '../../../common/core/events/gesture/swipeable';
 import { triggerResizeEvent } from '../../../common/core/events/visibility_change';
@@ -30,13 +29,13 @@ class MultiView extends CollectionWidgetLiveUpdate {
     return `.${MULTIVIEW_ITEM_CLASS}`;
   }
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       pageUp: noop,
       pageDown: noop
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       selectedIndex: 0,
       swipeEnabled: true,
       animationEnabled: true,

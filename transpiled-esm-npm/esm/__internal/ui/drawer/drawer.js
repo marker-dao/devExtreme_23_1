@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../../../common/core/animation';
 import { name as CLICK_EVENT_NAME } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
@@ -28,7 +27,7 @@ const ANONYMOUS_TEMPLATE_NAME = 'content';
 const PANEL_TEMPLATE_NAME = 'panel';
 class Drawer extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       position: 'left',
       opened: false,
       // @ts-expect-error ts-error

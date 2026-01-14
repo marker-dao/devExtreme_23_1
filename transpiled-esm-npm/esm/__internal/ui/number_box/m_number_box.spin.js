@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { lock } from '../../../common/core/events/core/emitter.feedback';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import holdEvent from '../../../common/core/events/hold';
@@ -16,7 +15,7 @@ const POINTERUP_EVENT_NAME = addNamespace(pointerEvents.up, NUMBER_BOX);
 const POINTERCANCEL_EVENT_NAME = addNamespace(pointerEvents.cancel, NUMBER_BOX);
 class SpinButton extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       direction: 'up',
       // @ts-expect-error ts-error
       onChange: null,

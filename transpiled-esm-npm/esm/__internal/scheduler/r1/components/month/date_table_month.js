@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["viewData", "viewContext", "addDateTableClass", "addVerticalSizesClassToRows", "dataCellTemplate", "groupOrientation", "tableRef", "width"];
 import { createComponentVNode, normalizeProps } from "inferno";
@@ -22,7 +21,7 @@ export class DateTableMonth extends InfernoWrapperComponent {
         width
       } = _this$props,
       restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
-    return normalizeProps(createComponentVNode(2, DateTable, _extends({}, restProps, {
+    return normalizeProps(createComponentVNode(2, DateTable, Object.assign({}, restProps, {
       "viewData": viewData,
       "viewContext": viewContext,
       "groupOrientation": groupOrientation,

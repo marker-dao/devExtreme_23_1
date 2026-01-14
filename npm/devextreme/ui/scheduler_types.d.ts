@@ -1,0 +1,55 @@
+/**
+* DevExtreme (ui/scheduler_types.d.ts)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+export {
+  FirstDayOfWeek,
+  Orientation,
+  ScrollMode,
+  AllDayPanelMode,
+  CellAppointmentsLimit,
+  RecurrenceEditMode,
+  AppointmentFormIconsShowMode,
+  AppointmentFormProperties,
+  ViewType,
+  SchedulerPredefinedToolbarItem,
+  SchedulerPredefinedDateNavigatorItem,
+  AppointmentAddedEvent,
+  AppointmentAddingEvent,
+  AppointmentClickEvent,
+  AppointmentContextMenuEvent,
+  AppointmentDblClickEvent,
+  AppointmentDeletedEvent,
+  AppointmentDeletingEvent,
+  AppointmentFormOpeningEvent,
+  AppointmentTooltipShowingAppointmentInfo,
+  AppointmentTooltipShowingEvent,
+  AppointmentRenderedEvent,
+  AppointmentUpdatedEvent,
+  AppointmentUpdatingEvent,
+  CellClickEvent,
+  CellContextMenuEvent,
+  ContentReadyEvent,
+  DisposingEvent,
+  InitializedEvent,
+  OptionChangedEvent,
+  AppointmentDraggingAddEvent,
+  AppointmentDraggingEndEvent,
+  AppointmentDraggingMoveEvent,
+  AppointmentDraggingStartEvent,
+  AppointmentDraggingRemoveEvent,
+  AppointmentTemplateData,
+  AppointmentTooltipTemplateData,
+  AppointmentCollectorTemplateData,
+  DateNavigatorTextInfo,
+  DateNavigatorItemProperties,
+  ToolbarItem,
+  Toolbar,
+  Appointment,
+  Properties,
+  dxSchedulerScrolling,
+} from './scheduler';

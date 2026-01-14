@@ -16,7 +16,6 @@ var _utils2 = require("../utils");
 var _legacy_header_filter = require("./legacy_header_filter");
 var _utils3 = require("./utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class HeaderFilterViewController {
   constructor(options, dataController, columnsController, filterController) {
     this.options = options;
@@ -45,7 +44,7 @@ class HeaderFilterViewController {
         columnsController.updateColumns(columns => {
           const index = (0, _utils.getColumnIndexByName)(columns, column.name);
           const newColumns = [...columns];
-          newColumns[index] = _extends({}, newColumns[index], {
+          newColumns[index] = Object.assign({}, newColumns[index], {
             // NOTE: Copy array because of mutations in legacy code
             filterValues: Array.isArray(filterValues) ? [...filterValues] : filterValues,
             filterType
@@ -57,9 +56,9 @@ class HeaderFilterViewController {
     };
     const popupOptions = {
       type,
-      column: _extends({}, column),
+      column: Object.assign({}, column),
       isFilterBuilder,
-      headerFilter: _extends({}, column.headerFilter),
+      headerFilter: Object.assign({}, column.headerFilter),
       filterType: column.filterType,
       // NOTE: Copy array because of mutations in legacy code
       filterValues: Array.isArray(column.filterValues) ? [...column.filterValues] : column.filterValues,

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import Color from '../../../color';
 import { locate, move } from '../../../common/core/animation/translator';
 import { name as clickEventName } from '../../../common/core/events/click';
@@ -137,7 +136,7 @@ class ColorView extends Editor {
       const handleLocation = locate(that._$alphaChannelHandle);
       that._calculateColorTransparencyByScaleWidth(handleLocation.left + that._alphaChannelHandleWidth / 2);
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       upArrow(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -199,7 +198,7 @@ class ColorView extends Editor {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: null,
       matchValue: null,
       onEnterKeyPressed: undefined,
@@ -735,7 +734,7 @@ class ColorView extends Editor {
           this._refreshMarkup();
         }
         this._updateByDrag = false;
-        super._optionChanged(_extends({}, args, {
+        super._optionChanged(Object.assign({}, args, {
           value: this.option('value')
         }));
         break;

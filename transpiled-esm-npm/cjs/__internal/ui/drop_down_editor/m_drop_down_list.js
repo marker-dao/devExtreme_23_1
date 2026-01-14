@@ -26,7 +26,6 @@ var _grouped = require("../../data/data_converter/grouped");
 var _m_drop_down_editor = _interopRequireDefault(require("../../ui/drop_down_editor/m_drop_down_editor"));
 var _listEdit = _interopRequireDefault(require("../../ui/list/list.edit.search"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = (0, _window.getWindow)();
 const LIST_ITEM_SELECTOR = '.dx-list-item';
 const LIST_ITEM_DATA_KEY = 'dxListItemData';
@@ -38,7 +37,7 @@ class DropDownList extends _m_drop_down_editor.default {
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   _supportedKeys() {
     const parentSupportedKeys = super._supportedKeys();
-    return _extends({}, parentSupportedKeys, {
+    return Object.assign({}, parentSupportedKeys, {
       tab(e) {
         if (this._allowSelectItemByTab()) {
           this._saveValueChangeEvent(e);
@@ -73,7 +72,7 @@ class DropDownList extends _m_drop_down_editor.default {
     this.option('value', value);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), _ui.default._dataExpressionDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), _ui.default._dataExpressionDefaultOptions(), {
       displayValue: undefined,
       searchEnabled: false,
       searchMode: 'contains',
@@ -418,7 +417,7 @@ class DropDownList extends _m_drop_down_editor.default {
     return this._$list ? this._$list.find(LIST_ITEM_SELECTOR) : (0, _renderer.default)();
   }
   _popupConfig() {
-    return _extends({}, super._popupConfig(), {
+    return Object.assign({}, super._popupConfig(), {
       templatesRenderAsynchronously: false,
       autoResizeEnabled: false,
       // @ts-expect-error ts-error

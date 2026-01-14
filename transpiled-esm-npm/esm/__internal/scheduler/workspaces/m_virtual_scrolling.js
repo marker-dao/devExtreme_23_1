@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace } from '../../../common/core/events/utils/index';
@@ -144,7 +143,7 @@ export class VirtualScrollingDispatcher {
     var _this$verticalVirtual2, _this$horizontalVirtu2;
     const verticalRenderState = ((_this$verticalVirtual2 = this.verticalVirtualScrolling) === null || _this$verticalVirtual2 === void 0 ? void 0 : _this$verticalVirtual2.getRenderState()) || {};
     const horizontalRenderState = ((_this$horizontalVirtu2 = this.horizontalVirtualScrolling) === null || _this$horizontalVirtu2 === void 0 ? void 0 : _this$horizontalVirtu2.getRenderState()) || {};
-    return _extends({}, verticalRenderState, horizontalRenderState);
+    return Object.assign({}, verticalRenderState, horizontalRenderState);
   }
   getCellHeight() {
     const cellHeight = this.options.getCellHeight();
@@ -202,14 +201,14 @@ export class VirtualScrollingDispatcher {
   }
   _createVirtualScrollingBase() {
     if (this.verticalScrollingAllowed) {
-      this.verticalVirtualScrolling = new VerticalVirtualScrolling(_extends({}, this.options, {
+      this.verticalVirtualScrolling = new VerticalVirtualScrolling(Object.assign({}, this.options, {
         viewportHeight: this.viewportHeight,
         rowHeight: this.rowHeight,
         outlineCount: this.outlineCount
       }));
     }
     if (this.horizontalScrollingAllowed) {
-      this.horizontalVirtualScrolling = new HorizontalVirtualScrolling(_extends({}, this.options, {
+      this.horizontalVirtualScrolling = new HorizontalVirtualScrolling(Object.assign({}, this.options, {
         viewportWidth: this.viewportWidth,
         cellWidth: this.cellWidth,
         outlineCount: this.outlineCount
@@ -489,7 +488,7 @@ class VirtualScrollingBase {
 }
 class VerticalVirtualScrolling extends VirtualScrollingBase {
   constructor(options) {
-    super(_extends({}, options, {
+    super(Object.assign({}, options, {
       itemSize: options.rowHeight,
       viewportSize: options.viewportHeight
     }));
@@ -521,7 +520,7 @@ class VerticalVirtualScrolling extends VirtualScrollingBase {
 }
 class HorizontalVirtualScrolling extends VirtualScrollingBase {
   constructor(options) {
-    super(_extends({}, options, {
+    super(Object.assign({}, options, {
       itemSize: options.cellWidth,
       viewportSize: options.viewportWidth
     }));

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createFragment, createComponentVNode } from "inferno";
 import { BaseInfernoComponent } from '../../../../core/r1/runtime/inferno/index';
 import { PublicTemplate } from '../../../../scheduler/r1/components/templates/index';
@@ -9,7 +8,7 @@ import { AllDayPanelTableBody, AllDayPanelTableBodyDefaultProps } from './all_da
 import { DateTableCellBase } from './date_table_cell_base';
 import { LayoutDefaultProps } from './layout_props';
 import { Row, RowDefaultProps } from './row';
-export const DateTableBodyDefaultProps = _extends({}, LayoutDefaultProps, {
+export const DateTableBodyDefaultProps = Object.assign({}, LayoutDefaultProps, {
   cellTemplate: DateTableCellBase
 });
 export class DateTableBody extends BaseInfernoComponent {

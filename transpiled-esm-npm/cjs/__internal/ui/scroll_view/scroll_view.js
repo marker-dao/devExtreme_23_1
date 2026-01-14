@@ -18,7 +18,8 @@ var _scroll_viewNative2 = _interopRequireDefault(require("../../ui/scroll_view/s
 var _scroll_view = _interopRequireDefault(require("../../ui/scroll_view/scroll_view.simulated"));
 var _scrollable = _interopRequireDefault(require("../../ui/scroll_view/scrollable"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
+/* eslint-disable max-classes-per-file */
+
 // STYLE scrollView
 const SCROLLVIEW_CLASS = 'dx-scrollview';
 const SCROLLVIEW_CONTENT_CLASS = `${SCROLLVIEW_CLASS}-content`;
@@ -61,7 +62,7 @@ class ScrollViewServerSide extends _scrollable.default {
 exports.ScrollViewServerSide = ScrollViewServerSide;
 class ScrollView extends _scrollable.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       pullingDownText: _message.default.format('dxScrollView-pullingDownText'),
       pulledDownText: _message.default.format('dxScrollView-pulledDownText'),
       refreshingText: _message.default.format('dxScrollView-refreshingText'),

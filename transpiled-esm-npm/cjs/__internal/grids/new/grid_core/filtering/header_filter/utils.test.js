@@ -3,10 +3,8 @@
 var _globals = require("@jest/globals");
 var _jestEach = _interopRequireDefault(require("jest-each"));
 var utils = _interopRequireWildcard(require("./utils"));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 (0, _globals.describe)('HeaderFilter', () => {
   (0, _globals.describe)('Utils', () => {
     (0, _globals.describe)('mergeColumnHeaderFilterOptions', () => {
@@ -303,19 +301,19 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       });
       (0, _jestEach.default)`
       column                                                      | expectedResult
-      ${_extends({}, allowFilteringColumnConfig, {
+      ${Object.assign({}, allowFilteringColumnConfig, {
         filterValues: []
       })}                                                          | ${false}
-      ${_extends({}, allowFilteringColumnConfig, {
+      ${Object.assign({}, allowFilteringColumnConfig, {
         filterValues: [1, 2, 3]
       })}                                                          | ${true}
-      ${_extends({}, allowFilteringColumnConfig, {
+      ${Object.assign({}, allowFilteringColumnConfig, {
         filterValues: null
       })}                                                          | ${false}
-      ${_extends({}, allowFilteringColumnConfig, {
+      ${Object.assign({}, allowFilteringColumnConfig, {
         filterValues: 'test'
       })}                                                          | ${true}
-      ${_extends({}, allowFilteringColumnConfig, {
+      ${Object.assign({}, allowFilteringColumnConfig, {
         filterValues: [null]
       })}                                                          | ${true}
 `.it('should check if there are selected values', _ref7 => {
@@ -330,37 +328,37 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
     (0, _globals.describe)('getComposedHeaderFilter', () => {
       _globals.it.each([{
         caseName: 'two columns have plain values',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: 'test'
-        }), _extends({}, allowFilteringColumnConfig, {
+        }), Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: 'test2'
         })],
         result: [['ID1', '=', 'test'], 'and', ['ID2', '=', 'test2']]
       }, {
         caseName: 'one columns has plain value',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: 'test'
         })],
         result: [['ID1', '=', 'test']]
       }, {
         caseName: 'two columns have array values',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [1, 2, 3]
-        }), _extends({}, allowFilteringColumnConfig, {
+        }), Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: ['test1', 'test2']
         })],
         result: [['ID1', 'anyof', [1, 2, 3]], 'and', ['ID2', 'anyof', ['test1', 'test2']]]
       }, {
         caseName: 'two columns have array values, one of them contain 1 item',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [1]
-        }), _extends({}, allowFilteringColumnConfig, {
+        }), Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: ['test1', 'test2']
         })],
@@ -370,18 +368,18 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
         columns: [{
           dataField: 'ID1',
           filterValues: [1, 2, 3]
-        }, _extends({}, allowFilteringColumnConfig, {
+        }, Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: ['test1', 'test2']
         })],
         result: [['ID2', 'anyof', ['test1', 'test2']]]
       }, {
         caseName: 'two columns have exclude filterType',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [1, 2, 3],
           filterType: 'exclude'
-        }), _extends({}, allowFilteringColumnConfig, {
+        }), Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: 'test1',
           filterType: 'exclude'
@@ -389,24 +387,24 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
         result: [['ID1', 'noneof', [1, 2, 3]], 'and', ['ID2', '<>', 'test1']]
       }, {
         caseName: 'one column has an array of filter expressions',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [['ID1', '>', 5], ['ID1', '<', 10]]
         })],
         result: [[['ID1', '>', 5], 'or', ['ID1', '<', 10]]]
       }, {
         caseName: 'one column has an array of plain value and filter expressions',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [5, ['ID1', '=', 10]]
         })],
         result: [[['ID1', '=', 5], 'or', ['ID1', '=', 10]]]
       }, {
         caseName: 'two column have an array of filter expressions',
-        columns: [_extends({}, allowFilteringColumnConfig, {
+        columns: [Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID1',
           filterValues: [['ID1', '>', 5], ['ID1', '<', 10]]
-        }), _extends({}, allowFilteringColumnConfig, {
+        }), Object.assign({}, allowFilteringColumnConfig, {
           dataField: 'ID2',
           filterValues: [['ID2', '>', 6], ['ID2', '<', 9]]
         })],

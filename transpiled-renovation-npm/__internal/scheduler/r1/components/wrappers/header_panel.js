@@ -8,13 +8,12 @@ var _component_registrator = _interopRequireDefault(require("../../../../../core
 var _index = require("../../../../core/r1/index");
 var _header_panel = require("../base/header_panel");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class HeaderPanelComponent extends _index.ComponentWrapper {
   _setOptionsByReference() {
     // @ts-expect-error badly typed DomComponent
     super._setOptionsByReference();
     // @ts-expect-error badly typed DomComponent
-    this._optionsByReference = _extends({}, this._optionsByReference, {
+    this._optionsByReference = Object.assign({}, this._optionsByReference, {
       dateHeaderData: true,
       resourceCellTemplate: true,
       dateCellTemplate: true,

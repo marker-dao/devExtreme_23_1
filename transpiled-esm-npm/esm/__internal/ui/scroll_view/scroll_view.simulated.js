@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../core/renderer';
 import Callbacks from '../../../core/utils/callbacks';
 // @ts-expect-error ts-error
@@ -247,7 +246,7 @@ class SimulatedScrollViewStrategy extends SimulatedStrategy {
     });
   }
   _scrollerOptions(direction) {
-    return _extends({}, super._scrollerOptions(direction), {
+    return Object.assign({}, super._scrollerOptions(direction), {
       $topPocket: this._$topPocket,
       $bottomPocket: this._$bottomPocket,
       $pullDown: this._$pullDown,

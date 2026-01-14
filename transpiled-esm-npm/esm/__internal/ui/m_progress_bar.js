@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../core/component_registrator';
 import $ from '../../core/renderer';
 import { isFunction } from '../../core/utils/type';
@@ -13,7 +12,7 @@ const PROGRESSBAR_INDETERMINATE_SEGMENT_CONTAINER = 'dx-progressbar-animating-co
 const PROGRESSBAR_INDETERMINATE_SEGMENT = 'dx-progressbar-animating-segment';
 class ProgressBar extends TrackBar {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: 0,
       statusFormat(ratio) {
         return `Progress: ${Math.round(ratio * 100)}%`;

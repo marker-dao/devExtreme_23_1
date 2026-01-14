@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { computed, effect, signal } from '../../../../core/state_manager/index';
 import { isColumnFilterable, mergeColumnHeaderFilterOptions } from '../../../../grids/new/grid_core/filtering/header_filter/utils';
 import { OptionsController } from '../options_controller/options_controller';
@@ -35,7 +34,7 @@ export class ColumnsController {
       return normalizeColumns(columnsSettings ?? [], template => template ? this.options.normalizeTemplate(template) : undefined, columnsFromDataOptions).map(column => mergeColumnHeaderFilterOptions(column, headerFilterRootOptions));
     });
     this.filterableColumns = computed(() => this.columns.value.filter(col => isColumnFilterable(col)));
-    this.visibleColumns = computed(() => this.columns.value.filter(column => column.visible).sort((a, b) => a.visibleIndex - b.visibleIndex).map((column, index) => _extends({}, column, {
+    this.visibleColumns = computed(() => this.columns.value.filter(column => column.visible).sort((a, b) => a.visibleIndex - b.visibleIndex).map((column, index) => Object.assign({}, column, {
       headerPanelIndex: index
     })));
     this.nonVisibleColumns = computed(() => this.columns.value.filter(column => !column.visible));

@@ -47,7 +47,6 @@ var _m_work_space_grouped_strategy_horizontal = _interopRequireDefault(require("
 var _m_work_space_grouped_strategy_vertical = _interopRequireDefault(require("./m_work_space_grouped_strategy_vertical"));
 var _m_view_data_provider = _interopRequireDefault(require("./view_model/m_view_data_provider"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const {
   tableCreator
 } = _m_table_creator.default;
@@ -154,12 +153,12 @@ class SchedulerWorkSpace extends _ui2.default {
             groups
           } = selectedCell;
           if (!groups || this._getGroupCount() === 0) {
-            return _extends({}, selectedCell, {
+            return Object.assign({}, selectedCell, {
               groupIndex: 0
             });
           }
           const groupIndex = this._getGroupIndexByGroupValues(groups);
-          return _extends({}, selectedCell, {
+          return Object.assign({}, selectedCell, {
             groupIndex
           });
         });
@@ -231,7 +230,7 @@ class SchedulerWorkSpace extends _ui2.default {
         const groupCount = this._getGroupCount();
         const isGroupedByDate = this.isGroupedByDate();
         const isHorizontalGrouping = this._isHorizontalGroupedWorkSpace();
-        const focusedCellPosition = this.viewDataProvider.findCellPositionInMap(_extends({}, focusedCellData, {
+        const focusedCellPosition = this.viewDataProvider.findCellPositionInMap(Object.assign({}, focusedCellData, {
           isAllDay: focusedCellData.allDay
         }));
         const edgeIndices = isHorizontalGrouping && isMultiSelection && !isGroupedByDate ? this.viewDataProvider.getGroupEdgeIndices(focusedCellData.groupIndex, isAllDayPanelCell) : this.viewDataProvider.getViewEdgeIndices(isAllDayPanelCell);
@@ -326,7 +325,11 @@ class SchedulerWorkSpace extends _ui2.default {
     return $cell.hasClass(ALL_DAY_TABLE_CELL_CLASS);
   }
   _focusInHandler(e) {
-    if ((0, _renderer.default)(e.target).is(this._focusTarget()) && this._isCellClick) {
+    const $target = (0, _renderer.default)(e.target);
+    const $focusTarget = this._focusTarget();
+    // T1312256: On macOS, e.target can be a child element of the workspace root
+    const isTargetInsideWorkspace = $target.is($focusTarget) || $target.closest($focusTarget).length > 0;
+    if (isTargetInsideWorkspace && this._isCellClick) {
       delete this._isCellClick;
       delete this._contextMenuHandled;
       // @ts-expect-error
@@ -419,7 +422,7 @@ class SchedulerWorkSpace extends _ui2.default {
     }
     if (this.isVirtualScrolling() && (this.virtualScrollingDispatcher.horizontalScrollingAllowed || this.virtualScrollingDispatcher.height)) {
       const currentOnScroll = config.onScroll;
-      config = _extends({}, config, {
+      config = Object.assign({}, config, {
         onScroll: e => {
           currentOnScroll === null || currentOnScroll === void 0 || currentOnScroll(e);
           this.virtualScrollingDispatcher.handleOnScrollEvent(e === null || e === void 0 ? void 0 : e.scrollOffset);
@@ -562,7 +565,7 @@ class SchedulerWorkSpace extends _ui2.default {
     var _this$_getToday;
     const groupCount = this._getGroupCount();
     const groupOrientation = groupCount > 0 ? this.option('groupOrientation') : this._getDefaultGroupStrategy();
-    const options = _extends({
+    const options = Object.assign({
       groupByDate: this.option('groupByDate'),
       startRowIndex: 0,
       startCellIndex: 0,
@@ -1206,7 +1209,7 @@ class SchedulerWorkSpace extends _ui2.default {
   }
   getGroupBoundsRtlCorrection(groupBounds) {
     const cellWidth = this.getCellWidth();
-    return _extends({}, groupBounds, {
+    return Object.assign({}, groupBounds, {
       left: groupBounds.right - cellWidth * 2,
       right: groupBounds.left + cellWidth * 2
     });
@@ -1542,7 +1545,7 @@ class SchedulerWorkSpace extends _ui2.default {
     if (visible) {
       var _this$virtualScrollin;
       this._updateAllDayVisibility();
-      const options = _extends({
+      const options = Object.assign({
         viewData: this.viewDataProvider.viewData,
         viewContext: this.getR1ComponentsViewContext(),
         dataCellTemplate: this.option('dataCellTemplate'),
@@ -2267,7 +2270,7 @@ class SchedulerWorkSpace extends _ui2.default {
     const $cell = (0, _renderer.default)('<th>').addClass(this._getHeaderPanelCellClass(panelCellIndex)).attr('title', text);
     if (cellTemplate !== null && cellTemplate !== void 0 && cellTemplate.render) {
       templateCallbacks.push(cellTemplate.render.bind(cellTemplate, {
-        model: _extends({
+        model: Object.assign({
           text,
           date
         }, this._getGroupsForDateHeaderTemplate(templateIndex)),
@@ -2432,7 +2435,7 @@ const createDragBehaviorConfig = (container, rootElement, isDefaultDraggingMode,
   };
   const createDragAppointment = (itemData, settings, appointments) => {
     const appointmentIndex = appointments.option('items').length;
-    const $item = appointments._renderItem(appointmentIndex, _extends({
+    const $item = appointments._renderItem(appointmentIndex, Object.assign({
       itemData
     }, settings, {
       isCompact: false,

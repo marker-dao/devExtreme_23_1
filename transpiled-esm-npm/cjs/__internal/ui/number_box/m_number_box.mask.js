@@ -17,7 +17,6 @@ var _m_number_box = _interopRequireDefault(require("./m_number_box.base"));
 var _m_number_box2 = require("./m_number_box.caret");
 var _m_utils = require("./m_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const NUMBER_FORMATTER_NAMESPACE = 'dxNumberFormatter';
 const MOVE_FORWARD = 1;
 const MOVE_BACKWARD = -1;
@@ -28,7 +27,7 @@ const NUMPAD_DOT_KEY_CODE = 110;
 const CARET_TIMEOUT_DURATION = 0;
 class NumberBoxMask extends _m_number_box.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       useMaskBehavior: true,
       // @ts-expect-error ts-error
       format: null
@@ -42,7 +41,7 @@ class NumberBoxMask extends _m_number_box.default {
       return super._supportedKeys();
     }
     const that = this;
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       minus: that._revertSign.bind(that),
       del: that._removeHandler.bind(that),
       backspace: that._removeHandler.bind(that),

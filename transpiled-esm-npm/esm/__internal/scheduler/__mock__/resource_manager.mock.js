@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { DataSource } from '../../data/data_source/m_data_source';
 import CustomStore from '../../data/m_custom_store';
 import { ResourceManager } from '../utils/resource_manager/resource_manager';
@@ -90,4 +89,4 @@ export const resourceConfigMock = [{
   dataSource: resourceItemsByIdMock.roomId,
   label: 'Room'
 }];
-export const getResourceManagerMock = config => new ResourceManager(config ?? resourceConfigMock.map(item => _extends({}, item)));
+export const getResourceManagerMock = config => new ResourceManager(config ?? resourceConfigMock.map(item => Object.assign({}, item)));

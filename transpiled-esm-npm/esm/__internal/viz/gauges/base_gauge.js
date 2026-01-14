@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable no-self-compare */
 /* eslint-disable prefer-rest-params */
 /* eslint-disable prefer-spread */
@@ -293,6 +292,6 @@ const {
   _change_TITLE
 } = BaseGauge.prototype;
 BaseGauge.prototype._change_TITLE = function () {
-  this._titleBBoxCache = _extends({}, this._title.getLayoutOptions());
+  this._titleBBoxCache = Object.assign({}, this._title.getLayoutOptions());
   _change_TITLE.apply(this, arguments);
 };

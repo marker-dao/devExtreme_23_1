@@ -11,7 +11,6 @@ var _iterator = require("../../../core/utils/iterator");
 var _public_component = require("../../../core/utils/public_component");
 var _dom_component = _interopRequireDefault(require("../../core/widget/dom_component"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DX_SWIPEABLE = 'dxSwipeable';
 const SWIPEABLE_CLASS = 'dx-swipeable';
 const ACTION_TO_EVENT_MAP = {
@@ -23,7 +22,7 @@ const ACTION_TO_EVENT_MAP = {
 const IMMEDIATE_TIMEOUT = 180;
 class Swipeable extends _dom_component.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       elastic: true,
       immediate: false,
       immediateTimeout: IMMEDIATE_TIMEOUT,

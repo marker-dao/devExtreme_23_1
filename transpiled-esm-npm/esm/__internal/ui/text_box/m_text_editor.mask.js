@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { name as wheelEventName } from '../../../common/core/events/core/wheel';
 import { addNamespace, createEvent, isCommandKeyPressed, normalizeKeyName } from '../../../common/core/events/utils/index';
@@ -51,7 +50,7 @@ function isSpaceChar(char) {
 }
 class TextEditorMask extends TextEditorBase {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       mask: '',
       maskChar: '_',
       maskRules: {},

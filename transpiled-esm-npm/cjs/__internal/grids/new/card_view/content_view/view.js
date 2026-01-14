@@ -11,11 +11,13 @@ var _index2 = require("../../../../grids/new/grid_core/keyboard_navigation/index
 var _view = require("../../grid_core/content_view/view");
 var _content_view = require("./content_view");
 var _utils = require("./utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-explicit-any */ /* eslint-disable
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable
   @typescript-eslint/explicit-function-return-type,
   @typescript-eslint/explicit-module-boundary-types,
   spellcheck/spell-checker
 */
+
 class ContentView extends _view.ContentView {
   constructor() {
     // @ts-expect-error
@@ -46,7 +48,7 @@ class ContentView extends _view.ContentView {
     });
   }
   getProps() {
-    return (0, _index.computed)(() => _extends({}, this.getBaseProps(), {
+    return (0, _index.computed)(() => Object.assign({}, this.getBaseProps(), {
       contentProps: {
         items: this.items.value,
         kbnEnabled: this.keyboardNavigationController.enabled.value,

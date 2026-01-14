@@ -7,8 +7,8 @@ exports.PaginationContentDefaultProps = exports.PaginationContent = void 0;
 var _inferno = require("inferno");
 var _index = require("../core/r1/runtime/inferno/index");
 var _widget = require("../core/r1/widget");
-var _accessibility = require("../../ui/shared/accessibility");
 var _render_utils = require("../core/r1/utils/render_utils");
+var _accessibility = require("../ui/shared/accessibility");
 var _consts = require("./common/consts");
 var _keyboard_action_context = require("./common/keyboard_action_context");
 var _pagination_config_provider = require("./common/pagination_config_provider");
@@ -16,8 +16,7 @@ var _pagination_props = require("./common/pagination_props");
 var _info = require("./info");
 var _selector = require("./page_size/selector");
 var _page_index_selector = require("./pages/page_index_selector");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const PaginationContentDefaultProps = exports.PaginationContentDefaultProps = _extends({}, _pagination_props.PaginationDefaultProps, {
+const PaginationContentDefaultProps = exports.PaginationContentDefaultProps = Object.assign({}, _pagination_props.PaginationDefaultProps, {
   infoTextVisible: true,
   isLargeDisplayMode: true
 });
@@ -44,7 +43,7 @@ class PaginationContent extends _index.InfernoComponent {
     return [new _index.InfernoEffect(this.setRootElementRef, [])];
   }
   getChildContext() {
-    return _extends({}, this.context, {
+    return Object.assign({}, this.context, {
       [_keyboard_action_context.KeyboardActionContext.id]: this.getKeyboardAction() || _keyboard_action_context.KeyboardActionContext.defaultValue
     });
   }
@@ -199,7 +198,7 @@ class PaginationContent extends _index.InfernoComponent {
       focusStateEnabled,
       hoverStateEnabled
     } = this.props;
-    const content = (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _widget.Widget, _extends({
+    const content = (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _widget.Widget, Object.assign({
       "rootElementRef": this.widgetRootElementRef,
       "rtlEnabled": rtlEnabled,
       "classes": this.getClasses(),

@@ -14,13 +14,12 @@ var _inferno = require("inferno");
 var _shallow_equals = require("./utils/shallow_equals");
 const _excluded = ["isEqual"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const isDxElementWrapper = element => !!element.toArray;
 const buildTemplateArgs = (model, template) => {
   const args = {
     template,
-    model: _extends({}, model)
+    model: Object.assign({}, model)
   };
   const _ref = model.data ?? {},
     {
@@ -48,7 +47,7 @@ const renderTemplateContent = (props, container) => {
       }
     });
   }
-  const rendered = props.template.render(_extends({
+  const rendered = props.template.render(Object.assign({
     container,
     transclude: props.transclude
   }, {

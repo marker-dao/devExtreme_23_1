@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["allDay", "startDate", "endDate", "groups", "groupIndex", "isFirstGroupCell", "isLastGroupCell", "index"];
 import dateUtils from '../../../../core/utils/date';
@@ -78,7 +77,7 @@ export class TimePanelDataGenerator {
         usualCellIndex += 1;
       }
       const timeIndex = (index - allDayRowsCount) % rowCountInGroup;
-      return _extends({}, restCellProps, {
+      return Object.assign({}, restCellProps, {
         startDate,
         allDay,
         highlighted,

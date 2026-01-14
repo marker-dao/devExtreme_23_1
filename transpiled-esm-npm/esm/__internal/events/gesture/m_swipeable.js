@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { end as swipeEventEnd, start as swipeEventStart, swipe as swipeEventSwipe } from '../../../common/core/events/swipe';
 import { addNamespace } from '../../../common/core/events/utils/index';
@@ -16,7 +15,7 @@ const ACTION_TO_EVENT_MAP = {
 const IMMEDIATE_TIMEOUT = 180;
 class Swipeable extends DOMComponent {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       elastic: true,
       immediate: false,
       immediateTimeout: IMMEDIATE_TIMEOUT,

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { maybeSplit } from './maybe_split';
 const entities = [{
@@ -17,33 +16,33 @@ const entities = [{
   isAllDayPanelOccupied: false,
   startDateUTC: 15
 }];
-const callback = (items, panelName) => items.map(item => _extends({}, item, {
+const callback = (items, panelName) => items.map(item => Object.assign({}, item, {
   panelName
 }));
 describe('maybeSplit', () => {
   it('should not split', () => {
-    expect(maybeSplit(entities, false, callback)).toEqual([_extends({}, entities[0], {
+    expect(maybeSplit(entities, false, callback)).toEqual([Object.assign({}, entities[0], {
       panelName: 'regularPanel'
-    }), _extends({}, entities[1], {
+    }), Object.assign({}, entities[1], {
       panelName: 'regularPanel'
-    }), _extends({}, entities[2], {
+    }), Object.assign({}, entities[2], {
       panelName: 'regularPanel'
-    }), _extends({}, entities[3], {
+    }), Object.assign({}, entities[3], {
       panelName: 'regularPanel'
-    }), _extends({}, entities[4], {
+    }), Object.assign({}, entities[4], {
       panelName: 'regularPanel'
     })]);
   });
   it('should split and sort by startDate', () => {
-    expect(maybeSplit(entities, true, callback)).toEqual([_extends({}, entities[0], {
+    expect(maybeSplit(entities, true, callback)).toEqual([Object.assign({}, entities[0], {
       panelName: 'allDayPanel'
-    }), _extends({}, entities[1], {
+    }), Object.assign({}, entities[1], {
       panelName: 'regularPanel'
-    }), _extends({}, entities[3], {
+    }), Object.assign({}, entities[3], {
       panelName: 'allDayPanel'
-    }), _extends({}, entities[2], {
+    }), Object.assign({}, entities[2], {
       panelName: 'regularPanel'
-    }), _extends({}, entities[4], {
+    }), Object.assign({}, entities[4], {
       panelName: 'regularPanel'
     })]);
   });

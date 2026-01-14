@@ -11,7 +11,8 @@ var _index2 = require("../../scheduler/r1/utils/index");
 var _constants_view = require("../utils/options/constants_view");
 var _m_timeline = _interopRequireDefault(require("./m_timeline"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // NOTE: Renovation component import.
+// NOTE: Renovation component import.
+
 const TIMELINE_CLASS = 'dx-scheduler-timeline-month';
 class SchedulerTimelineMonth extends _m_timeline.default {
   constructor() {
@@ -53,7 +54,7 @@ class SchedulerTimelineMonth extends _m_timeline.default {
   }
   generateRenderOptions() {
     const options = super.generateRenderOptions(true);
-    return _extends({}, options, {
+    return Object.assign({}, options, {
       getDateForHeaderText: (_, date) => date
     });
   }

@@ -41,6 +41,27 @@ export class SchedulerModel {
     const cells = this.container.querySelectorAll('.dx-scheduler-date-table-cell');
     return getTexts(cells);
   }
+  getDateTableCell() {
+    let rowIndex = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    let cellIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    const rowSelector = `.dx-scheduler-date-table-row:nth-child(${rowIndex + 1})`;
+    const cellSelector = `.dx-scheduler-date-table-cell:nth-child(${cellIndex + 1})`;
+    const selector = `${rowSelector} ${cellSelector}`;
+    const result = this.container.querySelector(selector);
+    if (!result) {
+      throw new Error(`Date cell in row ${rowIndex} and column ${cellIndex} not found`);
+    }
+    return result;
+  }
+  getAllDayTableCell() {
+    let cellIndex = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    const cellSelector = `.dx-scheduler-all-day-table-cell:nth-child(${cellIndex + 1})`;
+    const result = this.container.querySelector(cellSelector);
+    if (!result) {
+      throw new Error(`All-day cell in column ${cellIndex} not found`);
+    }
+    return result;
+  }
   getHeaderPanelContent() {
     const cells = this.container.querySelectorAll('.dx-scheduler-header-panel-cell');
     return getTexts(cells);
@@ -61,6 +82,9 @@ export class SchedulerModel {
     const popupElement = elements[0];
     return new PopupModel(popupElement);
   }
+  isPopupVisible() {
+    return this.getPopups().length > 0;
+  }
   openPopupByDblClick(text) {
     const appointment = this.getAppointment(text);
     if (!(appointment !== null && appointment !== void 0 && appointment.element)) {
@@ -69,6 +93,35 @@ export class SchedulerModel {
     appointment.element.click();
     appointment.element.click();
     return appointment;
+  }
+  dblClickDateTableCell() {
+    let rowIndex = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    let cellIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    const cellElement = this.getDateTableCell(rowIndex, cellIndex);
+    cellElement.dispatchEvent(new MouseEvent('mousedown', {
+      bubbles: true,
+      cancelable: true
+    }));
+    cellElement.click();
+    cellElement.dispatchEvent(new MouseEvent('mousedown', {
+      bubbles: true,
+      cancelable: true
+    }));
+    cellElement.click();
+  }
+  dblClickAllDayTableCell() {
+    let cellIndex = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    const cellElement = this.getAllDayTableCell(cellIndex);
+    cellElement.dispatchEvent(new MouseEvent('mousedown', {
+      bubbles: true,
+      cancelable: true
+    }));
+    cellElement.click();
+    cellElement.dispatchEvent(new MouseEvent('mousedown', {
+      bubbles: true,
+      cancelable: true
+    }));
+    cellElement.click();
   }
 }
 export const createSchedulerModel = container => {

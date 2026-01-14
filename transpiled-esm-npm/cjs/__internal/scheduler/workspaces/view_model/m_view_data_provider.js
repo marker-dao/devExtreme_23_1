@@ -14,8 +14,7 @@ var _m_time_panel_data_generator = require("./m_time_panel_data_generator");
 var _view_provider_utils = require("./utils/view_provider_utils");
 const _excluded = ["getResourceManager", "groupOrientation", "groupByDate", "isAllDayPanelVisible", "viewOffset"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 // TODO: Vinogradov types refactoring.
 class ViewDataProvider {
   constructor(viewType) {
@@ -90,7 +89,7 @@ class ViewDataProvider {
     const resourceManager = getResourceManager();
     const groupCount = resourceManager.groupCount();
     const interval = this.viewDataGenerator.getInterval(renderOptions.hoursInterval);
-    return _extends({}, restOptions, {
+    return Object.assign({}, restOptions, {
       startViewDate: this.viewDataGenerator.getStartViewDate(renderOptions),
       isVerticalGrouping: (0, _index.isVerticalGroupingApplied)(groupCount, groupOrientation),
       isHorizontalGrouping: (0, _index.isHorizontalGroupingApplied)(groupCount, groupOrientation),

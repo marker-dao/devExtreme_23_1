@@ -21,8 +21,7 @@ var _trial_panel = require("./trial_panel");
 var _types = require("./types");
 const _excluded = ["customerId", "maxVersionAllowed", "format", "internalUsageId"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const FORMAT = 1;
 const RTM_MIN_PATCH_VERSION = 3;
 const KEY_SPLITTER = '.';
@@ -114,7 +113,7 @@ function parseLicenseKey(encodedKey) {
   }
   return {
     kind: _types.TokenKind.verified,
-    payload: _extends({
+    payload: Object.assign({
       customerId,
       maxVersionAllowed
     }, rest)

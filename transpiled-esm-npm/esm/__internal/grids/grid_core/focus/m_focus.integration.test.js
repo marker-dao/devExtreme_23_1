@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import $ from '../../../../core/renderer';
 import DataGrid from '../../../../ui/data_grid';
@@ -10,7 +9,7 @@ const createDataGrid = async function () {
   let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   return new Promise(resolve => {
     const $container = $('<div>').attr('id', GRID_CONTAINER_ID).appendTo(document.body);
-    const instance = new DataGrid($container.get(0), _extends({
+    const instance = new DataGrid($container.get(0), Object.assign({
       // @ts-ignore
       loadingTimeout: null
     }, options));

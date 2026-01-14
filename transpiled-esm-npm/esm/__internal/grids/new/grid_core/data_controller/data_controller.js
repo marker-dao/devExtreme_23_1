@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["skip", "take"];
 import ArrayStore from '../../../../../common/data/array_store';
@@ -93,7 +92,7 @@ export class DataController {
         const {
           operationId
         } = e;
-        const localLoadOptions = _extends({}, this.pendingLocalOperations[operationId]);
+        const localLoadOptions = Object.assign({}, this.pendingLocalOperations[operationId]);
         const {
           skip,
           take

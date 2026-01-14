@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { normalizeColumn } from '../columns_controller/columns_controller.mock';
 import { defaultColumnProperties } from '../columns_controller/options';
@@ -343,14 +342,14 @@ describe('allowSearch', () => {
     expectedResult: false
   }, {
     caseName: 'Allow search in a column with default settings and with dataField',
-    column: _extends({}, defaultColumnProperties, {
+    column: Object.assign({}, defaultColumnProperties, {
       dataField: 'ID'
     }),
     searchVisibleColumnsOnly: false,
     expectedResult: true
   }, {
     caseName: 'Allow search in invisible column with default settings if searchVisibleColumnsOnly=false',
-    column: _extends({}, defaultColumnProperties, {
+    column: Object.assign({}, defaultColumnProperties, {
       dataField: 'ID',
       visible: false
     }),
@@ -358,7 +357,7 @@ describe('allowSearch', () => {
     expectedResult: true
   }, {
     caseName: 'Disallow search in invisible column with default settings if searchVisibleColumnsOnly=true',
-    column: _extends({}, defaultColumnProperties, {
+    column: Object.assign({}, defaultColumnProperties, {
       dataField: 'ID',
       visible: false
     }),
@@ -366,7 +365,7 @@ describe('allowSearch', () => {
     expectedResult: false
   }, {
     caseName: 'Disallow search in a column with default settings if allowSearch=false',
-    column: _extends({}, defaultColumnProperties, {
+    column: Object.assign({}, defaultColumnProperties, {
       dataField: 'ID',
       allowSearch: false
     }),
@@ -386,14 +385,14 @@ describe('createFilterExpression', () => {
   describe('targe=search and selectedFilterOperation=undefined', () => {
     it.each([{
       caseName: 'Column with default settings',
-      column: _extends({}, defaultColumnProperties, {
+      column: Object.assign({}, defaultColumnProperties, {
         dataField: 'ID'
       }),
       filterValue: 'a',
       expectedResult: ['ID', 'contains', 'a']
     }, {
       caseName: 'Column with number type',
-      column: _extends({}, defaultColumnProperties, {
+      column: Object.assign({}, defaultColumnProperties, {
         dataField: 'ID',
         dataType: 'number'
       }),
@@ -401,7 +400,7 @@ describe('createFilterExpression', () => {
       expectedResult: ['ID', '=', '1']
     }, {
       caseName: 'Column with calculateFilterExpression function',
-      column: _extends({}, defaultColumnProperties, {
+      column: Object.assign({}, defaultColumnProperties, {
         dataField: 'ID',
         dataType: 'number',
         calculateFilterExpression: () => ['ID', '=', '5']
@@ -429,9 +428,9 @@ describe('calculateSearchFilter', () => {
   }, {
     caseName: 'Two visible columns',
     text: 'A',
-    columns: [_extends({}, defaultColumnProperties, {
+    columns: [Object.assign({}, defaultColumnProperties, {
       dataField: 'ID1'
-    }), _extends({}, defaultColumnProperties, {
+    }), Object.assign({}, defaultColumnProperties, {
       dataField: 'ID2'
     })],
     searchVisibleColumnsOnly: false,
@@ -439,10 +438,10 @@ describe('calculateSearchFilter', () => {
   }, {
     caseName: 'Two visible columns with number format',
     text: '3',
-    columns: [_extends({}, defaultColumnProperties, {
+    columns: [Object.assign({}, defaultColumnProperties, {
       dataField: 'ID1',
       dataType: 'number'
-    }), _extends({}, defaultColumnProperties, {
+    }), Object.assign({}, defaultColumnProperties, {
       dataField: 'ID2',
       dataType: 'number'
     })],
@@ -451,10 +450,10 @@ describe('calculateSearchFilter', () => {
   }, {
     caseName: 'One visible and invisible column and searchVisibleColumnsOnly=true',
     text: 'A',
-    columns: [_extends({}, defaultColumnProperties, {
+    columns: [Object.assign({}, defaultColumnProperties, {
       dataField: 'ID1',
       visible: false
-    }), _extends({}, defaultColumnProperties, {
+    }), Object.assign({}, defaultColumnProperties, {
       dataField: 'ID2'
     })],
     searchVisibleColumnsOnly: true,

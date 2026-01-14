@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["imageSrc", "src"];
 /* eslint-disable max-classes-per-file */
@@ -83,7 +82,7 @@ export class ImageUploader {
         src
       } = formData,
       props = _objectWithoutPropertiesLoose(formData, _excluded);
-    return _extends({
+    return Object.assign({
       src: imageSrc ?? src
     }, props);
   }

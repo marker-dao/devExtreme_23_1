@@ -3,9 +3,12 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.isButtonInstance = exports.default = void 0;
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
+var _button = _interopRequireDefault(require("../../../../ui/button"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const isButtonInstance = instance => instance instanceof _button.default;
+exports.isButtonInstance = isButtonInstance;
 class TextEditorButton {
   constructor(name, editor, options) {
     this.instance = null;
@@ -47,7 +50,7 @@ class TextEditorButton {
       options
     } = this;
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    return options.visible || !editor.option('readOnly');
+    return options.visible || !(editor !== null && editor !== void 0 && editor.option('readOnly'));
   }
   // eslint-disable-next-line class-methods-use-this
   _isDisabled() {
@@ -57,21 +60,27 @@ class TextEditorButton {
     return this._isVisible() && !this._isRendered();
   }
   dispose() {
+    var _this$$placeMarker;
     const {
-      instance,
-      $placeMarker
+      instance
     } = this;
     if (instance) {
       // TODO: instance.dispose()
-      if (instance.dispose) {
+      if (isButtonInstance(instance)) {
         instance.dispose();
+        instance.$element().remove();
+        // @ts-expect-error _$element is private
+        instance._$element = null;
       } else {
-        // @ts-expect-error ts-error
         instance.remove();
       }
-      this.instance = null;
     }
-    $placeMarker === null || $placeMarker === void 0 || $placeMarker.remove();
+    this.instance = null;
+    this.editor = null;
+    // @ts-expect-error $container can be null and undefined
+    this.$container = null;
+    (_this$$placeMarker = this.$placeMarker) === null || _this$$placeMarker === void 0 || _this$$placeMarker.remove();
+    this.$placeMarker = null;
   }
   render() {
     let $container = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.$container;
@@ -80,8 +89,7 @@ class TextEditorButton {
       const {
         instance,
         $element
-      } = this._create();
-      // @ts-expect-error ts-error
+      } = this._create() ?? {};
       this.instance = instance;
       this._attachEvents(instance, $element);
     } else {

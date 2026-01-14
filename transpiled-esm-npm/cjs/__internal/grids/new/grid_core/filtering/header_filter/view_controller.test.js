@@ -4,7 +4,8 @@ var _globals = require("@jest/globals");
 var _columns_controller = require("../../../../../grids/new/grid_core/columns_controller");
 var _di = require("../../di.test_utils");
 var _view_controller = require("./view_controller");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable no-spaced-func */
+/* eslint-disable no-spaced-func */
+
 const setup = function () {
   let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   const context = (0, _di.getContext)(options);
@@ -116,7 +117,7 @@ const setup = function () {
           viewController,
           columnsController
         } = setup({
-          headerFilter: _extends({}, expectedHeaderFilter),
+          headerFilter: Object.assign({}, expectedHeaderFilter),
           filterValues: 'test',
           columns: [{
             dataField: 'A'

@@ -4,7 +4,6 @@ import domAdapter from '../../../../core/dom_adapter';
 import $ from '../../../../core/renderer';
 import { Deferred } from '../../../../core/utils/deferred';
 import { extend } from '../../../../core/utils/extend';
-import { each } from '../../../../core/utils/iterator';
 import { getHeight } from '../../../../core/utils/size';
 import { isDefined } from '../../../../core/utils/type';
 import { ColumnContextMenuMixin } from '../../../grids/grid_core/context_menu/m_column_context_menu_mixin';
@@ -369,23 +368,30 @@ export class ColumnHeadersView extends ColumnContextMenuMixin(ColumnsView) {
     return ($columnElements === null || $columnElements === void 0 ? void 0 : $columnElements.eq(index)) ?? $('');
   }
   getColumnElements(index, bandColumnIndex) {
-    const that = this;
     let $cellElement;
-    const columnsController = that._columnsController;
-    const rowCount = that.getRowCount();
-    if (that.option('showColumnHeaders')) {
+    const columnsController = this._columnsController;
+    const rowCount = this.getRowCount();
+    if (this.option('showColumnHeaders')) {
       if (rowCount > 1 && (!isDefined(index) || isDefined(bandColumnIndex))) {
         const result = [];
-        const visibleColumns = isDefined(bandColumnIndex) ? columnsController.getChildrenByBandColumn(bandColumnIndex, true) : columnsController.getVisibleColumns();
-        each(visibleColumns, (_, column) => {
-          const rowIndex = isDefined(index) ? index : columnsController.getRowIndex(column.index);
-          $cellElement = that._getCellElement(rowIndex, columnsController.getVisibleIndex(column.index, rowIndex));
-          $cellElement && result.push($cellElement.get(0));
+        let visibleColumns = [];
+        if (isDefined(bandColumnIndex)) {
+          visibleColumns = columnsController.getChildrenByBandColumn(bandColumnIndex, true);
+        } else {
+          visibleColumns = columnsController.getVisibleColumns();
+        }
+        visibleColumns.forEach(column => {
+          const rowIndex = index ?? columnsController.getRowIndex(column.index);
+          const visibleIndex = columnsController.getVisibleIndex(column.index, rowIndex);
+          $cellElement = this._getCellElement(rowIndex, visibleIndex);
+          if ($cellElement) {
+            result.push($cellElement.get(0));
+          }
         });
         return $(result);
       }
       if (!index || index < rowCount) {
-        return that.getCellElements(index || 0);
+        return this.getCellElements(index || 0);
       }
     }
     return undefined;

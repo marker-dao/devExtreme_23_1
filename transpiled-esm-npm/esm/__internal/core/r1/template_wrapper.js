@@ -1,5 +1,4 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-import _extends from "@babel/runtime/helpers/esm/extends";
 const _excluded = ["isEqual"];
 import domAdapter from '../../../core/dom_adapter';
 import { getPublicElement } from '../../../core/element';
@@ -13,7 +12,7 @@ const isDxElementWrapper = element => !!element.toArray;
 export const buildTemplateArgs = (model, template) => {
   const args = {
     template,
-    model: _extends({}, model)
+    model: Object.assign({}, model)
   };
   const _ref = model.data ?? {},
     {
@@ -40,7 +39,7 @@ const renderTemplateContent = (props, container) => {
       }
     });
   }
-  const rendered = props.template.render(_extends({
+  const rendered = props.template.render(Object.assign({
     container,
     transclude: props.transclude
   }, {

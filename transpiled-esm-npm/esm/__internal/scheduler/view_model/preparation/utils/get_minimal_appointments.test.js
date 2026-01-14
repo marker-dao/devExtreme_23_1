@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { mockAppointmentDataAccessor, mockUppercaseFieldExpressions } from '../../../__mock__/appointment_data_accessor.mock';
 import { createTimeZoneCalculator } from '../../../r1/timezone_calculator';
@@ -94,7 +93,7 @@ describe('getMinimalAppointments', () => {
       startDateTimeZone: 'Etc/GMT+10',
       endDateTimeZone: 'Etc/GMT-10'
     };
-    const data = [_extends({
+    const data = [Object.assign({
       startDate: new Date(2021, 9, 8),
       endDate: new Date(2021, 9, 9)
     }, expectedTimezones)];

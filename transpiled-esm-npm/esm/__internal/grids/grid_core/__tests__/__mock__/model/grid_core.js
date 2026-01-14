@@ -5,6 +5,8 @@ import { AIPromptEditorModel } from './ai_prompt_editor';
 import { AIHeaderCellModel } from './cell/ai_header_cell';
 import { DataCellModel } from './cell/data_cell';
 import { HeaderCellModel } from './cell/header_cell';
+import { EditFormModel } from './edit_form';
+import { DataRowModel } from './row/data_row';
 const SELECTORS = {
   headerRowClass: 'dx-header-row',
   dataRowClass: 'dx-data-row',
@@ -12,7 +14,10 @@ const SELECTORS = {
   aiDialog: 'dx-aidialog',
   aiPromptEditor: 'dx-ai-prompt-editor',
   toast: 'dx-toast',
-  loadPanel: 'dx-loadpanel'
+  loadPanel: 'dx-loadpanel',
+  editForm: 'edit-form',
+  headerCellIndicators: 'dx-column-indicators',
+  headerCellFilter: 'dx-header-filter'
 };
 export class GridCoreModel {
   constructor(root) {
@@ -30,14 +35,22 @@ export class GridCoreModel {
   getAIHeaderCell(columnIndex) {
     return new AIHeaderCellModel(this.getHeaderCells()[columnIndex], this.addWidgetPrefix.bind(this));
   }
+  getHeaderCellFilter(columnIndex) {
+    const $headerCell = $(this.getHeaderCells()[columnIndex]);
+    const headerFilterSelector = `.${SELECTORS.headerCellIndicators} > .${SELECTORS.headerCellFilter}`;
+    return $headerCell.find(headerFilterSelector);
+  }
   getDataRows() {
     return this.root.querySelectorAll(`.${SELECTORS.dataRowClass}`);
+  }
+  getDataRow(rowIndex) {
+    return new DataRowModel(this.getDataRows()[rowIndex]);
   }
   getDataCells(rowIndex) {
     return this.root.querySelectorAll(`.${SELECTORS.dataRowClass}:nth-child(${rowIndex + 1}) > td`);
   }
   getDataCell(rowIndex, columnIndex) {
-    return new DataCellModel(this.getDataCells(rowIndex)[columnIndex]);
+    return new DataCellModel(this.getDataCells(rowIndex)[columnIndex], this.addWidgetPrefix.bind(this));
   }
   getGroupRows() {
     return this.root.querySelectorAll(`.${SELECTORS.groupRowClass}`);
@@ -80,5 +93,8 @@ export class GridCoreModel {
   }
   getLoadPanel() {
     return new LoadPanelModel(document.body.querySelector(`.${SELECTORS.loadPanel}`));
+  }
+  getEditForm() {
+    return new EditFormModel(this.root.querySelector(`.${this.addWidgetPrefix(SELECTORS.editForm)}`));
   }
 }

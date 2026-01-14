@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { titleize } from '../../../../core/utils/inflector';
 import { DIRECTION_VERTICAL, SCROLLABLE_CONTENT_CLASS } from '../consts';
 import { getRelativeOffset } from './get_relative_offset';
@@ -6,7 +5,7 @@ import { getRelativeOffset } from './get_relative_offset';
 /* istanbul ignore next */
 export function getElementLocationInternal(targetElement, direction, containerElement, scrollOffset, offset) {
   let scrollableContentClass = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : SCROLLABLE_CONTENT_CLASS;
-  const additionalOffset = _extends({
+  const additionalOffset = Object.assign({
     top: 0,
     left: 0,
     right: 0,

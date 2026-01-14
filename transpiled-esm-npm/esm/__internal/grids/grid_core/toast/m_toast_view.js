@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../../core/renderer';
 import dxToast from '../../../../ui/toast';
 import { View } from '../m_modules';
@@ -15,7 +14,7 @@ export class ToastView extends View {
     if (!this._$toastContainer) {
       this._$toastContainer = $('<div>').appendTo(this.component.$element());
     }
-    this._toastInstance = this._createComponent(this._$toastContainer, dxToast, _extends({
+    this._toastInstance = this._createComponent(this._$toastContainer, dxToast, Object.assign({
       position: {
         my: 'bottom',
         at: 'bottom',
@@ -29,7 +28,7 @@ export class ToastView extends View {
   showToast(message) {
     let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const toast = this._createToastInstance(options);
-    toast === null || toast === void 0 || toast.option(_extends({}, options, {
+    toast === null || toast === void 0 || toast.option(Object.assign({}, options, {
       message,
       visible: true
     }));

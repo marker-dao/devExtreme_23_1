@@ -10,7 +10,6 @@ var _error_row = require("../../../../grids/new/grid_core/content_view/error_row
 var _no_data_text = require("../../../../grids/new/grid_core/content_view/no_data_text");
 var _scrollable = require("../../../../grids/new/grid_core/inferno_wrappers/scrollable");
 var _load_panel = require("./load_panel");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CLASSES = exports.CLASSES = {
   contentView: 'dx-gridcore-contentview'
 };
@@ -22,11 +21,11 @@ class ContentView extends _inferno.Component {
     this.resizeObserverTimeout = null;
   }
   render() {
-    return (0, _inferno.createVNode)(1, "div", CLASSES.contentView, [(0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _load_panel.LoadPanel, _extends({}, this.props.loadPanelProps))), this.props.noDataTextProps.visible ? (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _no_data_text.NoDataText, _extends({}, this.props.noDataTextProps))) : (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _scrollable.Scrollable, _extends({
+    return (0, _inferno.createVNode)(1, "div", CLASSES.contentView, [(0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _load_panel.LoadPanel, Object.assign({}, this.props.loadPanelProps))), this.props.noDataTextProps.visible ? (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _no_data_text.NoDataText, Object.assign({}, this.props.noDataTextProps))) : (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _scrollable.Scrollable, Object.assign({
       "componentRef": this.props.scrollableRef
     }, this.props.scrollableProps, {
       children: this.props.children
-    }), null, this.scrollableRef)), (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _error_row.ErrorRow, _extends({}, this.props.errorRowProps)))], 0, {
+    }), null, this.scrollableRef)), (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _error_row.ErrorRow, Object.assign({}, this.props.errorRowProps)))], 0, {
       "oncontextmenu": this.props.showContextMenu
     }, null, this.containerRef);
   }

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../core/renderer';
 import { styleProp } from '../../../core/utils/style';
 import DOMComponent from '../../core/widget/dom_component';
@@ -13,7 +12,7 @@ const FLEX_GROW = 'flexGrow';
 export const MAX_SIZE = 100;
 class Connector extends DOMComponent {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       orientation: 'horizontal',
       size: MAX_SIZE,
       value: 0

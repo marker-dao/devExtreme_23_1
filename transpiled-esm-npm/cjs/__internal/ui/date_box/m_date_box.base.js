@@ -25,7 +25,6 @@ var _m_date_boxStrategy4 = _interopRequireDefault(require("./m_date_box.strategy
 var _m_date_boxStrategy5 = _interopRequireDefault(require("./m_date_box.strategy.native"));
 var _m_date_utils = _interopRequireDefault(require("./m_date_utils"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = (0, _window.getWindow)();
 const DATEBOX_CLASS = 'dx-datebox';
 const DX_AUTO_WIDTH_CLASS = 'dx-auto-width';
@@ -61,7 +60,7 @@ const STRATEGY_CLASSES = {
 class DateBox extends _m_drop_down_editor.default {
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), this._strategy.supportedKeys());
+    return Object.assign({}, super._supportedKeys(), this._strategy.supportedKeys());
   }
   _renderButtonContainers() {
     // @ts-expect-error ts-error
@@ -69,7 +68,7 @@ class DateBox extends _m_drop_down_editor.default {
     this._strategy.customizeButtons();
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       type: 'date',
       showAnalogClock: true,
       value: null,
@@ -319,7 +318,7 @@ class DateBox extends _m_drop_down_editor.default {
   _renderPopup() {
     var _this$_popup;
     super._renderPopup();
-    (_this$_popup = this._popup) === null || _this$_popup === void 0 || _this$_popup.$wrapper().addClass(DATEBOX_WRAPPER_CLASS);
+    (_this$_popup = this._popup) === null || _this$_popup === void 0 || (_this$_popup = _this$_popup.$wrapper()) === null || _this$_popup === void 0 || _this$_popup.addClass(DATEBOX_WRAPPER_CLASS);
     this._renderPopupWrapper();
   }
   _getPopupToolbarItems() {
@@ -330,12 +329,13 @@ class DateBox extends _m_drop_down_editor.default {
   }
   _popupConfig() {
     const popupConfig = super._popupConfig();
-    return _extends({}, this._strategy.popupConfig(popupConfig), {
+    return Object.assign({}, this._strategy.popupConfig(popupConfig), {
       title: this._getPopupTitle(),
       dragEnabled: false
     });
   }
   _renderPopupWrapper() {
+    var _this$_popup$$wrapper;
     if (!this._popup) {
       return;
     }
@@ -347,7 +347,7 @@ class DateBox extends _m_drop_down_editor.default {
     const {
       type
     } = this.option();
-    this._popup.$wrapper().addClass(`${DATEBOX_WRAPPER_CLASS}-${type}`).addClass(`${DATEBOX_WRAPPER_CLASS}-${this._pickerType}`).addClass(DROPDOWNEDITOR_OVERLAY_CLASS);
+    (_this$_popup$$wrapper = this._popup.$wrapper()) === null || _this$_popup$$wrapper === void 0 || _this$_popup$$wrapper.addClass(`${DATEBOX_WRAPPER_CLASS}-${type}`).addClass(`${DATEBOX_WRAPPER_CLASS}-${this._pickerType}`).addClass(DROPDOWNEDITOR_OVERLAY_CLASS);
   }
   _renderPopupContent() {
     super._renderPopupContent();

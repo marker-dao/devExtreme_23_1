@@ -12,7 +12,6 @@ var _index = require("../../r1/utils/index");
 var _constants_view = require("../../utils/options/constants_view");
 var _group_utils = require("../../utils/resource_manager/group_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const toMs = _date.default.dateToMilliseconds;
 class ViewDataGenerator {
   constructor(viewType) {
@@ -91,7 +90,7 @@ class ViewDataGenerator {
     groupsList.slice(1).forEach((groups, index) => {
       const groupIndex = index + 1;
       viewDataMap.forEach((row, rowIndex) => {
-        const nextGroupRow = row.map(cellData => _extends({}, cellData, {
+        const nextGroupRow = row.map(cellData => Object.assign({}, cellData, {
           groups,
           groupIndex
         }));
@@ -105,7 +104,7 @@ class ViewDataGenerator {
     groupsList.slice(1).forEach((groups, index) => {
       const groupIndex = index + 1;
       const nextGroupMap = viewDataMap.map(cellsRow => {
-        const nextRow = cellsRow.map(cellData => _extends({}, cellData, {
+        const nextRow = cellsRow.map(cellData => Object.assign({}, cellData, {
           groupIndex,
           groups
         }));
@@ -120,10 +119,10 @@ class ViewDataGenerator {
     const correctedGroupCount = correctedGroupList.length;
     const result = viewDataMap.map(cellsRow => {
       const groupedByDateCellsRow = cellsRow.reduce((currentRow, cell) => {
-        const rowWithCurrentCell = [...currentRow, _extends({}, cell, {
+        const rowWithCurrentCell = [...currentRow, Object.assign({}, cell, {
           isFirstGroupCell: true,
           isLastGroupCell: correctedGroupCount === 0
-        }), ...correctedGroupList.map((groups, index) => _extends({}, cell, {
+        }), ...correctedGroupList.map((groups, index) => Object.assign({}, cell, {
           groups,
           groupIndex: index + 1,
           isFirstGroupCell: false,
@@ -147,7 +146,7 @@ class ViewDataGenerator {
       const isAllDay = row[0].allDay;
       const keyBase = (rowIndex - allDayPanelsCount) * totalColumnCount;
       const currentAllDayPanelsCount = isAllDay ? allDayPanelsCount + 1 : allDayPanelsCount;
-      currentViewDataMap.push(row.map((cell, columnIndex) => _extends({}, cell, {
+      currentViewDataMap.push(row.map((cell, columnIndex) => Object.assign({}, cell, {
         key: keyBase + columnIndex
       })));
       return {
@@ -300,7 +299,7 @@ class ViewDataGenerator {
       const index = rowIndex * columnCount + columnIndex;
       const isFirstGroupCell = this._isFirstGroupCell(rowIndex, columnIndex, options, rowCount, columnCount);
       const isLastGroupCell = this._isLastGroupCell(rowIndex, columnIndex, options, rowCount, columnCount);
-      cellsRow.push(_extends({}, cellDataValue, {
+      cellsRow.push(Object.assign({}, cellDataValue, {
         index,
         isFirstGroupCell,
         isLastGroupCell
@@ -331,7 +330,7 @@ class ViewDataGenerator {
     return data;
   }
   prepareAllDayCellData(options, rowIndex, columnIndex) {
-    const data = this.prepareCellData(_extends({}, options, {
+    const data = this.prepareCellData(Object.assign({}, options, {
       // NOTE: For all-day cells we should shift cell's dates
       // after trimming these dates time.
       viewOffset: 0
@@ -341,7 +340,7 @@ class ViewDataGenerator {
     } = options;
     const startDate = _date.default.trimTime(data.startDate);
     const shiftedStartDate = _date2.dateUtilsTs.addOffsets(startDate, viewOffset);
-    return _extends({}, data, {
+    return Object.assign({}, data, {
       startDate: shiftedStartDate,
       endDate: shiftedStartDate,
       allDay: true
@@ -531,8 +530,8 @@ class ViewDataGenerator {
       if (!isFocused && indexInSelectedCells === -1) {
         return cell;
       }
-      return _extends({}, cell, {
-        cellData: _extends({}, cell.cellData, {
+      return Object.assign({}, cell, {
+        cellData: Object.assign({}, cell.cellData, {
           isSelected: indexInSelectedCells > -1,
           isFocused
         })

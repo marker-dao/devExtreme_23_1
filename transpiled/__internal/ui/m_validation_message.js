@@ -11,7 +11,6 @@ var _size = require("../../core/utils/size");
 var _string = require("../../core/utils/string");
 var _overlay = _interopRequireDefault(require("../ui/overlay/overlay"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const INVALID_MESSAGE = 'dx-invalid-message';
 const INVALID_MESSAGE_AUTO = 'dx-invalid-message-auto';
 const INVALID_MESSAGE_ALWAYS = 'dx-invalid-message-always';
@@ -19,7 +18,7 @@ const INVALID_MESSAGE_CONTENT = 'dx-invalid-message-content';
 const VALIDATION_MESSAGE_MIN_WIDTH = 100;
 class ValidationMessage extends _overlay.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       integrationOptions: {},
       templatesRenderAsynchronously: false,
       shading: false,
@@ -69,20 +68,23 @@ class ValidationMessage extends _overlay.default {
   }
   _toggleVisibilityClasses(visible) {
     if (visible) {
+      var _this$$wrapper;
       this.$element().addClass(INVALID_MESSAGE);
-      this.$wrapper().addClass(INVALID_MESSAGE);
+      (_this$$wrapper = this.$wrapper()) === null || _this$$wrapper === void 0 || _this$$wrapper.addClass(INVALID_MESSAGE);
     } else {
+      var _this$$wrapper2;
       this.$element().removeClass(INVALID_MESSAGE);
-      this.$wrapper().removeClass(INVALID_MESSAGE);
+      (_this$$wrapper2 = this.$wrapper()) === null || _this$$wrapper2 === void 0 || _this$$wrapper2.removeClass(INVALID_MESSAGE);
     }
   }
   _updateContentId() {
+    var _this$$content;
     const {
       container,
       contentId
     } = this.option();
     const id = contentId ?? (0, _renderer.default)(container).attr('aria-describedby');
-    this.$content().addClass(INVALID_MESSAGE_CONTENT).attr('id', id);
+    (_this$$content = this.$content()) === null || _this$$content === void 0 || _this$$content.addClass(INVALID_MESSAGE_CONTENT).attr('id', id);
   }
   _renderInnerHtml(element) {
     const $element = element && (0, _renderer.default)(element);
@@ -99,10 +101,11 @@ class ValidationMessage extends _overlay.default {
     return validationErrorMessage;
   }
   _toggleModeClass() {
+    var _this$$wrapper3;
     const {
       mode
     } = this.option();
-    this.$wrapper().toggleClass(INVALID_MESSAGE_AUTO, mode === 'auto').toggleClass(INVALID_MESSAGE_ALWAYS, mode === 'always');
+    (_this$$wrapper3 = this.$wrapper()) === null || _this$$wrapper3 === void 0 || _this$$wrapper3.toggleClass(INVALID_MESSAGE_AUTO, mode === 'auto').toggleClass(INVALID_MESSAGE_ALWAYS, mode === 'always');
   }
   updateMaxWidth() {
     const target = this.option('target');
@@ -137,7 +140,7 @@ class ValidationMessage extends _overlay.default {
     } = this.option();
     const rtlSide = (0, _position.getDefaultAlignment)(rtlEnabled);
     const positions = this._getPositionsArray(positionSide, rtlSide);
-    const offset = _extends({}, componentOffset);
+    const offset = Object.assign({}, componentOffset);
     this.$element().addClass(`dx-invalid-message-${positionSide}`);
     // @ts-expect-error ts-error
     if (rtlEnabled && positionSide !== 'left' && positionSide !== 'right') offset.h = -offset.h;

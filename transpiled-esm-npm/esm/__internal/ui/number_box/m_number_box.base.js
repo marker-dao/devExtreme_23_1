@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace, getChar, isCommandKeyPressed, normalizeKeyName } from '../../../common/core/events/utils/index';
 import messageLocalization from '../../../common/core/localization/message';
@@ -20,7 +19,7 @@ const FIREFOX_CONTROL_KEYS = ['tab', 'del', 'backspace', 'leftArrow', 'rightArro
 const FORCE_VALUECHANGE_EVENT_NAMESPACE = 'NumberBoxForceValueChange';
 class NumberBoxBase extends TextEditor {
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       upArrow(e) {
         if (!isCommandKeyPressed(e)) {
           e.preventDefault();
@@ -39,7 +38,7 @@ class NumberBoxBase extends TextEditor {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: 0,
       min: undefined,
       max: undefined,

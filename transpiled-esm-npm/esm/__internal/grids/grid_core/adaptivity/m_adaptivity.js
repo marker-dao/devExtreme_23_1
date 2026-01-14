@@ -15,6 +15,7 @@ import { getWidth } from '../../../../core/utils/size';
 import { isDefined, isString } from '../../../../core/utils/type';
 import Form from '../../../../ui/form';
 import { isMaterial } from '../../../../ui/themes';
+import { AI_COLUMN_NAME } from '../ai_column/const';
 import modules from '../m_modules';
 import gridCoreUtils from '../m_utils';
 import { getHideableColumns } from './utils';
@@ -110,6 +111,9 @@ export class AdaptiveColumnsController extends modules.ViewController {
   publicMethods() {
     return ['isAdaptiveDetailRowExpanded', 'expandAdaptiveDetailRow', 'collapseAdaptiveDetailRow'];
   }
+  _getValueFromCellOptions(columnIndex, cellOptions) {
+    return cellOptions.row.values[columnIndex];
+  }
   _isRowEditMode() {
     const editMode = this._getEditMode();
     return editMode === EDIT_MODE_ROW;
@@ -132,7 +136,8 @@ export class AdaptiveColumnsController extends modules.ViewController {
       }
     });
     const rowData = cellOptions.row.data;
-    const value = column.calculateCellValue(rowData);
+    const columnIndex = that._columnsController.getVisibleIndex(column.index);
+    const value = column.type === AI_COLUMN_NAME ? this._getValueFromCellOptions(columnIndex, cellOptions) : column.calculateCellValue(rowData);
     const displayValue = gridCoreUtils.getDisplayValue(column, value, rowData, cellOptions.rowType);
     const text = gridCoreUtils.formatValue(displayValue, column);
     const isCellOrBatchEditMode = this._editingController.isCellOrBatchEditMode();
@@ -186,7 +191,7 @@ export class AdaptiveColumnsController extends modules.ViewController {
       const templateOptions = extend({}, cellOptions);
       const renderFormTemplate = function () {
         const isItemEdited = that._isItemEdited(item);
-        templateOptions.value = cellOptions.row.values[columnIndex];
+        templateOptions.value = that._getValueFromCellOptions(columnIndex, cellOptions);
         if (isItemEdited || column.showEditorAlways) {
           editingController.renderFormEditorTemplate(templateOptions, item, options, $container, !isItemEdited);
         } else {
@@ -199,7 +204,7 @@ export class AdaptiveColumnsController extends modules.ViewController {
       if (templateOptions.watch) {
         const dispose = templateOptions.watch(() => ({
           isItemEdited: that._isItemEdited(item),
-          value: cellOptions.row.values[columnIndex]
+          value: that._getValueFromCellOptions(columnIndex, cellOptions)
         }), () => {
           $container.contents().remove();
           $container.removeClass(ADAPTIVE_ITEM_TEXT_CLASS);

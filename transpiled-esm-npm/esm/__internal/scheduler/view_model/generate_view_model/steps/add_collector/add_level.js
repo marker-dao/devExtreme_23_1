@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 const between = (value, min, max) => Math.min(Math.max(value, min), max);
 export const addLevel = (entities, _ref) => {
   let {
@@ -12,7 +11,7 @@ export const addLevel = (entities, _ref) => {
     const entityEndDate = entity.endDateUTC === entity.startDateUTC ? entity.endDateUTC + 1 : entity.endDateUTC;
     const index = levelsEndDate.findIndex(endDate => entity.startDateUTC >= endDate);
     const level = index === -1 ? levelsEndDate.length : index;
-    const extended = _extends({}, entity, {
+    const extended = Object.assign({}, entity, {
       level,
       maxLevel: minMaxLevel,
       inStackWithCollector: false

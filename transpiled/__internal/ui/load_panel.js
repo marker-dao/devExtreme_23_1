@@ -14,8 +14,7 @@ var _themes = require("../../ui/themes");
 var _overlay = _interopRequireDefault(require("../ui/overlay/overlay"));
 const _excluded = ["src"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 // STYLE loadPanel
 const LOADPANEL_CLASS = 'dx-loadpanel';
 const LOADPANEL_WRAPPER_CLASS = 'dx-loadpanel-wrapper';
@@ -26,12 +25,12 @@ const LOADPANEL_CONTENT_WRAPPER_CLASS = 'dx-loadpanel-content-wrapper';
 const LOADPANEL_PANE_HIDDEN_CLASS = 'dx-loadpanel-pane-hidden';
 class LoadPanel extends _overlay.default {
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       escape: _common.noop
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       message: _message.default.format('Loading'),
       width: 222,
       height: 90,
@@ -81,14 +80,15 @@ class LoadPanel extends _overlay.default {
     super._init();
   }
   _render() {
+    var _this$$wrapper;
     super._render();
     this.$element().addClass(LOADPANEL_CLASS);
-    this.$wrapper().addClass(LOADPANEL_WRAPPER_CLASS);
+    (_this$$wrapper = this.$wrapper()) === null || _this$$wrapper === void 0 || _this$$wrapper.addClass(LOADPANEL_WRAPPER_CLASS);
     this._updateWrapperAria();
   }
   _setDeprecatedOptions() {
     super._setDeprecatedOptions();
-    this._deprecatedOptions = _extends({}, this._deprecatedOptions, {
+    this._deprecatedOptions = Object.assign({}, this._deprecatedOptions, {
       // @ts-expect-error ts-error
       indicatorSrc: {
         since: '25.2',
@@ -97,7 +97,8 @@ class LoadPanel extends _overlay.default {
     });
   }
   _updateWrapperAria() {
-    this.$wrapper().removeAttr('aria-label').removeAttr('role');
+    var _this$$wrapper2;
+    (_this$$wrapper2 = this.$wrapper()) === null || _this$$wrapper2 === void 0 || _this$$wrapper2.removeAttr('aria-label').removeAttr('role');
     const showIndicator = this.option('showIndicator');
     if (!showIndicator) {
       const aria = this._getAriaAttributes();
@@ -118,10 +119,14 @@ class LoadPanel extends _overlay.default {
     return aria;
   }
   _renderContentImpl() {
+    const $content = this.$content();
+    if (!$content) {
+      return Promise.resolve(undefined);
+    }
     const result = super._renderContentImpl();
-    this.$content().addClass(LOADPANEL_CONTENT_CLASS);
+    $content.addClass(LOADPANEL_CONTENT_CLASS);
     this._$loadPanelContentWrapper = (0, _renderer.default)('<div>').addClass(LOADPANEL_CONTENT_WRAPPER_CLASS);
-    this._$loadPanelContentWrapper.appendTo(this.$content());
+    this._$loadPanelContentWrapper.appendTo($content);
     this._togglePaneVisible();
     this._cleanPreviousContent();
     this._renderLoadIndicator();
@@ -182,18 +187,20 @@ class LoadPanel extends _overlay.default {
         src
       } = indicatorOptions,
       restIndicatorOptions = _objectWithoutPropertiesLoose(indicatorOptions, _excluded);
-    this._createComponent(this._$indicator, _load_indicator.default, _extends({
+    this._createComponent(this._$indicator, _load_indicator.default, Object.assign({
       elementAttr: this._getAriaAttributes(),
       indicatorSrc: src ?? indicatorSrc
     }, restIndicatorOptions));
   }
   _cleanPreviousContent() {
-    this.$content().find(`.${LOADPANEL_MESSAGE_CLASS}`).remove();
-    this.$content().find(`.${LOADPANEL_INDICATOR_CLASS}`).remove();
+    var _this$$content, _this$$content2;
+    (_this$$content = this.$content()) === null || _this$$content === void 0 || _this$$content.find(`.${LOADPANEL_MESSAGE_CLASS}`).remove();
+    (_this$$content2 = this.$content()) === null || _this$$content2 === void 0 || _this$$content2.find(`.${LOADPANEL_INDICATOR_CLASS}`).remove();
     this._$indicator = undefined;
   }
   _togglePaneVisible() {
-    this.$content().toggleClass(LOADPANEL_PANE_HIDDEN_CLASS, !this.option('showPane'));
+    var _this$$content3;
+    (_this$$content3 = this.$content()) === null || _this$$content3 === void 0 || _this$$content3.toggleClass(LOADPANEL_PANE_HIDDEN_CLASS, !this.option('showPane'));
   }
   _optionChanged(args) {
     switch (args.name) {

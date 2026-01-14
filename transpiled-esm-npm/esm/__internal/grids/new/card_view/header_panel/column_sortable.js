@@ -1,5 +1,4 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-import _extends from "@babel/runtime/helpers/esm/extends";
 const _excluded = ["source", "getColumnByIndex", "allowDragging", "onColumnMove", "columnDragTemplate", "dropFeedbackMode"];
 import { createVNode, createComponentVNode, normalizeProps } from "inferno";
 import $ from '../../../../../core/renderer';
@@ -35,7 +34,7 @@ export class ColumnSortable extends Component {
         source,
         destination: source
       };
-      e.itemData = _extends({}, e.itemData, this.getNeighborColumns(e));
+      e.itemData = Object.assign({}, e.itemData, this.getNeighborColumns(e));
       (_this$props$onDragSta = (_this$props2 = this.props).onDragStart) === null || _this$props$onDragSta === void 0 || _this$props$onDragSta.call(_this$props2, e);
     };
     this.onDraggableElementShown = e => {
@@ -98,7 +97,7 @@ export class ColumnSortable extends Component {
       [CLASS.dropzone]: true,
       [CLASS.dropzoneVisible]: !!this.props.showDropzone
     });
-    return normalizeProps(createComponentVNode(2, Sortable, _extends({
+    return normalizeProps(createComponentVNode(2, Sortable, Object.assign({
       "boundary": 'body'
     }, restProps, {
       "dropFeedbackMode": dropFeedbackMode ?? 'indicate',

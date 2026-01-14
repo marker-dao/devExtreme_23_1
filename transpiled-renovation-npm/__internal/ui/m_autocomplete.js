@@ -11,7 +11,6 @@ var _deferred = require("../../core/utils/deferred");
 var _extend = require("../../core/utils/extend");
 var _m_drop_down_list = _interopRequireDefault(require("../ui/drop_down_editor/m_drop_down_list"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const AUTOCOMPLETE_CLASS = 'dx-autocomplete';
 const AUTOCOMPLETE_POPUP_WRAPPER_CLASS = 'dx-autocomplete-popup-wrapper';
 class Autocomplete extends _m_drop_down_list.default {
@@ -20,7 +19,7 @@ class Autocomplete extends _m_drop_down_list.default {
     const parent = super._supportedKeys();
     // @ts-expect-error ts-error
     item = item && (0, _renderer.default)(item);
-    return _extends({}, parent, {
+    return Object.assign({}, parent, {
       upArrow(e) {
         // @ts-expect-error ts-error
         if (parent.upArrow.apply(this, arguments) && !(0, _index.isCommandKeyPressed)(e)) {
@@ -60,7 +59,7 @@ class Autocomplete extends _m_drop_down_list.default {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       minSearchLength: 1,
       maxItemCount: 10,
       noDataText: '',

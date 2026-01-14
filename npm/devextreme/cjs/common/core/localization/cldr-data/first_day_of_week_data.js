@@ -1,0 +1,17 @@
+/**
+* DevExtreme (cjs/common/core/localization/cldr-data/first_day_of_week_data.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+exports.default = void 0;
+var _first_day_of_week_data = _interopRequireDefault(require("../../../../__internal/core/localization/cldr-data/first_day_of_week_data"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+// deprecated
+var _default = exports.default = _first_day_of_week_data.default;
+module.exports = exports.default;
+module.exports.default = exports.default;

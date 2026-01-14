@@ -11,9 +11,8 @@ var _dom_component_wrapper = require("../../../core/r1/dom_component_wrapper");
 var _index = require("../../../core/r1/runtime/inferno/index");
 const _excluded = ["accessKey", "activeStateEnabled", "boundary", "className", "contentId", "disabled", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "mode", "offset", "onClick", "onKeyDown", "positionSide", "rtlEnabled", "tabIndex", "target", "validationErrors", "visible", "visualContainer", "width"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const defaultValidationMessageProps = exports.defaultValidationMessageProps = _extends({}, _base_props.BaseWidgetDefaultProps, {
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
+const defaultValidationMessageProps = exports.defaultValidationMessageProps = Object.assign({}, _base_props.BaseWidgetDefaultProps, {
   mode: 'auto',
   positionSide: 'top',
   offset: Object.freeze({
@@ -33,7 +32,7 @@ class ValidationMessage extends _index.BaseInfernoComponent {
     return restProps;
   }
   render() {
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _dom_component_wrapper.DomComponentWrapper, _extends({
+    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _dom_component_wrapper.DomComponentWrapper, Object.assign({
       "componentType": _validation_message.default,
       "componentProps": this.props,
       "templateNames": []

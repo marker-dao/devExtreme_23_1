@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../core/component_registrator';
 import Guid from '../../core/guid';
 import $ from '../../core/renderer';
@@ -9,7 +8,7 @@ const TOOLTIP_CLASS = 'dx-tooltip';
 const TOOLTIP_WRAPPER_CLASS = 'dx-tooltip-wrapper';
 class Tooltip extends Popover {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       toolbarItems: [],
       showCloseButton: false,
       enableBodyScroll: true,
@@ -23,8 +22,9 @@ class Tooltip extends Popover {
     });
   }
   _render() {
+    var _this$$wrapper;
     this.$element().addClass(TOOLTIP_CLASS);
-    this.$wrapper().addClass(TOOLTIP_WRAPPER_CLASS);
+    (_this$$wrapper = this.$wrapper()) === null || _this$$wrapper === void 0 || _this$$wrapper.addClass(TOOLTIP_WRAPPER_CLASS);
     super._render();
   }
   _renderContent() {

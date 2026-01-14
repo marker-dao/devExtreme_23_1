@@ -12,8 +12,7 @@ var _icon = require("../../grid_core/icon");
 var _sortable = require("../../grid_core/inferno_wrappers/sortable");
 const _excluded = ["source", "getColumnByIndex", "allowDragging", "onColumnMove", "columnDragTemplate", "dropFeedbackMode"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const ALLOWED_DRAGGING_DISTANCE = 20;
 const CLASS = {
   widget: 'dx-widget',
@@ -41,7 +40,7 @@ class ColumnSortable extends _inferno.Component {
         source,
         destination: source
       };
-      e.itemData = _extends({}, e.itemData, this.getNeighborColumns(e));
+      e.itemData = Object.assign({}, e.itemData, this.getNeighborColumns(e));
       (_this$props$onDragSta = (_this$props2 = this.props).onDragStart) === null || _this$props$onDragSta === void 0 || _this$props$onDragSta.call(_this$props2, e);
     };
     this.onDraggableElementShown = e => {
@@ -104,7 +103,7 @@ class ColumnSortable extends _inferno.Component {
       [CLASS.dropzone]: true,
       [CLASS.dropzoneVisible]: !!this.props.showDropzone
     });
-    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _sortable.Sortable, _extends({
+    return (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _sortable.Sortable, Object.assign({
       "boundary": 'body'
     }, restProps, {
       "dropFeedbackMode": dropFeedbackMode ?? 'indicate',

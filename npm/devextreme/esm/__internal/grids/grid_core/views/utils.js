@@ -1,0 +1,11 @@
+/**
+* DevExtreme (esm/__internal/grids/grid_core/views/utils.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { AI_COLUMN_NAME } from '../ai_column/const';
+import gridCoreUtils from '../m_utils';
+export const getCellText = (column, displayValue) => !column.command || column.type === AI_COLUMN_NAME ? gridCoreUtils.formatValue(displayValue, column) : '';

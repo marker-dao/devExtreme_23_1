@@ -7,7 +7,6 @@ exports.getAppointmentRecurrenceOccurrences = void 0;
 var _base = require("../../../../recurrence/base");
 var _generate_recurrence_utc_dates = require("./generate_recurrence_utc_dates");
 var _get_date_information = require("./get_date_information");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // NOTE: When DST+1, then 2 AM equal 3 AM and interval [2 AM, 3 AM) is unreachable
 // Recurrence is different because each occurrence has to have the same time in any timezone shift
 const getUnreachableShiftRecurrence = (startDateInfo, endDateInfo) => {
@@ -52,7 +51,7 @@ const getAppointmentRecurrenceOccurrences = (appointment, _ref) => {
     const startDateInfo = (0, _get_date_information.getDateInformation)(startDateMsBase, timeZone);
     const endDateInfo = (0, _get_date_information.getDateInformation)(endDateMsBase, timeZone);
     const [startDateFix, endDateFix] = getUnreachableShift(startDateInfo, endDateInfo);
-    return [_extends({}, appointment, {
+    return [Object.assign({}, appointment, {
       startDateUTC: startDateMsBase + startDateFix + startDateInfo.offsetMs,
       endDateUTC: endDateMsBase + endDateFix + endDateInfo.offsetMs
     })];
@@ -85,7 +84,7 @@ const getAppointmentRecurrenceOccurrences = (appointment, _ref) => {
     const [startDateFix, endDateFix] = getUnreachableShiftRecurrence(startDateInfo, endDateInfo);
     const sourceStartDate = startDateMs + startDateDSTChange;
     const sourceEndDate = endDateMs + endDateDSTChange;
-    return _extends({}, appointment, {
+    return Object.assign({}, appointment, {
       source: {
         startDate: sourceStartDate,
         endDate: sourceEndDate

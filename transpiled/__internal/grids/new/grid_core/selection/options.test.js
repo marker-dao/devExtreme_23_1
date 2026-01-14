@@ -5,10 +5,9 @@ var _di = require("../di.test_utils");
 var _items_controller = require("../items_controller/items_controller");
 var _controller = require("../toolbar/controller");
 var _controller2 = require("./controller");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const setup = function () {
   let config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  const context = (0, _di.getContext)(_extends({
+  const context = (0, _di.getContext)(Object.assign({
     selection: {
       mode: 'single'
     }

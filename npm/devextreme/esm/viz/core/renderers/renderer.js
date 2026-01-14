@@ -1,0 +1,9 @@
+/**
+* DevExtreme (esm/viz/core/renderers/renderer.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+export { getBackup, getFuncIri, processHatchingAttrs, SvgElement, PathSvgElement, ArcSvgElement, RectSvgElement, TextSvgElement, Renderer, refreshPaths } from '../../../__internal/viz/core/renderers/renderer';

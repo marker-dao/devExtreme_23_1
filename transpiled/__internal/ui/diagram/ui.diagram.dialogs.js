@@ -115,7 +115,7 @@ class DiagramDialog extends _widget.default {
   }
   _show() {
     var _this$_popup3, _this$_popup4;
-    (_this$_popup3 = this._popup) === null || _this$_popup3 === void 0 || _this$_popup3.$content().empty().append(this._onGetContentAction());
+    (_this$_popup3 = this._popup) === null || _this$_popup3 === void 0 || (_this$_popup3 = _this$_popup3.$content()) === null || _this$_popup3 === void 0 || _this$_popup3.empty().append(this._onGetContentAction());
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     (_this$_popup4 = this._popup) === null || _this$_popup4 === void 0 || _this$_popup4.show();
     this._isShown = true;

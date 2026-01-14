@@ -5,10 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getGroupCellClasses = exports.getCellSizeVerticalClass = exports.getCellSizeHorizontalClass = exports.addWidthToStyle = exports.addToStyles = exports.addHeightToStyle = void 0;
 var _render_utils = require("../../../core/r1/utils/render_utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const addToStyles = (options, style) => {
   const nextStyle = style ?? {};
-  const result = _extends({}, nextStyle);
+  const result = Object.assign({}, nextStyle);
   options.forEach(_ref => {
     let {
       attr,

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../../core/component_registrator';
 import $ from '../../../core/renderer';
 import { getImageContainer } from '../../core/utils/m_icon';
@@ -14,7 +13,7 @@ export const INFORMER_TEXT_CLASS = 'dx-informer-text';
 const INFORMER_ICON_CLASS = 'dx-informer-icon';
 class Informer extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       contentAlignment: 'center',
       icon: '',
       showBackground: true,

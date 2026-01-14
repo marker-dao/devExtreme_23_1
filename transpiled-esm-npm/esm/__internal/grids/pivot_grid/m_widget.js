@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { name as clickEventName } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace } from '../../../common/core/events/utils/index';
@@ -200,7 +199,7 @@ class PivotGrid extends Widget {
   }
   _setDeprecatedOptions() {
     super._setDeprecatedOptions();
-    this._deprecatedOptions = _extends({}, this._deprecatedOptions, {
+    this._deprecatedOptions = Object.assign({}, this._deprecatedOptions, {
       // @ts-expect-error ts-error
       'loadPanel.indicatorSrc': {
         since: '25.2',

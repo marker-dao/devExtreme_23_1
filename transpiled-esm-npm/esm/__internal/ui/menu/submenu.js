@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../../../ui/context_menu';
 import animationPosition from '../../../common/core/animation/position';
 import { getPublicElement } from '../../../core/element';
@@ -14,7 +13,7 @@ class Submenu extends ContextMenu {
     return Math.max(offsetTop, windowHeight - offsetTop - anchorHeight);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       orientation: 'horizontal',
       // @ts-expect-error ts-error
       tabIndex: null,

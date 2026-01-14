@@ -9,13 +9,12 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _m_tooltip = _interopRequireDefault(require("../../ui/m_tooltip"));
 var _slider_tooltip_position_controller = require("../../ui/slider/slider_tooltip_position_controller");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 // NOTE: Visibility is contolled by the 'visible' option
 // and 'dx-slider-tooltip-visible-on-hover' class
 const SLIDER_TOOLTIP_VISIBILITY_CLASS = 'dx-slider-tooltip-visible-on-hover';
 class SliderTooltip extends _m_tooltip.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       visible: false,
       position: 'top',
       hideOnOutsideClick: false,
@@ -48,12 +47,13 @@ class SliderTooltip extends _m_tooltip.default {
   // eslint-disable-next-line class-methods-use-this
   _toggleAriaAttributes() {}
   _renderContentText() {
+    var _this$$content;
     const {
       value,
       format
     } = this.option();
     const formattedText = _number.default.format(value ?? 0, format);
-    this.$content().text(formattedText);
+    (_this$$content = this.$content()) === null || _this$$content === void 0 || _this$$content.text(formattedText);
     this._renderPosition();
   }
   _toggleShowModeClass() {

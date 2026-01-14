@@ -1,5 +1,4 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-import _extends from "@babel/runtime/helpers/esm/extends";
 const _excluded = ["accessKey", "activeStateEnabled", "aria", "children", "className", "classes", "defaultValue", "disabled", "focusStateEnabled", "height", "hint", "hoverStateEnabled", "inputAttr", "isDirty", "isValid", "name", "onClick", "onFocusIn", "onKeyDown", "readOnly", "rtlEnabled", "tabIndex", "validationError", "validationErrors", "validationMessageMode", "validationMessagePosition", "validationStatus", "value", "valueChange", "visible", "width"];
 import { createFragment, createComponentVNode, normalizeProps } from "inferno";
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -25,7 +24,7 @@ const getCssClasses = model => {
   };
   return combineClasses(classesMap);
 };
-export const defaultEditorProps = _extends({}, WidgetDefaultProps, {
+export const defaultEditorProps = Object.assign({}, WidgetDefaultProps, {
   readOnly: false,
   name: '',
   validationError: null,
@@ -75,7 +74,7 @@ export class Editor extends InfernoWrapperComponent {
     onFocusIn === null || onFocusIn === void 0 || onFocusIn(event);
   }
   get cssClasses() {
-    return `${getCssClasses(_extends({}, this.props, {
+    return `${getCssClasses(Object.assign({}, this.props, {
       value: this.props.value !== undefined ? this.props.value : this.state.value
     }))}`;
   }
@@ -100,7 +99,7 @@ export class Editor extends InfernoWrapperComponent {
     if (this.shouldShowValidationMessage) {
       result.describedBy = this.state.validationMessageGuid;
     }
-    return _extends({}, result, this.props.aria);
+    return Object.assign({}, result, this.props.aria);
   }
   get validationErrors() {
     if (this.__getterCache.validationErrors !== undefined) {
@@ -114,7 +113,7 @@ export class Editor extends InfernoWrapperComponent {
       } = this.props;
       let allValidationErrors = validationErrors && [...validationErrors];
       if (!allValidationErrors && validationError) {
-        allValidationErrors = [_extends({}, validationError)];
+        allValidationErrors = [Object.assign({}, validationError)];
       }
       return allValidationErrors;
     })();
@@ -141,7 +140,7 @@ export class Editor extends InfernoWrapperComponent {
     }
   }
   render() {
-    return normalizeProps(createComponentVNode(2, Widget, _extends({
+    return normalizeProps(createComponentVNode(2, Widget, Object.assign({
       "rootElementRef": this.rootElementRef,
       "aria": this.aria,
       "classes": this.cssClasses,

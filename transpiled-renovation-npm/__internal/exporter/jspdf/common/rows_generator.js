@@ -10,7 +10,16 @@ var _number = _interopRequireDefault(require("../../../../common/core/localizati
 var _type = require("../../../../core/utils/type");
 var _pdf_utils = require("./pdf_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-unsafe-return */ /* eslint-disable @typescript-eslint/prefer-for-of */ /* eslint-disable max-depth */ /* eslint-disable @typescript-eslint/no-shadow */ /* eslint-disable @stylistic/max-len */ /* eslint-disable @typescript-eslint/no-use-before-define */ /* eslint-disable no-plusplus */ /* eslint-disable @typescript-eslint/explicit-module-boundary-types */ /* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/prefer-for-of */
+/* eslint-disable max-depth */
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable @stylistic/max-len */
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable no-plusplus */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 const defaultStyles = {
   base: {
     font: {
@@ -112,7 +121,7 @@ function generateRowCells(_ref) {
     }
     const cellInfo = {
       gridCell: cellData.cellSourceData,
-      pdfCell: _extends({}, pdfCell, style)
+      pdfCell: Object.assign({}, pdfCell, style)
     };
     if (rowType === 'header') {
       const cellMerging = dataProvider.getCellMerging(rowIndex, cellIndex);
@@ -154,13 +163,13 @@ function getBaseTableStyle() {
   return defaultStyles.base;
 }
 function getPdfCellStyle(column, rowType, cellStyle) {
-  const styles = _extends({}, defaultStyles.base, defaultStyles[rowType]);
+  const styles = Object.assign({}, defaultStyles.base, defaultStyles[rowType]);
   const alignment = rowType === 'header' ? column.alignment : cellStyle.alignment;
   if (alignment) {
     styles.alignment = alignment;
   }
   if (cellStyle.bold && rowType !== 'header') {
-    styles.font = _extends({}, styles.font, {
+    styles.font = Object.assign({}, styles.font, {
       style: 'bold'
     });
   }

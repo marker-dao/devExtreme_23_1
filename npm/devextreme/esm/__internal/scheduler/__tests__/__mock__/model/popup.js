@@ -1,0 +1,459 @@
+/**
+* DevExtreme (esm/__internal/scheduler/__tests__/__mock__/model/popup.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import $ from '../../../../../core/renderer';
+export class PopupModel {
+  constructor(element) {
+    var _this = this;
+    this.getInput = editorName => {
+      var _$input, _$input2, _$input3;
+      const editor = this.form.getEditor(editorName);
+      let $input = null;
+      if (editorName === 'startDateTimeZoneEditor' || editorName === 'endDateTimeZoneEditor') {
+        $input = editor === null || editor === void 0 ? void 0 : editor.$element().find('input[type="hidden"]');
+      }
+      if (!((_$input = $input) !== null && _$input !== void 0 && _$input.length)) {
+        $input = editor === null || editor === void 0 ? void 0 : editor.$element().find('.dx-texteditor-input');
+      }
+      if (!((_$input2 = $input) !== null && _$input2 !== void 0 && _$input2.length)) {
+        $input = editor === null || editor === void 0 ? void 0 : editor.$element().find('input');
+      }
+      if (!((_$input3 = $input) !== null && _$input3 !== void 0 && _$input3.length)) {
+        throw new Error(`Input element of editor with name "${editorName}" not found`);
+      }
+      return $input;
+    };
+    this.getInputValue = editorName => {
+      const $input = this.getInput(editorName);
+      return $input.val();
+    };
+    this.setInputValue = (editorName, value) => {
+      var _this$form$getEditor;
+      (_this$form$getEditor = this.form.getEditor(editorName)) === null || _this$form$getEditor === void 0 || _this$form$getEditor.option('value', value);
+    };
+    this.isInputVisible = editorName => {
+      const editor = this.form.getEditor(editorName);
+      if (!editor) {
+        return false;
+      }
+      return editor.$element().is(':visible');
+    };
+    this.getWeekDaysSelection = () => {
+      const buttons = this.element.querySelectorAll('.dx-scheduler-days-of-week-buttons .dx-button');
+      if (buttons.length === 0) {
+        throw new Error('Week day buttons not found');
+      }
+      return Array.from(buttons).map(button => button.classList.contains('dx-button-mode-contained'));
+    };
+    this.getLabelIdByText = labelText => {
+      const labels = Array.from(this.element.querySelectorAll('label'));
+      const label = labels.find(l => {
+        var _l$textContent;
+        return l === null || l === void 0 || (_l$textContent = l.textContent) === null || _l$textContent === void 0 || (_l$textContent = _l$textContent.trim()) === null || _l$textContent === void 0 ? void 0 : _l$textContent.startsWith(labelText);
+      });
+      if (!label) {
+        throw new Error(`Label with text "${labelText}" not found`);
+      }
+      const forId = label.getAttribute('for');
+      if (!forId) {
+        throw new Error(`Label with text "${labelText}" has no "for" attribute`);
+      }
+      return forId;
+    };
+    this.getInputByLabel = labelText => {
+      const forId = this.getLabelIdByText(labelText);
+      const input = this.element.querySelector(`input#${forId}`);
+      if (!input) {
+        throw new Error(`Input with id "${forId}" not found`);
+      }
+      return input;
+    };
+    this.setInputValueByLabel = (labelText, value) => {
+      const input = this.getInputByLabel(labelText);
+      if (!input) {
+        throw new Error(`Input with label "${labelText}" not found`);
+      }
+      input.value = '';
+      value.split('').forEach(char => {
+        input.value += char;
+        input.dispatchEvent(new Event('input', {
+          bubbles: true
+        }));
+        input.dispatchEvent(new KeyboardEvent('keydown', {
+          bubbles: true,
+          key: char
+        }));
+        input.dispatchEvent(new KeyboardEvent('keypress', {
+          bubbles: true,
+          key: char
+        }));
+        input.dispatchEvent(new KeyboardEvent('keyup', {
+          bubbles: true,
+          key: char
+        }));
+      });
+      input.dispatchEvent(new Event('change', {
+        bubbles: true
+      }));
+      input.dispatchEvent(new Event('input', {
+        bubbles: true
+      }));
+      return input;
+    };
+    this.getSwitchByName = name => {
+      const hiddenInput = this.element.querySelector(`input[name=${name}]`);
+      if (!hiddenInput) {
+        throw new Error(`Switch with name "${name}" not found`);
+      }
+      return hiddenInput;
+    };
+    this.selectRadio = value => {
+      const group = this.element.querySelector('[role="radiogroup"]');
+      if (!group) throw new Error('Radiogroup not found');
+      const radios = Array.from(group.querySelectorAll('[role="radio"]'));
+      const target = radios.find(radio => {
+        var _radio$getAttribute, _radio$textContent;
+        const label = (_radio$getAttribute = radio.getAttribute('aria-label')) === null || _radio$getAttribute === void 0 ? void 0 : _radio$getAttribute.trim();
+        const text = (_radio$textContent = radio.textContent) === null || _radio$textContent === void 0 ? void 0 : _radio$textContent.trim();
+        return label === value || text === value;
+      });
+      if (!target) throw new Error(`Radio with value "${value}" not found`);
+      radios.forEach(r => {
+        r.setAttribute('aria-checked', 'false');
+        r.classList.remove('dx-item-selected', 'dx-radiobutton-checked');
+      });
+      target.setAttribute('aria-checked', 'true');
+      target.classList.add('dx-item-selected', 'dx-radiobutton-checked');
+      target.dispatchEvent(new MouseEvent('click', {
+        bubbles: true
+      }));
+      return target;
+    };
+    this.getSelectedRadio = () => this.element.querySelector('[role="radio"][aria-checked="true"]');
+    this.getSelectedRadioValue = () => {
+      var _selected$textContent;
+      const selected = this.getSelectedRadio();
+      return (selected === null || selected === void 0 ? void 0 : selected.getAttribute('aria-label')) ?? (selected === null || selected === void 0 || (_selected$textContent = selected.textContent) === null || _selected$textContent === void 0 ? void 0 : _selected$textContent.trim()) ?? null;
+    };
+    this.getForm = () => this.element.querySelector('.dx-form');
+    this.getTitle = () => document.querySelector('.dx-popup-title .dx-toolbar-label');
+    this.getSaveButton = () => {
+      const saveButton = this.element.querySelector('.dx-button[aria-label="Save"]');
+      if (!saveButton) {
+        throw new Error('Done button not found');
+      }
+      return saveButton;
+    };
+    this.getBackButton = () => {
+      const backButton = this.element.querySelector('.dx-toolbar-button  .dx-button[aria-label="arrowleft"]');
+      if (!backButton) {
+        throw new Error('Back button not found');
+      }
+      return backButton;
+    };
+    this.getCancelButton = () => {
+      const cancelButton = this.element.querySelector('.dx-button[aria-label="Cancel"]');
+      if (!cancelButton) {
+        throw new Error('Cancel button not found');
+      }
+      return cancelButton;
+    };
+    this.getCloseButton = () => {
+      const closeButton = this.element.querySelector('.dx-closebutton.dx-button');
+      if (!closeButton) {
+        throw new Error('Close button not found');
+      }
+      return closeButton;
+    };
+    this.getFormEditor = fieldName => {
+      const form = this.getForm();
+      if (form === null) {
+        return null;
+      }
+      return form.querySelector(`[data-field="${fieldName}"]`);
+    };
+    this.getEditSeriesButton = () => {
+      const editSeriesButton = document.querySelector('[aria-label="Edit series"]');
+      if (!editSeriesButton) {
+        throw new Error('Edit series button not found');
+      }
+      return editSeriesButton;
+    };
+    this.getEditAppointmentButton = () => {
+      const editAppointmentButton = document.querySelector('[aria-label="Edit appointment"]');
+      if (!editAppointmentButton) {
+        throw new Error('Edit appointment button not found');
+      }
+      return editAppointmentButton;
+    };
+    this.openRecurrenceSettings = () => {
+      var _settingsButton$optio;
+      if (!this.repeatEditor) {
+        throw new Error('Repeat editor not found');
+      }
+      // @ts-expect-error
+      const repeatEditorInstance = $(this.repeatEditor).dxSelectBox('instance');
+      const buttons = repeatEditorInstance.option('buttons');
+      const settingsButton = buttons === null || buttons === void 0 ? void 0 : buttons.find(btn => btn.name === 'settings');
+      if (settingsButton !== null && settingsButton !== void 0 && (_settingsButton$optio = settingsButton.options) !== null && _settingsButton$optio !== void 0 && _settingsButton$optio.onClick) {
+        settingsButton.options.onClick();
+      } else {
+        throw new Error('Settings button not found or onClick is not defined');
+      }
+    };
+    this.openRecurrenceForm = function () {
+      let freq = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Daily';
+      if (!_this.repeatEditor) {
+        throw new Error('Repeat editor not found');
+      }
+      // @ts-expect-error
+      const repeatEditorInstance = $(_this.repeatEditor).dxSelectBox('instance');
+      repeatEditorInstance.option('value', freq.toLowerCase());
+      // Trigger the settings to open
+      _this.openRecurrenceSettings();
+    };
+    this.selectRepeatValue = value => {
+      // @ts-expect-error
+      const repeatEditor = $(this.repeatEditor).dxSelectBox('instance');
+      const previousValue = repeatEditor.option('value');
+      const originalOnValueChanged = repeatEditor.option('onValueChanged');
+      repeatEditor.option('value', value);
+      if (originalOnValueChanged) {
+        originalOnValueChanged({
+          component: repeatEditor,
+          value,
+          previousValue,
+          event: new Event('change')
+        });
+      }
+    };
+    this.setRecurrenceInterval = interval => {
+      const input = this.recurrenceRepeatEveryInput;
+      if (!input) {
+        throw new Error('Recurrence interval input not found');
+      }
+      input.value = interval.toString();
+      input.dispatchEvent(new Event('input', {
+        bubbles: true
+      }));
+      input.dispatchEvent(new Event('change', {
+        bubbles: true
+      }));
+    };
+    this.selectRecurrenceWeekDays = daysIndex => {
+      const buttonsContainer = this.recurrenceWeekDayButtons;
+      if (!buttonsContainer) {
+        throw new Error('Week day buttons not found');
+      }
+      const buttons = Array.from(buttonsContainer.querySelectorAll('.dx-button'));
+      buttons.forEach((button, index) => {
+        const isActive = button.classList.contains('dx-button-mode-contained');
+        const shouldBeActive = daysIndex.includes(index);
+        if (isActive !== shouldBeActive) {
+          button.click();
+        }
+      });
+    };
+    this.setRecurrenceMonthDay = day => {
+      const input = this.recurrenceMonthDayInput;
+      if (!input) {
+        throw new Error('Month day input not found');
+      }
+      input.value = day.toString();
+      input.dispatchEvent(new Event('input', {
+        bubbles: true
+      }));
+      input.dispatchEvent(new Event('change', {
+        bubbles: true
+      }));
+    };
+    this.setRecurrenceYearlyDate = (month, day) => {
+      const inputs = this.recurrenceYearlyInputs;
+      if (inputs.length < 2) {
+        throw new Error('Yearly date inputs not found');
+      }
+      const monthInput = inputs[0];
+      const dayInput = inputs[1];
+      monthInput.value = month.toString();
+      monthInput.dispatchEvent(new Event('input', {
+        bubbles: true
+      }));
+      monthInput.dispatchEvent(new Event('change', {
+        bubbles: true
+      }));
+      dayInput.value = day.toString();
+      dayInput.dispatchEvent(new Event('input', {
+        bubbles: true
+      }));
+      dayInput.dispatchEvent(new Event('change', {
+        bubbles: true
+      }));
+    };
+    this.setRecurrenceEnd = (type, value) => {
+      const radioGroup = this.recurrenceEndRadioGroup;
+      const inputGroup = this.recurrenceEndInputGroup;
+      if (!radioGroup) {
+        throw new Error('Recurrence end radio group not found');
+      }
+      const radioButtons = radioGroup.querySelectorAll('.dx-radiobutton');
+      switch (type) {
+        case 'never':
+          {
+            const neverRadio = radioButtons[0];
+            if (neverRadio) {
+              neverRadio.click();
+            }
+            break;
+          }
+        case 'until':
+          {
+            const untilRadio = radioButtons[1];
+            if (untilRadio) {
+              untilRadio.click();
+            }
+            if (value !== undefined && inputGroup) {
+              const untilInput = inputGroup.querySelector('[type="text"]');
+              if (untilInput) {
+                untilInput.value = value.toString();
+                untilInput.dispatchEvent(new Event('input', {
+                  bubbles: true
+                }));
+                untilInput.dispatchEvent(new Event('change', {
+                  bubbles: true
+                }));
+              }
+            }
+            break;
+          }
+        case 'count':
+          {
+            const countRadio = radioButtons[2];
+            if (countRadio) {
+              countRadio.click();
+            }
+            if (value !== undefined && inputGroup) {
+              const inputs = inputGroup.querySelectorAll('[type="text"]');
+              const countInput = inputs[1];
+              if (countInput) {
+                countInput.value = value.toString();
+                countInput.dispatchEvent(new Event('input', {
+                  bubbles: true
+                }));
+                countInput.dispatchEvent(new Event('change', {
+                  bubbles: true
+                }));
+              }
+            }
+            break;
+          }
+        default:
+          break;
+      }
+    };
+    this.element = element;
+    // @ts-expect-error
+    this.component = $('.dx-scheduler-appointment-popup.dx-popup.dx-widget').dxPopup('instance');
+  }
+  get form() {
+    // @ts-expect-error
+    return $(this.element.querySelector('.dx-form')).dxForm('instance');
+  }
+  get mainGroup() {
+    return this.element.querySelector('.dx-scheduler-form-main-group');
+  }
+  get recurrenceGroup() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-group');
+  }
+  isMainGroupVisible() {
+    const group = this.mainGroup;
+    if (!group) return false;
+    const $group = $(group);
+    return !$group.hasClass('dx-scheduler-form-main-group-hidden');
+  }
+  isRecurrenceGroupVisible() {
+    const group = this.recurrenceGroup;
+    if (!group) return false;
+    const $group = $(group);
+    return !$group.hasClass('dx-scheduler-form-recurrence-group-hidden');
+  }
+  get subjectIcon() {
+    return this.element.querySelector('.dx-scheduler-form-subject-group .dx-scheduler-form-icon .dx-icon');
+  }
+  get subjectInput() {
+    return this.element.querySelector('.dx-scheduler-form-text-editor .dx-textbox.dx-widget');
+  }
+  get startDate() {
+    return this.element.querySelector('.dx-scheduler-form-start-date-editor .dx-datebox.dx-widget');
+  }
+  get startTime() {
+    return this.element.querySelector('.dx-scheduler-form-start-time-editor .dx-datebox.dx-widget');
+  }
+  get startTimeZone() {
+    return this.element.querySelector('.dx-scheduler-form-start-date-timezone-editor .dx-selectbox.dx-widget');
+  }
+  get endDate() {
+    return this.element.querySelector('.dx-scheduler-form-end-date-editor .dx-datebox.dx-widget');
+  }
+  get endTime() {
+    return this.element.querySelector('.dx-scheduler-form-end-time-editor .dx-datebox.dx-widget');
+  }
+  get endTimeZone() {
+    return this.element.querySelector('.dx-scheduler-form-end-date-timezone-editor .dx-selectbox.dx-widget');
+  }
+  get repeatEditor() {
+    return this.element.querySelector('.dx-scheduler-form-repeat-editor .dx-selectbox.dx-widget');
+  }
+  get descriptionTextArea() {
+    return this.element.querySelector('.dx-scheduler-form-description-editor .dx-textarea.dx-widget');
+  }
+  get frequencyEditor() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-frequency-editor .dx-selectbox.dx-widget');
+  }
+  get intervalEditor() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-interval-editor .dx-textbox.dx-widget');
+  }
+  get byMonthEditor() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-by-month-editor .dx-selectbox.dx-widget');
+  }
+  get dayOfMonthEditor() {
+    return this.element.querySelector('.dx-scheduler-form-day-of-month-editor .dx-numberbox.dx-widget');
+  }
+  get countEditor() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-count-editor .dx-numberbox.dx-widget');
+  }
+  get repeatEndEditors() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-end-editors .dx-radiogroup.dx-widget');
+  }
+  get recurrenceSettingsButton() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-settings-button');
+  }
+  get recurrenceRepeatEveryInput() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-settings-group [type="text"]');
+  }
+  get recurrenceWeekDayButtons() {
+    return this.element.querySelector('.dx-scheduler-days-of-week-buttons');
+  }
+  get recurrenceMonthDayInput() {
+    return this.element.querySelector('.dx-scheduler-form-day-of-month-group [type="text"]');
+  }
+  get recurrenceYearlyInputs() {
+    return this.element.querySelectorAll('.dx-scheduler-form-recurrence-repeat-on-yearly-group [type="text"]');
+  }
+  get recurrenceEndRadioGroup() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-end-editors');
+  }
+  get recurrenceEndInputGroup() {
+    return this.element.querySelector('.dx-scheduler-form-recurrence-end-inputs');
+  }
+  get recurrenceMonthlyGroup() {
+    return this.element.querySelector('.dx-scheduler-form-day-of-month-group');
+  }
+  get recurrenceYearlyGroup() {
+    return this.element.querySelector('.dx-scheduler-form-day-of-year-group');
+  }
+}

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import Guid from '../../../core/guid';
 import { Deferred, when } from '../../../core/utils/deferred';
 import CollectionWidgetEdit from '../../ui/collection/collection_widget.edit';
@@ -17,7 +16,7 @@ class CollectionWidgetAsync extends CollectionWidgetEdit {
     const itemDeferred = Deferred();
     const uniqueKey = `dx${new Guid()}`;
     this._asyncTemplateItemsMap[uniqueKey] = itemDeferred;
-    const $itemContent = super._renderItemContent(_extends({}, args, {
+    const $itemContent = super._renderItemContent(Object.assign({}, args, {
       uniqueKey
     }));
     itemDeferred.done(() => {

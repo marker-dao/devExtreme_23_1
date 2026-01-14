@@ -4,10 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var _message = _interopRequireDefault(require("../../common/core/localization/message"));
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _date = _interopRequireDefault(require("../../core/utils/date"));
 var _extend = require("../../core/utils/extend");
-var _type = require("../../core/utils/type");
 var _m_text_utils = require("./appointments/m_text_utils");
 var _get_delta_time = require("./appointments/resizing/get_delta_time");
 var _constants = require("./constants");
@@ -15,7 +15,6 @@ var _m_utils = require("./m_utils");
 var _base = require("./r1/utils/base");
 var _appointment_adapter = require("./utils/appointment_adapter/appointment_adapter");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const toMs = _date.default.dateToMilliseconds;
 const isAllDay = (scheduler, appointmentData) => {
   const adapter = new _appointment_adapter.AppointmentAdapter(appointmentData, scheduler._dataAccessors);
@@ -103,22 +102,16 @@ const subscribes = {
     this.hideAppointmentTooltip();
   },
   createFormattedDateText(appointment, targetedAppointmentRaw, format) {
-    const targetedAppointment = _extends({}, appointment, targetedAppointmentRaw);
+    const targetedAppointment = Object.assign({}, appointment, targetedAppointmentRaw);
     const adapter = new _appointment_adapter.AppointmentAdapter(targetedAppointment, this._dataAccessors);
     // pull out time zone converting from appointment adapter for knockout (T947938)
     const startDate = targetedAppointment.displayStartDate || this.timeZoneCalculator.createDate(adapter.startDate, 'toGrid');
     const endDate = targetedAppointment.displayEndDate || this.timeZoneCalculator.createDate(adapter.endDate, 'toGrid');
     const formatType = format ?? (0, _m_text_utils.getFormatType)(startDate, endDate, adapter.allDay, this.currentView.type !== 'month');
     return {
-      text: adapter.text,
+      text: adapter.text || _message.default.format('dxScheduler-noSubject'),
       formatDate: (0, _m_text_utils.formatDates)(startDate, endDate, formatType)
     };
-  },
-  _createAppointmentTitle(data) {
-    if ((0, _type.isPlainObject)(data)) {
-      return data.text;
-    }
-    return String(data);
   },
   getResizableAppointmentArea(options) {
     const {

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import devices from '../../../core/devices';
 import $ from '../../../core/renderer';
 import { BindableTemplate } from '../../../core/templates/bindable_template';
@@ -13,7 +12,7 @@ const DISABLED_STATE_CLASS = 'dx-state-disabled';
 const ITEM_URL_CLASS = 'dx-item-url';
 class HierarchicalCollectionWidget extends CollectionWidgetAsync {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       keyExpr: 'id',
       displayExpr: 'text',
       selectedExpr: 'selected',
@@ -53,7 +52,7 @@ class HierarchicalCollectionWidget extends CollectionWidgetAsync {
     const {
       items = []
     } = this.option();
-    this._dataAdapter = new DataAdapter(_extends({
+    this._dataAdapter = new DataAdapter(Object.assign({
       dataAccessors: {
         getters: accessors.getters,
         setters: accessors.setters
@@ -94,7 +93,7 @@ class HierarchicalCollectionWidget extends CollectionWidgetAsync {
     const linkAttributes = isObject(linkAttr) ? linkAttr : {};
     return $('<a>').addClass(ITEM_URL_CLASS)
     // @ts-expect-error ts-error
-    .attr(_extends({}, linkAttributes, {
+    .attr(Object.assign({}, linkAttributes, {
       href: url
     }))
     // @ts-expect-error ts-error

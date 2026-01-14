@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../../../common/core/animation';
 import registerComponent from '../../../core/component_registrator';
 import $ from '../../../core/renderer';
@@ -77,7 +76,7 @@ class ToolbarBase extends CollectionWidgetAsync {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       renderAs: 'topToolbar',
       grouped: false,
       useFlatButtons: false,

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../core/renderer';
 import { isPlainObject, isString } from '../../core/utils/type';
 import { value as viewPort } from '../../core/utils/view_port';
@@ -149,7 +148,7 @@ const getToastOptions = (message, typeOrStack, displayTime) => {
     const containerKey = isString(position) ? position : `${position.top}-${position.left}-${position.bottom}-${position.right}`;
     const $container = getStackContainer(containerKey);
     setContainerClasses($container, direction);
-    const options = _extends({}, userOptions, defaultConfiguration, {
+    const options = Object.assign({}, userOptions, defaultConfiguration, {
       container: $container,
       _skipContentPositioning: true,
       onShowing: e => {
@@ -159,7 +158,7 @@ const getToastOptions = (message, typeOrStack, displayTime) => {
     });
     return options;
   }
-  const options = _extends({}, userOptions, defaultConfiguration);
+  const options = Object.assign({}, userOptions, defaultConfiguration);
   return options;
 };
 const notify = (message, typeOrStack, displayTime) => {

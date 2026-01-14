@@ -20,7 +20,8 @@ var _m_utils_time_zone = _interopRequireDefault(require("../m_utils_time_zone"))
 var _m_current_time_shader_horizontal = _interopRequireDefault(require("../shaders/m_current_time_shader_horizontal"));
 var _m_work_space_indicator = _interopRequireDefault(require("./m_work_space_indicator"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // NOTE: Renovation component import.
+// NOTE: Renovation component import.
+
 const {
   tableCreator
 } = _m_table_creator.default;
@@ -231,7 +232,7 @@ class SchedulerTimeline extends _m_work_space_indicator.default {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   generateRenderOptions(argument) {
     const options = super.generateRenderOptions(true);
-    return _extends({}, options, {
+    return Object.assign({}, options, {
       isGenerateWeekDaysHeaderData: this._needRenderWeekHeader(),
       getDateForHeaderText: _index2.timelineWeekUtils.getDateForHeaderText
     });
@@ -333,7 +334,7 @@ class SchedulerTimeline extends _m_work_space_indicator.default {
         const text = (0, _index2.formatWeekdayAndDay)(currentDate);
         if (cellTemplate) {
           const templateOptions = {
-            model: _extends({
+            model: Object.assign({
               text,
               date: new Date(currentDate)
             }, this._getGroupsForDateHeaderTemplate(templateIndex, colSpan)),

@@ -19,7 +19,6 @@ var _extend = require("../../../core/utils/extend");
 var _m_dom = _interopRequireDefault(require("./m_dom"));
 var _m_type = _interopRequireDefault(require("./m_type"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const findTemplates = (element, name) => {
   const optionsAttributeName = 'data-options';
   const templates = (0, _renderer.default)(element).contents().filter(`[${optionsAttributeName}*="${name}"]`);
@@ -66,7 +65,7 @@ const addPublicElementNormalization = template => {
   return (0, _extend.extend)({}, template, {
     render(options) {
       const $container = (0, _renderer.default)(options.container);
-      return render(_extends({}, options, {
+      return render(Object.assign({}, options, {
         container: (0, _element.getPublicElement)($container)
       }));
     }

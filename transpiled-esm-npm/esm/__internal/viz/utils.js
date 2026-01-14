@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable import/no-import-module-exports */
 /* eslint-disable prefer-rest-params */
 /* eslint-disable no-bitwise */
@@ -82,7 +81,7 @@ const areCanvasesDifferent = function (canvas1, canvas2) {
   return !(sizeLessThreshold && canvasCoordsIsEqual);
 };
 const floorCanvasDimensions = function (canvas) {
-  return _extends({}, canvas, {
+  return Object.assign({}, canvas, {
     height: floor(canvas.height),
     width: floor(canvas.width)
   });

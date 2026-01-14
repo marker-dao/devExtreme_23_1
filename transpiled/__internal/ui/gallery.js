@@ -25,7 +25,6 @@ var _window = require("../../core/utils/window");
 var _widget = _interopRequireDefault(require("../core/widget/widget"));
 var _collection_widget = _interopRequireDefault(require("../ui/collection/collection_widget.edit"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const GALLERY_CLASS = 'dx-gallery';
 const GALLERY_INDICATOR_VISIBLE_CLASS = 'dx-gallery-indicator-visible';
 const GALLERY_WRAPPER_CLASS = `${GALLERY_CLASS}-wrapper`;
@@ -47,13 +46,13 @@ const GALLERY_ITEM_DATA_KEY = 'dxGalleryItemData';
 const MAX_CALC_ERROR = 1;
 class GalleryNavButton extends _widget.default {
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       pageUp: _common.noop,
       pageDown: _common.noop
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       direction: 'next',
       onClick: null,
       hoverStateEnabled: true,
@@ -92,7 +91,7 @@ class Gallery extends _collection_widget.default {
     return GALLERY_ITEM_SELECTOR;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: false,
       animationDuration: 400,
       animationEnabled: true,
@@ -435,7 +434,7 @@ class Gallery extends _collection_widget.default {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    _animation.fx.animate(this._$container.get(0), _extends({
+    _animation.fx.animate(this._$container.get(0), Object.assign({
       type: 'slide',
       to: {
         left: targetPosition * (this._elementWidth() ?? 0)

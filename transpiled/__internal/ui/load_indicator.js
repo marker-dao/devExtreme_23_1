@@ -12,7 +12,6 @@ var _themes = require("../../ui/themes");
 var _widget = _interopRequireDefault(require("../core/widget/widget"));
 var _m_support = _interopRequireDefault(require("../core/utils/m_support"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const LOADINDICATOR_CLASS = exports.LOADINDICATOR_CLASS = 'dx-loadindicator';
 const LOADINDICATOR_WRAPPER_CLASS = exports.LOADINDICATOR_WRAPPER_CLASS = 'dx-loadindicator-wrapper';
 const LOADINDICATOR_CONTENT_CLASS = exports.LOADINDICATOR_CONTENT_CLASS = 'dx-loadindicator-content';
@@ -31,7 +30,7 @@ const ANIMATION_TYPE_CLASSES = exports.ANIMATION_TYPE_CLASSES = {
 };
 class LoadIndicator extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       _animatingSegmentCount: 1,
       _animatingSegmentInner: false,
       animationType: AnimationType.Circle,

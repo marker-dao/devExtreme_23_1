@@ -14,7 +14,6 @@ var _window = require("../../../../core/utils/window");
 var _format_helper = _interopRequireDefault(require("../../../../format_helper"));
 var _m_export = require("../../../grids/grid_core/m_export");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DEFAULT_DATA_TYPE = 'string';
 const DEFAUL_COLUMN_WIDTH = 100;
 const ExportController = exports.ExportController = {
@@ -252,7 +251,7 @@ class DataProvider {
     const dataFieldStyles = [];
     if (dataFields.length) {
       dataFields.forEach(dataField => {
-        dataFieldStyles.push(_extends({}, dataItemStyle, {
+        dataFieldStyles.push(Object.assign({}, dataItemStyle, {
           format: dataField.format,
           dataType: this.getCellDataType(dataField)
         }));

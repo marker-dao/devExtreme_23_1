@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import timeZoneUtils from '../m_utils_time_zone';
 export const getAppointmentInfo = item => {
   const appointment = {
@@ -16,7 +15,7 @@ export const getAppointmentInfo = item => {
     sourceAppointment: source
   };
 };
-export const getAgendaAppointmentInfo = item => _extends({}, getAppointmentInfo(item), {
+export const getAgendaAppointmentInfo = item => Object.assign({}, getAppointmentInfo(item), {
   partialDates: {
     allDay: item.allDay,
     startDate: timeZoneUtils.createDateFromUTCWithLocalOffset(new Date(item.datesAfterSplit.startDateUTC)),

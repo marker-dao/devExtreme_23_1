@@ -1,10 +1,9 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import '../../../ui/toolbar';
 import registerComponent from '../../../core/component_registrator';
 import Popup from '../../../ui/popup/ui.popup';
 export default class PopupFull extends Popup {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       preventScrollEvents: false
     });
   }

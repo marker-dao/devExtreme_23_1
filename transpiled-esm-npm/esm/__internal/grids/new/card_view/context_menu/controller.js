@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { ColumnsController } from '../../grid_core/columns_controller/index';
 import { BaseContextMenuController } from '../../grid_core/context_menu/controller';
 import { SortingController } from '../../grid_core/sorting_controller/index';
@@ -22,7 +21,7 @@ export class ContextMenuController extends BaseContextMenuController {
       items.push(...this.getSortingItems(contextInfo.column));
     }
     // @ts-expect-error
-    const event = _extends({
+    const event = Object.assign({
       items: items.length > 0 ? items : undefined,
       target: view,
       targetElement: targetElement,

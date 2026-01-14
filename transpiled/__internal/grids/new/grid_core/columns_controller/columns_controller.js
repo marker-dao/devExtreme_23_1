@@ -9,7 +9,6 @@ var _utils = require("../../../../grids/new/grid_core/filtering/header_filter/ut
 var _options_controller = require("../options_controller/options_controller");
 var _index2 = require("./columns_settings/index");
 var _utils2 = require("./utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class ColumnsController {
   constructor(options) {
     this.options = options;
@@ -41,7 +40,7 @@ class ColumnsController {
       return (0, _utils2.normalizeColumns)(columnsSettings ?? [], template => template ? this.options.normalizeTemplate(template) : undefined, columnsFromDataOptions).map(column => (0, _utils.mergeColumnHeaderFilterOptions)(column, headerFilterRootOptions));
     });
     this.filterableColumns = (0, _index.computed)(() => this.columns.value.filter(col => (0, _utils.isColumnFilterable)(col)));
-    this.visibleColumns = (0, _index.computed)(() => this.columns.value.filter(column => column.visible).sort((a, b) => a.visibleIndex - b.visibleIndex).map((column, index) => _extends({}, column, {
+    this.visibleColumns = (0, _index.computed)(() => this.columns.value.filter(column => column.visible).sort((a, b) => a.visibleIndex - b.visibleIndex).map((column, index) => Object.assign({}, column, {
       headerPanelIndex: index
     })));
     this.nonVisibleColumns = (0, _index.computed)(() => this.columns.value.filter(column => !column.visible));

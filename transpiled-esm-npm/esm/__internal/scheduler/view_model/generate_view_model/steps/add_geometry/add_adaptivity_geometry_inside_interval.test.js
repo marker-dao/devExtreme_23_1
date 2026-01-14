@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { addAdaptivityGeometryInsideInterval } from './add_adaptivity_geometry_inside_interval';
 describe('addAdaptivityGeometryInsideInterval', () => {
@@ -23,7 +22,7 @@ describe('addAdaptivityGeometryInsideInterval', () => {
         height: 80
       },
       viewOrientation: 'horizontal'
-    })).toEqual(_extends({}, entity, {
+    })).toEqual(Object.assign({}, entity, {
       width: 20,
       height: 20,
       left: 240,
@@ -55,7 +54,7 @@ describe('addAdaptivityGeometryInsideInterval', () => {
         height: 80
       },
       viewOrientation: 'horizontal'
-    })).toEqual(_extends({}, entity, {
+    })).toEqual(Object.assign({}, entity, {
       width: 20,
       height: 20,
       left: 40,
@@ -86,7 +85,7 @@ describe('addAdaptivityGeometryInsideInterval', () => {
         height: 80
       },
       viewOrientation: 'vertical'
-    })).toEqual(_extends({}, entity, {
+    })).toEqual(Object.assign({}, entity, {
       width: 20,
       height: 20,
       left: 35,

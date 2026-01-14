@@ -13,10 +13,8 @@ var _m_icon = require("../../core/utils/m_icon");
 var _collection_widget = _interopRequireDefault(require("../../ui/collection/collection_widget.async"));
 var _connector = _interopRequireDefault(require("../../ui/stepper/connector"));
 var _stepper_item = _interopRequireWildcard(require("../../ui/stepper/stepper_item"));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const STEPPER_CLASS = exports.STEPPER_CLASS = 'dx-stepper';
 const STEP_LIST_CLASS = exports.STEP_LIST_CLASS = 'dx-step-list';
 const STEP_CLASS = exports.STEP_CLASS = 'dx-step';
@@ -35,7 +33,7 @@ const ORIENTATION = exports.ORIENTATION = {
 };
 class Stepper extends _collection_widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       orientation: 'horizontal',
       linear: true,
       selectionMode: 'single',
@@ -59,7 +57,7 @@ class Stepper extends _collection_widget.default {
       linear,
       selectOnFocus
     } = this.option();
-    return _extends({}, defaultHandlers, {
+    return Object.assign({}, defaultHandlers, {
       home: linear && selectOnFocus ? defaultHandlers.leftArrow : defaultHandlers.home,
       end: linear && selectOnFocus ? defaultHandlers.rightArrow : defaultHandlers.end
     });
@@ -134,8 +132,8 @@ class Stepper extends _collection_widget.default {
       itemData,
       index
     } = renderArgs;
-    return super._createItemByTemplate(itemTemplate, _extends({}, renderArgs, {
-      itemData: _extends({
+    return super._createItemByTemplate(itemTemplate, Object.assign({}, renderArgs, {
+      itemData: Object.assign({
         text: `${index + 1}`
       }, itemData)
     }));

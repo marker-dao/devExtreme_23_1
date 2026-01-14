@@ -14,7 +14,6 @@ var _themes = require("../../../ui/themes");
 var _m_ink_ripple = require("../../core/utils/m_ink_ripple");
 var _overlay = _interopRequireDefault(require("../../ui/overlay/overlay"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const FAB_CLASS = 'dx-fa-button';
 const FAB_ICON_CLASS = 'dx-fa-button-icon';
 const FAB_LABEL_CLASS = 'dx-fa-button-label';
@@ -23,7 +22,7 @@ const FAB_CONTENT_REVERSE_CLASS = 'dx-fa-button-content-reverse';
 const OVERLAY_CONTENT_SELECTOR = '.dx-overlay-content';
 class SpeedDialItem extends _overlay.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       shading: false,
       useInkRipple: false,
       callOverlayRenderShading: false,
@@ -71,8 +70,11 @@ class SpeedDialItem extends _overlay.default {
     }
     const $element = (0, _renderer.default)('<div>').addClass(FAB_LABEL_CLASS);
     const $wrapper = (0, _renderer.default)('<div>').addClass(FAB_LABEL_WRAPPER_CLASS);
-    this._$label = $wrapper.prependTo(this.$content()).append($element.text(label));
-    this.$content().toggleClass(FAB_CONTENT_REVERSE_CLASS, this._isPositionLeft(this.option('parentPosition')));
+    const $content = this.$content();
+    if ($content) {
+      this._$label = $wrapper.prependTo($content).append($element.text(label));
+      $content.toggleClass(FAB_CONTENT_REVERSE_CLASS, this._isPositionLeft(this.option('parentPosition')));
+    }
   }
   _isPositionLeft(position) {
     let currentLocation = '';

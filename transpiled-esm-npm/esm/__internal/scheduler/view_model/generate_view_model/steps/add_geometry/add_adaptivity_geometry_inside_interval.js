@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { getAbstractSizeByViewOrientation, getRealSizeByViewOrientation } from './swap_by_view_orientation';
 const COLLECTOR_ADAPTIVE_BOTTOM_OFFSET = 40;
 export const addAdaptivityGeometryInsideInterval = (entity, _ref) => {
@@ -19,11 +18,11 @@ export const addAdaptivityGeometryInsideInterval = (entity, _ref) => {
   }, viewOrientation);
   abstractGeometry.offsetX += entity.columnIndex * cellAbstractSize.sizeX;
   const geometry = getRealSizeByViewOrientation(abstractGeometry, viewOrientation);
-  const items = entity.items.map(item => _extends({}, item, {
+  const items = entity.items.map(item => Object.assign({}, item, {
     width: cellSize.width,
     height: cellSize.height
   }));
-  return _extends({}, entity, geometry, {
+  return Object.assign({}, entity, geometry, {
     items
   });
 };

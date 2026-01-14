@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { triggerResizeEvent } from '../../common/core/events/visibility_change';
 import dateLocalization from '../../common/core/localization/date';
 import messageLocalization from '../../common/core/localization/message';
@@ -717,7 +716,7 @@ class Scheduler extends SchedulerOptionsBaseWidget {
     }
     this._editing.allowDragging = this._editing.allowDragging && this._editing.allowUpdating;
     this._editing.allowResizing = this._editing.allowResizing && this._editing.allowUpdating;
-    const isReadOnly = Object.values(_extends({}, this._editing, {
+    const isReadOnly = Object.values(Object.assign({}, this._editing, {
       form: undefined,
       popup: undefined
     })).every(value => !value);
@@ -1056,8 +1055,8 @@ class Scheduler extends SchedulerOptionsBaseWidget {
   _recalculateWorkspace() {
     // @ts-expect-error
     this._workSpaceRecalculation = new Deferred();
+    triggerResizeEvent(this._workSpace.$element());
     this._waitAsyncTemplate(() => {
-      triggerResizeEvent(this._workSpace.$element());
       this._workSpace.renderCurrentDateTimeLineAndShader();
     });
   }
@@ -1070,7 +1069,7 @@ class Scheduler extends SchedulerOptionsBaseWidget {
       resources: this.option('resources'),
       getResourceManager: () => this.resourceManager,
       getFilteredItems: () => this._layoutManager.filteredItems,
-      noDataText: this.option('noDataText'),
+      noDataText: this.option('noDataText') || messageLocalization.format('dxCollectionWidget-noDataText'),
       firstDayOfWeek: this.option('firstDayOfWeek'),
       startDayHour: this.option('startDayHour'),
       endDayHour: this.option('endDayHour'),
@@ -1211,7 +1210,7 @@ class Scheduler extends SchedulerOptionsBaseWidget {
   }
   _excludeAppointmentFromSeries(rawAppointment, newRawAppointment, exceptionDate, isDeleted, isPopupEditing, dragEvent) {
     const appointment = excludeFromRecurrence(rawAppointment, exceptionDate, this._dataAccessors);
-    const singleRawAppointment = _extends({}, newRawAppointment);
+    const singleRawAppointment = Object.assign({}, newRawAppointment);
     /* eslint-disable @typescript-eslint/no-dynamic-delete */
     delete singleRawAppointment[this._dataAccessors.expr.recurrenceExceptionExpr];
     delete singleRawAppointment[this._dataAccessors.expr.recurrenceRuleExpr];
@@ -1490,7 +1489,7 @@ class Scheduler extends SchedulerOptionsBaseWidget {
     this.showAppointmentPopup(resultAppointment, true);
   }
   showAppointmentPopup(rawAppointment, createNewAppointment, rawTargetedAppointment) {
-    const newRawTargetedAppointment = _extends({}, rawTargetedAppointment);
+    const newRawTargetedAppointment = Object.assign({}, rawTargetedAppointment);
     if (newRawTargetedAppointment) {
       delete newRawTargetedAppointment.displayStartDate;
       delete newRawTargetedAppointment.displayEndDate;
@@ -1554,7 +1553,7 @@ class Scheduler extends SchedulerOptionsBaseWidget {
       cancel: false,
       appointments: data.map(item => ({
         appointmentData: item.appointment,
-        currentAppointmentData: _extends({}, item.targetedAppointment),
+        currentAppointmentData: Object.assign({}, item.targetedAppointment),
         color: item.color
       })),
       targetElement: getPublicElement(target)
@@ -1564,7 +1563,7 @@ class Scheduler extends SchedulerOptionsBaseWidget {
       this.hideAppointmentTooltip();
     } else {
       this._processActionResult(arg, canceled => {
-        !canceled && this._appointmentTooltip.show(target, data, _extends({}, this._getExtraAppointmentTooltipOptions(), options));
+        !canceled && this._appointmentTooltip.show(target, data, Object.assign({}, this._getExtraAppointmentTooltipOptions(), options));
       });
     }
   }

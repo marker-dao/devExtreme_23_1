@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 import eventsEngine from '../../../../common/core/events/core/events_engine';
 import { normalizeKeyName } from '../../../../common/core/events/utils/index';
@@ -453,8 +452,8 @@ const columnHeadersView = Base => class ColumnHeadersViewFilterRowExtender exten
       const filter = this._dataController.getCombinedFilter();
       this._applyFilterViewController.setCurrentColumnForFiltering(null);
       const lookupDataSource = gridCoreUtils.getWrappedLookupDataSource(options, dataSource, filter);
-      const lookupOptions = _extends({}, options, {
-        lookup: _extends({}, options.lookup, {
+      const lookupOptions = Object.assign({}, options, {
+        lookup: Object.assign({}, options.lookup, {
           dataSource: lookupDataSource
         })
       });

@@ -11,7 +11,6 @@ var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
 var _m_type = require("../../core/utils/m_type");
 var _listEdit = require("../../ui/list/list.edit.decorator_registry");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const editOptionsRegistry = [];
 const registerOption = _ref => {
   let {
@@ -159,7 +158,7 @@ class EditProvider {
     (_this$_decorators2 = this._decorators) === null || _this$_decorators2 === void 0 || _this$_decorators2.forEach(decorator => {
       if ((0, _m_type.isFunction)(decorator[method])) {
         const $container = (0, _renderer.default)('<div>').addClass(containerClass);
-        decorator[method](_extends({}, config, {
+        decorator[method](Object.assign({}, config, {
           $container
         }));
         if ($container.children().length) {

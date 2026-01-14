@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable spellcheck/spell-checker */
 import { applyChanges } from '../../../../../common/data';
@@ -54,7 +53,7 @@ export class EditingController {
       }
       const insertChange = changes.find(change => change.key === editCardKey && change.type === 'insert');
       const oldData = (insertChange === null || insertChange === void 0 ? void 0 : insertChange.data) ?? oldItem.data;
-      const newData = insertChange ? _extends({}, oldData, changes) : applyChanges([oldData], changes, {
+      const newData = insertChange ? Object.assign({}, oldData, changes) : applyChanges([oldData], changes, {
         keyExpr: this.dataController.dataSource.peek().key(),
         immutable: true
       })[0];
@@ -248,8 +247,8 @@ export class EditingController {
   }
   addChange(key, newData) {
     const existingChange = this.changes.peek().find(change => change.key === key && ['insert', 'update'].includes(change.type));
-    const newChange = existingChange ? _extends({}, existingChange, {
-      data: _extends({}, existingChange.data, newData)
+    const newChange = existingChange ? Object.assign({}, existingChange, {
+      data: Object.assign({}, existingChange.data, newData)
     }) : {
       key,
       type: 'update',

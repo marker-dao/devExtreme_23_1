@@ -17,12 +17,11 @@ var _confirmationpopup = _interopRequireDefault(require("../../ui/chat/confirmat
 var _message_box = _interopRequireDefault(require("../../ui/chat/message_box/message_box"));
 var _messagelist = _interopRequireDefault(require("../../ui/chat/messagelist"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CHAT_CLASS = 'dx-chat';
 const TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
 class Chat extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: true,
       alerts: [],
       dataSource: null,
@@ -157,10 +156,7 @@ class Chat extends _widget.default {
     return options;
   }
   _getAttachmentDownloadHandler() {
-    const {
-      onAttachmentDownloadClick
-    } = this.option();
-    if (!onAttachmentDownloadClick) {
+    if (!this.hasActionSubscription('onAttachmentDownloadClick')) {
       return;
     }
     // eslint-disable-next-line consistent-return
@@ -168,6 +164,32 @@ class Chat extends _widget.default {
       var _this$_attachmentDown;
       (_this$_attachmentDown = this._attachmentDownloadAction) === null || _this$_attachmentDown === void 0 || _this$_attachmentDown.call(this, e);
     };
+  }
+  on(eventName) {
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+    // @ts-expect-error ts-error
+    const result = super.on.apply(this, [eventName, ...args]);
+    if (eventName === 'attachmentDownloadClick') {
+      this._updateAttachmentDownloadHandler();
+    }
+    return result;
+  }
+  off(eventName) {
+    for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      args[_key2 - 1] = arguments[_key2];
+    }
+    // @ts-expect-error ts-error
+    const result = super.off.apply(this, [eventName, ...args]);
+    if (eventName === 'attachmentDownloadClick') {
+      this._updateAttachmentDownloadHandler();
+    }
+    return result;
+  }
+  _updateAttachmentDownloadHandler() {
+    var _this$_messageList2;
+    (_this$_messageList2 = this._messageList) === null || _this$_messageList2 === void 0 || _this$_messageList2.option('onAttachmentDownloadClick', this._getAttachmentDownloadHandler());
   }
   _allowEditAction(message) {
     const {
@@ -548,9 +570,7 @@ class Chat extends _widget.default {
         break;
       case 'onAttachmentDownloadClick':
         this._createAttachmentDownloadAction();
-        this._messageList.option({
-          onAttachmentDownloadClick: this._getAttachmentDownloadHandler()
-        });
+        this._updateAttachmentDownloadHandler();
         break;
       case 'showDayHeaders':
       case 'showAvatar':

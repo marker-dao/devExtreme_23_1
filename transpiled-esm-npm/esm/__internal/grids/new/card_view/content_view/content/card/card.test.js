@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createComponentVNode, normalizeProps } from "inferno";
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { compileGetter } from '../../../../../../../common/data';
@@ -61,13 +60,13 @@ describe('Rendering', () => {
   it('should be rendered correctly', () => {
     const container = document.createElement('div');
     // @ts-expect-error
-    render(normalizeProps(createComponentVNode(2, Card, _extends({}, props))), container);
+    render(normalizeProps(createComponentVNode(2, Card, Object.assign({}, props))), container);
     expect(container).toMatchSnapshot();
   });
   it('should render content correctly', () => {
     const container = document.createElement('div');
     // @ts-expect-error
-    render(normalizeProps(createComponentVNode(2, Card, _extends({}, props))), container);
+    render(normalizeProps(createComponentVNode(2, Card, Object.assign({}, props))), container);
     const fieldValue = container.querySelector('.dx-cardview-field-value');
     expect(fieldValue === null || fieldValue === void 0 ? void 0 : fieldValue.textContent).toEqual('devextreme');
   });
@@ -76,7 +75,7 @@ describe('Card Header', () => {
   it('should render the card header components correctly', () => {
     const container = document.createElement('div');
     // @ts-expect-error
-    render(normalizeProps(createComponentVNode(2, Card, _extends({}, props))), container);
+    render(normalizeProps(createComponentVNode(2, Card, Object.assign({}, props))), container);
     const cardHeaderText = container.querySelector('.dx-toolbar-label .dx-toolbar-item-content > div');
     expect(cardHeaderText === null || cardHeaderText === void 0 ? void 0 : cardHeaderText.textContent).toBe('Card Header');
     const checkbox = container.querySelectorAll('.dx-checkbox');
@@ -91,19 +90,19 @@ describe('Cover', () => {
   it('should be rendered', () => {
     const container = document.createElement('div');
     // @ts-expect-error
-    render(normalizeProps(createComponentVNode(2, Card, _extends({}, props))), container);
+    render(normalizeProps(createComponentVNode(2, Card, Object.assign({}, props))), container);
     const image = container.querySelector('img');
     expect(image).not.toBeNull();
   });
   it('should be rendered if imageExpr is not defined but template is defined', () => {
     const container = document.createElement('div');
-    const localProps = _extends({}, props, {
+    const localProps = Object.assign({}, props, {
       cover: {
         template: () => createVNode(1, "img", 'myTemplate')
       }
     });
     // @ts-expect-error
-    render(normalizeProps(createComponentVNode(2, Card, _extends({}, localProps))), container);
+    render(normalizeProps(createComponentVNode(2, Card, Object.assign({}, localProps))), container);
     expect(container.querySelector('.myTemplate')).toBeTruthy();
   });
 });
@@ -111,7 +110,7 @@ describe('Field Template', () => {
   it('should render field template correctly', () => {
     const container = document.createElement('div');
     // @ts-expect-error
-    render(normalizeProps(createComponentVNode(2, Card, _extends({}, props))), container);
+    render(normalizeProps(createComponentVNode(2, Card, Object.assign({}, props))), container);
     const fieldName = container.querySelector('.dx-cardview-field-caption');
     const fieldValue = container.querySelector('.dx-cardview-field-value');
     expect(fieldName === null || fieldName === void 0 ? void 0 : fieldName.textContent).toBe('Field:');

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { move } from '../../../common/core/animation/translator';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import pointerEvents from '../../../common/core/events/pointer';
@@ -24,7 +23,7 @@ const MIN_CONTAINER_TO_CONTENT_RATIO = 1;
 let activeScrollbar = null;
 class Scrollbar extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       visible: false,
       activeStateEnabled: false,
       visibilityMode: 'onScroll',

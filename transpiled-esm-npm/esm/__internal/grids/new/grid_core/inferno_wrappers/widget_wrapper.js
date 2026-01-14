@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode } from "inferno";
 import { Component, createRef } from 'inferno';
 import { ConfigContext } from '../core/config_context';
@@ -17,7 +16,7 @@ export class InfernoWrapper extends Component {
   }
   getComponentOptions() {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return _extends({}, this.context[ConfigContext.id], this.props);
+    return Object.assign({}, this.context[ConfigContext.id], this.props);
   }
   updateComponentRef() {
     if (this.props.componentRef) {

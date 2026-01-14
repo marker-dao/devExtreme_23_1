@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../common/core/events/core/events_engine';
 import registerComponent from '../../core/component_registrator';
 // @ts-expect-error ts-error
@@ -12,7 +11,7 @@ const ITEM_CLASS = `${VALIDATION_SUMMARY_CLASS}-item`;
 const ITEM_DATA_KEY = `${VALIDATION_SUMMARY_CLASS}-item-data`;
 class ValidationSummary extends CollectionWidget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       focusStateEnabled: false,
       // @ts-expect-error ts-error
       noDataText: null

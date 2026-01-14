@@ -10,7 +10,6 @@ var _type = require("../../../../core/utils/type");
 var _m_date_boxStrategy = _interopRequireDefault(require("../../date_box/m_date_box.strategy.calendar"));
 var _m_date_range = require("../m_date_range.utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class RangeCalendarStrategy extends _m_date_boxStrategy.default {
   constructor(dateBox) {
     super();
@@ -37,7 +36,7 @@ class RangeCalendarStrategy extends _m_date_boxStrategy.default {
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   supportedKeys() {
     const dateRangeBox = this.getDateRangeBox();
-    return _extends({}, super.supportedKeys(), {
+    return Object.assign({}, super.supportedKeys(), {
       rightArrow: () => {
         if (dateRangeBox.option('opened')) {
           return true;

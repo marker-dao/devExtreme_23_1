@@ -10,7 +10,6 @@ var _dom_adapter = _interopRequireDefault(require("../../../../core/dom_adapter"
 var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _deferred = require("../../../../core/utils/deferred");
 var _extend = require("../../../../core/utils/extend");
-var _iterator = require("../../../../core/utils/iterator");
 var _size = require("../../../../core/utils/size");
 var _type = require("../../../../core/utils/type");
 var _m_column_context_menu_mixin = require("../../../grids/grid_core/context_menu/m_column_context_menu_mixin");
@@ -376,23 +375,30 @@ class ColumnHeadersView extends (0, _m_column_context_menu_mixin.ColumnContextMe
     return ($columnElements === null || $columnElements === void 0 ? void 0 : $columnElements.eq(index)) ?? (0, _renderer.default)('');
   }
   getColumnElements(index, bandColumnIndex) {
-    const that = this;
     let $cellElement;
-    const columnsController = that._columnsController;
-    const rowCount = that.getRowCount();
-    if (that.option('showColumnHeaders')) {
+    const columnsController = this._columnsController;
+    const rowCount = this.getRowCount();
+    if (this.option('showColumnHeaders')) {
       if (rowCount > 1 && (!(0, _type.isDefined)(index) || (0, _type.isDefined)(bandColumnIndex))) {
         const result = [];
-        const visibleColumns = (0, _type.isDefined)(bandColumnIndex) ? columnsController.getChildrenByBandColumn(bandColumnIndex, true) : columnsController.getVisibleColumns();
-        (0, _iterator.each)(visibleColumns, (_, column) => {
-          const rowIndex = (0, _type.isDefined)(index) ? index : columnsController.getRowIndex(column.index);
-          $cellElement = that._getCellElement(rowIndex, columnsController.getVisibleIndex(column.index, rowIndex));
-          $cellElement && result.push($cellElement.get(0));
+        let visibleColumns = [];
+        if ((0, _type.isDefined)(bandColumnIndex)) {
+          visibleColumns = columnsController.getChildrenByBandColumn(bandColumnIndex, true);
+        } else {
+          visibleColumns = columnsController.getVisibleColumns();
+        }
+        visibleColumns.forEach(column => {
+          const rowIndex = index ?? columnsController.getRowIndex(column.index);
+          const visibleIndex = columnsController.getVisibleIndex(column.index, rowIndex);
+          $cellElement = this._getCellElement(rowIndex, visibleIndex);
+          if ($cellElement) {
+            result.push($cellElement.get(0));
+          }
         });
         return (0, _renderer.default)(result);
       }
       if (!index || index < rowCount) {
-        return that.getCellElements(index || 0);
+        return this.getCellElements(index || 0);
       }
     }
     return undefined;

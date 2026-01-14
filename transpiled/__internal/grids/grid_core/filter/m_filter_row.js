@@ -20,7 +20,8 @@ var _accessibility = require("../../../../ui/shared/accessibility");
 var _m_modules = _interopRequireDefault(require("../m_modules"));
 var _m_utils = _interopRequireDefault(require("../m_utils"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */
+/* eslint-disable max-classes-per-file */
+
 const OPERATION_ICONS = {
   '=': 'filter-operation-equals',
   '<>': 'filter-operation-not-equals',
@@ -459,8 +460,8 @@ const columnHeadersView = Base => class ColumnHeadersViewFilterRowExtender exten
       const filter = this._dataController.getCombinedFilter();
       this._applyFilterViewController.setCurrentColumnForFiltering(null);
       const lookupDataSource = _m_utils.default.getWrappedLookupDataSource(options, dataSource, filter);
-      const lookupOptions = _extends({}, options, {
-        lookup: _extends({}, options.lookup, {
+      const lookupOptions = Object.assign({}, options, {
+        lookup: Object.assign({}, options.lookup, {
           dataSource: lookupDataSource
         })
       });

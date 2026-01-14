@@ -5,7 +5,8 @@ var _widget = _interopRequireDefault(require("../../../../../grids/new/card_view
 var _index = require("../../../../../grids/new/grid_core/filtering/filter_sync/__intergation__/index");
 var _inferno = require("inferno");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable spellcheck/spell-checker */
+/* eslint-disable spellcheck/spell-checker */
+
 const DEFAULT_OPTIONS = {
   keyExpr: 'id',
   headerFilter: {
@@ -26,7 +27,7 @@ const setup = function () {
     body
   } = document;
   body.append(container);
-  const cardView = new _widget.default(container, _extends({}, DEFAULT_OPTIONS, options));
+  const cardView = new _widget.default(container, Object.assign({}, DEFAULT_OPTIONS, options));
   (0, _inferno.rerender)();
   return cardView;
 };
@@ -220,7 +221,7 @@ _globals.describe.skip('FilterSync', () => {
               }]
             });
             const column = cardView.option('columns[0]');
-            cardView.option('columns[0]', _extends({}, column, {
+            cardView.option('columns[0]', Object.assign({}, column, {
               filterType: changes.headerFilterType,
               filterValues: changes.headerFilter
             }));
@@ -240,12 +241,12 @@ _globals.describe.skip('FilterSync', () => {
           });
         });
         (0, _globals.describe)('FilterPanel -> empty HeaderFilter', () => {
-          _globals.it.each(cases.filterPanel)('Option: $caseName', _ref10 => {
+          _globals.it.each(cases.filterPanel)('Option: $caseName', _ref0 => {
             let {
               changes,
               expected,
               filteredIds
-            } = _ref10;
+            } = _ref0;
             const cardView = setup({
               dataSource,
               columns: [{
@@ -260,10 +261,10 @@ _globals.describe.skip('FilterSync', () => {
             const headerFilterType = cardView.columnOption('value', 'filterType');
             const headerFilter = cardView.columnOption('value', 'filterValues');
             const filterPanel = cardView.option('filterValue');
-            const visibleIds = cardView.getVisibleCards().map(_ref11 => {
+            const visibleIds = cardView.getVisibleCards().map(_ref1 => {
               let {
                 data
-              } = _ref11;
+              } = _ref1;
               return data.id;
             });
             (0, _globals.expect)(headerFilterType).toStrictEqual(expected.headerFilterType);

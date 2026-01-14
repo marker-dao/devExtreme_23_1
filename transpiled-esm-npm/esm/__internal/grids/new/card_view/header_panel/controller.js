@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../../../core/renderer';
 import { ColumnChooserView } from '../../grid_core/column_chooser/index';
 import { ColumnsController } from '../../grid_core/columns_controller/index';
@@ -32,7 +31,7 @@ export class HeaderPanelController {
       this.columnsController.updateColumns(columns => {
         const newColumns = [...columns];
         newColumns.forEach((oldColumn, index) => {
-          const updatedColumn = _extends({}, oldColumn);
+          const updatedColumn = Object.assign({}, oldColumn);
           if (oldColumn.name === column.name) {
             updatedColumn.visibleIndex = columnAfter.visibleIndex;
             updatedColumn.visible = true;

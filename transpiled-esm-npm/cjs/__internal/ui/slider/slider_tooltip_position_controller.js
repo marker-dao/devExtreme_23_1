@@ -11,7 +11,6 @@ var _extend = require("../../../core/utils/extend");
 var _type = require("../../../core/utils/type");
 var _popover_position_controller = require("../../ui/popover/popover_position_controller");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const SLIDER_CLASS = 'dx-slider';
 const SLIDER_TOOLTIP_POSITION_ALIASES = {
   top: {
@@ -61,14 +60,16 @@ class SliderTooltipPositionController extends _popover_position_controller.Popov
     const left = ((_this$_visualPosition = this._visualPosition) === null || _this$_visualPosition === void 0 ? void 0 : _this$_visualPosition.left) ?? 0;
     const isLeftSide = collisionSide === 'left';
     const offset = (isLeftSide ? 1 : -1) * oversize;
-    (0, _translator.move)(this._$content, {
-      left: left + offset
-    });
+    if (this._$content) {
+      (0, _translator.move)(this._$content, {
+        left: left + offset
+      });
+    }
     this._updateVisualPositionValue();
   }
   _positionToObject(position) {
     if ((0, _popover_position_controller.isCommonPosition)(position)) {
-      const configuration = _extends({}, SLIDER_TOOLTIP_POSITION_ALIASES[position]);
+      const configuration = Object.assign({}, SLIDER_TOOLTIP_POSITION_ALIASES[position]);
       return configuration;
     }
     return position;

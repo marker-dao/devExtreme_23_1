@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../../core/renderer';
 import errors from '../../../../ui/widget/ui.errors';
 import CustomButton from './m_custom';
@@ -78,7 +77,7 @@ export default class TextEditorButtonCollection {
       } = button;
       // @ts-expect-error @ts-error
       checkNamesUniqueness(names, name);
-      return _extends({}, button, {
+      return Object.assign({}, button, {
         Ctor: CustomButton
       });
     });

@@ -18,11 +18,12 @@ export class GanttSizeHelper {
     setter(this._gantt._$ganttView, value);
     this._gantt._setGanttViewOption(dimension, getter(this._gantt._$ganttView));
   }
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   _getPanelsWidthByOption() {
     var _leftPanelWidth$index, _leftPanelWidth$index2;
     const ganttWidth = getWidth(this._gantt.$element());
-    const leftPanelWidth = this._gantt.option('taskListWidth');
+    const {
+      taskListWidth: leftPanelWidth
+    } = this._gantt.option();
     // eslint-disable-next-line @typescript-eslint/init-declarations
     let rightPanelWidth;
     // @ts-expect-error ts-error
@@ -38,6 +39,7 @@ export class GanttSizeHelper {
       // @ts-expect-error ts-error
       rightPanelWidth = `${100 - parseInt(leftPanelWidth.replace('%', ''), 10)}%`;
     }
+    // @ts-expect-error ts-error
     return {
       leftPanelWidth,
       rightPanelWidth
@@ -69,6 +71,7 @@ export class GanttSizeHelper {
     }
   }
   setInnerElementsWidth(widths) {
+    var _widths, _widths2;
     if (!hasWindow()) {
       return;
     }
@@ -79,8 +82,8 @@ export class GanttSizeHelper {
       this._setTreeListDimension('width', 0);
       this._setGanttViewDimension('width', 0);
     }
-    this._setTreeListDimension('width', widths.leftPanelWidth);
-    this._setGanttViewDimension('width', widths.rightPanelWidth);
+    this._setTreeListDimension('width', (_widths = widths) === null || _widths === void 0 ? void 0 : _widths.leftPanelWidth);
+    this._setGanttViewDimension('width', (_widths2 = widths) === null || _widths2 === void 0 ? void 0 : _widths2.rightPanelWidth);
     if (takeWithFromOption) {
       var _this$_gantt$_splitte;
       (_this$_gantt$_splitte = this._gantt._splitter) === null || _this$_gantt$_splitte === void 0 || _this$_gantt$_splitte._setSplitterPositionLeft();

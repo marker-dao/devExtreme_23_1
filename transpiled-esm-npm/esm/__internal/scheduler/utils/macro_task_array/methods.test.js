@@ -1,10 +1,9 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import dispatcher from './dispatcher';
 import { macroTaskArrayForEach, macroTaskArrayMap } from './methods';
 jest.mock('./dispatcher', () => {
   const actualModule = jest.requireActual('./dispatcher');
-  return _extends({}, actualModule.default, {
+  return Object.assign({}, actualModule.default, {
     schedule: jest.fn()
   });
 });

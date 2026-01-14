@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { name as clickName } from '../../../common/core/events/click';
 import { lock } from '../../../common/core/events/core/emitter.feedback';
 import eventsEngine from '../../../common/core/events/core/events_engine';
@@ -69,7 +68,7 @@ class Slider extends TrackBar {
     const moveHandleLeft = offset => {
       this.option('value', roundedValue(offset, !rtlEnabled));
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       leftArrow(e) {
         this._processKeyboardEvent(e);
         moveHandleLeft(this.option('step'));
@@ -104,7 +103,7 @@ class Slider extends TrackBar {
     this._saveValueChangeEvent(e);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: 50,
       hoverStateEnabled: true,
       activeStateEnabled: true,
@@ -480,6 +479,7 @@ class Slider extends TrackBar {
     } else {
       this.option('value', value);
       this._saveValueChangeEvent(undefined);
+      this._actualValue = undefined;
     }
   }
   _getActualValue() {

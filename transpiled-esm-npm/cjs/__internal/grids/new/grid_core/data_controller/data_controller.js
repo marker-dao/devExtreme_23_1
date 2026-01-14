@@ -22,8 +22,7 @@ var _index3 = require("./store_load_adapter/index");
 var _utils2 = require("./utils");
 const _excluded = ["skip", "take"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const FILTER_OBJ_COMPARE_DEPTH = 6;
 class DataController {
   constructor(columnsController, options, sortingController, filterController, errorController, lifecycle) {
@@ -100,7 +99,7 @@ class DataController {
         const {
           operationId
         } = e;
-        const localLoadOptions = _extends({}, this.pendingLocalOperations[operationId]);
+        const localLoadOptions = Object.assign({}, this.pendingLocalOperations[operationId]);
         const {
           skip,
           take

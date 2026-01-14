@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import pointerEvents from '../../../common/core/events/pointer';
 import { addNamespace, normalizeKeyName } from '../../../common/core/events/utils/index';
@@ -54,7 +53,7 @@ class TextEditorBase extends Editor {
     super.ctor(element, options);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       // eslint-disable-next-line no-void
       buttons: void 0,
       value: '',
@@ -231,11 +230,14 @@ class TextEditorBase extends Editor {
     this._buttonCollection.clean();
     this._disposePendingIndicator();
     this._unobserveLabelContainerResize();
+    super._clean();
     this._$beforeButtonsContainer = null;
     this._$afterButtonsContainer = null;
-    // @ts-expect-error ts-error
+    // @ts-expect-error _$textEditorContainer can be null and undefined
     this._$textEditorContainer = null;
-    super._clean();
+    // @ts-expect-error _$textEditorInputContainer can be null and undefined
+    this._$textEditorInputContainer = null;
+    this._$placeholder = null;
   }
   _createInput() {
     const $input = $('<input>');
@@ -809,6 +811,7 @@ class TextEditorBase extends Editor {
     }
   }
   getButton(name) {
+    // @ts-expect-error TextEditorButtonCollection should use generic
     return this._buttonCollection.getButton(name);
   }
   focus() {

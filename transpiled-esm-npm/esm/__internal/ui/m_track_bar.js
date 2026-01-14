@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../../common/core/animation';
 import registerComponent from '../../core/component_registrator';
 import $ from '../../core/renderer';
@@ -10,7 +9,7 @@ const TRACKBAR_RANGE_CLASS = 'dx-trackbar-range';
 const TRACKBAR_WRAPPER_CLASS = 'dx-trackbar-wrapper';
 class TrackBar extends Editor {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       min: 0,
       max: 100,
       value: 0

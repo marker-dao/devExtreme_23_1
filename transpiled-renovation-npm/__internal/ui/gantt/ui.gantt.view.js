@@ -15,7 +15,8 @@ var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _gantt_importer = require("../../ui/gantt/gantt_importer");
 var _uiGanttTaskArea = require("../../ui/gantt/ui.gantt.task.area.container");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 const visualStateKey = 'visualState';
 const fullScreenModeKey = 'fullScreen';
 class GanttView extends _widget.default {
@@ -50,7 +51,7 @@ class GanttView extends _widget.default {
       stripLines: {
         // @ts-expect-error ts-error
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        stripLines: (_this$option = this.option('stripLines')) === null || _this$option === void 0 ? void 0 : _this$option.map(item => _extends({}, item))
+        stripLines: (_this$option = this.option('stripLines')) === null || _this$option === void 0 ? void 0 : _this$option.map(item => Object.assign({}, item))
       },
       areHorizontalBordersEnabled: this.option('showRowLines'),
       areAlternateRowsEnabled: false,

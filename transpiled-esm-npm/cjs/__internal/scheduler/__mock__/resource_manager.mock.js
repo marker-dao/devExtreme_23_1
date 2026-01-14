@@ -8,7 +8,6 @@ var _m_data_source = require("../../data/data_source/m_data_source");
 var _m_custom_store = _interopRequireDefault(require("../../data/m_custom_store"));
 var _resource_manager = require("../utils/resource_manager/resource_manager");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const resourceItemsByIdMock = exports.resourceItemsByIdMock = {
   'nested.priorityId': [{
     id: 1,
@@ -97,5 +96,5 @@ const resourceConfigMock = exports.resourceConfigMock = [{
   dataSource: resourceItemsByIdMock.roomId,
   label: 'Room'
 }];
-const getResourceManagerMock = config => new _resource_manager.ResourceManager(config ?? resourceConfigMock.map(item => _extends({}, item)));
+const getResourceManagerMock = config => new _resource_manager.ResourceManager(config ?? resourceConfigMock.map(item => Object.assign({}, item)));
 exports.getResourceManagerMock = getResourceManagerMock;

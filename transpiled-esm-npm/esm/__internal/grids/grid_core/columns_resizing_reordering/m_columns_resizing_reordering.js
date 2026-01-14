@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 import { fx } from '../../../../common/core/animation';
 import eventsEngine from '../../../../common/core/events/core/events_engine';
@@ -387,7 +386,7 @@ export class DraggingHeaderView extends modules.View {
     const {
       columnElement
     } = options;
-    const dragOptions = _extends({}, options, {
+    const dragOptions = Object.assign({}, options, {
       draggingPanelBoundingRects: getDraggingPanelBoundingRects(options.draggingPanels)
     });
     this._isDragging = true;
@@ -1270,7 +1269,7 @@ export class DraggingHeaderViewController extends modules.ViewController {
   addColumnIndexOffset(columnIndex) {
     const offset = this._columnsController.getColumnIndexOffset();
     if (isObject(columnIndex)) {
-      return _extends({}, columnIndex, {
+      return Object.assign({}, columnIndex, {
         columnIndex: columnIndex.columnIndex + offset
       });
     }

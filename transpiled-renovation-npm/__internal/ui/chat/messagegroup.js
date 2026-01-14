@@ -12,10 +12,8 @@ var _type = require("../../../core/utils/type");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _avatar = _interopRequireDefault(require("./avatar"));
 var _messagebubble = _interopRequireWildcard(require("./messagebubble"));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CHAT_MESSAGEGROUP_CLASS = exports.CHAT_MESSAGEGROUP_CLASS = 'dx-chat-messagegroup';
 const CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS = exports.CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS = 'dx-chat-messagegroup-alignment-start';
 const CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS = exports.CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS = 'dx-chat-messagegroup-alignment-end';
@@ -29,7 +27,7 @@ const CHAT_MESSAGE_EDITED_ICON_CLASS = 'dx-chat-message-edited-icon';
 const CHAT_MESSAGE_EDITED_TEXT_CLASS = 'dx-chat-message-edited-text';
 class MessageGroup extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       items: [],
       alignment: 'start',
       showAvatar: true,
@@ -103,10 +101,11 @@ class MessageGroup extends _widget.default {
       options.src = message.src;
     } else {
       options.text = message.text;
+      options.metadata = message.metadata;
     }
     if (messageTemplate) {
       options.template = (messageData, container) => {
-        messageTemplate(_extends({}, message, messageData), container);
+        messageTemplate(Object.assign({}, message, messageData), container);
       };
     }
     return options;

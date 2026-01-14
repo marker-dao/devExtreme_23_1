@@ -8,7 +8,6 @@ var _renderer = _interopRequireDefault(require("../../../../core/renderer"));
 var _ui = _interopRequireDefault(require("../../../../ui/widget/ui.errors"));
 var _m_custom = _interopRequireDefault(require("./m_custom"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const TEXTEDITOR_BUTTONS_CONTAINER_CLASS = 'dx-texteditor-buttons-container';
 function checkButtonInfo(buttonInfo) {
   const checkButtonType = () => {
@@ -85,7 +84,7 @@ class TextEditorButtonCollection {
       } = button;
       // @ts-expect-error @ts-error
       checkNamesUniqueness(names, name);
-      return _extends({}, button, {
+      return Object.assign({}, button, {
         Ctor: _m_custom.default
       });
     });

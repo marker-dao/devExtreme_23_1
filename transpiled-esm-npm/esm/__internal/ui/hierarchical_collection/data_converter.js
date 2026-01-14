@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["items"];
 import { each } from '../../../core/utils/iterator';
@@ -50,7 +49,7 @@ class DataConverter {
       this._visibleItemsCount += 1;
     }
     const itemWithoutItems = _objectWithoutPropertiesLoose(item, _excluded);
-    const node = _extends({
+    const node = Object.assign({
       internalFields: {
         disabled: this._dataAccessors.getters.disabled(item, {
           defaultValue: false

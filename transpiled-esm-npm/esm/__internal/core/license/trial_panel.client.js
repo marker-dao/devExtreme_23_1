@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 /* eslint no-restricted-imports: ["error", { "patterns": ["*"] }] */
 export const BASE_Z_INDEX = 1500;
@@ -24,7 +23,7 @@ const commonStyles = {
   'clip-path': 'none',
   filter: 'none'
 };
-const contentStyles = _extends({}, commonStyles, {
+const contentStyles = Object.assign({}, commonStyles, {
   width: '100%',
   height: 'auto',
   'line-height': 'normal',
@@ -38,7 +37,7 @@ const contentStyles = _extends({}, commonStyles, {
   'box-sizing': 'border-box',
   'text-align': 'center'
 });
-const containerStyles = _extends({}, contentStyles, {
+const containerStyles = Object.assign({}, contentStyles, {
   display: 'flex',
   'align-items': 'center',
   'flex-direction': 'row',
@@ -52,18 +51,18 @@ const buttonStyles = {
   cursor: 'pointer',
   height: '1rem'
 };
-const textStyles = _extends({}, commonStyles, {
+const textStyles = Object.assign({}, commonStyles, {
   display: 'inline',
   position: 'static',
   padding: '0px',
   margin: '0px',
   color: 'white',
-  'font-family': '-apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, adwaita sans, cantarell, ubuntu, roboto, noto, helvetica, arial, sans-serif',
+  'font-family': '-apple-system, BlinkMacSystemFont, \'avenir next\', avenir, \'helvetica neue\', \'adwaita sans\', cantarell, ubuntu, roboto, noto, helvetica, arial, sans-serif',
   'font-size': '0.875rem',
   'font-weight': '600'
 });
 function createImportantStyles(defaultStyles, customStyles) {
-  const styles = customStyles ? _extends({}, defaultStyles, customStyles) : defaultStyles;
+  const styles = customStyles ? Object.assign({}, defaultStyles, customStyles) : defaultStyles;
   return Object.keys(styles).reduce((cssString, currentKey) => `${cssString}${[currentKey, `${styles[currentKey]} !important;`].join(': ')}`, '');
 }
 class DxLicense extends SafeHTMLElement {

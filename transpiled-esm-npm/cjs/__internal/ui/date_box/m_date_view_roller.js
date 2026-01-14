@@ -17,7 +17,6 @@ var _size = require("../../../core/utils/size");
 var _convert_location = require("../../ui/scroll_view/utils/convert_location");
 var _scrollable = _interopRequireDefault(require("../scroll_view/scrollable"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DATEVIEW_ROLLER_CLASS = 'dx-dateviewroller';
 const DATEVIEW_ROLLER_ACTIVE_CLASS = 'dx-state-active';
 const DATEVIEW_ROLLER_CURRENT_CLASS = 'dx-dateviewroller-current';
@@ -27,7 +26,7 @@ const DATEVIEW_ROLLER_ITEM_SELECTED_FRAME_CLASS = 'dx-dateview-item-selected-fra
 const DATEVIEW_ROLLER_ITEM_SELECTED_BORDER_CLASS = 'dx-dateview-item-selected-border';
 class DateViewRoller extends _scrollable.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       showScrollbar: 'never',
       useNative: false,
       selectedIndex: 0,

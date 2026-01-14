@@ -1,11 +1,10 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../core/renderer';
 import Widget from '../../core/widget/widget';
 import SliderTooltip from '../../ui/slider/m_slider_tooltip';
 const SLIDER_HANDLE_CLASS = 'dx-slider-handle';
 class SliderHandle extends Widget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: false,
       value: 0,
       tooltip: {

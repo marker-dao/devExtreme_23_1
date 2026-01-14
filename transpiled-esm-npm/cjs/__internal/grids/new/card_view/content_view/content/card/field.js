@@ -7,7 +7,8 @@ exports.Field = exports.CLASSES = void 0;
 var _inferno = require("inferno");
 var _caption = require("./caption");
 var _value_text = require("./value_text");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 const CLASSES = exports.CLASSES = {
   fieldTemplate: 'dx-cardview-field-template',
   overflowHint: 'dx-cardview-overflow-hint'
@@ -28,10 +29,10 @@ class Field extends _inferno.Component {
         "field": this.props.field
       }), 2);
     }
-    return (0, _inferno.createFragment)([(0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _caption.Caption, _extends({
+    return (0, _inferno.createFragment)([(0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _caption.Caption, Object.assign({
       "field": this.props.field,
       "template": this.props.captionTemplate
-    }, this.props.captionProps))), (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _value_text.ValueText, _extends({
+    }, this.props.captionProps))), (0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _value_text.ValueText, Object.assign({
       "fieldHintEnabled": this.props.fieldHintEnabled,
       "field": this.props.field,
       "template": this.props.valueTemplate

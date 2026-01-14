@@ -3,25 +3,26 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.MESSAGE_DATA_KEY = exports.CHAT_MESSAGEBUBBLE_IMAGE_CLASS = exports.CHAT_MESSAGEBUBBLE_ICON_PROHIBITION_CLASS = exports.CHAT_MESSAGEBUBBLE_HAS_IMAGE_CLASS = exports.CHAT_MESSAGEBUBBLE_DELETED_CLASS = exports.CHAT_MESSAGEBUBBLE_CONTENT_CLASS = exports.CHAT_MESSAGEBUBBLE_CLASS = void 0;
+exports.default = exports.MESSAGE_DATA_KEY = exports.CHAT_MESSAGEBUBBLE_IMAGE_CLASS = exports.CHAT_MESSAGEBUBBLE_ICON_PROHIBITION_CLASS = exports.CHAT_MESSAGEBUBBLE_HAS_IMAGE_CLASS = exports.CHAT_MESSAGEBUBBLE_FUNCTIONCALL_CLASS = exports.CHAT_MESSAGEBUBBLE_DELETED_CLASS = exports.CHAT_MESSAGEBUBBLE_CONTENT_CLASS = exports.CHAT_MESSAGEBUBBLE_CLASS = void 0;
 var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
 var _element = require("../../../core/element");
 var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _m_icon = require("../../core/utils/m_icon");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
+var _accordion = _interopRequireDefault(require("../../ui/accordion"));
 var _file_view = _interopRequireDefault(require("../../ui/chat/file_view/file_view"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CHAT_MESSAGEBUBBLE_CLASS = exports.CHAT_MESSAGEBUBBLE_CLASS = 'dx-chat-messagebubble';
 const CHAT_MESSAGEBUBBLE_DELETED_CLASS = exports.CHAT_MESSAGEBUBBLE_DELETED_CLASS = 'dx-chat-messagebubble-deleted';
 const CHAT_MESSAGEBUBBLE_CONTENT_CLASS = exports.CHAT_MESSAGEBUBBLE_CONTENT_CLASS = 'dx-chat-messagebubble-content';
 const CHAT_MESSAGEBUBBLE_ICON_PROHIBITION_CLASS = exports.CHAT_MESSAGEBUBBLE_ICON_PROHIBITION_CLASS = `${_m_icon.ICON_CLASS}-cursorprohibition`;
 const CHAT_MESSAGEBUBBLE_HAS_IMAGE_CLASS = exports.CHAT_MESSAGEBUBBLE_HAS_IMAGE_CLASS = 'dx-has-image';
 const CHAT_MESSAGEBUBBLE_IMAGE_CLASS = exports.CHAT_MESSAGEBUBBLE_IMAGE_CLASS = 'dx-chat-messagebubble-image';
+const CHAT_MESSAGEBUBBLE_FUNCTIONCALL_CLASS = exports.CHAT_MESSAGEBUBBLE_FUNCTIONCALL_CLASS = 'dx-chat-messagebubble-functioncall';
 const MESSAGE_DATA_KEY = exports.MESSAGE_DATA_KEY = 'dxMessageData';
 class MessageBubble extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       isDeleted: false,
       isEdited: false,
       text: '',
@@ -33,12 +34,26 @@ class MessageBubble extends _widget.default {
     $element.addClass(CHAT_MESSAGEBUBBLE_CLASS);
     super._initMarkup();
     this._renderContentContainer();
+    this._renderFunctionCallElement();
     this._renderAttachmentsElement();
     this._updateContent();
+    this._renderFunctionCall();
     this._renderAttachments();
   }
   _renderContentContainer() {
     this._$content = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGEBUBBLE_CONTENT_CLASS).appendTo(this.$element());
+  }
+  _renderFunctionCallElement() {
+    var _this$_$functionCall;
+    const {
+      metadata,
+      isDeleted
+    } = this.option();
+    (_this$_$functionCall = this._$functionCall) === null || _this$_$functionCall === void 0 || _this$_$functionCall.remove();
+    this._$functionCall = undefined;
+    if (metadata !== null && metadata !== void 0 && metadata.functionCall && !isDeleted) {
+      this._$functionCall = (0, _renderer.default)('<div>').addClass(CHAT_MESSAGEBUBBLE_FUNCTIONCALL_CLASS).appendTo(this.$element());
+    }
   }
   _renderAttachmentsElement() {
     var _this$_$attachments;
@@ -89,6 +104,40 @@ class MessageBubble extends _widget.default {
         this._$content.text(text ?? '');
     }
   }
+  _renderFunctionCall() {
+    const {
+      metadata
+    } = this.option();
+    if (!this._$functionCall || !(metadata !== null && metadata !== void 0 && metadata.functionCall)) {
+      return;
+    }
+    this._$functionCall.empty();
+    const {
+      functionCall
+    } = metadata;
+    const accordionItems = [{
+      title: `${_message.default.format('dxChat-functionCallTitle')}`,
+      template: () => {
+        const $content = (0, _renderer.default)('<div>');
+        const $functionName = (0, _renderer.default)('<div>').append((0, _renderer.default)('<strong>').text(`${_message.default.format('dxChat-functionCallLabel')}: `)).append((0, _renderer.default)('<span>').text(functionCall.name));
+        const args = functionCall.arguments || [];
+        const argumentsText = args.length > 0 ? args.map(arg => Object.entries(arg).map(_ref => {
+          let [key, value] = _ref;
+          return `${key}: ${JSON.stringify(value)}`;
+        }).join(', ')).join(', ') : '';
+        const $arguments = (0, _renderer.default)('<div>').append((0, _renderer.default)('<strong>').text(`${_message.default.format('dxChat-argumentsLabel')}: `)).append((0, _renderer.default)('<span>').text(argumentsText));
+        const $result = (0, _renderer.default)('<div>').append((0, _renderer.default)('<strong>').text(`${_message.default.format('dxChat-resultLabel')}: `)).append((0, _renderer.default)('<span>').text(JSON.stringify(functionCall.result)));
+        $content.append($functionName).append($arguments).append($result);
+        return $content;
+      }
+    }];
+    this._createComponent(this._$functionCall, _accordion.default, {
+      dataSource: accordionItems,
+      collapsible: true,
+      multiple: false,
+      selectedIndex: -1
+    });
+  }
   _renderAttachments() {
     const {
       attachments,
@@ -135,6 +184,10 @@ class MessageBubble extends _widget.default {
         break;
       case 'isEdited':
         this._updateMessageData(name, value);
+        break;
+      case 'metadata':
+        this._renderFunctionCallElement();
+        this._renderFunctionCall();
         break;
       case 'onAttachmentDownloadClick':
       case 'attachments':

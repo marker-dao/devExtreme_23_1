@@ -27,7 +27,6 @@ var _m_text_editor = _interopRequireDefault(require("./m_text_editor.clear"));
 var _m_text_editor2 = require("./m_text_editor.label");
 var _m_index = _interopRequireDefault(require("./texteditor_button_collection/m_index"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const TEXTEDITOR_CLASS = exports.TEXTEDITOR_CLASS = 'dx-texteditor';
 const TEXTEDITOR_INPUT_CONTAINER_CLASS = exports.TEXTEDITOR_INPUT_CONTAINER_CLASS = 'dx-texteditor-input-container';
 const TEXTEDITOR_INPUT_CLASS = exports.TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
@@ -61,7 +60,7 @@ class TextEditorBase extends _editor.default {
     super.ctor(element, options);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       // eslint-disable-next-line no-void
       buttons: void 0,
       value: '',
@@ -238,11 +237,14 @@ class TextEditorBase extends _editor.default {
     this._buttonCollection.clean();
     this._disposePendingIndicator();
     this._unobserveLabelContainerResize();
+    super._clean();
     this._$beforeButtonsContainer = null;
     this._$afterButtonsContainer = null;
-    // @ts-expect-error ts-error
+    // @ts-expect-error _$textEditorContainer can be null and undefined
     this._$textEditorContainer = null;
-    super._clean();
+    // @ts-expect-error _$textEditorInputContainer can be null and undefined
+    this._$textEditorInputContainer = null;
+    this._$placeholder = null;
   }
   _createInput() {
     const $input = (0, _renderer.default)('<input>');
@@ -816,6 +818,7 @@ class TextEditorBase extends _editor.default {
     }
   }
   getButton(name) {
+    // @ts-expect-error TextEditorButtonCollection should use generic
     return this._buttonCollection.getButton(name);
   }
   focus() {

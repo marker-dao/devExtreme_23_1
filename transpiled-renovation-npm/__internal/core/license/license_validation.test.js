@@ -7,8 +7,7 @@ var _z_index = require("../../ui/overlay/z_index");
 var _version = require("../../utils/version");
 var _license_validation = require("./license_validation");
 var trialPanel = _interopRequireWildcard(require("./trial_panel.client"));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 _globals.jest.mock('./key', () => ({
   PUBLIC_KEY: {
@@ -453,11 +452,11 @@ _globals.jest.mock('./key', () => ({
   }, {
     token: TOKEN_23_2,
     version: '42.4.0'
-  }])('Trial panel should be displayed if license is outdated (>=1 major for RTM, >=2 major for preview)', _ref10 => {
+  }])('Trial panel should be displayed if license is outdated (>=1 major for RTM, >=2 major for preview)', _ref0 => {
     let {
       token,
       version
-    } = _ref10;
+    } = _ref0;
     (0, _license_validation.validateLicense)(token, version);
     (0, _globals.expect)(trialPanelSpy).toHaveBeenCalledTimes(1);
   });
@@ -473,11 +472,11 @@ _globals.jest.mock('./key', () => ({
   }, {
     token: TOKEN_23_2,
     version: '24.1.abc'
-  }])('Trial panel should not be displayed in previews if the license is for the previous RTM', _ref11 => {
+  }])('Trial panel should not be displayed in previews if the license is for the previous RTM', _ref1 => {
     let {
       token,
       version
-    } = _ref11;
+    } = _ref1;
     (0, _license_validation.validateLicense)(token, version);
     (0, _globals.expect)(trialPanelSpy).not.toHaveBeenCalled();
   });
@@ -508,11 +507,11 @@ _globals.jest.mock('./key', () => ({
   }, {
     token: '3.2.1',
     version: '1.2.3'
-  }])('W0021 error should be logged if license is corrupted/invalid [%#]', _ref12 => {
+  }])('W0021 error should be logged if license is corrupted/invalid [%#]', _ref10 => {
     let {
       token,
       version
-    } = _ref12;
+    } = _ref10;
     (0, _license_validation.validateLicense)(token, version);
     (0, _globals.expect)(_errors.default.log).toHaveBeenCalledWith('W0021');
   });
@@ -570,11 +569,11 @@ _globals.jest.mock('./key', () => ({
   }, {
     token: '3.2.1',
     version: '1.2.0'
-  }])('trial panel should be displayed if license is corrupted/invalid, preview or not', _ref13 => {
+  }])('trial panel should be displayed if license is corrupted/invalid, preview or not', _ref11 => {
     let {
       token,
       version
-    } = _ref13;
+    } = _ref11;
     (0, _license_validation.validateLicense)(token, version);
     (0, _globals.expect)(trialPanelSpy).toHaveBeenCalledTimes(1);
   });

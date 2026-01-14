@@ -13,7 +13,6 @@ var _m_virtual_columns_core = require("./m_virtual_columns_core");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable max-classes-per-file */
 
-const DEFAULT_COLUMN_WIDTH = 50;
 const baseView = Base => class BaseViewVirtualColumnsExtender extends Base {
   _needToSetCellWidths() {
     let result = super._needToSetCellWidths();
@@ -32,19 +31,12 @@ const rowsView = Base => class VirtualColumnsRowsViewExtender extends baseView(B
     this._columnsController.resize();
   }
   _handleScroll(e) {
-    const that = this;
-    const scrollable = this.getScrollable();
-    let {
-      left
-    } = e.scrollOffset;
+    const left = this.normalizeScrollLeft(e.scrollOffset.left);
     this._scrollLeft = left;
     // @ts-expect-error
-    super._handleScroll.apply(that, arguments);
-    if (that.option('rtlEnabled') && scrollable) {
-      left = (0, _size.getWidth)(scrollable.$content()) - (0, _size.getWidth)(scrollable.$element()) - left;
-    }
+    super._handleScroll.apply(this, arguments);
     // @ts-expect-error
-    that._columnsController.setScrollPosition(left, e.event);
+    this._columnsController.setScrollPosition(left, e.event);
   }
   _renderCore(e) {
     if (e !== null && e !== void 0 && e.virtualColumnsScrolling) {
@@ -87,9 +79,6 @@ const columnHeadersView = Base => class VirtualColumnsColumnHeaderViewExtender e
     return deferred;
   }
 };
-const getWidths = function (columns) {
-  return columns.map(column => column.visibleWidth || parseFloat(column.width) || DEFAULT_COLUMN_WIDTH);
-};
 const columns = Base => class VirtualColumnsControllerExtender extends Base {
   init() {
     const that = this;
@@ -112,7 +101,7 @@ const columns = Base => class VirtualColumnsControllerExtender extends Base {
   }
   getBeginPageIndex(position) {
     const visibleColumns = this.getVisibleColumns(undefined, true);
-    const widths = getWidths(visibleColumns);
+    const widths = _m_utils.default.getColumnWidths(visibleColumns);
     let currentPosition = 0;
     for (let index = 0; index < widths.length; index++) {
       if (currentPosition >= position) {
@@ -131,7 +120,7 @@ const columns = Base => class VirtualColumnsControllerExtender extends Base {
   }
   getEndPageIndex(position) {
     const visibleColumns = this.getVisibleColumns(undefined, true);
-    const widths = getWidths(visibleColumns);
+    const widths = _m_utils.default.getColumnWidths(visibleColumns);
     let currentPosition = 0;
     position += this.getTotalWidth();
     for (let index = 0; index < widths.length; index++) {
@@ -169,17 +158,6 @@ const columns = Base => class VirtualColumnsControllerExtender extends Base {
       scrollingTimeout = this.option('scrolling.timeout');
     }
     return scrollingTimeout;
-  }
-  setScrollPosition(position, event) {
-    const scrollingTimeout = this.getScrollingTimeout();
-    if (scrollingTimeout > 0) {
-      clearTimeout(this._changedTimeout);
-      this._changedTimeout = setTimeout(() => {
-        this._setScrollPositionCore(position, event);
-      }, scrollingTimeout);
-    } else {
-      this._setScrollPositionCore(position, event);
-    }
   }
   resize() {
     this._setScrollPositionCore(this._position);
@@ -236,14 +214,14 @@ const columns = Base => class VirtualColumnsControllerExtender extends Base {
     const beginFixedColumnCount = fixedColumns.length ? transparentColumnIndex : 0;
     let beginFixedColumns = visibleColumns.slice(0, beginFixedColumnCount);
     const beginColumns = visibleColumns.slice(beginFixedColumnCount, startIndex);
-    const beginWidth = getWidths(beginColumns).reduce((a, b) => a + b, 0);
+    const beginWidth = _m_utils.default.getColumnWidths(beginColumns).reduce((a, b) => a + b, 0);
     if (!beginWidth) {
       startIndex = 0;
     }
     const endFixedColumnCount = fixedColumns.length ? fixedColumns.length - transparentColumnIndex - 1 : 0;
     let endFixedColumns = visibleColumns.slice(visibleColumns.length - endFixedColumnCount);
     const endColumns = visibleColumns.slice(endIndex, visibleColumns.length - endFixedColumnCount);
-    const endWidth = getWidths(endColumns).reduce((a, b) => a + b, 0);
+    const endWidth = _m_utils.default.getColumnWidths(endColumns).reduce((a, b) => a + b, 0);
     if (!endWidth) {
       endIndex = visibleColumns.length;
     }
@@ -289,6 +267,17 @@ const columns = Base => class VirtualColumnsControllerExtender extends Base {
   }
   isVirtualMode() {
     return (0, _window.hasWindow)() && this.option('scrolling.columnRenderingMode') === 'virtual';
+  }
+  setScrollPosition(position, event) {
+    const scrollingTimeout = this.getScrollingTimeout();
+    if (scrollingTimeout > 0) {
+      clearTimeout(this._changedTimeout);
+      this._changedTimeout = setTimeout(() => {
+        this._setScrollPositionCore(position, event);
+      }, scrollingTimeout);
+    } else {
+      this._setScrollPositionCore(position, event);
+    }
   }
 };
 const virtualColumnsModule = exports.virtualColumnsModule = {

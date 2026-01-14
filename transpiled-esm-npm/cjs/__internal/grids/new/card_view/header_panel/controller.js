@@ -8,7 +8,6 @@ var _renderer = _interopRequireDefault(require("../../../../../core/renderer"));
 var _index = require("../../grid_core/column_chooser/index");
 var _index2 = require("../../grid_core/columns_controller/index");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CLASS = {
   hidden: 'dx-hidden'
 };
@@ -39,7 +38,7 @@ class HeaderPanelController {
       this.columnsController.updateColumns(columns => {
         const newColumns = [...columns];
         newColumns.forEach((oldColumn, index) => {
-          const updatedColumn = _extends({}, oldColumn);
+          const updatedColumn = Object.assign({}, oldColumn);
           if (oldColumn.name === column.name) {
             updatedColumn.visibleIndex = columnAfter.visibleIndex;
             updatedColumn.visible = true;

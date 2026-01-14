@@ -1,8 +1,9 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../../../common/core/animation';
 import { name as clickEventName } from '../../../common/core/events/click';
+import { name as contextMenuEventName } from '../../../common/core/events/contextmenu';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { name as dblclickEvent } from '../../../common/core/events/double_click';
+import holdEvent from '../../../common/core/events/hold';
 import pointerEvents from '../../../common/core/events/pointer';
 import { addNamespace } from '../../../common/core/events/utils';
 import messageLocalization from '../../../common/core/localization/message';
@@ -37,20 +38,20 @@ const ITEM_WITH_CUSTOM_EXPANDER_ICON_CLASS = `${ITEM_CLASS}-with-custom-expander
 const CUSTOM_EXPANDER_ICON_ITEM_CONTAINER_CLASS = `${WIDGET_CLASS}-custom-expander-icon-item-container`;
 const ITEM_WITHOUT_CHECKBOX_CLASS = `${ITEM_CLASS}-without-checkbox`;
 const ITEM_DATA_KEY = `${ITEM_CLASS}-data`;
-const TOGGLE_ITEM_VISIBILITY_CLASS = `${WIDGET_CLASS}-toggle-item-visibility`;
+export const TOGGLE_ITEM_VISIBILITY_CLASS = `${WIDGET_CLASS}-toggle-item-visibility`;
 const CUSTOM_COLLAPSE_ICON_CLASS = `${WIDGET_CLASS}-custom-collapse-icon`;
 const CUSTOM_EXPAND_ICON_CLASS = `${WIDGET_CLASS}-custom-expand-icon`;
 const LOAD_INDICATOR_CLASS = `${WIDGET_CLASS}-loadindicator`;
 const LOAD_INDICATOR_WRAPPER_CLASS = `${WIDGET_CLASS}-loadindicator-wrapper`;
 const TOGGLE_ITEM_VISIBILITY_OPENED_CLASS = `${WIDGET_CLASS}-toggle-item-visibility-opened`;
-const SELECT_ALL_ITEM_CLASS = `${WIDGET_CLASS}-select-all-item`;
+export const SELECT_ALL_ITEM_CLASS = `${WIDGET_CLASS}-select-all-item`;
 const INVISIBLE_STATE_CLASS = 'dx-state-invisible';
 const DISABLED_STATE_CLASS = 'dx-state-disabled';
 const SELECTED_ITEM_CLASS = 'dx-state-selected';
 const EXPAND_EVENT_NAMESPACE = 'dxTreeView_expand';
 const DATA_ITEM_ID = 'data-item-id';
 const ITEM_URL_CLASS = 'dx-item-url';
-const CHECK_BOX_CLASS = 'dx-checkbox';
+export const CHECK_BOX_CLASS = 'dx-checkbox';
 const CHECK_BOX_ICON_CLASS = 'dx-checkbox-icon';
 const ROOT_NODE_CLASS = `${WIDGET_CLASS}-root-node`;
 export const EXPANDER_ICON_STUB_CLASS = `${WIDGET_CLASS}-expander-icon-stub`;
@@ -113,7 +114,7 @@ class TreeViewBase extends HierarchicalCollectionWidget {
       const rootItem = this._getItemData($rootElement.find(`.${ITEM_CLASS}`));
       this._toggleExpandedNestedItems([rootItem], state);
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       enter: this._showCheckboxes() ? select : click,
       space: this._showCheckboxes() ? select : click,
       asterisk: e => {
@@ -159,7 +160,7 @@ class TreeViewBase extends HierarchicalCollectionWidget {
     return WIDGET_CLASS;
   }
   _getDefaultOptions() {
-    const defaultOptions = _extends({}, super._getDefaultOptions(), {
+    const defaultOptions = Object.assign({}, super._getDefaultOptions(), {
       animationEnabled: true,
       dataStructure: 'tree',
       deferRendering: true,
@@ -838,6 +839,18 @@ class TreeViewBase extends HierarchicalCollectionWidget {
   _detachExpandEvent(itemsContainer) {
     eventsEngine.off(itemsContainer, `.${EXPAND_EVENT_NAMESPACE}`, this._itemSelector());
   }
+  _detachHoldEvent(itemsContainer) {
+    const itemSelector = this._itemSelector();
+    // @ts-expect-error ts-error
+    const eventName = addNamespace(holdEvent.name, this.NAME);
+    eventsEngine.off(itemsContainer, eventName, itemSelector);
+  }
+  _detachContextMenuEvent(itemsContainer) {
+    const itemSelector = this._itemSelector();
+    // @ts-expect-error ts-error
+    const eventName = addNamespace(contextMenuEventName, this.NAME);
+    eventsEngine.off(itemsContainer, eventName, itemSelector);
+  }
   _getEventNameByOption(name) {
     const event = name === 'click' ? clickEventName : dblclickEvent;
     return addNamespace(event, EXPAND_EVENT_NAMESPACE);
@@ -1407,9 +1420,9 @@ class TreeViewBase extends HierarchicalCollectionWidget {
   _detachClickEvent(itemsContainer) {
     const {
       clickEventNamespace,
-      itemSelector,
       pointerDownEventNamespace,
-      nodeSelector
+      nodeSelector,
+      itemSelector
     } = this._getItemClickEventData();
     eventsEngine.off(itemsContainer, clickEventNamespace, itemSelector);
     eventsEngine.off(itemsContainer, pointerDownEventNamespace, nodeSelector);

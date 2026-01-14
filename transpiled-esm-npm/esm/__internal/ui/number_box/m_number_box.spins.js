@@ -13,22 +13,33 @@ export default class SpinButtons extends TextEditorButton {
     const {
       editor
     } = this;
-    // @ts-expect-error
-    const eventName = addNamespace(pointer.down, editor.NAME);
+    if (!editor) {
+      return;
+    }
+    const eventName = addNamespace(pointer.down, editor.NAME ?? '');
     const $spinContainerChildren = $spinContainer.children();
     const pointerDownAction = editor._createAction(
-    // @ts-expect-error
-    e => editor._spinButtonsPointerDownHandler(e));
+    // @ts-expect-error Private API
+    e => {
+      var _this$editor;
+      (_this$editor = this.editor) === null || _this$editor === void 0 || _this$editor._spinButtonsPointerDownHandler(e);
+    });
     eventsEngine.off($spinContainer, eventName);
     eventsEngine.on($spinContainer, eventName, e => pointerDownAction({
       event: e
     }));
     SpinButton.getInstance($spinContainerChildren.eq(0)).option('onChange',
-    // @ts-expect-error
-    e => editor._spinUpChangeHandler(e));
+    // @ts-expect-error Private API
+    e => {
+      var _this$editor2;
+      (_this$editor2 = this.editor) === null || _this$editor2 === void 0 || _this$editor2._spinUpChangeHandler(e);
+    });
     SpinButton.getInstance($spinContainerChildren.eq(1)).option('onChange',
-    // @ts-expect-error
-    e => editor._spinDownChangeHandler(e));
+    // @ts-expect-error Private API
+    e => {
+      var _this$editor3;
+      (_this$editor3 = this.editor) === null || _this$editor3 === void 0 || _this$editor3._spinDownChangeHandler(e);
+    });
   }
   _create() {
     const {
@@ -39,13 +50,13 @@ export default class SpinButtons extends TextEditorButton {
     const $spinDown = $('<div>').appendTo($spinContainer);
     const options = this._getOptions();
     this._addToContainer($spinContainer);
-    editor._createComponent($spinUp, SpinButton, extend({
+    editor === null || editor === void 0 || editor._createComponent($spinUp, SpinButton, extend({
       direction: 'up'
     }, options));
-    editor._createComponent($spinDown, SpinButton, extend({
+    editor === null || editor === void 0 || editor._createComponent($spinDown, SpinButton, extend({
       direction: 'down'
     }, options));
-    this._legacyRender(editor.$element(), this._isTouchFriendly(), options.visible);
+    this._legacyRender(editor === null || editor === void 0 ? void 0 : editor.$element(), this._isTouchFriendly(), options.visible);
     return {
       instance: $spinContainer,
       $element: $spinContainer
@@ -56,7 +67,7 @@ export default class SpinButtons extends TextEditorButton {
       editor
     } = this;
     const visible = this._isVisible();
-    const disabled = editor.option('disabled');
+    const disabled = editor === null || editor === void 0 ? void 0 : editor.option('disabled');
     return {
       visible,
       disabled
@@ -67,13 +78,13 @@ export default class SpinButtons extends TextEditorButton {
     const {
       editor
     } = this;
-    return super._isVisible() && editor.option('showSpinButtons');
+    return super._isVisible() && (editor === null || editor === void 0 ? void 0 : editor.option('showSpinButtons'));
   }
   _isTouchFriendly() {
     const {
       editor
     } = this;
-    return editor.option('showSpinButtons') && editor.option('useLargeSpinButtons');
+    return (editor === null || editor === void 0 ? void 0 : editor.option('showSpinButtons')) && (editor === null || editor === void 0 ? void 0 : editor.option('useLargeSpinButtons'));
   }
   // TODO: get rid of it
   _legacyRender($editor, isTouchFriendly, isVisible) {
@@ -88,7 +99,7 @@ export default class SpinButtons extends TextEditorButton {
         editor,
         instance
       } = this;
-      const $editor = editor.$element();
+      const $editor = editor === null || editor === void 0 ? void 0 : editor.$element();
       const isVisible = this._isVisible();
       const isTouchFriendly = this._isTouchFriendly();
       // @ts-expect-error

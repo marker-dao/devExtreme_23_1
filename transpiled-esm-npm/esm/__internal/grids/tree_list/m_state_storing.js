@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 // eslint-disable-next-line max-classes-per-file
 import { stateStoringModule } from '../../grids/grid_core/state_storing/m_state_storing';
 import treeListCore from './m_core';
@@ -17,9 +16,9 @@ const data = Base => class TreeListStateStoringDataExtender extends stateStoring
     return state;
   }
 };
-treeListCore.registerModule('stateStoring', _extends({}, stateStoringModule, {
-  extenders: _extends({}, stateStoringModule.extenders, {
-    controllers: _extends({}, stateStoringModule.extenders.controllers, {
+treeListCore.registerModule('stateStoring', Object.assign({}, stateStoringModule, {
+  extenders: Object.assign({}, stateStoringModule.extenders, {
+    controllers: Object.assign({}, stateStoringModule.extenders.controllers, {
       stateStoring,
       data
     })

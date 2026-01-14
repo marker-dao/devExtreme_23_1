@@ -14,7 +14,6 @@ var _renderer = _interopRequireDefault(require("../../../core/renderer"));
 var _deferred = require("../../../core/utils/deferred");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const SPIN_CLASS = 'dx-numberbox-spin';
 const SPIN_BUTTON_CLASS = 'dx-numberbox-spin-button';
 const SPIN_HOLD_DELAY = 100;
@@ -23,7 +22,7 @@ const POINTERUP_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.up, NUMBE
 const POINTERCANCEL_EVENT_NAME = (0, _index.addNamespace)(_pointer.default.cancel, NUMBER_BOX);
 class SpinButton extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       direction: 'up',
       // @ts-expect-error ts-error
       onChange: null,

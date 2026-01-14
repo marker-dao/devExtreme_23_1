@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { addLastInGroup } from './add_last_in_group';
 const items = [{
@@ -22,17 +21,17 @@ const items = [{
 }];
 describe('addLastInGroup', () => {
   it('should add last in group', () => {
-    expect(addLastInGroup(items)).toEqual([_extends({}, items[0], {
+    expect(addLastInGroup(items)).toEqual([Object.assign({}, items[0], {
       isLastInGroup: false
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       isLastInGroup: true
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       isLastInGroup: true
-    }), _extends({}, items[3], {
+    }), Object.assign({}, items[3], {
       isLastInGroup: false
-    }), _extends({}, items[4], {
+    }), Object.assign({}, items[4], {
       isLastInGroup: true
-    }), _extends({}, items[5], {
+    }), Object.assign({}, items[5], {
       isLastInGroup: true
     })]);
   });

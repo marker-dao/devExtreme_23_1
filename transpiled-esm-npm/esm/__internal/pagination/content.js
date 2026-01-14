@@ -1,10 +1,9 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createComponentVNode, normalizeProps } from "inferno";
 import { InfernoComponent, InfernoEffect } from '../core/r1/runtime/inferno/index';
 import { Widget } from '../core/r1/widget';
 import { createRef as infernoCreateRef } from 'inferno';
-import { registerKeyboardAction } from '../../ui/shared/accessibility';
 import { combineClasses } from '../core/r1/utils/render_utils';
+import { registerKeyboardAction } from '../ui/shared/accessibility';
 import { LIGHT_MODE_CLASS, PAGER_CLASS, PAGINATION_CLASS, PAGINATION_PAGE_INDEXES_CLASS, PAGINATION_PAGES_CLASS } from './common/consts';
 import { KeyboardActionContext } from './common/keyboard_action_context';
 import { PaginationConfigProvider } from './common/pagination_config_provider';
@@ -12,7 +11,7 @@ import { PaginationDefaultProps } from './common/pagination_props';
 import { InfoText } from './info';
 import { PageSizeSelector } from './page_size/selector';
 import { PageIndexSelector } from './pages/page_index_selector';
-export const PaginationContentDefaultProps = _extends({}, PaginationDefaultProps, {
+export const PaginationContentDefaultProps = Object.assign({}, PaginationDefaultProps, {
   infoTextVisible: true,
   isLargeDisplayMode: true
 });
@@ -39,7 +38,7 @@ export class PaginationContent extends InfernoComponent {
     return [new InfernoEffect(this.setRootElementRef, [])];
   }
   getChildContext() {
-    return _extends({}, this.context, {
+    return Object.assign({}, this.context, {
       [KeyboardActionContext.id]: this.getKeyboardAction() || KeyboardActionContext.defaultValue
     });
   }
@@ -194,7 +193,7 @@ export class PaginationContent extends InfernoComponent {
       focusStateEnabled,
       hoverStateEnabled
     } = this.props;
-    const content = normalizeProps(createComponentVNode(2, Widget, _extends({
+    const content = normalizeProps(createComponentVNode(2, Widget, Object.assign({
       "rootElementRef": this.widgetRootElementRef,
       "rtlEnabled": rtlEnabled,
       "classes": this.getClasses(),

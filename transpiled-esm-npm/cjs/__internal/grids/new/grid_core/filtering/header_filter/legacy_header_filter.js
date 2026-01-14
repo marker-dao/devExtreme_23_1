@@ -13,7 +13,7 @@ var _m_header_filter = require("../../../../../grids/grid_core/header_filter/m_h
 var _m_header_filter_core = require("../../../../../grids/grid_core/header_filter/m_header_filter_core");
 var _m_utils2 = _interopRequireDefault(require("../../../../../grids/grid_core/m_utils"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // NOTE: This code moved from old grid_core/header_filter/m_header_filter
+// NOTE: This code moved from old grid_core/header_filter/m_header_filter
 // with minimal possible modifications
 /* eslint-disable
    @typescript-eslint/explicit-function-return-type,
@@ -26,6 +26,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
    @typescript-eslint/explicit-module-boundary-types,
    @typescript-eslint/no-explicit-any,
 */
+
 const getHeaderItemText = (displayValue, column, currentLevel,
 // NOTE: Only text used from header filter options
 headerFilterOptions) => {
@@ -159,7 +160,7 @@ const getDataSourceOptions = (storeLoadAdapter, popupOptions, headerFilterOption
   options.dataSource.postProcess = data => {
     let items = data;
     items = (origPostProcess === null || origPostProcess === void 0 ? void 0 : origPostProcess.call(void 0, items)) || items;
-    _updateSelectedState(items, _extends({}, column, {
+    _updateSelectedState(items, Object.assign({}, column, {
       filterType: popupOptions.filterType,
       filterValues: popupOptions.filterValues
     }));

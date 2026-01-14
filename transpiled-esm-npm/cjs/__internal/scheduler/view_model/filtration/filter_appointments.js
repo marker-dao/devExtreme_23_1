@@ -10,11 +10,10 @@ var _filter_by_intervals = require("./utils/filter_by_intervals/filter_by_interv
 var _get_filter_options = require("./utils/get_filter_options/get_filter_options");
 var _split_by_group_index = require("./utils/split_by_group_index");
 var _split_by_recurrence = require("./utils/split_by_recurrence/split_by_recurrence");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const addDuration = entities => entities.map(entity => _extends({}, entity, {
+const addDuration = entities => entities.map(entity => Object.assign({}, entity, {
   duration: entity.endDateUTC - entity.startDateUTC
 }));
-const saveDatesBeforeSplit = entities => entities.map(entity => _extends({}, entity, {
+const saveDatesBeforeSplit = entities => entities.map(entity => Object.assign({}, entity, {
   datesBeforeSplit: {
     startDateUTC: entity.startDateUTC,
     endDateUTC: entity.endDateUTC

@@ -12,7 +12,8 @@ var _size = require("../../../core/utils/size");
 var _load_indicator = _interopRequireDefault(require("../../../ui/load_indicator"));
 var _scrollable = require("../../ui/scroll_view/scrollable.simulated");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
+// @ts-expect-error ts-error
+
 const SCROLLVIEW_PULLDOWN_REFRESHING_CLASS = 'dx-scrollview-pull-down-loading';
 const SCROLLVIEW_PULLDOWN_READY_CLASS = 'dx-scrollview-pull-down-ready';
 const SCROLLVIEW_PULLDOWN_IMAGE_CLASS = 'dx-scrollview-pull-down-image';
@@ -254,7 +255,7 @@ class SimulatedScrollViewStrategy extends _scrollable.SimulatedStrategy {
     });
   }
   _scrollerOptions(direction) {
-    return _extends({}, super._scrollerOptions(direction), {
+    return Object.assign({}, super._scrollerOptions(direction), {
       $topPocket: this._$topPocket,
       $bottomPocket: this._$bottomPocket,
       $pullDown: this._$pullDown,

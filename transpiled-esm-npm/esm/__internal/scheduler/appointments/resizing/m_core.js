@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { dateUtilsTs } from '../../../core/utils/date';
 import { dateUtils } from '../../../core/utils/m_date';
 const toMs = dateUtils.dateToMilliseconds;
@@ -129,7 +128,7 @@ export const getAppointmentDateRange = options => {
     isAllDay: Boolean(appointmentSettings.info.appointment.allDay),
     isOccupiedAllDay: Boolean(appointmentSettings.allDay)
   };
-  const extendedOptions = _extends({}, options, cellInfo, {
+  const extendedOptions = Object.assign({}, options, cellInfo, {
     appointment,
     relativeAppointmentRect
   });

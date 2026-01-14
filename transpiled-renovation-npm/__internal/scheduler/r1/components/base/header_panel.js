@@ -10,8 +10,7 @@ var _index2 = require("../../../../scheduler/r1/components/templates/index");
 var _index3 = require("../../utils/index");
 var _date_header = require("./date_header");
 var _group_panel = require("./group_panel");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const HeaderPanelDefaultProps = exports.HeaderPanelDefaultProps = _extends({}, _group_panel.GroupPanelDefaultProps, {
+const HeaderPanelDefaultProps = exports.HeaderPanelDefaultProps = Object.assign({}, _group_panel.GroupPanelDefaultProps, {
   isRenderDateHeader: true,
   dateHeaderTemplate: _date_header.DateHeader
 });

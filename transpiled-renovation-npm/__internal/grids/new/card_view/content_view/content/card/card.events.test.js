@@ -3,7 +3,6 @@
 var _inferno = require("inferno");
 var _globals = require("@jest/globals");
 var _card = require("./card");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const createMockCallback = () => ({
   called: false,
   call() {
@@ -71,12 +70,12 @@ const props = {
     (0, _globals.describe)('when allowSelectOnClick = true', () => {
       (0, _globals.it)('should rise it', () => {
         const container = document.createElement('div');
-        const newProps = _extends({}, props, {
+        const newProps = Object.assign({}, props, {
           elementRef: (0, _inferno.createRef)(),
           allowSelectOnClick: true
         });
         // @ts-expect-error
-        (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, newProps))), container);
+        (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, Object.assign({}, newProps))), container);
         const cardElement = container.querySelector(`.${_card.CLASSES.card}`);
         cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('click'));
         (0, _globals.expect)(mockSelectCard.called).toBe(true);
@@ -85,12 +84,12 @@ const props = {
     (0, _globals.describe)('when allowSelectOnClick = false', () => {
       (0, _globals.it)('should not rise it', () => {
         const container = document.createElement('div');
-        const newProps = _extends({}, props, {
+        const newProps = Object.assign({}, props, {
           elementRef: (0, _inferno.createRef)(),
           allowSelectOnClick: false
         });
         // @ts-expect-error
-        (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, newProps))), container);
+        (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, Object.assign({}, newProps))), container);
         const cardElement = container.querySelector(`.${_card.CLASSES.card}`);
         cardElement === null || cardElement === void 0 || cardElement.dispatchEvent(new MouseEvent('click'));
         (0, _globals.expect)(mockSelectCard.called).toBe(false);

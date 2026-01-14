@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../../common/core/localization/message';
 import $ from '../../../../core/renderer';
 import DOMComponent from '../../../core/widget/dom_component';
@@ -10,7 +9,7 @@ class FileView extends DOMComponent {
     this._fileInstances = [];
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       files: [],
       activeStateEnabled: true,
       focusStateEnabled: true,

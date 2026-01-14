@@ -22,7 +22,6 @@ var _ui = _interopRequireDefault(require("../../ui/widget/ui.errors"));
 var _m_dom = _interopRequireDefault(require("../core/utils/m_dom"));
 var _m_popup = _interopRequireDefault(require("../ui/popup/m_popup"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = (0, _window.getWindow)();
 const DX_DIALOG_CLASSNAME = 'dx-dialog';
 const DX_DIALOG_WRAPPER_CLASSNAME = 'dx-dialog-wrapper';
@@ -61,6 +60,7 @@ const getCancelButtonConfig = () => {
   return {};
 };
 const custom = params => {
+  var _popupInstance$$wrapp;
   const {
     buttons,
     dragEnabled,
@@ -84,8 +84,9 @@ const custom = params => {
   const $element = (0, _renderer.default)('<div>').addClass(DX_DIALOG_CLASSNAME).appendTo((0, _view_port.value)());
   const $message = (0, _renderer.default)('<div>').addClass(DX_DIALOG_MESSAGE_CLASSNAME).html(messageMarkup).attr('id', messageId);
   const onContentReady = e => {
+    var _component$$content;
     const component = e.component;
-    component.$content().addClass(DX_DIALOG_CONTENT_CLASSNAME).append($message);
+    (_component$$content = component.$content()) === null || _component$$content === void 0 || _component$$content.addClass(DX_DIALOG_CONTENT_CLASSNAME).append($message);
     if (messageId) {
       component.$overlayContent().attr('aria-labelledby', messageId);
     }
@@ -155,7 +156,7 @@ const custom = params => {
       toolbar: 'bottom',
       location: _devices.default.current().android ? 'after' : 'center',
       widget: 'dxButton',
-      options: _extends({}, configuration, {
+      options: Object.assign({}, configuration, {
         onClick: e => {
           const result = action.execute(e);
           hide(result);
@@ -165,7 +166,7 @@ const custom = params => {
     return buttonItem;
   });
   const popupPosition = position ?? {
-    boundaryOffset: _extends({}, DEFAULT_BOUNDARY_OFFSET)
+    boundaryOffset: Object.assign({}, DEFAULT_BOUNDARY_OFFSET)
   };
   const configuration = {
     // @ts-expect-error animation should be typed correctly in popup.d.ts
@@ -193,7 +194,7 @@ const custom = params => {
     visualContainer: window,
     width
   };
-  const options = _extends({}, configuration, popupOptions, {
+  const options = Object.assign({}, configuration, popupOptions, {
     onHidden: e => {
       var _popupOptions$onHidde;
       (0, _renderer.default)(e.element).remove();
@@ -202,7 +203,7 @@ const custom = params => {
   });
   // @ts-expect-error Incorrect constructor usage
   popupInstance = new _m_popup.default($element, options);
-  popupInstance.$wrapper().addClass(DX_DIALOG_WRAPPER_CLASSNAME).addClass(DX_DIALOG_ROOT_CLASSNAME);
+  (_popupInstance$$wrapp = popupInstance.$wrapper()) === null || _popupInstance$$wrapp === void 0 || _popupInstance$$wrapp.addClass(DX_DIALOG_WRAPPER_CLASSNAME).addClass(DX_DIALOG_ROOT_CLASSNAME);
   const dialog = {
     show,
     hide
@@ -218,7 +219,7 @@ const alert = (messageHtml, title, showTitle) => {
     title: titleValue,
     messageHtml,
     showTitle,
-    buttons: [_extends({}, DEFAULT_BUTTON_OPTIONS, getApplyButtonConfig())],
+    buttons: [Object.assign({}, DEFAULT_BUTTON_OPTIONS, getApplyButtonConfig())],
     dragEnabled: showTitle
   };
   return custom(options).show();
@@ -231,10 +232,10 @@ const confirm = (messageHtml, title, showTitle) => {
     title: titleValue,
     messageHtml,
     showTitle,
-    buttons: [_extends({
+    buttons: [Object.assign({
       text: _message.default.format('Yes'),
       onClick: () => true
-    }, getApplyButtonConfig()), _extends({
+    }, getApplyButtonConfig()), Object.assign({
       text: _message.default.format('No'),
       onClick: () => false
     }, getCancelButtonConfig())],

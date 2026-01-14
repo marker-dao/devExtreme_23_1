@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../../common/core/localization/message';
 import $ from '../../../../core/renderer';
 import Button from '../../../../ui/button';
@@ -12,7 +11,7 @@ export const CHAT_FILE_SIZE_CLASS = 'dx-chat-file-size';
 const CHAT_FILE_DOWNLOAD_BUTTON_CLASS = 'dx-chat-file-download-button';
 class File extends DOMComponent {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: true,
       focusStateEnabled: true,
       hoverStateEnabled: true,

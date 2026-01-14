@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/prefer-for-of */
 /* eslint-disable max-depth */
@@ -113,7 +112,7 @@ function generateRowCells(_ref) {
     }
     const cellInfo = {
       gridCell: cellData.cellSourceData,
-      pdfCell: _extends({}, pdfCell, style)
+      pdfCell: Object.assign({}, pdfCell, style)
     };
     if (rowType === 'header') {
       const cellMerging = dataProvider.getCellMerging(rowIndex, cellIndex);
@@ -155,13 +154,13 @@ function getBaseTableStyle() {
   return defaultStyles.base;
 }
 function getPdfCellStyle(column, rowType, cellStyle) {
-  const styles = _extends({}, defaultStyles.base, defaultStyles[rowType]);
+  const styles = Object.assign({}, defaultStyles.base, defaultStyles[rowType]);
   const alignment = rowType === 'header' ? column.alignment : cellStyle.alignment;
   if (alignment) {
     styles.alignment = alignment;
   }
   if (cellStyle.bold && rowType !== 'header') {
-    styles.font = _extends({}, styles.font, {
+    styles.font = Object.assign({}, styles.font, {
       style: 'bold'
     });
   }

@@ -1,8 +1,7 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
+import messageLocalization from '../../common/core/localization/message';
 import $ from '../../core/renderer';
 import dateUtils from '../../core/utils/date';
 import { extend } from '../../core/utils/extend';
-import { isPlainObject } from '../../core/utils/type';
 import { formatDates, getFormatType } from './appointments/m_text_utils';
 import { getDeltaTime } from './appointments/resizing/get_delta_time';
 import { VERTICAL_VIEW_TYPES } from './constants';
@@ -96,22 +95,16 @@ const subscribes = {
     this.hideAppointmentTooltip();
   },
   createFormattedDateText(appointment, targetedAppointmentRaw, format) {
-    const targetedAppointment = _extends({}, appointment, targetedAppointmentRaw);
+    const targetedAppointment = Object.assign({}, appointment, targetedAppointmentRaw);
     const adapter = new AppointmentAdapter(targetedAppointment, this._dataAccessors);
     // pull out time zone converting from appointment adapter for knockout (T947938)
     const startDate = targetedAppointment.displayStartDate || this.timeZoneCalculator.createDate(adapter.startDate, 'toGrid');
     const endDate = targetedAppointment.displayEndDate || this.timeZoneCalculator.createDate(adapter.endDate, 'toGrid');
     const formatType = format ?? getFormatType(startDate, endDate, adapter.allDay, this.currentView.type !== 'month');
     return {
-      text: adapter.text,
+      text: adapter.text || messageLocalization.format('dxScheduler-noSubject'),
       formatDate: formatDates(startDate, endDate, formatType)
     };
-  },
-  _createAppointmentTitle(data) {
-    if (isPlainObject(data)) {
-      return data.text;
-    }
-    return String(data);
   },
   getResizableAppointmentArea(options) {
     const {

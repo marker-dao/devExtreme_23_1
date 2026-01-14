@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 export const cropByVirtualScreen = (entities, _ref) => {
   let {
     isVirtualScrolling,
@@ -17,7 +16,7 @@ export const cropByVirtualScreen = (entities, _ref) => {
       const top = Math.max(screen.top, item.top);
       const width = Math.min(screen.right, right) - left;
       const height = Math.min(screen.bottom, bottom) - top;
-      acc.push(_extends({}, item, {
+      acc.push(Object.assign({}, item, {
         left,
         width,
         top,

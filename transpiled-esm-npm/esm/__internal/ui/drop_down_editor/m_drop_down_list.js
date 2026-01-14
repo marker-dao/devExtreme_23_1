@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { addNamespace } from '../../../common/core/events/utils';
 import messageLocalization from '../../../common/core/localization/message';
@@ -33,7 +32,7 @@ class DropDownList extends DropDownEditor {
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   _supportedKeys() {
     const parentSupportedKeys = super._supportedKeys();
-    return _extends({}, parentSupportedKeys, {
+    return Object.assign({}, parentSupportedKeys, {
       tab(e) {
         if (this._allowSelectItemByTab()) {
           this._saveValueChangeEvent(e);
@@ -68,7 +67,7 @@ class DropDownList extends DropDownEditor {
     this.option('value', value);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), DataExpressionMixin._dataExpressionDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), DataExpressionMixin._dataExpressionDefaultOptions(), {
       displayValue: undefined,
       searchEnabled: false,
       searchMode: 'contains',
@@ -413,7 +412,7 @@ class DropDownList extends DropDownEditor {
     return this._$list ? this._$list.find(LIST_ITEM_SELECTOR) : $();
   }
   _popupConfig() {
-    return _extends({}, super._popupConfig(), {
+    return Object.assign({}, super._popupConfig(), {
       templatesRenderAsynchronously: false,
       autoResizeEnabled: false,
       // @ts-expect-error ts-error

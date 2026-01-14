@@ -1,10 +1,9 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createVNode, createComponentVNode } from "inferno";
 import { BaseInfernoComponent } from '../../../../core/r1/runtime/inferno/index';
 import { PublicTemplate } from '../../../../scheduler/r1/components/templates/index';
 import { combineClasses } from '../../../../core/r1/utils/render_utils';
 import { GroupPanelCellDefaultProps } from './group_panel_props';
-export const GroupPanelHorizontalCellDefaultProps = _extends({}, GroupPanelCellDefaultProps, {
+export const GroupPanelHorizontalCellDefaultProps = Object.assign({}, GroupPanelCellDefaultProps, {
   isFirstGroupCell: false,
   isLastGroupCell: false,
   colSpan: 1

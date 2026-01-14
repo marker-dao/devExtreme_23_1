@@ -1,6 +1,5 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { splitByCondition } from './split_by_condition';
-const addEmptyCollector = entities => entities.map(entity => _extends({}, entity, {
+const addEmptyCollector = entities => entities.map(entity => Object.assign({}, entity, {
   items: [],
   isCompact: false
 }));
@@ -14,7 +13,7 @@ const groupByOccupation = (entities, cells, maxLevel) => entities.reduce((result
   result[entity.cellIndex].push(entity);
   for (let i = entity.cellIndex + 1; i <= entity.endCellIndex; i += 1) {
     if (entity.level >= maxLevel) {
-      result[i].push(_extends({}, entity, {
+      result[i].push(Object.assign({}, entity, {
         cellIndex: i,
         endCellIndex: i,
         startDateUTC: cells[i].min,
@@ -43,7 +42,7 @@ export const addCollectorByLevel = (entities, _ref) => {
     const [free, collected] = splitByCondition(cellEntities, item => item.level < maxLevel);
     result.push(...addEmptyCollector(free));
     if (collected.length > 0) {
-      result.push(_extends({}, collected[0], {
+      result.push(Object.assign({}, collected[0], {
         items: collected,
         isCompact
       }));

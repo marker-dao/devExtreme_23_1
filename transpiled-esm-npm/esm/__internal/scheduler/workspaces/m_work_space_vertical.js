@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { formatWeekdayAndDay } from '../../scheduler/r1/utils/index';
 import SchedulerWorkSpaceIndicator from './m_work_space_indicator';
 class SchedulerWorkspaceVertical extends SchedulerWorkSpaceIndicator {
@@ -7,7 +6,7 @@ class SchedulerWorkspaceVertical extends SchedulerWorkSpaceIndicator {
   }
   generateRenderOptions() {
     const options = super.generateRenderOptions();
-    return _extends({}, options, {
+    return Object.assign({}, options, {
       isGenerateTimePanelData: true
     });
   }

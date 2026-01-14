@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { locate, move } from '../../../common/core/animation/translator';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { end as dragEventEnd, move as dragEventMove, start as dragEventStart } from '../../../common/core/events/drag';
@@ -34,7 +33,7 @@ const SIDE_BORDER_WIDTH_STYLES = {
 };
 class Resizable extends DOMComponent {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       handles: 'all',
       // NOTE: does not affect proportional resize
       step: '1',
@@ -227,7 +226,7 @@ class Resizable extends DOMComponent {
     return Math.min(value, this[`_${directionName}MaxOffset`] ?? Infinity);
   }
   _fitDeltaProportionally(delta) {
-    let fittedDelta = _extends({}, delta);
+    let fittedDelta = Object.assign({}, delta);
     const size = this._elementSize;
     const {
       minWidth,

@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConfigProviderDefaultProps = exports.ConfigProvider = void 0;
 var _index = require("../../core/r1/runtime/inferno/index");
 var _config_context = require("./config_context");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-unsafe-return */ /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 const ConfigProviderDefaultProps = exports.ConfigProviderDefaultProps = {};
 class ConfigProvider extends _index.BaseInfernoComponent {
   constructor() {
@@ -28,7 +30,7 @@ class ConfigProvider extends _index.BaseInfernoComponent {
     }
   }
   getChildContext() {
-    return _extends({}, this.context, {
+    return Object.assign({}, this.context, {
       [_config_context.ConfigContext.id]: this.config || _config_context.ConfigContext.defaultValue
     });
   }

@@ -1,6 +1,7 @@
-import { current as currentTheme } from '../../../../../ui/themes';
+import { current as currentTheme, isCompact } from '../../../../../ui/themes';
 const COMPACT_THEME_APPOINTMENT_DEFAULT_HEIGHT = 18;
 const APPOINTMENT_DEFAULT_HEIGHT = 20;
+const DAY_VIEW_APPOINTMENT_MIN_HEIGHT = 12;
 const APPOINTMENT_DEFAULT_HORIZONTAL_WIDTH = 40;
 const APPOINTMENT_DEFAULT_VERTICAL_WIDTH = 50;
 const APPOINTMENT_MIN_HEIGHT = 35;
@@ -8,30 +9,39 @@ const APPOINTMENT_MIN_WIDTH = 40;
 const TIMELINE_APPOINTMENT_DEFAULT_HEIGHT = 60;
 const ADAPTIVE_APPOINTMENT_DEFAULT_WIDTH = 30; // used for vertical view
 // TODO get rid of depending from themes
-const isCompactTheme = () => (currentTheme() || '').split('.').pop() === 'compact';
-const getMinAppointmentHeightByTheme = () => isCompactTheme() ? COMPACT_THEME_APPOINTMENT_DEFAULT_HEIGHT : APPOINTMENT_DEFAULT_HEIGHT;
-export const getMinAppointmentSize = _ref => {
-  let {
+const getMinAppointmentHeightByTheme = () => isCompact(currentTheme()) ? COMPACT_THEME_APPOINTMENT_DEFAULT_HEIGHT : APPOINTMENT_DEFAULT_HEIGHT;
+export const getMinAppointmentSize = options => {
+  const {
     isTimelineView,
-    isAdaptivityEnabled
-  } = _ref;
+    isAdaptivityEnabled,
+    isMonthView,
+    isAllDayAppointment
+  } = options;
   if (isAdaptivityEnabled) {
     return {
       width: ADAPTIVE_APPOINTMENT_DEFAULT_WIDTH,
       height: ADAPTIVE_APPOINTMENT_DEFAULT_WIDTH
     };
   }
+  if (isTimelineView) {
+    return {
+      width: APPOINTMENT_MIN_WIDTH,
+      height: APPOINTMENT_MIN_HEIGHT
+    };
+  }
+  const width = APPOINTMENT_MIN_WIDTH;
+  const height = isMonthView || isAllDayAppointment ? getMinAppointmentHeightByTheme() : DAY_VIEW_APPOINTMENT_MIN_HEIGHT;
   return {
-    width: APPOINTMENT_MIN_WIDTH,
-    height: isTimelineView ? APPOINTMENT_MIN_HEIGHT : getMinAppointmentHeightByTheme()
+    width,
+    height
   };
 };
-export const getDefaultAppointmentSize = _ref2 => {
+export const getDefaultAppointmentSize = _ref => {
   let {
     isTimelineView,
     isAdaptivityEnabled,
     viewOrientation
-  } = _ref2;
+  } = _ref;
   if (isAdaptivityEnabled) {
     return {
       width: ADAPTIVE_APPOINTMENT_DEFAULT_WIDTH,

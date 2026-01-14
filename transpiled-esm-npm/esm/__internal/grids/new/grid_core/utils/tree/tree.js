@@ -1,9 +1,8 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { extend } from '../../../../../core/utils/m_extend';
 import { isPlainObject } from '../../../../../core/utils/m_type';
 export const shallowCopyTree = tree => {
   if (isPlainObject(tree)) {
-    return _extends({}, tree);
+    return Object.assign({}, tree);
   }
   if (Array.isArray(tree)) {
     return [...tree];

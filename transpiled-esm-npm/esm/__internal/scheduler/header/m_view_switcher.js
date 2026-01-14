@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { isFluent } from '../../../ui/themes';
 import { formatViews, getViewName } from './m_utils';
 const ClASS = {
@@ -24,7 +23,7 @@ export const getTabViewSwitcher = (header, item) => {
   const isVisible = isViewSwitcherVisible(views);
   // @ts-expect-error
   const stylingMode = isFluent() ? 'outlined' : 'contained';
-  return _extends({
+  return Object.assign({
     widget: 'dxButtonGroup',
     locateInMenu: 'auto',
     location: 'after',
@@ -54,7 +53,7 @@ export const getDropDownViewSwitcher = (header, item) => {
     views
   } = getViewsAndSelectedView(header);
   const isVisible = isViewSwitcherVisible(views);
-  return _extends({
+  return Object.assign({
     widget: 'dxDropDownButton',
     locateInMenu: 'never',
     location: 'after',

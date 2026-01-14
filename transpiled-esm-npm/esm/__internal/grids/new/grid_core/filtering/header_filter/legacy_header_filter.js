@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 // NOTE: This code moved from old grid_core/header_filter/m_header_filter
 // with minimal possible modifications
 /* eslint-disable
@@ -152,7 +151,7 @@ export const getDataSourceOptions = (storeLoadAdapter, popupOptions, headerFilte
   options.dataSource.postProcess = data => {
     let items = data;
     items = (origPostProcess === null || origPostProcess === void 0 ? void 0 : origPostProcess.call(this, items)) || items;
-    _updateSelectedState(items, _extends({}, column, {
+    _updateSelectedState(items, Object.assign({}, column, {
       filterType: popupOptions.filterType,
       filterValues: popupOptions.filterValues
     }));

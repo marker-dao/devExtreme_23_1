@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import $ from '../../../../core/renderer';
 import DOMComponent from '../../../core/widget/dom_component';
 import ChatTextArea from '../../../ui/chat/message_box/chat_text_area';
@@ -9,7 +8,7 @@ export const TYPING_END_DELAY = 2000;
 const ESCAPE_KEY = 'escape';
 class MessageBox extends DOMComponent {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       activeStateEnabled: true,
       focusStateEnabled: true,
       hoverStateEnabled: true,

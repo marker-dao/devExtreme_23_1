@@ -1,0 +1,20 @@
+/**
+* DevExtreme (esm/__internal/ui/list/__tests__/__mock__/model/list_item.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+const CLASSES = {
+  stateDisabled: 'dx-state-disabled'
+};
+export class ListItemModel {
+  constructor(root) {
+    this.root = root;
+    this.isDisabled = (root === null || root === void 0 ? void 0 : root.classList.contains(CLASSES.stateDisabled)) ?? false;
+  }
+  getElement() {
+    return this.root;
+  }
+}

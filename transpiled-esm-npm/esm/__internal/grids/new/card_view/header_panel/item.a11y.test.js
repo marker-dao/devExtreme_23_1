@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode, normalizeProps } from "inferno";
 import { describe, expect, it } from '@jest/globals';
 import { Item } from '../../../../grids/new/card_view/header_panel/item';
@@ -10,7 +9,7 @@ const CLASSES = {
 };
 const setup = props => {
   const rootElement = document.createElement('div');
-  render(normalizeProps(createComponentVNode(2, Item, _extends({}, props))), rootElement);
+  render(normalizeProps(createComponentVNode(2, Item, Object.assign({}, props))), rootElement);
   return rootElement;
 };
 const getItemRoot = element => element.querySelector(`.${CLASSES.itemRoot}`);

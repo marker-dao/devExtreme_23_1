@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable
   @typescript-eslint/explicit-function-return-type,
@@ -42,7 +41,7 @@ export class ContentView extends ContentViewBase {
     });
   }
   getProps() {
-    return computed(() => _extends({}, this.getBaseProps(), {
+    return computed(() => Object.assign({}, this.getBaseProps(), {
       contentProps: {
         items: this.items.value,
         kbnEnabled: this.keyboardNavigationController.enabled.value,

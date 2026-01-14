@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../../core/component_registrator';
 import $ from '../../../core/renderer';
 import { noop } from '../../../core/utils/common';
@@ -225,7 +224,7 @@ class SchedulerTimeline extends SchedulerWorkSpace {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   generateRenderOptions(argument) {
     const options = super.generateRenderOptions(true);
-    return _extends({}, options, {
+    return Object.assign({}, options, {
       isGenerateWeekDaysHeaderData: this._needRenderWeekHeader(),
       getDateForHeaderText: timelineWeekUtils.getDateForHeaderText
     });
@@ -327,7 +326,7 @@ class SchedulerTimeline extends SchedulerWorkSpace {
         const text = formatWeekdayAndDay(currentDate);
         if (cellTemplate) {
           const templateOptions = {
-            model: _extends({
+            model: Object.assign({
               text,
               date: new Date(currentDate)
             }, this._getGroupsForDateHeaderTemplate(templateIndex, colSpan)),

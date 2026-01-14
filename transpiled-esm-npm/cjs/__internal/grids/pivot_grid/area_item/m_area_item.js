@@ -14,7 +14,6 @@ var _style = require("../../../../core/utils/style");
 var _type = require("../../../../core/utils/type");
 var _scroll = require("../../../core/utils/scroll");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const PIVOTGRID_EXPAND_CLASS = 'dx-expand';
 const getRealElementWidth = function (element) {
   let width = 0;
@@ -498,7 +497,7 @@ class AreaItem {
     }
     const rtlEnabled = this.option('rtlEnabled');
     const areaName = this._getAreaName();
-    const scrollablePos = _extends({}, pos, {
+    const scrollablePos = Object.assign({}, pos, {
       left: rtlEnabled && (areaName === 'column' || areaName === 'data') ? this._getMaxLeftOffset(scrollable) - pos.left : pos.left
     });
     const memoizeScrollTo = this._getMemoizeScrollTo();

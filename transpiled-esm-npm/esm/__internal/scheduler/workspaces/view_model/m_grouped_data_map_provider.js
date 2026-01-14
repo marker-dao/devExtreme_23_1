@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import dateUtils from '../../../../core/utils/date';
 import { dateUtilsTs } from '../../../core/utils/date';
 import { isDateAndTimeView } from '../../../scheduler/r1/utils/index';
@@ -102,7 +101,7 @@ export class GroupedDataMapProvider {
         // NOTE: If this is appointment's render call
         // we should shift the real cellData dates by viewOffset
         // to find correct cell indexes.
-        const cellData = isAppointmentRender ? _extends({}, originCellData, {
+        const cellData = isAppointmentRender ? Object.assign({}, originCellData, {
           startDate: dateUtilsTs.addOffsets(cell.cellData.startDate, -viewOffset),
           endDate: dateUtilsTs.addOffsets(cell.cellData.endDate, -viewOffset)
         }) : originCellData;

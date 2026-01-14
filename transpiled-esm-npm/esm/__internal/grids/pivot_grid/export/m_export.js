@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import localizationNumber from '../../../../common/core/localization/number';
 import { Deferred, when } from '../../../../core/utils/deferred';
 import { extend } from '../../../../core/utils/extend';
@@ -245,7 +244,7 @@ class DataProvider {
     const dataFieldStyles = [];
     if (dataFields.length) {
       dataFields.forEach(dataField => {
-        dataFieldStyles.push(_extends({}, dataItemStyle, {
+        dataFieldStyles.push(Object.assign({}, dataItemStyle, {
           format: dataField.format,
           dataType: this.getCellDataType(dataField)
         }));

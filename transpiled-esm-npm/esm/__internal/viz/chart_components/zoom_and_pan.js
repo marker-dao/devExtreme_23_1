@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable spellcheck/spell-checker */
 /* eslint-disable @stylistic/no-mixed-operators */
 /* eslint-disable no-bitwise */
@@ -30,6 +29,7 @@ const SCROLL_BAR_MOVE_EVENT_NAME = `dxc-scroll-move${EVENTS_NS}`;
 const SCROLL_BAR_END_EVENT_NAME = `dxc-scroll-end${EVENTS_NS}`;
 const GESTURE_TIMEOUT = 300;
 const MIN_DRAG_DELTA = 5;
+export const SCROLL_PREVENTION_TIMEOUT = 500;
 const _min = Math.min;
 const _max = Math.max;
 const _abs = Math.abs;
@@ -97,7 +97,7 @@ function zoomAxes(e, axes, getRange, zoom, params, onlyAxisToNotify) {
     const {
       stopInteraction,
       result
-    } = axisZoom(axis, onlyAxisToNotify, getRange(_extends({
+    } = axisZoom(axis, onlyAxisToNotify, getRange(Object.assign({
       scale,
       translator,
       axis
@@ -120,6 +120,7 @@ export default {
   init() {
     const chart = this;
     const renderer = this._renderer;
+    let lastWheelTimer;
     function getAxesCopy(zoomAndPan, actionField) {
       let axes = [];
       const {
@@ -307,12 +308,22 @@ export default {
     function calcOffsetForDrag(e, actionData, coordField) {
       return e.offset[coordField] - actionData.offset[coordField];
     }
+    function setLastWheelTimer() {
+      clearTimeout(lastWheelTimer);
+      // eslint-disable-next-line no-restricted-globals
+      lastWheelTimer = setTimeout(() => {
+        lastWheelTimer = undefined;
+      }, SCROLL_PREVENTION_TIMEOUT);
+    }
     function preventDefaults(e) {
+      let stopChartHandler = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
       if (e.cancelable !== false) {
         e.preventDefault();
         e.stopPropagation();
       }
-      chart._stopCurrentHandling();
+      if (stopChartHandler) {
+        chart._stopCurrentHandling();
+      }
     }
     const zoomAndPan = {
       dragStartHandler(e) {
@@ -539,11 +550,17 @@ export default {
             coord: rotated ? coords.y : coords.x
           }, chart.getArgumentAxis());
         }
+        const isPanningAvailable = targetAxes ? isAxisAvailablePanning(targetAxes) : zoomAndPan.panningVisualRangeEnabled();
         if (axesZoomed) {
           chart._requestChange(['VISUAL_RANGE']);
-          if (targetAxes && isAxisAvailablePanning(targetAxes) || !targetAxes && zoomAndPan.panningVisualRangeEnabled()) {
+          if (isPanningAvailable) {
             preventDefaults(e); // T249548
+            setLastWheelTimer();
           }
+        }
+        if ((!axesZoomed || !isPanningAvailable) && lastWheelTimer) {
+          preventDefaults(e, false);
+          setLastWheelTimer();
         }
       },
       cleanup() {

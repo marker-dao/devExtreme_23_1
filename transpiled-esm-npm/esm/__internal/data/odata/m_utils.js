@@ -182,7 +182,7 @@ const ajaxOptionsForRequest = function (protocolVersion, request) {
 };
 export const sendRequest = (protocolVersion, request, options) => {
   const {
-    deserializeDates,
+    processDatesAsUtc,
     fieldTypes,
     countOnly,
     isPaged
@@ -192,7 +192,7 @@ export const sendRequest = (protocolVersion, request, options) => {
   const ajaxOptions = ajaxOptionsForRequest(protocolVersion, request, options);
   ajax.sendRequest(ajaxOptions).always((obj, textStatus) => {
     const transformOptions = {
-      deserializeDates,
+      processDatesAsUtc,
       fieldTypes
     };
     const tuple = interpretJsonFormat(obj, textStatus, transformOptions, ajaxOptions);
@@ -355,13 +355,13 @@ const transformTypes = function (obj) {
       // @ts-expect-error
       const {
         fieldTypes,
-        deserializeDates
+        processDatesAsUtc
       } = options;
       const canBeGuid = !fieldTypes || fieldTypes[key] !== 'String';
       if (canBeGuid && GUID_REGEX.test(value)) {
         obj[key] = new Guid(value);
       }
-      if (deserializeDates !== false) {
+      if (processDatesAsUtc !== false) {
         if (VERBOSE_DATE_REGEX.exec(value)) {
           // @ts-expect-error
           const date = new Date(Number(RegExp.$1) + RegExp.$2 * 60 * 1000);
@@ -376,7 +376,7 @@ const transformTypes = function (obj) {
 const serializeDate = date => `datetime'${formatISO8601(date, true, true)}'`;
 const serializeString = value => `'${value.replace(/'/g, '\'\'')}'`;
 export const serializePropName = propName => propName instanceof EdmLiteral ? propName.valueOf() : propName.replace(/\./g, '/');
-const serializeValueV4 = value => {
+const serializeValueV4 = (value, fieldType) => {
   if (value instanceof Date) {
     return formatISO8601(value, false, false);
   }
@@ -384,11 +384,11 @@ const serializeValueV4 = value => {
     return value.valueOf();
   }
   if (Array.isArray(value)) {
-    return `[${value.map(item => serializeValueV4(item)).join(',')}]`;
+    return `[${value.map(item => serializeValueV4(item, fieldType)).join(',')}]`;
   }
-  return serializeValueV2(value);
+  return serializeValueV2(value, fieldType);
 };
-const serializeValueV2 = value => {
+const serializeValueV2 = (value, fieldType) => {
   if (value instanceof Date) {
     return serializeDate(value);
   }
@@ -398,18 +398,21 @@ const serializeValueV2 = value => {
   if (value instanceof EdmLiteral) {
     return value.valueOf();
   }
+  if (fieldType && ['Date', 'DateTimeOffset'].includes(fieldType)) {
+    return value;
+  }
   if (typeof value === 'string') {
     return serializeString(value);
   }
   return String(value);
 };
-export const serializeValue = (value, protocolVersion) => {
+export const serializeValue = (value, protocolVersion, fieldType) => {
   switch (protocolVersion) {
     case 2:
     case 3:
-      return serializeValueV2(value);
+      return serializeValueV2(value, fieldType);
     case 4:
-      return serializeValueV4(value);
+      return serializeValueV4(value, fieldType);
     default:
       throw errors.Error('E4002');
   }
@@ -430,7 +433,9 @@ export const keyConverters = {
   Guid: value => value instanceof Guid ? value : new Guid(value),
   Boolean: value => !!value,
   Single: value => value instanceof EdmLiteral ? value : new EdmLiteral(`${value}f`),
-  Decimal: value => value instanceof EdmLiteral ? value : new EdmLiteral(`${value}m`)
+  Decimal: value => value instanceof EdmLiteral ? value : new EdmLiteral(`${value}m`),
+  DateTimeOffset: value => value,
+  Date: value => value
 };
 export const convertPrimitiveValue = (type, value) => {
   if (value === null) return null;

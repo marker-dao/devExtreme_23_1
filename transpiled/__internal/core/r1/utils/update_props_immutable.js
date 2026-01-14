@@ -6,8 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.updatePropsImmutable = void 0;
 var _data = require("../../../../core/utils/data");
 var _type = require("../../../../core/utils/type");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-const cloneObjectValue = value => Array.isArray(value) ? [...value] : _extends({}, value);
+const cloneObjectValue = value => Array.isArray(value) ? [...value] : Object.assign({}, value);
 const cloneObjectProp = (value, prevValue, fullNameParts) => {
   const result = fullNameParts.length > 0 && prevValue && value !== prevValue ? cloneObjectValue(prevValue) : cloneObjectValue(value);
   const name = fullNameParts[0];

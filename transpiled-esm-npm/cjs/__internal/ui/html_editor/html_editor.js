@@ -31,7 +31,8 @@ var _html_sanitizer = require("../../ui/html_editor/utils/html_sanitizer");
 var _m_utils = require("../../ui/text_box/m_utils.scroll");
 var _aiDialog = _interopRequireDefault(require("./ui/aiDialog"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } // @ts-expect-error ts-error
+// @ts-expect-error ts-error
+
 const QUILL_CONTAINER_CLASS = 'dx-quill-container';
 const QUILL_CLIPBOARD_CLASS = 'ql-clipboard';
 const HTML_EDITOR_CLASS = 'dx-htmleditor';
@@ -47,7 +48,7 @@ class HtmlEditor extends _editor.default {
     } = (0, _config.default)();
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const stylingMode = editorStylingMode || 'outlined';
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       // @ts-expect-error undefined is not allowed
       aiIntegration: null,
       allowSoftLineBreak: false,
@@ -508,7 +509,7 @@ class HtmlEditor extends _editor.default {
           } = this.option();
           if (currentValue !== previousValue) {
             this._setSubmitValue(currentValue);
-            super._optionChanged(_extends({}, args, {
+            super._optionChanged(Object.assign({}, args, {
               [name]: currentValue
             }));
           }

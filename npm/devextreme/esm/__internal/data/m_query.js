@@ -1,0 +1,15 @@
+/**
+* DevExtreme (esm/__internal/data/m_query.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { queryImpl } from '../../common/data/query_implementation';
+const query = function () {
+  const impl = Array.isArray(arguments[0]) ? 'array' : 'remote';
+  // @ts-expect-error
+  return queryImpl[impl].apply(this, arguments);
+};
+export default query;

@@ -32,7 +32,6 @@ var _calendarRangeSelection = _interopRequireDefault(require("./calendar.range.s
 var _calendarSingleSelection = _interopRequireDefault(require("./calendar.single.selection.strategy"));
 var _calendar2 = _interopRequireDefault(require("./calendar.views"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CALENDAR_CLASS = 'dx-calendar';
 const CALENDAR_BODY_CLASS = 'dx-calendar-body';
 const CALENDAR_CELL_CLASS = 'dx-calendar-cell';
@@ -72,7 +71,7 @@ class Calendar extends _editor.default {
     return `.${CALENDAR_CELL_CLASS}`;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       activeStateEnabled: true,
       currentDate: new Date(),
@@ -109,7 +108,7 @@ class Calendar extends _editor.default {
     }]);
   }
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       rightArrow(e) {
         e.preventDefault();
         if ((0, _index.isCommandKeyPressed)(e)) {
@@ -716,7 +715,7 @@ class Calendar extends _editor.default {
       _todayDate: todayDate
     } = this.option();
     const disabledDates = (0, _type.isFunction)(disabledDatesOption) ? this._injectComponent(disabledDatesOption.bind(this)) : disabledDatesOption;
-    return _extends({}, this._selectionStrategy.getViewOptions(), {
+    return Object.assign({}, this._selectionStrategy.getViewOptions(), {
       date,
       min: this._getMinDate(),
       max: this._getMaxDate(),
@@ -748,7 +747,7 @@ class Calendar extends _editor.default {
     }
   }
   _injectComponent(func) {
-    return params => func(_extends({}, params, {
+    return params => func(Object.assign({}, params, {
       component: this
     }));
   }

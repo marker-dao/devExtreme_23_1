@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable max-classes-per-file */
 import { name as clickEventName } from '../../../../common/core/events/click';
 import eventsEngine from '../../../../common/core/events/core/events_engine';
@@ -67,7 +66,7 @@ function getStringState(state) {
 const mixinWidget = headerFilterMixin(sortingMixin(columnStateMixin(Widget)));
 export class FieldChooserBase extends mixinWidget {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       allowFieldDragging: true,
       applyChangesMode: 'instantly',
       state: null,

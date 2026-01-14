@@ -12,7 +12,6 @@ var _type = require("../../../core/utils/type");
 var _swatch_container = _interopRequireDefault(require("../../core/utils/swatch_container"));
 var _m_window = _interopRequireDefault(require("../../core/utils/m_window"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = _m_window.default.getWindow();
 const OVERLAY_POSITION_ALIASES = exports.OVERLAY_POSITION_ALIASES = {
   top: {
@@ -145,7 +144,9 @@ class OverlayPositionController {
     if (this._shouldRenderContentInitialPosition) {
       this._renderContentInitialPosition();
     } else {
-      (0, _translator.move)(this._$content, this._visualPosition);
+      if (this._$content) {
+        (0, _translator.move)(this._$content, this._visualPosition);
+      }
       this.detectVisualPositionChange();
     }
   }
@@ -165,14 +166,25 @@ class OverlayPositionController {
     const positionStyle = useFixed ? 'fixed' : 'absolute';
     (_this$_$wrapper = this._$wrapper) === null || _this$_$wrapper === void 0 || _this$_$wrapper.css('position', positionStyle);
   }
+  clean() {
+    this._$root = undefined;
+    this._$content = undefined;
+    this._$wrapper = undefined;
+    this._$markupContainer = undefined;
+    this._$visualContainer = undefined;
+  }
   _updateVisualPositionValue() {
     this._previousVisualPosition = this._visualPosition;
-    this._visualPosition = (0, _translator.locate)(this._$content);
+    if (this._$content) {
+      this._visualPosition = (0, _translator.locate)(this._$content);
+    }
   }
   _renderContentInitialPosition() {
     var _this$_$wrapper2, _this$_$wrapper3, _this$_$wrapper4;
     this._renderBoundaryOffset();
-    (0, _translator.resetPosition)(this._$content);
+    if (this._$content) {
+      (0, _translator.resetPosition)(this._$content);
+    }
     const wrapperOverflow = ((_this$_$wrapper2 = this._$wrapper) === null || _this$_$wrapper2 === void 0 ? void 0 : _this$_$wrapper2.css('overflow')) ?? '';
     (_this$_$wrapper3 = this._$wrapper) === null || _this$_$wrapper3 === void 0 || _this$_$wrapper3.css('overflow', 'hidden');
     if (!this._properties._skipContentPositioning) {
@@ -242,7 +254,7 @@ class OverlayPositionController {
   }
   _positionToObject(position) {
     if (isPositionAlignment(position)) {
-      const configuration = _extends({}, OVERLAY_POSITION_ALIASES[position]);
+      const configuration = Object.assign({}, OVERLAY_POSITION_ALIASES[position]);
       return configuration;
     }
     return position;

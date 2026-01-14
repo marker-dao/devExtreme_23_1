@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode } from "inferno";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseInfernoComponent } from '../../core/r1/runtime/inferno/index';
@@ -7,7 +6,7 @@ import { DomComponentWrapper } from '../../core/r1/dom_component_wrapper';
 import { EditorLabelDefaultProps } from '../editors/common/editor_label_props';
 import { EditorDefaultProps } from '../editors/common/editor_props';
 import { EditorStateDefaultProps } from '../editors/common/editor_state_props';
-export const NumberBoxDefaultProps = _extends({}, EditorDefaultProps, EditorStateDefaultProps, EditorLabelDefaultProps, {
+export const NumberBoxDefaultProps = Object.assign({}, EditorDefaultProps, EditorStateDefaultProps, EditorLabelDefaultProps, {
   placeholder: '',
   hoverStateEnabled: true,
   searchEnabled: false,

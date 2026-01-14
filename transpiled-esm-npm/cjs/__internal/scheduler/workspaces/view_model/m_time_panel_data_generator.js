@@ -10,8 +10,7 @@ var _math = require("../../../core/utils/math");
 var _index = require("../../../scheduler/r1/utils/index");
 const _excluded = ["allDay", "startDate", "endDate", "groups", "groupIndex", "isFirstGroupCell", "isLastGroupCell", "index"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const toMs = _date.default.dateToMilliseconds;
 class TimePanelDataGenerator {
   constructor(_viewDataGenerator) {
@@ -85,7 +84,7 @@ class TimePanelDataGenerator {
         usualCellIndex += 1;
       }
       const timeIndex = (index - allDayRowsCount) % rowCountInGroup;
-      return _extends({}, restCellProps, {
+      return Object.assign({}, restCellProps, {
         startDate,
         allDay,
         highlighted,

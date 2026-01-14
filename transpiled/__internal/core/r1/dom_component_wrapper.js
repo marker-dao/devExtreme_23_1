@@ -10,8 +10,8 @@ var _get_updated_options = require("../../core/r1/utils/get_updated_options");
 var _extend = require("../../../core/utils/extend");
 var _config_context = require("./config_context");
 const _excluded = ["componentProps", "componentType", "templateNames"];
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const normalizeProps = props => Object.keys(props).reduce((accumulator, key) => {
   if (props[key] !== undefined) {
     accumulator[key] = props[key];
@@ -40,7 +40,7 @@ class DomComponentWrapper extends _index.InfernoComponent {
     return _config_context.ConfigContext.defaultValue;
   }
   render() {
-    return normalizeProps((0, _inferno.createVNode)(1, "div", this.props.componentProps.className, null, 1, _extends({}, this.getRestAttributes()), null, this.widgetRef));
+    return normalizeProps((0, _inferno.createVNode)(1, "div", this.props.componentProps.className, null, 1, Object.assign({}, this.getRestAttributes()), null, this.widgetRef));
   }
   componentWillUpdate(nextProps, nextState, context) {
     super.componentWillUpdate(nextProps, nextState, context);

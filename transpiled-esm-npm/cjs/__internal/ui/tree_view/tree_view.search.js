@@ -10,13 +10,12 @@ var _search_box_controller = _interopRequireDefault(require("../../ui/collection
 var _m_text_box = _interopRequireDefault(require("../../ui/text_box/m_text_box"));
 var _tree_view = _interopRequireDefault(require("../../ui/tree_view/tree_view.base"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const TREEVIEW_CLASS_PREFIX = exports.TREEVIEW_CLASS_PREFIX = 'dx-treeview';
 const TREEVIEW_NODE_CONTAINER_CLASS = 'dx-treeview-node-container';
 _search_box_controller.default.setEditorClass(_m_text_box.default);
 class TreeViewSearch extends _tree_view.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       searchValue: '',
       searchEnabled: false,
       searchEditorOptions: {}
@@ -117,7 +116,7 @@ class TreeViewSearch extends _tree_view.default {
       searchMode = 'contains',
       searchExpr
     } = this.option();
-    return _extends({}, super._getDataAdapterOptions(), {
+    return Object.assign({}, super._getDataAdapterOptions(), {
       searchValue,
       searchMode,
       searchExpr
@@ -175,10 +174,44 @@ class TreeViewSearch extends _tree_view.default {
     if (isSelectAllEnabled && items.length) {
       return this._getNodeContainer();
     }
-    if (this._scrollable && isSearchMode) {
-      return (0, _renderer.default)(this._scrollable.content());
+    if (this.getScrollable() && isSearchMode) {
+      return (0, _renderer.default)(this.getScrollable().content());
     }
     return super._itemContainer();
+  }
+  _applyToAllItemContainers(callback) {
+    if (this.getScrollable()) {
+      callback((0, _renderer.default)(this.getScrollable().content()));
+    }
+    const nodeContainer = this._getNodeContainer();
+    if (nodeContainer.length) {
+      callback(nodeContainer);
+    }
+    callback(this.$element());
+  }
+  _attachClickEvent() {
+    if (this._selectAllEnabled()) {
+      this._applyToAllItemContainers(itemsContainer => {
+        this._detachClickEvent(itemsContainer);
+      });
+    }
+    super._attachClickEvent();
+  }
+  _attachHoldEvent() {
+    if (this._selectAllEnabled()) {
+      this._applyToAllItemContainers(itemsContainer => {
+        this._detachHoldEvent(itemsContainer);
+      });
+    }
+    super._attachHoldEvent();
+  }
+  _attachContextMenuEvent() {
+    if (this._selectAllEnabled()) {
+      this._applyToAllItemContainers(itemsContainer => {
+        this._detachContextMenuEvent(itemsContainer);
+      });
+    }
+    super._attachContextMenuEvent();
   }
   _addWidgetClass() {
     this.$element().addClass(this._widgetClass());

@@ -59,3 +59,135 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e
     (0, _globals.expect)(cardView.option('pager.showPageSizeSelector')).toBe(false);
   });
 });
+(0, _globals.describe)('absence of multiple re-render', () => {
+  const dataSource = [{
+    id: 1,
+    name: 'Audi'
+  }, {
+    id: 2,
+    name: 'BMW'
+  }];
+  const columns = [{
+    dataField: 'id',
+    caption: 'ID'
+  }, {
+    dataField: 'name',
+    caption: 'Name'
+  }];
+  (0, _globals.describe)('card template', () => {
+    (0, _globals.it)('should render each card template not more than once per sort update', () => {
+      const cardTemplate = _globals.jest.fn();
+      const container = document.createElement('div');
+      const cardView = new _widget.CardView(container, {
+        keyExpr: 'id',
+        dataSource,
+        columns,
+        cardTemplate,
+        sorting: {
+          mode: 'single'
+        }
+      });
+      cardTemplate.mockClear();
+      cardView.columnOption('name', 'sortOrder', 'asc');
+      (0, _globals.expect)(cardTemplate).toBeCalledTimes(dataSource.length);
+    });
+    (0, _globals.it)('should render each card template not more than once per filter update', () => {
+      const cardTemplate = _globals.jest.fn();
+      const container = document.createElement('div');
+      const cardView = new _widget.CardView(container, {
+        keyExpr: 'id',
+        dataSource,
+        cardTemplate,
+        columns: [...columns.slice(0, -1), {
+          dataField: 'name',
+          caption: 'Name',
+          filterValues: ['Audi']
+        }],
+        headerFilter: {
+          visible: true
+        }
+      });
+      cardTemplate.mockClear();
+      cardView.clearFilter();
+      (0, _globals.expect)(cardTemplate).toBeCalledTimes(dataSource.length);
+    });
+    (0, _globals.it)('should render each card template not more than once per search update', () => {
+      const cardTemplate = _globals.jest.fn();
+      const searchValue = 'audi';
+      const foundCards = dataSource.filter(card => card.name.toLowerCase().includes(searchValue));
+      const calledTimes = foundCards.length + dataSource.length;
+      const container = document.createElement('div');
+      const cardView = new _widget.CardView(container, {
+        keyExpr: 'id',
+        dataSource,
+        columns,
+        cardTemplate,
+        searchPanel: {
+          visible: true
+        }
+      });
+      cardTemplate.mockClear();
+      cardView.searchByText(searchValue);
+      cardView.searchByText('');
+      (0, _globals.expect)(cardTemplate).toBeCalledTimes(calledTimes);
+    });
+  });
+  (0, _globals.describe)('card footer template', () => {
+    (0, _globals.it)('should render each card template not more than once per sort update', () => {
+      const cardFooterTemplate = _globals.jest.fn();
+      const container = document.createElement('div');
+      const cardView = new _widget.CardView(container, {
+        keyExpr: 'id',
+        dataSource,
+        columns,
+        cardFooterTemplate,
+        sorting: {
+          mode: 'single'
+        }
+      });
+      cardFooterTemplate.mockClear();
+      cardView.columnOption('name', 'sortOrder', 'asc');
+      (0, _globals.expect)(cardFooterTemplate).toBeCalledTimes(dataSource.length);
+    });
+    (0, _globals.it)('should render each card template not more than once per filter update', () => {
+      const cardFooterTemplate = _globals.jest.fn();
+      const container = document.createElement('div');
+      const cardView = new _widget.CardView(container, {
+        keyExpr: 'id',
+        dataSource,
+        cardFooterTemplate,
+        columns: [...columns.slice(0, -1), {
+          dataField: 'name',
+          caption: 'Name',
+          filterValues: ['Audi']
+        }],
+        headerFilter: {
+          visible: true
+        }
+      });
+      cardFooterTemplate.mockClear();
+      cardView.clearFilter();
+      (0, _globals.expect)(cardFooterTemplate).toBeCalledTimes(dataSource.length);
+    });
+    (0, _globals.it)('should render each card template not more than once per search update', () => {
+      const cardFooterTemplate = _globals.jest.fn();
+      const searchValue = 'audi';
+      const foundCards = dataSource.filter(card => card.name.toLowerCase().includes(searchValue));
+      const calledTimes = foundCards.length + dataSource.length;
+      const container = document.createElement('div');
+      const cardView = new _widget.CardView(container, {
+        keyExpr: 'id',
+        dataSource,
+        columns,
+        cardFooterTemplate,
+        searchPanel: {
+          visible: true
+        }
+      });
+      cardFooterTemplate.mockClear();
+      cardView.searchByText(searchValue);
+      cardView.searchByText('');
+      (0, _globals.expect)(cardFooterTemplate).toBeCalledTimes(calledTimes);
+    });
+  });
+});

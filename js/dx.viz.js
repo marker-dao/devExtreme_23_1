@@ -1,9 +1,9 @@
 /*!
 * DevExtreme (dx.viz.js)
-* Version: 25.2.3
-* Build date: Tue Dec 16 2025
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
 *
-* Copyright (c) 2012 - 2025 Developer Express Inc. ALL RIGHTS RESERVED
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
@@ -2476,8 +2476,8 @@ var _m_option_manager = __webpack_require__(59830);
 
 
 exports.version = exports.fullVersion = void 0;
-const version = exports.version = '25.2.3';
-const fullVersion = exports.fullVersion = '25.2.3';
+const version = exports.version = '26.1.0';
+const fullVersion = exports.fullVersion = '26.1.0';
 
 /***/ }),
 
@@ -12674,6 +12674,14 @@ const dxChart = _m_advanced_chart.AdvancedChart.inherit({
   },
   _handleSeriesDataUpdated() {
     const viewport = new _range.Range();
+    this._argumentAxes.forEach(axis => {
+      if (Array.isArray(axis._majorTicks)) {
+        axis._majorTicks.forEach(tick => tick.removeLabel && tick.removeLabel());
+      }
+      if (Array.isArray(axis._minorTicks)) {
+        axis._minorTicks.forEach(tick => tick.removeLabel && tick.removeLabel());
+      }
+    });
     this.series.forEach(s => {
       viewport.addRange(s.getArgumentRange());
     });
@@ -18314,6 +18322,9 @@ function readThemeMarker() {
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let result;
   try {
+    if (!(window !== null && window !== void 0 && window.getComputedStyle)) {
+      return null;
+    }
     result = window.getComputedStyle(element.get(0)).fontFamily;
     if (!result) {
       return null;
@@ -20651,7 +20662,7 @@ class RequestDispatcher {
     // @ts-expect-error
     this._withCredentials = options.withCredentials;
     // @ts-expect-error
-    this._deserializeDates = options.deserializeDates;
+    this._processDatesAsUtc = options.processDatesAsUtc ?? options.deserializeDates ?? false;
     // @ts-expect-error
     this._filterToLower = options.filterToLower;
   }
@@ -20669,7 +20680,7 @@ class RequestDispatcher {
       // @ts-expect-error
       withCredentials: this._withCredentials,
       // @ts-expect-error
-      deserializeDates: this._deserializeDates
+      processDatesAsUtc: this._processDatesAsUtc
     });
   }
   get version() {
@@ -25846,17 +25857,17 @@ function exportDataGrid(options) {
           const isTextHeightGreaterThanRect = jsPDFDocument.getTextDimensions(sourceRect.sourceCellInfo.text).h > topRect.h;
           const isTextTopAlignment = ((_sourceRect$sourceCel9 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel9 === void 0 ? void 0 : _sourceRect$sourceCel9.verticalAlign) === 'top';
           if (isTextHeightGreaterThanRect || !isTextTopAlignment) {
-            var _sourceRect$sourceCel10, _sourceRect$sourceCel11, _sourceRect$sourceCel12;
+            var _sourceRect$sourceCel0, _sourceRect$sourceCel1, _sourceRect$sourceCel10;
             let topTextTopOffset;
             let bottomTextTopOffset;
-            if (((_sourceRect$sourceCel10 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel10 === void 0 ? void 0 : _sourceRect$sourceCel10.verticalAlign) === 'top') {
+            if (((_sourceRect$sourceCel0 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel0 === void 0 ? void 0 : _sourceRect$sourceCel0.verticalAlign) === 'top') {
               topTextTopOffset = sourceRect.sourceCellInfo._textTopOffset ?? 0;
               bottomTextTopOffset = topTextTopOffset - topRect.h;
-            } else if (((_sourceRect$sourceCel11 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel11 === void 0 ? void 0 : _sourceRect$sourceCel11.verticalAlign) === 'middle') {
+            } else if (((_sourceRect$sourceCel1 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel1 === void 0 ? void 0 : _sourceRect$sourceCel1.verticalAlign) === 'middle') {
               const offset = sourceRect.sourceCellInfo._textTopOffset ?? 0;
               topTextTopOffset = offset + (sourceRect.y + sourceRect.h / 2) - (topRect.y + topRect.h / 2);
               bottomTextTopOffset = offset + (sourceRect.y + sourceRect.h / 2) - (bottomRect.y + bottomRect.h / 2);
-            } else if (((_sourceRect$sourceCel12 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel12 === void 0 ? void 0 : _sourceRect$sourceCel12.verticalAlign) === 'bottom') {
+            } else if (((_sourceRect$sourceCel10 = sourceRect.sourceCellInfo) === null || _sourceRect$sourceCel10 === void 0 ? void 0 : _sourceRect$sourceCel10.verticalAlign) === 'bottom') {
               topTextTopOffset = sourceRect.y + sourceRect.h - (topRect.y + topRect.h);
               bottomTextTopOffset = sourceRect.y + sourceRect.h - (bottomRect.y + bottomRect.h);
             }
@@ -26195,7 +26206,7 @@ const ajaxOptionsForRequest = function (protocolVersion, request) {
 };
 const sendRequest = (protocolVersion, request, options) => {
   const {
-    deserializeDates,
+    processDatesAsUtc,
     fieldTypes,
     countOnly,
     isPaged
@@ -26205,7 +26216,7 @@ const sendRequest = (protocolVersion, request, options) => {
   const ajaxOptions = ajaxOptionsForRequest(protocolVersion, request, options);
   _ajax.default.sendRequest(ajaxOptions).always((obj, textStatus) => {
     const transformOptions = {
-      deserializeDates,
+      processDatesAsUtc,
       fieldTypes
     };
     const tuple = interpretJsonFormat(obj, textStatus, transformOptions, ajaxOptions);
@@ -26369,13 +26380,13 @@ const transformTypes = function (obj) {
       // @ts-expect-error
       const {
         fieldTypes,
-        deserializeDates
+        processDatesAsUtc
       } = options;
       const canBeGuid = !fieldTypes || fieldTypes[key] !== 'String';
       if (canBeGuid && GUID_REGEX.test(value)) {
         obj[key] = new _guid.default(value);
       }
-      if (deserializeDates !== false) {
+      if (processDatesAsUtc !== false) {
         if (VERBOSE_DATE_REGEX.exec(value)) {
           // @ts-expect-error
           const date = new Date(Number(RegExp.$1) + RegExp.$2 * 60 * 1000);
@@ -26391,7 +26402,7 @@ const serializeDate = date => `datetime'${formatISO8601(date, true, true)}'`;
 const serializeString = value => `'${value.replace(/'/g, '\'\'')}'`;
 const serializePropName = propName => propName instanceof EdmLiteral ? propName.valueOf() : propName.replace(/\./g, '/');
 exports.serializePropName = serializePropName;
-const serializeValueV4 = value => {
+const serializeValueV4 = (value, fieldType) => {
   if (value instanceof Date) {
     return formatISO8601(value, false, false);
   }
@@ -26399,11 +26410,11 @@ const serializeValueV4 = value => {
     return value.valueOf();
   }
   if (Array.isArray(value)) {
-    return `[${value.map(item => serializeValueV4(item)).join(',')}]`;
+    return `[${value.map(item => serializeValueV4(item, fieldType)).join(',')}]`;
   }
-  return serializeValueV2(value);
+  return serializeValueV2(value, fieldType);
 };
-const serializeValueV2 = value => {
+const serializeValueV2 = (value, fieldType) => {
   if (value instanceof Date) {
     return serializeDate(value);
   }
@@ -26413,18 +26424,21 @@ const serializeValueV2 = value => {
   if (value instanceof EdmLiteral) {
     return value.valueOf();
   }
+  if (fieldType && ['Date', 'DateTimeOffset'].includes(fieldType)) {
+    return value;
+  }
   if (typeof value === 'string') {
     return serializeString(value);
   }
   return String(value);
 };
-const serializeValue = (value, protocolVersion) => {
+const serializeValue = (value, protocolVersion, fieldType) => {
   switch (protocolVersion) {
     case 2:
     case 3:
-      return serializeValueV2(value);
+      return serializeValueV2(value, fieldType);
     case 4:
-      return serializeValueV4(value);
+      return serializeValueV4(value, fieldType);
     default:
       throw _errors.errors.Error('E4002');
   }
@@ -26447,7 +26461,9 @@ const keyConverters = exports.keyConverters = {
   Guid: value => value instanceof _guid.default ? value : new _guid.default(value),
   Boolean: value => !!value,
   Single: value => value instanceof EdmLiteral ? value : new EdmLiteral(`${value}f`),
-  Decimal: value => value instanceof EdmLiteral ? value : new EdmLiteral(`${value}m`)
+  Decimal: value => value instanceof EdmLiteral ? value : new EdmLiteral(`${value}m`),
+  DateTimeOffset: value => value,
+  Date: value => value
 };
 const convertPrimitiveValue = (type, value) => {
   if (value === null) return null;
@@ -30160,7 +30176,7 @@ const _excluded = ["x", "y", "canvas", "offsetX", "offsetY", "offset"];
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-else-return */
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const math = Math;
 const round = math.round;
 const max = math.max;
@@ -31691,7 +31707,7 @@ const ODataStore = _abstract_store.default.inherit({
       withCredentials: this._requestDispatcher._withCredentials,
       expand: loadOptions === null || loadOptions === void 0 ? void 0 : loadOptions.expand,
       requireTotalCount: loadOptions === null || loadOptions === void 0 ? void 0 : loadOptions.requireTotalCount,
-      deserializeDates: this._requestDispatcher._deserializeDates,
+      processDatesAsUtc: this._requestDispatcher._processDatesAsUtc,
       fieldTypes: this._fieldTypes
     };
     // NOTE: For AppBuilder, do not remove
@@ -35645,8 +35661,7 @@ var _license_validation = _interopRequireWildcard(__webpack_require__(93391));
 var _m_template_manager = _interopRequireDefault(__webpack_require__(66298));
 var _m_common = __webpack_require__(39315);
 var _component = __webpack_require__(65020);
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class DOMComponent extends _component.Component {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38035,7 +38050,7 @@ var _type = __webpack_require__(11528);
 var _abstract_store = _interopRequireDefault(__webpack_require__(77735));
 const _excluded = ["items"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const CANCELED_TOKEN = exports.CANCELED_TOKEN = 'canceled';
 const isPending = deferred => deferred.state() === 'pending';
 exports.isPending = isPending;
@@ -47340,7 +47355,7 @@ var _inferno = __webpack_require__(76231);
 var _shallow_equals = __webpack_require__(1270);
 const _excluded = ["isEqual"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const isDxElementWrapper = element => !!element.toArray;
 const buildTemplateArgs = (model, template) => {
   const args = {
@@ -53582,8 +53597,7 @@ var transformEvents = _interopRequireWildcard(__webpack_require__(37008));
 var _extend = __webpack_require__(52576);
 var _type = __webpack_require__(11528);
 var _utils = __webpack_require__(98013);
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 /* eslint-disable spellcheck/spell-checker */
 /* eslint-disable @stylistic/no-mixed-operators */
 /* eslint-disable no-bitwise */
@@ -55756,8 +55770,7 @@ var _utils = __webpack_require__(98013);
 var circularIndicators = _interopRequireWildcard(__webpack_require__(31735));
 var _circular_range_container = _interopRequireDefault(__webpack_require__(98120));
 var _common = __webpack_require__(80586);
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable operator-assignment */
 /* eslint-disable spellcheck/spell-checker */
@@ -63515,8 +63528,7 @@ var _type = __webpack_require__(11528);
 var _utils = __webpack_require__(98013);
 var _area_series = __webpack_require__(38525);
 var scatterSeries = _interopRequireWildcard(__webpack_require__(39294));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 /* eslint-disable prefer-rest-params */
 /* eslint-disable @stylistic/no-mixed-operators */
 /* eslint-disable @typescript-eslint/prefer-for-of */
@@ -74617,8 +74629,7 @@ var _parse_utils = __webpack_require__(40650);
 var _utils = __webpack_require__(98013);
 var _range = __webpack_require__(8315);
 var _translator2d = __webpack_require__(50912);
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prefer-rest-params */
@@ -77198,8 +77209,7 @@ var _date2 = _interopRequireDefault(__webpack_require__(45508));
 var iteratorUtils = _interopRequireWildcard(__webpack_require__(26044));
 var _m_type = __webpack_require__(39918);
 var _globalize = _interopRequireDefault(__webpack_require__(87626));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable spellcheck/spell-checker */
 
@@ -78868,7 +78878,7 @@ const compileCriteria = (() => {
     notcontains: createStringFuncFormatter('not contains')
   });
   const compileBinary = criteria => {
-    var _fieldTypes;
+    var _fieldTypes, _fieldTypes2;
     criteria = (0, _m_utils.normalizeBinaryCriterion)(criteria);
     const op = criteria[1];
     const fieldName = criteria[0];
@@ -78886,7 +78896,7 @@ const compileCriteria = (() => {
     if ((_fieldTypes = fieldTypes) !== null && _fieldTypes !== void 0 && _fieldTypes[fieldName]) {
       value = (0, _m_utils2.convertPrimitiveValue)(fieldTypes[fieldName], value);
     }
-    return formatter((0, _m_utils2.serializePropName)(fieldName), (0, _m_utils2.serializeValue)(value, protocolVersion));
+    return formatter((0, _m_utils2.serializePropName)(fieldName), (0, _m_utils2.serializeValue)(value, protocolVersion, (_fieldTypes2 = fieldTypes) === null || _fieldTypes2 === void 0 ? void 0 : _fieldTypes2[fieldName]));
   };
   const compileUnary = criteria => {
     const op = criteria[0];
@@ -79023,7 +79033,7 @@ const createODataQueryAdapter = queryOptions => {
         jsonp: queryOptions.jsonp,
         withCredentials: queryOptions.withCredentials,
         countOnly: _countQuery,
-        deserializeDates: queryOptions.deserializeDates,
+        processDatesAsUtc: queryOptions.processDatesAsUtc,
         fieldTypes: queryOptions.fieldTypes,
         isPaged: isFinite(_take)
       });
@@ -80660,8 +80670,7 @@ Object.defineProperty(exports, "isLoadResultObject", ({
   }
 }));
 var _m_custom_store = _interopRequireWildcard(__webpack_require__(12764));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 
 /***/ }),
 
@@ -81291,20 +81300,20 @@ const implementationsMap = exports.implementationsMap = {
     return elementSizeHelper('innerWidth', ...args);
   },
   setInnerWidth: function () {
-    for (var _len10 = arguments.length, args = new Array(_len10), _key10 = 0; _key10 < _len10; _key10++) {
-      args[_key10] = arguments[_key10];
+    for (var _len0 = arguments.length, args = new Array(_len0), _key0 = 0; _key0 < _len0; _key0++) {
+      args[_key0] = arguments[_key0];
     }
     return elementSizeHelper('innerWidth', ...args);
   },
   getInnerHeight: function () {
-    for (var _len11 = arguments.length, args = new Array(_len11), _key11 = 0; _key11 < _len11; _key11++) {
-      args[_key11] = arguments[_key11];
+    for (var _len1 = arguments.length, args = new Array(_len1), _key1 = 0; _key1 < _len1; _key1++) {
+      args[_key1] = arguments[_key1];
     }
     return elementSizeHelper('innerHeight', ...args);
   },
   setInnerHeight: function () {
-    for (var _len12 = arguments.length, args = new Array(_len12), _key12 = 0; _key12 < _len12; _key12++) {
-      args[_key12] = arguments[_key12];
+    for (var _len10 = arguments.length, args = new Array(_len10), _key10 = 0; _key10 < _len10; _key10++) {
+      args[_key10] = arguments[_key10];
     }
     return elementSizeHelper('innerHeight', ...args);
   }
@@ -84600,8 +84609,7 @@ var _emitter_registrator = _interopRequireDefault(__webpack_require__(81411));
 var _index = __webpack_require__(98834);
 var iteratorUtils = _interopRequireWildcard(__webpack_require__(21274));
 var _math = __webpack_require__(50254);
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const DX_PREFIX = 'dx';
 const TRANSFORM = 'transform';
@@ -87546,6 +87554,10 @@ const defaultMessages = exports.defaultMessages = {
     "dxChat-fileViewLabel": "File list",
     "dxChat-downloadButtonLabel": "Download file {0}",
     "dxChat-fileLimitReachedWarning": "You selected too many files. Select no more than {0} files and retry.",
+    "dxChat-functionCallTitle": "function called",
+    "dxChat-functionCallLabel": "Function Called",
+    "dxChat-argumentsLabel": "Arguments",
+    "dxChat-resultLabel": "Result",
     "dxColorView-ariaRed": "Red",
     "dxColorView-ariaGreen": "Green",
     "dxColorView-ariaBlue": "Blue",
@@ -94315,7 +94327,7 @@ var _themes = __webpack_require__(52071);
 var _overlay = _interopRequireDefault(__webpack_require__(79384));
 const _excluded = ["src"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 // STYLE loadPanel
 const LOADPANEL_CLASS = 'dx-loadpanel';
 const LOADPANEL_WRAPPER_CLASS = 'dx-loadpanel-wrapper';
@@ -95946,8 +95958,7 @@ var _m_window = _interopRequireDefault(__webpack_require__(14470));
 var _widget = _interopRequireDefault(__webpack_require__(89275));
 var _overlay_position_controller = __webpack_require__(46967);
 var zIndexPool = _interopRequireWildcard(__webpack_require__(27869));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const ready = _ready_callbacks.default.add;
 const window = _m_window.default.getWindow();
@@ -96405,8 +96416,8 @@ class Overlay extends _widget.default {
       this._hidingDeferred.resolve();
     };
     const startCallback = (element, config) => {
-      var _this$_$content10;
-      (_this$_$content10 = this._$content) === null || _this$_$content10 === void 0 || _this$_$content10.css('pointerEvents', 'none');
+      var _this$_$content0;
+      (_this$_$content0 = this._$content) === null || _this$_$content0 === void 0 || _this$_$content0.css('pointerEvents', 'none');
       startHideAnimation.call(this, element, config);
       this._hideAnimationProcessing = true;
     };
@@ -96450,9 +96461,9 @@ class Overlay extends _widget.default {
     return this._hidingDeferred.promise();
   }
   _forceFocusLost() {
-    var _this$_$content11;
+    var _this$_$content1;
     const activeElement = _dom_adapter.default.getActiveElement();
-    const shouldResetActiveElement = !!((_this$_$content11 = this._$content) !== null && _this$_$content11 !== void 0 && _this$_$content11.find(activeElement).length);
+    const shouldResetActiveElement = !!((_this$_$content1 = this._$content) !== null && _this$_$content1 !== void 0 && _this$_$content1.find(activeElement).length);
     if (shouldResetActiveElement) {
       _m_dom.default.resetActiveElement();
     }
@@ -96494,9 +96505,9 @@ class Overlay extends _widget.default {
       (0, _visibility_change.triggerShownEvent)(this._$content);
       (0, _visibility_change.triggerResizeEvent)(this._$content);
     } else {
-      var _this$_$content12;
+      var _this$_$content10;
       this._toggleVisibility(visible);
-      (_this$_$content12 = this._$content) === null || _this$_$content12 === void 0 || _this$_$content12.toggleClass(INVISIBLE_STATE_CLASS, !visible);
+      (_this$_$content10 = this._$content) === null || _this$_$content10 === void 0 || _this$_$content10.toggleClass(INVISIBLE_STATE_CLASS, !visible);
       this._updateZIndexStackPosition(visible);
       this._moveFromContainer();
     }
@@ -96533,9 +96544,9 @@ class Overlay extends _widget.default {
     this._updateZIndex();
   }
   _updateZIndex() {
-    var _this$_$wrapper, _this$_$content13;
+    var _this$_$wrapper, _this$_$content11;
     (_this$_$wrapper = this._$wrapper) === null || _this$_$wrapper === void 0 || _this$_$wrapper.css('zIndex', this._zIndex);
-    (_this$_$content13 = this._$content) === null || _this$_$content13 === void 0 || _this$_$content13.css('zIndex', this._zIndex);
+    (_this$_$content11 = this._$content) === null || _this$_$content11 === void 0 || _this$_$content11.css('zIndex', this._zIndex);
   }
   _toggleShading(visible) {
     var _this$_$wrapper2, _this$_$wrapper3;
@@ -96693,10 +96704,10 @@ class Overlay extends _widget.default {
     this._renderVisibilityAnimate(this._isVisible());
   }
   _appendContentToElement() {
-    var _this$_$content14;
-    if (!((_this$_$content14 = this._$content) !== null && _this$_$content14 !== void 0 && _this$_$content14.parent().is(this.$element()))) {
-      var _this$_$content15;
-      (_this$_$content15 = this._$content) === null || _this$_$content15 === void 0 || _this$_$content15.appendTo(this.$element());
+    var _this$_$content12;
+    if (!((_this$_$content12 = this._$content) !== null && _this$_$content12 !== void 0 && _this$_$content12.parent().is(this.$element()))) {
+      var _this$_$content13;
+      (_this$_$content13 = this._$content) === null || _this$_$content13 === void 0 || _this$_$content13.appendTo(this.$element());
     }
   }
   _renderContent() {
@@ -96858,8 +96869,8 @@ class Overlay extends _widget.default {
     }
   }
   _moveFromContainer() {
-    var _this$_$content16, _this$_$wrapper6;
-    (_this$_$content16 = this._$content) === null || _this$_$content16 === void 0 || _this$_$content16.appendTo(this.$element());
+    var _this$_$content14, _this$_$wrapper6;
+    (_this$_$content14 = this._$content) === null || _this$_$content14 === void 0 || _this$_$content14.appendTo(this.$element());
     (_this$_$wrapper6 = this._$wrapper) === null || _this$_$wrapper6 === void 0 || _this$_$wrapper6.detach();
   }
   _checkContainerExists() {
@@ -96880,8 +96891,8 @@ class Overlay extends _widget.default {
       (_this$_$wrapper7 = this._$wrapper) === null || _this$_$wrapper7 === void 0 || _this$_$wrapper7.appendTo($wrapperContainer);
     }
     if (this._$wrapper) {
-      var _this$_$content17;
-      (_this$_$content17 = this._$content) === null || _this$_$content17 === void 0 || _this$_$content17.appendTo(this._$wrapper);
+      var _this$_$content15;
+      (_this$_$content15 = this._$content) === null || _this$_$content15 === void 0 || _this$_$content15.appendTo(this._$wrapper);
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -96950,9 +96961,9 @@ class Overlay extends _widget.default {
     });
   }
   _renderDimensions() {
-    var _this$_$content18, _this$_$content19;
-    const content = (_this$_$content18 = this._$content) === null || _this$_$content18 === void 0 ? void 0 : _this$_$content18.get(0);
-    (_this$_$content19 = this._$content) === null || _this$_$content19 === void 0 || _this$_$content19.css({
+    var _this$_$content16, _this$_$content17;
+    const content = (_this$_$content16 = this._$content) === null || _this$_$content16 === void 0 ? void 0 : _this$_$content16.get(0);
+    (_this$_$content17 = this._$content) === null || _this$_$content17 === void 0 || _this$_$content17.css({
       minWidth: this._getOptionValue('minWidth', content),
       maxWidth: this._getOptionValue('maxWidth', content),
       minHeight: this._getOptionValue('minHeight', content),
@@ -97006,7 +97017,7 @@ class Overlay extends _widget.default {
     this._cleanFocusState();
   }
   _dispose() {
-    var _this$_$wrapper9, _this$_$content20;
+    var _this$_$wrapper9, _this$_$content18;
     if (this._$content) {
       _animation.fx.stop(this._$content.get(0), false);
     }
@@ -97023,13 +97034,13 @@ class Overlay extends _widget.default {
     this._actions = {};
     this._parentsScrollSubscriptionInfo = undefined;
     (_this$_$wrapper9 = this._$wrapper) === null || _this$_$wrapper9 === void 0 || _this$_$wrapper9.remove();
-    (_this$_$content20 = this._$content) === null || _this$_$content20 === void 0 || _this$_$content20.remove();
+    (_this$_$content18 = this._$content) === null || _this$_$content18 === void 0 || _this$_$content18.remove();
     this._$wrapper = null;
     this._$content = null;
   }
   _toggleRTLDirection(rtl) {
-    var _this$_$content21;
-    (_this$_$content21 = this._$content) === null || _this$_$content21 === void 0 || _this$_$content21.toggleClass(RTL_DIRECTION_CLASS, rtl);
+    var _this$_$content19;
+    (_this$_$content19 = this._$content) === null || _this$_$content19 === void 0 || _this$_$content19.toggleClass(RTL_DIRECTION_CLASS, rtl);
   }
   _optionChanged(args) {
     const {
@@ -102191,7 +102202,7 @@ const _excluded = ["_rect", "gridCell"];
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -105111,8 +105122,7 @@ var _renderer = _interopRequireDefault(__webpack_require__(64553));
 var _array = __webpack_require__(94487);
 var _dom = __webpack_require__(86858);
 var iteratorUtils = _interopRequireWildcard(__webpack_require__(21274));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const DRAG_START_EVENT = exports.start = 'dxdragstart';
 const DRAG_EVENT = exports.move = 'dxdrag';
@@ -110150,7 +110160,7 @@ var _trial_panel = __webpack_require__(99671);
 var _types = __webpack_require__(13407);
 const _excluded = ["customerId", "maxVersionAllowed", "format", "internalUsageId"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 const FORMAT = 1;
 const RTM_MIN_PATCH_VERSION = 3;
 const KEY_SPLITTER = '.';
@@ -114029,8 +114039,7 @@ var _utils = __webpack_require__(98013);
 var _common = __webpack_require__(80586);
 var linearIndicators = _interopRequireWildcard(__webpack_require__(11691));
 var _linear_range_container = _interopRequireDefault(__webpack_require__(17884));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable spellcheck/spell-checker */
 /* eslint-disable prefer-rest-params */
@@ -114397,8 +114406,7 @@ var _base_point = __webpack_require__(35394);
 var _range_series = __webpack_require__(18519);
 var scatterSeries = _interopRequireWildcard(__webpack_require__(39294));
 var stackedSeries = _interopRequireWildcard(__webpack_require__(92659));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-depth */

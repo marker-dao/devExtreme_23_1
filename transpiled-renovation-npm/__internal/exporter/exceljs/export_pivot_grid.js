@@ -9,7 +9,13 @@ var _position = require("../../../core/utils/position");
 var _type = require("../../../core/utils/type");
 var _export = require("./export");
 var _export_merged_ranges_manager = require("./export_merged_ranges_manager");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/naming-convention */ /* eslint-disable @typescript-eslint/no-use-before-define */ /* eslint-disable @typescript-eslint/explicit-module-boundary-types */ /* eslint-disable @typescript-eslint/no-unsafe-return */ /* eslint-disable @typescript-eslint/explicit-function-return-type */ /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 const FIELD_HEADERS_SEPARATOR = ', ';
 class PivotGridHelpers {
   constructor(component, dataProvider, worksheet, options) {
@@ -160,7 +166,7 @@ class PivotGridHelpers {
       let cellData = [];
       const value = values.length > totalColumnsCount || shouldMergeHeaderField ? values.join(FIELD_HEADERS_SEPARATOR) : values[cellIndex];
       // @ts-expect-error
-      cellData = _extends({}, this._getDefaultFieldHeaderCellsData(value), {
+      cellData = Object.assign({}, this._getDefaultFieldHeaderCellsData(value), {
         headerType: area
       });
       excelCell.value = value;

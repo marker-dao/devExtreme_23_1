@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import pointerEvents from '../../../common/core/events/pointer';
 import registerComponent from '../../../core/component_registrator';
@@ -70,7 +69,7 @@ ready(() => {
 });
 class Toast extends Overlay {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       message: '',
       type: 'info',
       displayTime: 2000,
@@ -121,14 +120,14 @@ class Toast extends Overlay {
       device(device) {
         return device.deviceType === 'phone';
       },
-      options: _extends({
+      options: Object.assign({
         width: `calc(100vw - ${DEFAULT_MARGIN * 2}px)`
       }, tabletAndMobileCommonOptions)
     }, {
       device(device) {
         return device.deviceType === 'tablet';
       },
-      options: _extends({
+      options: Object.assign({
         width: 'auto',
         maxWidth: '80vw'
       }, tabletAndMobileCommonOptions)
@@ -154,24 +153,29 @@ class Toast extends Overlay {
       message,
       type
     } = this.option();
-    this._message = $('<div>').addClass(TOAST_MESSAGE_CLASS).text(message ?? '').appendTo(this.$content());
+    const $content = this.$content();
+    if ($content) {
+      this._message = $('<div>').addClass(TOAST_MESSAGE_CLASS).text(message ?? '').appendTo($content);
+    }
     this.setAria('role', 'alert', this._message);
     if (type && toastTypes.includes(type.toLowerCase())) {
-      this.$content().prepend($('<div>').addClass(TOAST_ICON_CLASS));
+      $content === null || $content === void 0 || $content.prepend($('<div>').addClass(TOAST_ICON_CLASS));
     }
     return super._renderContentImpl();
   }
   _render() {
+    var _this$$element, _this$$wrapper, _this$$content2;
     super._render();
-    this.$element().addClass(TOAST_CLASS);
-    this.$wrapper().addClass(TOAST_WRAPPER_CLASS);
+    (_this$$element = this.$element()) === null || _this$$element === void 0 || _this$$element.addClass(TOAST_CLASS);
+    (_this$$wrapper = this.$wrapper()) === null || _this$$wrapper === void 0 || _this$$wrapper.addClass(TOAST_WRAPPER_CLASS);
     const {
       type
     } = this.option();
     if (type) {
-      this.$content().addClass(`${TOAST_CLASS}-${type.toLowerCase()}`);
+      var _this$$content;
+      (_this$$content = this.$content()) === null || _this$$content === void 0 || _this$$content.addClass(`${TOAST_CLASS}-${type.toLowerCase()}`);
     }
-    this.$content().addClass(TOAST_CONTENT_CLASS);
+    (_this$$content2 = this.$content()) === null || _this$$content2 === void 0 || _this$$content2.addClass(TOAST_CONTENT_CLASS);
     this._toggleCloseEvents('Swipe');
     this._toggleCloseEvents('Click');
   }
@@ -193,7 +197,7 @@ class Toast extends Overlay {
     }
     const verticalPosition = position.split(' ')[0];
     const horizontalPosition = position.split(' ')[1];
-    const newPosition = _extends({
+    const newPosition = Object.assign({
       boundaryOffset: DEFAULT_BOUNDARY_OFFSET
     }, POSITION_ALIASES[verticalPosition]);
     this.option('position', newPosition);
@@ -239,6 +243,7 @@ class Toast extends Overlay {
     super._dispose();
   }
   _optionChanged(args) {
+    var _this$$content3;
     const {
       name,
       value,
@@ -246,9 +251,10 @@ class Toast extends Overlay {
     } = args;
     switch (name) {
       case 'type':
-        this.$content().removeClass(`${TOAST_CLASS}-${previousValue}`);
+        (_this$$content3 = this.$content()) === null || _this$$content3 === void 0 || _this$$content3.removeClass(`${TOAST_CLASS}-${previousValue}`);
         if (value) {
-          this.$content().addClass(`${TOAST_CLASS}-${String(value).toLowerCase()}`);
+          var _this$$content4;
+          (_this$$content4 = this.$content()) === null || _this$$content4 === void 0 || _this$$content4.addClass(`${TOAST_CLASS}-${String(value).toLowerCase()}`);
         }
         break;
       case 'message':

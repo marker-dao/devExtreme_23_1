@@ -21,7 +21,6 @@ var _editor = _interopRequireDefault(require("../../ui/editor/editor"));
 var _m_number_box = _interopRequireDefault(require("../../ui/number_box/m_number_box"));
 var _m_text_box = _interopRequireDefault(require("../../ui/text_box/m_text_box"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const COLOR_VIEW_CLASS = 'dx-colorview';
 const COLOR_VIEW_CONTAINER_CLASS = 'dx-colorview-container';
 const COLOR_VIEW_ROW_CLASS = 'dx-colorview-container-row';
@@ -144,7 +143,7 @@ class ColorView extends _editor.default {
       const handleLocation = (0, _translator.locate)(that._$alphaChannelHandle);
       that._calculateColorTransparencyByScaleWidth(handleLocation.left + that._alphaChannelHandleWidth / 2);
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       upArrow(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -206,7 +205,7 @@ class ColorView extends _editor.default {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: null,
       matchValue: null,
       onEnterKeyPressed: undefined,
@@ -742,7 +741,7 @@ class ColorView extends _editor.default {
           this._refreshMarkup();
         }
         this._updateByDrag = false;
-        super._optionChanged(_extends({}, args, {
+        super._optionChanged(Object.assign({}, args, {
           value: this.option('value')
         }));
         break;

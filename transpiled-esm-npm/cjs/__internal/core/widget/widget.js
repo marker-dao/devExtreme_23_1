@@ -19,7 +19,6 @@ var _version = require("../../../core/utils/version");
 var _m_selectors = require("../../core/utils/m_selectors");
 var _dom_component = _interopRequireDefault(require("../../core/widget/dom_component"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const WIDGET_CLASS = exports.WIDGET_CLASS = 'dx-widget';
 const DISABLED_STATE_CLASS = 'dx-state-disabled';
 const ACTIVE_STATE_CLASS = exports.ACTIVE_STATE_CLASS = 'dx-state-active';
@@ -287,7 +286,7 @@ class Widget extends _dom_component.default {
   }
   _toggleFocusClass(isFocused, $element) {
     const $focusTarget = $element !== null && $element !== void 0 && $element.length ? $element : this._focusTarget();
-    $focusTarget.toggleClass(FOCUSED_STATE_CLASS, isFocused);
+    $focusTarget === null || $focusTarget === void 0 || $focusTarget.toggleClass(FOCUSED_STATE_CLASS, isFocused);
   }
   _hasFocusClass(element) {
     const $focusTarget = (0, _renderer.default)(element ?? this._focusTarget());
@@ -347,7 +346,7 @@ class Widget extends _dom_component.default {
   }
   _cleanFocusState() {
     const $element = this._focusTarget();
-    $element.removeAttr('tabIndex');
+    $element === null || $element === void 0 || $element.removeAttr('tabIndex');
     this._toggleFocusClass(false);
     this._detachFocusEvents();
     this._detachKeyboardEvents();
@@ -597,7 +596,7 @@ class Widget extends _dom_component.default {
   }
   registerKeyHandler(key, handler) {
     const currentKeys = this._supportedKeys();
-    this._supportedKeys = () => _extends({}, currentKeys, {
+    this._supportedKeys = () => Object.assign({}, currentKeys, {
       [key]: handler
     });
   }

@@ -1,0 +1,24 @@
+/**
+* DevExtreme (esm/__internal/core/localization/utils.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { multiplyInExponentialForm, sign } from '../../core/utils/m_math';
+const DECIMAL_BASE = 10;
+function roundByAbs(value) {
+  const valueSign = sign(value);
+  return valueSign * Math.round(Math.abs(value));
+}
+function adjustValue(value, precision) {
+  const precisionMultiplier = DECIMAL_BASE ** precision;
+  const intermediateValue = multiplyInExponentialForm(value, precision);
+  return roundByAbs(intermediateValue) / precisionMultiplier;
+}
+export function toFixed(value, precision) {
+  const valuePrecision = precision ?? 0;
+  const adjustedValue = valuePrecision > 0 ? adjustValue(value, valuePrecision) : value;
+  return adjustedValue.toFixed(valuePrecision);
+}

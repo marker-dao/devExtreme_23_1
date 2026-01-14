@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../../core/component_registrator';
 import { getImageSourceType } from '../../../core/utils/icon';
 import ValidationEngine from '../../../ui/validation_engine';
@@ -107,7 +106,7 @@ export default class Button extends ComponentWrapper {
     }
   }
   _patchOptionValues(options) {
-    return super._patchOptionValues(_extends({}, options, {
+    return super._patchOptionValues(Object.assign({}, options, {
       templateData: options._templateData
     }));
   }

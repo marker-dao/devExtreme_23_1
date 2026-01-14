@@ -15,7 +15,12 @@ var _window = require("../../../core/utils/window");
 var _ui = _interopRequireDefault(require("../../../ui/widget/ui.errors"));
 var _update_views_borders = require("./views/utils/update_views_borders");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */ /* eslint-disable max-classes-per-file */ /* eslint-disable @typescript-eslint/method-signature-style */ // @ts-expect-error
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+/* eslint-disable max-classes-per-file */
+/* eslint-disable @typescript-eslint/method-signature-style */
+
+// @ts-expect-error
+
 const WIDGET_WITH_LEGACY_CONTAINER_NAME = 'dxDataGrid';
 class ModuleItem {
   constructor(component) {
@@ -371,13 +376,13 @@ function processModules(componentInstance, componentClass) {
     let {
       extenders
     } = _ref6;
-    return _extends({}, types, getExtendedTypes(types, extenders === null || extenders === void 0 ? void 0 : extenders.controllers));
+    return Object.assign({}, types, getExtendedTypes(types, extenders === null || extenders === void 0 ? void 0 : extenders.controllers));
   }, rootControllerTypes);
   const viewTypes = moduleExtenders.reduce((types, _ref7) => {
     let {
       extenders
     } = _ref7;
-    return _extends({}, types, getExtendedTypes(types, extenders === null || extenders === void 0 ? void 0 : extenders.views));
+    return Object.assign({}, types, getExtendedTypes(types, extenders === null || extenders === void 0 ? void 0 : extenders.views));
   }, rootViewTypes);
   // eslint-disable-next-line no-param-reassign
   componentInstance._controllers = createModuleItems(controllerTypes);

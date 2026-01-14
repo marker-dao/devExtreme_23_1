@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { afterAll, describe, expect, it, jest } from '@jest/globals';
 import { mockAppointmentDataAccessor } from '../../../scheduler/__mock__/appointment_data_accessor.mock';
 import { mockTimeZoneCalculator } from '../../../scheduler/__mock__/timezone_calculator.mock';
@@ -14,7 +13,7 @@ const options = {
 describe('Appointment text utils', () => {
   describe('getAriaLabel', () => {
     it('should return text for all day appointment', () => {
-      expect(getAriaLabel(_extends({}, options, {
+      expect(getAriaLabel(Object.assign({}, options, {
         data: {
           allDay: true,
           text: 'Appointment name',
@@ -24,7 +23,7 @@ describe('Appointment text utils', () => {
       }))).toBe('Appointment name: March 10, 2025, All day');
     });
     it('should return text for one day appointment', () => {
-      expect(getAriaLabel(_extends({}, options, {
+      expect(getAriaLabel(Object.assign({}, options, {
         data: {
           text: 'Appointment name',
           startDate: Date.UTC(2025, 2, 10, 10),
@@ -35,7 +34,7 @@ describe('Appointment text utils', () => {
       }))).toBe('Appointment name: March 10, 2025, 10:00 AM - 10:30 AM');
     });
     it('should return text for a part of long appointment', () => {
-      expect(getAriaLabel(_extends({}, options, {
+      expect(getAriaLabel(Object.assign({}, options, {
         data: {
           text: 'Appointment name',
           startDate: Date.UTC(2025, 2, 10, 10),
@@ -48,7 +47,7 @@ describe('Appointment text utils', () => {
   });
   describe('getReducedIconTooltip', () => {
     it('should return text with end date', () => {
-      expect(getReducedIconTooltip(_extends({}, options, {
+      expect(getReducedIconTooltip(Object.assign({}, options, {
         data: {
           text: 'Appointment name',
           startDate: Date.UTC(2025, 2, 10, 10),
@@ -66,7 +65,7 @@ describe('Appointment text utils', () => {
         label: 'Assignee',
         values: ['Samantha Bright']
       }]));
-      expect(await getAriaDescription(_extends({}, options, {
+      expect(await getAriaDescription(Object.assign({}, options, {
         groupTexts: []
       }))).toBe('Assignee: Samantha Bright');
     });
@@ -78,13 +77,13 @@ describe('Appointment text utils', () => {
         label: 'Room',
         values: ['Room 1']
       }]));
-      expect(await getAriaDescription(_extends({}, options, {
+      expect(await getAriaDescription(Object.assign({}, options, {
         groupTexts: []
       }))).toBe('Assignee: Samantha Bright, John Heart; Room: Room 1');
     });
     it('should return text with group', async () => {
       getAppointmentResourcesValues.mockReturnValue([]);
-      expect(await getAriaDescription(_extends({}, options, {
+      expect(await getAriaDescription(Object.assign({}, options, {
         groupIndex: 0,
         groupTexts: ['Samantha Bright']
       }))).toBe('Group: Samantha Bright');
@@ -97,7 +96,7 @@ describe('Appointment text utils', () => {
         label: 'Room',
         values: ['Room 1', 'Room 2']
       }]));
-      expect(await getAriaDescription(_extends({}, options, {
+      expect(await getAriaDescription(Object.assign({}, options, {
         groupIndex: 1,
         groupTexts: ['Samantha Bright', 'Room 1']
       }))).toBe('Group: Samantha Bright, Room 1; Assignee: Samantha Bright; Room: Room 1, Room 2');

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable operator-assignment */
 /* eslint-disable no-plusplus */
@@ -8,7 +7,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 const isHeader = rect => (rect === null || rect === void 0 ? void 0 : rect.sourceCellInfo.gridCell.rowType) === 'header';
 const spitMultiPageRows = (rectsToPatch, isCurrentPageContainsOnlyHeader, firstRectYAdjustment, splitMultiPageRowFunc, checkIsFitToPageFunc) => {
   let [newPageRects, remainPageRects] = splitMultiPageRowFunc(isCurrentPageContainsOnlyHeader, rectsToPatch);
-  const newPageRectsArray = [isCurrentPageContainsOnlyHeader ? newPageRects.map(rect => _extends({}, rect, {
+  const newPageRectsArray = [isCurrentPageContainsOnlyHeader ? newPageRects.map(rect => Object.assign({}, rect, {
     y: firstRectYAdjustment
   })) : newPageRects];
   while (!checkIsFitToPageFunc(false, remainPageRects[0].h)) {

@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["elementRef", "tabIndex", "onKeyDown", "children"];
 import { createComponentVNode, normalizeProps } from "inferno";
@@ -55,7 +54,7 @@ export const withKbnNavigationItem = WrappedComponent => {
         } = _this$props,
         restProps = _objectWithoutPropertiesLoose(_this$props, _excluded);
       const ref = this.getActualRef();
-      return normalizeProps(createComponentVNode(2, WrappedComponent, _extends({
+      return normalizeProps(createComponentVNode(2, WrappedComponent, Object.assign({
         "elementRef": ref,
         "tabIndex": 0,
         "onKeyDown": this.onKeyDown.bind(this)

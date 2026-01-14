@@ -22,19 +22,22 @@ var _resolve_rtl = require("../../core/r1/utils/resolve_rtl");
 var _base_props = require("./base_props");
 var _subscribe_to_event = require("./utils/subscribe_to_event");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/naming-convention */ /* eslint-disable @typescript-eslint/explicit-module-boundary-types */ /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 const WIDGET_CLASS = exports.WIDGET_CLASS = 'dx-widget';
 const DEFAULT_FEEDBACK_HIDE_TIMEOUT = 400;
 const DEFAULT_FEEDBACK_SHOW_TIMEOUT = 30;
 const getAria = args => Object.keys(args).reduce((r, key) => {
   if (args[key]) {
-    return _extends({}, r, {
+    return Object.assign({}, r, {
       [key === 'role' || key === 'id' ? key : `aria-${key}`]: String(args[key])
     });
   }
   return r;
 }, {});
-const WidgetDefaultProps = exports.WidgetDefaultProps = _extends({}, _base_props.BaseWidgetDefaultProps, {
+const WidgetDefaultProps = exports.WidgetDefaultProps = Object.assign({}, _base_props.BaseWidgetDefaultProps, {
   _feedbackHideTimeout: DEFAULT_FEEDBACK_HIDE_TIMEOUT,
   _feedbackShowTimeout: DEFAULT_FEEDBACK_SHOW_TIMEOUT,
   cssText: '',
@@ -86,7 +89,7 @@ class Widget extends _index.InfernoWrapperComponent {
     return [new _index.InfernoEffect(this.setRootElementRef, []), new _index.InfernoEffect(this.activeEffect, [this.props._feedbackShowTimeout, this.props.activeStateEnabled, this.props.activeStateUnit, this.props.disabled, this.props.onActive]), new _index.InfernoEffect(this.inactiveEffect, [this.props._feedbackHideTimeout, this.props.activeStateEnabled, this.props.activeStateUnit, this.props.onInactive, this.state.active]), new _index.InfernoEffect(this.clickEffect, [this.props.disabled, this.props.name, this.props.onClick]), new _index.InfernoEffect(this.focusInEffect, [this.props.disabled, this.props.focusStateEnabled, this.props.name, this.props.onFocusIn]), new _index.InfernoEffect(this.focusOutEffect, [this.props.focusStateEnabled, this.props.name, this.props.onFocusOut, this.state.focused]), new _index.InfernoEffect(this.hoverStartEffect, [this.props.activeStateUnit, this.props.disabled, this.props.hoverStateEnabled, this.props.onHoverStart, this.state.active]), new _index.InfernoEffect(this.hoverEndEffect, [this.props.activeStateUnit, this.props.hoverStateEnabled, this.props.onHoverEnd, this.state.hovered]), new _index.InfernoEffect(this.keyboardEffect, [this.props.focusStateEnabled, this.props.onKeyDown]), new _index.InfernoEffect(this.resizeEffect, [this.props.name, this.props.onDimensionChanged]), new _index.InfernoEffect(this.windowResizeEffect, [this.props.onDimensionChanged]), new _index.InfernoEffect(this.visibilityEffect, [this.props.name, this.props.onVisibilityChange]), new _index.InfernoEffect(this.checkDeprecation, [this.props.height, this.props.width]), new _index.InfernoEffect(this.applyCssTextEffect, [this.props.cssText]), (0, _index.createReRenderEffect)()];
   }
   updateEffects() {
-    var _this$_effects$, _this$_effects$2, _this$_effects$3, _this$_effects$4, _this$_effects$5, _this$_effects$6, _this$_effects$7, _this$_effects$8, _this$_effects$9, _this$_effects$10, _this$_effects$11, _this$_effects$12, _this$_effects$13;
+    var _this$_effects$, _this$_effects$2, _this$_effects$3, _this$_effects$4, _this$_effects$5, _this$_effects$6, _this$_effects$7, _this$_effects$8, _this$_effects$9, _this$_effects$0, _this$_effects$1, _this$_effects$10, _this$_effects$11;
     (_this$_effects$ = this._effects[1]) === null || _this$_effects$ === void 0 || _this$_effects$.update([this.props._feedbackShowTimeout, this.props.activeStateEnabled, this.props.activeStateUnit, this.props.disabled, this.props.onActive]);
     (_this$_effects$2 = this._effects[2]) === null || _this$_effects$2 === void 0 || _this$_effects$2.update([this.props._feedbackHideTimeout, this.props.activeStateEnabled, this.props.activeStateUnit, this.props.onInactive, this.state.active]);
     (_this$_effects$3 = this._effects[3]) === null || _this$_effects$3 === void 0 || _this$_effects$3.update([this.props.disabled, this.props.name, this.props.onClick]);
@@ -96,10 +99,10 @@ class Widget extends _index.InfernoWrapperComponent {
     (_this$_effects$7 = this._effects[7]) === null || _this$_effects$7 === void 0 || _this$_effects$7.update([this.props.activeStateUnit, this.props.hoverStateEnabled, this.props.onHoverEnd, this.state.hovered]);
     (_this$_effects$8 = this._effects[8]) === null || _this$_effects$8 === void 0 || _this$_effects$8.update([this.props.focusStateEnabled, this.props.onKeyDown]);
     (_this$_effects$9 = this._effects[9]) === null || _this$_effects$9 === void 0 || _this$_effects$9.update([this.props.name, this.props.onDimensionChanged]);
-    (_this$_effects$10 = this._effects[10]) === null || _this$_effects$10 === void 0 || _this$_effects$10.update([this.props.onDimensionChanged]);
-    (_this$_effects$11 = this._effects[11]) === null || _this$_effects$11 === void 0 || _this$_effects$11.update([this.props.name, this.props.onVisibilityChange]);
-    (_this$_effects$12 = this._effects[12]) === null || _this$_effects$12 === void 0 || _this$_effects$12.update([this.props.height, this.props.width]);
-    (_this$_effects$13 = this._effects[13]) === null || _this$_effects$13 === void 0 || _this$_effects$13.update([this.props.cssText]);
+    (_this$_effects$0 = this._effects[10]) === null || _this$_effects$0 === void 0 || _this$_effects$0.update([this.props.onDimensionChanged]);
+    (_this$_effects$1 = this._effects[11]) === null || _this$_effects$1 === void 0 || _this$_effects$1.update([this.props.name, this.props.onVisibilityChange]);
+    (_this$_effects$10 = this._effects[12]) === null || _this$_effects$10 === void 0 || _this$_effects$10.update([this.props.height, this.props.width]);
+    (_this$_effects$11 = this._effects[13]) === null || _this$_effects$11 === void 0 || _this$_effects$11.update([this.props.cssText]);
   }
   setRootElementRef() {
     var _this$widgetElementRe;
@@ -284,8 +287,8 @@ class Widget extends _index.InfernoWrapperComponent {
       focusStateEnabled
     } = this.props;
     if (focusStateEnabled && onKeyDown) {
-      var _this$widgetElementRe10, _this$widgetElementRe11;
-      const id = _short.keyboard.on((_this$widgetElementRe10 = this.widgetElementRef) === null || _this$widgetElementRe10 === void 0 ? void 0 : _this$widgetElementRe10.current, (_this$widgetElementRe11 = this.widgetElementRef) === null || _this$widgetElementRe11 === void 0 ? void 0 : _this$widgetElementRe11.current, e => onKeyDown(e));
+      var _this$widgetElementRe0, _this$widgetElementRe1;
+      const id = _short.keyboard.on((_this$widgetElementRe0 = this.widgetElementRef) === null || _this$widgetElementRe0 === void 0 ? void 0 : _this$widgetElementRe0.current, (_this$widgetElementRe1 = this.widgetElementRef) === null || _this$widgetElementRe1 === void 0 ? void 0 : _this$widgetElementRe1.current, e => onKeyDown(e));
       return () => _short.keyboard.off(id);
     }
     return undefined;
@@ -296,13 +299,13 @@ class Widget extends _index.InfernoWrapperComponent {
       onDimensionChanged
     } = this.props;
     if (onDimensionChanged) {
-      var _this$widgetElementRe12;
-      _short.resize.on((_this$widgetElementRe12 = this.widgetElementRef) === null || _this$widgetElementRe12 === void 0 ? void 0 : _this$widgetElementRe12.current, onDimensionChanged, {
+      var _this$widgetElementRe10;
+      _short.resize.on((_this$widgetElementRe10 = this.widgetElementRef) === null || _this$widgetElementRe10 === void 0 ? void 0 : _this$widgetElementRe10.current, onDimensionChanged, {
         namespace
       });
       return () => {
-        var _this$widgetElementRe13;
-        return _short.resize.off((_this$widgetElementRe13 = this.widgetElementRef) === null || _this$widgetElementRe13 === void 0 ? void 0 : _this$widgetElementRe13.current, {
+        var _this$widgetElementRe11;
+        return _short.resize.off((_this$widgetElementRe11 = this.widgetElementRef) === null || _this$widgetElementRe11 === void 0 ? void 0 : _this$widgetElementRe11.current, {
           namespace
         });
       };
@@ -328,13 +331,13 @@ class Widget extends _index.InfernoWrapperComponent {
     } = this.props;
     const namespace = `${name}VisibilityChange`;
     if (onVisibilityChange) {
-      var _this$widgetElementRe14;
-      _short.visibility.on((_this$widgetElementRe14 = this.widgetElementRef) === null || _this$widgetElementRe14 === void 0 ? void 0 : _this$widgetElementRe14.current, () => onVisibilityChange(true), () => onVisibilityChange(false), {
+      var _this$widgetElementRe12;
+      _short.visibility.on((_this$widgetElementRe12 = this.widgetElementRef) === null || _this$widgetElementRe12 === void 0 ? void 0 : _this$widgetElementRe12.current, () => onVisibilityChange(true), () => onVisibilityChange(false), {
         namespace
       });
       return () => {
-        var _this$widgetElementRe15;
-        return _short.visibility.off((_this$widgetElementRe15 = this.widgetElementRef) === null || _this$widgetElementRe15 === void 0 ? void 0 : _this$widgetElementRe15.current, {
+        var _this$widgetElementRe13;
+        return _short.visibility.off((_this$widgetElementRe13 = this.widgetElementRef) === null || _this$widgetElementRe13 === void 0 ? void 0 : _this$widgetElementRe13.current, {
           namespace
         });
       };
@@ -354,11 +357,11 @@ class Widget extends _index.InfernoWrapperComponent {
     }
   }
   applyCssTextEffect() {
-    var _this$widgetElementRe16;
+    var _this$widgetElementRe14;
     const {
       cssText
     } = this.props;
-    if (cssText !== undefined && cssText !== '' && (_this$widgetElementRe16 = this.widgetElementRef) !== null && _this$widgetElementRe16 !== void 0 && _this$widgetElementRe16.current) {
+    if (cssText !== undefined && cssText !== '' && (_this$widgetElementRe14 = this.widgetElementRef) !== null && _this$widgetElementRe14 !== void 0 && _this$widgetElementRe14.current) {
       this.widgetElementRef.current.style.cssText = cssText;
     }
   }
@@ -382,16 +385,16 @@ class Widget extends _index.InfernoWrapperComponent {
       visible
     } = this.props;
     const accessKey = focusStateEnabled && !disabled && this.props.accessKey;
-    const props = _extends({}, (0, _extend.extend)({}, accessKey && {
+    const props = Object.assign({}, (0, _extend.extend)({}, accessKey && {
       accessKey
-    }), getAria(_extends({}, aria, {
+    }), getAria(Object.assign({}, aria, {
       disabled,
       hidden: !visible
     })), (0, _extend.extend)({}, this.getRestAttributes(this.props)));
     return props;
   }
   getRestAttributes(props) {
-    const result = _extends({}, props);
+    const result = Object.assign({}, props);
     ['_feedbackHideTimeout', '_feedbackShowTimeout', 'accessKey', 'activeStateEnabled', 'activeStateUnit', 'addWidgetClass', 'aria', 'children', 'className', 'classes', 'cssText', 'disabled', 'focusStateEnabled', 'height', 'hint', 'hoverStateEnabled', 'name', 'onActive', 'onClick', 'onDimensionChanged', 'onFocusIn', 'onFocusOut', 'onHoverEnd', 'onHoverStart', 'onInactive', 'onKeyDown', 'onRootElementRendered', 'onVisibilityChange', 'rootElementRef', 'rtlEnabled', 'tabIndex', 'visible', 'width'].forEach(exclude => {
       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete result[exclude];
@@ -408,7 +411,7 @@ class Widget extends _index.InfernoWrapperComponent {
     const computedWidth = (0, _style.normalizeStyleProp)('width', (0, _type.isFunction)(width) ? width() : width);
     // @ts-expect-error ts-error
     const computedHeight = (0, _style.normalizeStyleProp)('height', (0, _type.isFunction)(height) ? height() : height);
-    return _extends({}, style, {
+    return Object.assign({}, style, {
       height: computedHeight ?? style.height,
       width: computedWidth ?? style.width
     });
@@ -452,13 +455,13 @@ class Widget extends _index.InfernoWrapperComponent {
     return isFocusable ? tabIndex : undefined;
   }
   focus() {
-    var _this$widgetElementRe17;
-    _short.focus.trigger((_this$widgetElementRe17 = this.widgetElementRef) === null || _this$widgetElementRe17 === void 0 ? void 0 : _this$widgetElementRe17.current);
+    var _this$widgetElementRe15;
+    _short.focus.trigger((_this$widgetElementRe15 = this.widgetElementRef) === null || _this$widgetElementRe15 === void 0 ? void 0 : _this$widgetElementRe15.current);
   }
   blur() {
-    var _this$widgetElementRe18, _this$widgetElementRe19;
-    const activeElement = _dom_adapter.default.getActiveElement((_this$widgetElementRe18 = this.widgetElementRef) === null || _this$widgetElementRe18 === void 0 ? void 0 : _this$widgetElementRe18.current);
-    if (((_this$widgetElementRe19 = this.widgetElementRef) === null || _this$widgetElementRe19 === void 0 ? void 0 : _this$widgetElementRe19.current) === activeElement) {
+    var _this$widgetElementRe16, _this$widgetElementRe17;
+    const activeElement = _dom_adapter.default.getActiveElement((_this$widgetElementRe16 = this.widgetElementRef) === null || _this$widgetElementRe16 === void 0 ? void 0 : _this$widgetElementRe16.current);
+    if (((_this$widgetElementRe17 = this.widgetElementRef) === null || _this$widgetElementRe17 === void 0 ? void 0 : _this$widgetElementRe17.current) === activeElement) {
       activeElement.blur();
     }
   }
@@ -477,7 +480,7 @@ class Widget extends _index.InfernoWrapperComponent {
       hint,
       children
     } = this.props;
-    const widget = (0, _inferno.normalizeProps)((0, _inferno.createVNode)(1, "div", this.getCssClasses(), children, 0, _extends({}, this.getAttributes(), {
+    const widget = (0, _inferno.normalizeProps)((0, _inferno.createVNode)(1, "div", this.getCssClasses(), children, 0, Object.assign({}, this.getAttributes(), {
       "tabindex": this.getTabIndex(),
       "title": hint,
       "style": this.getStyles()

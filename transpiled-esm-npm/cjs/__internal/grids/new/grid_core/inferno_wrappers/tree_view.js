@@ -10,8 +10,7 @@ var _widget_wrapper = require("./widget_wrapper");
 const _excluded = ["selected"],
   _excluded2 = ["selected"];
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 class TreeView extends _widget_wrapper.InfernoWrapper {
   getComponentFabric() {
     return _tree_view.default;
@@ -19,7 +18,7 @@ class TreeView extends _widget_wrapper.InfernoWrapper {
   updateComponentOptions(prevProps, props) {
     var _this$component, _this$component2;
     const itemsOnlySelectionChanged = this.isItemsOnlySelectionChanged(prevProps, props);
-    const propsToUpdate = _extends({}, props);
+    const propsToUpdate = Object.assign({}, props);
     if (itemsOnlySelectionChanged) {
       this.updateSelection(props.items ?? []);
       delete propsToUpdate.items;

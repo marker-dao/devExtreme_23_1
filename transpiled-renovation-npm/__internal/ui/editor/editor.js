@@ -17,7 +17,6 @@ var _validation_message = _interopRequireDefault(require("../../../ui/validation
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _m_dom = _interopRequireDefault(require("../../core/utils/m_dom"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const INVALID_MESSAGE_AUTO = 'dx-invalid-message-auto';
 const READONLY_STATE_CLASS = 'dx-state-readonly';
 const INVALID_CLASS = 'dx-invalid';
@@ -65,7 +64,7 @@ class Editor extends _widget.default {
     $element.addClass(DX_INVALID_BADGE_CLASS);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: null,
       name: '',
       onValueChanged: null,

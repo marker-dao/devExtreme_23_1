@@ -54,7 +54,7 @@ const compileCriteria = (() => {
     notcontains: createStringFuncFormatter('not contains')
   });
   const compileBinary = criteria => {
-    var _fieldTypes;
+    var _fieldTypes, _fieldTypes2;
     criteria = normalizeBinaryCriterion(criteria);
     const op = criteria[1];
     const fieldName = criteria[0];
@@ -72,7 +72,7 @@ const compileCriteria = (() => {
     if ((_fieldTypes = fieldTypes) !== null && _fieldTypes !== void 0 && _fieldTypes[fieldName]) {
       value = convertPrimitiveValue(fieldTypes[fieldName], value);
     }
-    return formatter(serializePropName(fieldName), serializeValue(value, protocolVersion));
+    return formatter(serializePropName(fieldName), serializeValue(value, protocolVersion, (_fieldTypes2 = fieldTypes) === null || _fieldTypes2 === void 0 ? void 0 : _fieldTypes2[fieldName]));
   };
   const compileUnary = criteria => {
     const op = criteria[0];
@@ -209,7 +209,7 @@ const createODataQueryAdapter = queryOptions => {
         jsonp: queryOptions.jsonp,
         withCredentials: queryOptions.withCredentials,
         countOnly: _countQuery,
-        deserializeDates: queryOptions.deserializeDates,
+        processDatesAsUtc: queryOptions.processDatesAsUtc,
         fieldTypes: queryOptions.fieldTypes,
         isPaged: isFinite(_take)
       });

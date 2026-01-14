@@ -53,26 +53,41 @@ const FREQ = {
   YEARLY: 'yearly'
 };
 const EDITOR_NAMES = {
-  recurrenceStartDate: 'recurrenceStartDateEditor',
-  interval: 'intervalEditor',
-  frequency: 'frequencyEditor',
-  byMonth: 'byMonthEditor',
-  repeatEnd: 'repeatEndEditor',
-  until: 'untilEditor',
-  count: 'countEditor'
+  recurrenceStartDateEditor: 'recurrenceStartDateEditor',
+  recurrenceCountEditor: 'recurrenceCountEditor',
+  recurrencePeriodEditor: 'recurrencePeriodEditor',
+  recurrenceDayOfYearMonthEditor: 'recurrenceDayOfYearMonthEditor',
+  recurrenceDayOfMonthEditor: 'recurrenceDayOfMonthEditor',
+  recurrenceDayOfYearDayEditor: 'recurrenceDayOfYearDayEditor',
+  recurrenceEndEditor: 'recurrenceEndEditor',
+  recurrenceRepeatEndEditor: 'recurrenceRepeatEndEditor',
+  recurrenceEndUntilEditor: 'recurrenceEndUntilEditor',
+  recurrenceEndCountEditor: 'recurrenceEndCountEditor',
+  recurrenceEndSpacer: 'recurrenceEndSpacer'
 };
 const GROUP_NAMES = {
-  daysOfWeek: 'daysOfWeek',
-  dayOfMonth: 'dayOfMonth',
-  dayOfYear: 'dayOfYear'
+  recurrenceStartDateGroup: 'recurrenceStartDateGroup',
+  recurrenceRuleGroup: 'recurrenceRuleGroup',
+  recurrencePatternGroup: 'recurrencePatternGroup',
+  recurrenceRuleRepeatGroup: 'recurrenceRuleRepeatGroup',
+  recurrenceEndGroup: 'recurrenceEndGroup',
+  recurrenceDaysOfWeekEditor: 'recurrenceDaysOfWeekEditor',
+  recurrenceDayOfYearGroup: 'recurrenceDayOfYearGroup',
+  recurrenceEndEditorsGroup: 'recurrenceEndEditorsGroup'
+};
+const ICON_NAMES = {
+  recurrenceStartDateIcon: 'recurrenceStartDateIcon',
+  recurrenceRuleIcon: 'recurrenceRuleIcon',
+  recurrenceEndIcon: 'recurrenceEndIcon'
 };
 const weekDays = dateLocalization.getDayNames('abbreviated').map(dayName => dayName.slice(0, 2).toUpperCase());
 const RECURRENCE_GROUP_NAME = 'recurrenceGroup';
 export class RecurrenceForm {
   constructor(scheduler) {
-    this._recurrenceRule = new RecurrenceRule('', new Date());
+    this.recurrenceRule = new RecurrenceRule('', new Date());
     this.weekDayItems = [];
     this._weekDayButtons = {};
+    this._readOnly = false;
     this.scheduler = scheduler;
     this.weekDayItems = this.createWeekDayItems();
   }
@@ -119,15 +134,7 @@ export class RecurrenceForm {
     this._dxForm = value;
   }
   setReadOnly(value) {
-    Object.values(this._weekDayButtons).forEach(button => {
-      button === null || button === void 0 || button.option('disabled', value);
-    });
-  }
-  get recurrenceRule() {
-    return this._recurrenceRule;
-  }
-  set recurrenceRule(value) {
-    this._recurrenceRule = value;
+    this._readOnly = value;
   }
   createRecurrenceFormGroup() {
     return {
@@ -140,6 +147,7 @@ export class RecurrenceForm {
   }
   createRecurrenceStartDateGroup() {
     return {
+      name: GROUP_NAMES.recurrenceStartDateGroup,
       itemType: 'group',
       colCount: 2,
       colCountByScreen: {
@@ -147,11 +155,12 @@ export class RecurrenceForm {
       },
       cssClass: CLASSES.groupWithIcon,
       items: [{
+        name: ICON_NAMES.recurrenceStartDateIcon,
         colSpan: 1,
         cssClass: CLASSES.formIcon,
         template: createFormIconTemplate('clock')
       }, extend(true, getStartDateCommonConfig(this.scheduler.getFirstDayOfWeek()), {
-        name: EDITOR_NAMES.recurrenceStartDate,
+        name: EDITOR_NAMES.recurrenceStartDateEditor,
         label: {
           text: messageLocalization.format('dxScheduler-editorLabelStartDate')
         },
@@ -169,17 +178,20 @@ export class RecurrenceForm {
   createRecurrenceSettingsGroup() {
     return {
       itemType: 'group',
+      name: GROUP_NAMES.recurrenceRuleGroup,
       cssClass: `${CLASSES.recurrenceSettingsGroup} ${CLASSES.groupWithIcon}`,
       colCount: 2,
       colCountByScreen: {
         xs: 2
       },
       items: [{
+        name: ICON_NAMES.recurrenceRuleIcon,
         colSpan: 1,
         cssClass: CLASSES.formIcon,
         template: createFormIconTemplate('repeat')
       }, {
         itemType: 'group',
+        name: GROUP_NAMES.recurrencePatternGroup,
         colSpan: 1,
         colCount: 1,
         colCountByScreen: {
@@ -192,6 +204,7 @@ export class RecurrenceForm {
   createRecurrenceRuleGroup() {
     return {
       itemType: 'group',
+      name: GROUP_NAMES.recurrenceRuleRepeatGroup,
       colSpan: 1,
       colCount: 2,
       colCountByScreen: {
@@ -199,7 +212,7 @@ export class RecurrenceForm {
       },
       items: [{
         itemType: 'simple',
-        name: EDITOR_NAMES.interval,
+        name: EDITOR_NAMES.recurrenceCountEditor,
         colSpan: 1,
         editorType: 'dxNumberBox',
         label: {
@@ -219,7 +232,7 @@ export class RecurrenceForm {
         }
       }, {
         itemType: 'simple',
-        name: EDITOR_NAMES.frequency,
+        name: EDITOR_NAMES.recurrencePeriodEditor,
         cssClass: CLASSES.frequencyEditor,
         colSpan: 1,
         editorType: 'dxSelectBox',
@@ -247,26 +260,39 @@ export class RecurrenceForm {
   }
   createDaysOfWeekGroup() {
     return {
-      name: GROUP_NAMES.daysOfWeek,
+      name: GROUP_NAMES.recurrenceDaysOfWeekEditor,
       colSpan: 1,
+      cssClass: 'dx-field-item-has-group',
       label: {
         visible: false
       },
       template: () => {
         const $container = $('<div>').addClass(CLASSES.daysOfWeekButtons);
         this.weekDayItems.forEach(item => {
+          var _this$_weekDayButtons;
           const buttonContainer = $('<div>').appendTo($container);
+          (_this$_weekDayButtons = this._weekDayButtons[item.key]) === null || _this$_weekDayButtons === void 0 || _this$_weekDayButtons.dispose();
           this._weekDayButtons[item.key] = this.scheduler.createComponent(buttonContainer, Button, {
             text: item.text,
-            onClick: () => {
+            disabled: this._readOnly,
+            onContentReady: e => {
+              $(e.element).removeClass('dx-button-has-text');
+              const isSelected = this.recurrenceRule.byDay.includes(item.key);
+              e.component.option('stylingMode', isSelected ? 'contained' : 'outlined');
+              e.component.option('type', isSelected ? 'default' : 'normal');
+            },
+            onClick: e => {
               const isSelected = this.recurrenceRule.byDay.includes(item.key);
               if (isSelected) {
                 const index = this.recurrenceRule.byDay.indexOf(item.key);
                 this.recurrenceRule.byDay.splice(index, 1);
+                e.component.option('stylingMode', 'outlined');
+                e.component.option('type', 'normal');
               } else {
                 this.recurrenceRule.byDay.push(item.key);
+                e.component.option('stylingMode', 'contained');
+                e.component.option('type', 'default');
               }
-              this.updateWeekDaysButtons();
             }
           });
         });
@@ -275,19 +301,14 @@ export class RecurrenceForm {
     };
   }
   createDayOfMonthGroup() {
-    return {
-      itemType: 'group',
-      name: GROUP_NAMES.dayOfMonth,
-      cssClass: CLASSES.dayOfMonthGroup,
-      colCount: 1,
-      colSpan: 1,
-      items: [this.createByMonthDayNumberBoxItem('bymonthday', true)]
-    };
+    return Object.assign({}, this.createByMonthDayNumberBoxItem(EDITOR_NAMES.recurrenceDayOfMonthEditor, true), {
+      cssClass: `${CLASSES.dayOfMonthEditor} ${CLASSES.dayOfMonthGroup}`
+    });
   }
   createDayOfYearGroup() {
     return {
       itemType: 'group',
-      name: GROUP_NAMES.dayOfYear,
+      name: GROUP_NAMES.recurrenceDayOfYearGroup,
       cssClass: CLASSES.dayOfYearGroup,
       colCount: 2,
       colCountByScreen: {
@@ -295,7 +316,7 @@ export class RecurrenceForm {
       },
       items: [{
         itemType: 'simple',
-        name: EDITOR_NAMES.byMonth,
+        name: EDITOR_NAMES.recurrenceDayOfYearMonthEditor,
         colSpan: 1,
         cssClass: CLASSES.byMonthEditor,
         editorType: 'dxSelectBox',
@@ -313,11 +334,12 @@ export class RecurrenceForm {
             this.recurrenceRule.byMonth = e.value;
           }
         }
-      }, this.createByMonthDayNumberBoxItem('bymonthdayYearly', false)]
+      }, this.createByMonthDayNumberBoxItem(EDITOR_NAMES.recurrenceDayOfYearDayEditor, false)]
     };
   }
   createRecurrenceEndGroup() {
     return {
+      name: GROUP_NAMES.recurrenceEndGroup,
       itemType: 'group',
       colCount: 2,
       colCountByScreen: {
@@ -325,11 +347,13 @@ export class RecurrenceForm {
       },
       cssClass: `${CLASSES.groupWithIcon} ${CLASSES.recurrenceEndGroup}`,
       items: [{
+        name: ICON_NAMES.recurrenceEndIcon,
         colSpan: 1,
         cssClass: CLASSES.formIcon,
         template: createFormIconTemplate('description')
       }, {
         itemType: 'group',
+        name: EDITOR_NAMES.recurrenceEndEditor,
         colSpan: 1,
         colCount: 2,
         colCountByScreen: {
@@ -345,10 +369,9 @@ export class RecurrenceForm {
   createRecurrenceEndRadioGroup() {
     return {
       itemType: 'simple',
-      name: EDITOR_NAMES.repeatEnd,
+      name: EDITOR_NAMES.recurrenceRepeatEndEditor,
       colSpan: 1,
       editorType: 'dxRadioGroup',
-      cssClass: CLASSES.recurrenceEndEditors,
       label: {
         visible: false
       },
@@ -378,13 +401,15 @@ export class RecurrenceForm {
   createRecurrenceEndEditors() {
     return {
       itemType: 'group',
+      name: GROUP_NAMES.recurrenceEndEditorsGroup,
       cssClass: CLASSES.recurrenceEndEditors,
       colSpan: 1,
       items: [{
-        itemType: 'empty'
+        itemType: 'empty',
+        name: EDITOR_NAMES.recurrenceEndSpacer
       }, {
         itemType: 'simple',
-        name: EDITOR_NAMES.until,
+        name: EDITOR_NAMES.recurrenceEndUntilEditor,
         label: {
           visible: false
         },
@@ -395,8 +420,13 @@ export class RecurrenceForm {
           calendarOptions: {
             firstDayOfWeek: this.scheduler.getFirstDayOfWeek()
           },
+          inputAttr: {
+            'aria-label': messageLocalization.format('dxScheduler-recurrenceUntilDateLabel')
+          },
           onContentReady: e => {
+            const repeatEndValue = this.recurrenceRule.repeatEnd;
             e.component.option('value', this.recurrenceRule.until);
+            e.component.option('disabled', repeatEndValue !== 'until');
           },
           onValueChanged: e => {
             this.recurrenceRule.until = e.value;
@@ -404,7 +434,7 @@ export class RecurrenceForm {
         }
       }, {
         itemType: 'simple',
-        name: EDITOR_NAMES.count,
+        name: EDITOR_NAMES.recurrenceEndCountEditor,
         cssClass: CLASSES.countEditor,
         label: {
           visible: false
@@ -415,8 +445,13 @@ export class RecurrenceForm {
           min: 1,
           showSpinButtons: true,
           useLargeSpinButtons: false,
+          inputAttr: {
+            'aria-label': messageLocalization.format('dxScheduler-recurrenceOccurrenceLabel')
+          },
           onContentReady: e => {
+            const repeatEndValue = this.recurrenceRule.repeatEnd;
             e.component.option('value', this.recurrenceRule.count ?? undefined);
+            e.component.option('disabled', repeatEndValue !== 'count');
           },
           onValueChanged: e => {
             this.recurrenceRule.count = e.value;
@@ -425,43 +460,39 @@ export class RecurrenceForm {
       }]
     };
   }
-  updateRecurrenceFormValues(repeatEditorValue, recurrenceRuleRaw, startDate) {
+  updateRecurrenceFormValues(recurrenceRuleRaw, startDate) {
     var _this$dxForm$getEdito, _this$dxForm$getEdito2, _this$dxForm$getEdito3, _this$dxForm$getEdito4, _this$dxForm$getEdito5, _this$dxForm$getEdito6;
-    this.recurrenceRule = this.createRecurrenceRule(repeatEditorValue, recurrenceRuleRaw, startDate);
-    (_this$dxForm$getEdito = this.dxForm.getEditor(EDITOR_NAMES.recurrenceStartDate)) === null || _this$dxForm$getEdito === void 0 || _this$dxForm$getEdito.option('value', this.recurrenceRule.startDate);
-    (_this$dxForm$getEdito2 = this.dxForm.getEditor(EDITOR_NAMES.frequency)) === null || _this$dxForm$getEdito2 === void 0 || _this$dxForm$getEdito2.option('value', repeatEditorValue);
-    (_this$dxForm$getEdito3 = this.dxForm.getEditor(EDITOR_NAMES.interval)) === null || _this$dxForm$getEdito3 === void 0 || _this$dxForm$getEdito3.option('value', this.recurrenceRule.interval);
-    (_this$dxForm$getEdito4 = this.dxForm.getEditor(EDITOR_NAMES.repeatEnd)) === null || _this$dxForm$getEdito4 === void 0 || _this$dxForm$getEdito4.option('value', this.recurrenceRule.repeatEnd);
-    (_this$dxForm$getEdito5 = this.dxForm.getEditor(EDITOR_NAMES.until)) === null || _this$dxForm$getEdito5 === void 0 || _this$dxForm$getEdito5.option('value', this.recurrenceRule.until);
-    (_this$dxForm$getEdito6 = this.dxForm.getEditor(EDITOR_NAMES.count)) === null || _this$dxForm$getEdito6 === void 0 || _this$dxForm$getEdito6.option('value', this.recurrenceRule.count);
+    this.recurrenceRule = this.createRecurrenceRule(recurrenceRuleRaw, startDate);
+    (_this$dxForm$getEdito = this.dxForm.getEditor(EDITOR_NAMES.recurrenceStartDateEditor)) === null || _this$dxForm$getEdito === void 0 || _this$dxForm$getEdito.option('value', this.recurrenceRule.startDate);
+    (_this$dxForm$getEdito2 = this.dxForm.getEditor(EDITOR_NAMES.recurrencePeriodEditor)) === null || _this$dxForm$getEdito2 === void 0 || _this$dxForm$getEdito2.option('value', this.recurrenceRule.frequency);
+    (_this$dxForm$getEdito3 = this.dxForm.getEditor(EDITOR_NAMES.recurrenceCountEditor)) === null || _this$dxForm$getEdito3 === void 0 || _this$dxForm$getEdito3.option('value', this.recurrenceRule.interval);
+    (_this$dxForm$getEdito4 = this.dxForm.getEditor(EDITOR_NAMES.recurrenceRepeatEndEditor)) === null || _this$dxForm$getEdito4 === void 0 || _this$dxForm$getEdito4.option('value', this.recurrenceRule.repeatEnd);
+    (_this$dxForm$getEdito5 = this.dxForm.getEditor(EDITOR_NAMES.recurrenceEndUntilEditor)) === null || _this$dxForm$getEdito5 === void 0 || _this$dxForm$getEdito5.option('value', this.recurrenceRule.until);
+    (_this$dxForm$getEdito6 = this.dxForm.getEditor(EDITOR_NAMES.recurrenceEndCountEditor)) === null || _this$dxForm$getEdito6 === void 0 || _this$dxForm$getEdito6.option('value', this.recurrenceRule.count);
     this.updateRepeatEndEditors();
     this.updateDayEditorsVisibility();
   }
-  createRecurrenceRule(repeatEditorValue, recurrenceRuleRaw, startDate) {
+  createRecurrenceRule(recurrenceRuleRaw, startDate) {
     const recurrenceRule = new RecurrenceRule(recurrenceRuleRaw ?? '', startDate);
-    const {
-      frequency
-    } = recurrenceRule;
-    if (frequency !== repeatEditorValue) {
-      const newRecurrenceRule = new RecurrenceRule(`freq=${repeatEditorValue};`, startDate);
+    if (recurrenceRule.byDay.length === 0) {
       const defaultByDay = [weekDays[(startDate === null || startDate === void 0 ? void 0 : startDate.getDay()) ?? this.scheduler.getFirstDayOfWeek()]];
-      newRecurrenceRule.byDay = defaultByDay;
-      return newRecurrenceRule;
+      recurrenceRule.byDay = defaultByDay;
     }
     return recurrenceRule;
   }
   updateRepeatEndEditors() {
     const repeatEndValue = this.recurrenceRule.repeatEnd;
-    const untilEditor = this.dxForm.getEditor(EDITOR_NAMES.until);
-    const countEditor = this.dxForm.getEditor(EDITOR_NAMES.count);
+    const untilEditor = this.dxForm.getEditor(EDITOR_NAMES.recurrenceEndUntilEditor);
+    const countEditor = this.dxForm.getEditor(EDITOR_NAMES.recurrenceEndCountEditor);
     untilEditor === null || untilEditor === void 0 || untilEditor.option('disabled', repeatEndValue !== 'until');
     countEditor === null || countEditor === void 0 || countEditor.option('disabled', repeatEndValue !== 'count');
   }
   updateDayEditorsVisibility() {
+    const recurrencePatternGroupPath = `${RECURRENCE_GROUP_NAME}.${GROUP_NAMES.recurrenceRuleGroup}.${GROUP_NAMES.recurrencePatternGroup}`;
+    const daysOfWeekGroup = `${recurrencePatternGroupPath}.${GROUP_NAMES.recurrenceDaysOfWeekEditor}`;
+    const dayOfMonthGroup = `${recurrencePatternGroupPath}.${EDITOR_NAMES.recurrenceDayOfMonthEditor}`;
+    const dayOfYearGroup = `${recurrencePatternGroupPath}.${GROUP_NAMES.recurrenceDayOfYearGroup}`;
     this.dxForm.beginUpdate();
-    const daysOfWeekGroup = `${RECURRENCE_GROUP_NAME}.${GROUP_NAMES.daysOfWeek}`;
-    const dayOfMonthGroup = `${RECURRENCE_GROUP_NAME}.${GROUP_NAMES.dayOfMonth}`;
-    const dayOfYearGroup = `${RECURRENCE_GROUP_NAME}.${GROUP_NAMES.dayOfYear}`;
     this.dxForm.itemOption(daysOfWeekGroup, 'visible', false);
     this.dxForm.itemOption(dayOfMonthGroup, 'visible', false);
     this.dxForm.itemOption(dayOfYearGroup, 'visible', false);
@@ -479,14 +510,5 @@ export class RecurrenceForm {
         break;
     }
     this.dxForm.endUpdate();
-    this.updateWeekDaysButtons();
-  }
-  updateWeekDaysButtons() {
-    Object.entries(this._weekDayButtons).forEach(_ref => {
-      let [dayKey, button] = _ref;
-      const isSelected = this.recurrenceRule.byDay.includes(dayKey);
-      button.option('stylingMode', isSelected ? 'contained' : 'outlined');
-      button.option('type', isSelected ? 'default' : 'normal');
-    });
   }
 }

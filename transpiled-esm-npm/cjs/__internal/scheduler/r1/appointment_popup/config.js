@@ -9,7 +9,6 @@ var _devices = _interopRequireDefault(require("../../../../core/devices"));
 var _size = require("../../../../core/utils/size");
 var _window = require("../../../../core/utils/window");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const POPUP_WIDTH = exports.POPUP_WIDTH = {
   DEFAULT: 485,
   RECURRENCE: 970,
@@ -63,7 +62,7 @@ const getPopupToolbarItems = (allowUpdating, doneClick) => {
   const result = [];
   const buttonsConfig = getButtonsConfig();
   if (allowUpdating) {
-    result.push(_extends({}, buttonsConfig.doneButton, {
+    result.push(Object.assign({}, buttonsConfig.doneButton, {
       onClick: doneClick
     }));
   }

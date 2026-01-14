@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { fx } from '../../../common/core/animation';
 import { move } from '../../../common/core/animation/translator';
 import eventsEngine from '../../../common/core/events/core/events_engine';
@@ -65,7 +64,7 @@ class Calendar extends Editor {
     return `.${CALENDAR_CELL_CLASS}`;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       activeStateEnabled: true,
       currentDate: new Date(),
@@ -102,7 +101,7 @@ class Calendar extends Editor {
     }]);
   }
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       rightArrow(e) {
         e.preventDefault();
         if (isCommandKeyPressed(e)) {
@@ -709,7 +708,7 @@ class Calendar extends Editor {
       _todayDate: todayDate
     } = this.option();
     const disabledDates = isFunction(disabledDatesOption) ? this._injectComponent(disabledDatesOption.bind(this)) : disabledDatesOption;
-    return _extends({}, this._selectionStrategy.getViewOptions(), {
+    return Object.assign({}, this._selectionStrategy.getViewOptions(), {
       date,
       min: this._getMinDate(),
       max: this._getMaxDate(),
@@ -741,7 +740,7 @@ class Calendar extends Editor {
     }
   }
   _injectComponent(func) {
-    return params => func(_extends({}, params, {
+    return params => func(Object.assign({}, params, {
       component: this
     }));
   }

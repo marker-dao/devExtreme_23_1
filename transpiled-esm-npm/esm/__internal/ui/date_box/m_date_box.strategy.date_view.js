@@ -1,11 +1,10 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import messageLocalization from '../../../common/core/localization/message';
 import $ from '../../../core/renderer';
 import { inputType } from '../../../core/utils/support';
 import { getWindow } from '../../../core/utils/window';
+import DateView from './date_view';
 import DateBoxStrategy from './m_date_box.strategy';
 import dateUtils from './m_date_utils';
-import DateView from './m_date_view';
 const window = getWindow();
 class DateViewStrategy extends DateBoxStrategy {
   ctor(dateBox) {
@@ -13,7 +12,7 @@ class DateViewStrategy extends DateBoxStrategy {
     this.NAME = 'DateView';
   }
   getDefaultOptions() {
-    return _extends({}, super.getDefaultOptions(), {
+    return Object.assign({}, super.getDefaultOptions(), {
       openOnFieldClick: true,
       applyButtonText: messageLocalization.format('OK'),
       'dropDownOptions.showTitle': true

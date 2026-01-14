@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-return-assign */
 /* eslint-disable no-plusplus */
@@ -15,8 +14,8 @@ import { createOnSplitMultiPageRow } from './rows_spliting_utils/create_on_split
 import { checkPageContainsOnlyHeader, getMultiPageRowPages } from './rows_spliting_utils/get_multipage_row_pages';
 const COORDINATE_EPSILON = 0.001;
 function convertToCellsArray(rows) {
-  return [].concat.apply([], rows.map(rowInfo => rowInfo.cells.filter(cell => !isDefined(cell.pdfCell.isMerged)).map(cellInfo => _extends({}, cellInfo.pdfCell._rect, {
-    sourceCellInfo: _extends({}, cellInfo.pdfCell, {
+  return [].concat.apply([], rows.map(rowInfo => rowInfo.cells.filter(cell => !isDefined(cell.pdfCell.isMerged)).map(cellInfo => Object.assign({}, cellInfo.pdfCell._rect, {
+    sourceCellInfo: Object.assign({}, cellInfo.pdfCell, {
       gridCell: cellInfo.gridCell
     })
   }))));
@@ -98,7 +97,7 @@ function splitByPages(doc, rowsInfo, options, onSeparateRectHorizontally, onSepa
       pageIndex += 1;
     }
   }
-  return verticallyPages.map(rects => rects.map(rect => _extends({}, rect.sourceCellInfo, {
+  return verticallyPages.map(rects => rects.map(rect => Object.assign({}, rect.sourceCellInfo, {
     _rect: rect
   })));
 }

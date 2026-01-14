@@ -9,7 +9,6 @@ var _themes = require("../../../ui/themes");
 var _widget = _interopRequireDefault(require("../../core/widget/widget"));
 var _wrapper = _interopRequireDefault(require("../../ui/button/wrapper"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const CALENDAR_NAVIGATOR_CLASS = 'dx-calendar-navigator';
 const CALENDAR_NAVIGATOR_PREVIOUS_MONTH_CLASS = 'dx-calendar-navigator-previous-month';
 const CALENDAR_NAVIGATOR_NEXT_MONTH_CLASS = 'dx-calendar-navigator-next-month';
@@ -20,7 +19,7 @@ const CALENDAR_NAVIGATOR_CAPTION_BUTTON_CLASS = 'dx-calendar-caption-button';
 const BUTTON_TEXT_CLASS = 'dx-button-text';
 class Navigator extends _widget.default {
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       onClick: undefined,
       onCaptionClick: undefined,
       type: 'normal',

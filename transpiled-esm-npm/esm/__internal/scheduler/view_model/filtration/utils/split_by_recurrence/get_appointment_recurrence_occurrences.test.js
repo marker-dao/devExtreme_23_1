@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { getAsciiStringByDate } from '../../../../recurrence/base';
 import { getAppointmentRecurrenceOccurrences } from './get_appointment_recurrence_occurrences';
@@ -20,7 +19,7 @@ describe('getAppointmentRecurrenceOccurrences', () => {
           endDate: Date.UTC(2000, 0, 10, 11)
         }
       };
-      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([_extends({}, appointment, {
+      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([Object.assign({}, appointment, {
         startDateUTC: appointment.source.startDate - HOUR_MS * 8,
         endDateUTC: appointment.source.endDate - HOUR_MS * 8
       })]);
@@ -32,7 +31,7 @@ describe('getAppointmentRecurrenceOccurrences', () => {
           endDate: Date.UTC(2025, 2, 9, 4)
         }
       };
-      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([_extends({}, appointment, {
+      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([Object.assign({}, appointment, {
         startDateUTC: appointment.source.startDate - HOUR_MS * 8,
         endDateUTC: appointment.source.endDate - HOUR_MS * 8
       })]);
@@ -44,7 +43,7 @@ describe('getAppointmentRecurrenceOccurrences', () => {
           endDate: Date.UTC(2025, 10, 2, 4)
         }
       };
-      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([_extends({}, appointment, {
+      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([Object.assign({}, appointment, {
         startDateUTC: appointment.source.startDate - HOUR_MS * 7,
         endDateUTC: appointment.source.endDate - HOUR_MS * 7
       })]);
@@ -56,7 +55,7 @@ describe('getAppointmentRecurrenceOccurrences', () => {
           endDate: Date.UTC(2025, 2, 9, 3, 45)
         }
       };
-      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([_extends({}, appointment, {
+      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([Object.assign({}, appointment, {
         startDateUTC: appointment.source.startDate - HOUR_MS * 8,
         endDateUTC: appointment.source.endDate - HOUR_MS * 8
       })]);
@@ -102,35 +101,35 @@ describe('getAppointmentRecurrenceOccurrences', () => {
         recurrenceRule: 'FREQ=DAILY',
         hasRecurrenceRule: true
       };
-      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([_extends({}, appointment, {
+      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 10, 10),
           endDate: Date.UTC(2000, 0, 10, 11)
         },
         startDateUTC: Date.UTC(2000, 0, 10, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 10, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 11, 10),
           endDate: Date.UTC(2000, 0, 11, 11)
         },
         startDateUTC: Date.UTC(2000, 0, 11, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 11, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 12, 10),
           endDate: Date.UTC(2000, 0, 12, 11)
         },
         startDateUTC: Date.UTC(2000, 0, 12, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 12, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 13, 10),
           endDate: Date.UTC(2000, 0, 13, 11)
         },
         startDateUTC: Date.UTC(2000, 0, 13, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 13, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 14, 10),
           endDate: Date.UTC(2000, 0, 14, 11)
@@ -148,10 +147,10 @@ describe('getAppointmentRecurrenceOccurrences', () => {
         recurrenceRule: 'FREQ=DAILY',
         hasRecurrenceRule: true
       };
-      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([_extends({}, appointment, {
+      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([Object.assign({}, appointment, {
         startDateUTC: Date.UTC(2000, 0, 13, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 13, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 14, 10),
           endDate: Date.UTC(2000, 0, 14, 11)
@@ -189,7 +188,7 @@ describe('getAppointmentRecurrenceOccurrences', () => {
         recurrenceRule: 'FREQ=DAILY;INTERVAL=20',
         hasRecurrenceRule: true
       };
-      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([_extends({}, appointment, {
+      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 9),
           endDate: Date.UTC(2000, 0, 16)
@@ -216,7 +215,7 @@ describe('getAppointmentRecurrenceOccurrences', () => {
         recurrenceRule: 'FREQ=DAILY;INTERVAL=10',
         hasRecurrenceRule: true
       };
-      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([_extends({}, appointment, {
+      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 9, 20),
           endDate: Date.UTC(2000, 0, 10, 10)
@@ -238,14 +237,14 @@ describe('getAppointmentRecurrenceOccurrences', () => {
         recurrenceRule: 'FREQ=DAILY',
         hasRecurrenceRule: true
       };
-      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([_extends({}, appointment, {
+      expect(getAppointmentRecurrenceOccurrences(appointment, options)).toEqual([Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 10, 10),
           endDate: Date.UTC(2000, 0, 10, 11)
         },
         startDateUTC: Date.UTC(2000, 0, 10, 10) - HOUR_MS * 8,
         endDateUTC: Date.UTC(2000, 0, 10, 11) - HOUR_MS * 8
-      }), _extends({}, appointment, {
+      }), Object.assign({}, appointment, {
         source: {
           startDate: Date.UTC(2000, 0, 14, 10),
           endDate: Date.UTC(2000, 0, 14, 11)

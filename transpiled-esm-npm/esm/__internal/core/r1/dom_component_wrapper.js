@@ -1,5 +1,4 @@
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-import _extends from "@babel/runtime/helpers/esm/extends";
 const _excluded = ["componentProps", "componentType", "templateNames"];
 import { createVNode } from "inferno";
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -36,7 +35,7 @@ export class DomComponentWrapper extends InfernoComponent {
     return ConfigContext.defaultValue;
   }
   render() {
-    return normalizeProps(createVNode(1, "div", this.props.componentProps.className, null, 1, _extends({}, this.getRestAttributes()), null, this.widgetRef));
+    return normalizeProps(createVNode(1, "div", this.props.componentProps.className, null, 1, Object.assign({}, this.getRestAttributes()), null, this.widgetRef));
   }
   componentWillUpdate(nextProps, nextState, context) {
     super.componentWillUpdate(nextProps, nextState, context);

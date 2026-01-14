@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { DataController } from '../../data_controller/index';
 import { OptionsController } from '../../options_controller/options_controller';
 import { FilterController } from '../filter_controller';
@@ -25,7 +24,7 @@ export class CompatibilityHeaderFilterController {
   getDataSource(column) {
     const adapter = this.realDataController.getStoreLoadAdapter();
     const popupOptions = {
-      column: _extends({}, column),
+      column: Object.assign({}, column),
       filterType: column.filterType,
       filterValues: column.filterValues
     };

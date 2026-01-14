@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { describe, expect, it } from '@jest/globals';
 import { ResourceManager } from '../../../utils/resource_manager/resource_manager';
 import { splitByGroupIndex } from './split_by_group_index';
@@ -28,11 +27,11 @@ const getFilterOptions = async configs => {
 describe('splitByGroupIndex', () => {
   it('should add groupIndex for no grouping', async () => {
     const options = await getFilterOptions([]);
-    expect(splitByGroupIndex(items, options)).toEqual([_extends({}, items[0], {
+    expect(splitByGroupIndex(items, options)).toEqual([Object.assign({}, items[0], {
       groupIndex: 0
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       groupIndex: 0
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       groupIndex: 0
     })]);
   });
@@ -43,11 +42,11 @@ describe('splitByGroupIndex', () => {
       }],
       fieldExpr: 'roomId'
     }]);
-    expect(splitByGroupIndex(items, options)).toEqual([_extends({}, items[0], {
+    expect(splitByGroupIndex(items, options)).toEqual([Object.assign({}, items[0], {
       groupIndex: 0
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       groupIndex: 0
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       groupIndex: 0
     })]);
   });
@@ -62,11 +61,11 @@ describe('splitByGroupIndex', () => {
       }],
       fieldExpr: 'roomId'
     }]);
-    expect(splitByGroupIndex(items, options)).toEqual([_extends({}, items[0], {
+    expect(splitByGroupIndex(items, options)).toEqual([Object.assign({}, items[0], {
       groupIndex: 1
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       groupIndex: 1
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       groupIndex: 1
     })]);
   });
@@ -91,17 +90,17 @@ describe('splitByGroupIndex', () => {
       }],
       fieldExpr: 'kind'
     }]);
-    expect(splitByGroupIndex(items, options)).toEqual([_extends({}, items[0], {
+    expect(splitByGroupIndex(items, options)).toEqual([Object.assign({}, items[0], {
       groupIndex: 3
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       groupIndex: 3
-    }), _extends({}, items[1], {
+    }), Object.assign({}, items[1], {
       groupIndex: 4
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       groupIndex: 3
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       groupIndex: 4
-    }), _extends({}, items[2], {
+    }), Object.assign({}, items[2], {
       groupIndex: 5
     })]);
   });

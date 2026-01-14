@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import messageLocalization from '../../../../../localization/message';
@@ -176,7 +175,7 @@ export class SelectionController {
   selectionChanging(e) {
     if (e.addedItemKeys.length || e.removedItemKeys.length) {
       const onSelectionChanging = this.onSelectionChanging.peek();
-      const eventArgs = _extends({}, this.getSelectionEventArgs(e), {
+      const eventArgs = Object.assign({}, this.getSelectionEventArgs(e), {
         cancel: false
       });
       // @ts-expect-error

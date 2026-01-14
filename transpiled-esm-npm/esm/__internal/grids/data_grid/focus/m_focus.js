@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { equalByValue } from '../../../../core/utils/common';
 import { compileGetter } from '../../../../core/utils/data';
 import { Deferred } from '../../../../core/utils/deferred';
@@ -124,9 +123,9 @@ const data = Base => class FocusDataControllerExtender extends focusModule.exten
     }).fail(deferred.reject);
   }
 };
-gridCore.registerModule('focus', _extends({}, focusModule, {
-  extenders: _extends({}, focusModule.extenders, {
-    controllers: _extends({}, focusModule.extenders.controllers, {
+gridCore.registerModule('focus', Object.assign({}, focusModule, {
+  extenders: Object.assign({}, focusModule.extenders, {
+    controllers: Object.assign({}, focusModule.extenders.controllers, {
       data
     })
   })

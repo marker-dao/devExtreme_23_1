@@ -63,6 +63,7 @@ class EventsStrategy {
     (0, _iterator.each)(this._events, (eventName, event) => {
       event.empty();
     });
+    this._owner = null;
   }
 }
 exports.EventsStrategy = EventsStrategy;

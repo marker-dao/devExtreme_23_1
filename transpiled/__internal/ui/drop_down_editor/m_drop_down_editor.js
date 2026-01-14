@@ -31,7 +31,6 @@ var _m_text_box = _interopRequireDefault(require("../../ui/text_box/m_text_box")
 var _m_drop_down_button = _interopRequireDefault(require("./m_drop_down_button"));
 var _m_utils = require("./m_utils");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const DROP_DOWN_EDITOR_CLASS = exports.DROP_DOWN_EDITOR_CLASS = 'dx-dropdowneditor';
 const DROP_DOWN_EDITOR_INPUT_WRAPPER = 'dx-dropdowneditor-input-wrapper';
 const DROP_DOWN_EDITOR_BUTTON_ICON = 'dx-dropdowneditor-icon';
@@ -56,7 +55,7 @@ function createTemplateWrapperElement() {
 class DropDownEditor extends _m_text_box.default {
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       tab: e => {
         if (!this.option('opened')) {
           return;
@@ -121,7 +120,7 @@ class DropDownEditor extends _m_text_box.default {
     }]);
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       value: null,
       onOpened: null,
       onClosed: null,
@@ -819,14 +818,13 @@ class DropDownEditor extends _m_text_box.default {
     return isOutsideClick;
   }
   _clean() {
-    delete this._openOnFieldClickAction;
-    delete this._$templateWrapper;
+    var _this$_$popup;
     this._clearFieldAddons(true);
-    if (this._$popup) {
-      this._$popup.remove();
-      delete this._$popup;
-      delete this._popup;
-    }
+    (_this$_$popup = this._$popup) === null || _this$_$popup === void 0 || _this$_$popup.remove();
+    this._openOnFieldClickAction = undefined;
+    this._$templateWrapper = undefined;
+    this._popup = undefined;
+    this._$popup = undefined;
     super._clean();
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

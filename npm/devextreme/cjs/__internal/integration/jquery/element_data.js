@@ -1,0 +1,20 @@
+/**
+* DevExtreme (cjs/__internal/integration/jquery/element_data.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+var _m_element_data = require("../../core/m_element_data");
+var _jquery = _interopRequireDefault(require("jquery"));
+var _use_jquery = _interopRequireDefault(require("./use_jquery"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+// eslint-disable-next-line import/no-extraneous-dependencies
+
+const useJQuery = (0, _use_jquery.default)();
+if (useJQuery) {
+  (0, _m_element_data.setDataStrategy)(_jquery.default);
+}

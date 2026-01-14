@@ -11,7 +11,6 @@ var _form = _interopRequireDefault(require("../../../../ui/form"));
 var _themes = require("../../../../ui/themes");
 var _m_baseDialog = _interopRequireDefault(require("./m_baseDialog"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const FORM_CLASS = 'dx-formdialog-form';
 const FORM_DIALOG_CLASS = 'dx-formdialog';
 const getApplyButtonConfig = () => {
@@ -51,7 +50,7 @@ class FormDialog extends _m_baseDialog.default {
   }
   _getPopupConfig() {
     const baseConfig = super._getPopupConfig();
-    return (0, _extend.extend)(true, {}, baseConfig, _extends({
+    return (0, _extend.extend)(true, {}, baseConfig, Object.assign({
       showCloseButton: false,
       onInitialized: e => {
         this._popup = e.component;
@@ -65,7 +64,7 @@ class FormDialog extends _m_baseDialog.default {
         toolbar: 'bottom',
         location: 'after',
         widget: 'dxButton',
-        options: _extends({
+        options: Object.assign({
           onInitialized: this._addEscapeHandler.bind(this),
           text: _message.default.format('OK'),
           onClick: e => {
@@ -76,7 +75,7 @@ class FormDialog extends _m_baseDialog.default {
         toolbar: 'bottom',
         location: 'after',
         widget: 'dxButton',
-        options: _extends({
+        options: Object.assign({
           onInitialized: this._addEscapeHandler.bind(this),
           text: _message.default.format('Cancel'),
           onClick: () => {

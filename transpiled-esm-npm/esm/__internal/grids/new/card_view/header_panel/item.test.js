@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { createComponentVNode, normalizeProps } from "inferno";
 import { describe, expect, it } from '@jest/globals';
 import { render } from 'inferno';
@@ -6,7 +5,7 @@ import { normalizeColumn } from '../../grid_core/columns_controller/columns_cont
 import { Item } from './item';
 const setup = props => {
   const rootElement = document.createElement('div');
-  render(normalizeProps(createComponentVNode(2, Item, _extends({}, props))), rootElement);
+  render(normalizeProps(createComponentVNode(2, Item, Object.assign({}, props))), rootElement);
   return rootElement;
 };
 describe('Item', () => {

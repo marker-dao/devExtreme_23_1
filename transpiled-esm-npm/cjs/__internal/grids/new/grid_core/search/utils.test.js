@@ -4,7 +4,6 @@ var _globals = require("@jest/globals");
 var _columns_controller = require("../columns_controller/columns_controller.mock");
 var _options = require("../columns_controller/options");
 var _utils = require("./utils");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 (0, _globals.describe)('Search', () => {
   (0, _globals.describe)('Text highlighting', () => {
     (0, _globals.describe)('Utils', () => {
@@ -345,14 +344,14 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
     expectedResult: false
   }, {
     caseName: 'Allow search in a column with default settings and with dataField',
-    column: _extends({}, _options.defaultColumnProperties, {
+    column: Object.assign({}, _options.defaultColumnProperties, {
       dataField: 'ID'
     }),
     searchVisibleColumnsOnly: false,
     expectedResult: true
   }, {
     caseName: 'Allow search in invisible column with default settings if searchVisibleColumnsOnly=false',
-    column: _extends({}, _options.defaultColumnProperties, {
+    column: Object.assign({}, _options.defaultColumnProperties, {
       dataField: 'ID',
       visible: false
     }),
@@ -360,7 +359,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
     expectedResult: true
   }, {
     caseName: 'Disallow search in invisible column with default settings if searchVisibleColumnsOnly=true',
-    column: _extends({}, _options.defaultColumnProperties, {
+    column: Object.assign({}, _options.defaultColumnProperties, {
       dataField: 'ID',
       visible: false
     }),
@@ -368,7 +367,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
     expectedResult: false
   }, {
     caseName: 'Disallow search in a column with default settings if allowSearch=false',
-    column: _extends({}, _options.defaultColumnProperties, {
+    column: Object.assign({}, _options.defaultColumnProperties, {
       dataField: 'ID',
       allowSearch: false
     }),
@@ -388,14 +387,14 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
   (0, _globals.describe)('targe=search and selectedFilterOperation=undefined', () => {
     _globals.it.each([{
       caseName: 'Column with default settings',
-      column: _extends({}, _options.defaultColumnProperties, {
+      column: Object.assign({}, _options.defaultColumnProperties, {
         dataField: 'ID'
       }),
       filterValue: 'a',
       expectedResult: ['ID', 'contains', 'a']
     }, {
       caseName: 'Column with number type',
-      column: _extends({}, _options.defaultColumnProperties, {
+      column: Object.assign({}, _options.defaultColumnProperties, {
         dataField: 'ID',
         dataType: 'number'
       }),
@@ -403,7 +402,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
       expectedResult: ['ID', '=', '1']
     }, {
       caseName: 'Column with calculateFilterExpression function',
-      column: _extends({}, _options.defaultColumnProperties, {
+      column: Object.assign({}, _options.defaultColumnProperties, {
         dataField: 'ID',
         dataType: 'number',
         calculateFilterExpression: () => ['ID', '=', '5']
@@ -431,9 +430,9 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
   }, {
     caseName: 'Two visible columns',
     text: 'A',
-    columns: [_extends({}, _options.defaultColumnProperties, {
+    columns: [Object.assign({}, _options.defaultColumnProperties, {
       dataField: 'ID1'
-    }), _extends({}, _options.defaultColumnProperties, {
+    }), Object.assign({}, _options.defaultColumnProperties, {
       dataField: 'ID2'
     })],
     searchVisibleColumnsOnly: false,
@@ -441,10 +440,10 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
   }, {
     caseName: 'Two visible columns with number format',
     text: '3',
-    columns: [_extends({}, _options.defaultColumnProperties, {
+    columns: [Object.assign({}, _options.defaultColumnProperties, {
       dataField: 'ID1',
       dataType: 'number'
-    }), _extends({}, _options.defaultColumnProperties, {
+    }), Object.assign({}, _options.defaultColumnProperties, {
       dataField: 'ID2',
       dataType: 'number'
     })],
@@ -453,10 +452,10 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
   }, {
     caseName: 'One visible and invisible column and searchVisibleColumnsOnly=true',
     text: 'A',
-    columns: [_extends({}, _options.defaultColumnProperties, {
+    columns: [Object.assign({}, _options.defaultColumnProperties, {
       dataField: 'ID1',
       visible: false
-    }), _extends({}, _options.defaultColumnProperties, {
+    }), Object.assign({}, _options.defaultColumnProperties, {
       dataField: 'ID2'
     })],
     searchVisibleColumnsOnly: true,

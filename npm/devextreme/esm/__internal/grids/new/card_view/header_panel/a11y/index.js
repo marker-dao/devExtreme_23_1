@@ -1,0 +1,9 @@
+/**
+* DevExtreme (esm/__internal/grids/new/card_view/header_panel/a11y/index.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+export { getHeaderItemA11yLabel } from './utils';

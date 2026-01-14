@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { dateUtils } from '../../../../core/utils/m_date';
 const toMs = dateUtils.dateToMilliseconds;
 const MINUTE_MS = toMs('minute');
@@ -50,12 +49,12 @@ export const expandAllDayAllDayPanel = (entities, endDayHour, viewOffsetMs) => e
     // (0 hours) [startHour, endHour] (appointment start, end) (24 hours)
     const minStartDate = new Date(entity.startDateUTC).setUTCHours(endDayHour, 0, 0, 0) - MINUTE_MS;
     const maxEndDate = new Date(entity.endDateUTC).setUTCHours(endDayHour, 0, 0, 0) - MINUTE_MS;
-    return _extends({}, entity, {
+    return Object.assign({}, entity, {
       startDateUTC: Math.min(entity.startDateUTC, minStartDate),
       endDateUTC: maxEndDate
     });
   }
-  return _extends({}, entity, {
+  return Object.assign({}, entity, {
     startDateUTC: getShiftedStartDate(entity.startDateUTC, viewOffsetMs),
     endDateUTC: getShiftedEndDate(entity.endDateUTC, viewOffsetMs)
   });
@@ -67,7 +66,7 @@ export const expandAllDayRegularPanel = entities => entities.map(entity => {
   const startDate = new Date(entity.startDateUTC);
   const endDate = new Date(entity.endDateUTC);
   endDate.setDate(endDate.getDate() + 1);
-  return _extends({}, entity, {
+  return Object.assign({}, entity, {
     endDateUTC: endDate.setUTCHours(startDate.getUTCHours(), startDate.getUTCMinutes(), startDate.getUTCSeconds(), startDate.getUTCMilliseconds())
   });
 });

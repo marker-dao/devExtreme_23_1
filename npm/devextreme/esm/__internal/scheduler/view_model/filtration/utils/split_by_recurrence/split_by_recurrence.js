@@ -1,0 +1,31 @@
+/**
+* DevExtreme (esm/__internal/scheduler/view_model/filtration/utils/split_by_recurrence/split_by_recurrence.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+import { getAppointmentRecurrenceOccurrences } from './get_appointment_recurrence_occurrences';
+export const splitByRecurrence = (entities, _ref) => {
+  let {
+    timeZone,
+    firstDayOfWeek,
+    allDayIntervals,
+    regularIntervals
+  } = _ref;
+  return entities.reduce((acc, appointment) => {
+    const intervals = appointment.allDay || appointment.isAllDayPanelOccupied ? allDayIntervals : regularIntervals;
+    const recurrenceInterval = {
+      min: intervals[0].min,
+      max: intervals[intervals.length - 1].max
+    };
+    const occurrences = getAppointmentRecurrenceOccurrences(appointment, {
+      firstDayOfWeek,
+      interval: recurrenceInterval,
+      timeZone
+    });
+    acc.push(...occurrences);
+    return acc;
+  }, []);
+};

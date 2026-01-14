@@ -21,16 +21,15 @@ var _inflector = require("../../../../../core/utils/inflector");
 var _type = require("../../../../../core/utils/type");
 var _index = require("../../../../grids/new/grid_core/utils/tree/index");
 var _options = require("./options");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 function normalizeColumn(column, templateNormalizationFunc, columnFromDataOptions) {
   const dataType = column.dataType ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.dataType) ?? _options.defaultColumnProperties.dataType;
   const columnDataTypeDefaultOptions = _options.defaultColumnPropertiesByDataType[dataType];
   const columnFormat = column.format ?? (columnDataTypeDefaultOptions === null || columnDataTypeDefaultOptions === void 0 ? void 0 : columnDataTypeDefaultOptions.format) ?? (columnFromDataOptions === null || columnFromDataOptions === void 0 ? void 0 : columnFromDataOptions.format);
   const caption = (0, _inflector.captionize)(column.name);
-  const colWithDefaults = _extends({}, _options.defaultColumnProperties, columnDataTypeDefaultOptions, {
+  const colWithDefaults = Object.assign({}, _options.defaultColumnProperties, columnDataTypeDefaultOptions, {
     caption
   }, column);
-  const normalizedColumn = _extends({}, colWithDefaults, {
+  const normalizedColumn = Object.assign({}, colWithDefaults, {
     dataType
   }, !!columnFormat && {
     format: columnFormat
@@ -107,7 +106,7 @@ function preNormalizeColumns(columns) {
       };
     }
     return column;
-  }).map((column, index) => _extends({}, column, {
+  }).map((column, index) => Object.assign({}, column, {
     name: column.name ?? column.dataField ?? `column-${index}`
   }));
   const visibleIndexes = getVisibleIndexes(normalizedColumns === null || normalizedColumns === void 0 ? void 0 : normalizedColumns.map(c => c.visibleIndex));
@@ -188,7 +187,7 @@ function addDataFieldToComputedColumns(columns) {
       return column;
     }
     // NOTE: same logic in datagrid
-    return _extends({}, column, {
+    return Object.assign({}, column, {
       dataField: column.name
     });
   });

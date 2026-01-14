@@ -1,0 +1,146 @@
+/**
+* DevExtreme (cjs/__internal/ui/file_manager/ui.file_manager.dialog.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _message = _interopRequireDefault(require("../../../common/core/localization/message"));
+var _renderer = _interopRequireDefault(require("../../../core/renderer"));
+var _type = require("../../../core/utils/type");
+var _ui = _interopRequireDefault(require("../../../ui/popup/ui.popup"));
+var _widget = _interopRequireDefault(require("../../core/widget/widget"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
+const FILE_MANAGER_DIALOG_CONTENT = 'dx-filemanager-dialog';
+const FILE_MANAGER_DIALOG_POPUP = 'dx-filemanager-dialog-popup';
+class FileManagerDialogBase extends _widget.default {
+  _initMarkup() {
+    super._initMarkup();
+    this._createOnClosedAction();
+    const options = this._getDialogOptions();
+    const $popup = (0, _renderer.default)('<div>').appendTo(this.$element());
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const popupOptions = {
+      showTitle: true,
+      title: options.title,
+      visible: false,
+      hideOnOutsideClick: true,
+      contentTemplate: this._createContentTemplate.bind(this),
+      toolbarItems: [{
+        widget: 'dxButton',
+        toolbar: 'bottom',
+        location: 'after',
+        options: {
+          text: options.buttonText,
+          onClick: this._applyDialogChanges.bind(this)
+        }
+      }, {
+        widget: 'dxButton',
+        toolbar: 'bottom',
+        location: 'after',
+        options: {
+          text: _message.default.format('dxFileManager-dialogButtonCancel'),
+          onClick: this._closeDialog.bind(this)
+        }
+      }],
+      onInitialized: _ref => {
+        let {
+          component
+        } = _ref;
+        component.registerKeyHandler('enter', this._applyDialogChanges.bind(this));
+      },
+      onHiding: this._onPopupHiding.bind(this),
+      onShown: this._onPopupShown.bind(this),
+      _wrapperClassExternal: `${FILE_MANAGER_DIALOG_POPUP} ${options.popupCssClass ?? ''}`
+    };
+    if ((0, _type.isDefined)(options.height)) {
+      popupOptions.height = options.height;
+    }
+    if ((0, _type.isDefined)(options.maxHeight)) {
+      popupOptions.maxHeight = options.maxHeight;
+    }
+    this._popup = this._createComponent($popup, _ui.default, popupOptions);
+  }
+  show() {
+    var _this$_popup;
+    this._dialogResult = null;
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    (_this$_popup = this._popup) === null || _this$_popup === void 0 || _this$_popup.show();
+  }
+  _getDialogOptions() {
+    return {
+      title: 'Title',
+      buttonText: 'ButtonText',
+      contentCssClass: '',
+      popupCssClass: ''
+    };
+  }
+  _createContentTemplate(element) {
+    this._$contentElement = (0, _renderer.default)('<div>').appendTo(element).addClass(FILE_MANAGER_DIALOG_CONTENT);
+    const cssClass = this._getDialogOptions().contentCssClass;
+    if (cssClass) {
+      this._$contentElement.addClass(cssClass);
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  _getDialogResult() {
+    return null;
+  }
+  _applyDialogChanges() {
+    const result = this._getDialogResult();
+    if (result) {
+      this._dialogResult = result;
+      this._closeDialog();
+    }
+  }
+  _closeDialog() {
+    var _this$_popup2;
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    (_this$_popup2 = this._popup) === null || _this$_popup2 === void 0 || _this$_popup2.hide();
+  }
+  _onPopupHiding() {
+    var _this$_onClosedAction;
+    (_this$_onClosedAction = this._onClosedAction) === null || _this$_onClosedAction === void 0 || _this$_onClosedAction.call(this, {
+      dialogResult: this._dialogResult
+    });
+  }
+  _onPopupShown() {}
+  _createOnClosedAction() {
+    this._onClosedAction = this._createActionByOption('onClosed');
+  }
+  _setTitle(newTitle) {
+    var _this$_popup3;
+    (_this$_popup3 = this._popup) === null || _this$_popup3 === void 0 || _this$_popup3.option('title', newTitle);
+  }
+  _setApplyButtonOptions(options) {
+    var _this$_popup4;
+    (_this$_popup4 = this._popup) === null || _this$_popup4 === void 0 || _this$_popup4.option('toolbarItems[0].options', options);
+  }
+  _getDefaultOptions() {
+    return Object.assign({}, super._getDefaultOptions(), {
+      onClosed: undefined
+    });
+  }
+  _optionChanged(args) {
+    const {
+      name
+    } = args;
+    switch (name) {
+      case 'onClosed':
+        this._createOnClosedAction();
+        break;
+      default:
+        super._optionChanged(args);
+    }
+  }
+}
+var _default = exports.default = FileManagerDialogBase;

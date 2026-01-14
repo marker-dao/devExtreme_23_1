@@ -1,0 +1,80 @@
+/**
+* DevExtreme (cjs/__internal/exporter/jspdf/common/rows_spliting_utils/create_on_split_multipage_row.js)
+* Version: 26.1.0
+* Build date: Tue Jan 13 2026
+*
+* Copyright (c) 2012 - 2026 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createOnSplitMultiPageRow = void 0;
+var _pdf_utils = require("../pdf_utils");
+/* eslint-disable no-return-assign */
+/* eslint-disable @stylistic/max-len */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
+function createMultiCellRect(rect, text, marginTop) {
+  return Object.assign({}, rect, {
+    sourceCellInfo: Object.assign({}, rect.sourceCellInfo, {
+      text
+    }),
+    y: marginTop
+  });
+}
+const createOnSplitMultiPageRow = (doc, options, headerHeight, maxBottomRight) => (isFirstPage, pageRects) => {
+  const currentPageRects = [];
+  const nextPageRects = [];
+  let maxCurrentPageHeight = 0;
+  let maxNextPageHeight = 0;
+  pageRects.forEach(rect => {
+    const {
+      w,
+      sourceCellInfo
+    } = rect;
+    const additionalHeight = !isFirstPage && options.repeatHeaders ? headerHeight : headerHeight + options.topLeft.y;
+    const heightOfOneLine = (0, _pdf_utils.getTextDimensions)(doc, sourceCellInfo.text, sourceCellInfo.font).h;
+    const paddingHeight = sourceCellInfo.padding.top + sourceCellInfo.padding.bottom;
+    const fullPageHeight = maxBottomRight.y - additionalHeight - paddingHeight - options.margin.top;
+    const possibleLinesCount = Math.floor(fullPageHeight / (heightOfOneLine * doc.getLineHeightFactor()));
+    const allLines = (0, _pdf_utils.getTextLines)(doc, sourceCellInfo.text, sourceCellInfo.font, {
+      wordWrapEnabled: sourceCellInfo.wordWrapEnabled,
+      targetRectWidth: w
+    });
+    if (possibleLinesCount < allLines.length) {
+      const currentPageText = allLines.slice(0, possibleLinesCount).join('\n');
+      const currentPageHeight = (0, _pdf_utils.calculateTextHeight)(doc, currentPageText, sourceCellInfo.font, {
+        wordWrapEnabled: sourceCellInfo.wordWrapEnabled,
+        targetRectWidth: w
+      });
+      maxCurrentPageHeight = Math.max(maxCurrentPageHeight, currentPageHeight + paddingHeight);
+      maxNextPageHeight = rect.h - currentPageHeight;
+      // @ts-expect-error
+      currentPageRects.push(createMultiCellRect(rect, currentPageText, options.margin.top));
+      // @ts-expect-error
+      nextPageRects.push(createMultiCellRect(rect, allLines.slice(possibleLinesCount).join('\n'), options.margin.top));
+    } else {
+      const currentPageHeight = (0, _pdf_utils.calculateTextHeight)(doc, sourceCellInfo.text, sourceCellInfo.font, {
+        wordWrapEnabled: sourceCellInfo.wordWrapEnabled,
+        targetRectWidth: w
+      });
+      maxCurrentPageHeight = Math.max(maxCurrentPageHeight, currentPageHeight + paddingHeight);
+      maxNextPageHeight = Math.max(maxNextPageHeight, currentPageHeight + paddingHeight);
+      // @ts-expect-error
+      currentPageRects.push(createMultiCellRect(rect, sourceCellInfo.text, options.margin.top));
+      // @ts-expect-error
+      nextPageRects.push(createMultiCellRect(rect, '', options.margin.top));
+    }
+  });
+  // @ts-expect-error
+  currentPageRects.forEach(rect => rect.h = maxCurrentPageHeight);
+  // @ts-expect-error
+  nextPageRects.forEach(rect => rect.h = maxNextPageHeight);
+  return [currentPageRects, nextPageRects];
+};
+exports.createOnSplitMultiPageRow = createOnSplitMultiPageRow;

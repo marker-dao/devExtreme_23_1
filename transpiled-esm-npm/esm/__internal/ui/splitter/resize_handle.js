@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import { name as CLICK_EVENT } from '../../../common/core/events/click';
 import eventsEngine from '../../../common/core/events/core/events_engine';
 import { name as DOUBLE_CLICK_EVENT } from '../../../common/core/events/double_click';
@@ -29,7 +28,7 @@ const RESIZE_DIRECTION = {
 class ResizeHandle extends Widget {
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   _supportedKeys() {
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       rightArrow(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -119,7 +118,7 @@ class ResizeHandle extends Widget {
     });
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       direction: RESIZE_DIRECTION.horizontal,
       hoverStateEnabled: true,
       focusStateEnabled: true,

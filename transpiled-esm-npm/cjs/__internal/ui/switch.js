@@ -19,7 +19,6 @@ var _position = require("../../core/utils/position");
 var _size = require("../../core/utils/size");
 var _editor = _interopRequireDefault(require("../ui/editor/editor"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const SWITCH_CLASS = 'dx-switch';
 const SWITCH_WRAPPER_CLASS = `${SWITCH_CLASS}-wrapper`;
 const SWITCH_CONTAINER_CLASS = `${SWITCH_CLASS}-container`;
@@ -51,7 +50,7 @@ class Switch extends _editor.default {
       this._saveValueChangeEvent(e);
       this._animateValue(value);
     };
-    return _extends({}, super._supportedKeys(), {
+    return Object.assign({}, super._supportedKeys(), {
       space: click,
       enter: click,
       leftArrow: e => {
@@ -66,7 +65,7 @@ class Switch extends _editor.default {
     return false;
   }
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       hoverStateEnabled: true,
       activeStateEnabled: true,
       switchedOnText: _message.default.format('dxSwitch-switchedOnText'),

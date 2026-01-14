@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 const _excluded = ["onApplyButtonClick", "onCancelButtonClick"];
 import eventsEngine from '../../../common/core/events/core/events_engine';
@@ -33,7 +32,7 @@ class ConfirmationPopup {
   _getPopupConfig() {
     const messageId = new Guid().toString();
     const $message = $('<div>').text(messageLocalization.format('dxChat-editingDeleteConfirmText')).attr('id', messageId);
-    return extend(_extends({
+    return extend(Object.assign({
       width: POPUP_WIDTH,
       height: 'auto',
       showTitle: false,

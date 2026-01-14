@@ -28,8 +28,12 @@ var _window = require("../core/utils/window");
 var _dom_component = _interopRequireDefault(require("./core/widget/dom_component"));
 var _animator = _interopRequireDefault(require("./ui/scroll_view/animator"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable max-classes-per-file */ // @ts-expect-error
+/* eslint-disable max-classes-per-file */
+
 // @ts-expect-error
+
+// @ts-expect-error
+
 const window = (0, _window.getWindow)();
 const KEYDOWN_EVENT = 'keydown';
 const DRAGGABLE = 'dxDraggable';
@@ -213,7 +217,7 @@ class Draggable extends _dom_component.default {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _fireRemoveEvent(sourceEvent) {}
   _getDefaultOptions() {
-    return _extends({}, super._getDefaultOptions(), {
+    return Object.assign({}, super._getDefaultOptions(), {
       // @ts-expect-error
       onDragStart: null,
       // @ts-expect-error
@@ -521,7 +525,7 @@ class Draggable extends _dom_component.default {
       dragElement: $dragElement.get(0),
       initialOffset: isFixedPosition && initialOffset
     }));
-    this._getAction('onDraggableElementShown')(_extends({}, dragStartArgs, {
+    this._getAction('onDraggableElementShown')(Object.assign({}, dragStartArgs, {
       dragElement: $dragElement
     }));
     const $area = this._getArea();

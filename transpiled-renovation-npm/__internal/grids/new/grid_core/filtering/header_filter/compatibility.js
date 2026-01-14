@@ -9,7 +9,6 @@ var _options_controller = require("../../options_controller/options_controller")
 var _filter_controller = require("../filter_controller");
 var _legacy_header_filter = require("./legacy_header_filter");
 var _view_controller = require("./view_controller");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 class CompatibilityHeaderFilterController {
   constructor(realFilterController, realHeaderFilterViewController, realDataController, options) {
     this.realFilterController = realFilterController;
@@ -31,7 +30,7 @@ class CompatibilityHeaderFilterController {
   getDataSource(column) {
     const adapter = this.realDataController.getStoreLoadAdapter();
     const popupOptions = {
-      column: _extends({}, column),
+      column: Object.assign({}, column),
       filterType: column.filterType,
       filterValues: column.filterValues
     };

@@ -15,7 +15,9 @@ var _options_controller = require("../options_controller/options_controller");
 var _controller = require("../toolbar/controller");
 var _const2 = require("./const");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable @typescript-eslint/no-unsafe-return */ /* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 class SelectionController {
   constructor(options, dataController, itemsController, toolbarController, optionsValidationController) {
     this.options = options;
@@ -181,7 +183,7 @@ class SelectionController {
   selectionChanging(e) {
     if (e.addedItemKeys.length || e.removedItemKeys.length) {
       const onSelectionChanging = this.onSelectionChanging.peek();
-      const eventArgs = _extends({}, this.getSelectionEventArgs(e), {
+      const eventArgs = Object.assign({}, this.getSelectionEventArgs(e), {
         cancel: false
       });
       // @ts-expect-error

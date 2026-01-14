@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import dateSerialization from '../../../../core/utils/date_serialization';
 import { AppointmentAdapter } from '../../utils/appointment_adapter/appointment_adapter';
 const FULL_DATE_FORMAT = 'yyyyMMddTHHmmss';
@@ -18,7 +17,7 @@ const createRecurrenceException = (appointmentAdapter, exceptionDate) => {
   return result.join();
 };
 export const excludeFromRecurrence = (appointment, exceptionDate, dataAccessors) => {
-  const appointmentAdapter = new AppointmentAdapter(_extends({}, appointment), dataAccessors);
+  const appointmentAdapter = new AppointmentAdapter(Object.assign({}, appointment), dataAccessors);
   appointmentAdapter.recurrenceException = createRecurrenceException(appointmentAdapter, exceptionDate);
   return appointmentAdapter;
 };

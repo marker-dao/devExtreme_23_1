@@ -10,7 +10,6 @@ var _view_port = require("../../core/utils/view_port");
 var _window = require("../../core/utils/window");
 var _toast = _interopRequireDefault(require("../../ui/toast"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const window = (0, _window.getWindow)();
 let $notify = null;
 const $containers = {};
@@ -156,7 +155,7 @@ const getToastOptions = (message, typeOrStack, displayTime) => {
     const containerKey = (0, _type.isString)(position) ? position : `${position.top}-${position.left}-${position.bottom}-${position.right}`;
     const $container = getStackContainer(containerKey);
     setContainerClasses($container, direction);
-    const options = _extends({}, userOptions, defaultConfiguration, {
+    const options = Object.assign({}, userOptions, defaultConfiguration, {
       container: $container,
       _skipContentPositioning: true,
       onShowing: e => {
@@ -166,7 +165,7 @@ const getToastOptions = (message, typeOrStack, displayTime) => {
     });
     return options;
   }
-  const options = _extends({}, userOptions, defaultConfiguration);
+  const options = Object.assign({}, userOptions, defaultConfiguration);
   return options;
 };
 const notify = (message, typeOrStack, displayTime) => {

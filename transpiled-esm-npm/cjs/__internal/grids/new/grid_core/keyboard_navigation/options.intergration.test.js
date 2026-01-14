@@ -5,7 +5,8 @@ var _renderer = _interopRequireDefault(require("../../../../../core/renderer"));
 var _widget = _interopRequireDefault(require("../../../../grids/new/card_view/widget"));
 var _inferno = require("inferno");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); } /* eslint-disable spellcheck/spell-checker */
+/* eslint-disable spellcheck/spell-checker */
+
 const SELECTORS = {
   cardView: '.dx-cardview',
   headerPanelContent: '.dx-cardview-headerpanel-content',
@@ -52,7 +53,7 @@ const baseConfig = {
       (0, _globals.it)('header items should contain tabindex=0', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -63,7 +64,7 @@ const baseConfig = {
       (0, _globals.it)('header items container should render focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -80,7 +81,7 @@ const baseConfig = {
       (0, _globals.it)('cards should contain tabindex=0', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -91,7 +92,7 @@ const baseConfig = {
       (0, _globals.it)('card content should render focus trap container', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -103,7 +104,7 @@ const baseConfig = {
       (0, _globals.it)('card content should render focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -120,7 +121,7 @@ const baseConfig = {
       (0, _globals.it)('cards container should render focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           }
@@ -137,7 +138,7 @@ const baseConfig = {
       (0, _globals.it)('header items should not contain tabindex', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -148,7 +149,7 @@ const baseConfig = {
       (0, _globals.it)('header items container should not has active focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -165,7 +166,7 @@ const baseConfig = {
       (0, _globals.it)('cards should not contain tabindex', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -176,7 +177,7 @@ const baseConfig = {
       (0, _globals.it)('card content should render focus trap container', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -188,7 +189,7 @@ const baseConfig = {
       (0, _globals.it)('card content should not has active focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -205,7 +206,7 @@ const baseConfig = {
       (0, _globals.it)('cards container should not render focus decoys', () => {
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: false
           }
@@ -223,7 +224,7 @@ const baseConfig = {
         const callbackMock = _globals.jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },
@@ -250,7 +251,7 @@ const baseConfig = {
         const callbackMock = _globals.jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },
@@ -275,7 +276,7 @@ const baseConfig = {
         const callbackMock = _globals.jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },
@@ -301,7 +302,7 @@ const baseConfig = {
         const callbackMock = _globals.jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },
@@ -326,7 +327,7 @@ const baseConfig = {
         const callbackMock = _globals.jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },
@@ -353,7 +354,7 @@ const baseConfig = {
         const callbackMock = _globals.jest.fn();
         const {
           container
-        } = setup(_extends({}, baseConfig, {
+        } = setup(Object.assign({}, baseConfig, {
           keyboardNavigation: {
             enabled: true
           },

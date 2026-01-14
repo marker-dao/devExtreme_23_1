@@ -5,7 +5,6 @@ var _globals = require("@jest/globals");
 var _data = require("../../../../../../../common/data");
 var _m_guid = require("../../../../../../core/m_guid");
 var _card = require("./card");
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 const props = {
   card: {
     fields: [{
@@ -62,13 +61,13 @@ const props = {
   (0, _globals.it)('should be rendered correctly', () => {
     const container = document.createElement('div');
     // @ts-expect-error
-    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, props))), container);
+    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, Object.assign({}, props))), container);
     (0, _globals.expect)(container).toMatchSnapshot();
   });
   (0, _globals.it)('should render content correctly', () => {
     const container = document.createElement('div');
     // @ts-expect-error
-    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, props))), container);
+    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, Object.assign({}, props))), container);
     const fieldValue = container.querySelector('.dx-cardview-field-value');
     (0, _globals.expect)(fieldValue === null || fieldValue === void 0 ? void 0 : fieldValue.textContent).toEqual('devextreme');
   });
@@ -77,7 +76,7 @@ const props = {
   (0, _globals.it)('should render the card header components correctly', () => {
     const container = document.createElement('div');
     // @ts-expect-error
-    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, props))), container);
+    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, Object.assign({}, props))), container);
     const cardHeaderText = container.querySelector('.dx-toolbar-label .dx-toolbar-item-content > div');
     (0, _globals.expect)(cardHeaderText === null || cardHeaderText === void 0 ? void 0 : cardHeaderText.textContent).toBe('Card Header');
     const checkbox = container.querySelectorAll('.dx-checkbox');
@@ -92,19 +91,19 @@ const props = {
   (0, _globals.it)('should be rendered', () => {
     const container = document.createElement('div');
     // @ts-expect-error
-    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, props))), container);
+    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, Object.assign({}, props))), container);
     const image = container.querySelector('img');
     (0, _globals.expect)(image).not.toBeNull();
   });
   (0, _globals.it)('should be rendered if imageExpr is not defined but template is defined', () => {
     const container = document.createElement('div');
-    const localProps = _extends({}, props, {
+    const localProps = Object.assign({}, props, {
       cover: {
         template: () => (0, _inferno.createVNode)(1, "img", 'myTemplate')
       }
     });
     // @ts-expect-error
-    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, localProps))), container);
+    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, Object.assign({}, localProps))), container);
     (0, _globals.expect)(container.querySelector('.myTemplate')).toBeTruthy();
   });
 });
@@ -112,7 +111,7 @@ const props = {
   (0, _globals.it)('should render field template correctly', () => {
     const container = document.createElement('div');
     // @ts-expect-error
-    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, _extends({}, props))), container);
+    (0, _inferno.render)((0, _inferno.normalizeProps)((0, _inferno.createComponentVNode)(2, _card.Card, Object.assign({}, props))), container);
     const fieldName = container.querySelector('.dx-cardview-field-caption');
     const fieldValue = container.querySelector('.dx-cardview-field-value');
     (0, _globals.expect)(fieldName === null || fieldName === void 0 ? void 0 : fieldName.textContent).toBe('Field:');

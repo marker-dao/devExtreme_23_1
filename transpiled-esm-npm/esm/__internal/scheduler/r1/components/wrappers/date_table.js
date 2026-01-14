@@ -1,4 +1,3 @@
-import _extends from "@babel/runtime/helpers/esm/extends";
 import registerComponent from '../../../../../core/component_registrator';
 import { ComponentWrapper } from '../../../../core/r1/index';
 import { DateTable } from '../base/date_table';
@@ -7,7 +6,7 @@ export class DateTableComponent extends ComponentWrapper {
     // @ts-expect-error badly typed DomComponent
     super._setOptionsByReference();
     // @ts-expect-error badly typed DomComponent
-    this._optionsByReference = _extends({}, this._optionsByReference, {
+    this._optionsByReference = Object.assign({}, this._optionsByReference, {
       dataCellTemplate: true
     });
   }
